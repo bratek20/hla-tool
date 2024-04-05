@@ -1,6 +1,18 @@
-package pl.bratek20.hla.file
+package pl.bratek20.hla.directory
 
 import org.assertj.core.api.Assertions.assertThat
+
+data class ExpectedDirectory(
+    var name: String? = null,
+)
+
+fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) {
+    val expected = ExpectedDirectory().apply(expectedOv)
+
+    if (expected.name != null) {
+        assertThat(given.name).isEqualTo(expected.name)
+    }
+}
 
 data class ExpectedFile(
     var name: String? = null,

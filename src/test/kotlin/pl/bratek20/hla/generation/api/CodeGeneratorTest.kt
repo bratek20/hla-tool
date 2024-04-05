@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.api
 
 import org.junit.jupiter.api.Test
-import pl.bratek20.hla.file.assertFile
+import pl.bratek20.hla.directory.assertDirectory
 import pl.bratek20.hla.generation.impl.CodeGeneratorLogic
 import pl.bratek20.hla.model.hlaModule
 
@@ -14,9 +14,9 @@ class CodeGeneratorTest {
             name = "SomeModule"
         }
 
-        val file = codeGenerator.generateCode(module)
+        val directory = codeGenerator.generateCode(module)
 
-        assertFile(file) {
+        assertDirectory(directory) {
             name = "SomeModule"
         }
     }
