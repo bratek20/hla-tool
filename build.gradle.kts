@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.bratek20.base.conventions)
+    alias(libs.plugins.bratek20.library.conventions)
 }
 
 group = "pl.bratek20.hla"
