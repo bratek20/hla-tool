@@ -1,4 +1,4 @@
-package pl.bratek20.template;
+package pl.bratek20.hla;
 
 import org.junit.jupiter.api.Test;
 

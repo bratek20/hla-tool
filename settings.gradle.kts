@@ -1,4 +1,4 @@
-rootProject.name = "template" // TODO: Change this
+rootProject.name = "hla"
 
 pluginManagement {
     repositories {
