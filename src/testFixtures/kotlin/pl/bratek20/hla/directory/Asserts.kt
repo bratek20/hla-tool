@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 
 data class ExpectedDirectory(
     var name: String? = null,
+    var files: List<ExpectedFile.() -> Unit>? = null
 )
 
 fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) {
@@ -11,6 +12,10 @@ fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) 
 
     if (expected.name != null) {
         assertThat(given.name).isEqualTo(expected.name)
+    }
+
+    expected.files?.forEachIndexed { index, expectedFile ->
+        assertFile(given.files[index], expectedFile)
     }
 }
 

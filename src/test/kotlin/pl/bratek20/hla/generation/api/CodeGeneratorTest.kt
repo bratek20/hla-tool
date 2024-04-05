@@ -12,12 +12,42 @@ class CodeGeneratorTest {
     fun `should generate code`() {
         val module = hlaModule {
             name = "SomeModule"
+            valueObjects = listOf(
+                {
+                    name = "SomeId"
+                    fields = listOf {
+                        name = "value"
+                        type = "string"
+                    }
+                },
+                {
+                    name = "SomeClass"
+                    fields = listOf(
+                        {
+                            name = "id"
+                            type = "SomeId"
+                        },
+                        {
+                            name = "value"
+                            type = "int"
+                        }
+                    )
+                }
+            )
         }
 
         val directory = codeGenerator.generateCode(module)
 
         assertDirectory(directory) {
             name = "SomeModule"
+            files = listOf(
+                {
+                    name = "SomeId.java"
+                },
+                {
+                    name = "SomeClass.java"
+                }
+            )
         }
     }
 }
