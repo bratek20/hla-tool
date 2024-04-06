@@ -2,7 +2,8 @@ package pl.bratek20.hla.model
 
 data class HlaModule(
     val name: String,
-    val valueObjects: List<ValueObject>,
+    val simpleValueObjects: List<SimpleValueObject>,
+    val complexValueObjects: List<ComplexValueObject>,
     val interfaces: List<Interface>
 )
 
@@ -11,7 +12,12 @@ data class Field(
     val type: String
 )
 
-data class ValueObject(
+data class SimpleValueObject(
+    val name: String,
+    val type: String
+)
+
+data class ComplexValueObject(
     val name: String,
     val fields: List<Field>
 )

@@ -1,4 +1,4 @@
-package pl.bratek20.hla.directory
+package pl.bratek20.hla.directory.api
 
 data class Directory(
     val name: String,

@@ -1,0 +1,26 @@
+package pl.bratek20.hla.directory
+
+import pl.bratek20.hla.directory.api.Directory
+import pl.bratek20.hla.directory.api.File
+import pl.bratek20.hla.directory.api.FileContent
+
+data class FileDef(
+    var name: String = "SomeName",
+    var content: String = ""
+)
+fun file(init: FileDef.() -> Unit): File {
+    val def = FileDef().apply(init)
+    return File(def.name, FileContent.fromString(def.content))
+}
+
+data class DirectoryDef(
+    var name: String = "SomeName",
+    var files: List<FileDef.() -> Unit> = emptyList()
+)
+fun directory(init: DirectoryDef.() -> Unit): Directory {
+    val def = DirectoryDef().apply(init)
+    return Directory(
+        name = def.name,
+        files = def.files.map { file(it) },
+        directories = emptyList())
+}

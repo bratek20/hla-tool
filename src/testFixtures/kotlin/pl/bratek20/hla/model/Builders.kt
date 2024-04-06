@@ -12,13 +12,25 @@ fun field(ov: FieldDef.() -> Unit): Field {
     )
 }
 
-data class ValueObjectDef(
+data class SimpleValueObjectDef(
+    var name: String = "test",
+    var type: String = "String",
+)
+fun simpleValueObject(ov: SimpleValueObjectDef.() -> Unit): SimpleValueObject {
+    val def = SimpleValueObjectDef().apply(ov)
+    return SimpleValueObject(
+        name = def.name,
+        type = def.type
+    )
+}
+
+data class ComplexValueObjectDef(
     var name: String = "test",
     var fields: List<FieldDef.() -> Unit> = listOf(),
 )
-fun valueObject(ov: ValueObjectDef.() -> Unit): ValueObject {
-    val def = ValueObjectDef().apply(ov)
-    return ValueObject(
+fun complexValueObject(ov: ComplexValueObjectDef.() -> Unit): ComplexValueObject {
+    val def = ComplexValueObjectDef().apply(ov)
+    return ComplexValueObject(
         name = def.name,
         fields = def.fields.map { field(it) }
     )
@@ -26,13 +38,15 @@ fun valueObject(ov: ValueObjectDef.() -> Unit): ValueObject {
 
 data class HlaModuleDef(
     var name: String = "test",
-    var valueObjects: List<ValueObjectDef.()->Unit> = listOf(),
+    var simpleValueObjects: List<SimpleValueObjectDef.()->Unit> = listOf(),
+    var complexValueObjects: List<ComplexValueObjectDef.()->Unit> = listOf(),
 )
 fun hlaModule(ov: HlaModuleDef.() -> Unit): HlaModule {
     val def = HlaModuleDef().apply(ov)
     return HlaModule(
         name = def.name,
-        valueObjects = def.valueObjects.map { valueObject(it) },
+        simpleValueObjects = def.simpleValueObjects.map { simpleValueObject(it) },
+        complexValueObjects = def.complexValueObjects.map { complexValueObject(it) },
         interfaces = emptyList()
     )
 }
