@@ -46,6 +46,19 @@ class CodeGeneratorTest {
                 name = "SomeId"
                 type = "String"
             }
+            complexValueObjects = listOf {
+                name = "SomeClass"
+                fields = listOf (
+                    {
+                        name = "id"
+                        type = "SomeId"
+                    },
+                    {
+                        name = "amount"
+                        type = "Int"
+                    }
+                )
+            }
         }
 
         val directory = codeGenerator.generateCode(module)
