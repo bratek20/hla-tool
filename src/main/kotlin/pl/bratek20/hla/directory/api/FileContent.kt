@@ -5,7 +5,7 @@ data class FileContent(
 ) {
     companion object {
         fun fromString(content: String): FileContent {
-            return FileContent(content.split("\n"))
+            return FileContent(content.split("\\n|\\r\\n".toRegex()))
         }
     }
 }

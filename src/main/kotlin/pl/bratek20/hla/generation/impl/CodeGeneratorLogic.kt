@@ -7,8 +7,11 @@ import pl.bratek20.hla.generation.api.CodeGenerator
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.SimpleValueObject
+import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
 class CodeGeneratorLogic : CodeGenerator {
+    private val velocity = VelocityFacadeImpl() // TODO proper injection
+
     override fun generateCode(module: HlaModule): Directory {
         val simpleValueObjectFiles = module.simpleValueObjects.map {
             simpleValueObjectFile(module.name, it)
@@ -25,15 +28,15 @@ class CodeGeneratorLogic : CodeGenerator {
     }
 
     private fun simpleValueObjectFile(moduleName: String, vo: SimpleValueObject): File {
+        val fileContent = velocity.contentBuilder("templates/simpleValueObject.vm")
+            .put("packageName", "pl.bratek20.${moduleName.lowercase()}")
+            .put("className", vo.name)
+            .put("type", vo.type)
+            .build()
+
         return File(
             name = vo.name + ".kt",
-            content = FileContentBuilder()
-                .addLine("package pl.bratek20.${moduleName.lowercase()}")
-                .addLine("")
-                .addLine("data class ${vo.name}(")
-                .addLine("    val value: ${vo.type}")
-                .addLine(")")
-                .build()
+            content = fileContent
         )
     }
 
