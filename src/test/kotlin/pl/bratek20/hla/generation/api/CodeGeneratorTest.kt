@@ -59,6 +59,33 @@ class CodeGeneratorTest {
                     }
                 )
             }
+            interfaces = listOf {
+                name = "SomeInterface"
+                methods = listOf (
+                    {
+                        name = "someCommand"
+                        returnType = "Unit" //TODO: make it work for null
+                        args = listOf (
+                            {
+                                name = "id"
+                                type = "SomeId"
+                            },
+                            {
+                                name = "amount"
+                                type = "Int"
+                            }
+                        )
+                    },
+                    {
+                        name = "someQuery"
+                        returnType = "SomeClass"
+                        args = listOf {
+                            name = "id"
+                            type = "SomeId"
+                        }
+                    }
+                )
+            }
         }
 
         val directory = codeGenerator.generateCode(module)

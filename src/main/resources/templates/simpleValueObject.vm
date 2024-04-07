@@ -1,5 +1,5 @@
 package ${packageName}
 
-data class ${className}(
-    val value: ${type}
+data class ${vo.name}(
+    val value: ${vo.type}
 )

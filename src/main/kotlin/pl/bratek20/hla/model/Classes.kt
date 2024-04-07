@@ -38,7 +38,7 @@ data class Exception(
 
 data class Method(
     val name: String,
-    val returnType: String,
+    val returnType: String?,
     val args: List<Argument>,
     val throws: List<Exception>
 )

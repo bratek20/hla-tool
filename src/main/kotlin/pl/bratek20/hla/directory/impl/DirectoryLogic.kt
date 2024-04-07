@@ -46,21 +46,21 @@ class DirectoryLogic: DirectoryApi {
             } else if (file2 == null) {
                 differences.add("File $file not found in second directory")
             } else {
-                differences.addAll(compareFileContent(file1.content, file2.content))
+                differences.addAll(compareFileContent(file, file1.content, file2.content))
             }
         }
 
         return differences
     }
 
-    private fun compareFileContent(content1: FileContent, content2: FileContent): List<String> {
+    private fun compareFileContent(name: String, content1: FileContent, content2: FileContent): List<String> {
         if (content1.lines.size != content2.lines.size) {
-            return listOf("Different number of lines: ${content1.lines.size} != ${content2.lines.size}")
+            return listOf("Different number of lines for file $name: ${content1.lines.size} != ${content2.lines.size}")
         }
 
         return content1.lines.zip(content2.lines).mapIndexed { index, (line1, line2) ->
             if (line1 != line2) {
-                "Different content in line ${index + 1}: $line1 != $line2"
+                "Different content for file $name in line ${index + 1}: $line1 != $line2"
             } else {
                 null
             }
