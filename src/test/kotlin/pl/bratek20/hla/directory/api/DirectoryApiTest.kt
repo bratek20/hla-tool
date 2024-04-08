@@ -15,7 +15,7 @@ class DirectoryApiTest {
         val result = api.readDirectory(Path("example/src/main/java/pl/bratek20/somemodule"))
         assertDirectory(result) {
             name = "somemodule"
-            files = listOf {
+            hasFile = {
                 name = "SomeId.kt"
                 content = listOf(
                     "package pl.bratek20.somemodule",
@@ -74,7 +74,7 @@ class DirectoryApiTest {
             }
         }
         assertCompareResult(api.compare(dir1, wrongFileContent)) {
-            difference = "Different content in line 1: content1 != content2"
+            difference = "Different content for file file1 in line 1: content1 != content2"
         }
     }
 }
