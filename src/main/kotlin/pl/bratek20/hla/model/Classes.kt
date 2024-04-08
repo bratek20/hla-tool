@@ -5,7 +5,11 @@ data class HlaModule(
     val simpleValueObjects: List<SimpleValueObject>,
     val complexValueObjects: List<ComplexValueObject>,
     val interfaces: List<Interface>
-)
+) {
+    fun findSimpleVO(type: String): SimpleValueObject? {
+        return simpleValueObjects.find { it.name == type }
+    }
+}
 
 data class Field(
     val name: String,

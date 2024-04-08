@@ -4,11 +4,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoryLogic
-import pl.bratek20.hla.generation.impl.CodeGeneratorLogic
+import pl.bratek20.hla.generation.impl.CodeGeneratorImpl
 import pl.bratek20.hla.model.hlaModule
 
 class CodeGeneratorTest {
-    private val codeGenerator = CodeGeneratorLogic()
+    private val codeGenerator = CodeGeneratorImpl()
 
     @Test
     fun `should generate code (E2E)`() { //TODO move to better place

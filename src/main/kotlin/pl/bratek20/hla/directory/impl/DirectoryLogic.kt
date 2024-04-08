@@ -92,7 +92,7 @@ class DirectoryLogic: DirectoryApi {
 
         return content1.lines.zip(content2.lines).mapIndexed { index, (line1, line2) ->
             if (line1 != line2) {
-                "Different content for file $filePath in line ${index + 1}: $line1 != $line2"
+                "Different content for file $filePath in line ${index + 1}: `$line1` != `$line2`"
             } else {
                 null
             }

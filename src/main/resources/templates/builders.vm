@@ -1,0 +1,17 @@
+package ${packageName}.fixtures
+
+import ${packageName}.api.*
+
+data class ${def.name}(
+#foreach($field in $def.fields)
+    var $field.name: $field.type = $field.defaultValue,
+#end
+)
+fun ${funName}(init: ${def.name}.() -> Unit = {}): ${vo.name} {
+    val def = ${def.name}().apply(init)
+    return ${vo.name}(
+    #foreach($field in $vo.fields)
+        $field.name = ${field.prefix}def.${field.name}${field.suffix},
+    #end
+    )
+}

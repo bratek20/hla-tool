@@ -1,4 +1,4 @@
-package $packageName
+package ${packageName}.api
 
 interface $interface.name {
 #foreach($method in $interface.methods)

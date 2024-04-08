@@ -7,13 +7,14 @@ import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.Interface
 import pl.bratek20.hla.model.SimpleValueObject
+import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
-import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
-class CodeGeneratorLogic : CodeGenerator {
-    private val velocity = VelocityFacadeImpl() // TODO proper injection
+class ApiCodeGenerator(
+    private val velocity: VelocityFacade
+) {
 
-    override fun generateCode(module: HlaModule): Directory {
+    fun generateCode(module: HlaModule): Directory {
         val simpleValueObjectFiles = module.simpleValueObjects.map {
             simpleValueObjectFile(module.name, it)
         }
@@ -25,11 +26,8 @@ class CodeGeneratorLogic : CodeGenerator {
         }
 
         return Directory(
-            name = module.name.lowercase(),
-            directories = listOf(Directory(
-                name = "api",
-                files = simpleValueObjectFiles + complexValueObjectFiles + interfaceFiles,
-            ))
+            name = "api",
+            files = simpleValueObjectFiles + complexValueObjectFiles + interfaceFiles,
         )
     }
 
@@ -67,7 +65,6 @@ class CodeGeneratorLogic : CodeGenerator {
     }
 
     private fun contentBuilder(templatePath: String, moduleName: String): VelocityFileContentBuilder {
-        return velocity.contentBuilder(templatePath)
-            .put("packageName", "pl.bratek20.${moduleName.lowercase()}.api")
+        return contentBuilder(velocity, templatePath, moduleName)
     }
 }

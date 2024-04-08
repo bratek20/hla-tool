@@ -65,7 +65,7 @@ class DirectoryApiTest {
             }
         }
         assertCompareResult(api.compare(dir1, wrongFileContent)) {
-            difference = "Different content for file dir1/file1 in line 1: content1 != content2"
+            difference = "Different content for file dir1/file1 in line 1: `content1` != `content2`"
         }
     }
 
