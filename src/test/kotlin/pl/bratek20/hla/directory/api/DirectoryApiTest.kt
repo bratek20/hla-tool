@@ -15,15 +15,18 @@ class DirectoryApiTest {
         val result = api.readDirectory(Path("example/src/main/java/pl/bratek20/somemodule"))
         assertDirectory(result) {
             name = "somemodule"
-            hasFile = {
-                name = "SomeId.kt"
-                content = listOf(
-                    "package pl.bratek20.somemodule",
-                    "",
-                    "data class SomeId(",
-                    "    val value: String",
-                    ")"
-                )
+            hasDirectory = {
+                name = "api"
+                hasFile = {
+                    name = "SomeId.kt"
+                    content = listOf(
+                        "package pl.bratek20.somemodule.api",
+                        "",
+                        "data class SomeId(",
+                        "    val value: String",
+                        ")"
+                    )
+                }
             }
         }
     }

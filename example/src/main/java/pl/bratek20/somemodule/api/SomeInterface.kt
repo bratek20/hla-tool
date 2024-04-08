@@ -1,4 +1,4 @@
-package pl.bratek20.somemodule
+package pl.bratek20.somemodule.api
 
 interface SomeInterface {
     fun someCommand(id: SomeId, amount: Int): Unit

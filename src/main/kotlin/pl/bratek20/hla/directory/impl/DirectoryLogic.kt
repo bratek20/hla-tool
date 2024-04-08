@@ -11,10 +11,14 @@ class DirectoryLogic: DirectoryApi {
             "File does not exist or not dir for path: $nioPath"
         }
 
+        val allFiles = file.listFiles()
+        val files = allFiles!!.filter { it.isFile }.map { toApiFile(it) }
+        val directories = allFiles.filter { it.isDirectory }.map { readDirectory(Path(it.absolutePath)) }
+
         return Directory(
             name = file.name,
-            files = file.listFiles()!!.map { toApiFile(it) },
-            directories = emptyList()
+            files = files,
+            directories = directories
         )
     }
 

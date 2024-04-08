@@ -9,7 +9,8 @@ import pl.bratek20.hla.directory.api.FileContent
 data class ExpectedDirectory(
     var name: String? = null,
     var files: List<ExpectedFile.() -> Unit>? = null,
-    var hasFile: (ExpectedFile.() -> Unit)? = null
+    var hasFile: (ExpectedFile.() -> Unit)? = null,
+    var hasDirectory: (ExpectedDirectory.() -> Unit)? = null,
 )
 
 fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) {
@@ -31,6 +32,13 @@ fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) 
         val file = given.files.find { it.name == expectedFile.name }
         assertThat(file).isNotNull
         assertFile(file!!, expected.hasFile!!)
+    }
+
+    if (expected.hasDirectory != null) {
+        val expectedDirectory = ExpectedDirectory().apply(expected.hasDirectory!!)
+        val directory = given.directories.find { it.name == expectedDirectory.name }
+        assertThat(directory).isNotNull
+        assertDirectory(directory!!, expected.hasDirectory!!)
     }
 }
 

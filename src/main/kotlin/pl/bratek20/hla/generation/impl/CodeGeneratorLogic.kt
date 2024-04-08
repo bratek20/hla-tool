@@ -7,6 +7,7 @@ import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.Interface
 import pl.bratek20.hla.model.SimpleValueObject
+import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
 class CodeGeneratorLogic : CodeGenerator {
@@ -25,13 +26,15 @@ class CodeGeneratorLogic : CodeGenerator {
 
         return Directory(
             name = module.name.lowercase(),
-            files = simpleValueObjectFiles + complexValueObjectFiles + interfaceFiles,
-            directories = emptyList()
+            directories = listOf(Directory(
+                name = "api",
+                files = simpleValueObjectFiles + complexValueObjectFiles + interfaceFiles,
+            ))
         )
     }
 
     private fun simpleValueObjectFile(moduleName: String, vo: SimpleValueObject): File {
-        val fileContent = velocity.contentBuilder("templates/simpleValueObject.vm")
+        val fileContent = contentBuilder("templates/simpleValueObject.vm", moduleName)
             .put("packageName", "pl.bratek20.${moduleName.lowercase()}")
             .put("vo", vo)
             .build()
@@ -43,8 +46,7 @@ class CodeGeneratorLogic : CodeGenerator {
     }
 
     private fun complexValueObjectFile(moduleName: String, vo: ComplexValueObject): File {
-        val fileContent = velocity.contentBuilder("templates/complexValueObject.vm")
-            .put("packageName", "pl.bratek20.${moduleName.lowercase()}")
+        val fileContent = contentBuilder("templates/complexValueObject.vm", moduleName)
             .put("vo", vo)
             .build()
 
@@ -55,8 +57,7 @@ class CodeGeneratorLogic : CodeGenerator {
     }
 
     private fun interfaceFile(moduleName: String, interf: Interface): File {
-        val fileContent = velocity.contentBuilder("templates/interface.vm")
-            .put("packageName", "pl.bratek20.${moduleName.lowercase()}")
+        val fileContent = contentBuilder("templates/interface.vm", moduleName)
             .put("interface", interf)
             .build()
 
@@ -64,5 +65,10 @@ class CodeGeneratorLogic : CodeGenerator {
             name = interf.name + ".kt",
             content = fileContent
         )
+    }
+
+    private fun contentBuilder(templatePath: String, moduleName: String): VelocityFileContentBuilder {
+        return velocity.contentBuilder(templatePath)
+            .put("packageName", "pl.bratek20.api.${moduleName.lowercase()}")
     }
 }
