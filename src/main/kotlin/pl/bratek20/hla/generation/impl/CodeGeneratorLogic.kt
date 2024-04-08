@@ -35,7 +35,6 @@ class CodeGeneratorLogic : CodeGenerator {
 
     private fun simpleValueObjectFile(moduleName: String, vo: SimpleValueObject): File {
         val fileContent = contentBuilder("templates/simpleValueObject.vm", moduleName)
-            .put("packageName", "pl.bratek20.${moduleName.lowercase()}")
             .put("vo", vo)
             .build()
 
@@ -69,6 +68,6 @@ class CodeGeneratorLogic : CodeGenerator {
 
     private fun contentBuilder(templatePath: String, moduleName: String): VelocityFileContentBuilder {
         return velocity.contentBuilder(templatePath)
-            .put("packageName", "pl.bratek20.api.${moduleName.lowercase()}")
+            .put("packageName", "pl.bratek20.${moduleName.lowercase()}.api")
     }
 }
