@@ -42,8 +42,21 @@ class DirectoryLogic: DirectoryApi {
         val newPath = fullPath(path, dir1.name)
         differences.addAll(compareFiles(newPath, dir1.files, dir2.files))
 
-        dir1.directories.zip(dir2.directories).forEach { (dir1dir, dir2dir) ->
-            differences.addAll(compareDirectories(newPath, dir1dir, dir2dir))
+        val dir1Map = dir1.directories.associateBy { it.name }
+        val dir2Map = dir2.directories.associateBy { it.name }
+
+        val allDirs = dir1Map.keys + dir2Map.keys
+        for (dir in allDirs) {
+            val subDir1 = dir1Map[dir]
+            val subDir2 = dir2Map[dir]
+
+            if (subDir1 == null) {
+                differences.add("Directory ${fullPath(newPath, dir)} not found in first directory")
+            } else if (subDir2 == null) {
+                differences.add("Directory ${fullPath(newPath, dir)} not found in second directory")
+            } else {
+                differences.addAll(compareDirectories(newPath, subDir1, subDir2))
+            }
         }
 
         return differences

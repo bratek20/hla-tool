@@ -84,6 +84,13 @@ class DirectoryApiTest {
             same = true
         }
 
+        val missingDirectory = directory {
+            name = "dir"
+        }
+        assertCompareResult(api.compare(dir, missingDirectory)) {
+            differences = listOf("Directory dir/dir1 not found in second directory")
+        }
+
         val wrongName = directory {
             name = "otherDir"
             directories = listOf {
@@ -107,7 +114,10 @@ class DirectoryApiTest {
             }
         }
         assertCompareResult(api.compare(dir, wrongNestedName)) {
-            differences = listOf("Different directory names: dir/dir1 != dir/dir2")
+            differences = listOf(
+                "Directory dir/dir1 not found in second directory",
+                "Directory dir/dir2 not found in first directory"
+            )
         }
 
         val wrongFile = directory {
