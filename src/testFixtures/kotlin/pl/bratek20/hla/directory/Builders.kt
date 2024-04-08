@@ -15,12 +15,14 @@ fun file(init: FileDef.() -> Unit): File {
 
 data class DirectoryDef(
     var name: String = "SomeName",
-    var files: List<FileDef.() -> Unit> = emptyList()
+    var files: List<FileDef.() -> Unit> = emptyList(),
+    var directories: List<DirectoryDef.() -> Unit> = emptyList(),
 )
 fun directory(init: DirectoryDef.() -> Unit): Directory {
     val def = DirectoryDef().apply(init)
     return Directory(
         name = def.name,
         files = def.files.map { file(it) },
-        directories = emptyList())
+        directories = def.directories.map { directory(it) },
+    )
 }

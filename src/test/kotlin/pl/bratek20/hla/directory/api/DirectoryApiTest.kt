@@ -1,6 +1,5 @@
 package pl.bratek20.hla.directory.api
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import pl.bratek20.hla.directory.assertCompareResult
 import pl.bratek20.hla.directory.assertDirectory
@@ -32,7 +31,7 @@ class DirectoryApiTest {
     }
 
     @Test
-    fun shouldCompareDirectories() {
+    fun shouldCompareDirectoryFiles() {
         val dir1 = directory {
             name = "dir1"
             files = listOf {
@@ -44,17 +43,6 @@ class DirectoryApiTest {
             same = true
         }
 
-        val wrongName = directory {
-            name = "dir2"
-            files = listOf {
-                name = "file1"
-                content = "content1"
-            }
-        }
-        assertCompareResult(api.compare(dir1, wrongName)) {
-            difference = "Different names: dir1 != dir2"
-        }
-
         val wrongFileName = directory {
             name = "dir1"
             files = listOf {
@@ -64,8 +52,8 @@ class DirectoryApiTest {
         }
         assertCompareResult(api.compare(dir1, wrongFileName)) {
             differences = listOf(
-                "File file1 not found in second directory",
-                "File file2 not found in first directory"
+                "File dir1/file1 not found in second directory",
+                "File dir1/file2 not found in first directory"
             )
         }
 
@@ -77,7 +65,65 @@ class DirectoryApiTest {
             }
         }
         assertCompareResult(api.compare(dir1, wrongFileContent)) {
-            difference = "Different content for file file1 in line 1: content1 != content2"
+            difference = "Different content for file dir1/file1 in line 1: content1 != content2"
+        }
+    }
+
+    @Test
+    fun shouldCompareNestedDirectories() {
+        val dir = directory {
+            name = "dir"
+            directories = listOf {
+                name = "dir1"
+                files = listOf {
+                    name = "file1"
+                }
+            }
+        }
+        assertCompareResult(api.compare(dir, dir)) {
+            same = true
+        }
+
+        val wrongName = directory {
+            name = "otherDir"
+            directories = listOf {
+                name = "dir1"
+                files = listOf {
+                    name = "file1"
+                }
+            }
+        }
+        assertCompareResult(api.compare(dir, wrongName)) {
+            difference = "Different directory names: dir != otherDir"
+        }
+
+        val wrongNestedName = directory {
+            name = "dir"
+            directories = listOf {
+                name = "dir2"
+                files = listOf {
+                    name = "file1"
+                }
+            }
+        }
+        assertCompareResult(api.compare(dir, wrongNestedName)) {
+            differences = listOf("Different directory names: dir/dir1 != dir/dir2")
+        }
+
+        val wrongFile = directory {
+            name = "dir"
+            directories = listOf {
+                name = "dir1"
+                files = listOf {
+                    name = "file2"
+                }
+            }
+        }
+        assertCompareResult(api.compare(dir, wrongFile)) {
+            differences = listOf(
+                "File dir/dir1/file1 not found in second directory",
+                "File dir/dir1/file2 not found in first directory"
+            )
         }
     }
 }
