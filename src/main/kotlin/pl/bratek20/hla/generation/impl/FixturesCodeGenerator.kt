@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.model.ComplexValueObject
+import pl.bratek20.hla.model.Field
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
@@ -28,11 +29,22 @@ data class BuilderVO(
     val fields: List<BuilderVOField>
 )
 
-
 data class BuilderDeclaration(
     val funName: String,
     val def: Def,
     val vo: BuilderVO
+)
+
+data class AssertField(
+    val name: String,
+    val type: String,
+    val givenSuffix: String,
+)
+
+data class AssertDeclaration(
+    val givenName: String,
+    val expectedName: String,
+    val fields: List<AssertField>
 )
 
 class FixturesCodeGenerator(
@@ -40,10 +52,13 @@ class FixturesCodeGenerator(
 ) {
     fun generateCode(module: HlaModule): Directory {
         val buildersFile = buildersFile(module)
+        val assertsFile = assertsFile(module)
+
         return Directory(
             name = "fixtures",
             files = listOf(
-                buildersFile
+                buildersFile,
+                assertsFile
             )
         )
     }
@@ -67,6 +82,31 @@ class FixturesCodeGenerator(
 
         return File(
             name = "Builders.kt",
+            content = fileContent
+        )
+    }
+
+    private fun assertsFile(module: HlaModule): File {
+        val declarations = module.complexValueObjects.map {
+            AssertDeclaration(
+                givenName = it.name,
+                expectedName = "Expected${it.name}",
+                fields = it.fields.map {
+                    AssertField(
+                        name = it.name,
+                        type = module.findSimpleVO(it.type)?.type ?: it.type,
+                        givenSuffix = if (module.findSimpleVO(it.type) != null) ".value" else ""
+                    )
+                }
+            )
+        }
+
+        val fileContent = contentBuilder("templates/asserts.vm", module.name)
+            .put("declarations", declarations)
+            .build()
+
+        return File(
+            name = "Asserts.kt",
             content = fileContent
         )
     }
