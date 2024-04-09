@@ -1,5 +1,6 @@
 package pl.bratek20.hla.directory.api
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import pl.bratek20.hla.directory.assertCompareResult
 import pl.bratek20.hla.directory.assertDirectory
@@ -28,6 +29,14 @@ class DirectoryApiTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun shouldReadCorrectFileLength() {
+        //TODO api.readFile
+        val result = api.readDirectory(Path("example/src/main/java/pl/bratek20/somemodule/fixtures"))
+        //TODO proper setup for this assertion
+        assertThat(result.files[0].content.lines.size).isEqualTo(28)
     }
 
     @Test

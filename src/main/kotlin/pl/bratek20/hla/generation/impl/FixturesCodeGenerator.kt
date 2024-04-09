@@ -28,6 +28,13 @@ data class BuilderVO(
     val fields: List<BuilderVOField>
 )
 
+
+data class BuilderDeclaration(
+    val funName: String,
+    val def: Def,
+    val vo: BuilderVO
+)
+
 class FixturesCodeGenerator(
     private val velocity: VelocityFacade
 ) {
@@ -41,15 +48,21 @@ class FixturesCodeGenerator(
         )
     }
 
+    private fun pascalToCamelCase(name: String): String {
+        return name[0].lowercase() + name.substring(1)
+    }
+
     private fun buildersFile(module: HlaModule): File {
-        val vo = module.complexValueObjects[0]
-        val def = toDef(vo, module)
-        val builderVO = toBuilderVO(vo, module)
+        val declarations = module.complexValueObjects.map {
+            BuilderDeclaration(
+                funName = pascalToCamelCase(it.name),
+                def = toDef(it, module),
+                vo = toBuilderVO(it, module)
+            )
+        }
 
         val fileContent = contentBuilder("templates/builders.vm", module.name)
-            .put("def", def)
-            .put("funName", "someClass")
-            .put("vo", builderVO)
+            .put("declarations", declarations)
             .build()
 
         return File(

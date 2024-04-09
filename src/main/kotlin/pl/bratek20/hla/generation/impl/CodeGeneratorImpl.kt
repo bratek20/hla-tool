@@ -2,6 +2,8 @@ package pl.bratek20.hla.generation.impl
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
+import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.api.CodeGenerator
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
@@ -20,12 +22,15 @@ class CodeGeneratorImpl : CodeGenerator {
         val apiCode = apiGenerator.generateCode(module)
         val fixturesCode = fixturesGenerator.generateCode(module)
 
-        return Directory(
+        val x = Directory(
             name = module.name.lowercase(),
             directories = listOf(
                 apiCode,
                 fixturesCode
             )
         )
+
+        //DirectoryLogic().writeDirectory(Path("tmp"), x)
+        return x
     }
 }

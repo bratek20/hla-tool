@@ -13,3 +13,16 @@ fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
         amount = def.amount,
     )
 }
+
+data class SomeClass2Def(
+    var id: String = "someValue",
+    var enabled: Boolean = false,
+)
+fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
+    val def = SomeClass2Def().apply(init)
+    return SomeClass2(
+        id = SomeId(def.id),
+        enabled = def.enabled,
+    )
+}
+

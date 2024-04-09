@@ -22,6 +22,25 @@ class DirectoryLogic: DirectoryApi {
         )
     }
 
+    override fun writeDirectory(path: Path, directory: Directory) {
+        val nioPath = java.nio.file.Paths.get(path.value)
+        val file = nioPath.toFile()
+
+        val newDir = java.io.File(file, directory.name)
+        check(newDir.mkdirs()) {
+            "Could not create directory: $newDir"
+        }
+
+        directory.files.forEach {
+            val newFile = java.io.File(newDir, it.name)
+            newFile.writeText(it.content.lines.joinToString("\n"))
+        }
+
+        directory.directories.forEach {
+            writeDirectory(Path(newDir.absolutePath), it)
+        }
+    }
+
     override fun compare(dir1: Directory, dir2: Directory): CompareResult {
         val differences = compareDirectories("", dir1, dir2)
 

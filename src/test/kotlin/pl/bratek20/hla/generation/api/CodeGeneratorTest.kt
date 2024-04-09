@@ -18,19 +18,34 @@ class CodeGeneratorTest {
                 name = "SomeId"
                 type = "String"
             }
-            complexValueObjects = listOf {
-                name = "SomeClass"
-                fields = listOf (
-                    {
-                        name = "id"
-                        type = "SomeId"
-                    },
-                    {
-                        name = "amount"
-                        type = "Int"
-                    }
-                )
-            }
+            complexValueObjects = listOf(
+                {
+                    name = "SomeClass"
+                    fields = listOf (
+                        {
+                            name = "id"
+                            type = "SomeId"
+                        },
+                        {
+                            name = "amount"
+                            type = "Int"
+                        }
+                    )
+                },
+                {
+                    name = "SomeClass2"
+                    fields = listOf (
+                        {
+                            name = "id"
+                            type = "SomeId"
+                        },
+                        {
+                            name = "enabled"
+                            type = "Boolean"
+                        }
+                    )
+                }
+            )
             interfaces = listOf {
                 name = "SomeInterface"
                 methods = listOf (
