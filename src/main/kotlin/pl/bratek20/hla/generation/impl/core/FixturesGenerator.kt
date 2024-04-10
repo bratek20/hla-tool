@@ -1,9 +1,8 @@
-package pl.bratek20.hla.generation.impl
+package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.model.ComplexValueObject
-import pl.bratek20.hla.model.Field
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
@@ -47,15 +46,21 @@ data class AssertDeclaration(
     val fields: List<AssertField>
 )
 
-class FixturesCodeGenerator(
+abstract class FixturesGenerator(
+    private val module: HlaModule,
     private val velocity: VelocityFacade
 ) {
-    fun generateCode(module: HlaModule): Directory {
+    abstract fun dirName(): String
+    abstract fun buildersFileName(): String
+    abstract fun assertsFileName(): String
+    abstract fun templatesPathPrefix(): String
+
+    fun generateCode(): Directory {
         val buildersFile = buildersFile(module)
         val assertsFile = assertsFile(module)
 
         return Directory(
-            name = "fixtures",
+            name = dirName(),
             files = listOf(
                 buildersFile,
                 assertsFile
@@ -76,12 +81,12 @@ class FixturesCodeGenerator(
             )
         }
 
-        val fileContent = contentBuilder("templates/builders.vm", module.name)
+        val fileContent = contentBuilder("builders.vm")
             .put("declarations", declarations)
             .build()
 
         return File(
-            name = "Builders.kt",
+            name = buildersFileName(),
             content = fileContent
         )
     }
@@ -101,12 +106,12 @@ class FixturesCodeGenerator(
             )
         }
 
-        val fileContent = contentBuilder("templates/asserts.vm", module.name)
+        val fileContent = contentBuilder("asserts.vm")
             .put("declarations", declarations)
             .build()
 
         return File(
-            name = "Asserts.kt",
+            name = assertsFileName(),
             content = fileContent
         )
     }
@@ -155,7 +160,7 @@ class FixturesCodeGenerator(
         )
     }
 
-    private fun contentBuilder(templatePath: String, moduleName: String): VelocityFileContentBuilder {
-        return contentBuilder(velocity, templatePath, moduleName)
+    private fun contentBuilder(templateName: String): VelocityFileContentBuilder {
+        return contentBuilder(velocity, templatesPathPrefix() + "/" + templateName, module.name)
     }
 }

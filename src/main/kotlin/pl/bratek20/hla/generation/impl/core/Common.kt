@@ -1,4 +1,4 @@
-package pl.bratek20.hla.generation.impl
+package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder

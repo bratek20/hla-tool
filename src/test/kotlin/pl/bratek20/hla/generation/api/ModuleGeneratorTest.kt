@@ -8,12 +8,12 @@ import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoryLogic
-import pl.bratek20.hla.generation.impl.CodeGeneratorImpl
+import pl.bratek20.hla.generation.impl.core.ModuleGeneratorImpl
 import pl.bratek20.hla.model.hlaModule
 import java.util.stream.Stream
 
-class CodeGeneratorTest {
-    private val codeGenerator = CodeGeneratorImpl()
+class ModuleGeneratorTest {
+    private val codeGenerator = ModuleGeneratorImpl()
 
     fun module() = hlaModule {
         name = "SomeModule"
@@ -83,18 +83,18 @@ class CodeGeneratorTest {
             Stream.of(
                 Arguments.of(
                     "example/kotlin/src/main/java/pl/bratek20/somemodule",
-                    GeneratorLanguage.KOTLIN
+                    ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
                     "example/typescript/SomeModule",
-                    GeneratorLanguage.TYPE_SCRIPT
+                    ModuleLanguage.TYPE_SCRIPT
                 )
             )
     }
 
     @ParameterizedTest(name = "{1}")
     @ArgumentsSource(MyArgumentsProvider::class)
-    fun `should generate code (E2E)`(path: String, lang: GeneratorLanguage) { //TODO move to better place
+    fun `should generate code (E2E)`(path: String, lang: ModuleLanguage) { //TODO move to better place
         val module = module()
 
         val directory = codeGenerator.generateCode(module, lang)
@@ -103,8 +103,11 @@ class CodeGeneratorTest {
         val exampleDirectory = directoryApi.readDirectory(Path(path))
 
         val compareResult = directoryApi.compare(directory, exampleDirectory)
+        val failMessage = "${compareResult.differences.size} differences found!\n" +
+                compareResult.differences.joinToString("\n")
+
         assertThat(compareResult.same)
-            .withFailMessage(compareResult.differences.toString())
+            .withFailMessage(failMessage)
             .isTrue()
     }
 }

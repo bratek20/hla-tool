@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.api
 
-enum class GeneratorLanguage {
+enum class ModuleLanguage {
     KOTLIN,
     TYPE_SCRIPT,
 }

@@ -1,8 +1,7 @@
-package pl.bratek20.hla.generation.impl
+package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.api.CodeGenerator
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.Interface
@@ -10,11 +9,13 @@ import pl.bratek20.hla.model.SimpleValueObject
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-class ApiCodeGenerator(
+abstract class ApiGenerator(
+    private val module: HlaModule,
     private val velocity: VelocityFacade
 ) {
+    abstract fun dirName(): String
 
-    fun generateCode(module: HlaModule): Directory {
+    fun generateCode(): Directory {
         val simpleValueObjectFiles = module.simpleValueObjects.map {
             simpleValueObjectFile(module.name, it)
         }
@@ -26,13 +27,13 @@ class ApiCodeGenerator(
         }
 
         return Directory(
-            name = "api",
+            name = dirName(),
             files = simpleValueObjectFiles + complexValueObjectFiles + interfaceFiles,
         )
     }
 
     private fun simpleValueObjectFile(moduleName: String, vo: SimpleValueObject): File {
-        val fileContent = contentBuilder("templates/simpleValueObject.vm", moduleName)
+        val fileContent = contentBuilder("templates/kotlin/simpleValueObject.vm", moduleName)
             .put("vo", vo)
             .build()
 
@@ -43,7 +44,7 @@ class ApiCodeGenerator(
     }
 
     private fun complexValueObjectFile(moduleName: String, vo: ComplexValueObject): File {
-        val fileContent = contentBuilder("templates/complexValueObject.vm", moduleName)
+        val fileContent = contentBuilder("templates/kotlin/complexValueObject.vm", moduleName)
             .put("vo", vo)
             .build()
 
@@ -54,7 +55,7 @@ class ApiCodeGenerator(
     }
 
     private fun interfaceFile(moduleName: String, interf: Interface): File {
-        val fileContent = contentBuilder("templates/interface.vm", moduleName)
+        val fileContent = contentBuilder("templates/kotlin/interface.vm", moduleName)
             .put("interface", interf)
             .build()
 

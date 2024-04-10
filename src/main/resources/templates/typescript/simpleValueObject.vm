@@ -1,0 +1,5 @@
+package ${packageName}.api
+
+data class ${vo.name}(
+    val value: ${vo.type}
+)
