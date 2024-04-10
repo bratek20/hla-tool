@@ -78,7 +78,7 @@ class CodeGeneratorTest {
         val directory = codeGenerator.generateCode(module)
 
         val directoryApi = DirectoryLogic()
-        val exampleDirectory = directoryApi.readDirectory(Path("example/src/main/java/pl/bratek20/somemodule"))
+        val exampleDirectory = directoryApi.readDirectory(Path("example/kotlin/src/main/java/pl/bratek20/somemodule"))
 
         val compareResult = directoryApi.compare(directory, exampleDirectory)
         assertThat(compareResult.same)

@@ -1,6 +1,6 @@
-rootProject.name = "hla"
+rootProject.name = "example"
 
-includeBuild("example")
+include("kotlin")
 
 pluginManagement {
     repositories {
