@@ -47,13 +47,16 @@ data class AssertDeclaration(
 )
 
 abstract class FixturesGenerator(
-    private val module: HlaModule,
-    private val velocity: VelocityFacade
+    protected val module: HlaModule,
+    protected val velocity: VelocityFacade
 ) {
     abstract fun dirName(): String
+
     abstract fun buildersFileName(): String
+    abstract fun buildersContentBuilder(): VelocityFileContentBuilder
+
     abstract fun assertsFileName(): String
-    abstract fun templatesPathPrefix(): String
+    abstract fun assertsContentBuilder(): VelocityFileContentBuilder
 
     fun generateCode(): Directory {
         val buildersFile = buildersFile(module)
@@ -81,7 +84,7 @@ abstract class FixturesGenerator(
             )
         }
 
-        val fileContent = contentBuilder("builders.vm")
+        val fileContent = buildersContentBuilder()
             .put("declarations", declarations)
             .build()
 
@@ -106,7 +109,7 @@ abstract class FixturesGenerator(
             )
         }
 
-        val fileContent = contentBuilder("asserts.vm")
+        val fileContent = assertsContentBuilder()
             .put("declarations", declarations)
             .build()
 
@@ -158,9 +161,5 @@ abstract class FixturesGenerator(
                 )
             }
         )
-    }
-
-    private fun contentBuilder(templateName: String): VelocityFileContentBuilder {
-        return contentBuilder(velocity, templatesPathPrefix() + "/" + templateName, module.name)
     }
 }

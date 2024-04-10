@@ -33,7 +33,7 @@ abstract class ApiGenerator(
     }
 
     private fun simpleValueObjectFile(moduleName: String, vo: SimpleValueObject): File {
-        val fileContent = contentBuilder("templates/kotlin/simpleValueObject.vm", moduleName)
+        val fileContent = contentBuilder("simpleValueObject.vm", moduleName)
             .put("vo", vo)
             .build()
 
@@ -44,7 +44,7 @@ abstract class ApiGenerator(
     }
 
     private fun complexValueObjectFile(moduleName: String, vo: ComplexValueObject): File {
-        val fileContent = contentBuilder("templates/kotlin/complexValueObject.vm", moduleName)
+        val fileContent = contentBuilder("complexValueObject.vm", moduleName)
             .put("vo", vo)
             .build()
 
@@ -55,7 +55,7 @@ abstract class ApiGenerator(
     }
 
     private fun interfaceFile(moduleName: String, interf: Interface): File {
-        val fileContent = contentBuilder("templates/kotlin/interface.vm", moduleName)
+        val fileContent = contentBuilder("interface.vm", moduleName)
             .put("interface", interf)
             .build()
 
@@ -65,7 +65,7 @@ abstract class ApiGenerator(
         )
     }
 
-    private fun contentBuilder(templatePath: String, moduleName: String): VelocityFileContentBuilder {
-        return contentBuilder(velocity, templatePath, moduleName)
+    private fun contentBuilder(templateName: String, moduleName: String): VelocityFileContentBuilder {
+        return pl.bratek20.hla.generation.impl.languages.kotlin.kotlinContentBuilder(velocity, templateName, moduleName)
     }
 }
