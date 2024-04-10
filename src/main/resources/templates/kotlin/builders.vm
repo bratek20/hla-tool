@@ -14,7 +14,15 @@ fun ${dec.funName}(init: ${def.name}.() -> Unit = {}): ${vo.name} {
     val def = ${def.name}().apply(init)
     return ${vo.name}(
     #foreach($field in $vo.fields)
-        $field.name = ${field.prefix}def.${field.name}${field.suffix},
+        #set($prefix = "")
+        #if($field.isSimpleVO())
+            #set($prefix = $field.simpleVOName + "(")
+        #end
+        #set($suffix = "")
+        #if($field.isSimpleVO())
+            #set($suffix = ")")
+        #end
+        $field.name = ${prefix}def.${field.name}${suffix},
     #end
     )
 }

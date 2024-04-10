@@ -1,5 +1,11 @@
 package pl.bratek20.hla.model
 
+enum class BuiltInType {
+    STRING,
+    INT,
+    BOOLEAN,
+}
+
 data class HlaModule(
     val name: String,
     val simpleValueObjects: List<SimpleValueObject>,

@@ -20,9 +20,13 @@ data class Def(
 
 data class BuilderVOField(
     val name: String,
-    val prefix: String,
-    val suffix: String,
-)
+    val simpleVOName: String?
+) {
+    fun isSimpleVO(): Boolean {
+        return simpleVOName != null
+    }
+}
+
 data class BuilderVO(
     val name: String,
     val fields: List<BuilderVOField>
@@ -147,17 +151,10 @@ abstract class FixturesGenerator(
             name = vo.name,
             fields = vo.fields.map {
                 val simpleVO = module.findSimpleVO(it.type)
-                var prefix = ""
-                var suffix = ""
-                if (simpleVO != null) {
-                    prefix = simpleVO.name + "("
-                    suffix = ")"
-                }
 
                 BuilderVOField(
                     name = it.name,
-                    prefix = prefix,
-                    suffix = suffix
+                    simpleVOName = simpleVO?.name
                 )
             }
         )
