@@ -5,6 +5,7 @@ import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.api.CodeGenerator
+import pl.bratek20.hla.generation.api.GeneratorLanguage
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.Interface
@@ -18,7 +19,7 @@ class CodeGeneratorImpl : CodeGenerator {
     private val apiGenerator: ApiCodeGenerator = ApiCodeGenerator(velocity)
     private val fixturesGenerator: FixturesCodeGenerator = FixturesCodeGenerator(velocity)
 
-    override fun generateCode(module: HlaModule): Directory {
+    override fun generateCode(module: HlaModule, lang: GeneratorLanguage): Directory {
         val apiCode = apiGenerator.generateCode(module)
         val fixturesCode = fixturesGenerator.generateCode(module)
 
