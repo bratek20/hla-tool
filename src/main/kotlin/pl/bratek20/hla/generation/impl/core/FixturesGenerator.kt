@@ -38,6 +38,7 @@ data class AssertView(
     val fields: List<AssertFieldView>
 )
 
+//TODO support for nested classes
 abstract class FixturesGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
