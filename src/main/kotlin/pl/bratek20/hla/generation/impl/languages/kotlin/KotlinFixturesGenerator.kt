@@ -27,4 +27,8 @@ class KotlinFixturesGenerator(module: HlaModule, velocity: VelocityFacade)
     override fun assertsContentBuilder(): VelocityFileContentBuilder {
         return kotlinContentBuilder(velocity, "asserts.vm", module.name)
     }
+
+    override fun assertFunName(voName: String): String {
+        return "assert${voName}"
+    }
 }

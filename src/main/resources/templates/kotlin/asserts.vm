@@ -9,7 +9,7 @@ data class ${a.expectedName}(
     var $field.name: $field.type? = null,
     #end
 )
-fun assert${a.givenName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Unit) {
+fun ${a.funName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Unit) {
     val expected = ${a.expectedName}().apply(expectedInit)
 
     #foreach($field in $a.fields)

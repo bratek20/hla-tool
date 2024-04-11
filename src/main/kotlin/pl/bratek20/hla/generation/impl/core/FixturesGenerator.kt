@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl.core
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.model.HlaModule
+import pl.bratek20.hla.utils.pascalToCamelCase
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
@@ -31,6 +32,7 @@ data class AssertFieldView(
 )
 
 data class AssertView(
+    val funName: String,
     val givenName: String,
     val expectedName: String,
     val fields: List<AssertFieldView>
@@ -48,6 +50,7 @@ abstract class FixturesGenerator(
 
     abstract fun assertsFileName(): String
     abstract fun assertsContentBuilder(): VelocityFileContentBuilder
+    abstract fun assertFunName(voName: String): String
 
     fun generateCode(): Directory {
         val buildersFile = buildersFile(module)
@@ -60,10 +63,6 @@ abstract class FixturesGenerator(
                 assertsFile
             )
         )
-    }
-
-    private fun pascalToCamelCase(name: String): String {
-        return name[0].lowercase() + name.substring(1)
     }
 
     private fun buildersFile(module: HlaModule): File {
@@ -97,6 +96,7 @@ abstract class FixturesGenerator(
     private fun assertsFile(module: HlaModule): File {
         val asserts = module.complexValueObjects.map {
             AssertView(
+                funName = assertFunName(it.name),
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {

@@ -1,24 +1,16 @@
-namespace ${moduleName}.Builder {
-#foreach($b in $builders)
-export interface ${b.defName} {
+namespace ${moduleName}.Assert {
+#foreach($a in $asserts)
+export interface ${a.expectedName} {
     #foreach($field in $b.fields)
         $field.name?: $field.type,
     #end
 }
-export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
-return new ${b.voName}(
-    #foreach($field in $b.fields)
-        #set($prefix = "")
-        #if($field.isSimpleVO())
-            #set($prefix = "new " + $field.simpleVOName + "(")
-        #end
-        #set($suffix = "")
-        #if($field.isSimpleVO())
-            #set($suffix = ")")
-        #end
-        ${prefix}def?.${field.name} ?? $field.defaultValue${suffix},
+export function ${a.funName}(given: ${a.givenName}, expected: ${a.expectedName} {
+    #foreach($field in $a.fields)
+    if (expected.${field.name} !== undefined) {
+        AssertEquals(given.${field.name}${field.givenSuffix}, expected.${field.name})
+    }
     #end
-)
 }
     #if($foreach.hasNext)
 
