@@ -2,18 +2,16 @@ package ${packageName}.fixtures
 
 import ${packageName}.api.*
 
-#foreach($dec in $declarations)
-    #set($def = $dec.def)
-    #set($vo = $dec.vo)
-data class ${def.name}(
-    #foreach($field in $def.fields)
+#foreach($b in $builders)
+data class ${b.defName}(
+    #foreach($field in $b.fields)
     var $field.name: $field.type = $field.defaultValue,
     #end
 )
-fun ${dec.funName}(init: ${def.name}.() -> Unit = {}): ${vo.name} {
-    val def = ${def.name}().apply(init)
-    return ${vo.name}(
-    #foreach($field in $vo.fields)
+fun ${b.funName}(init: ${b.defName}.() -> Unit = {}): ${b.voName} {
+    val def = ${b.defName}().apply(init)
+    return ${b.voName}(
+    #foreach($field in $b.fields)
         #set($prefix = "")
         #if($field.isSimpleVO())
             #set($prefix = $field.simpleVOName + "(")

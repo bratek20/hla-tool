@@ -3,16 +3,16 @@ package ${packageName}.fixtures
 import org.assertj.core.api.Assertions.assertThat
 import ${packageName}.api.*
 
-#foreach($dec in $declarations)
-data class ${dec.expectedName}(
-    #foreach($field in $dec.fields)
+#foreach($a in $asserts)
+data class ${a.expectedName}(
+    #foreach($field in $a.fields)
     var $field.name: $field.type? = null,
     #end
 )
-fun assert${dec.givenName}(given: ${dec.givenName}, expectedInit: ${dec.expectedName}.() -> Unit) {
-    val expected = ${dec.expectedName}().apply(expectedInit)
+fun assert${a.givenName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Unit) {
+    val expected = ${a.expectedName}().apply(expectedInit)
 
-    #foreach($field in $dec.fields)
+    #foreach($field in $a.fields)
     if (expected.${field.name} != null) {
         assertThat(given.${field.name}${field.givenSuffix}).isEqualTo(expected.${field.name})
     }

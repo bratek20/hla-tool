@@ -5,7 +5,7 @@ import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 
 class TypeScriptApiGenerator(module: HlaModule, velocity: VelocityFacade)
-    : ApiGenerator(module, velocity) {
+    : ApiGenerator(module, velocity, TypeScriptTypes()) {
 
     override fun dirName(): String {
         return "Api"

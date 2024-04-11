@@ -6,7 +6,7 @@ import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 class TypeScriptFixturesGenerator(module: HlaModule, velocity: VelocityFacade)
-    : FixturesGenerator(module, velocity) {
+    : FixturesGenerator(module, velocity, TypeScriptTypes()) {
 
     override fun dirName(): String {
         return "Fixtures"

@@ -3,7 +3,7 @@ package pl.bratek20.hla.model
 enum class BuiltInType {
     STRING,
     INT,
-    BOOLEAN,
+    BOOL
 }
 
 data class HlaModule(

@@ -19,7 +19,7 @@ class ModuleGeneratorTest {
         name = "SomeModule"
         simpleValueObjects = listOf {
             name = "SomeId"
-            type = "String"
+            type = "string"
         }
         complexValueObjects = listOf(
             {
@@ -31,7 +31,7 @@ class ModuleGeneratorTest {
                     },
                     {
                         name = "amount"
-                        type = "Int"
+                        type = "int"
                     }
                 )
             },
@@ -44,7 +44,7 @@ class ModuleGeneratorTest {
                     },
                     {
                         name = "enabled"
-                        type = "Boolean"
+                        type = "bool"
                     }
                 )
             }
@@ -62,7 +62,7 @@ class ModuleGeneratorTest {
                         },
                         {
                             name = "amount"
-                            type = "Int"
+                            type = "int"
                         }
                     )
                 },

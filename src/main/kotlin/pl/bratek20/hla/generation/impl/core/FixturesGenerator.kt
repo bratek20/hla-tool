@@ -2,24 +2,14 @@ package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-
-data class DefField(
+data class BuilderFieldView(
     val name: String,
     val type: String,
-    val defaultValue: String
-)
-data class Def(
-    val name: String,
-    val fields: List<DefField>
-)
-
-data class BuilderVOField(
-    val name: String,
+    val defaultValue: String,
     val simpleVOName: String?
 ) {
     fun isSimpleVO(): Boolean {
@@ -27,32 +17,29 @@ data class BuilderVOField(
     }
 }
 
-data class BuilderVO(
-    val name: String,
-    val fields: List<BuilderVOField>
-)
-
-data class BuilderDeclaration(
+data class BuilderView(
     val funName: String,
-    val def: Def,
-    val vo: BuilderVO
+    val defName: String,
+    val voName: String,
+    val fields: List<BuilderFieldView>
 )
 
-data class AssertField(
+data class AssertFieldView(
     val name: String,
     val type: String,
     val givenSuffix: String,
 )
 
-data class AssertDeclaration(
+data class AssertView(
     val givenName: String,
     val expectedName: String,
-    val fields: List<AssertField>
+    val fields: List<AssertFieldView>
 )
 
 abstract class FixturesGenerator(
     protected val module: HlaModule,
-    protected val velocity: VelocityFacade
+    protected val velocity: VelocityFacade,
+    private val types: Types
 ) {
     abstract fun dirName(): String
 
@@ -80,16 +67,25 @@ abstract class FixturesGenerator(
     }
 
     private fun buildersFile(module: HlaModule): File {
-        val declarations = module.complexValueObjects.map {
-            BuilderDeclaration(
+        val builders = module.complexValueObjects.map {
+            BuilderView(
                 funName = pascalToCamelCase(it.name),
-                def = toDef(it, module),
-                vo = toBuilderVO(it, module)
+                defName = it.name + "Def",
+                voName = it.name,
+                fields = it.fields.map {
+                    val simpleVO = module.findSimpleVO(it.type)
+                    BuilderFieldView(
+                        name = it.name,
+                        type = types.map(simpleVO?.type ?: it.type),
+                        defaultValue = types.defaultValue(simpleVO?.type ?: it.type),
+                        simpleVOName = simpleVO?.name
+                    )
+                }
             )
         }
 
         val fileContent = buildersContentBuilder()
-            .put("declarations", declarations)
+            .put("builders", builders)
             .build()
 
         return File(
@@ -99,14 +95,14 @@ abstract class FixturesGenerator(
     }
 
     private fun assertsFile(module: HlaModule): File {
-        val declarations = module.complexValueObjects.map {
-            AssertDeclaration(
+        val asserts = module.complexValueObjects.map {
+            AssertView(
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
-                    AssertField(
+                    AssertFieldView(
                         name = it.name,
-                        type = module.findSimpleVO(it.type)?.type ?: it.type,
+                        type = types.map(module.findSimpleVO(it.type)?.type ?: it.type),
                         givenSuffix = if (module.findSimpleVO(it.type) != null) ".value" else ""
                     )
                 }
@@ -114,49 +110,12 @@ abstract class FixturesGenerator(
         }
 
         val fileContent = assertsContentBuilder()
-            .put("declarations", declarations)
+            .put("asserts", asserts)
             .build()
 
         return File(
             name = assertsFileName(),
             content = fileContent
-        )
-    }
-
-    private fun defaultValue(type: String): String {
-        return when (type) {
-            "String" -> "\"someValue\""
-            "Int" -> "0"
-            "Boolean" -> "false"
-            else -> "null"
-        }
-    }
-
-    private fun toDef(vo: ComplexValueObject, module: HlaModule): Def {
-        return Def(
-            name = vo.name + "Def",
-            fields = vo.fields.map {
-                val simpleVO = module.findSimpleVO(it.type)
-                DefField(
-                    name = it.name,
-                    type = simpleVO?.type ?: it.type,
-                    defaultValue = defaultValue(simpleVO?.type ?: it.type)
-                )
-            }
-        )
-    }
-
-    private fun toBuilderVO(vo: ComplexValueObject, module: HlaModule): BuilderVO {
-        return BuilderVO(
-            name = vo.name,
-            fields = vo.fields.map {
-                val simpleVO = module.findSimpleVO(it.type)
-
-                BuilderVOField(
-                    name = it.name,
-                    simpleVOName = simpleVO?.name
-                )
-            }
         )
     }
 }

@@ -6,7 +6,7 @@ namespace SomeModule.Builder {
     export function someClass(def?: SomeClassDef): SomeClass {
         return new SomeClass(
             new SomeId(def?.id ?? "someValue"),
-            def?.amount ?? 0
+            def?.amount ?? 0,
         )
     }
 
@@ -17,7 +17,7 @@ namespace SomeModule.Builder {
     export function someClass2(def?: SomeClass2Def): SomeClass2 {
         return new SomeClass2(
             new SomeId(def?.id ?? "someValue"),
-            def?.enabled ?? false
+            def?.enabled ?? false,
         )
     }
 }

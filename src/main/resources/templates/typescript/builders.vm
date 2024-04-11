@@ -1,16 +1,22 @@
 namespace ${moduleName}.Builder {
-#foreach($dec in $declarations)
-    #set($def = $dec.def)
-    #set($vo = $dec.vo)
-    export interface ${def.name} {
-        #foreach($field in $def.fields)
-        var $field.name?: $field.type,
+#foreach($b in $builders)
+    export interface ${b.defName} {
+        #foreach($field in $b.fields)
+        $field.name?: $field.type,
         #end
     }
-    export function ${dec.funName}(def:? ${def.name}): ${vo.name} {
-        return new ${vo.name}(
-        #foreach($field in $vo.fields)
-            $field.name = ${field.prefix}def.${field.name}${field.suffix} ?? $field.defaultValue,
+    export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
+        return new ${b.voName}(
+        #foreach($field in $b.fields)
+            #set($prefix = "")
+            #if($field.isSimpleVO())
+                #set($prefix = "new " + $field.simpleVOName + "(")
+            #end
+            #set($suffix = "")
+            #if($field.isSimpleVO())
+                #set($suffix = ")")
+            #end
+            ${prefix}def?.${field.name} ?? $field.defaultValue${suffix},
         #end
         )
     }

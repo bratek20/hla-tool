@@ -1,24 +1,27 @@
-package ${packageName}.fixtures
-
-import org.assertj.core.api.Assertions.assertThat
-import ${packageName}.api.*
-
-#foreach($dec in $declarations)
-data class ${dec.expectedName}(
-    #foreach($field in $dec.fields)
-    var $field.name: $field.type? = null,
-    #end
-)
-fun assert${dec.givenName}(given: ${dec.givenName}, expectedInit: ${dec.expectedName}.() -> Unit) {
-    val expected = ${dec.expectedName}().apply(expectedInit)
-
-    #foreach($field in $dec.fields)
-    if (expected.${field.name} != null) {
-        assertThat(given.${field.name}${field.givenSuffix}).isEqualTo(expected.${field.name})
-    }
+namespace ${moduleName}.Builder {
+#foreach($b in $builders)
+export interface ${b.defName} {
+    #foreach($field in $b.fields)
+        $field.name?: $field.type,
     #end
 }
-#if($foreach.hasNext)
+export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
+return new ${b.voName}(
+    #foreach($field in $b.fields)
+        #set($prefix = "")
+        #if($field.isSimpleVO())
+            #set($prefix = "new " + $field.simpleVOName + "(")
+        #end
+        #set($suffix = "")
+        #if($field.isSimpleVO())
+            #set($suffix = ")")
+        #end
+        ${prefix}def?.${field.name} ?? $field.defaultValue${suffix},
+    #end
+)
+}
+    #if($foreach.hasNext)
 
+    #end
 #end
-#end
+}
