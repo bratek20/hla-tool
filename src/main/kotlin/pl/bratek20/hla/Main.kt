@@ -11,12 +11,12 @@ fun exampleModule(): HlaModule {
         name = "example",
         simpleValueObjects = listOf(
             SimpleValueObject(
-                name = "SomeClass",
-                type = "SomeClass"
+                name = "SomeId",
+                type = "string"
             ),
             SimpleValueObject(
-                name = "SomeClass2",
-                type = "SomeClass2"
+                name = "SomeId2",
+                type = "string"
             )
         ),
         complexValueObjects = listOf(
@@ -25,11 +25,11 @@ fun exampleModule(): HlaModule {
                 fields = listOf(
                     Field(
                         name = "id",
-                        type = "String"
+                        type = "string"
                     ),
                     Field(
                         name = "amount",
-                        type = "Int"
+                        type = "int"
                     )
                 )
             ),
@@ -38,11 +38,11 @@ fun exampleModule(): HlaModule {
                 fields = listOf(
                     Field(
                         name = "id",
-                        type = "String"
+                        type = "string"
                     ),
                     Field(
                         name = "enabled",
-                        type = "Boolean"
+                        type = "bool"
                     )
                 )
             )
@@ -54,7 +54,7 @@ fun exampleModule(): HlaModule {
 fun main() {
     val module = exampleModule()
 
-    val dir = ModuleGeneratorImpl().generateCode(module, ModuleLanguage.KOTLIN)
+    val dir = ModuleGeneratorImpl().generateCode(module, ModuleLanguage.TYPE_SCRIPT)
 
     DirectoryLogic().writeDirectory(Path("tmp"), dir)
 }

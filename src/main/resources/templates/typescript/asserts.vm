@@ -1,17 +1,17 @@
 namespace ${moduleName}.Assert {
 #foreach($a in $asserts)
-export interface ${a.expectedName} {
-    #foreach($field in $b.fields)
+    export interface ${a.expectedName} {
+    #foreach($field in $a.fields)
         $field.name?: $field.type,
     #end
-}
-export function ${a.funName}(given: ${a.givenName}, expected: ${a.expectedName} {
-    #foreach($field in $a.fields)
-    if (expected.${field.name} !== undefined) {
-        AssertEquals(given.${field.name}${field.givenSuffix}, expected.${field.name})
     }
-    #end
-}
+    export function ${a.funName}(given: ${a.givenName}, expected: ${a.expectedName}) {
+        #foreach($field in $a.fields)
+        if (expected.${field.name} !== undefined) {
+            AssertEquals(given.${field.name}${field.givenSuffix}, expected.${field.name})
+        }
+        #end
+    }
     #if($foreach.hasNext)
 
     #end
