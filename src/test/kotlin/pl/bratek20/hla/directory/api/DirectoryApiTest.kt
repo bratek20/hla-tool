@@ -34,9 +34,9 @@ class DirectoryApiTest {
     @Test
     fun shouldReadCorrectFileLength() {
         //TODO api.readFile
-        val result = api.readDirectory(Path("example/src/main/java/pl/bratek20/somemodule/fixtures"))
+        val result = api.readDirectory(Path("src/test/resources/directory/subdir"))
         //TODO proper setup for this assertion
-        assertThat(result.files[0].content.lines.size).isEqualTo(28)
+        assertThat(result.files[0].content.lines.size).isEqualTo(5)
     }
 
     @Test
