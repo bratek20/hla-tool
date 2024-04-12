@@ -11,10 +11,13 @@ abstract class Types {
         return BuiltInType.valueOf(type.uppercase())
     }
 
-    protected abstract fun mapBuiltInType(type: BuiltInType): String
+    protected abstract fun mapBuiltInType(type: BuiltInType?): String
     protected abstract fun defaultValueForBuiltInType(type: BuiltInType): String
 
-    fun map(type: String): String {
+    fun map(type: String?): String {
+        if (type == null) {
+            return mapBuiltInType(null)
+        }
         if (isBuiltInType(type)) {
             return mapBuiltInType(toBuiltInType(type))
         }

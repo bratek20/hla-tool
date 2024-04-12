@@ -17,3 +17,4 @@ class SomeClass2 {
         public readonly enabled: boolean,
     ) {}
 }
+

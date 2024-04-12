@@ -1,17 +1,19 @@
-package ${packageName}.api
-
 #foreach($vo in $valueObjects.simpleList)
-data class ${vo.name}(
-    val value: ${vo.type}
-)
+class ${vo.name} {
+    constructor(
+        public readonly value: ${vo.type}
+    ) {}
+}
 
 #end
 #foreach($vo in $valueObjects.complexList)
-data class ${vo.name}(
-    #foreach($field in $vo.fields)
-    val $field.name: $field.type,
-    #end
-)
+class ${vo.name} {
+    constructor(
+        #foreach($field in $vo.fields)
+        public readonly $field.name: $field.type,
+        #end
+    ) {}
+}
 #if($foreach.hasNext)
 
 #end

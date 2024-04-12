@@ -108,14 +108,10 @@ abstract class ApiGenerator(
             methods = interf.methods.map { method ->
                 MethodView(
                     name = method.name,
-                    returnType = method.returnType?.let { types.map(it) },
+                    returnType = types.map(method.returnType),
                     args = method.args.map { ArgumentView(it.name, types.map(it.type)) }
                 )
             }
         )
-    }
-
-    private fun contentBuilder(templateName: String, moduleName: String): VelocityFileContentBuilder {
-        return pl.bratek20.hla.generation.impl.languages.kotlin.kotlinContentBuilder(velocity, templateName, moduleName)
     }
 }

@@ -63,15 +63,12 @@ class ModuleGeneratorImpl : ModuleGenerator {
         val apiCode = stg.apiGenerator().generateCode()
         val fixturesCode = stg.fixturesGenerator().generateCode()
 
-        val x = Directory(
+        return Directory(
             name = stg.moduleDirName(),
             directories = listOf(
                 apiCode,
                 fixturesCode
             )
         )
-
-        //DirectoryLogic().writeDirectory(Path("tmp"), x)
-        return x
     }
 }

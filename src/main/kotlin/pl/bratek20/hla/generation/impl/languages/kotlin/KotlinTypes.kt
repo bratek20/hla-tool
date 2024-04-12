@@ -4,7 +4,10 @@ import pl.bratek20.hla.generation.impl.core.Types
 import pl.bratek20.hla.model.BuiltInType
 
 class KotlinTypes: Types() {
-    override fun mapBuiltInType(type: BuiltInType): String {
+    override fun mapBuiltInType(type: BuiltInType?): String {
+        if (type == null) {
+            return "Unit"
+        }
         return when (type) {
             BuiltInType.STRING -> "String"
             BuiltInType.INT -> "Int"

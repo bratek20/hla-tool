@@ -54,7 +54,7 @@ class ModuleGeneratorTest {
             methods = listOf (
                 {
                     name = "someCommand"
-                    returnType = "Unit" //TODO: make it work for null
+                    returnType = null //TODO: make it work for null
                     args = listOf (
                         {
                             name = "id"
