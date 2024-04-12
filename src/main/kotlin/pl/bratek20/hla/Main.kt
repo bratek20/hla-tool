@@ -47,14 +47,44 @@ fun exampleModule(): HlaModule {
                 )
             )
         ),
-        interfaces = emptyList()
+        interfaces = listOf(
+            Interface(
+                name = "SomeInterface",
+                methods = listOf(
+                    Method(
+                        name = "someCommand",
+                        returnType = "void",
+                        args = listOf(
+                            Argument(
+                                name = "id",
+                                type = "SomeId"
+                            ),
+                            Argument(
+                                name = "amount",
+                                type = "int"
+                            )
+                        )
+                    ),
+                    Method(
+                        name = "someQuery",
+                        returnType = "SomeClass",
+                        args = listOf(
+                            Argument(
+                                name = "id",
+                                type = "SomeId"
+                            )
+                        )
+                    )
+                )
+            )
+        )
     )
 }
 
 fun main() {
     val module = exampleModule()
 
-    val dir = ModuleGeneratorImpl().generateCode(module, ModuleLanguage.TYPE_SCRIPT)
+    val dir = ModuleGeneratorImpl().generateCode(module, ModuleLanguage.KOTLIN)
 
     DirectoryLogic().writeDirectory(Path("tmp"), dir)
 }

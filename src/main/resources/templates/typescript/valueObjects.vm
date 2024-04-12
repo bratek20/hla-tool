@@ -1,0 +1,18 @@
+package ${packageName}.api
+
+#foreach($vo in $valueObjects.simpleList)
+data class ${vo.name}(
+    val value: ${vo.type}
+)
+
+#end
+#foreach($vo in $valueObjects.complexList)
+data class ${vo.name}(
+    #foreach($field in $vo.fields)
+    val $field.name: $field.type,
+    #end
+)
+#if($foreach.hasNext)
+
+#end
+#end

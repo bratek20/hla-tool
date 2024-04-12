@@ -6,53 +6,89 @@ import pl.bratek20.hla.model.*
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
+data class FieldView(
+    val name: String,
+    val type: String
+)
+data class ComplexValueObjectView(
+    val name: String,
+    val fields: List<FieldView>
+)
+data class SimpleValueObjectView(
+    val name: String,
+    val type: String
+)
+data class ValueObjectsView(
+    val simpleList: List<SimpleValueObjectView>,
+    val complexList: List<ComplexValueObjectView>
+)
+
+data class ArgumentView(
+    val name: String,
+    val type: String
+)
+data class MethodView(
+    val name: String,
+    val returnType: String?,
+    val args: List<ArgumentView>
+)
+data class InterfaceView(
+    val name: String,
+    val methods: List<MethodView>
+)
+
 abstract class ApiGenerator(
-    private val module: HlaModule,
-    private val velocity: VelocityFacade,
+    protected val module: HlaModule,
+    protected val velocity: VelocityFacade,
     private val types: Types
 ) {
     abstract fun dirName(): String
 
+    abstract fun valueObjectsFileName(): String
+    abstract fun valueObjectsContentBuilder(): VelocityFileContentBuilder
+
+    abstract fun interfacesFileName(): String
+    abstract fun interfacesContentBuilder(): VelocityFileContentBuilder
+
     fun generateCode(): Directory {
-        val simpleValueObjectFiles = module.simpleValueObjects.map {
-            simpleValueObjectFile(module.name, it)
-        }
-        val complexValueObjectFiles = module.complexValueObjects.map {
-            complexValueObjectFile(module.name, it)
-        }
-        val interfaceFiles = module.interfaces.map {
-            interfaceFile(module.name, it)
-        }
+        val valueObjectsFile = valueObjectsFile()
+        val interfacesFile = interfacesFile()
 
         return Directory(
             name = dirName(),
-            files = simpleValueObjectFiles + complexValueObjectFiles + interfaceFiles,
+            files = listOf(
+                valueObjectsFile,
+                interfacesFile
+            )
         )
     }
 
-    private fun simpleValueObjectFile(moduleName: String, vo: SimpleValueObject): File {
-        val fileContent = contentBuilder("simpleValueObject.vm", moduleName)
-            .put("vo", toView(vo))
+    private fun valueObjectsFile(): File {
+        val fileContent = valueObjectsContentBuilder()
+            .put("valueObjects", ValueObjectsView(
+                simpleList = module.simpleValueObjects.map { toView(it) },
+                complexList = module.complexValueObjects.map { toView(it) }
+            ))
             .build()
 
         return File(
-            name = vo.name + ".kt",
+            name = valueObjectsFileName(),
             content = fileContent
         )
     }
 
-    data class FieldView(
-        val name: String,
-        val type: String
-    )
-    data class ComplexValueObjectView(
-        val name: String,
-        val fields: List<FieldView>
-    )
-    data class SimpleValueObjectView(
-        val name: String,
-        val type: String
-    )
+    private fun interfacesFile(): File {
+        val fileContent = interfacesContentBuilder()
+            .put("interfaces", module.interfaces.map { toView(it) })
+            .build()
+
+        return File(
+            name = interfacesFileName(),
+            content = fileContent
+        )
+    }
+
+
     private fun toView(vo: SimpleValueObject): SimpleValueObjectView {
         return SimpleValueObjectView(
             name = vo.name,
@@ -66,31 +102,6 @@ abstract class ApiGenerator(
         )
     }
 
-    private fun complexValueObjectFile(moduleName: String, vo: ComplexValueObject): File {
-        val fileContent = contentBuilder("complexValueObject.vm", moduleName)
-            .put("vo", toView(vo))
-            .build()
-
-        return File(
-            name = vo.name + ".kt",
-            content = fileContent
-        )
-    }
-
-    data class ArgumentView(
-        val name: String,
-        val type: String
-    )
-    data class MethodView(
-        val name: String,
-        val returnType: String?,
-        val args: List<ArgumentView>
-    )
-    data class InterfaceView(
-        val name: String,
-        val methods: List<MethodView>
-    )
-
     private fun toView(interf: Interface): InterfaceView {
         return InterfaceView(
             name = interf.name,
@@ -101,16 +112,6 @@ abstract class ApiGenerator(
                     args = method.args.map { ArgumentView(it.name, types.map(it.type)) }
                 )
             }
-        )
-    }
-    private fun interfaceFile(moduleName: String, interf: Interface): File {
-        val fileContent = contentBuilder("interface.vm", moduleName)
-            .put("interface", toView(interf))
-            .build()
-
-        return File(
-            name = interf.name + ".kt",
-            content = fileContent
         )
     }
 

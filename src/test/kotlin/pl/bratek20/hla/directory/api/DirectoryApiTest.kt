@@ -12,19 +12,19 @@ class DirectoryApiTest {
 
     @Test
     fun shouldReadDirectory() {
-        val result = api.readDirectory(Path("example/src/main/java/pl/bratek20/somemodule"))
+        val result = api.readDirectory(Path("src/test/resources/directory"))
         assertDirectory(result) {
-            name = "somemodule"
+            name = "directory"
             hasDirectory = {
-                name = "api"
+                name = "subdir"
                 hasFile = {
-                    name = "SomeId.kt"
+                    name = "SomeFile.kt"
                     content = listOf(
-                        "package pl.bratek20.somemodule.api",
+                        "package directory",
                         "",
-                        "data class SomeId(",
-                        "    val value: String",
-                        ")"
+                        "class SomeFile {",
+                        "}",
+                        ""
                     )
                 }
             }

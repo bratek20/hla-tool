@@ -50,5 +50,5 @@ data class Method(
     val name: String,
     val returnType: String?,
     val args: List<Argument>,
-    val throws: List<Exception>
+    val throws: List<Exception> = emptyList()
 )
