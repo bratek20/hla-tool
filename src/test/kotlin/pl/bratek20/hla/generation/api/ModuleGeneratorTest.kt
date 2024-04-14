@@ -27,11 +27,15 @@ class ModuleGeneratorTest {
                 fields = listOf (
                     {
                         name = "id"
-                        type = "SomeId"
+                        type = {
+                            name = "SomeId"
+                        }
                     },
                     {
                         name = "amount"
-                        type = "int"
+                        type = {
+                            name = "int"
+                        }
                     }
                 )
             },
@@ -40,11 +44,15 @@ class ModuleGeneratorTest {
                 fields = listOf (
                     {
                         name = "id"
-                        type = "SomeId"
+                        type = {
+                            name = "SomeId"
+                        }
                     },
                     {
                         name = "enabled"
-                        type = "bool"
+                        type = {
+                            name = "bool"
+                        }
                     }
                 )
             }

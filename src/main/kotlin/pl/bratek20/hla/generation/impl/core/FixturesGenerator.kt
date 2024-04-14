@@ -3,6 +3,8 @@ package pl.bratek20.hla.generation.impl.core
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.model.HlaModule
+import pl.bratek20.hla.model.SimpleValueObject
+import pl.bratek20.hla.model.Type
 import pl.bratek20.hla.utils.pascalToCamelCase
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
@@ -73,11 +75,11 @@ abstract class FixturesGenerator(
                 defName = it.name + "Def",
                 voName = it.name,
                 fields = it.fields.map {
-                    val simpleVO = module.findSimpleVO(it.type)
+                    val simpleVO = findSimpleVO(it.type)
                     BuilderFieldView(
                         name = it.name,
-                        type = types.map(simpleVO?.type ?: it.type),
-                        defaultValue = types.defaultValue(simpleVO?.type ?: it.type),
+                        type = types.map(simpleVO?.type ?: it.type.name),
+                        defaultValue = types.defaultValue(simpleVO?.type ?: it.type.name),
                         simpleVOName = simpleVO?.name
                     )
                 }
@@ -103,8 +105,8 @@ abstract class FixturesGenerator(
                 fields = it.fields.map {
                     AssertFieldView(
                         name = it.name,
-                        type = types.map(module.findSimpleVO(it.type)?.type ?: it.type),
-                        givenSuffix = if (module.findSimpleVO(it.type) != null) ".value" else ""
+                        type = types.map(findSimpleVO(it.type)?.type ?: it.type.name),
+                        givenSuffix = if (findSimpleVO(it.type) != null) ".value" else ""
                     )
                 }
             )
@@ -118,5 +120,9 @@ abstract class FixturesGenerator(
             name = assertsFileName(),
             content = fileContent
         )
+    }
+
+    private fun findSimpleVO(type: Type): SimpleValueObject? {
+        return module.simpleValueObjects.find { it.name == type.name }
     }
 }

@@ -25,11 +25,15 @@ fun exampleModule(): HlaModule {
                 fields = listOf(
                     Field(
                         name = "id",
-                        type = "string"
+                        type = Type(
+                            name = "string",
+                        )
                     ),
                     Field(
                         name = "amount",
-                        type = "int"
+                        type = Type(
+                            name = "int",
+                        )
                     )
                 )
             ),
@@ -38,11 +42,15 @@ fun exampleModule(): HlaModule {
                 fields = listOf(
                     Field(
                         name = "id",
-                        type = "string"
+                        type = Type(
+                            name = "string",
+                        )
                     ),
                     Field(
                         name = "enabled",
-                        type = "bool"
+                        type = Type(
+                            name = "bool",
+                        )
                     )
                 )
             )

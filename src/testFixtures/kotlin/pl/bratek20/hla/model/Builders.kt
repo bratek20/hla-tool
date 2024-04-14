@@ -1,14 +1,26 @@
 package pl.bratek20.hla.model
 
+data class TypeDef(
+    var name: String = "test",
+    var wrappers: List<TypeWrapper> = emptyList(),
+)
+fun type(ov: TypeDef.() -> Unit): Type {
+    val def = TypeDef().apply(ov)
+    return Type(
+        name = def.name,
+        wrappers = def.wrappers
+    )
+}
+
 data class FieldDef(
     var name: String = "test",
-    var type: String = "String",
+    var type: TypeDef.() -> Unit = {},
 )
 fun field(ov: FieldDef.() -> Unit): Field {
     val def = FieldDef().apply(ov)
     return Field(
         name = def.name,
-        type = def.type
+        type = type(def.type)
     )
 }
 

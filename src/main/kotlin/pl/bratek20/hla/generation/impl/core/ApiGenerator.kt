@@ -98,7 +98,7 @@ abstract class ApiGenerator(
     private fun toView(vo: ComplexValueObject): ComplexValueObjectView {
         return ComplexValueObjectView(
             name = vo.name,
-            fields = vo.fields.map { FieldView(it.name, types.map(it.type)) }
+            fields = vo.fields.map { FieldView(it.name, types.map(it.type.name)) }
         )
     }
 

@@ -11,15 +11,20 @@ data class HlaModule(
     val simpleValueObjects: List<SimpleValueObject>,
     val complexValueObjects: List<ComplexValueObject>,
     val interfaces: List<Interface>
-) {
-    fun findSimpleVO(type: String): SimpleValueObject? {
-        return simpleValueObjects.find { it.name == type }
-    }
+)
+
+enum class TypeWrapper {
+    LIST,
+    OPTIONAL
 }
 
+data class Type(
+    val name: String,
+    val wrappers: List<TypeWrapper> = emptyList()
+)
 data class Field(
     val name: String,
-    val type: String
+    val type: Type
 )
 
 data class SimpleValueObject(
