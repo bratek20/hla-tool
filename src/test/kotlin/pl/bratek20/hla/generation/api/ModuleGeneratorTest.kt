@@ -63,6 +63,15 @@ class ModuleGeneratorTest {
                                 TypeWrapper.LIST
                             )
                         }
+                    },
+                    {
+                        name = "ids"
+                        type = {
+                            name = "SomeId"
+                            wrappers = listOf (
+                                TypeWrapper.LIST
+                            )
+                        }
                     }
                 )
             }

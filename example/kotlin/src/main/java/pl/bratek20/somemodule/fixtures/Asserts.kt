@@ -22,6 +22,7 @@ data class ExpectedSomeClass2(
     var id: String? = null,
     var enabled: Boolean? = null,
     var names: List<String>? = null,
+    var ids: List<String>? = null,
 )
 fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Unit) {
     val expected = ExpectedSomeClass2().apply(expectedInit)
@@ -34,6 +35,9 @@ fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> U
     }
     if (expected.names != null) {
         assertThat(given.names).isEqualTo(expected.names)
+    }
+    if (expected.ids != null) {
+        assertThat(given.ids.map { it.value }).isEqualTo(expected.ids)
     }
 }
 

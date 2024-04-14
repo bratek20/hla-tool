@@ -18,6 +18,7 @@ data class SomeClass2Def(
     var id: String = "someValue",
     var enabled: Boolean = false,
     var names: List<String> = emptyList(),
+    var ids: List<String> = emptyList(),
 )
 fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
     val def = SomeClass2Def().apply(init)
@@ -25,6 +26,7 @@ fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
         id = SomeId(def.id),
         enabled = def.enabled,
         names = def.names,
+        ids = def.ids.map { SomeId(it) },
     )
 }
 

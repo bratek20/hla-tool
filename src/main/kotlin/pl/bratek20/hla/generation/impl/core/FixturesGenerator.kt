@@ -5,6 +5,7 @@ import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.SimpleValueObject
 import pl.bratek20.hla.model.Type
+import pl.bratek20.hla.model.TypeWrapper
 import pl.bratek20.hla.utils.pascalToCamelCase
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
@@ -13,6 +14,7 @@ data class BuilderFieldView(
     val name: String,
     val type: String,
     val defaultValue: String,
+    val isList: Boolean,
     val simpleVOName: String?
 ) {
     fun isSimpleVO(): Boolean {
@@ -80,6 +82,7 @@ abstract class FixturesGenerator(
                         name = it.name,
                         type = types.map(simpleVO?.type() ?: it.type),
                         defaultValue = types.defaultValue(simpleVO?.type() ?: it.type),
+                        isList = it.type.wrappers.contains(TypeWrapper.LIST),
                         simpleVOName = simpleVO?.name
                     )
                 }
