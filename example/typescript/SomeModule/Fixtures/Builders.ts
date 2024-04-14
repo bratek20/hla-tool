@@ -13,11 +13,13 @@ namespace SomeModule.Builder {
     export interface SomeClass2Def {
         id?: string,
         enabled?: boolean,
+        names?: string[],
     }
     export function someClass2(def?: SomeClass2Def): SomeClass2 {
         return new SomeClass2(
             new SomeId(def?.id ?? "someValue"),
             def?.enabled ?? false,
+            def?.names ?? [],
         )
     }
 }

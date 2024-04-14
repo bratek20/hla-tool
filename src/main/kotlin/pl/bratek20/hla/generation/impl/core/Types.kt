@@ -17,12 +17,15 @@ abstract class Types {
     protected abstract fun mapBuiltInType(type: BuiltInType?): String
     protected abstract fun defaultValueForBuiltInType(type: BuiltInType): String
 
+    protected abstract fun wrapWithList(typeName: String): String
+    protected abstract fun defaultValueForList(): String
+
     fun map(type: Type?): String {
         if (type == null) {
             return mapBuiltInType(null)
         }
         if (isList(type)) {
-            return "List<${map(type.copy(wrappers = type.wrappers - TypeWrapper.LIST))}>"
+            return wrapWithList(map(Type(type.name)))
         }
         if (isBuiltInType(type.name)) {
             return mapBuiltInType(toBuiltInType(type.name))
@@ -36,7 +39,7 @@ abstract class Types {
 
     fun defaultValue(type: Type): String {
         if (isList(type)) {
-            return "emptyList()"
+            return defaultValueForList()
         }
         if (isBuiltInType(type.name)) {
             return defaultValueForBuiltInType(toBuiltInType(type.name))

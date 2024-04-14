@@ -15,6 +15,7 @@ namespace SomeModule.Assert {
     export interface ExpectedSomeClass2 {
         id?: string,
         enabled?: boolean,
+        names?: string[],
     }
     export function someClass2(given: SomeClass2, expected: ExpectedSomeClass2) {
         if (expected.id !== undefined) {
@@ -22,6 +23,9 @@ namespace SomeModule.Assert {
         }
         if (expected.enabled !== undefined) {
             AssertEquals(given.enabled, expected.enabled)
+        }
+        if (expected.names !== undefined) {
+            AssertEquals(given.names, expected.names)
         }
     }
 }

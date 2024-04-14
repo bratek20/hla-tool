@@ -22,4 +22,12 @@ class TypeScriptTypes: Types() {
             BuiltInType.BOOL -> "false"
         }
     }
+
+    override fun wrapWithList(typeName: String): String {
+        return "$typeName[]"
+    }
+
+    override fun defaultValueForList(): String {
+        return "[]"
+    }
 }

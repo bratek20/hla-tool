@@ -22,4 +22,12 @@ class KotlinTypes: Types() {
             BuiltInType.BOOL -> "false"
         }
     }
+
+    override fun wrapWithList(typeName: String): String {
+        return "List<$typeName>"
+    }
+
+    override fun defaultValueForList(): String {
+        return "emptyList()"
+    }
 }
