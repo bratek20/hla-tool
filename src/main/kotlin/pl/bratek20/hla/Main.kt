@@ -12,11 +12,11 @@ fun exampleModule(): HlaModule {
         simpleValueObjects = listOf(
             SimpleValueObject(
                 name = "SomeId",
-                type = "string"
+                typeName = "string"
             ),
             SimpleValueObject(
                 name = "SomeId2",
-                type = "string"
+                typeName = "string"
             )
         ),
         complexValueObjects = listOf(
@@ -61,25 +61,33 @@ fun exampleModule(): HlaModule {
                 methods = listOf(
                     Method(
                         name = "someCommand",
-                        returnType = "void",
+                        returnType = null,
                         args = listOf(
                             Argument(
                                 name = "id",
-                                type = "SomeId"
+                                type = Type(
+                                    name = "SomeId"
+                                )
                             ),
                             Argument(
                                 name = "amount",
-                                type = "int"
+                                type = Type(
+                                    name = "int"
+                                )
                             )
                         )
                     ),
                     Method(
                         name = "someQuery",
-                        returnType = "SomeClass",
+                        returnType = Type(
+                            name = "SomeClass"
+                        ),
                         args = listOf(
                             Argument(
                                 name = "id",
-                                type = "SomeId"
+                                type = Type(
+                                    name = "SomeId"
+                                )
                             )
                         )
                     )

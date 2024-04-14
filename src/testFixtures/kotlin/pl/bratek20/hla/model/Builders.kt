@@ -32,7 +32,7 @@ fun simpleValueObject(ov: SimpleValueObjectDef.() -> Unit): SimpleValueObject {
     val def = SimpleValueObjectDef().apply(ov)
     return SimpleValueObject(
         name = def.name,
-        type = def.type
+        typeName = def.type
     )
 }
 
@@ -50,13 +50,13 @@ fun complexValueObject(ov: ComplexValueObjectDef.() -> Unit): ComplexValueObject
 
 data class ArgumentDef(
     var name: String = "test",
-    var type: String = "String",
+    var type: TypeDef.() -> Unit = {},
 )
 fun argument(ov: ArgumentDef.() -> Unit): Argument {
     val def = ArgumentDef().apply(ov)
     return Argument(
         name = def.name,
-        type = def.type
+        type = type(def.type)
     )
 }
 
@@ -72,7 +72,7 @@ fun exception(ov: ExceptionDef.() -> Unit): Exception {
 
 data class MethodDef(
     var name: String = "test",
-    var returnType: String? = null,
+    var returnType: (TypeDef.() -> Unit)? = null,
     var args: List<ArgumentDef.()->Unit> = listOf(),
     var throws: List<ExceptionDef.()->Unit> = listOf(),
 )
@@ -80,7 +80,7 @@ fun method(ov: MethodDef.() -> Unit): Method {
     val def = MethodDef().apply(ov)
     return Method(
         name = def.name,
-        returnType = def.returnType,
+        returnType = def.returnType?.let { type(it) },
         args = def.args.map { argument(it) },
         throws = def.throws.map { exception(it) }
     )

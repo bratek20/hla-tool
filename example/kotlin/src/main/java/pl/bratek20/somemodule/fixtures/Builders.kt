@@ -17,12 +17,14 @@ fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
 data class SomeClass2Def(
     var id: String = "someValue",
     var enabled: Boolean = false,
+    var names: List<String> = emptyList(),
 )
 fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
     val def = SomeClass2Def().apply(init)
     return SomeClass2(
         id = SomeId(def.id),
         enabled = def.enabled,
+        names = def.names,
     )
 }
 

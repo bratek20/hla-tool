@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.impl.core.ModuleGeneratorImpl
+import pl.bratek20.hla.model.TypeWrapper
 import pl.bratek20.hla.model.hlaModule
 import java.util.stream.Stream
 
@@ -53,6 +54,15 @@ class ModuleGeneratorTest {
                         type = {
                             name = "bool"
                         }
+                    },
+                    {
+                        name = "names"
+                        type = {
+                            name = "string"
+                            wrappers = listOf (
+                                TypeWrapper.LIST
+                            )
+                        }
                     }
                 )
             }
@@ -66,20 +76,28 @@ class ModuleGeneratorTest {
                     args = listOf (
                         {
                             name = "id"
-                            type = "SomeId"
+                            type = {
+                                name = "SomeId"
+                            }
                         },
                         {
                             name = "amount"
-                            type = "int"
+                            type = {
+                                name = "int"
+                            }
                         }
                     )
                 },
                 {
                     name = "someQuery"
-                    returnType = "SomeClass"
+                    returnType = {
+                        name = "SomeClass"
+                    }
                     args = listOf {
                         name = "id"
-                        type = "SomeId"
+                        type = {
+                            name = "SomeId"
+                        }
                     }
                 }
             )

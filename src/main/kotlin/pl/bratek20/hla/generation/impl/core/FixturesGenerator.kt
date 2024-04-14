@@ -78,8 +78,8 @@ abstract class FixturesGenerator(
                     val simpleVO = findSimpleVO(it.type)
                     BuilderFieldView(
                         name = it.name,
-                        type = types.map(simpleVO?.type ?: it.type.name),
-                        defaultValue = types.defaultValue(simpleVO?.type ?: it.type.name),
+                        type = types.map(simpleVO?.type() ?: it.type),
+                        defaultValue = types.defaultValue(simpleVO?.type() ?: it.type),
                         simpleVOName = simpleVO?.name
                     )
                 }
@@ -105,7 +105,7 @@ abstract class FixturesGenerator(
                 fields = it.fields.map {
                     AssertFieldView(
                         name = it.name,
-                        type = types.map(findSimpleVO(it.type)?.type ?: it.type.name),
+                        type = types.map(findSimpleVO(it.type)?.type() ?: it.type),
                         givenSuffix = if (findSimpleVO(it.type) != null) ".value" else ""
                     )
                 }

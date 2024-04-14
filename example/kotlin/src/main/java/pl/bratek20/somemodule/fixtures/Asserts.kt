@@ -21,6 +21,7 @@ fun assertSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit
 data class ExpectedSomeClass2(
     var id: String? = null,
     var enabled: Boolean? = null,
+    var names: List<String>? = null,
 )
 fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Unit) {
     val expected = ExpectedSomeClass2().apply(expectedInit)
@@ -30,6 +31,9 @@ fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> U
     }
     if (expected.enabled != null) {
         assertThat(given.enabled).isEqualTo(expected.enabled)
+    }
+    if (expected.names != null) {
+        assertThat(given.names).isEqualTo(expected.names)
     }
 }
 

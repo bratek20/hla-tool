@@ -12,5 +12,6 @@ data class SomeClass(
 data class SomeClass2(
     val id: SomeId,
     val enabled: Boolean,
+    val names: List<String>,
 )
 

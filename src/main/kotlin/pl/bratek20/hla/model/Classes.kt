@@ -29,8 +29,12 @@ data class Field(
 
 data class SimpleValueObject(
     val name: String,
-    val type: String
-)
+    val typeName: String
+) {
+    fun type(): Type {
+        return Type(name = typeName)
+    }
+}
 
 data class ComplexValueObject(
     val name: String,
@@ -44,7 +48,7 @@ data class Interface(
 
 data class Argument(
     val name: String,
-    val type: String
+    val type: Type
 )
 
 data class Exception(
@@ -53,7 +57,7 @@ data class Exception(
 
 data class Method(
     val name: String,
-    val returnType: String?,
+    val returnType: Type?,
     val args: List<Argument>,
     val throws: List<Exception> = emptyList()
 )
