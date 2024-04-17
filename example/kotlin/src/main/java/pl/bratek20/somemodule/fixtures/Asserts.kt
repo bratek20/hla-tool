@@ -41,3 +41,23 @@ fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> U
     }
 }
 
+data class ExpectedSomeClass3(
+    var class2Object: (ExpectedSomeClass2.() -> Unit)? = null,
+    var class2List: List<(ExpectedSomeClass2.() -> Unit)>? = null,
+)
+fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Unit) {
+    val expected = ExpectedSomeClass3().apply(expectedInit)
+
+    if (expected.class2Object != null) {
+        assertSomeClass2(given.class2Object, expected.class2Object!!)
+    }
+
+    if (expected.class2List != null) {
+        assertThat(given.class2List).hasSize(expected.class2List!!.size)
+        expected.class2List!!.forEachIndexed { index, expectedClass2 ->
+            assertSomeClass2(given.class2List[index], expectedClass2)
+        }
+    }
+}
+
+

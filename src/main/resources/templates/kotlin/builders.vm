@@ -5,26 +5,15 @@ import ${packageName}.api.*
 #foreach($b in $builders)
 data class ${b.defName}(
     #foreach($field in $b.fields)
-    var $field.name: $field.type = $field.defaultValue,
+    var $field.name: $field.defType = $field.defaultValue,
     #end
 )
 fun ${b.funName}(init: ${b.defName}.() -> Unit = {}): ${b.voName} {
     val def = ${b.defName}().apply(init)
     return ${b.voName}(
     #foreach($field in $b.fields)
-        #if($field.isSimpleVO() && $field.isList())
-        ${field.name} = def.${field.name}.map { ${field.simpleVOName}(it) },
-        #else
-            #set($prefix = "")
-            #if($field.isSimpleVO())
-                #set($prefix = $field.simpleVOName + "(")
-            #end
-            #set($suffix = "")
-            #if($field.isSimpleVO())
-                #set($suffix = ")")
-            #end
-        $field.name = ${prefix}def.${field.name}${suffix},
-        #end
+        #set($x = "def." + $field.name)
+        $field.name = $field.constructor($x),
     #end
     )
 }

@@ -1,45 +1,55 @@
 package pl.bratek20.hla.generation.impl.core
 
-import pl.bratek20.hla.model.HlaModule
-import pl.bratek20.hla.model.SimpleValueObject
-import pl.bratek20.hla.model.Type
-import pl.bratek20.hla.model.TypeWrapper
+import pl.bratek20.hla.model.*
 
-data class DomainType(
+enum class TypeKind {
+    BASE,
+    SIMPLE_VO,
+    COMPLEX_VO
+}
+
+data class OldDomainType(
     val name: String,
-    val baseName: String? = null,
+    val kind: TypeKind,
+    val boxedTypeName: String? = null,
     val isList: Boolean = false,
 ) {
-    val isWrapped: Boolean
-        get() = baseName != null
+    val isBoxed: Boolean
+        get() = boxedTypeName != null
 
-    fun unwrap(): DomainType {
-        if (!isWrapped) {
+    fun unbox(): OldDomainType {
+        if (!isBoxed) {
             return this
         }
-        return DomainType(
-            name = baseName!!,
-            baseName = null,
+        return OldDomainType(
+            name = boxedTypeName!!,
+            kind = TypeKind.BASE,
+            boxedTypeName = null,
             isList = isList
         )
     }
 }
 
-class DomainFactory(
+class OldDomainFactory(
     private val module: HlaModule
 ) {
-    fun mapOptType(type: Type?): DomainType? {
+    fun mapOptType(type: Type?): OldDomainType? {
         if (type == null) {
             return null
         }
         return mapType(type)
     }
 
-    fun mapType(type: Type): DomainType {
+    fun mapType(type: Type): OldDomainType {
         val simpleVO = findSimpleVO(type)
-        return DomainType(
+        return OldDomainType(
             name = type.name,
-            baseName = simpleVO?.typeName,
+            kind = when {
+                simpleVO != null -> TypeKind.SIMPLE_VO
+                findComplexVO(type) != null -> TypeKind.COMPLEX_VO
+                else -> TypeKind.BASE
+            },
+            boxedTypeName = simpleVO?.typeName,
             isList = type.wrappers.contains(TypeWrapper.LIST)
         )
     }
@@ -47,5 +57,9 @@ class DomainFactory(
 
     private fun findSimpleVO(type: Type): SimpleValueObject? {
         return module.simpleValueObjects.find { it.name == type.name }
+    }
+
+    private fun findComplexVO(type: Type): ComplexValueObject? {
+        return module.complexValueObjects.find { it.name == type.name }
     }
 }

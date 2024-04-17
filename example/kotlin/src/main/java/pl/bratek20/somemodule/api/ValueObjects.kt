@@ -16,3 +16,8 @@ data class SomeClass2(
     val ids: List<SomeId>,
 )
 
+data class SomeClass3(
+    val class2Object: SomeClass2,
+    val class2List: List<SomeClass2>,
+)
+

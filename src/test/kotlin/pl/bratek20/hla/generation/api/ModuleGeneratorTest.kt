@@ -74,6 +74,26 @@ class ModuleGeneratorTest {
                         }
                     }
                 )
+            },
+            {
+                name = "SomeClass3"
+                fields = listOf (
+                    {
+                        name = "class2Object"
+                        type = {
+                            name = "SomeClass2"
+                        }
+                    },
+                    {
+                        name = "class2List"
+                        type = {
+                            name = "SomeClass2"
+                            wrappers = listOf (
+                                TypeWrapper.LIST
+                            )
+                        }
+                    }
+                )
             }
         )
         interfaces = listOf {

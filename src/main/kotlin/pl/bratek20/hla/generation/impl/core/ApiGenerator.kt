@@ -41,7 +41,7 @@ abstract class ApiGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
     private val types: Types,
-    private val domainFactory: DomainFactory = DomainFactory(module)
+    private val domainFactory: OldDomainFactory = OldDomainFactory(module)
 ) {
     abstract fun dirName(): String
 
