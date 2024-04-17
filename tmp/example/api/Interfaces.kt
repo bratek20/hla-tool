@@ -1,6 +1,6 @@
 package pl.bratek20.example.api
 
 interface SomeInterface {
-    fun someCommand(id: SomeId, amount: Int): void
-    fun someQuery(id: SomeId): SomeClass
+    fun someCommand(id: String, amount: Int): Unit
+    fun someQuery(id: String): SomeClass
 }

@@ -1,8 +1,6 @@
 package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.model.BuiltInType
-import pl.bratek20.hla.model.Type
-import pl.bratek20.hla.model.TypeWrapper
 
 abstract class Types {
 
@@ -20,12 +18,12 @@ abstract class Types {
     protected abstract fun wrapWithList(typeName: String): String
     protected abstract fun defaultValueForList(): String
 
-    fun map(type: Type?): String {
+    fun map(type: DomainType?): String {
         if (type == null) {
             return mapBuiltInType(null)
         }
-        if (isList(type)) {
-            return wrapWithList(map(Type(type.name)))
+        if (type.isList) {
+            return wrapWithList(map(type.copy(isList = false)))
         }
         if (isBuiltInType(type.name)) {
             return mapBuiltInType(toBuiltInType(type.name))
@@ -33,12 +31,8 @@ abstract class Types {
         return type.name
     }
 
-    private fun isList(type: Type): Boolean {
-        return type.wrappers.contains(TypeWrapper.LIST)
-    }
-
-    fun defaultValue(type: Type): String {
-        if (isList(type)) {
+    fun defaultValue(type: DomainType): String {
+        if (type.isList) {
             return defaultValueForList()
         }
         if (isBuiltInType(type.name)) {

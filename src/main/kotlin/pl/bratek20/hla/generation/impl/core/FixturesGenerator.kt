@@ -32,7 +32,8 @@ data class BuilderView(
 data class AssertFieldView(
     val name: String,
     val type: String,
-    val givenSuffix: String,
+    val isList: Boolean,
+    val isSimpleVO: Boolean,
 )
 
 data class AssertView(
@@ -46,7 +47,8 @@ data class AssertView(
 abstract class FixturesGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
-    private val types: Types
+    private val types: Types,
+    private val domainFactory: DomainFactory = DomainFactory(module)
 ) {
     abstract fun dirName(): String
 
@@ -77,13 +79,13 @@ abstract class FixturesGenerator(
                 defName = it.name + "Def",
                 voName = it.name,
                 fields = it.fields.map {
-                    val simpleVO = findSimpleVO(it.type)
+                    val domainType = domainFactory.mapType(it.type)
                     BuilderFieldView(
                         name = it.name,
-                        type = types.map(simpleVO?.type() ?: it.type),
-                        defaultValue = types.defaultValue(simpleVO?.type() ?: it.type),
-                        isList = it.type.wrappers.contains(TypeWrapper.LIST),
-                        simpleVOName = simpleVO?.name
+                        type = types.map(domainType.unwrap()),
+                        defaultValue = types.defaultValue(domainType.unwrap()),
+                        isList = domainType.isList,
+                        simpleVOName = if(domainType.isWrapped) domainType.name else null
                     )
                 }
             )
@@ -99,6 +101,8 @@ abstract class FixturesGenerator(
         )
     }
 
+
+
     private fun assertsFile(module: HlaModule): File {
         val asserts = module.complexValueObjects.map {
             AssertView(
@@ -106,10 +110,12 @@ abstract class FixturesGenerator(
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
+                    val domainType = domainFactory.mapType(it.type)
                     AssertFieldView(
                         name = it.name,
-                        type = types.map(findSimpleVO(it.type)?.type() ?: it.type),
-                        givenSuffix = if (findSimpleVO(it.type) != null) ".value" else ""
+                        type = types.map(domainType.unwrap()),
+                        isList = domainType.isList,
+                        isSimpleVO = domainType.isWrapped
                     )
                 }
             )
@@ -125,7 +131,4 @@ abstract class FixturesGenerator(
         )
     }
 
-    private fun findSimpleVO(type: Type): SimpleValueObject? {
-        return module.simpleValueObjects.find { it.name == type.name }
-    }
 }

@@ -40,7 +40,8 @@ data class InterfaceView(
 abstract class ApiGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
-    private val types: Types
+    private val types: Types,
+    private val domainFactory: DomainFactory = DomainFactory(module)
 ) {
     abstract fun dirName(): String
 
@@ -92,13 +93,13 @@ abstract class ApiGenerator(
     private fun toView(vo: SimpleValueObject): SimpleValueObjectView {
         return SimpleValueObjectView(
             name = vo.name,
-            type = types.map(vo.type())
+            type = toViewType(vo.type())
         )
     }
     private fun toView(vo: ComplexValueObject): ComplexValueObjectView {
         return ComplexValueObjectView(
             name = vo.name,
-            fields = vo.fields.map { FieldView(it.name, types.map(it.type)) }
+            fields = vo.fields.map { FieldView(it.name, toViewType(it.type)) }
         )
     }
 
@@ -108,10 +109,15 @@ abstract class ApiGenerator(
             methods = interf.methods.map { method ->
                 MethodView(
                     name = method.name,
-                    returnType = types.map(method.returnType),
-                    args = method.args.map { ArgumentView(it.name, types.map(it.type)) }
+                    returnType = toViewType(method.returnType),
+                    args = method.args.map { ArgumentView(it.name, toViewType(it.type)) }
                 )
             }
         )
+    }
+
+    private fun toViewType(type: Type?): String {
+        val domainType = domainFactory.mapOptType(type)
+        return types.map(domainType)
     }
 }

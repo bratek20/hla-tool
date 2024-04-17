@@ -14,7 +14,15 @@ fun ${a.funName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Un
 
     #foreach($field in $a.fields)
     if (expected.${field.name} != null) {
-        assertThat(given.${field.name}${field.givenSuffix}).isEqualTo(expected.${field.name})
+        #if($field.isSimpleVO() && $field.isList())
+        assertThat(given.${field.name}.map { it.value }).isEqualTo(expected.${field.name})
+        #else
+            #set($suffix = "")
+            #if($field.isSimpleVO())
+                #set($suffix = ".value")
+            #end
+        assertThat(given.${field.name}${suffix}).isEqualTo(expected.${field.name})
+        #end
     }
     #end
 }
