@@ -8,7 +8,15 @@ namespace ${moduleName}.Assert {
     export function ${a.funName}(given: ${a.givenName}, expected: ${a.expectedName}) {
         #foreach($field in $a.fields)
         if (expected.${field.name} !== undefined) {
-            AssertEquals(given.${field.name}${field.givenSuffix}, expected.${field.name})
+            #if($field.isSimpleVO() && $field.isList())
+            AssertArray(given.${field.name}.map(it => it.value), expected.${field.name})
+            #elseif($field.isList())
+            AssertArray(given.${field.name}, expected.${field.name})
+            #elseif($field.isSimpleVO())
+            AssertEquals(given.${field.name}.value, expected.${field.name})
+            #else
+            AssertEquals(given.${field.name}, expected.${field.name})
+            #end
         }
         #end
     }

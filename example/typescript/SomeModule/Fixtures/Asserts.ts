@@ -16,6 +16,7 @@ namespace SomeModule.Assert {
         id?: string,
         enabled?: boolean,
         names?: string[],
+        ids?: string[],
     }
     export function someClass2(given: SomeClass2, expected: ExpectedSomeClass2) {
         if (expected.id !== undefined) {
@@ -25,7 +26,10 @@ namespace SomeModule.Assert {
             AssertEquals(given.enabled, expected.enabled)
         }
         if (expected.names !== undefined) {
-            AssertEquals(given.names, expected.names)
+            AssertArray(given.names, expected.names)
+        }
+        if (expected.ids !== undefined) {
+            AssertArray(given.ids.map(it => it.value), expected.ids)
         }
     }
 }

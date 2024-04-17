@@ -8,15 +8,19 @@ namespace ${moduleName}.Builder {
     export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
         return new ${b.voName}(
         #foreach($field in $b.fields)
-            #set($prefix = "")
-            #if($field.isSimpleVO())
-                #set($prefix = "new " + $field.simpleVOName + "(")
-            #end
-            #set($suffix = "")
-            #if($field.isSimpleVO())
-                #set($suffix = ")")
-            #end
+            #if($field.isSimpleVO() && $field.isList())
+            (def?.${field.name} ?? $field.defaultValue).map(it => new ${field.simpleVOName}(it)),
+            #else
+                #set($prefix = "")
+                #if($field.isSimpleVO())
+                    #set($prefix = "new " + $field.simpleVOName + "(")
+                #end
+                #set($suffix = "")
+                #if($field.isSimpleVO())
+                    #set($suffix = ")")
+                #end
             ${prefix}def?.${field.name} ?? $field.defaultValue${suffix},
+            #end
         #end
         )
     }

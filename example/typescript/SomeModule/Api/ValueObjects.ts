@@ -16,6 +16,7 @@ class SomeClass2 {
         public readonly id: SomeId,
         public readonly enabled: boolean,
         public readonly names: string[],
+        public readonly ids: SomeId[],
     ) {}
 }
 

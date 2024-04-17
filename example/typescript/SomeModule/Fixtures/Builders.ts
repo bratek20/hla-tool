@@ -14,12 +14,14 @@ namespace SomeModule.Builder {
         id?: string,
         enabled?: boolean,
         names?: string[],
+        ids?: string[],
     }
     export function someClass2(def?: SomeClass2Def): SomeClass2 {
         return new SomeClass2(
             new SomeId(def?.id ?? "someValue"),
             def?.enabled ?? false,
             def?.names ?? [],
+            (def?.ids ?? []).map(it => new SomeId(it)),
         )
     }
 }
