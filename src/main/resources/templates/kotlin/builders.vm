@@ -12,8 +12,7 @@ fun ${b.funName}(init: ${b.defName}.() -> Unit = {}): ${b.voName} {
     val def = ${b.defName}().apply(init)
     return ${b.voName}(
     #foreach($field in $b.fields)
-        #set($x = "def." + $field.name)
-        $field.name = $field.constructor($x),
+        $field.name = $field.constructor("def.$field.name"),
     #end
     )
 }

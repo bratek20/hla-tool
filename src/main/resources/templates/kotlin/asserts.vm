@@ -6,7 +6,7 @@ import ${packageName}.api.*
 #foreach($a in $asserts)
 data class ${a.expectedName}(
     #foreach($field in $a.fields)
-    var $field.name: $field.type? = null,
+    var $field.name: $field.defType? = null,
     #end
 )
 fun ${a.funName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Unit) {
@@ -16,6 +16,13 @@ fun ${a.funName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Un
     if (expected.${field.name} != null) {
         #if($field.isSimpleVO() && $field.isList())
         assertThat(given.${field.name}.map { it.value }).isEqualTo(expected.${field.name})
+        #elseif($field.isComplexVO() && $field.isList())
+        assertThat(given.${field.name}).hasSize(expected.${field.name}!!.size)
+        expected.${field.name}!!.forEachIndexed { index, entry ->
+            $field.assertion("given.${field.name}[index]", "entry")
+        }
+        #elseif($field.isComplexVO())
+        $field.assertion("given.${field.name}", "expected.${field.name}")
         #else
             #set($suffix = "")
             #if($field.isSimpleVO())

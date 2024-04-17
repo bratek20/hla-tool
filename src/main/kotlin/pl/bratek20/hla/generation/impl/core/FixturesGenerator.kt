@@ -37,7 +37,15 @@ data class AssertFieldView(
     val type: String,
     val isList: Boolean,
     val isSimpleVO: Boolean,
-)
+    val isComplexVO: Boolean,
+    val defType: String,
+    val defType2: ExpectedType
+) {
+    fun assertion(given: String, expected: String): String {
+        return defType2.assertion(given, expected)
+    }
+
+}
 
 data class AssertView(
     val funName: String,
@@ -78,6 +86,10 @@ abstract class FixturesGenerator(
 
     private fun defType(type: DomainType): DefType {
         return DefTypeFactory(types).create(type)
+    }
+
+    private fun expectedType(type: DomainType): ExpectedType {
+        return ExpectedTypeFactory(types).create(type)
     }
 
     private fun buildersFile(module: HlaModule): File {
@@ -121,12 +133,16 @@ abstract class FixturesGenerator(
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
-                    val domainType = oldDomainFactory.mapType(it.type)
+                    val oldDomainType = oldDomainFactory.mapType(it.type)
+                    val domainType = domainFactory.mapType(it.type)
                     AssertFieldView(
                         name = it.name,
-                        type = types.map(domainType.unbox()),
-                        isList = domainType.isList,
-                        isSimpleVO = domainType.isBoxed
+                        type = types.map(oldDomainType.unbox()),
+                        isList = oldDomainType.isList,
+                        isSimpleVO = oldDomainType.isBoxed,
+                        isComplexVO = oldDomainType.kind == TypeKind.COMPLEX_VO,
+                        defType = expectedType(domainType).toView(),
+                        defType2 = expectedType(domainType)
                     )
                 }
             )

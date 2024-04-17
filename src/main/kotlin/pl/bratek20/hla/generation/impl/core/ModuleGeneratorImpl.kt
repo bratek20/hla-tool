@@ -1,6 +1,8 @@
 package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
+import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinApiGenerator
@@ -63,12 +65,14 @@ class ModuleGeneratorImpl : ModuleGenerator {
         val apiCode = stg.apiGenerator().generateCode()
         val fixturesCode = stg.fixturesGenerator().generateCode()
 
-        return Directory(
+        val x = Directory(
             name = stg.moduleDirName(),
             directories = listOf(
                 apiCode,
                 fixturesCode
             )
         )
+        //DirectoryLogic().writeDirectory(Path("tmp"), x)
+        return x
     }
 }

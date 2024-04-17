@@ -63,3 +63,76 @@ class OldDomainFactory(
         return module.complexValueObjects.find { it.name == type.name }
     }
 }
+
+interface DomainType {
+    fun toView(): String
+}
+
+data class BaseDomainType(
+    val name: String,
+    val types: Types
+) : DomainType {
+    override fun toView(): String {
+        return types.mapBaseType(name)
+    }
+}
+
+data class SimpleVODomainType(
+    val name: String,
+    val boxedType: BaseDomainType
+) : DomainType {
+    override fun toView(): String {
+        return boxedType.toView()
+    }
+}
+
+
+data class ComplexVODomainType(
+    val name: String,
+) : DomainType {
+    override fun toView(): String {
+        return name
+    }
+}
+
+data class ListDomainType(
+    val wrappedType: DomainType,
+    val types: Types
+) : DomainType {
+    override fun toView(): String {
+        return types.wrapWithList(wrappedType.toView())
+    }
+}
+
+class DomainFactory(
+    private val module: HlaModule,
+    private val types: Types
+) {
+    fun mapOptType(type: Type?): DomainType? {
+        if (type == null) {
+            return null
+        }
+        return mapType(type)
+    }
+
+    fun mapType(type: Type): DomainType {
+        val simpleVO = findSimpleVO(type)
+        val complexVO = findComplexVO(type)
+        val isList = type.wrappers.contains(TypeWrapper.LIST)
+        return when {
+            isList -> ListDomainType(mapType(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)), types)
+            simpleVO != null -> SimpleVODomainType(type.name, BaseDomainType(simpleVO.typeName, types))
+            complexVO != null -> ComplexVODomainType(type.name)
+            else -> BaseDomainType(type.name, types)
+        }
+    }
+
+
+    private fun findSimpleVO(type: Type): SimpleValueObject? {
+        return module.simpleValueObjects.find { it.name == type.name }
+    }
+
+    private fun findComplexVO(type: Type): ComplexValueObject? {
+        return module.complexValueObjects.find { it.name == type.name }
+    }
+}
