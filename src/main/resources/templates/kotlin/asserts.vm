@@ -17,10 +17,7 @@ fun ${a.funName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Un
         #if($field.isSimpleVO() && $field.isList())
         assertThat(given.${field.name}.map { it.value }).isEqualTo(expected.${field.name})
         #elseif($field.isComplexVO() && $field.isList())
-        assertThat(given.${field.name}).hasSize(expected.${field.name}!!.size)
-        expected.${field.name}!!.forEachIndexed { index, entry ->
-            $field.assertion("given.${field.name}[index]", "entry")
-        }
+        $field.assertion("given.${field.name}", "expected.${field.name}")
         #elseif($field.isComplexVO())
         $field.assertion("given.${field.name}", "expected.${field.name}")
         #else

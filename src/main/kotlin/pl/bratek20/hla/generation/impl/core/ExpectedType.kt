@@ -70,7 +70,12 @@ data class ListExpectedType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return wrappedType.assertion(given, expected)
+        return """
+        |assertThat($given).hasSize($expected!!.size)
+        |        $expected!!.forEachIndexed { index, entry ->
+        |            ${wrappedType.assertion("$given[index]", "entry")}
+        |        }
+        """.trimMargin()
     }
 }
 
