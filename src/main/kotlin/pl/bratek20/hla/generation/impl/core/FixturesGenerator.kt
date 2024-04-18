@@ -22,12 +22,7 @@ data class BuilderView(
 data class AssertFieldView(
     val name: String,
     val expectedType: ExpectedType
-) {
-    fun assertion(given: String, expected: String): String {
-        return expectedType.assertion(given, expected)
-    }
-
-}
+)
 
 data class AssertView(
     val funName: String,
