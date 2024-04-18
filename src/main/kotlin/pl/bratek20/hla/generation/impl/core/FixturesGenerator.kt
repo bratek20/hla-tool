@@ -9,19 +9,10 @@ import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 data class BuilderFieldView(
     val name: String,
-    val type: String,
-    val defType: String,
-    val defaultValue: String,
-    val isList: Boolean,
-    val simpleVOName: String?,
-    val defType2: DefType
+    val defType: DefType
 ) {
-    fun isSimpleVO(): Boolean {
-        return simpleVOName != null
-    }
-
     fun constructor(x: String): String {
-        return defType2.constructor(x)
+        return defType.constructor(x)
     }
 }
 
@@ -34,15 +25,10 @@ data class BuilderView(
 
 data class AssertFieldView(
     val name: String,
-    val type: String,
-    val isList: Boolean,
-    val isSimpleVO: Boolean,
-    val isComplexVO: Boolean,
-    val defType: String,
-    val defType2: ExpectedType
+    val expectedType: ExpectedType
 ) {
     fun assertion(given: String, expected: String): String {
-        return defType2.assertion(given, expected)
+        return expectedType.assertion(given, expected)
     }
 
 }
@@ -59,7 +45,6 @@ abstract class FixturesGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
     private val types: Types,
-    private val oldDomainFactory: OldDomainFactory = OldDomainFactory(module),
     private val domainFactory: DomainFactory = DomainFactory(module, types),
 ) {
     abstract fun dirName(): String
@@ -99,16 +84,10 @@ abstract class FixturesGenerator(
                 defName = it.name + "Def",
                 voName = it.name,
                 fields = it.fields.map {
-                    val oldDomainType = oldDomainFactory.mapType(it.type)
                     val domainType = domainFactory.mapType(it.type)
                     BuilderFieldView(
                         name = it.name,
-                        type = types.map(oldDomainType.unbox()),
-                        defType = defType(domainType).toView(),
-                        defaultValue = defType(domainType).defaultValue(),
-                        isList = oldDomainType.isList,
-                        simpleVOName = if(oldDomainType.isBoxed) oldDomainType.name else null,
-                        defType2 = defType(domainType)
+                        defType = defType(domainType),
                     )
                 }
             )
@@ -133,16 +112,10 @@ abstract class FixturesGenerator(
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
-                    val oldDomainType = oldDomainFactory.mapType(it.type)
                     val domainType = domainFactory.mapType(it.type)
                     AssertFieldView(
                         name = it.name,
-                        type = types.map(oldDomainType.unbox()),
-                        isList = oldDomainType.isList,
-                        isSimpleVO = oldDomainType.isBoxed,
-                        isComplexVO = oldDomainType.kind == TypeKind.COMPLEX_VO,
-                        defType = expectedType(domainType).toView(),
-                        defType2 = expectedType(domainType)
+                        expectedType = expectedType(domainType)
                     )
                 }
             )

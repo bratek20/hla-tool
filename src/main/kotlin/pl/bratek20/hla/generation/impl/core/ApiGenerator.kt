@@ -41,7 +41,7 @@ abstract class ApiGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
     private val types: Types,
-    private val domainFactory: OldDomainFactory = OldDomainFactory(module)
+    private val domainFactory: DomainFactory = DomainFactory(module, types)
 ) {
     abstract fun dirName(): String
 
@@ -117,7 +117,6 @@ abstract class ApiGenerator(
     }
 
     private fun toViewType(type: Type?): String {
-        val domainType = domainFactory.mapOptType(type)
-        return types.map(domainType)
+        return domainFactory.mapType(type).toView()
     }
 }

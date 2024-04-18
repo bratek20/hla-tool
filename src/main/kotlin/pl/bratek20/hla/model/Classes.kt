@@ -4,6 +4,7 @@ enum class BuiltInType {
     STRING,
     INT,
     BOOL,
+    VOID
 }
 
 data class HlaModule(

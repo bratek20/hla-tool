@@ -8,7 +8,7 @@ abstract class Types {
         return BuiltInType.entries.find { it.name == type.uppercase() } != null
     }
 
-    fun toBuiltInType(type: String): BuiltInType {
+    private fun toBuiltInType(type: String): BuiltInType {
         return BuiltInType.valueOf(type.uppercase())
     }
 
@@ -20,32 +20,9 @@ abstract class Types {
         return defaultValueForBuiltInType(toBuiltInType(type))
     }
 
-    protected abstract fun mapBuiltInType(type: BuiltInType?): String
+    protected abstract fun mapBuiltInType(type: BuiltInType): String
     protected abstract fun defaultValueForBuiltInType(type: BuiltInType): String
 
     abstract fun wrapWithList(typeName: String): String
     protected abstract fun defaultValueForList(): String
-
-    fun map(type: OldDomainType?): String {
-        if (type == null) {
-            return mapBuiltInType(null)
-        }
-        if (type.isList) {
-            return wrapWithList(map(type.copy(isList = false)))
-        }
-        if (isBuiltInType(type.name)) {
-            return mapBuiltInType(toBuiltInType(type.name))
-        }
-        return type.name
-    }
-
-    fun defaultValue(type: OldDomainType): String {
-        if (type.isList) {
-            return defaultValueForList()
-        }
-        if (isBuiltInType(type.name)) {
-            return defaultValueForBuiltInType(toBuiltInType(type.name))
-        }
-        return "null"
-    }
 }
