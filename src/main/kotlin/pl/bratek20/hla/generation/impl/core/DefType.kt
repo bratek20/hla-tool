@@ -11,15 +11,15 @@ interface DefType {
 }
 
 data class BaseDefType(
-    val domain: BaseDomainType,
-    val types: Types
+    val domain: BaseViewType,
+    val languageTypes: LanguageTypes
 ) : DefType {
     override fun toView(): String {
-        return domain.toView()
+        return domain.name()
     }
 
     override fun defaultValue(): String {
-        return types.defaultValueForBaseType(domain.name)
+        return languageTypes.defaultValueForBaseType(domain.name)
     }
 
     override fun constructor(x: String): String {
@@ -28,7 +28,7 @@ data class BaseDefType(
 }
 
 data class SimpleVODefType(
-    val domain: SimpleVODomainType,
+    val domain: SimpleVOViewType,
     val boxedType: BaseDefType
 ) : DefType {
     override fun toView(): String {
@@ -80,14 +80,14 @@ data class ListDefType(
 }
 
 class DefTypeFactory(
-    private val types: Types
+    private val languageTypes: LanguageTypes
 ) {
-    fun create(type: DomainType): DefType {
+    fun create(type: ViewType): DefType {
         return when (type) {
-            is BaseDomainType -> BaseDefType(type, types)
-            is SimpleVODomainType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
-            is ComplexVODomainType -> ComplexVODefType(type.name)
-            is ListDomainType -> ListDefType(create(type.wrappedType))
+            is BaseViewType -> BaseDefType(type, languageTypes)
+            is SimpleVOViewType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
+            is ComplexVOViewType -> ComplexVODefType(type.name)
+            is ListViewType -> ListDefType(create(type.wrappedType))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

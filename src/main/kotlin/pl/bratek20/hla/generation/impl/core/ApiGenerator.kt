@@ -40,8 +40,8 @@ data class InterfaceView(
 abstract class ApiGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
-    private val types: Types,
-    private val domainFactory: DomainFactory = DomainFactory(module, types)
+    private val languageTypes: LanguageTypes,
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(module, languageTypes)
 ) {
     abstract fun dirName(): String
 
@@ -117,6 +117,6 @@ abstract class ApiGenerator(
     }
 
     private fun toViewType(type: Type?): String {
-        return domainFactory.mapType(type).toView()
+        return viewTypeFactory.create(type).name()
     }
 }

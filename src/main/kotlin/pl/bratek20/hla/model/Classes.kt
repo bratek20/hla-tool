@@ -1,10 +1,16 @@
 package pl.bratek20.hla.model
 
-enum class BuiltInType {
+enum class BaseType {
     STRING,
     INT,
     BOOL,
-    VOID
+    VOID;
+
+    companion object {
+        fun of(value: String): BaseType {
+            return BaseType.valueOf(value.uppercase())
+        }
+    }
 }
 
 data class HlaModule(

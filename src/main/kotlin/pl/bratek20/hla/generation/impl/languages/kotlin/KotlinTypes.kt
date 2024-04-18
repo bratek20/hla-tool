@@ -1,24 +1,24 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
-import pl.bratek20.hla.generation.impl.core.Types
-import pl.bratek20.hla.model.BuiltInType
+import pl.bratek20.hla.generation.impl.core.LanguageTypes
+import pl.bratek20.hla.model.BaseType
 
-class KotlinTypes: Types() {
-    override fun mapBuiltInType(type: BuiltInType): String {
+class KotlinTypes: LanguageTypes {
+    override fun mapBaseType(type: BaseType): String {
         return when (type) {
-            BuiltInType.STRING -> "String"
-            BuiltInType.INT -> "Int"
-            BuiltInType.BOOL -> "Boolean"
-            BuiltInType.VOID -> "Unit"
+            BaseType.STRING -> "String"
+            BaseType.INT -> "Int"
+            BaseType.BOOL -> "Boolean"
+            BaseType.VOID -> "Unit"
         }
     }
 
-    override fun defaultValueForBuiltInType(type: BuiltInType): String {
+    override fun defaultValueForBaseType(type: BaseType): String {
         return when (type) {
-            BuiltInType.STRING -> "\"someValue\""
-            BuiltInType.INT -> "0"
-            BuiltInType.BOOL -> "false"
-            BuiltInType.VOID -> throw IllegalArgumentException("Void type has no default value")
+            BaseType.STRING -> "\"someValue\""
+            BaseType.INT -> "0"
+            BaseType.BOOL -> "false"
+            BaseType.VOID -> throw IllegalArgumentException("Void type has no default value")
         }
     }
 

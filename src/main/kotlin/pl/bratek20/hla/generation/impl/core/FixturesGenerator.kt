@@ -44,8 +44,8 @@ data class AssertView(
 abstract class FixturesGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
-    private val types: Types,
-    private val domainFactory: DomainFactory = DomainFactory(module, types),
+    private val languageTypes: LanguageTypes,
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(module, languageTypes),
 ) {
     abstract fun dirName(): String
 
@@ -69,12 +69,12 @@ abstract class FixturesGenerator(
         )
     }
 
-    private fun defType(type: DomainType): DefType {
-        return DefTypeFactory(types).create(type)
+    private fun defType(type: ViewType): DefType {
+        return DefTypeFactory(languageTypes).create(type)
     }
 
-    private fun expectedType(type: DomainType): ExpectedType {
-        return ExpectedTypeFactory(types).create(type)
+    private fun expectedType(type: ViewType): ExpectedType {
+        return ExpectedTypeFactory(languageTypes).create(type)
     }
 
     private fun buildersFile(module: HlaModule): File {
@@ -84,7 +84,7 @@ abstract class FixturesGenerator(
                 defName = it.name + "Def",
                 voName = it.name,
                 fields = it.fields.map {
-                    val domainType = domainFactory.mapType(it.type)
+                    val domainType = viewTypeFactory.create(it.type)
                     BuilderFieldView(
                         name = it.name,
                         defType = defType(domainType),
@@ -112,7 +112,7 @@ abstract class FixturesGenerator(
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
-                    val domainType = domainFactory.mapType(it.type)
+                    val domainType = viewTypeFactory.create(it.type)
                     AssertFieldView(
                         name = it.name,
                         expectedType = expectedType(domainType)

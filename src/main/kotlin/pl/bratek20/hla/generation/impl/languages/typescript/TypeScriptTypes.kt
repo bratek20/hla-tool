@@ -1,24 +1,24 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
-import pl.bratek20.hla.generation.impl.core.Types
-import pl.bratek20.hla.model.BuiltInType
+import pl.bratek20.hla.generation.impl.core.LanguageTypes
+import pl.bratek20.hla.model.BaseType
 
-class TypeScriptTypes: Types() {
-    override fun mapBuiltInType(type: BuiltInType): String {
+class TypeScriptTypes: LanguageTypes {
+    override fun mapBaseType(type: BaseType): String {
         return when (type) {
-            BuiltInType.STRING -> "string"
-            BuiltInType.INT -> "number"
-            BuiltInType.BOOL -> "boolean"
-            BuiltInType.VOID -> "void"
+            BaseType.STRING -> "string"
+            BaseType.INT -> "number"
+            BaseType.BOOL -> "boolean"
+            BaseType.VOID -> "void"
         }
     }
 
-    override fun defaultValueForBuiltInType(type: BuiltInType): String {
+    override fun defaultValueForBaseType(type: BaseType): String {
         return when (type) {
-            BuiltInType.STRING -> "\"someValue\""
-            BuiltInType.INT -> "0"
-            BuiltInType.BOOL -> "false"
-            BuiltInType.VOID -> throw IllegalArgumentException("Void type has no default value")
+            BaseType.STRING -> "\"someValue\""
+            BaseType.INT -> "0"
+            BaseType.BOOL -> "false"
+            BaseType.VOID -> throw IllegalArgumentException("Void type has no default value")
         }
     }
 

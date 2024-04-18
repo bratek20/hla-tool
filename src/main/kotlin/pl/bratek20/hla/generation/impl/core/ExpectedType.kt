@@ -9,15 +9,15 @@ interface ExpectedType {
 }
 
 data class BaseExpectedType(
-    val domain: BaseDomainType,
-    val types: Types
+    val domain: BaseViewType,
+    val languageTypes: LanguageTypes
 ) : ExpectedType {
     override fun toView(): String {
-        return domain.toView()
+        return domain.name()
     }
 
     override fun defaultValue(): String {
-        return types.defaultValueForBaseType(domain.name)
+        return languageTypes.defaultValueForBaseType(domain.name)
     }
 
     override fun assertion(given: String, expected: String): String {
@@ -26,7 +26,7 @@ data class BaseExpectedType(
 }
 
 data class SimpleVOExpectedType(
-    val domain: SimpleVODomainType,
+    val domain: SimpleVOViewType,
     val boxedType: BaseExpectedType
 ) : ExpectedType {
     override fun toView(): String {
@@ -80,14 +80,14 @@ data class ListExpectedType(
 }
 
 class ExpectedTypeFactory(
-    private val types: Types
+    private val languageTypes: LanguageTypes
 ) {
-    fun create(type: DomainType): ExpectedType {
+    fun create(type: ViewType): ExpectedType {
         return when (type) {
-            is BaseDomainType -> BaseExpectedType(type, types)
-            is SimpleVODomainType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
-            is ComplexVODomainType -> ComplexVOExpectedType(type.name)
-            is ListDomainType -> ListExpectedType(create(type.wrappedType))
+            is BaseViewType -> BaseExpectedType(type, languageTypes)
+            is SimpleVOViewType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
+            is ComplexVOViewType -> ComplexVOExpectedType(type.name)
+            is ListViewType -> ListExpectedType(create(type.wrappedType))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }
