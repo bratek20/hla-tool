@@ -5,14 +5,14 @@ import ${packageName}.api.*
 #foreach($b in $builders)
 data class ${b.defName}(
     #foreach($field in $b.fields)
-    var $field.name: $field.defType = $field.defaultValue,
+    var $field.name: $field.defType.name() = $field.defType.defaultValue(),
     #end
 )
 fun ${b.funName}(init: ${b.defName}.() -> Unit = {}): ${b.voName} {
     val def = ${b.defName}().apply(init)
     return ${b.voName}(
     #foreach($field in $b.fields)
-        $field.name = $field.constructor("def.$field.name"),
+        $field.name = $field.defType.constructor("def.$field.name"),
     #end
     )
 }

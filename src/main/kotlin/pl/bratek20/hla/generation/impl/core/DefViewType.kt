@@ -2,19 +2,19 @@ package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.utils.pascalToCamelCase
 
-interface DefType {
-    fun toView(): String
+interface DefViewType {
+    fun name(): String
 
     fun defaultValue(): String
 
     fun constructor(x: String): String
 }
 
-data class BaseDefType(
+data class BaseDefViewType(
     val domain: BaseViewType,
     val languageTypes: LanguageTypes
-) : DefType {
-    override fun toView(): String {
+) : DefViewType {
+    override fun name(): String {
         return domain.name()
     }
 
@@ -27,12 +27,12 @@ data class BaseDefType(
     }
 }
 
-data class SimpleVODefType(
+data class SimpleVODefViewType(
     val domain: SimpleVOViewType,
-    val boxedType: BaseDefType
-) : DefType {
-    override fun toView(): String {
-        return boxedType.toView()
+    val boxedType: BaseDefViewType
+) : DefViewType {
+    override fun name(): String {
+        return boxedType.name()
     }
 
     override fun defaultValue(): String {
@@ -44,10 +44,10 @@ data class SimpleVODefType(
     }
 }
 
-data class ComplexVODefType(
+data class ComplexVODefViewType(
     val name: String
-) : DefType {
-    override fun toView(): String {
+) : DefViewType {
+    override fun name(): String {
         return "(${name}Def.() -> Unit)"
     }
 
@@ -60,11 +60,11 @@ data class ComplexVODefType(
     }
 }
 
-data class ListDefType(
-    val wrappedType: DefType
-) : DefType {
-    override fun toView(): String {
-        return "List<${wrappedType.toView()}>"
+data class ListDefViewType(
+    val wrappedType: DefViewType
+) : DefViewType {
+    override fun name(): String {
+        return "List<${wrappedType.name()}>"
     }
 
     override fun defaultValue(): String {
@@ -72,7 +72,7 @@ data class ListDefType(
     }
 
     override fun constructor(x: String): String {
-        if (wrappedType is BaseDefType) {
+        if (wrappedType is BaseDefViewType) {
             return x
         }
         return "$x.map { ${wrappedType.constructor("it")} }"
@@ -82,12 +82,12 @@ data class ListDefType(
 class DefTypeFactory(
     private val languageTypes: LanguageTypes
 ) {
-    fun create(type: ViewType): DefType {
+    fun create(type: ViewType): DefViewType {
         return when (type) {
-            is BaseViewType -> BaseDefType(type, languageTypes)
-            is SimpleVOViewType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
-            is ComplexVOViewType -> ComplexVODefType(type.name)
-            is ListViewType -> ListDefType(create(type.wrappedType))
+            is BaseViewType -> BaseDefViewType(type, languageTypes)
+            is SimpleVOViewType -> SimpleVODefViewType(type, create(type.boxedType) as BaseDefViewType)
+            is ComplexVOViewType -> ComplexVODefViewType(type.name)
+            is ListViewType -> ListDefViewType(create(type.wrappedType))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

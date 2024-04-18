@@ -9,12 +9,8 @@ import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 data class BuilderFieldView(
     val name: String,
-    val defType: DefType
-) {
-    fun constructor(x: String): String {
-        return defType.constructor(x)
-    }
-}
+    val defType: DefViewType
+)
 
 data class BuilderView(
     val funName: String,
@@ -69,7 +65,7 @@ abstract class FixturesGenerator(
         )
     }
 
-    private fun defType(type: ViewType): DefType {
+    private fun defType(type: ViewType): DefViewType {
         return DefTypeFactory(languageTypes).create(type)
     }
 
