@@ -32,4 +32,17 @@ namespace SomeModule.Assert {
             AssertArray(given.ids.map(it => it.value), expected.ids)
         }
     }
+
+    export interface ExpectedSomeClass3 {
+        class2Object?: ExpectedSomeClass2,
+        class2List?: ExpectedSomeClass2[],
+    }
+    export function someClass3(given: SomeClass3, expected: ExpectedSomeClass3) {
+        if (expected.class2Object !== undefined) {
+            someClass2(given.class2Object, expected.class2Object)
+        }
+        if (expected.class2List !== undefined) {
+            AssertArray(given.class2List, expected.class2List, someClass2)
+        }
+    }
 }
