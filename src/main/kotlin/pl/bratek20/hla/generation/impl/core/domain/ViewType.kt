@@ -1,4 +1,4 @@
-package pl.bratek20.hla.generation.impl.core
+package pl.bratek20.hla.generation.impl.core.domain
 
 import pl.bratek20.hla.model.*
 
@@ -43,20 +43,19 @@ data class ListViewType(
 }
 
 class ViewTypeFactory(
-    private val module: HlaModule,
     private val languageTypes: LanguageTypes
 ) {
 
-    fun create(type: Type?): ViewType {
+    fun create(type: Type?, module: HlaModule): ViewType {
         if (type == null) {
             return BaseViewType(BaseType.VOID, languageTypes)
         }
 
-        val simpleVO = findSimpleVO(type)
-        val complexVO = findComplexVO(type)
+        val simpleVO = findSimpleVO(type, module)
+        val complexVO = findComplexVO(type, module)
         val isList = type.wrappers.contains(TypeWrapper.LIST)
         return when {
-            isList -> ListViewType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)), languageTypes)
+            isList -> ListViewType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST), module), languageTypes)
             simpleVO != null -> SimpleVOViewType(type.name, BaseViewType(BaseType.of(simpleVO.typeName), languageTypes))
             complexVO != null -> ComplexVOViewType(type.name)
             else -> BaseViewType(BaseType.of(type.name), languageTypes)
@@ -64,11 +63,11 @@ class ViewTypeFactory(
     }
 
 
-    private fun findSimpleVO(type: Type): SimpleValueObject? {
+    private fun findSimpleVO(type: Type, module: HlaModule): SimpleValueObject? {
         return module.simpleValueObjects.find { it.name == type.name }
     }
 
-    private fun findComplexVO(type: Type): ComplexValueObject? {
+    private fun findComplexVO(type: Type, module: HlaModule): ComplexValueObject? {
         return module.complexValueObjects.find { it.name == type.name }
     }
 }

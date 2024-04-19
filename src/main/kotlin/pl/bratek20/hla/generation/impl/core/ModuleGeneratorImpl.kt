@@ -1,14 +1,18 @@
 package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.api.ModuleLanguage
+import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
+import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
+import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
+import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinApiGenerator
-import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinFixturesGenerator
+import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinAssertsGenerator
+import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinBuildersGenerator
 import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptApiGenerator
-import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptFixturesGenerator
+import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptAssertsGenerator
+import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptBuildersGenerator
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
@@ -18,7 +22,10 @@ abstract class LanguageStrategy(
 ){
     abstract fun moduleDirName(): String
     abstract fun apiGenerator(): ApiGenerator
-    abstract fun fixturesGenerator(): FixturesGenerator
+
+    abstract fun fixturesDirName(): String
+    abstract fun buildersGenerator(): BuildersGenerator
+    abstract fun assertsGenerator(): AssertsGenerator
 }
 
 class KotlinStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
@@ -32,8 +39,16 @@ class KotlinStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
         return KotlinApiGenerator(module, velocity)
     }
 
-    override fun fixturesGenerator(): FixturesGenerator {
-        return KotlinFixturesGenerator(module, velocity)
+    override fun fixturesDirName(): String {
+        return "fixtures"
+    }
+
+    override fun buildersGenerator(): BuildersGenerator {
+        return KotlinBuildersGenerator(module, velocity)
+    }
+
+    override fun assertsGenerator(): AssertsGenerator {
+        return KotlinAssertsGenerator(module, velocity)
     }
 }
 
@@ -48,8 +63,16 @@ class TypeScriptStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
         return TypeScriptApiGenerator(module, velocity)
     }
 
-    override fun fixturesGenerator(): FixturesGenerator {
-        return TypeScriptFixturesGenerator(module, velocity)
+    override fun fixturesDirName(): String {
+        return "Fixtures"
+    }
+
+    override fun buildersGenerator(): BuildersGenerator {
+        return TypeScriptBuildersGenerator(module, velocity)
+    }
+
+    override fun assertsGenerator(): AssertsGenerator {
+        return TypeScriptAssertsGenerator(module, velocity)
     }
 }
 
@@ -62,8 +85,8 @@ class ModuleGeneratorImpl : ModuleGenerator {
             ModuleLanguage.TYPE_SCRIPT -> TypeScriptStrategy(module, velocity)
         }
 
-        val apiCode = stg.apiGenerator().generateCode()
-        val fixturesCode = stg.fixturesGenerator().generateCode()
+        val apiCode = stg.apiGenerator().generateDirectory()
+        val fixturesCode = FixturesGenerator(stg).generateDirectory()
 
         val x = Directory(
             name = stg.moduleDirName(),

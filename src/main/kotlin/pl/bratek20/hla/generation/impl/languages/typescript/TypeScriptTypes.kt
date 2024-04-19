@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
-import pl.bratek20.hla.generation.impl.core.LanguageTypes
+import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
 import pl.bratek20.hla.model.BaseType
 
 class TypeScriptTypes: LanguageTypes {

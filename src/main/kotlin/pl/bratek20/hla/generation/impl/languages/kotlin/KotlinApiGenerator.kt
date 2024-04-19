@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
-import pl.bratek20.hla.generation.impl.core.ApiGenerator
+import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder

@@ -1,6 +1,8 @@
-package pl.bratek20.hla.generation.impl.core
+package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
-interface ExpectedType {
+import pl.bratek20.hla.generation.impl.core.domain.*
+
+interface ExpectedViewType {
     fun name(): String
 
     fun defaultValue(): String
@@ -8,10 +10,10 @@ interface ExpectedType {
     fun assertion(given: String, expected: String): String
 }
 
-data class BaseExpectedType(
+data class BaseExpectedViewType(
     val domain: BaseViewType,
     val languageTypes: LanguageTypes
-) : ExpectedType {
+) : ExpectedViewType {
     override fun name(): String {
         return domain.name()
     }
@@ -25,10 +27,10 @@ data class BaseExpectedType(
     }
 }
 
-data class SimpleVOExpectedType(
+data class SimpleVOExpectedViewType(
     val domain: SimpleVOViewType,
-    val boxedType: BaseExpectedType
-) : ExpectedType {
+    val boxedType: BaseExpectedViewType
+) : ExpectedViewType {
     override fun name(): String {
         return boxedType.name()
     }
@@ -42,9 +44,9 @@ data class SimpleVOExpectedType(
     }
 }
 
-data class ComplexVOExpectedType(
+data class ComplexVOExpectedViewType(
     val name: String
-) : ExpectedType {
+) : ExpectedViewType {
     override fun name(): String {
         return "(Expected$name.() -> Unit)"
     }
@@ -58,9 +60,9 @@ data class ComplexVOExpectedType(
     }
 }
 
-data class ListExpectedType(
-    val wrappedType: ExpectedType
-) : ExpectedType {
+data class ListExpectedViewType(
+    val wrappedType: ExpectedViewType
+) : ExpectedViewType {
     override fun name(): String {
         return "List<${wrappedType.name()}>"
     }
@@ -82,12 +84,12 @@ data class ListExpectedType(
 class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes
 ) {
-    fun create(type: ViewType): ExpectedType {
+    fun create(type: ViewType): ExpectedViewType {
         return when (type) {
-            is BaseViewType -> BaseExpectedType(type, languageTypes)
-            is SimpleVOViewType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
-            is ComplexVOViewType -> ComplexVOExpectedType(type.name)
-            is ListViewType -> ListExpectedType(create(type.wrappedType))
+            is BaseViewType -> BaseExpectedViewType(type, languageTypes)
+            is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType)
+            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name)
+            is ListViewType -> ListExpectedViewType(create(type.wrappedType))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

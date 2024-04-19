@@ -1,48 +1,20 @@
-package pl.bratek20.hla.generation.impl.core
+package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
+import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
+import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
+import pl.bratek20.hla.generation.impl.core.domain.ViewTypeFactory
 import pl.bratek20.hla.model.*
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
-
-data class FieldView(
-    val name: String,
-    val type: String
-)
-data class ComplexValueObjectView(
-    val name: String,
-    val fields: List<FieldView>
-)
-data class SimpleValueObjectView(
-    val name: String,
-    val type: String
-)
-data class ValueObjectsView(
-    val simpleList: List<SimpleValueObjectView>,
-    val complexList: List<ComplexValueObjectView>
-)
-
-data class ArgumentView(
-    val name: String,
-    val type: String
-)
-data class MethodView(
-    val name: String,
-    val returnType: String?,
-    val args: List<ArgumentView>
-)
-data class InterfaceView(
-    val name: String,
-    val methods: List<MethodView>
-)
 
 abstract class ApiGenerator(
     protected val module: HlaModule,
     protected val velocity: VelocityFacade,
     private val languageTypes: LanguageTypes,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(module, languageTypes)
-) {
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes)
+): DirectoryGenerator {
     abstract fun dirName(): String
 
     abstract fun valueObjectsFileName(): String
@@ -51,7 +23,7 @@ abstract class ApiGenerator(
     abstract fun interfacesFileName(): String
     abstract fun interfacesContentBuilder(): VelocityFileContentBuilder
 
-    fun generateCode(): Directory {
+    override fun generateDirectory(): Directory {
         val valueObjectsFile = valueObjectsFile()
         val interfacesFile = interfacesFile()
 
@@ -117,6 +89,6 @@ abstract class ApiGenerator(
     }
 
     private fun toViewType(type: Type?): String {
-        return viewTypeFactory.create(type).name()
+        return viewTypeFactory.create(type, module).name()
     }
 }
