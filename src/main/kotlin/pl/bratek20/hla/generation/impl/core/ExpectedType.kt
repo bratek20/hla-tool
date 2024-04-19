@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.impl.core
 
 interface ExpectedType {
-    fun toView(): String
+    fun name(): String
 
     fun defaultValue(): String
 
@@ -12,7 +12,7 @@ data class BaseExpectedType(
     val domain: BaseViewType,
     val languageTypes: LanguageTypes
 ) : ExpectedType {
-    override fun toView(): String {
+    override fun name(): String {
         return domain.name()
     }
 
@@ -21,7 +21,7 @@ data class BaseExpectedType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return ""
+        return "assertThat($given).isEqualTo($expected)"
     }
 }
 
@@ -29,8 +29,8 @@ data class SimpleVOExpectedType(
     val domain: SimpleVOViewType,
     val boxedType: BaseExpectedType
 ) : ExpectedType {
-    override fun toView(): String {
-        return boxedType.toView()
+    override fun name(): String {
+        return boxedType.name()
     }
 
     override fun defaultValue(): String {
@@ -38,14 +38,14 @@ data class SimpleVOExpectedType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return ""
+        return "assertThat($given.value).isEqualTo($expected)"
     }
 }
 
 data class ComplexVOExpectedType(
     val name: String
 ) : ExpectedType {
-    override fun toView(): String {
+    override fun name(): String {
         return "(Expected$name.() -> Unit)"
     }
 
@@ -61,8 +61,8 @@ data class ComplexVOExpectedType(
 data class ListExpectedType(
     val wrappedType: ExpectedType
 ) : ExpectedType {
-    override fun toView(): String {
-        return "List<${wrappedType.toView()}>"
+    override fun name(): String {
+        return "List<${wrappedType.name()}>"
     }
 
     override fun defaultValue(): String {

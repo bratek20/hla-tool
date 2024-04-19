@@ -34,10 +34,16 @@ fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> U
         assertThat(given.enabled).isEqualTo(expected.enabled)
     }
     if (expected.names != null) {
-        assertThat(given.names).isEqualTo(expected.names)
+        assertThat(given.names).hasSize(expected.names!!.size)
+        expected.names!!.forEachIndexed { index, entry ->
+            assertThat(given.names[index]).isEqualTo(entry)
+        }
     }
     if (expected.ids != null) {
-        assertThat(given.ids.map { it.value }).isEqualTo(expected.ids)
+        assertThat(given.ids).hasSize(expected.ids!!.size)
+        expected.ids!!.forEachIndexed { index, entry ->
+            assertThat(given.ids[index].value).isEqualTo(entry)
+        }
     }
 }
 
