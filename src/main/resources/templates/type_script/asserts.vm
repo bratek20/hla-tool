@@ -10,7 +10,9 @@ namespace ${moduleName}.Assert {
         if (expected.${field.name} !== undefined) {
             $field.expectedType.assertion("given.${field.name}", "expected.${field.name}")
         }
-        #end
+        #if($foreach.hasNext)
+
+        #end#end
     }
     #if($foreach.hasNext)
 

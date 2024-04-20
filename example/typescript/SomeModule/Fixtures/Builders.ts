@@ -35,4 +35,19 @@ namespace SomeModule.Builder {
             (def?.class2List ?? []).map(it => someClass2(it)),
         )
     }
+
+    export interface SomeClass4Def {
+        otherId?: string,
+        otherClass?: OtherModule.Builder.OtherClassDef,
+        otherIdList?: string[],
+        otherClassList?: OtherModule.Builder.OtherClassDef[]
+    }
+    export function someClass4(def?: SomeClass4Def): SomeClass4 {
+        return new SomeClass4(
+            new OtherId(def?.otherId ?? "someValue"),
+            OtherModule.Builder.otherClass(def?.otherClass ?? {}),
+            (def?.otherIdList ?? []).map(it => new OtherId(it)),
+            (def?.otherClassList ?? []).map(it => OtherModule.Builder.otherClass(it)),
+        )
+    }
 }

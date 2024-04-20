@@ -1,3 +1,4 @@
+
 class SomeId {
     constructor(
         public readonly value: string
@@ -27,3 +28,11 @@ class SomeClass3 {
     ) {}
 }
 
+class SomeClass4 {
+    constructor(
+        public readonly otherId: OtherId,
+        public readonly otherClass: OtherClass,
+        public readonly otherIdList: OtherId[],
+        public readonly otherClassList: OtherClass[],
+    ) {}
+}

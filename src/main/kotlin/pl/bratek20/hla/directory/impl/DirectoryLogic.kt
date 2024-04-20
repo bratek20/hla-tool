@@ -22,6 +22,17 @@ class DirectoryLogic: DirectoryApi {
         )
     }
 
+    override fun deleteDirectory(path: Path) {
+        val nioPath = java.nio.file.Paths.get(path.value)
+        val file = nioPath.toFile()
+
+        if(!file.exists() || !file.isDirectory()) {
+            return
+        }
+
+        file.deleteRecursively()
+    }
+
     override fun writeDirectory(path: Path, directory: Directory) {
         val nioPath = java.nio.file.Paths.get(path.value)
         val file = nioPath.toFile()

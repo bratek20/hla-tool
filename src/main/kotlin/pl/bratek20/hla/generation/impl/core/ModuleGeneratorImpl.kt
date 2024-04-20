@@ -113,7 +113,8 @@ class ModuleGeneratorImpl : ModuleGenerator {
                 fixturesCode
             )
         )
-        if (false && moduleName.value == "SomeModule" && language == ModuleLanguage.KOTLIN) {
+        if (moduleName.value == "OtherModule" && language == ModuleLanguage.TYPE_SCRIPT) {
+            DirectoryLogic().deleteDirectory(Path("tmp"))
             DirectoryLogic().writeDirectory(Path("tmp"), x)
         }
         return x
