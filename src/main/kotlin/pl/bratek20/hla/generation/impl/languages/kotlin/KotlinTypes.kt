@@ -43,4 +43,16 @@ class KotlinTypes: LanguageTypes {
     override fun defClassType(name: String): String {
         return "(${name}Def.() -> Unit)"
     }
+
+    override fun assertEquals(given: String, expected: String): String {
+        return "assertThat($given).isEqualTo($expected)"
+    }
+
+    override fun assertArraysLength(given: String, expected: String): String {
+        return "assertThat($given).hasSize($expected.size)"
+    }
+
+    override fun arrayIndexedIteration(array: String, body: (it: String, index: String) -> String): String {
+        return "$array.forEachIndexed { index, entry -> ${body("entry", "index")} }"
+    }
 }

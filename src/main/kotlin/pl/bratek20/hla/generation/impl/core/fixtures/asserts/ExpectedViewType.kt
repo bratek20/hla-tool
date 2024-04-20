@@ -23,13 +23,14 @@ data class BaseExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return "assertThat($given).isEqualTo($expected)"
+        return languageTypes.assertEquals(given, expected)
     }
 }
 
 data class SimpleVOExpectedViewType(
     val domain: SimpleVOViewType,
-    val boxedType: BaseExpectedViewType
+    val boxedType: BaseExpectedViewType,
+    val languageTypes: LanguageTypes
 ) : ExpectedViewType {
     override fun name(): String {
         return boxedType.name()
@@ -40,7 +41,7 @@ data class SimpleVOExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return "assertThat($given.value).isEqualTo($expected)"
+        return languageTypes.assertEquals("${given}.value", expected)
     }
 }
 
@@ -56,27 +57,29 @@ data class ComplexVOExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return "assert$name($given, $expected!!)"
+        return "assert$name($given, $expected)"
     }
 }
 
 data class ListExpectedViewType(
-    val wrappedType: ExpectedViewType
+    val wrappedType: ExpectedViewType,
+    val languageTypes: LanguageTypes
 ) : ExpectedViewType {
     override fun name(): String {
-        return "List<${wrappedType.name()}>"
+        return languageTypes.wrapWithList(wrappedType.name())
     }
 
     override fun defaultValue(): String {
-        return "emptyList()"
+        return languageTypes.defaultValueForList()
     }
 
     override fun assertion(given: String, expected: String): String {
+        val indexedAssertion = {
+            item: String, idx: String -> wrappedType.assertion(item, "$expected[$idx]")
+        }
         return """
-        |assertThat($given).hasSize($expected!!.size)
-        |        $expected!!.forEachIndexed { index, entry ->
-        |            ${wrappedType.assertion("$given[index]", "entry")}
-        |        }
+        |${languageTypes.assertArraysLength(given, expected)}
+        |        ${languageTypes.arrayIndexedIteration(given, indexedAssertion)}
         """.trimMargin()
     }
 }
@@ -87,9 +90,9 @@ class ExpectedTypeFactory(
     fun create(type: ViewType): ExpectedViewType {
         return when (type) {
             is BaseViewType -> BaseExpectedViewType(type, languageTypes)
-            is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType)
+            is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType, languageTypes)
             is ComplexVOViewType -> ComplexVOExpectedViewType(type.name)
-            is ListViewType -> ListExpectedViewType(create(type.wrappedType))
+            is ListViewType -> ListExpectedViewType(create(type.wrappedType), languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

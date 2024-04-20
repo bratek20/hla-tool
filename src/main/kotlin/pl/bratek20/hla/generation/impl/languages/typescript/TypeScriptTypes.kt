@@ -43,4 +43,17 @@ class TypeScriptTypes: LanguageTypes {
     override fun defClassType(name: String): String {
         return "${name}Def"
     }
+
+    override fun assertEquals(given: String, expected: String): String {
+        return "AssertEquals($given, $expected)"
+    }
+
+    override fun assertArraysLength(given: String, expected: String): String {
+        return assertEquals("$given.length", "$expected.length")
+    }
+
+    override fun arrayIndexedIteration(array: String, body: (it: String, index: String) -> String): String {
+        return "$array.forEach((it, index) => ${body("it", "index")})"
+    }
+
 }

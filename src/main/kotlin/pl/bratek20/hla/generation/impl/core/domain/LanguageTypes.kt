@@ -13,4 +13,9 @@ interface LanguageTypes {
     fun classConstructor(name: String, params: String): String
 
     fun defClassType(name: String): String
+
+    fun assertEquals(given: String, expected: String): String
+    fun assertArraysLength(given: String, expected: String): String
+
+    fun arrayIndexedIteration(array: String, body: (it: String, index: String) -> String): String
 }

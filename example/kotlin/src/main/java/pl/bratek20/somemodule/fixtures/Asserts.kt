@@ -10,11 +10,12 @@ data class ExpectedSomeClass(
 fun assertSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit) {
     val expected = ExpectedSomeClass().apply(expectedInit)
 
-    if (expected.id != null) {
-        assertThat(given.id.value).isEqualTo(expected.id)
+    expected.id?.let {
+        assertThat(given.id.value).isEqualTo(it)
     }
-    if (expected.amount != null) {
-        assertThat(given.amount).isEqualTo(expected.amount)
+
+    expected.amount?.let {
+        assertThat(given.amount).isEqualTo(it)
     }
 }
 
@@ -27,23 +28,22 @@ data class ExpectedSomeClass2(
 fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Unit) {
     val expected = ExpectedSomeClass2().apply(expectedInit)
 
-    if (expected.id != null) {
-        assertThat(given.id.value).isEqualTo(expected.id)
+    expected.id?.let {
+        assertThat(given.id.value).isEqualTo(it)
     }
-    if (expected.enabled != null) {
-        assertThat(given.enabled).isEqualTo(expected.enabled)
+
+    expected.enabled?.let {
+        assertThat(given.enabled).isEqualTo(it)
     }
-    if (expected.names != null) {
-        assertThat(given.names).hasSize(expected.names!!.size)
-        expected.names!!.forEachIndexed { index, entry ->
-            assertThat(given.names[index]).isEqualTo(entry)
-        }
+
+    expected.names?.let {
+        assertThat(given.names).hasSize(it.size)
+        given.names.forEachIndexed { index, entry -> assertThat(entry).isEqualTo(it[index]) }
     }
-    if (expected.ids != null) {
-        assertThat(given.ids).hasSize(expected.ids!!.size)
-        expected.ids!!.forEachIndexed { index, entry ->
-            assertThat(given.ids[index].value).isEqualTo(entry)
-        }
+
+    expected.ids?.let {
+        assertThat(given.ids).hasSize(it.size)
+        given.ids.forEachIndexed { index, entry -> assertThat(entry.value).isEqualTo(it[index]) }
     }
 }
 
@@ -54,14 +54,13 @@ data class ExpectedSomeClass3(
 fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Unit) {
     val expected = ExpectedSomeClass3().apply(expectedInit)
 
-    if (expected.class2Object != null) {
-        assertSomeClass2(given.class2Object, expected.class2Object!!)
+    expected.class2Object?.let {
+        assertSomeClass2(given.class2Object, it)
     }
-    if (expected.class2List != null) {
-        assertThat(given.class2List).hasSize(expected.class2List!!.size)
-        expected.class2List!!.forEachIndexed { index, entry ->
-            assertSomeClass2(given.class2List[index], entry!!)
-        }
+
+    expected.class2List?.let {
+        assertThat(given.class2List).hasSize(it.size)
+        given.class2List.forEachIndexed { index, entry -> assertSomeClass2(entry, it[index]) }
     }
 }
 

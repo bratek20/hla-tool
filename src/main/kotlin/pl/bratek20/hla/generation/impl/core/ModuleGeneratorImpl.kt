@@ -1,6 +1,8 @@
 package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
+import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
@@ -95,7 +97,9 @@ class ModuleGeneratorImpl : ModuleGenerator {
                 fixturesCode
             )
         )
-        //DirectoryLogic().writeDirectory(Path("tmp"), x)
+        if (false) {
+            DirectoryLogic().writeDirectory(Path("tmp"), x)
+        }
         return x
     }
 }

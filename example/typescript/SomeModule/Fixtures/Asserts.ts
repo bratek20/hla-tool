@@ -26,10 +26,16 @@ namespace SomeModule.Assert {
             AssertEquals(given.enabled, expected.enabled)
         }
         if (expected.names !== undefined) {
-            AssertArray(given.names, expected.names)
+            AssertEquals(given.names.length, expected.names.length)
+            for (let i = 0; i < given.names.length; i++) {
+                AssertEquals(given.names[i], expected.names[i])
+            }
         }
         if (expected.ids !== undefined) {
-            AssertArray(given.ids.map(it => it.value), expected.ids)
+            AssertEquals(given.ids.length, expected.ids.length)
+            for (let i = 0; i < given.names.length; i++) {
+                AssertEquals(given.ids[i].value, expected.ids[i])
+            }
         }
     }
 
@@ -42,7 +48,8 @@ namespace SomeModule.Assert {
             someClass2(given.class2Object, expected.class2Object)
         }
         if (expected.class2List !== undefined) {
-            AssertArray(given.class2List, expected.class2List, someClass2)
+            AssertEquals(given.class2List.length, expected.class2List.length)
+            given.class2List.forEach((item, i) => { someClass2(given.class2List[i], expected.class2List[i]) })
         }
     }
 }
