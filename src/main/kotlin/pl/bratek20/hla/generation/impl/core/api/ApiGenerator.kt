@@ -27,12 +27,13 @@ abstract class ApiGenerator(
         val valueObjectsFile = valueObjectsFile()
         val interfacesFile = interfacesFile()
 
+        val files = mutableListOf<File>()
+        files.add(valueObjectsFile)
+        interfacesFile?.let { files.add(it) }
+
         return Directory(
             name = dirName(),
-            files = listOf(
-                valueObjectsFile,
-                interfacesFile
-            )
+            files = files
         )
     }
 
@@ -50,7 +51,11 @@ abstract class ApiGenerator(
         )
     }
 
-    private fun interfacesFile(): File {
+    private fun interfacesFile(): File? {
+        if (module.interfaces.isEmpty()) {
+            return null
+        }
+
         val fileContent = interfacesContentBuilder()
             .put("interfaces", module.interfaces.map { toView(it) })
             .build()

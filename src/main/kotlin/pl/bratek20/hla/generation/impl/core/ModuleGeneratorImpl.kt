@@ -81,7 +81,9 @@ class TypeScriptStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
 class ModuleGeneratorImpl : ModuleGenerator {
     private val velocity = VelocityFacadeImpl() // TODO proper injection
 
-    override fun generateCode(module: HlaModule, lang: ModuleLanguage): Directory {
+    override fun generateModule(moduleName: String, modules: List<HlaModule>, lang: ModuleLanguage): Directory {
+        val module = modules.first { it.name == moduleName }
+
         val stg = when (lang) {
             ModuleLanguage.KOTLIN -> KotlinStrategy(module, velocity)
             ModuleLanguage.TYPE_SCRIPT -> TypeScriptStrategy(module, velocity)

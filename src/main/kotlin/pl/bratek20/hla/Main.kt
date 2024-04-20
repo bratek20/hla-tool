@@ -100,7 +100,7 @@ fun exampleModule(): HlaModule {
 fun main() {
     val module = exampleModule()
 
-    val dir = ModuleGeneratorImpl().generateCode(module, ModuleLanguage.KOTLIN)
+    val dir = ModuleGeneratorImpl().generateModule("example", listOf(module), ModuleLanguage.KOTLIN)
 
     DirectoryLogic().writeDirectory(Path("tmp"), dir)
 }

@@ -16,7 +16,32 @@ import java.util.stream.Stream
 class ModuleGeneratorTest {
     private val codeGenerator = ModuleGeneratorImpl()
 
-    fun module() = hlaModule {
+    fun otherModule() = hlaModule {
+        name = "OtherModule"
+        simpleValueObjects = listOf {
+            name = "OtherId"
+            type = "string"
+        }
+        complexValueObjects = listOf {
+            name = "OtherClass"
+            fields = listOf(
+                {
+                    name = "id"
+                    type = {
+                        name = "OtherId"
+                    }
+                },
+                {
+                    name = "amount"
+                    type = {
+                        name = "int"
+                    }
+                }
+            )
+        }
+    }
+
+    fun someModule() = hlaModule {
         name = "SomeModule"
         simpleValueObjects = listOf {
             name = "SomeId"
@@ -94,6 +119,41 @@ class ModuleGeneratorTest {
                         }
                     }
                 )
+            },
+            {
+                name = "SomeClass4"
+                fields = listOf (
+                    {
+                        name = "otherId"
+                        type = {
+                            name = "OtherId"
+                        }
+                    },
+                    {
+                        name = "otherClass"
+                        type = {
+                            name = "OtherClass"
+                        }
+                    },
+                    {
+                        name = "otherIdList"
+                        type = {
+                            name = "OtherId"
+                            wrappers = listOf (
+                                TypeWrapper.LIST
+                            )
+                        }
+                    },
+                    {
+                        name = "otherClassList"
+                        type = {
+                            name = "OtherClass"
+                            wrappers = listOf (
+                                TypeWrapper.LIST
+                            )
+                        }
+                    }
+                )
             }
         )
         interfaces = listOf {
@@ -137,22 +197,37 @@ class ModuleGeneratorTest {
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> =
             Stream.of(
                 Arguments.of(
+                    "OtherModule",
+                    "example/kotlin/src/main/java/pl/bratek20/othermodule",
+                    ModuleLanguage.KOTLIN
+                ),
+                Arguments.of(
+                    "OtherModule",
+                    "example/typescript/OtherModule",
+                    ModuleLanguage.TYPE_SCRIPT
+                ),
+                Arguments.of(
+                    "SomeModule",
                     "example/kotlin/src/main/java/pl/bratek20/somemodule",
                     ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
+                    "SomeModule",
                     "example/typescript/SomeModule",
                     ModuleLanguage.TYPE_SCRIPT
                 )
             )
     }
 
-    @ParameterizedTest(name = "{1}")
+    @ParameterizedTest(name = "{0} ({2})")
     @ArgumentsSource(MyArgumentsProvider::class)
-    fun `should generate code (E2E)`(path: String, lang: ModuleLanguage) { //TODO move to better place
-        val module = module()
+    fun `should generate module (E2E)`(moduleName: String, path: String, lang: ModuleLanguage) { //TODO move to better place
+        val modules = listOf(
+            someModule(),
+            otherModule()
+        )
 
-        val directory = codeGenerator.generateCode(module, lang)
+        val directory = codeGenerator.generateModule(moduleName, modules, lang)
 
         val directoryApi = DirectoryLogic()
         val exampleDirectory = directoryApi.readDirectory(Path(path))
