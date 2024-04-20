@@ -8,4 +8,9 @@ interface LanguageTypes {
 
     fun wrapWithList(typeName: String): String
     fun defaultValueForList(): String
+    fun mapList(variableName: String, mapping: String): String
+
+    fun classConstructor(name: String, params: String): String
+
+    fun defClassType(name: String): String
 }

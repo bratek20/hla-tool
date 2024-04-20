@@ -29,4 +29,18 @@ class KotlinTypes: LanguageTypes {
     override fun defaultValueForList(): String {
         return "emptyList()"
     }
+
+    override fun mapList(variableName: String, mapping: String): String {
+        //expected: "$variableName.map { ${mapping("it")} }"
+        return "$variableName.map { $mapping }"
+
+    }
+
+    override fun classConstructor(name: String, params: String): String {
+        return "$name($params)"
+    }
+
+    override fun defClassType(name: String): String {
+        return "(${name}Def.() -> Unit)"
+    }
 }

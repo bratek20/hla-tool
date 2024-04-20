@@ -31,7 +31,7 @@ namespace SomeModule.Builder {
     }
     export function someClass3(def?: SomeClass3Def): SomeClass3 {
         return new SomeClass3(
-            someClass2(def?.class2Object),
+            someClass2(def?.class2Object ?? {}),
             (def?.class2List ?? []).map(it => someClass2(it)),
         )
     }

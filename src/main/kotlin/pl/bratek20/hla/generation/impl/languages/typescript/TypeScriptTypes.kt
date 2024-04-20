@@ -29,4 +29,18 @@ class TypeScriptTypes: LanguageTypes {
     override fun defaultValueForList(): String {
         return "[]"
     }
+
+    override fun mapList(variableName: String, mapping: String): String {
+        //expected: "$variableName.map { ${mapping("it")} }"
+        return "($variableName).map(it => $mapping)"
+
+    }
+
+    override fun classConstructor(name: String, params: String): String {
+        return "new $name($params)"
+    }
+
+    override fun defClassType(name: String): String {
+        return "${name}Def"
+    }
 }
