@@ -46,10 +46,11 @@ data class SimpleVOExpectedViewType(
 }
 
 data class ComplexVOExpectedViewType(
-    val name: String
+    val name: String,
+    val languageTypes: LanguageTypes
 ) : ExpectedViewType {
     override fun name(): String {
-        return "(Expected$name.() -> Unit)"
+        return languageTypes.expectedClassType(name)
     }
 
     override fun defaultValue(): String {
@@ -57,7 +58,7 @@ data class ComplexVOExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return "assert$name($given, $expected)"
+        return languageTypes.complexVoAssertion(name, given, expected)
     }
 }
 
@@ -74,16 +75,18 @@ data class ListExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        val entriesAssertion = languageTypes.arrayIndexedIteration(
+        val entriesAssertion = languageTypes.listIndexedIteration(
             given,
             "idx",
             "entry",
             wrappedType.assertion("entry", "$expected[idx]")
         )
 
+        val indention = " ".repeat(languageTypes.indentionForAssertListElements())
+
         return """
-        |${languageTypes.assertArraysLength(given, expected)}
-        |        $entriesAssertion
+        |${languageTypes.assertListLength(given, expected)}
+        |$indention$entriesAssertion
         """.trimMargin()
     }
 }
@@ -95,7 +98,7 @@ class ExpectedTypeFactory(
         return when (type) {
             is BaseViewType -> BaseExpectedViewType(type, languageTypes)
             is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType, languageTypes)
-            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name)
+            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name, languageTypes)
             is ListViewType -> ListExpectedViewType(create(type.wrappedType), languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }

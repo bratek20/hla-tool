@@ -30,10 +30,8 @@ class KotlinTypes: LanguageTypes {
         return "emptyList()"
     }
 
-    override fun mapList(variableName: String, mapping: String): String {
-        //expected: "$variableName.map { ${mapping("it")} }"
-        return "$variableName.map { $mapping }"
-
+    override fun mapListElements(listName: String, elementName: String, mapping: String): String {
+        return "$listName.map { $elementName -> $mapping }"
     }
 
     override fun classConstructor(name: String, params: String): String {
@@ -44,15 +42,27 @@ class KotlinTypes: LanguageTypes {
         return "(${name}Def.() -> Unit)"
     }
 
+    override fun expectedClassType(name: String): String {
+        return "(Expected${name}.() -> Unit)"
+    }
+
+    override fun complexVoAssertion(name: String, given: String, expected: String): String {
+        return "assert$name($given, $expected)"
+    }
+
     override fun assertEquals(given: String, expected: String): String {
         return "assertThat($given).isEqualTo($expected)"
     }
 
-    override fun assertArraysLength(given: String, expected: String): String {
+    override fun assertListLength(given: String, expected: String): String {
         return "assertThat($given).hasSize($expected.size)"
     }
 
-    override fun arrayIndexedIteration(array: String, idx: String, entry: String, body: String): String {
-        return "$array.forEachIndexed { $idx, $entry -> $body }"
+    override fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String {
+        return "$listName.forEachIndexed { $idx, $entry -> $body }"
+    }
+
+    override fun indentionForAssertListElements(): Int {
+        return 8
     }
 }

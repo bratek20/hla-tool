@@ -27,11 +27,11 @@ namespace SomeModule.Assert {
         }
         if (expected.names !== undefined) {
             AssertEquals(given.names.length, expected.names.length)
-            given.names.forEach((it, idx) => AssertEquals(it.value, expected.names[idx]))
+            given.names.forEach((entry, idx) => AssertEquals(entry, expected.names[idx]))
         }
         if (expected.ids !== undefined) {
             AssertEquals(given.ids.length, expected.ids.length)
-            given.ids.forEach((it, idx) => AssertEquals(it.value, expected.ids[idx]))
+            given.ids.forEach((entry, idx) => AssertEquals(entry.value, expected.ids[idx]))
         }
     }
 
@@ -45,7 +45,7 @@ namespace SomeModule.Assert {
         }
         if (expected.class2List !== undefined) {
             AssertEquals(given.class2List.length, expected.class2List.length)
-            given.class2List.forEach((it, idx) => someClass2(it, expected.class2List[idx]))
+            given.class2List.forEach((entry, idx) => someClass2(entry, expected.class2List[idx]))
         }
     }
 }

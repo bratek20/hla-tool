@@ -79,7 +79,7 @@ data class ListDefViewType(
         if (wrappedType is BaseDefViewType) {
             return x
         }
-        return languageTypes.mapList(x, wrappedType.constructor("it"))
+        return languageTypes.mapListElements(x, "it", wrappedType.constructor("it"))
     }
 }
 
