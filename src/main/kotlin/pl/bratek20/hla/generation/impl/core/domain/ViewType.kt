@@ -46,28 +46,22 @@ class ViewTypeFactory(
     private val languageTypes: LanguageTypes
 ) {
 
-    fun create(type: Type?, module: HlaModule): ViewType {
+    fun create(type: Type?, modules: HlaModules): ViewType {
         if (type == null) {
             return BaseViewType(BaseType.VOID, languageTypes)
         }
 
-        val simpleVO = findSimpleVO(type, module)
-        val complexVO = findComplexVO(type, module)
+        val simpleVO = modules.findSimpleVO(type)
+        val complexVO = modules.findComplexVO(type)
         val isList = type.wrappers.contains(TypeWrapper.LIST)
+        val isBaseType = BaseType.isBaseType(type.name)
+
         return when {
-            isList -> ListViewType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST), module), languageTypes)
+            isList -> ListViewType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST), modules), languageTypes)
             simpleVO != null -> SimpleVOViewType(type.name, BaseViewType(BaseType.of(simpleVO.typeName), languageTypes))
             complexVO != null -> ComplexVOViewType(type.name)
-            else -> BaseViewType(BaseType.of(type.name), languageTypes)
+            isBaseType -> BaseViewType(BaseType.of(type.name), languageTypes)
+            else -> throw IllegalArgumentException("Unknown type: $type")
         }
-    }
-
-
-    private fun findSimpleVO(type: Type, module: HlaModule): SimpleValueObject? {
-        return module.simpleValueObjects.find { it.name == type.name }
-    }
-
-    private fun findComplexVO(type: Type, module: HlaModule): ComplexValueObject? {
-        return module.complexValueObjects.find { it.name == type.name }
     }
 }

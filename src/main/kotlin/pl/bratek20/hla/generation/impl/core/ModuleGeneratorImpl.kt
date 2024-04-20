@@ -6,6 +6,8 @@ import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
+import pl.bratek20.hla.generation.impl.core.domain.HlaModules
+import pl.bratek20.hla.generation.impl.core.domain.ModuleName
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
@@ -19,8 +21,7 @@ import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
 abstract class LanguageStrategy(
-    protected val module: HlaModule,
-    protected val velocity: VelocityFacadeImpl
+    protected val c: ModulePartGeneratorContext
 ){
     abstract fun moduleDirName(): String
     abstract fun apiGenerator(): ApiGenerator
@@ -30,15 +31,15 @@ abstract class LanguageStrategy(
     abstract fun assertsGenerator(): AssertsGenerator
 }
 
-class KotlinStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
-    : LanguageStrategy(module, velocity) {
+class KotlinStrategy(c: ModulePartGeneratorContext)
+    : LanguageStrategy(c) {
 
     override fun moduleDirName(): String {
-        return module.name.lowercase()
+        return c.moduleName.value.lowercase()
     }
 
     override fun apiGenerator(): ApiGenerator {
-        return KotlinApiGenerator(module, velocity)
+        return KotlinApiGenerator(c)
     }
 
     override fun fixturesDirName(): String {
@@ -46,23 +47,23 @@ class KotlinStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
     }
 
     override fun buildersGenerator(): BuildersGenerator {
-        return KotlinBuildersGenerator(module, velocity)
+        return KotlinBuildersGenerator(c)
     }
 
     override fun assertsGenerator(): AssertsGenerator {
-        return KotlinAssertsGenerator(module, velocity)
+        return KotlinAssertsGenerator(c)
     }
 }
 
-class TypeScriptStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
-    : LanguageStrategy(module, velocity) {
+class TypeScriptStrategy(c: ModulePartGeneratorContext)
+    : LanguageStrategy(c) {
 
     override fun moduleDirName(): String {
-        return module.name
+        return c.moduleName.value
     }
 
     override fun apiGenerator(): ApiGenerator {
-        return TypeScriptApiGenerator(module, velocity)
+        return TypeScriptApiGenerator(c)
     }
 
     override fun fixturesDirName(): String {
@@ -70,11 +71,11 @@ class TypeScriptStrategy(module: HlaModule, velocity: VelocityFacadeImpl)
     }
 
     override fun buildersGenerator(): BuildersGenerator {
-        return TypeScriptBuildersGenerator(module, velocity)
+        return TypeScriptBuildersGenerator(c)
     }
 
     override fun assertsGenerator(): AssertsGenerator {
-        return TypeScriptAssertsGenerator(module, velocity)
+        return TypeScriptAssertsGenerator(c)
     }
 }
 
@@ -82,11 +83,15 @@ class ModuleGeneratorImpl : ModuleGenerator {
     private val velocity = VelocityFacadeImpl() // TODO proper injection
 
     override fun generateModule(moduleName: String, modules: List<HlaModule>, lang: ModuleLanguage): Directory {
-        val module = modules.first { it.name == moduleName }
+        val context = ModulePartGeneratorContext(
+            moduleName = ModuleName(moduleName),
+            modules = HlaModules(modules),
+            velocity = velocity
+        )
 
         val stg = when (lang) {
-            ModuleLanguage.KOTLIN -> KotlinStrategy(module, velocity)
-            ModuleLanguage.TYPE_SCRIPT -> TypeScriptStrategy(module, velocity)
+            ModuleLanguage.KOTLIN -> KotlinStrategy(context)
+            ModuleLanguage.TYPE_SCRIPT -> TypeScriptStrategy(context)
         }
 
         val apiCode = stg.apiGenerator().generateDirectory()

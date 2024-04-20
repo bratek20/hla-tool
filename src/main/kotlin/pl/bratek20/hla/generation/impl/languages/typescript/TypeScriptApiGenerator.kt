@@ -1,12 +1,13 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
+import pl.bratek20.hla.generation.impl.core.ModulePartGeneratorContext
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-class TypeScriptApiGenerator(module: HlaModule, velocity: VelocityFacade)
-    : ApiGenerator(module, velocity, TypeScriptTypes()) {
+class TypeScriptApiGenerator(c: ModulePartGeneratorContext)
+    : ApiGenerator(c, TypeScriptTypes()) {
 
     override fun dirName(): String {
         return "Api"

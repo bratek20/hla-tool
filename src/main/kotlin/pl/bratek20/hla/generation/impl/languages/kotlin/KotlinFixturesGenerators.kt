@@ -1,13 +1,14 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
+import pl.bratek20.hla.generation.impl.core.ModulePartGeneratorContext
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-class KotlinBuildersGenerator(module: HlaModule, velocity: VelocityFacade)
-    : BuildersGenerator(module, velocity, KotlinTypes()) {
+class KotlinBuildersGenerator(c: ModulePartGeneratorContext)
+    : BuildersGenerator(c, KotlinTypes()) {
 
     override fun buildersFileName(): String {
         return "Builders.kt"
@@ -18,8 +19,8 @@ class KotlinBuildersGenerator(module: HlaModule, velocity: VelocityFacade)
     }
 }
 
-class KotlinAssertsGenerator(module: HlaModule, velocity: VelocityFacade)
-    : AssertsGenerator(module, velocity, KotlinTypes()) {
+class KotlinAssertsGenerator(c: ModulePartGeneratorContext)
+    : AssertsGenerator(c, KotlinTypes()) {
 
     override fun assertsFileName(): String {
         return "Asserts.kt"

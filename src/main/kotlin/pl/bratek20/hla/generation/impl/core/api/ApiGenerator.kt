@@ -2,19 +2,21 @@ package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
+import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
+import pl.bratek20.hla.generation.impl.core.ModulePartGeneratorContext
 import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
 import pl.bratek20.hla.generation.impl.core.domain.ViewTypeFactory
-import pl.bratek20.hla.model.*
-import pl.bratek20.hla.velocity.api.VelocityFacade
+import pl.bratek20.hla.model.ComplexValueObject
+import pl.bratek20.hla.model.Interface
+import pl.bratek20.hla.model.SimpleValueObject
+import pl.bratek20.hla.model.Type
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 abstract class ApiGenerator(
-    protected val module: HlaModule,
-    protected val velocity: VelocityFacade,
+    c: ModulePartGeneratorContext,
     private val languageTypes: LanguageTypes,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes)
-): DirectoryGenerator {
+): ModulePartDirectoryGenerator(c) {
     abstract fun dirName(): String
 
     abstract fun valueObjectsFileName(): String
@@ -94,6 +96,6 @@ abstract class ApiGenerator(
     }
 
     private fun toViewType(type: Type?): String {
-        return viewTypeFactory.create(type, module).name()
+        return viewTypeFactory.create(type, modules).name()
     }
 }

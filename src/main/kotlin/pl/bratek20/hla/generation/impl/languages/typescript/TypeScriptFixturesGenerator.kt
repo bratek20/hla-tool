@@ -1,5 +1,6 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
+import pl.bratek20.hla.generation.impl.core.ModulePartGeneratorContext
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
@@ -8,8 +9,8 @@ import pl.bratek20.hla.utils.pascalToCamelCase
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-class TypeScriptBuildersGenerator(module: HlaModule, velocity: VelocityFacade)
-    : BuildersGenerator(module, velocity, TypeScriptTypes()) {
+class TypeScriptBuildersGenerator(c: ModulePartGeneratorContext)
+    : BuildersGenerator(c, TypeScriptTypes()) {
 
     override fun buildersFileName(): String {
         return "Builders.ts"
@@ -21,8 +22,8 @@ class TypeScriptBuildersGenerator(module: HlaModule, velocity: VelocityFacade)
 }
 
 
-class TypeScriptAssertsGenerator(module: HlaModule, velocity: VelocityFacade)
-    : AssertsGenerator(module, velocity, TypeScriptTypes()) {
+class TypeScriptAssertsGenerator(c: ModulePartGeneratorContext)
+    : AssertsGenerator(c, TypeScriptTypes()) {
 
     override fun assertsFileName(): String {
         return "Asserts.ts"
