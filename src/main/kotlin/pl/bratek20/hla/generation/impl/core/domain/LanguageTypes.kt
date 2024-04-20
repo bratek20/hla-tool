@@ -17,5 +17,5 @@ interface LanguageTypes {
     fun assertEquals(given: String, expected: String): String
     fun assertArraysLength(given: String, expected: String): String
 
-    fun arrayIndexedIteration(array: String, body: (it: String, index: String) -> String): String
+    fun arrayIndexedIteration(array: String, idx: String, entry: String, body: String): String
 }

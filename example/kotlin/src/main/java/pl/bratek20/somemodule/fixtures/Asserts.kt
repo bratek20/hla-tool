@@ -38,12 +38,12 @@ fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> U
 
     expected.names?.let {
         assertThat(given.names).hasSize(it.size)
-        given.names.forEachIndexed { index, entry -> assertThat(entry).isEqualTo(it[index]) }
+        given.names.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
     }
 
     expected.ids?.let {
         assertThat(given.ids).hasSize(it.size)
-        given.ids.forEachIndexed { index, entry -> assertThat(entry.value).isEqualTo(it[index]) }
+        given.ids.forEachIndexed { idx, entry -> assertThat(entry.value).isEqualTo(it[idx]) }
     }
 }
 
@@ -60,7 +60,7 @@ fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> U
 
     expected.class2List?.let {
         assertThat(given.class2List).hasSize(it.size)
-        given.class2List.forEachIndexed { index, entry -> assertSomeClass2(entry, it[index]) }
+        given.class2List.forEachIndexed { idx, entry -> assertSomeClass2(entry, it[idx]) }
     }
 }
 

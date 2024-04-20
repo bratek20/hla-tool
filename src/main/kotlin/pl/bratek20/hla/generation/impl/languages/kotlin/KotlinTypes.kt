@@ -52,7 +52,7 @@ class KotlinTypes: LanguageTypes {
         return "assertThat($given).hasSize($expected.size)"
     }
 
-    override fun arrayIndexedIteration(array: String, body: (it: String, index: String) -> String): String {
-        return "$array.forEachIndexed { index, entry -> ${body("entry", "index")} }"
+    override fun arrayIndexedIteration(array: String, idx: String, entry: String, body: String): String {
+        return "$array.forEachIndexed { $idx, $entry -> $body }"
     }
 }

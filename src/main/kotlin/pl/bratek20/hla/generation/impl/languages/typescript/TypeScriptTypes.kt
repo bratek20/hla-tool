@@ -52,8 +52,7 @@ class TypeScriptTypes: LanguageTypes {
         return assertEquals("$given.length", "$expected.length")
     }
 
-    override fun arrayIndexedIteration(array: String, body: (it: String, index: String) -> String): String {
-        return "$array.forEach((it, index) => ${body("it", "index")})"
+    override fun arrayIndexedIteration(array: String, idx: String, entry: String, body: String): String {
+        return "$array.forEach(($entry, $idx) => $body)"
     }
-
 }

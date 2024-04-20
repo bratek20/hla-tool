@@ -74,12 +74,16 @@ data class ListExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        val indexedAssertion = {
-            item: String, idx: String -> wrappedType.assertion(item, "$expected[$idx]")
-        }
+        val entriesAssertion = languageTypes.arrayIndexedIteration(
+            given,
+            "idx",
+            "entry",
+            wrappedType.assertion("entry", "$expected[idx]")
+        )
+
         return """
         |${languageTypes.assertArraysLength(given, expected)}
-        |        ${languageTypes.arrayIndexedIteration(given, indexedAssertion)}
+        |        $entriesAssertion
         """.trimMargin()
     }
 }
