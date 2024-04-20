@@ -19,15 +19,15 @@ data class AssertView(
 
 abstract class AssertsGenerator(
     c: ModuleGenerationContext,
-    private val languageTypes: LanguageTypes,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes),
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.language.types()),
+    private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.moreTypes())
 ): ModulePartFileGenerator(c) {
 
     abstract fun assertsFileName(): String
     abstract fun assertFunName(voName: String): String
 
     private fun expectedType(type: ViewType): ExpectedViewType {
-        return ExpectedTypeFactory(languageTypes).create(type)
+        return expectedTypeFactory.create(type)
     }
 
     override fun generateFile(): File {

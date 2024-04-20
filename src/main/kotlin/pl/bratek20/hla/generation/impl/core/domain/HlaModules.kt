@@ -7,10 +7,14 @@ import pl.bratek20.hla.model.SimpleValueObject
 import pl.bratek20.hla.model.Type
 
 class HlaModules(
+    private val currentName: ModuleName,
     private val modules: List<HlaModule>
 ) {
+    val current: HlaModule
+        get() = get(currentName)
+
     fun get(moduleName: ModuleName): HlaModule {
-        return modules.first { it.name == moduleName.value }
+        return modules.first { it.name == moduleName }
     }
 
     fun findSimpleVO(type: Type): SimpleValueObject? {
@@ -29,10 +33,18 @@ class HlaModules(
         return module.complexValueObjects.find { it.name == type.name }
     }
 
-    fun getDependencies(name: ModuleName): List<ModuleName> {
-        if (name.value == "SomeModule") {
+    fun getCurrentDependencies(): List<ModuleName> {
+        if (currentName.value == "SomeModule") {
             return listOf(ModuleName("OtherModule"))
         }
         return emptyList()
+    }
+
+    fun getComplexVoModule(complexVoName: String): ModuleName {
+        return modules.first { it.complexValueObjects.any { it.name == complexVoName } }.name
+    }
+
+    private fun otherModules(): List<HlaModule> {
+        return modules.filter { it.name != currentName }
     }
 }

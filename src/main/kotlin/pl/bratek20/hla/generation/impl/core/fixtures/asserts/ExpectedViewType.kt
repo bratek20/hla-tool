@@ -1,6 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
 import pl.bratek20.hla.generation.impl.core.domain.*
+import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptMoreTypes
 
 interface ExpectedViewType {
     fun name(): String
@@ -47,10 +48,11 @@ data class SimpleVOExpectedViewType(
 
 data class ComplexVOExpectedViewType(
     val name: String,
-    val languageTypes: LanguageTypes
+    val languageTypes: LanguageTypes,
+    val moreTypes: MoreLanguageTypes
 ) : ExpectedViewType {
     override fun name(): String {
-        return languageTypes.expectedClassType(name)
+        return moreTypes.expectedClassType(name)
     }
 
     override fun defaultValue(): String {
@@ -58,7 +60,7 @@ data class ComplexVOExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return languageTypes.complexVoAssertion(name, given, expected)
+        return moreTypes.complexVoAssertion(name, given, expected)
     }
 }
 
@@ -92,13 +94,14 @@ data class ListExpectedViewType(
 }
 
 class ExpectedTypeFactory(
-    private val languageTypes: LanguageTypes
+    private val languageTypes: LanguageTypes,
+    private val moreTypes: MoreLanguageTypes
 ) {
     fun create(type: ViewType): ExpectedViewType {
         return when (type) {
             is BaseViewType -> BaseExpectedViewType(type, languageTypes)
             is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType, languageTypes)
-            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name, languageTypes)
+            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name, languageTypes, moreTypes)
             is ListViewType -> ListExpectedViewType(create(type.wrappedType), languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }

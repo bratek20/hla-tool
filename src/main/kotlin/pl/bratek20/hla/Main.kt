@@ -9,7 +9,7 @@ import pl.bratek20.hla.model.*
 
 fun exampleModule(): HlaModule {
     return HlaModule(
-        name = "example",
+        name = ModuleName("example"),
         simpleValueObjects = listOf(
             SimpleValueObject(
                 name = "SomeId",

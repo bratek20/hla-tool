@@ -58,7 +58,7 @@ namespace SomeModule.Assert {
         otherId?: string,
         otherClass?: OtherModule.Assert.ExpectedOtherClass,
         otherIdList?: string[],
-        otherClassList?: OtherModule.Assert.ExpectedOtherClass[]
+        otherClassList?: OtherModule.Assert.ExpectedOtherClass[],
     }
     export function someClass4(given: SomeClass4, expected: ExpectedSomeClass4) {
         if (expected.otherId !== undefined) {

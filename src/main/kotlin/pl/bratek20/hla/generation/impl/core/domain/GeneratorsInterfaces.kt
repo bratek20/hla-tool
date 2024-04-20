@@ -7,6 +7,7 @@ import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
+import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
@@ -23,14 +24,19 @@ abstract class LanguageStrategy(
     abstract fun assertsGenerator(): AssertsGenerator
 
     open fun contentBuilderExtensions(): List<ContentBuilderExtension> = emptyList()
+
+    abstract fun types(): LanguageTypes
+    abstract fun moreTypes(): MoreLanguageTypes
 }
 
 class ModuleGenerationContext(
-    val name: ModuleName,
     val modules: HlaModules,
     val velocity: VelocityFacade,
 ) {
     lateinit var language: LanguageStrategy
+
+    val module: HlaModule
+        get() = modules.current
 }
 
 abstract class ContentBuilderExtension(
@@ -42,23 +48,17 @@ abstract class ContentBuilderExtension(
 abstract class ModulePartGenerator(
     private val c: ModuleGenerationContext
 ) {
-    protected val moduleName
-        get() = c.name
-
     protected val module
-        get() = c.modules.get(c.name)
+        get() = c.modules.current
 
     protected val modules
         get() = c.modules
 
-    protected val velocity
-        get() = c.velocity
-
     protected fun contentBuilder(fileName: String): VelocityFileContentBuilder {
         val path = "templates/${c.language.name().name.lowercase()}/$fileName"
 
-        val builder = velocity.contentBuilder(path)
-            .put("moduleName", moduleName.value)
+        val builder = c.velocity.contentBuilder(path)
+            .put("moduleName", module.name.value)
 
         c.language.contentBuilderExtensions().forEach { it.extend(builder) }
 

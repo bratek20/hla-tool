@@ -8,11 +8,11 @@ class PackageNameExtension(
     c: ModuleGenerationContext
 ) : ContentBuilderExtension(c) {
     override fun extend(builder: VelocityFileContentBuilder) {
-        val imports = c.modules.getDependencies(c.name)
+        val imports = c.modules.getCurrentDependencies()
             .map { "pl.bratek20.${it.value.lowercase()}" }
 
         builder
-            .put("packageName", "pl.bratek20.${c.name.value.lowercase()}")
+            .put("packageName", "pl.bratek20.${c.module.name.value.lowercase()}")
             .put("imports", imports)
     }
 }

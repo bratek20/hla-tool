@@ -18,8 +18,8 @@ data class BuilderView(
 
 abstract class BuildersGenerator(
     c: ModuleGenerationContext,
-    private val languageTypes: LanguageTypes,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes),
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.language.types()),
+    private val defTypeFactory: DefTypeFactory = DefTypeFactory(c.language.types(), c.language.moreTypes()),
 ): ModulePartFileGenerator(c) {
     abstract fun buildersFileName(): String
 
@@ -50,6 +50,6 @@ abstract class BuildersGenerator(
     }
 
     private fun defType(type: ViewType): DefViewType {
-        return DefTypeFactory(languageTypes).create(type)
+        return defTypeFactory.create(type)
     }
 }

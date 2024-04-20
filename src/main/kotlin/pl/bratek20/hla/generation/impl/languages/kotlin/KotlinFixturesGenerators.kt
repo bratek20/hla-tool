@@ -5,7 +5,7 @@ import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 
 class KotlinBuildersGenerator(c: ModuleGenerationContext)
-    : BuildersGenerator(c, KotlinTypes()) {
+    : BuildersGenerator(c) {
 
     override fun buildersFileName(): String {
         return "Builders.kt"
@@ -13,7 +13,7 @@ class KotlinBuildersGenerator(c: ModuleGenerationContext)
 }
 
 class KotlinAssertsGenerator(c: ModuleGenerationContext)
-    : AssertsGenerator(c, KotlinTypes()) {
+    : AssertsGenerator(c) {
 
     override fun assertsFileName(): String {
         return "Asserts.kt"

@@ -1,5 +1,7 @@
 package pl.bratek20.hla.model
 
+import pl.bratek20.hla.generation.api.ModuleName
+
 data class TypeDef(
     var name: String = "test",
     var wrappers: List<TypeWrapper> = emptyList(),
@@ -107,7 +109,7 @@ data class HlaModuleDef(
 fun hlaModule(ov: HlaModuleDef.() -> Unit): HlaModule {
     val def = HlaModuleDef().apply(ov)
     return HlaModule(
-        name = def.name,
+        name = ModuleName(def.name),
         simpleValueObjects = def.simpleValueObjects.map { simpleValueObject(it) },
         complexValueObjects = def.complexValueObjects.map { complexValueObject(it) },
         interfaces = def.interfaces.map { interfaceDef(it) }

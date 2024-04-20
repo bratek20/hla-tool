@@ -1,5 +1,7 @@
 package pl.bratek20.hla.model
 
+import pl.bratek20.hla.generation.api.ModuleName
+
 enum class BaseType {
     STRING,
     INT,
@@ -18,7 +20,7 @@ enum class BaseType {
 }
 
 data class HlaModule(
-    val name: String,
+    val name: ModuleName,
     val simpleValueObjects: List<SimpleValueObject>,
     val complexValueObjects: List<ComplexValueObject>,
     val interfaces: List<Interface>

@@ -40,7 +40,7 @@ namespace SomeModule.Builder {
         otherId?: string,
         otherClass?: OtherModule.Builder.OtherClassDef,
         otherIdList?: string[],
-        otherClassList?: OtherModule.Builder.OtherClassDef[]
+        otherClassList?: OtherModule.Builder.OtherClassDef[],
     }
     export function someClass4(def?: SomeClass4Def): SomeClass4 {
         return new SomeClass4(

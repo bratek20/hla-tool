@@ -6,7 +6,7 @@ import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 class TypeScriptBuildersGenerator(c: ModuleGenerationContext)
-    : BuildersGenerator(c, TypeScriptTypes()) {
+    : BuildersGenerator(c) {
 
     override fun buildersFileName(): String {
         return "Builders.ts"
@@ -14,7 +14,7 @@ class TypeScriptBuildersGenerator(c: ModuleGenerationContext)
 }
 
 class TypeScriptAssertsGenerator(c: ModuleGenerationContext)
-    : AssertsGenerator(c, TypeScriptTypes()) {
+    : AssertsGenerator(c) {
 
     override fun assertsFileName(): String {
         return "Asserts.ts"

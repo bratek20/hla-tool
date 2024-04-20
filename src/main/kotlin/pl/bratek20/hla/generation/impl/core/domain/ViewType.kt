@@ -27,6 +27,7 @@ data class SimpleVOViewType(
 
 data class ComplexVOViewType(
     val name: String,
+    val otherModuleName: String?
 ) : ViewType {
     override fun name(): String {
         return name
@@ -55,11 +56,17 @@ class ViewTypeFactory(
         val complexVO = modules.findComplexVO(type)
         val isList = type.wrappers.contains(TypeWrapper.LIST)
         val isBaseType = BaseType.isBaseType(type.name)
-
         return when {
             isList -> ListViewType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST), modules), languageTypes)
             simpleVO != null -> SimpleVOViewType(type.name, BaseViewType(BaseType.of(simpleVO.typeName), languageTypes))
-            complexVO != null -> ComplexVOViewType(type.name)
+            complexVO != null -> {
+                val module = modules.getComplexVoModule(type.name)
+                if (module == modules.current.name) {
+                    ComplexVOViewType(type.name, null)
+                } else {
+                    ComplexVOViewType(type.name, module.value)
+                }
+            }
             isBaseType -> BaseViewType(BaseType.of(type.name), languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
