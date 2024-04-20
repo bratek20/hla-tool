@@ -3,6 +3,13 @@ package pl.bratek20.hla.generation.api
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.model.HlaModule
 
+data class ModuleName(val value: String)
+
+enum class ModuleLanguage {
+    KOTLIN,
+    TYPE_SCRIPT,
+}
+
 interface ModuleGenerator {
-    fun generateModule(moduleName: String, modules: List<HlaModule>, lang: ModuleLanguage): Directory
+    fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<HlaModule>): Directory
 }

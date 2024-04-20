@@ -4,7 +4,6 @@ import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.*
 import pl.bratek20.hla.generation.impl.core.domain.*
 import pl.bratek20.hla.utils.pascalToCamelCase
-import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 data class BuilderFieldView(
@@ -20,12 +19,11 @@ data class BuilderView(
 )
 
 abstract class BuildersGenerator(
-    c: ModulePartGeneratorContext,
+    c: ModuleGenerationContext,
     private val languageTypes: LanguageTypes,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes),
 ): ModulePartFileGenerator(c) {
     abstract fun buildersFileName(): String
-    abstract fun buildersContentBuilder(): VelocityFileContentBuilder
 
     override fun generateFile(): File {
         val builders = module.complexValueObjects.map {
@@ -43,7 +41,7 @@ abstract class BuildersGenerator(
             )
         }
 
-        val fileContent = buildersContentBuilder()
+        val fileContent = contentBuilder("builders.vm")
             .put("builders", builders)
             .build()
 

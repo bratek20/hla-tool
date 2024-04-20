@@ -3,6 +3,7 @@ package pl.bratek20.hla
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoryLogic
 import pl.bratek20.hla.generation.api.ModuleLanguage
+import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.generation.impl.core.ModuleGeneratorImpl
 import pl.bratek20.hla.model.*
 
@@ -100,7 +101,7 @@ fun exampleModule(): HlaModule {
 fun main() {
     val module = exampleModule()
 
-    val dir = ModuleGeneratorImpl().generateModule("example", listOf(module), ModuleLanguage.KOTLIN)
+    val dir = ModuleGeneratorImpl().generate(ModuleName("example"), ModuleLanguage.KOTLIN, listOf(module))
 
     DirectoryLogic().writeDirectory(Path("tmp"), dir)
 }

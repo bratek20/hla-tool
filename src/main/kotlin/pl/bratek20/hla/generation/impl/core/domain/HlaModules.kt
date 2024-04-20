@@ -1,11 +1,10 @@
 package pl.bratek20.hla.generation.impl.core.domain
 
+import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.SimpleValueObject
 import pl.bratek20.hla.model.Type
-
-data class ModuleName(val value: String)
 
 class HlaModules(
     private val modules: List<HlaModule>

@@ -227,7 +227,7 @@ class ModuleGeneratorTest {
             otherModule()
         )
 
-        val directory = codeGenerator.generateModule(moduleName, modules, lang)
+        val directory = codeGenerator.generate(ModuleName(moduleName), lang, modules)
 
         val directoryApi = DirectoryLogic()
         val exampleDirectory = directoryApi.readDirectory(Path(path))

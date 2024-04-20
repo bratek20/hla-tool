@@ -2,9 +2,8 @@ package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
-import pl.bratek20.hla.generation.impl.core.ModulePartGeneratorContext
+import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.domain.*
-import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 data class AssertFieldView(
@@ -20,15 +19,13 @@ data class AssertView(
 )
 
 abstract class AssertsGenerator(
-    c: ModulePartGeneratorContext,
+    c: ModuleGenerationContext,
     private val languageTypes: LanguageTypes,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes),
 ): ModulePartFileGenerator(c) {
 
     abstract fun assertsFileName(): String
-    abstract fun assertsContentBuilder(): VelocityFileContentBuilder
     abstract fun assertFunName(voName: String): String
-
 
     private fun expectedType(type: ViewType): ExpectedViewType {
         return ExpectedTypeFactory(languageTypes).create(type)
@@ -50,7 +47,7 @@ abstract class AssertsGenerator(
             )
         }
 
-        val fileContent = assertsContentBuilder()
+        val fileContent = contentBuilder("asserts.vm")
             .put("asserts", asserts)
             .build()
 

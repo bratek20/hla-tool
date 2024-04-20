@@ -3,7 +3,7 @@ package pl.bratek20.hla.generation.impl.core.api
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
-import pl.bratek20.hla.generation.impl.core.ModulePartGeneratorContext
+import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
 import pl.bratek20.hla.generation.impl.core.domain.ViewTypeFactory
 import pl.bratek20.hla.model.ComplexValueObject
@@ -13,17 +13,15 @@ import pl.bratek20.hla.model.Type
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 abstract class ApiGenerator(
-    c: ModulePartGeneratorContext,
+    c: ModuleGenerationContext,
     private val languageTypes: LanguageTypes,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes)
 ): ModulePartDirectoryGenerator(c) {
     abstract fun dirName(): String
 
     abstract fun valueObjectsFileName(): String
-    abstract fun valueObjectsContentBuilder(): VelocityFileContentBuilder
 
     abstract fun interfacesFileName(): String
-    abstract fun interfacesContentBuilder(): VelocityFileContentBuilder
 
     override fun generateDirectory(): Directory {
         val valueObjectsFile = valueObjectsFile()
@@ -40,7 +38,7 @@ abstract class ApiGenerator(
     }
 
     private fun valueObjectsFile(): File {
-        val fileContent = valueObjectsContentBuilder()
+        val fileContent = contentBuilder("valueObjects.vm")
             .put("valueObjects", ValueObjectsView(
                 simpleList = module.simpleValueObjects.map { toView(it) },
                 complexList = module.complexValueObjects.map { toView(it) }
@@ -58,7 +56,7 @@ abstract class ApiGenerator(
             return null
         }
 
-        val fileContent = interfacesContentBuilder()
+        val fileContent = contentBuilder("interfaces.vm")
             .put("interfaces", module.interfaces.map { toView(it) })
             .build()
 

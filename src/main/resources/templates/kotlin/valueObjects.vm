@@ -1,4 +1,11 @@
 package ${packageName}.api
+#if($imports.size() > 0)
+
+#foreach($import in $imports)
+import ${import}.api.*
+#end
+
+#end
 
 #foreach($vo in $valueObjects.simpleList)
 data class ${vo.name}(
