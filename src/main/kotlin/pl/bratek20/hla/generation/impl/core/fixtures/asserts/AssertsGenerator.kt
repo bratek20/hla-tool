@@ -1,10 +1,9 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.ModulePartFileGenerator
+import pl.bratek20.hla.generation.impl.core.domain.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.domain.*
-import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 data class AssertFieldView(
     val name: String,

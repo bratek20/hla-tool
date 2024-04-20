@@ -29,4 +29,3 @@ data class SomeClass4(
     val otherIdList: List<OtherId>,
     val otherClassList: List<OtherClass>,
 )
-

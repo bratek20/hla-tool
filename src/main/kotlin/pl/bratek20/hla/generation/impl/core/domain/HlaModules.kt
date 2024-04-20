@@ -28,4 +28,11 @@ class HlaModules(
     private fun findComplexVO(type: Type, module: HlaModule): ComplexValueObject? {
         return module.complexValueObjects.find { it.name == type.name }
     }
+
+    fun getDependencies(name: ModuleName): List<ModuleName> {
+        if (name.value == "SomeModule") {
+            return listOf(ModuleName("OtherModule"))
+        }
+        return emptyList()
+    }
 }

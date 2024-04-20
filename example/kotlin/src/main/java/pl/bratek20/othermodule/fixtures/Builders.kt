@@ -13,4 +13,3 @@ fun otherClass(init: OtherClassDef.() -> Unit = {}): OtherClass {
         amount = def.amount,
     )
 }
-

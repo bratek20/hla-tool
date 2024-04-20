@@ -1,10 +1,8 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.builders
 
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.*
 import pl.bratek20.hla.generation.impl.core.domain.*
 import pl.bratek20.hla.utils.pascalToCamelCase
-import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 data class BuilderFieldView(
     val name: String,

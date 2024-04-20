@@ -18,4 +18,3 @@ fun assertOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> U
         assertThat(given.amount).isEqualTo(it)
     }
 }
-

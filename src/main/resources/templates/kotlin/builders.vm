@@ -1,8 +1,15 @@
 package ${packageName}.fixtures
+#if($imports.size() > 0)
+
+#foreach($import in $imports)
+import ${import}.api.*
+import ${import}.fixtures.*
+#end
+#end
 
 import ${packageName}.api.*
-
 #foreach($b in $builders)
+
 data class ${b.defName}(
     #foreach($field in $b.fields)
     var $field.name: $field.defType.name() = $field.defType.defaultValue(),
@@ -15,8 +22,6 @@ fun ${b.funName}(init: ${b.defName}.() -> Unit = {}): ${b.voName} {
         $field.name = $field.defType.constructor("def.$field.name"),
     #end
     )
-}
-#if($foreach.hasNext)
+}#if($foreach.hasNext)
 
-#end
-#end
+#end#end

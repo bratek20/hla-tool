@@ -1,5 +1,8 @@
 package pl.bratek20.somemodule.fixtures
 
+import pl.bratek20.othermodule.api.*
+import pl.bratek20.othermodule.fixtures.*
+
 import pl.bratek20.somemodule.api.*
 
 data class SomeClassDef(
@@ -42,3 +45,18 @@ fun someClass3(init: SomeClass3Def.() -> Unit = {}): SomeClass3 {
     )
 }
 
+data class SomeClass4Def(
+    var otherId: String = "someValue",
+    var otherClass: (OtherClassDef.() -> Unit) = {},
+    var otherIdList: List<String> = emptyList(),
+    var otherClassList: List<(OtherClassDef.() -> Unit)> = emptyList(),
+)
+fun someClass4(init: SomeClass4Def.() -> Unit = {}): SomeClass4 {
+    val def = SomeClass4Def().apply(init)
+    return SomeClass4(
+        otherId = OtherId(def.otherId),
+        otherClass = otherClass(def.otherClass),
+        otherIdList = def.otherIdList.map { it -> OtherId(it) },
+        otherClassList = def.otherClassList.map { it -> otherClass(it) },
+    )
+}

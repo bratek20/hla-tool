@@ -3,23 +3,19 @@ package ${packageName}.api
 
 #foreach($import in $imports)
 import ${import}.api.*
-#end
-
-#end
-
+#end#end
 #foreach($vo in $valueObjects.simpleList)
+
 data class ${vo.name}(
     val value: ${vo.type}
 )
-
 #end
 #foreach($vo in $valueObjects.complexList)
+
 data class ${vo.name}(
     #foreach($field in $vo.fields)
     val $field.name: $field.type,
     #end
-)
-#if($foreach.hasNext)
+)#if($foreach.hasNext)
 
-#end
-#end
+#end#end

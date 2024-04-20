@@ -1,6 +1,7 @@
 package pl.bratek20.somemodule.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
+import pl.bratek20.othermodule.fixtures.*
 import pl.bratek20.somemodule.api.*
 
 data class ExpectedSomeClass(
@@ -64,3 +65,30 @@ fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> U
     }
 }
 
+data class ExpectedSomeClass4(
+    var otherId: String? = null,
+    var otherClass: (ExpectedOtherClass.() -> Unit)? = null,
+    var otherIdList: List<String>? = null,
+    var otherClassList: List<(ExpectedOtherClass.() -> Unit)>? = null,
+)
+fun assertSomeClass4(given: SomeClass4, expectedInit: ExpectedSomeClass4.() -> Unit) {
+    val expected = ExpectedSomeClass4().apply(expectedInit)
+
+    expected.otherId?.let {
+        assertThat(given.otherId.value).isEqualTo(it)
+    }
+
+    expected.otherClass?.let {
+        assertOtherClass(given.otherClass, it)
+    }
+
+    expected.otherIdList?.let {
+        assertThat(given.otherIdList).hasSize(it.size)
+        given.otherIdList.forEachIndexed { idx, entry -> assertThat(entry.value).isEqualTo(it[idx]) }
+    }
+
+    expected.otherClassList?.let {
+        assertThat(given.otherClassList).hasSize(it.size)
+        given.otherClassList.forEachIndexed { idx, entry -> assertOtherClass(entry, it[idx]) }
+    }
+}

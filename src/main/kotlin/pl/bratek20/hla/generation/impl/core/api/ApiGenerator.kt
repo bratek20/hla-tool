@@ -2,15 +2,14 @@ package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.ModulePartDirectoryGenerator
+import pl.bratek20.hla.generation.impl.core.domain.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
 import pl.bratek20.hla.generation.impl.core.domain.ViewTypeFactory
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.Interface
 import pl.bratek20.hla.model.SimpleValueObject
 import pl.bratek20.hla.model.Type
-import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 abstract class ApiGenerator(
     c: ModuleGenerationContext,

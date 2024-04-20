@@ -7,7 +7,10 @@ import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
+import pl.bratek20.hla.generation.impl.core.domain.ContentBuilderExtension
 import pl.bratek20.hla.generation.impl.core.domain.HlaModules
+import pl.bratek20.hla.generation.impl.core.domain.LanguageStrategy
+import pl.bratek20.hla.generation.impl.core.domain.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
@@ -110,7 +113,7 @@ class ModuleGeneratorImpl : ModuleGenerator {
                 fixturesCode
             )
         )
-        if (false) {
+        if (false && moduleName.value == "SomeModule" && language == ModuleLanguage.KOTLIN) {
             DirectoryLogic().writeDirectory(Path("tmp"), x)
         }
         return x

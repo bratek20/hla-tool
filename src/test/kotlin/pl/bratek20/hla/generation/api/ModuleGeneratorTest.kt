@@ -215,7 +215,7 @@ class ModuleGeneratorTest {
                     "SomeModule",
                     "example/typescript/SomeModule",
                     ModuleLanguage.TYPE_SCRIPT
-                )
+                ),
             )
     }
 

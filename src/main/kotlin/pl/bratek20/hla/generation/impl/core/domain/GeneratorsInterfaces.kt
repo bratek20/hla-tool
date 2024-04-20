@@ -1,11 +1,10 @@
-package pl.bratek20.hla.generation.impl.core
+package pl.bratek20.hla.generation.impl.core.domain
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
-import pl.bratek20.hla.generation.impl.core.domain.HlaModules
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 import pl.bratek20.hla.velocity.api.VelocityFacade

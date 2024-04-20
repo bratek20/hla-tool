@@ -1,9 +1,14 @@
 package ${packageName}.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
+#if($imports.size() > 0)
+#foreach($import in $imports)
+import ${import}.fixtures.*
+#end
+#end
 import ${packageName}.api.*
-
 #foreach($a in $asserts)
+
 data class ${a.expectedName}(
     #foreach($field in $a.fields)
     var $field.name: $field.expectedType.name()? = null,
@@ -20,8 +25,6 @@ fun ${a.funName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Un
 
         #end
     #end
-}
-#if($foreach.hasNext)
+}#if($foreach.hasNext)
 
-#end
-#end
+#end#end
