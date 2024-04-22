@@ -2,36 +2,36 @@ package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.domain.HlaModules
+import pl.bratek20.hla.generation.impl.core.api.ViewTypeFactory
+import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.model.HlaModule
+import pl.bratek20.hla.model.Type
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 class ModuleGenerationContext(
-    val modules: HlaModules,
+    val domain: DomainContext,
     val velocity: VelocityFacade,
+    val language: LanguageSupport
 ) {
-    lateinit var language: LanguageSupport
-
     val module: HlaModule
-        get() = modules.current
+        get() = domain.module
 }
 
-abstract class ContentBuilderExtension(
-    protected val c: ModuleGenerationContext
-) {
-    abstract fun extend(builder: VelocityFileContentBuilder)
+interface ContentBuilderExtension{
+    fun extend(builder: VelocityFileContentBuilder)
 }
 
 abstract class ModulePartGenerator(
-    private val c: ModuleGenerationContext
+    private val c: ModuleGenerationContext,
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.domain.modules, c.language.types())
 ) {
     protected val module
-        get() = c.modules.current
+        get() = c.module
 
     protected val modules
-        get() = c.modules
+        get() = c.domain.modules
 
     protected val language
         get() = c.language
@@ -46,6 +46,8 @@ abstract class ModulePartGenerator(
 
         return builder
     }
+
+    protected fun viewType(type: Type?) = viewTypeFactory.create(type)
 }
 
 abstract class ModulePartFileGenerator(c: ModuleGenerationContext)

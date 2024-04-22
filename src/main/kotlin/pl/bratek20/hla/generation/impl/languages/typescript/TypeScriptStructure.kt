@@ -1,9 +1,9 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.LanguageStructure
 
-class TypeScriptStructure(private val c: ModuleGenerationContext)
+class TypeScriptStructure(private val c: DomainContext)
     : LanguageStructure
 {
     override fun moduleDirName(): String {
@@ -32,5 +32,13 @@ class TypeScriptStructure(private val c: ModuleGenerationContext)
 
     override fun assertsFileName(): String {
         return "Asserts.ts"
+    }
+
+    override fun webDirName(): String {
+        return "Web"
+    }
+
+    override fun dtosFileName(): String {
+        return "Dtos.ts"
     }
 }

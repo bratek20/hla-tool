@@ -10,8 +10,7 @@ import pl.bratek20.hla.model.SimpleValueObject
 import pl.bratek20.hla.model.Type
 
 class ApiGenerator(
-    c: ModuleGenerationContext,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types())
+    c: ModuleGenerationContext
 ): ModulePartDirectoryGenerator(c) {
 
     override fun generateDirectory(): Directory {
@@ -85,6 +84,6 @@ class ApiGenerator(
     }
 
     private fun toViewType(type: Type?): String {
-        return viewTypeFactory.create(type).name()
+        return viewType(type).name()
     }
 }

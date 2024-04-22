@@ -2,9 +2,10 @@ package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.*
 
-class TypeScriptSupport(private val c: ModuleGenerationContext)
+class TypeScriptSupport(private val c: DomainContext)
     : LanguageSupport
 {
     override fun name(): ModuleLanguage {

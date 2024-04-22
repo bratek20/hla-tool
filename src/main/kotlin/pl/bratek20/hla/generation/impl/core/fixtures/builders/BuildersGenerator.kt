@@ -21,7 +21,6 @@ data class BuilderView(
 
 class BuildersGenerator(
     c: ModuleGenerationContext,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
     private val defTypeFactory: DefTypeFactory = DefTypeFactory(c.language.types(), c.language.buildersFixture()),
 ): ModulePartFileGenerator(c) {
 
@@ -32,10 +31,9 @@ class BuildersGenerator(
                 defName = it.name + "Def",
                 voName = it.name,
                 fields = it.fields.map {
-                    val viewType = viewTypeFactory.create(it.type)
                     BuilderFieldView(
                         name = it.name,
-                        defType = defType(viewType),
+                        defType = defType(viewType(it.type)),
                     )
                 }
             )

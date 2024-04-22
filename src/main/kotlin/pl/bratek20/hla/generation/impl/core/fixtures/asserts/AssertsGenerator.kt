@@ -21,7 +21,6 @@ data class AssertView(
 
 class AssertsGenerator(
     c: ModuleGenerationContext,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
     private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.assertsFixture())
 ): ModulePartFileGenerator(c) {
 
@@ -36,10 +35,9 @@ class AssertsGenerator(
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
-                    val viewType = viewTypeFactory.create(it.type)
                     AssertFieldView(
                         name = it.name,
-                        expectedType = expectedType(viewType)
+                        expectedType = expectedType(viewType(it.type))
                     )
                 }
             )

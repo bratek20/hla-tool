@@ -51,12 +51,12 @@ class ViewTypeFactory(
 
     fun create(rawType: Type?): ViewType {
         val type = DomainTypeFactory(modules).create(rawType)
-        return create2(type)
+        return createFromDomainType(type)
     }
 
-    private fun create2(type: DomainType): ViewType {
+    private fun createFromDomainType(type: DomainType): ViewType {
         return when (type) {
-            is ListDomainType -> ListViewType(create2(type.wrappedType), languageTypes)
+            is ListDomainType -> ListViewType(createFromDomainType(type.wrappedType), languageTypes)
             is SimpleVODomainType -> SimpleVOViewType(type.name, BaseViewType(type.boxedType.name, languageTypes))
             is ComplexVODomainType -> ComplexVOViewType(type.name)
             is BaseDomainType -> BaseViewType(type.name, languageTypes)

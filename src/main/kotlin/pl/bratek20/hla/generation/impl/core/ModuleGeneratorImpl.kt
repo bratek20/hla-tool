@@ -9,6 +9,7 @@ import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.generation.impl.core.domain.*
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
+import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.*
 import pl.bratek20.hla.generation.impl.languages.typescript.*
 import pl.bratek20.hla.model.HlaModule
@@ -19,30 +20,32 @@ class ModuleGeneratorImpl : ModuleGenerator {
 
     override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<HlaModule>): Directory {
 
-        val context = ModuleGenerationContext(
+        val domainContext = DomainContext(
             modules = HlaModules(moduleName, modules),
-            velocity = velocity,
         )
 
-        val stg = when (language) {
-            ModuleLanguage.KOTLIN -> KotlinSupport(context)
-            ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(context)
-        }
+        val context = ModuleGenerationContext(
+            domain = domainContext,
+            velocity = velocity,
+            language = when (language) {
+                ModuleLanguage.KOTLIN -> KotlinSupport(domainContext)
+                ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
+            }
+        )
 
-        context.language = stg
-
-
-        val apiCode = ApiGenerator(context).generateDirectory()
-        val fixturesCode = FixturesGenerator(context).generateDirectory()
+        val apiSubmodule = ApiGenerator(context).generateDirectory()
+        val fixturesSubmodule = FixturesGenerator(context).generateDirectory()
+        val webSubmodule = WebGenerator(context).generateDirectory()
 
         val x = Directory(
             name = context.language.structure().moduleDirName(),
             directories = listOf(
-                apiCode,
-                fixturesCode
+                apiSubmodule,
+                fixturesSubmodule,
+                webSubmodule
             )
         )
-        if (moduleName.value == "OtherModule" && language == ModuleLanguage.TYPE_SCRIPT) {
+        if (moduleName.value == "OtherModule" && language == ModuleLanguage.KOTLIN) {
             DirectoryLogic().deleteDirectory(Path("tmp"))
             DirectoryLogic().writeDirectory(Path("tmp"), x)
         }

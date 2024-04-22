@@ -10,4 +10,7 @@ interface LanguageStructure {
     fun fixturesDirName(): String
     fun buildersFileName(): String
     fun assertsFileName(): String
+
+    fun webDirName(): String
+    fun dtosFileName(): String
 }

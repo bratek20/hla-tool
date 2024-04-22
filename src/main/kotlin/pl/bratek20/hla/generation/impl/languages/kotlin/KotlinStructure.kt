@@ -1,9 +1,9 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.LanguageStructure
 
-class KotlinStructure(private val c: ModuleGenerationContext) : LanguageStructure {
+class KotlinStructure(private val c: DomainContext) : LanguageStructure {
     override fun moduleDirName(): String {
         return c.module.name.value.lowercase()
     }
@@ -30,5 +30,13 @@ class KotlinStructure(private val c: ModuleGenerationContext) : LanguageStructur
 
     override fun assertsFileName(): String {
         return "Asserts.kt"
+    }
+
+    override fun webDirName(): String {
+        return "web"
+    }
+
+    override fun dtosFileName(): String {
+        return "Dtos.kt"
     }
 }

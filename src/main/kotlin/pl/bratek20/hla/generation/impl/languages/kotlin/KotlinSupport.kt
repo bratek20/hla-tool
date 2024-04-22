@@ -3,9 +3,10 @@ package pl.bratek20.hla.generation.impl.languages.kotlin
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.*
 
-class KotlinSupport(private val c: ModuleGenerationContext)
+class KotlinSupport(private val c: DomainContext)
     : LanguageSupport {
 
     override fun name(): ModuleLanguage {
