@@ -1,8 +1,8 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.impl.core.domain.HlaModules
-import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.domain.MoreLanguageTypes
+import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
+import pl.bratek20.hla.generation.impl.core.language.MoreLanguageTypes
 import pl.bratek20.hla.model.BaseType
 import pl.bratek20.hla.utils.pascalToCamelCase
 
@@ -59,6 +59,10 @@ class TypeScriptTypes: LanguageTypes {
 }
 
 class TypeScriptMoreTypes(modules: HlaModules) : MoreLanguageTypes(modules) {
+    override fun assertFunName(name: String): String {
+        return pascalToCamelCase(name)
+    }
+
     override fun defClassType(name: String): String {
         val base = "${name}Def"
         val module = modules.getComplexVoModule(name);

@@ -33,6 +33,9 @@ abstract class ModulePartGenerator(
     protected val modules
         get() = c.modules
 
+    protected val language
+        get() = c.language
+
     protected fun contentBuilder(fileName: String): VelocityFileContentBuilder {
         val path = "templates/${c.language.name().name.lowercase()}/$fileName"
 

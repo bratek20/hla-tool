@@ -1,5 +1,6 @@
-package pl.bratek20.hla.generation.impl.core.domain
+package pl.bratek20.hla.generation.impl.core.language
 
+import pl.bratek20.hla.generation.impl.core.domain.HlaModules
 import pl.bratek20.hla.model.BaseType
 
 interface LanguageTypes {
@@ -23,6 +24,8 @@ interface LanguageTypes {
 abstract class MoreLanguageTypes(
     protected val modules: HlaModules
 ) {
+    abstract fun assertFunName(name: String): String
+
     abstract fun defClassType(name: String): String
 
     abstract fun expectedClassType(name: String): String

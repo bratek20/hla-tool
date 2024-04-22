@@ -19,12 +19,11 @@ data class BuilderView(
     val fields: List<BuilderFieldView>
 )
 
-abstract class BuildersGenerator(
+class BuildersGenerator(
     c: ModuleGenerationContext,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
     private val defTypeFactory: DefTypeFactory = DefTypeFactory(c.language.types(), c.language.moreTypes()),
 ): ModulePartFileGenerator(c) {
-    abstract fun buildersFileName(): String
 
     override fun generateFile(): File {
         val builders = module.complexValueObjects.map {
@@ -47,7 +46,7 @@ abstract class BuildersGenerator(
             .build()
 
         return File(
-            name = buildersFileName(),
+            name = language.structure().buildersFileName(),
             content = fileContent
         )
     }

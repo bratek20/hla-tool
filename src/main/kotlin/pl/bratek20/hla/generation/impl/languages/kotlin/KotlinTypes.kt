@@ -1,8 +1,8 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
 import pl.bratek20.hla.generation.impl.core.domain.HlaModules
-import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.domain.MoreLanguageTypes
+import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
+import pl.bratek20.hla.generation.impl.core.language.MoreLanguageTypes
 import pl.bratek20.hla.model.BaseType
 import pl.bratek20.hla.utils.pascalToCamelCase
 
@@ -59,6 +59,10 @@ class KotlinTypes: LanguageTypes {
 }
 
 class KotlinMoreTypes(modules: HlaModules) : MoreLanguageTypes(modules) {
+    override fun assertFunName(name: String): String {
+        return "assert${name}"
+    }
+
     override fun defClassType(name: String): String {
         return "(${name}Def.() -> Unit)"
     }

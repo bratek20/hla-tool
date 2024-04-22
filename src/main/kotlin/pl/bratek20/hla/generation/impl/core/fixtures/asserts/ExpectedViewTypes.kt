@@ -1,7 +1,8 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
 import pl.bratek20.hla.generation.impl.core.api.*
-import pl.bratek20.hla.generation.impl.core.domain.*
+import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
+import pl.bratek20.hla.generation.impl.core.language.MoreLanguageTypes
 
 interface ExpectedViewType {
     fun name(): String

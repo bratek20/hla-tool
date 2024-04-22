@@ -19,14 +19,11 @@ data class AssertView(
     val fields: List<AssertFieldView>
 )
 
-abstract class AssertsGenerator(
+class AssertsGenerator(
     c: ModuleGenerationContext,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
     private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.moreTypes())
 ): ModulePartFileGenerator(c) {
-
-    abstract fun assertsFileName(): String
-    abstract fun assertFunName(voName: String): String
 
     private fun expectedType(type: ViewType): ExpectedViewType {
         return expectedTypeFactory.create(type)
@@ -35,7 +32,7 @@ abstract class AssertsGenerator(
     override fun generateFile(): File {
         val asserts = module.complexValueObjects.map {
             AssertView(
-                funName = assertFunName(it.name),
+                funName =  language.moreTypes().assertFunName(it.name),
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
@@ -53,7 +50,7 @@ abstract class AssertsGenerator(
             .build()
 
         return File(
-            name = assertsFileName(),
+            name = language.structure().assertsFileName(),
             content = fileContent
         )
     }

@@ -4,22 +4,15 @@ import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
-import pl.bratek20.hla.generation.impl.core.domain.DomainTypeFactory
-import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.Interface
 import pl.bratek20.hla.model.SimpleValueObject
 import pl.bratek20.hla.model.Type
 
-abstract class ApiGenerator(
+class ApiGenerator(
     c: ModuleGenerationContext,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types())
 ): ModulePartDirectoryGenerator(c) {
-    abstract fun dirName(): String
-
-    abstract fun valueObjectsFileName(): String
-
-    abstract fun interfacesFileName(): String
 
     override fun generateDirectory(): Directory {
         val valueObjectsFile = valueObjectsFile()
@@ -30,7 +23,7 @@ abstract class ApiGenerator(
         interfacesFile?.let { files.add(it) }
 
         return Directory(
-            name = dirName(),
+            name = language.structure().apiDirName(),
             files = files
         )
     }
@@ -44,7 +37,7 @@ abstract class ApiGenerator(
             .build()
 
         return File(
-            name = valueObjectsFileName(),
+            name = language.structure().valueObjectsFileName(),
             content = fileContent
         )
     }
@@ -59,7 +52,7 @@ abstract class ApiGenerator(
             .build()
 
         return File(
-            name = interfacesFileName(),
+            name = language.structure().interfacesFileName(),
             content = fileContent
         )
     }

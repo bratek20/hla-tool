@@ -1,6 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.generation.impl.core.domain.*
+import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.model.*
 
 interface ViewType {
