@@ -1,10 +1,7 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
-import pl.bratek20.hla.generation.impl.core.domain.HlaModules
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.language.MoreLanguageTypes
 import pl.bratek20.hla.model.BaseType
-import pl.bratek20.hla.utils.pascalToCamelCase
 
 class TypeScriptTypes: LanguageTypes {
     override fun mapBaseType(type: BaseType): String {
@@ -52,54 +49,5 @@ class TypeScriptTypes: LanguageTypes {
     override fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String {
         return "$listName.forEach(($entry, $idx) => $body)"
     }
-
-    override fun indentionForAssertListElements(): Int {
-        return 12
-    }
 }
 
-class TypeScriptMoreTypes(modules: HlaModules) : MoreLanguageTypes(modules) {
-    override fun assertFunName(name: String): String {
-        return pascalToCamelCase(name)
-    }
-
-    override fun defClassType(name: String): String {
-        val base = "${name}Def"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Builder.$base"
-        }
-    }
-
-    override fun expectedClassType(name: String): String {
-        val base = "Expected${name}"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Assert.$base"
-        }
-    }
-
-    override fun complexVoAssertion(name: String, given: String, expected: String): String {
-        val base = "${pascalToCamelCase(name)}($given, $expected)"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Assert.$base"
-        }
-    }
-
-    override fun complexVoDefConstructor(name: String, arg: String): String {
-        val base = "${pascalToCamelCase(name)}($arg)"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Builder.$base"
-        }
-    }
-}

@@ -1,8 +1,8 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
-import pl.bratek20.hla.generation.impl.core.domain.HlaModules
+import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsFixture
+import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersFixture
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.language.MoreLanguageTypes
 import pl.bratek20.hla.model.BaseType
 import pl.bratek20.hla.utils.pascalToCamelCase
 
@@ -51,31 +51,5 @@ class KotlinTypes: LanguageTypes {
 
     override fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String {
         return "$listName.forEachIndexed { $idx, $entry -> $body }"
-    }
-
-    override fun indentionForAssertListElements(): Int {
-        return 8
-    }
-}
-
-class KotlinMoreTypes(modules: HlaModules) : MoreLanguageTypes(modules) {
-    override fun assertFunName(name: String): String {
-        return "assert${name}"
-    }
-
-    override fun defClassType(name: String): String {
-        return "(${name}Def.() -> Unit)"
-    }
-
-    override fun expectedClassType(name: String): String {
-        return "(Expected${name}.() -> Unit)"
-    }
-
-    override fun complexVoAssertion(name: String, given: String, expected: String): String {
-        return "assert$name($given, $expected)"
-    }
-
-    override fun complexVoDefConstructor(name: String, arg: String): String {
-        return "${pascalToCamelCase(name)}($arg)"
     }
 }

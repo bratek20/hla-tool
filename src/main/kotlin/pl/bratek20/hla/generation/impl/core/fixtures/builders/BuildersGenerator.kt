@@ -22,7 +22,7 @@ data class BuilderView(
 class BuildersGenerator(
     c: ModuleGenerationContext,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
-    private val defTypeFactory: DefTypeFactory = DefTypeFactory(c.language.types(), c.language.moreTypes()),
+    private val defTypeFactory: DefTypeFactory = DefTypeFactory(c.language.types(), c.language.buildersFixture()),
 ): ModulePartFileGenerator(c) {
 
     override fun generateFile(): File {

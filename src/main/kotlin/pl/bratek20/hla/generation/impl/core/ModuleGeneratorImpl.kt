@@ -25,8 +25,8 @@ class ModuleGeneratorImpl : ModuleGenerator {
         )
 
         val stg = when (language) {
-            ModuleLanguage.KOTLIN -> KotlinStrategy(context)
-            ModuleLanguage.TYPE_SCRIPT -> TypeScriptStrategy(context)
+            ModuleLanguage.KOTLIN -> KotlinSupport(context)
+            ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(context)
         }
 
         context.language = stg

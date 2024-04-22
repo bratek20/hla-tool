@@ -1,6 +1,5 @@
 package pl.bratek20.hla.generation.impl.core.language
 
-import pl.bratek20.hla.generation.impl.core.domain.HlaModules
 import pl.bratek20.hla.model.BaseType
 
 interface LanguageTypes {
@@ -17,20 +16,5 @@ interface LanguageTypes {
     fun assertListLength(given: String, expected: String): String
 
     fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String
-
-    fun indentionForAssertListElements(): Int
 }
 
-abstract class MoreLanguageTypes(
-    protected val modules: HlaModules
-) {
-    abstract fun assertFunName(name: String): String
-
-    abstract fun defClassType(name: String): String
-
-    abstract fun expectedClassType(name: String): String
-
-    abstract fun complexVoAssertion(name: String, given: String, expected: String): String
-
-    abstract fun complexVoDefConstructor(name: String, arg: String): String
-}

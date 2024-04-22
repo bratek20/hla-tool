@@ -1,8 +1,8 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
 import pl.bratek20.hla.generation.impl.core.api.*
+import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsFixture
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.language.MoreLanguageTypes
 
 interface ExpectedViewType {
     fun name(): String
@@ -49,11 +49,11 @@ data class SimpleVOExpectedViewType(
 
 data class ComplexVOExpectedViewType(
     val name: String,
-    val languageTypes: LanguageTypes,
-    val moreTypes: MoreLanguageTypes
+    val types: LanguageTypes,
+    val fixture: LanguageAssertsFixture
 ) : ExpectedViewType {
     override fun name(): String {
-        return moreTypes.expectedClassType(name)
+        return fixture.expectedClassType(name)
     }
 
     override fun defaultValue(): String {
@@ -61,34 +61,35 @@ data class ComplexVOExpectedViewType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return moreTypes.complexVoAssertion(name, given, expected)
+        return fixture.complexVoAssertion(name, given, expected)
     }
 }
 
 data class ListExpectedViewType(
     val wrappedType: ExpectedViewType,
-    val languageTypes: LanguageTypes
+    val types: LanguageTypes,
+    val fixture: LanguageAssertsFixture
 ) : ExpectedViewType {
     override fun name(): String {
-        return languageTypes.wrapWithList(wrappedType.name())
+        return types.wrapWithList(wrappedType.name())
     }
 
     override fun defaultValue(): String {
-        return languageTypes.defaultValueForList()
+        return types.defaultValueForList()
     }
 
     override fun assertion(given: String, expected: String): String {
-        val entriesAssertion = languageTypes.listIndexedIteration(
+        val entriesAssertion = types.listIndexedIteration(
             given,
             "idx",
             "entry",
             wrappedType.assertion("entry", "$expected[idx]")
         )
 
-        val indention = " ".repeat(languageTypes.indentionForAssertListElements())
+        val indention = " ".repeat(fixture.indentionForAssertListElements())
 
         return """
-        |${languageTypes.assertListLength(given, expected)}
+        |${types.assertListLength(given, expected)}
         |$indention$entriesAssertion
         """.trimMargin()
     }
@@ -96,14 +97,14 @@ data class ListExpectedViewType(
 
 class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
-    private val moreTypes: MoreLanguageTypes
+    private val languageFixture: LanguageAssertsFixture,
 ) {
     fun create(type: ViewType): ExpectedViewType {
         return when (type) {
             is BaseViewType -> BaseExpectedViewType(type, languageTypes)
             is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType, languageTypes)
-            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name, languageTypes, moreTypes)
-            is ListViewType -> ListExpectedViewType(create(type.wrappedType), languageTypes)
+            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name, languageTypes, languageFixture)
+            is ListViewType -> ListExpectedViewType(create(type.wrappedType), languageTypes, languageFixture)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

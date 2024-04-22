@@ -3,7 +3,7 @@ package pl.bratek20.hla.generation.impl.core
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.domain.HlaModules
-import pl.bratek20.hla.generation.impl.core.language.LanguageStrategy
+import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
@@ -12,7 +12,7 @@ class ModuleGenerationContext(
     val modules: HlaModules,
     val velocity: VelocityFacade,
 ) {
-    lateinit var language: LanguageStrategy
+    lateinit var language: LanguageSupport
 
     val module: HlaModule
         get() = modules.current

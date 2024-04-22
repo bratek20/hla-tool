@@ -1,15 +1,15 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.builders
 
 import pl.bratek20.hla.generation.impl.core.api.*
+import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersFixture
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.language.MoreLanguageTypes
 
 interface DefViewType {
     fun name(): String
 
     fun defaultValue(): String
 
-    fun constructor(x: String): String
+    fun constructor(arg: String): String
 }
 
 data class BaseDefViewType(
@@ -24,8 +24,8 @@ data class BaseDefViewType(
         return languageTypes.defaultValueForBaseType(domain.name)
     }
 
-    override fun constructor(x: String): String {
-        return x
+    override fun constructor(arg: String): String {
+        return arg
     }
 }
 
@@ -42,15 +42,15 @@ data class SimpleVODefViewType(
         return boxedType.defaultValue()
     }
 
-    override fun constructor(x: String): String {
-        return languageTypes.classConstructor(domain.name, x)
+    override fun constructor(arg: String): String {
+        return languageTypes.classConstructor(domain.name, arg)
     }
 }
 
 data class ComplexVODefViewType(
     val name: String,
     val languageTypes: LanguageTypes,
-    val more: MoreLanguageTypes
+    val more: LanguageBuildersFixture
 ) : DefViewType {
     override fun name(): String {
         return more.defClassType(name);
@@ -77,17 +77,17 @@ data class ListDefViewType(
         return languageTypes.defaultValueForList()
     }
 
-    override fun constructor(x: String): String {
+    override fun constructor(arg: String): String {
         if (wrappedType is BaseDefViewType) {
-            return x
+            return arg
         }
-        return languageTypes.mapListElements(x, "it", wrappedType.constructor("it"))
+        return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
     }
 }
 
 class DefTypeFactory(
     private val languageTypes: LanguageTypes,
-    private val more: MoreLanguageTypes
+    private val more: LanguageBuildersFixture
 ) {
     fun create(type: ViewType): DefViewType {
         return when (type) {

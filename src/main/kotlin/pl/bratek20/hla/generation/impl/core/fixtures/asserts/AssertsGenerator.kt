@@ -22,7 +22,7 @@ data class AssertView(
 class AssertsGenerator(
     c: ModuleGenerationContext,
     private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
-    private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.moreTypes())
+    private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.assertsFixture())
 ): ModulePartFileGenerator(c) {
 
     private fun expectedType(type: ViewType): ExpectedViewType {
@@ -32,7 +32,7 @@ class AssertsGenerator(
     override fun generateFile(): File {
         val asserts = module.complexValueObjects.map {
             AssertView(
-                funName =  language.moreTypes().assertFunName(it.name),
+                funName =  language.assertsFixture().assertFunName(it.name),
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
