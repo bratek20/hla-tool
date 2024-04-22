@@ -6,12 +6,12 @@ import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
 interface LanguageSupport {
     fun name(): ModuleLanguage
 
-    fun contentBuilderExtensions(): List<ContentBuilderExtension> = emptyList()
-
     fun types(): LanguageTypes
 
     fun structure(): LanguageStructure
 
     fun assertsFixture(): LanguageAssertsFixture
     fun buildersFixture(): LanguageBuildersFixture
+
+    fun contentBuilderExtensions(): List<ContentBuilderExtension> = emptyList()
 }
