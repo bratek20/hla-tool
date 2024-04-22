@@ -1,9 +1,11 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.domain.ModulePartFileGenerator
-import pl.bratek20.hla.generation.impl.core.domain.ModuleGenerationContext
-import pl.bratek20.hla.generation.impl.core.domain.*
+import pl.bratek20.hla.generation.impl.core.api.ViewType
+import pl.bratek20.hla.generation.impl.core.api.ViewTypeFactory
+import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
+import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.DomainTypeFactory
 
 data class AssertFieldView(
     val name: String,
@@ -19,7 +21,7 @@ data class AssertView(
 
 abstract class AssertsGenerator(
     c: ModuleGenerationContext,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.language.types()),
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
     private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.moreTypes())
 ): ModulePartFileGenerator(c) {
 
@@ -37,10 +39,10 @@ abstract class AssertsGenerator(
                 givenName = it.name,
                 expectedName = "Expected${it.name}",
                 fields = it.fields.map {
-                    val domainType = viewTypeFactory.create(it.type, modules)
+                    val viewType = viewTypeFactory.create(it.type)
                     AssertFieldView(
                         name = it.name,
-                        expectedType = expectedType(domainType)
+                        expectedType = expectedType(viewType)
                     )
                 }
             )

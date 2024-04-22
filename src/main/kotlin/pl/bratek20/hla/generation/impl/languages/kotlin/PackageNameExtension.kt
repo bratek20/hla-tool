@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
-import pl.bratek20.hla.generation.impl.core.domain.ContentBuilderExtension
-import pl.bratek20.hla.generation.impl.core.domain.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
+import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
 class PackageNameExtension(

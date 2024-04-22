@@ -1,7 +1,10 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.builders
 
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.domain.*
+import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
+import pl.bratek20.hla.generation.impl.core.api.ViewType
+import pl.bratek20.hla.generation.impl.core.api.ViewTypeFactory
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 data class BuilderFieldView(
@@ -18,7 +21,7 @@ data class BuilderView(
 
 abstract class BuildersGenerator(
     c: ModuleGenerationContext,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.language.types()),
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types()),
     private val defTypeFactory: DefTypeFactory = DefTypeFactory(c.language.types(), c.language.moreTypes()),
 ): ModulePartFileGenerator(c) {
     abstract fun buildersFileName(): String
@@ -30,10 +33,10 @@ abstract class BuildersGenerator(
                 defName = it.name + "Def",
                 voName = it.name,
                 fields = it.fields.map {
-                    val domainType = viewTypeFactory.create(it.type, modules)
+                    val viewType = viewTypeFactory.create(it.type)
                     BuilderFieldView(
                         name = it.name,
-                        defType = defType(domainType),
+                        defType = defType(viewType),
                     )
                 }
             )

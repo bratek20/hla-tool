@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.fixtures
 
 import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.generation.impl.core.domain.LanguageStrategy
+import pl.bratek20.hla.generation.impl.core.language.LanguageStrategy
 
 class FixturesGenerator(
     private val languageStrategy: LanguageStrategy,

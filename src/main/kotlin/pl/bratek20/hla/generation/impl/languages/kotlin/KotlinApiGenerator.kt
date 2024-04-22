@@ -1,10 +1,10 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
-import pl.bratek20.hla.generation.impl.core.domain.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 
 class KotlinApiGenerator(c: ModuleGenerationContext)
-    : ApiGenerator(c, KotlinTypes()) {
+    : ApiGenerator(c) {
 
     override fun dirName(): String {
         return "api"

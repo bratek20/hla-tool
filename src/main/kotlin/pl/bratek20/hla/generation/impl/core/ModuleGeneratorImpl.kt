@@ -11,6 +11,7 @@ import pl.bratek20.hla.generation.impl.core.domain.*
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
+import pl.bratek20.hla.generation.impl.core.language.LanguageStrategy
 import pl.bratek20.hla.generation.impl.languages.kotlin.*
 import pl.bratek20.hla.generation.impl.languages.typescript.*
 import pl.bratek20.hla.model.HlaModule

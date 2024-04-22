@@ -2,10 +2,10 @@ package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.domain.ModulePartDirectoryGenerator
-import pl.bratek20.hla.generation.impl.core.domain.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
+import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.domain.DomainTypeFactory
 import pl.bratek20.hla.generation.impl.core.domain.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.domain.ViewTypeFactory
 import pl.bratek20.hla.model.ComplexValueObject
 import pl.bratek20.hla.model.Interface
 import pl.bratek20.hla.model.SimpleValueObject
@@ -13,8 +13,7 @@ import pl.bratek20.hla.model.Type
 
 abstract class ApiGenerator(
     c: ModuleGenerationContext,
-    private val languageTypes: LanguageTypes,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(languageTypes)
+    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.modules, c.language.types())
 ): ModulePartDirectoryGenerator(c) {
     abstract fun dirName(): String
 
@@ -93,6 +92,6 @@ abstract class ApiGenerator(
     }
 
     private fun toViewType(type: Type?): String {
-        return viewTypeFactory.create(type, modules).name()
+        return viewTypeFactory.create(type).name()
     }
 }
