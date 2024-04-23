@@ -13,7 +13,30 @@ class HlaModulesParserTest {
         val modules = parser.parse(Path("src/test/resources/parsing"))
 
         assertModules(modules, listOf(
-            { name = "OtherModule" },
+            {
+                name = "OtherModule"
+                simpleValueObjects = listOf {
+                    name = "OtherId"
+                    type = "string"
+                }
+                complexValueObjects = listOf {
+                    name = "OtherClass"
+                    fields = listOf(
+                        {
+                            name = "id"
+                            type = {
+                                name = "OtherId"
+                            }
+                        },
+                        {
+                            name = "amount"
+                            type = {
+                                name = "int"
+                            }
+                        }
+                    )
+                }
+            },
             { name = "SomeModule" }
         ))
     }
