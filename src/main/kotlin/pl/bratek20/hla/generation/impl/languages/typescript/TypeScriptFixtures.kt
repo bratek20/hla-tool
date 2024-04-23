@@ -13,22 +13,12 @@ class TypeScriptAssertsPattern(private val modules: HlaModules) : LanguageAssert
 
     override fun expectedClassType(name: String): String {
         val base = "Expected${name}"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Assert.$base"
-        }
+        return handleReferencing(modules, name, base, "Assert")
     }
 
     override fun complexVoAssertion(name: String, given: String, expected: String): String {
         val base = "${pascalToCamelCase(name)}($given, $expected)"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Assert.$base"
-        }
+        return handleReferencing(modules, name, base, "Assert")
     }
 
     override fun indentionForAssertListElements(): Int {
@@ -39,33 +29,27 @@ class TypeScriptAssertsPattern(private val modules: HlaModules) : LanguageAssert
 class TypeScriptBuildersPattern(private val modules: HlaModules) : LanguageBuildersPattern {
     override fun defClassType(name: String): String {
         val base = "${name}Def"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Builder.$base"
-        }
+        return handleReferencing(modules, name, base, "Builder")
     }
 
     override fun complexVoDefConstructor(name: String, arg: String): String {
         val base = "${pascalToCamelCase(name)}($arg)"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Builder.$base"
-        }
+        return handleReferencing(modules, name, base, "Builder")
     }
 }
 
 class TypeScriptDtoPattern(private val modules: HlaModules) : LanguageDtoPattern {
     override fun dtoClassType(name: String): String {
         val base = "${name}Dto"
-        val module = modules.getComplexVoModule(name);
-        return if (module == modules.current.name) {
-            base
-        } else {
-            "${module.value}.Web.$base"
-        }
+        return handleReferencing(modules, name, base, "Web")
+    }
+}
+
+private fun handleReferencing(modules: HlaModules, name: String, base: String, submodule: String): String {
+    val module = modules.getComplexVoModule(name);
+    return if (module == modules.current.name) {
+        base
+    } else {
+        "${module.value}.$submodule.$base"
     }
 }
