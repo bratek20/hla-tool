@@ -49,11 +49,15 @@ data class ComplexVODtoViewType(
     val languageTypes: LanguageTypes
 ) : DtoViewType {
     override fun name(): String {
-        return name;
+        return name + "Dto"
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.classConstructor(name, arg)
+        return "$arg.toApi()"
+    }
+
+    override fun assignment(name: String): String {
+        return "${this.name}Dto.fromApi($name)"
     }
 }
 
@@ -70,6 +74,13 @@ data class ListDtoViewType(
             return arg
         }
         return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
+    }
+
+    override fun assignment(name: String): String {
+        if (wrappedType is BaseDtoViewType) {
+            return name
+        }
+        return languageTypes.mapListElements(name, "it", wrappedType.assignment("it"))
     }
 }
 

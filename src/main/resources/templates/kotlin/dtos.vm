@@ -3,13 +3,13 @@ package ${packageName}.web
 
 #foreach($import in $imports)
 import ${import}.api.*
-import ${import}.fixtures.*
+import ${import}.web.*
 #end
 #end
 
 import ${packageName}.api.*
-
 #foreach($d in $dtos)
+
 data class ${d.dtoName}(
     #foreach($field in $d.fields)
     val $field.name: $field.type.name(),
