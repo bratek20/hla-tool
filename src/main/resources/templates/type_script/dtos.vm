@@ -6,9 +6,9 @@ namespace ${moduleName}.Web {
         #end
 
         toApi(): ${d.apiName} {
-            return ${d.apiName}(
+            return new ${d.apiName}(
                 #foreach($field in $d.fields)
-                $field.type.constructor($field.name),
+                $field.type.constructor("this.$field.name"),
                 #end
             )
         }
@@ -16,7 +16,7 @@ namespace ${moduleName}.Web {
         static fromApi(api: ${d.apiName}): ${d.dtoName} {
             const dto = new ${d.dtoName}()
             #foreach($field in $d.fields)
-            $field.name = $field.type.assignment("api.${field.name}")
+            dto.$field.name = $field.type.assignment("api.${field.name}")
             #end
             return dto
         }
