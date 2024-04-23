@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test
 import pl.bratek20.hla.directory.assertCompareResult
 import pl.bratek20.hla.directory.assertDirectory
 import pl.bratek20.hla.directory.directory
-import pl.bratek20.hla.directory.impl.DirectoryLogic
+import pl.bratek20.hla.directory.impl.DirectoriesLogic
 
 class DirectoriesTest {
-    private val api = DirectoryLogic()
+    private val api = DirectoriesLogic()
 
     @Test
     fun shouldReadDirectory() {

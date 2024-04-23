@@ -2,7 +2,7 @@ package pl.bratek20.hla.directory.impl
 
 import pl.bratek20.hla.directory.api.*
 
-class DirectoryLogic: Directories {
+class DirectoriesLogic: Directories {
     override fun readDirectory(path: Path): Directory {
         val nioPath = java.nio.file.Paths.get(path.value)
         val file = nioPath.toFile()

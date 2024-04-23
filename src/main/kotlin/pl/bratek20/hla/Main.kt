@@ -1,7 +1,7 @@
 package pl.bratek20.hla
 
 import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.directory.impl.DirectoryLogic
+import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.generation.impl.core.ModuleGeneratorImpl
@@ -103,5 +103,5 @@ fun main() {
 
     val dir = ModuleGeneratorImpl().generate(ModuleName("example"), ModuleLanguage.KOTLIN, listOf(module))
 
-    DirectoryLogic().write(Path("tmp"), dir)
+    DirectoriesLogic().write(Path("tmp"), dir)
 }

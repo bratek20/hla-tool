@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.directory.impl.DirectoryLogic
+import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.generation.impl.core.ModuleGeneratorImpl
 import pl.bratek20.hla.model.TypeWrapper
 import pl.bratek20.hla.model.hlaModule
@@ -229,7 +229,7 @@ class ModuleGeneratorTest {
 
         val directory = codeGenerator.generate(ModuleName(moduleName), lang, modules)
 
-        val directoryApi = DirectoryLogic()
+        val directoryApi = DirectoriesLogic()
         val exampleDirectory = directoryApi.readDirectory(Path(path))
 
         val compareResult = directoryApi.compare(directory, exampleDirectory)

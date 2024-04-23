@@ -2,7 +2,7 @@ package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.directory.impl.DirectoryLogic
+import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
@@ -46,8 +46,8 @@ class ModuleGeneratorImpl : ModuleGenerator {
             )
         )
         if (moduleName.value == "SomeModule" && language == ModuleLanguage.KOTLIN) {
-            DirectoryLogic().deleteDirectory(Path("tmp"))
-            DirectoryLogic().write(Path("tmp"), x)
+            DirectoriesLogic().deleteDirectory(Path("tmp"))
+            DirectoriesLogic().write(Path("tmp"), x)
         }
         return x
     }

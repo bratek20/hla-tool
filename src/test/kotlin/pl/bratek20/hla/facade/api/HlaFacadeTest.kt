@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.directory.impl.DirectoryLogic
+import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.impl.HlaFacadeImpl
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
@@ -63,7 +63,7 @@ class HlaFacadeTest {
 
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {
-        val directories = DirectoryLogic()
+        val directories = DirectoriesLogic()
         val exampleDirectory = directories.readDirectory(Path(examplePath))
 
         val compareResult = directories.compare(writtenDirectory, exampleDirectory)
