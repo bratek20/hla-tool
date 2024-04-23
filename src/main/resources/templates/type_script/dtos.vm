@@ -5,10 +5,10 @@ namespace ${moduleName}.Web {
         $field.name: $field.type.name()
         #end
 
-        toApi(): ${d.apiName} {
+        static toApi(dto: ${d.dtoName}): ${d.apiName} {
             return new ${d.apiName}(
                 #foreach($field in $d.fields)
-                $field.type.constructor("this.$field.name"),
+                $field.type.constructor("dto.$field.name"),
                 #end
             )
         }

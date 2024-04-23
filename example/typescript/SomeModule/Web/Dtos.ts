@@ -3,10 +3,10 @@ namespace SomeModule.Web {
         id: string
         amount: number
 
-        toApi(): SomeClass {
+        static toApi(dto: SomeClassDto): SomeClass {
             return new SomeClass(
-                new SomeId(this.id),
-                this.amount,
+                new SomeId(dto.id),
+                dto.amount,
             )
         }
 
@@ -24,12 +24,12 @@ namespace SomeModule.Web {
         names: string[]
         ids: string[]
 
-        toApi(): SomeClass2 {
+        static toApi(dto: SomeClass2Dto): SomeClass2 {
             return new SomeClass2(
-                new SomeId(this.id),
-                this.enabled,
-                this.names,
-                this.ids.map(it => new SomeId(it)),
+                new SomeId(dto.id),
+                dto.enabled,
+                dto.names,
+                dto.ids.map(it => new SomeId(it)),
             )
         }
 
@@ -47,10 +47,10 @@ namespace SomeModule.Web {
         class2Object: SomeClass2Dto
         class2List: SomeClass2Dto[]
 
-        toApi(): SomeClass3 {
+        static toApi(dto: SomeClass3Dto): SomeClass3 {
             return new SomeClass3(
-                this.class2Object.toApi(),
-                this.class2List.map(it => it.toApi()),
+                dto.class2Object.toApi(),
+                dto.class2List.map(it => it.toApi()),
             )
         }
 
@@ -68,12 +68,12 @@ namespace SomeModule.Web {
         otherIdList: string[]
         otherClassList: OtherModule.Web.OtherClassDto[]
 
-        toApi(): SomeClass4 {
+        static toApi(dto: SomeClass4Dto): SomeClass4 {
             return new SomeClass4(
-                new OtherId(this.otherId),
-                this.otherClass.toApi(),
-                this.otherIdList.map(it => new OtherId(it)),
-                this.otherClassList.map(it => it.toApi()),
+                new OtherId(dto.otherId),
+                dto.otherClass.toApi(),
+                dto.otherIdList.map(it => new OtherId(it)),
+                dto.otherClassList.map(it => it.toApi()),
             )
         }
 
