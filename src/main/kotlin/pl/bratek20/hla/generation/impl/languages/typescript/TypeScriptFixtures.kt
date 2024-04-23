@@ -1,11 +1,12 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.impl.core.domain.HlaModules
-import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsFixture
-import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersFixture
+import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
+import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
+import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import pl.bratek20.hla.utils.pascalToCamelCase
 
-class TypeScriptAssertsFixture(private val modules: HlaModules) : LanguageAssertsFixture {
+class TypeScriptAssertsPattern(private val modules: HlaModules) : LanguageAssertsPattern {
     override fun assertFunName(name: String): String {
         return pascalToCamelCase(name)
     }
@@ -35,7 +36,7 @@ class TypeScriptAssertsFixture(private val modules: HlaModules) : LanguageAssert
     }
 }
 
-class TypeScriptBuildersFixture(private val modules: HlaModules) : LanguageBuildersFixture {
+class TypeScriptBuildersPattern(private val modules: HlaModules) : LanguageBuildersPattern {
     override fun defClassType(name: String): String {
         val base = "${name}Def"
         val module = modules.getComplexVoModule(name);
@@ -53,6 +54,18 @@ class TypeScriptBuildersFixture(private val modules: HlaModules) : LanguageBuild
             base
         } else {
             "${module.value}.Builder.$base"
+        }
+    }
+}
+
+class TypeScriptDtoPattern(private val modules: HlaModules) : LanguageDtoPattern {
+    override fun dtoClassType(name: String): String {
+        val base = "${name}Dto"
+        val module = modules.getComplexVoModule(name);
+        return if (module == modules.current.name) {
+            base
+        } else {
+            "${module.value}.Web.$base"
         }
     }
 }

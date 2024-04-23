@@ -1,10 +1,11 @@
 package pl.bratek20.hla.generation.impl.languages.kotlin
 
-import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsFixture
-import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersFixture
+import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
+import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
+import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import pl.bratek20.hla.utils.pascalToCamelCase
 
-class KotlinAssertsFixture: LanguageAssertsFixture {
+class KotlinAssertsPattern: LanguageAssertsPattern {
     override fun assertFunName(name: String): String {
         return "assert${name}"
     }
@@ -22,12 +23,18 @@ class KotlinAssertsFixture: LanguageAssertsFixture {
     }
 }
 
-class KotlinBuildersFixture: LanguageBuildersFixture {
+class KotlinBuildersPattern: LanguageBuildersPattern {
     override fun defClassType(name: String): String {
         return "(${name}Def.() -> Unit)"
     }
 
     override fun complexVoDefConstructor(name: String, arg: String): String {
         return "${pascalToCamelCase(name)}($arg)"
+    }
+}
+
+class KotlinDtoPattern: LanguageDtoPattern {
+    override fun dtoClassType(name: String): String {
+        return "${name}Dto"
     }
 }

@@ -1,6 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.web.dto
 
 import pl.bratek20.hla.generation.impl.core.api.*
+import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
 interface DtoViewType {
@@ -46,10 +47,10 @@ data class SimpleVODtoViewType(
 
 data class ComplexVODtoViewType(
     val name: String,
-    val languageTypes: LanguageTypes
+    val pattern: LanguageDtoPattern
 ) : DtoViewType {
     override fun name(): String {
-        return name + "Dto"
+        return pattern.dtoClassType(name)
     }
 
     override fun constructor(arg: String): String {
@@ -57,7 +58,7 @@ data class ComplexVODtoViewType(
     }
 
     override fun assignment(name: String): String {
-        return "${this.name}Dto.fromApi($name)"
+        return "${this.name()}.fromApi($name)"
     }
 }
 
@@ -85,13 +86,14 @@ data class ListDtoViewType(
 }
 
 class DtoViewTypeFactory(
-    private val languageTypes: LanguageTypes
+    private val languageTypes: LanguageTypes,
+    private val languageDtoPattern: LanguageDtoPattern
 ) {
     fun create(type: ViewType): DtoViewType {
         return when (type) {
             is BaseViewType -> BaseDtoViewType(type, languageTypes)
             is SimpleVOViewType -> SimpleVODtoViewType(type, create(type.boxedType) as BaseDtoViewType, languageTypes)
-            is ComplexVOViewType -> ComplexVODtoViewType(type.name, languageTypes)
+            is ComplexVOViewType -> ComplexVODtoViewType(type.name, languageDtoPattern)
             is ListViewType -> ListDtoViewType(create(type.wrappedType), languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }

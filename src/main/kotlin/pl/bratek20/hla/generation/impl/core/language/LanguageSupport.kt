@@ -10,8 +10,9 @@ interface LanguageSupport {
 
     fun structure(): LanguageStructure
 
-    fun assertsFixture(): LanguageAssertsFixture
-    fun buildersFixture(): LanguageBuildersFixture
+    fun assertsFixture(): LanguageAssertsPattern
+    fun buildersFixture(): LanguageBuildersPattern
+    fun dtoPattern(): LanguageDtoPattern
 
     fun contentBuilderExtensions(): List<ContentBuilderExtension> = emptyList()
 }

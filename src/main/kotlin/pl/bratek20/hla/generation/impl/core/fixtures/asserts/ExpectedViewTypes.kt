@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.asserts
 
 import pl.bratek20.hla.generation.impl.core.api.*
-import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsFixture
+import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
 interface ExpectedViewType {
@@ -50,7 +50,7 @@ data class SimpleVOExpectedViewType(
 data class ComplexVOExpectedViewType(
     val name: String,
     val types: LanguageTypes,
-    val fixture: LanguageAssertsFixture
+    val fixture: LanguageAssertsPattern
 ) : ExpectedViewType {
     override fun name(): String {
         return fixture.expectedClassType(name)
@@ -68,7 +68,7 @@ data class ComplexVOExpectedViewType(
 data class ListExpectedViewType(
     val wrappedType: ExpectedViewType,
     val types: LanguageTypes,
-    val fixture: LanguageAssertsFixture
+    val fixture: LanguageAssertsPattern
 ) : ExpectedViewType {
     override fun name(): String {
         return types.wrapWithList(wrappedType.name())
@@ -97,7 +97,7 @@ data class ListExpectedViewType(
 
 class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
-    private val languageFixture: LanguageAssertsFixture,
+    private val languageFixture: LanguageAssertsPattern,
 ) {
     fun create(type: ViewType): ExpectedViewType {
         return when (type) {

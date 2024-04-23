@@ -31,7 +31,8 @@ class TypeScriptTypes: LanguageTypes {
     }
 
     override fun mapListElements(listName: String, elementName: String, mapping: String): String {
-        return "($listName).map($elementName => $mapping)"
+        val finalListName = if (listName.contains(" ")) "($listName)" else listName
+        return "$finalListName.map($elementName => $mapping)"
     }
 
     override fun classConstructor(name: String, params: String): String {

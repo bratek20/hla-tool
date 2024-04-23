@@ -17,7 +17,7 @@ data class DtoView(
 
 class DtosGenerator(
     c: ModuleGenerationContext,
-    private val dtoViewTypeFactory: DtoViewTypeFactory = DtoViewTypeFactory(c.language.types()),
+    private val dtoViewTypeFactory: DtoViewTypeFactory = DtoViewTypeFactory(c.language.types(), c.language.dtoPattern())
 ): ModulePartFileGenerator(c) {
 
     override fun generateFile(): File {

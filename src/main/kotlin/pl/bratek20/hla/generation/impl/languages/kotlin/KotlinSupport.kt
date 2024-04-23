@@ -2,7 +2,6 @@ package pl.bratek20.hla.generation.impl.languages.kotlin
 
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.*
 
@@ -21,12 +20,16 @@ class KotlinSupport(private val c: DomainContext)
         return KotlinStructure(c)
     }
 
-    override fun assertsFixture(): LanguageAssertsFixture {
-        return KotlinAssertsFixture()
+    override fun assertsFixture(): LanguageAssertsPattern {
+        return KotlinAssertsPattern()
     }
 
-    override fun buildersFixture(): LanguageBuildersFixture {
-        return KotlinBuildersFixture()
+    override fun buildersFixture(): LanguageBuildersPattern {
+        return KotlinBuildersPattern()
+    }
+
+    override fun dtoPattern(): LanguageDtoPattern {
+        return KotlinDtoPattern()
     }
 
     override fun contentBuilderExtensions(): List<ContentBuilderExtension> {

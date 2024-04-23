@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.builders
 
 import pl.bratek20.hla.generation.impl.core.api.*
-import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersFixture
+import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
 interface DefViewType {
@@ -50,10 +50,10 @@ data class SimpleVODefViewType(
 data class ComplexVODefViewType(
     val name: String,
     val languageTypes: LanguageTypes,
-    val more: LanguageBuildersFixture
+    val fixture: LanguageBuildersPattern
 ) : DefViewType {
     override fun name(): String {
-        return more.defClassType(name);
+        return fixture.defClassType(name);
     }
 
     override fun defaultValue(): String {
@@ -61,7 +61,7 @@ data class ComplexVODefViewType(
     }
 
     override fun constructor(arg: String): String {
-        return more.complexVoDefConstructor(name, arg)
+        return fixture.complexVoDefConstructor(name, arg)
     }
 }
 
@@ -87,7 +87,7 @@ data class ListDefViewType(
 
 class DefTypeFactory(
     private val languageTypes: LanguageTypes,
-    private val more: LanguageBuildersFixture
+    private val more: LanguageBuildersPattern
 ) {
     fun create(type: ViewType): DefViewType {
         return when (type) {

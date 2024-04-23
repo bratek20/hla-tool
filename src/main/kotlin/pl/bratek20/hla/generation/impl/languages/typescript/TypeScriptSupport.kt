@@ -1,7 +1,6 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.api.ModuleLanguage
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.*
 
@@ -20,11 +19,15 @@ class TypeScriptSupport(private val c: DomainContext)
         return TypeScriptStructure(c)
     }
 
-    override fun assertsFixture(): LanguageAssertsFixture {
-        return TypeScriptAssertsFixture(c.modules)
+    override fun assertsFixture(): LanguageAssertsPattern {
+        return TypeScriptAssertsPattern(c.modules)
     }
 
-    override fun buildersFixture(): LanguageBuildersFixture {
-        return TypeScriptBuildersFixture(c.modules)
+    override fun buildersFixture(): LanguageBuildersPattern {
+        return TypeScriptBuildersPattern(c.modules)
+    }
+
+    override fun dtoPattern(): LanguageDtoPattern {
+        return TypeScriptDtoPattern(c.modules)
     }
 }
