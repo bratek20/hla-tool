@@ -47,7 +47,7 @@ class ModuleGeneratorImpl : ModuleGenerator {
         )
         if (moduleName.value == "SomeModule" && language == ModuleLanguage.KOTLIN) {
             DirectoryLogic().deleteDirectory(Path("tmp"))
-            DirectoryLogic().writeDirectory(Path("tmp"), x)
+            DirectoryLogic().write(Path("tmp"), x)
         }
         return x
     }

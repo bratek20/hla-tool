@@ -7,7 +7,7 @@ import pl.bratek20.hla.directory.assertDirectory
 import pl.bratek20.hla.directory.directory
 import pl.bratek20.hla.directory.impl.DirectoryLogic
 
-class DirectoryApiTest {
+class DirectoriesTest {
     private val api = DirectoryLogic()
 
     @Test

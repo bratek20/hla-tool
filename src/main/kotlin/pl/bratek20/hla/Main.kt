@@ -103,5 +103,5 @@ fun main() {
 
     val dir = ModuleGeneratorImpl().generate(ModuleName("example"), ModuleLanguage.KOTLIN, listOf(module))
 
-    DirectoryLogic().writeDirectory(Path("tmp"), dir)
+    DirectoryLogic().write(Path("tmp"), dir)
 }
