@@ -1,18 +1,27 @@
 ValueObjects
     SomeId: string
+
     SomeClass
         id: SomeId
         amount: int
+
     SomeClass2
         id: SomeId
         enabled: bool
         names: string[]
         ids: SomeId[]
+
     SomeClass3
         class2Object: SomeClass2
         class2List: SomeClass2[]
+
     SomeClass4
         otherId: OtherId
         otherClass: OtherClass
         otherIdList: OtherId[]
         otherClassList: OtherClass[]
+
+Interfaces
+    SomeInterface
+        someCommand(id: SomeId, amount: int)
+        someQuery(id: SomeId): SomeClass

@@ -51,7 +51,10 @@ class HlaModulesParserImpl: HlaModulesParser {
     ) : ParsedElement(indent)
 
     private fun parseElements(content: FileContent): List<ParsedElement> {
-        val initialElements = content.lines.map { parseElement(it) }
+        val initialElements = content.lines
+            .filter { it.isNotBlank() }
+            .map { parseElement(it) }
+
         val result = mutableListOf<ParsedElement>()
         val sectionsStack: ArrayDeque<Section> = ArrayDeque()
 

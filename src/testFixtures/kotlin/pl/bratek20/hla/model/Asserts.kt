@@ -70,10 +70,79 @@ fun assertComplexValueObject(given: ComplexValueObject, init: ExpectedComplexVal
     }
 }
 
+data class ExpectedArg(
+    var name: String? = null,
+    var type: (ExpectedType.() -> Unit)? = null,
+)
+fun assertArg(given: Argument, init: ExpectedArg.() -> Unit) {
+    val expected = ExpectedArg().apply(init)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.type?.let {
+        assertType(given.type, it)
+    }
+}
+
+data class ExpectedMethod(
+    var name: String? = null,
+    var emptyReturnType: Boolean? = null,
+    var returnType: (ExpectedType.() -> Unit)? = null,
+    var args: List<ExpectedArg.() -> Unit>? = null,
+)
+fun assertMethod(given: Method, init: ExpectedMethod.() -> Unit) {
+    val expected = ExpectedMethod().apply(init)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.emptyReturnType?.let {
+        if (it) {
+            assertThat(given.returnType).isNull()
+        } else {
+            assertThat(given.returnType).isNotNull()
+        }
+    }
+
+    expected.returnType?.let {
+        assertType(given.returnType!!, it)
+    }
+
+    expected.args?.let {
+        assertThat(given.args).hasSize(it.size)
+        given.args.zip(it).forEach { (arg, expected) ->
+            assertArg(arg, expected)
+        }
+    }
+}
+
+data class ExpectedInterface(
+    var name: String? = null,
+    var methods: List<ExpectedMethod.() -> Unit>? = null,
+)
+fun assertInterface(given: Interface, init: ExpectedInterface.() -> Unit) {
+    val expected = ExpectedInterface().apply(init)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.methods?.let {
+        assertThat(given.methods).hasSize(it.size)
+        given.methods.zip(it).forEach { (method, expected) ->
+            assertMethod(method, expected)
+        }
+    }
+}
+
 data class ExpectedModule(
     var name: String? = null,
     var simpleValueObjects: List<ExpectedSimpleValueObject.() -> Unit>? = null,
     var complexValueObjects: List<ExpectedComplexValueObject.() -> Unit>? = null,
+    var interfaces: List<ExpectedInterface.() -> Unit>? = null,
 )
 fun assertModule(given: HlaModule, init: ExpectedModule.() -> Unit) {
     val expected = ExpectedModule().apply(init)
@@ -93,6 +162,13 @@ fun assertModule(given: HlaModule, init: ExpectedModule.() -> Unit) {
         assertThat(given.complexValueObjects).hasSameSizeAs(it)
         given.complexValueObjects.zip(it).forEach { (complexValueObject, expected) ->
             assertComplexValueObject(complexValueObject, expected)
+        }
+    }
+
+    expected.interfaces?.let {
+        assertThat(given.interfaces).hasSameSizeAs(it)
+        given.interfaces.zip(it).forEach { (interf, expected) ->
+            assertInterface(interf, expected)
         }
     }
 }

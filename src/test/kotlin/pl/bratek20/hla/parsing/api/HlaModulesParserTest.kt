@@ -153,6 +153,41 @@ class HlaModulesParserTest {
                         )
                     }
                 )
+                interfaces = listOf {
+                    name = "SomeInterface"
+                    methods = listOf (
+                        {
+                            name = "someCommand"
+                            emptyReturnType = true
+                            args = listOf (
+                                {
+                                    name = "id"
+                                    type = {
+                                        name = "SomeId"
+                                    }
+                                },
+                                {
+                                    name = "amount"
+                                    type = {
+                                        name = "int"
+                                    }
+                                }
+                            )
+                        },
+                        {
+                            name = "someQuery"
+                            returnType = {
+                                name = "SomeClass"
+                            }
+                            args = listOf {
+                                name = "id"
+                                type = {
+                                    name = "SomeId"
+                                }
+                            }
+                        }
+                    )
+                }
             }
         ))
     }
