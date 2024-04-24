@@ -1,0 +1,12 @@
+ValueObjects
+    OtherId: string
+
+    OtherClass
+        id: OtherId
+        amount: int
+        enabled: bool
+
+Interfaces
+    MyApi
+        getById(id: OtherId): OtherClass
+        save(otherClass: OtherClass)

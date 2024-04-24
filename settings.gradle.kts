@@ -30,6 +30,7 @@ dependencyResolutionManagement {
 
     repositories {
         mavenLocal()
+        mavenCentral()
 
         if (System.getenv("GITHUB_ACTOR") != null) {
             maven {
@@ -43,3 +44,5 @@ dependencyResolutionManagement {
         }
     }
 }
+include("app")
+include("lib")
