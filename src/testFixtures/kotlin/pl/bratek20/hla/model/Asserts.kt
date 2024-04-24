@@ -19,12 +19,20 @@ fun assertSimpleValueObject(given: SimpleValueObject, init: ExpectedSimpleValueO
 
 data class ExpectedType(
     var name: String? = null,
+    var wrappers: List<TypeWrapper>? = null,
 )
 fun assertType(given: Type, init: ExpectedType.() -> Unit) {
     val expected = ExpectedType().apply(init)
 
     if (expected.name != null) {
         assertThat(given.name).isEqualTo(expected.name)
+    }
+
+    expected.wrappers?.let {
+        assertThat(given.wrappers).hasSize(it.size)
+        given.wrappers.zip(it).forEach { (wrapper, expected) ->
+            assertThat(wrapper.name).isEqualTo(expected.name)
+        }
     }
 }
 

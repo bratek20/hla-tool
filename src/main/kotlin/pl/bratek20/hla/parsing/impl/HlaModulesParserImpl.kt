@@ -7,6 +7,8 @@ import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.model.*
 import pl.bratek20.hla.parsing.api.HlaModulesParser
+import java.util.ArrayDeque
+import java.util.Queue
 
 class HlaModulesParserImpl: HlaModulesParser {
     override fun parse(path: Path): List<HlaModule> {
@@ -51,20 +53,23 @@ class HlaModulesParserImpl: HlaModulesParser {
     private fun parseElements(content: FileContent): List<ParsedElement> {
         val initialElements = content.lines.map { parseElement(it) }
         val result = mutableListOf<ParsedElement>()
-        var currentIndent = 0
-        var lastSection: Section? = null
+        val sectionsStack: ArrayDeque<Section> = ArrayDeque()
 
         for (element in initialElements) {
             if(element is Section) {
-                if(element.indent > currentIndent) {
-                    lastSection?.addElement(element)
-                } else {
-                    result.add(element)
+                while((sectionsStack.lastOrNull()?.indent ?: -1) >= element.indent) {
+                    sectionsStack.removeLast()
                 }
-                lastSection = element
-                currentIndent = element.indent
+
+                if (sectionsStack.isEmpty()) {
+                    result.add(element)
+                } else {
+                    sectionsStack.last().addElement(element)
+                }
+
+                sectionsStack.add(element)
             } else {
-                lastSection?.addElement(element)
+                sectionsStack.last.addElement(element)
             }
         }
 
@@ -107,15 +112,24 @@ class HlaModulesParserImpl: HlaModulesParser {
         )
     }
 
+    private fun parseType(typeValue: String): Type {
+        if (typeValue.contains("[]")) {
+            return Type(
+                name = typeValue.replace("[]", ""),
+                wrappers = listOf(TypeWrapper.LIST)
+            )
+        }
+        return Type(
+            name = typeValue,
+        )
+    }
     private fun parseComplexValueObject(section: Section): ComplexValueObject {
         return ComplexValueObject(
             name = section.name,
             fields = section.elements.filterIsInstance<Assignment>().map {
                 Field(
                     name = it.name,
-                    type = Type(
-                        name = it.value
-                    )
+                    type = parseType(it.value)
                 )
             }
         )
