@@ -43,10 +43,9 @@ class HlaFacadeTest {
             )
     }
 
-    @Disabled // TODO: enable when parsing works
     @ParameterizedTest(name = "{0} ({2})")
     @ArgumentsSource(MyArgumentsProvider::class)
-    fun `should generate module (E2E)`(moduleName: String, path: String, lang: ModuleLanguage) {
+    fun `should generate module`(moduleName: String, path: String, lang: ModuleLanguage) {
         //given
         val directoriesMock = DirectoriesMock()
         val facade = HlaFacadeImpl(directoriesMock)
