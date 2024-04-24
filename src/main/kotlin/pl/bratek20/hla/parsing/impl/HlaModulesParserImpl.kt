@@ -22,11 +22,12 @@ class HlaModulesParserImpl: HlaModulesParser {
         val moduleName = ModuleName(file.name.split(".module").get(0))
         val elements = parseElements(file.content)
         val valueObjects = parseValueObjects(elements)
+        val interfaces = parseInterfaces(elements)
         return HlaModule(
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
-            interfaces = emptyList()
+            interfaces = interfaces
         )
     }
 
@@ -48,6 +49,17 @@ class HlaModulesParserImpl: HlaModulesParser {
         indent: Int,
         val name: String,
         val value: String
+    ) : ParsedElement(indent)
+
+    class ParsedArg(
+        val name: String,
+        val value: String
+    )
+    class ParsedMethod(
+        indent: Int,
+        val name: String,
+        val args: List<ParsedArg>,
+        val returnType: String?
     ) : ParsedElement(indent)
 
     private fun parseElements(content: FileContent): List<ParsedElement> {
@@ -83,7 +95,19 @@ class HlaModulesParserImpl: HlaModulesParser {
         val indent = line.takeWhile { it == ' ' }.length
         val noIndentLine = line.trim()
 
-        if(noIndentLine.contains(":"))  {
+        if (noIndentLine.contains("(")) {
+            val methodName = noIndentLine.substringBefore("(")
+            val args = noIndentLine.substringAfter("(").substringBefore(")").split(",").map {
+                val split = it.split(":")
+                ParsedArg(split[0].trim(), split[1].trim())
+            }
+            val returnTypeStr = noIndentLine.substringAfter(")").trim()
+            val returnType = returnTypeStr.contains(":").let {
+                if(it) returnTypeStr.substringAfter(":").trim() else null
+            }
+            return ParsedMethod(indent, methodName, args, returnType)
+        }
+        else if(noIndentLine.contains(":"))  {
             noIndentLine.split(":").let {
                 return Assignment(indent, it[0], it[1].trim())
             }
@@ -136,5 +160,31 @@ class HlaModulesParserImpl: HlaModulesParser {
                 )
             }
         )
+    }
+
+    private fun parseMethod(method: ParsedMethod): Method {
+        return Method(
+            name = method.name,
+            returnType = method.returnType?.let { parseType(it) },
+            args = method.args.map {
+                Argument(
+                    name = it.name,
+                    type = parseType(it.value)
+                )
+            },
+            throws = listOf()
+        )
+    }
+
+    private fun parseInterfaces(elements: List<ParsedElement>): List<Interface> {
+        val interfacesSection = elements.find { it is Section && it.name == "Interfaces" } as Section?
+        return interfacesSection?.elements?.filterIsInstance<Section>()?.map {
+            Interface(
+                name = it.name,
+                methods = it.elements.filterIsInstance<ParsedMethod>().map {
+                    parseMethod(it)
+                }
+            )
+        } ?: emptyList()
     }
 }
