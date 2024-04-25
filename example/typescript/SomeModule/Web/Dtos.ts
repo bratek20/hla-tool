@@ -1,7 +1,7 @@
 namespace SomeModule.Web {
     export class SomeClassDto {
-        id: string
-        amount: number
+        id = STRING
+        amount = NUMBER
 
         static toApi(dto: SomeClassDto): SomeClass {
             return new SomeClass(
@@ -19,10 +19,10 @@ namespace SomeModule.Web {
     }
 
     export class SomeClass2Dto {
-        id: string
-        enabled: boolean
-        names: string[]
-        ids: string[]
+        id = STRING
+        enabled = BOOLEAN
+        names = [STRING]
+        ids = [STRING]
 
         static toApi(dto: SomeClass2Dto): SomeClass2 {
             return new SomeClass2(
@@ -44,8 +44,8 @@ namespace SomeModule.Web {
     }
 
     export class SomeClass3Dto {
-        class2Object: SomeClass2Dto
-        class2List: SomeClass2Dto[]
+        class2Object = new SomeClass2Dto
+        class2List = [new SomeClass2Dto]
 
         static toApi(dto: SomeClass3Dto): SomeClass3 {
             return new SomeClass3(
@@ -63,10 +63,10 @@ namespace SomeModule.Web {
     }
 
     export class SomeClass4Dto {
-        otherId: string
-        otherClass: OtherModule.Web.OtherClassDto
-        otherIdList: string[]
-        otherClassList: OtherModule.Web.OtherClassDto[]
+        otherId = STRING
+        otherClass = new OtherModule.Web.OtherClassDto
+        otherIdList = [STRING]
+        otherClassList = [new OtherModule.Web.OtherClassDto]
 
         static toApi(dto: SomeClass4Dto): SomeClass4 {
             return new SomeClass4(

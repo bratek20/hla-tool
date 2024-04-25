@@ -1,7 +1,7 @@
 namespace OtherModule.Web {
     export class OtherClassDto {
-        id: string
-        amount: number
+        id = STRING
+        amount = NUMBER
 
         static toApi(dto: OtherClassDto): OtherClass {
             return new OtherClass(

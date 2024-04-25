@@ -2,7 +2,7 @@ namespace ${moduleName}.Web {
     #foreach($d in $dtos)
     export class ${d.dtoName} {
         #foreach($field in $d.fields)
-        $field.name: $field.type.name()
+        $field.name = $oc.map($field.type.name())
         #end
 
         static toApi(dto: ${d.dtoName}): ${d.apiName} {

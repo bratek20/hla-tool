@@ -33,6 +33,6 @@ class KotlinSupport(private val c: DomainContext)
     }
 
     override fun contentBuilderExtensions(): List<ContentBuilderExtension> {
-        return listOf(PackageNameExtension(c))
+        return listOf(PackageNameAndImportsExtension(c))
     }
 }

@@ -4,7 +4,7 @@ import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-class PackageNameExtension(
+class PackageNameAndImportsExtension(
     private val c: DomainContext
 ) : ContentBuilderExtension {
     override fun extend(builder: VelocityFileContentBuilder) {
