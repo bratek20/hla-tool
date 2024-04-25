@@ -4,3 +4,8 @@ ValueObjects
     OtherClass
         id: OtherId
         amount: int
+
+PropertyValueObjects
+    OtherProperty
+        id: OtherId
+        name: string

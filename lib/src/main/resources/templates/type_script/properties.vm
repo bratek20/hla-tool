@@ -1,0 +1,29 @@
+namespace $moduleName {
+    #foreach($vo in $valueObjects)
+    export class ${vo.name} {
+        #foreach($field in $vo.fields)
+        $field.declaration = $oc.map($field.type.unbox().name())
+        #end
+
+        static create(
+            #foreach($field in $vo.fields)
+            $field.name: $field.type.name(),
+            #end
+        ): ${vo.name} {
+            const instance = new ${vo.name}()
+            #foreach($field in $vo.fields)
+            ${field.unboxedAssignment("instance")}
+            #end
+            return instance
+        }
+
+        #foreach($getter in $vo.getters)
+        ${getter.name}(): ${getter.type.name()} {
+            return ${getter.type.constructor("this.${getter.field}")}
+        }
+        #end
+    }
+    #if($foreach.hasNext)
+
+    #end#end
+}

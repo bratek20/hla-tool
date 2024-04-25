@@ -6,6 +6,7 @@ interface LanguageStructure {
     fun apiDirName(): String
     fun valueObjectsFileName(): String
     fun interfacesFileName(): String
+    fun propertiesFileName(): String
 
     fun fixturesDirName(): String
     fun buildersFileName(): String

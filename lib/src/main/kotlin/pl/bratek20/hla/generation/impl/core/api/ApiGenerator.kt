@@ -14,12 +14,10 @@ class ApiGenerator(
 ): ModulePartDirectoryGenerator(c) {
 
     override fun generateDirectory(): Directory {
-        val valueObjectsFile = valueObjectsFile()
-        val interfacesFile = interfacesFile()
-
         val files = mutableListOf<File>()
-        files.add(valueObjectsFile)
-        interfacesFile?.let { files.add(it) }
+        valueObjectsFile()?.let { files.add(it) }
+        interfacesFile()?.let { files.add(it) }
+        propertiesFile()?.let { files.add(it) }
 
         return Directory(
             name = language.structure().apiDirName(),
@@ -27,7 +25,11 @@ class ApiGenerator(
         )
     }
 
-    private fun valueObjectsFile(): File {
+    private fun valueObjectsFile(): File? {
+        if (module.simpleValueObjects.isEmpty() && module.complexValueObjects.isEmpty()) {
+            return null
+        }
+
         val fileContent = contentBuilder("valueObjects.vm")
             .put("valueObjects", ValueObjectsView(
                 simpleList = module.simpleValueObjects.map { toView(it) },
@@ -56,6 +58,21 @@ class ApiGenerator(
         )
     }
 
+    private fun propertiesFile(): File? {
+        if (module.propertyValueObjects.isEmpty()) {
+            return null
+        }
+
+        val fileContent = contentBuilder("properties.vm")
+            .put("valueObjects", module.propertyValueObjects.map { toPropertyView(it) })
+            .build()
+
+        return File(
+            name = language.structure().propertiesFileName(),
+            content = fileContent
+        )
+    }
+
 
     private fun toView(vo: SimpleStructureDefinition): SimpleValueObjectView {
         return SimpleValueObjectView(
@@ -67,6 +84,26 @@ class ApiGenerator(
         return ComplexValueObjectView(
             name = vo.name,
             fields = vo.fields.map { FieldView(it.name, toViewType(it.type)) }
+        )
+    }
+
+    data class GetterView(
+        val name: String,
+        val type: String,
+        val field: String
+    )
+    data class PropertyValueObjectView(
+        val name: String,
+        val fields: List<FieldView>,
+        val getters: List<GetterView>
+    )
+    private fun toPropertyView(vo: ComplexStructureDefinition): PropertyValueObjectView {
+        return PropertyValueObjectView(
+            name = vo.name,
+            fields = vo.fields.map { FieldView(it.name, toViewType(it.type)) },
+            getters = vo.fields
+                .filter { viewType(it.type) is SimpleVOViewType }
+                .map { GetterView(it.name, toViewType(it.type), it.name) }
         )
     }
 
