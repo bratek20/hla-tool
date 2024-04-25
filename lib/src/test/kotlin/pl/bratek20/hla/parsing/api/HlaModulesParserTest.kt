@@ -203,7 +203,6 @@ class HlaModulesParserTest {
         val modules = parse("only-properties")
 
         assertModules(modules, listOf {
-            name = "OnlyProperties"
             properties = listOf(
                 {
                     name = "someElements"

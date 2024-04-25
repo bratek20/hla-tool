@@ -1,0 +1,6 @@
+Data
+    someElements: SomeElementData[]
+        id: SomeId
+
+    someObject: SomeObjectData
+        completed: bool
