@@ -27,7 +27,8 @@ class HlaModulesParserImpl: HlaModulesParser {
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
-            interfaces = interfaces
+            interfaces = interfaces,
+            properties = emptyList()
         )
     }
 

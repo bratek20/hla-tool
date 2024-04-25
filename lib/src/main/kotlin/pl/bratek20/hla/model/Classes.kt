@@ -19,11 +19,18 @@ enum class BaseType {
     }
 }
 
+data class Property(
+    val name: String,
+    val isList: Boolean,
+    val type: ComplexValueObject
+)
+
 data class HlaModule(
     val name: ModuleName,
     val simpleValueObjects: List<SimpleValueObject>,
     val complexValueObjects: List<ComplexValueObject>,
-    val interfaces: List<Interface>
+    val interfaces: List<Interface>,
+    val properties: List<Property>
 )
 
 enum class TypeWrapper {

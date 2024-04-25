@@ -2,6 +2,7 @@ package pl.bratek20.hla.parsing.api
 
 import org.junit.jupiter.api.Test
 import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.model.HlaModule
 import pl.bratek20.hla.model.TypeWrapper
 import pl.bratek20.hla.model.assertModules
 import pl.bratek20.hla.parsing.impl.HlaModulesParserImpl
@@ -9,9 +10,14 @@ import pl.bratek20.hla.parsing.impl.HlaModulesParserImpl
 class HlaModulesParserTest {
     private val parser = HlaModulesParserImpl()
 
+    private fun parse(pathSuffix: String): List<HlaModule> {
+        val fullPath = "src/test/resources/parsing/$pathSuffix"
+        return parser.parse(Path(fullPath))
+    }
+
     @Test
-    fun `should parse modules`() {
-        val modules = parser.parse(Path("src/test/resources/parsing"))
+    fun `should parse two modules`() {
+        val modules = parse("two-modules")
 
         assertModules(modules, listOf(
             {
@@ -192,4 +198,39 @@ class HlaModulesParserTest {
         ))
     }
 
+    @Test
+    fun `should parse properties`() {
+        val modules = parse("only-properties")
+
+        assertModules(modules, listOf {
+            name = "OnlyProperties"
+            properties = listOf(
+                {
+                    name = "someElements"
+                    isList = true
+                    type = {
+                        name = "SomeElement"
+                        fields = listOf {
+                            name = "id"
+                            type = {
+                                name = "SomeId"
+                            }
+                        }
+                    }
+                },
+                {
+                    name = "someConfig"
+                    type = {
+                        name = "SomeConfig"
+                        fields = listOf {
+                            name = "enabled"
+                            type = {
+                                name = "bool"
+                            }
+                        }
+                    }
+                }
+            )
+        })
+    }
 }

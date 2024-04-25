@@ -112,6 +112,7 @@ fun hlaModule(ov: HlaModuleDef.() -> Unit): HlaModule {
         name = ModuleName(def.name),
         simpleValueObjects = def.simpleValueObjects.map { simpleValueObject(it) },
         complexValueObjects = def.complexValueObjects.map { complexValueObject(it) },
-        interfaces = def.interfaces.map { interfaceDef(it) }
+        interfaces = def.interfaces.map { interfaceDef(it) },
+        properties = emptyList()
     )
 }

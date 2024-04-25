@@ -138,11 +138,33 @@ fun assertInterface(given: Interface, init: ExpectedInterface.() -> Unit) {
     }
 }
 
+data class ExpectedProperty(
+    var name: String? = null,
+    var isList: Boolean? = null,
+    var type: (ExpectedComplexValueObject.() -> Unit)? = null,
+)
+fun assertProperty(given: Property, init: ExpectedProperty.() -> Unit) {
+    val expected = ExpectedProperty().apply(init)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.isList?.let {
+        assertThat(given.isList).isEqualTo(it)
+    }
+
+    expected.type?.let {
+        assertComplexValueObject(given.type, it)
+    }
+}
+
 data class ExpectedModule(
     var name: String? = null,
     var simpleValueObjects: List<ExpectedSimpleValueObject.() -> Unit>? = null,
     var complexValueObjects: List<ExpectedComplexValueObject.() -> Unit>? = null,
     var interfaces: List<ExpectedInterface.() -> Unit>? = null,
+    var properties: List<ExpectedProperty.() -> Unit>? = null,
 )
 fun assertModule(given: HlaModule, init: ExpectedModule.() -> Unit) {
     val expected = ExpectedModule().apply(init)
@@ -169,6 +191,13 @@ fun assertModule(given: HlaModule, init: ExpectedModule.() -> Unit) {
         assertThat(given.interfaces).hasSameSizeAs(it)
         given.interfaces.zip(it).forEach { (interf, expected) ->
             assertInterface(interf, expected)
+        }
+    }
+
+    expected.properties?.let {
+        assertThat(given.properties).hasSameSizeAs(it)
+        given.properties.zip(it).forEach { (property, expected) ->
+            assertProperty(property, expected)
         }
     }
 }

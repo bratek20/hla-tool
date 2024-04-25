@@ -25,3 +25,10 @@ Interfaces
     SomeInterface
         someCommand(id: SomeId, amount: int)
         someQuery(id: SomeId): SomeClass
+
+Properties
+    someElements: SomeElement[]
+        id: SomeId
+
+    someConfig: SomeConfig
+        enabled: bool
