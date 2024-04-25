@@ -1,11 +1,11 @@
 package pl.bratek20.hla.generation.impl.core.domain
 
-import pl.bratek20.hla.model.HlaModule
+import pl.bratek20.hla.definitions.ModuleDefinition
 
 data class DomainContext(
     val modules: HlaModules,
     val typeFactory: DomainTypeFactory = DomainTypeFactory(modules),
 ) {
-    val module: HlaModule
+    val module: ModuleDefinition
         get() = modules.current
 }

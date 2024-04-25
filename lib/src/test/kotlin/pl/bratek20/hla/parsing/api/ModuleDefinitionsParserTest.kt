@@ -2,15 +2,15 @@ package pl.bratek20.hla.parsing.api
 
 import org.junit.jupiter.api.Test
 import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.model.HlaModule
-import pl.bratek20.hla.model.TypeWrapper
-import pl.bratek20.hla.model.assertModules
-import pl.bratek20.hla.parsing.impl.HlaModulesParserImpl
+import pl.bratek20.hla.definitions.ModuleDefinition
+import pl.bratek20.hla.definitions.TypeWrapper
+import pl.bratek20.hla.definitions.assertModules
+import pl.bratek20.hla.parsing.impl.ModuleDefinitionsParserImpl
 
-class HlaModulesParserTest {
-    private val parser = HlaModulesParserImpl()
+class ModuleDefinitionsParserTest {
+    private val parser = ModuleDefinitionsParserImpl()
 
-    private fun parse(pathSuffix: String): List<HlaModule> {
+    private fun parse(pathSuffix: String): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
         return parser.parse(Path(fullPath))
     }
@@ -203,29 +203,22 @@ class HlaModulesParserTest {
         val modules = parse("only-properties")
 
         assertModules(modules, listOf {
-            properties = listOf(
+            propertyValueObjects = listOf(
                 {
-                    name = "someElements"
-                    isList = true
-                    type = {
-                        name = "SomeElement"
-                        fields = listOf {
-                            name = "id"
-                            type = {
-                                name = "SomeId"
-                            }
+                    name = "SomeElement"
+                    fields = listOf {
+                        name = "id"
+                        type = {
+                            name = "SomeId"
                         }
                     }
                 },
                 {
-                    name = "someConfig"
-                    type = {
-                        name = "SomeConfig"
-                        fields = listOf {
-                            name = "enabled"
-                            type = {
-                                name = "bool"
-                            }
+                    name = "SomeConfig"
+                    fields = listOf {
+                        name = "enabled"
+                        type = {
+                            name = "bool"
                         }
                     }
                 }

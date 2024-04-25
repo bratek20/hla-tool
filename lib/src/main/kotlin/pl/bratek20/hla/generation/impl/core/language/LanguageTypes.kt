@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.language
 
-import pl.bratek20.hla.model.BaseType
+import pl.bratek20.hla.definitions.BaseType
 
 interface LanguageTypes {
     fun mapBaseType(type: BaseType): String

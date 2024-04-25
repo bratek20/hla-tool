@@ -5,8 +5,8 @@ import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.api.ViewTypeFactory
 import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
-import pl.bratek20.hla.model.HlaModule
-import pl.bratek20.hla.model.Type
+import pl.bratek20.hla.definitions.ModuleDefinition
+import pl.bratek20.hla.definitions.TypeDefinition
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
@@ -15,7 +15,7 @@ class ModuleGenerationContext(
     val velocity: VelocityFacade,
     val language: LanguageSupport
 ) {
-    val module: HlaModule
+    val module: ModuleDefinition
         get() = domain.module
 }
 
@@ -47,7 +47,7 @@ abstract class ModulePartGenerator(
         return builder
     }
 
-    protected fun viewType(type: Type?) = viewTypeFactory.create(type)
+    protected fun viewType(type: TypeDefinition?) = viewTypeFactory.create(type)
 }
 
 abstract class ModulePartFileGenerator(c: ModuleGenerationContext)

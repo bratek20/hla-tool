@@ -4,10 +4,10 @@ import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
-import pl.bratek20.hla.model.ComplexValueObject
-import pl.bratek20.hla.model.Interface
-import pl.bratek20.hla.model.SimpleValueObject
-import pl.bratek20.hla.model.Type
+import pl.bratek20.hla.definitions.ComplexStructureDefinition
+import pl.bratek20.hla.definitions.InterfaceDefinition
+import pl.bratek20.hla.definitions.SimpleStructureDefinition
+import pl.bratek20.hla.definitions.TypeDefinition
 
 class ApiGenerator(
     c: ModuleGenerationContext
@@ -57,20 +57,20 @@ class ApiGenerator(
     }
 
 
-    private fun toView(vo: SimpleValueObject): SimpleValueObjectView {
+    private fun toView(vo: SimpleStructureDefinition): SimpleValueObjectView {
         return SimpleValueObjectView(
             name = vo.name,
             type = toViewType(vo.type())
         )
     }
-    private fun toView(vo: ComplexValueObject): ComplexValueObjectView {
+    private fun toView(vo: ComplexStructureDefinition): ComplexValueObjectView {
         return ComplexValueObjectView(
             name = vo.name,
             fields = vo.fields.map { FieldView(it.name, toViewType(it.type)) }
         )
     }
 
-    private fun toView(interf: Interface): InterfaceView {
+    private fun toView(interf: InterfaceDefinition): InterfaceView {
         return InterfaceView(
             name = interf.name,
             methods = interf.methods.map { method ->
@@ -83,7 +83,7 @@ class ApiGenerator(
         )
     }
 
-    private fun toViewType(type: Type?): String {
+    private fun toViewType(type: TypeDefinition?): String {
         return viewType(type).name()
     }
 }

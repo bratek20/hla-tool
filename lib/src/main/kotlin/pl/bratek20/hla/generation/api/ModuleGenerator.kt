@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.api
 
 import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.model.HlaModule
+import pl.bratek20.hla.definitions.ModuleDefinition
 
 data class ModuleName(val value: String)
 
@@ -11,5 +11,5 @@ enum class ModuleLanguage {
 }
 
 interface ModuleGenerator {
-    fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<HlaModule>): Directory
+    fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): Directory
 }

@@ -1,35 +1,35 @@
 package pl.bratek20.hla.generation.impl.core.domain
 
 import pl.bratek20.hla.generation.api.ModuleName
-import pl.bratek20.hla.model.ComplexValueObject
-import pl.bratek20.hla.model.HlaModule
-import pl.bratek20.hla.model.SimpleValueObject
-import pl.bratek20.hla.model.Type
+import pl.bratek20.hla.definitions.ComplexStructureDefinition
+import pl.bratek20.hla.definitions.ModuleDefinition
+import pl.bratek20.hla.definitions.SimpleStructureDefinition
+import pl.bratek20.hla.definitions.TypeDefinition
 
 class HlaModules(
     private val currentName: ModuleName,
-    private val modules: List<HlaModule>
+    private val modules: List<ModuleDefinition>
 ) {
-    val current: HlaModule
+    val current: ModuleDefinition
         get() = get(currentName)
 
-    fun get(moduleName: ModuleName): HlaModule {
+    fun get(moduleName: ModuleName): ModuleDefinition {
         return modules.first { it.name == moduleName }
     }
 
-    fun findSimpleVO(type: Type): SimpleValueObject? {
+    fun findSimpleVO(type: TypeDefinition): SimpleStructureDefinition? {
         return modules.firstNotNullOfOrNull { findSimpleVO(type, it) }
     }
 
-    fun findComplexVO(type: Type): ComplexValueObject? {
+    fun findComplexVO(type: TypeDefinition): ComplexStructureDefinition? {
         return modules.firstNotNullOfOrNull { findComplexVO(type, it) }
     }
 
-    private fun findSimpleVO(type: Type, module: HlaModule): SimpleValueObject? {
+    private fun findSimpleVO(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
         return module.simpleValueObjects.find { it.name == type.name }
     }
 
-    private fun findComplexVO(type: Type, module: HlaModule): ComplexValueObject? {
+    private fun findComplexVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
         return module.complexValueObjects.find { it.name == type.name }
     }
 
@@ -44,7 +44,7 @@ class HlaModules(
         return modules.first { it.complexValueObjects.any { it.name == complexVoName } }.name
     }
 
-    private fun otherModules(): List<HlaModule> {
+    private fun otherModules(): List<ModuleDefinition> {
         return modules.filter { it.name != currentName }
     }
 }

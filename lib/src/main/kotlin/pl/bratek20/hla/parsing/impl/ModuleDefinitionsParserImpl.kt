@@ -5,30 +5,29 @@ import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.generation.api.ModuleName
-import pl.bratek20.hla.model.*
-import pl.bratek20.hla.parsing.api.HlaModulesParser
+import pl.bratek20.hla.definitions.*
+import pl.bratek20.hla.parsing.api.ModuleDefinitionsParser
 import java.util.ArrayDeque
-import java.util.Queue
 
-class HlaModulesParserImpl: HlaModulesParser {
-    override fun parse(path: Path): List<HlaModule> {
+class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
+    override fun parse(path: Path): List<ModuleDefinition> {
         val directories = DirectoriesLogic()
 
         val modulesDir = directories.readDirectory(path)
         return modulesDir.files.map { parseModuleFile(it) }
     }
 
-    private fun parseModuleFile(file: File): HlaModule {
+    private fun parseModuleFile(file: File): ModuleDefinition {
         val moduleName = ModuleName(file.name.split(".module").get(0))
         val elements = parseElements(file.content)
         val valueObjects = parseValueObjects(elements)
         val interfaces = parseInterfaces(elements)
-        return HlaModule(
+        return ModuleDefinition(
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
             interfaces = interfaces,
-            properties = emptyList()
+            propertyValueObjects = emptyList()
         )
     }
 
@@ -118,13 +117,13 @@ class HlaModulesParserImpl: HlaModulesParser {
     }
 
     data class ValueObjects(
-        val simple: List<SimpleValueObject>,
-        val complex: List<ComplexValueObject>
+        val simple: List<SimpleStructureDefinition>,
+        val complex: List<ComplexStructureDefinition>
     )
     private fun parseValueObjects(elements: List<ParsedElement>): ValueObjects {
         val voSection = elements.find { it is Section && it.name == "ValueObjects" } as Section?
         val simple = voSection?.elements?.filterIsInstance<Assignment>()?.map {
-            SimpleValueObject(
+            SimpleStructureDefinition(
                 name = it.name,
                 typeName = it.value
             )
@@ -140,22 +139,22 @@ class HlaModulesParserImpl: HlaModulesParser {
         )
     }
 
-    private fun parseType(typeValue: String): Type {
+    private fun parseType(typeValue: String): TypeDefinition {
         if (typeValue.contains("[]")) {
-            return Type(
+            return TypeDefinition(
                 name = typeValue.replace("[]", ""),
                 wrappers = listOf(TypeWrapper.LIST)
             )
         }
-        return Type(
+        return TypeDefinition(
             name = typeValue,
         )
     }
-    private fun parseComplexValueObject(section: Section): ComplexValueObject {
-        return ComplexValueObject(
+    private fun parseComplexValueObject(section: Section): ComplexStructureDefinition {
+        return ComplexStructureDefinition(
             name = section.name,
             fields = section.elements.filterIsInstance<Assignment>().map {
-                Field(
+                FieldDefinition(
                     name = it.name,
                     type = parseType(it.value)
                 )
@@ -163,12 +162,12 @@ class HlaModulesParserImpl: HlaModulesParser {
         )
     }
 
-    private fun parseMethod(method: ParsedMethod): Method {
-        return Method(
+    private fun parseMethod(method: ParsedMethod): MethodDefinition {
+        return MethodDefinition(
             name = method.name,
             returnType = method.returnType?.let { parseType(it) },
             args = method.args.map {
-                Argument(
+                ArgumentDefinition(
                     name = it.name,
                     type = parseType(it.value)
                 )
@@ -177,10 +176,10 @@ class HlaModulesParserImpl: HlaModulesParser {
         )
     }
 
-    private fun parseInterfaces(elements: List<ParsedElement>): List<Interface> {
+    private fun parseInterfaces(elements: List<ParsedElement>): List<InterfaceDefinition> {
         val interfacesSection = elements.find { it is Section && it.name == "Interfaces" } as Section?
         return interfacesSection?.elements?.filterIsInstance<Section>()?.map {
-            Interface(
+            InterfaceDefinition(
                 name = it.name,
                 methods = it.elements.filterIsInstance<ParsedMethod>().map {
                     parseMethod(it)

@@ -1,6 +1,6 @@
-Properties
-    someElements: SomeElement[]
+PropertyValueObjects
+    SomeElement
         id: SomeId
 
-    someConfig: SomeConfig
+    SomeConfig
         enabled: bool

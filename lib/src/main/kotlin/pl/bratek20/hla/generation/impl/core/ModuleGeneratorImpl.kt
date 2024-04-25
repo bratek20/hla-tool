@@ -12,13 +12,13 @@ import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.*
 import pl.bratek20.hla.generation.impl.languages.typescript.*
-import pl.bratek20.hla.model.HlaModule
+import pl.bratek20.hla.definitions.ModuleDefinition
 import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
 class ModuleGeneratorImpl : ModuleGenerator {
     private val velocity = VelocityFacadeImpl() // TODO proper injection
 
-    override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<HlaModule>): Directory {
+    override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): Directory {
 
         val domainContext = DomainContext(
             modules = HlaModules(moduleName, modules),

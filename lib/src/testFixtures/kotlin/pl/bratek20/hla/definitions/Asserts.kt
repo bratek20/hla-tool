@@ -1,13 +1,13 @@
-package pl.bratek20.hla.model
+package pl.bratek20.hla.definitions
 
 import org.assertj.core.api.Assertions.assertThat
 
-data class ExpectedSimpleValueObject(
+data class ExpectedSimpleStructureDefinition(
     var name: String? = null,
     var type: String? = null,
 )
-fun assertSimpleValueObject(given: SimpleValueObject, init: ExpectedSimpleValueObject.() -> Unit) {
-    val expected = ExpectedSimpleValueObject().apply(init)
+fun assertSimpleValueObject(given: SimpleStructureDefinition, init: ExpectedSimpleStructureDefinition.() -> Unit) {
+    val expected = ExpectedSimpleStructureDefinition().apply(init)
 
     if (expected.name != null) {
         assertThat(given.name).isEqualTo(expected.name)
@@ -17,12 +17,12 @@ fun assertSimpleValueObject(given: SimpleValueObject, init: ExpectedSimpleValueO
     }
 }
 
-data class ExpectedType(
+data class ExpectedTypeDefinition(
     var name: String? = null,
     var wrappers: List<TypeWrapper>? = null,
 )
-fun assertType(given: Type, init: ExpectedType.() -> Unit) {
-    val expected = ExpectedType().apply(init)
+fun assertTypeDefinition(given: TypeDefinition, init: ExpectedTypeDefinition.() -> Unit) {
+    val expected = ExpectedTypeDefinition().apply(init)
 
     if (expected.name != null) {
         assertThat(given.name).isEqualTo(expected.name)
@@ -36,27 +36,27 @@ fun assertType(given: Type, init: ExpectedType.() -> Unit) {
     }
 }
 
-data class ExpectedField(
+data class ExpectedFieldDefinition(
     var name: String? = null,
-    var type: (ExpectedType.() -> Unit)? = null,
+    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
 )
-fun assertField(given: Field, init: ExpectedField.() -> Unit) {
-    val expected = ExpectedField().apply(init)
+fun assertField(given: FieldDefinition, init: ExpectedFieldDefinition.() -> Unit) {
+    val expected = ExpectedFieldDefinition().apply(init)
 
     if (expected.name != null) {
         assertThat(given.name).isEqualTo(expected.name)
     }
     expected.type?.let {
-        assertType(given.type, it)
+        assertTypeDefinition(given.type, it)
     }
 }
 
-data class ExpectedComplexValueObject(
+data class ExpectedComplexStructureDefinition(
     var name: String? = null,
-    var fields: List<ExpectedField.() -> Unit>? = null,
+    var fields: List<ExpectedFieldDefinition.() -> Unit>? = null,
 )
-fun assertComplexValueObject(given: ComplexValueObject, init: ExpectedComplexValueObject.() -> Unit) {
-    val expected = ExpectedComplexValueObject().apply(init)
+fun assertComplexStructureDefinition(given: ComplexStructureDefinition, init: ExpectedComplexStructureDefinition.() -> Unit) {
+    val expected = ExpectedComplexStructureDefinition().apply(init)
 
     expected.name?.let {
         assertThat(given.name).isEqualTo(it)
@@ -72,9 +72,9 @@ fun assertComplexValueObject(given: ComplexValueObject, init: ExpectedComplexVal
 
 data class ExpectedArg(
     var name: String? = null,
-    var type: (ExpectedType.() -> Unit)? = null,
+    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
 )
-fun assertArg(given: Argument, init: ExpectedArg.() -> Unit) {
+fun assertArg(given: ArgumentDefinition, init: ExpectedArg.() -> Unit) {
     val expected = ExpectedArg().apply(init)
 
     expected.name?.let {
@@ -82,17 +82,17 @@ fun assertArg(given: Argument, init: ExpectedArg.() -> Unit) {
     }
 
     expected.type?.let {
-        assertType(given.type, it)
+        assertTypeDefinition(given.type, it)
     }
 }
 
 data class ExpectedMethod(
     var name: String? = null,
     var emptyReturnType: Boolean? = null,
-    var returnType: (ExpectedType.() -> Unit)? = null,
+    var returnType: (ExpectedTypeDefinition.() -> Unit)? = null,
     var args: List<ExpectedArg.() -> Unit>? = null,
 )
-fun assertMethod(given: Method, init: ExpectedMethod.() -> Unit) {
+fun assertMethod(given: MethodDefinition, init: ExpectedMethod.() -> Unit) {
     val expected = ExpectedMethod().apply(init)
 
     expected.name?.let {
@@ -108,7 +108,7 @@ fun assertMethod(given: Method, init: ExpectedMethod.() -> Unit) {
     }
 
     expected.returnType?.let {
-        assertType(given.returnType!!, it)
+        assertTypeDefinition(given.returnType!!, it)
     }
 
     expected.args?.let {
@@ -123,7 +123,7 @@ data class ExpectedInterface(
     var name: String? = null,
     var methods: List<ExpectedMethod.() -> Unit>? = null,
 )
-fun assertInterface(given: Interface, init: ExpectedInterface.() -> Unit) {
+fun assertInterface(given: InterfaceDefinition, init: ExpectedInterface.() -> Unit) {
     val expected = ExpectedInterface().apply(init)
 
     expected.name?.let {
@@ -138,35 +138,14 @@ fun assertInterface(given: Interface, init: ExpectedInterface.() -> Unit) {
     }
 }
 
-data class ExpectedProperty(
-    var name: String? = null,
-    var isList: Boolean? = null,
-    var type: (ExpectedComplexValueObject.() -> Unit)? = null,
-)
-fun assertProperty(given: Property, init: ExpectedProperty.() -> Unit) {
-    val expected = ExpectedProperty().apply(init)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.isList?.let {
-        assertThat(given.isList).isEqualTo(it)
-    }
-
-    expected.type?.let {
-        assertComplexValueObject(given.type, it)
-    }
-}
-
 data class ExpectedModule(
     var name: String? = null,
-    var simpleValueObjects: List<ExpectedSimpleValueObject.() -> Unit>? = null,
-    var complexValueObjects: List<ExpectedComplexValueObject.() -> Unit>? = null,
+    var simpleValueObjects: List<ExpectedSimpleStructureDefinition.() -> Unit>? = null,
+    var complexValueObjects: List<ExpectedComplexStructureDefinition.() -> Unit>? = null,
     var interfaces: List<ExpectedInterface.() -> Unit>? = null,
-    var properties: List<ExpectedProperty.() -> Unit>? = null,
+    var propertyValueObjects: List<ExpectedComplexStructureDefinition.() -> Unit>? = null,
 )
-fun assertModule(given: HlaModule, init: ExpectedModule.() -> Unit) {
+fun assertModule(given: ModuleDefinition, init: ExpectedModule.() -> Unit) {
     val expected = ExpectedModule().apply(init)
 
     expected.name?.let {
@@ -183,7 +162,7 @@ fun assertModule(given: HlaModule, init: ExpectedModule.() -> Unit) {
     expected.complexValueObjects?.let {
         assertThat(given.complexValueObjects).hasSameSizeAs(it)
         given.complexValueObjects.zip(it).forEach { (complexValueObject, expected) ->
-            assertComplexValueObject(complexValueObject, expected)
+            assertComplexStructureDefinition(complexValueObject, expected)
         }
     }
 
@@ -194,15 +173,15 @@ fun assertModule(given: HlaModule, init: ExpectedModule.() -> Unit) {
         }
     }
 
-    expected.properties?.let {
-        assertThat(given.properties).hasSameSizeAs(it)
-        given.properties.zip(it).forEach { (property, expected) ->
-            assertProperty(property, expected)
+    expected.propertyValueObjects?.let {
+        assertThat(given.propertyValueObjects).hasSameSizeAs(it)
+        given.propertyValueObjects.zip(it).forEach { (property, expected) ->
+            assertComplexStructureDefinition(property, expected)
         }
     }
 }
 
-fun assertModules(given: List<HlaModule>, init: List<ExpectedModule.() -> Unit>) {
+fun assertModules(given: List<ModuleDefinition>, init: List<ExpectedModule.() -> Unit>) {
     assertThat(given).hasSize(init.size)
     given.zip(init).forEach { (module, expected) ->
         assertModule(module, expected)

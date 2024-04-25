@@ -1,8 +1,8 @@
 package pl.bratek20.hla.generation.impl.core.domain
 
-import pl.bratek20.hla.model.BaseType
-import pl.bratek20.hla.model.Type
-import pl.bratek20.hla.model.TypeWrapper
+import pl.bratek20.hla.definitions.BaseType
+import pl.bratek20.hla.definitions.TypeDefinition
+import pl.bratek20.hla.definitions.TypeWrapper
 
 interface DomainType
 
@@ -28,7 +28,7 @@ class DomainTypeFactory(
     private val modules: HlaModules
 ) {
 
-    fun create(type: Type?): DomainType {
+    fun create(type: TypeDefinition?): DomainType {
         if (type == null) {
             return BaseDomainType(BaseType.VOID)
         }

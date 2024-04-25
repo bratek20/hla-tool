@@ -2,7 +2,7 @@ package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.generation.impl.core.domain.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.model.*
+import pl.bratek20.hla.definitions.*
 
 interface ViewType {
     fun name(): String
@@ -49,7 +49,7 @@ class ViewTypeFactory(
     private val languageTypes: LanguageTypes
 ) {
 
-    fun create(rawType: Type?): ViewType {
+    fun create(rawType: TypeDefinition?): ViewType {
         val type = DomainTypeFactory(modules).create(rawType)
         return createFromDomainType(type)
     }
