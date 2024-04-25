@@ -22,12 +22,13 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val elements = parseElements(file.content)
         val valueObjects = parseValueObjects(elements)
         val interfaces = parseInterfaces(elements)
+        val propertyValueObjects = parsePropertyValueObjects(elements)
         return ModuleDefinition(
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
             interfaces = interfaces,
-            propertyValueObjects = emptyList()
+            propertyValueObjects = propertyValueObjects
         )
     }
 
@@ -129,9 +130,7 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
             )
         } ?: emptyList()
 
-        val complex = voSection?.elements?.filterIsInstance<Section>()?.map {
-            parseComplexValueObject(it)
-        } ?: emptyList()
+        val complex = parseComplexStructureDefinitions(voSection)
 
         return ValueObjects(
             simple = simple,
@@ -185,6 +184,17 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
                     parseMethod(it)
                 }
             )
+        } ?: emptyList()
+    }
+
+    private fun parsePropertyValueObjects(elements: List<ParsedElement>): List<ComplexStructureDefinition> {
+        val propertyVosSection = elements.find { it is Section && it.name == "PropertyValueObjects" } as Section?
+        return parseComplexStructureDefinitions(propertyVosSection)
+    }
+
+    private fun parseComplexStructureDefinitions(section: Section?): List<ComplexStructureDefinition> {
+        return section?.elements?.filterIsInstance<Section>()?.map {
+            parseComplexValueObject(it)
         } ?: emptyList()
     }
 }
