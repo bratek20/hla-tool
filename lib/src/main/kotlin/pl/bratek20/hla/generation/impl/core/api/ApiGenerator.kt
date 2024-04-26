@@ -8,6 +8,8 @@ import pl.bratek20.hla.definitions.ComplexStructureDefinition
 import pl.bratek20.hla.definitions.InterfaceDefinition
 import pl.bratek20.hla.definitions.SimpleStructureDefinition
 import pl.bratek20.hla.definitions.TypeDefinition
+import pl.bratek20.hla.utils.camelToPascalCase
+import pl.bratek20.hla.utils.pascalToCamelCase
 
 class ApiGenerator(
     c: ModuleGenerationContext
@@ -83,28 +85,45 @@ class ApiGenerator(
     private fun toView(vo: ComplexStructureDefinition): ComplexValueObjectView {
         return ComplexValueObjectView(
             name = vo.name,
-            fields = vo.fields.map { FieldView(it.name, toViewType(it.type)) }
+            fields = vo.fields.map { FieldView(it.name, viewType(it.type)) }
         )
     }
 
     data class GetterView(
         val name: String,
-        val type: String,
+        val type: ViewType,
         val field: String
+    )
+    data class PropertyFieldView(
+        val name: String,
+        val declaration: String,
+        val type: ViewType
     )
     data class PropertyValueObjectView(
         val name: String,
-        val fields: List<FieldView>,
+        val fields: List<PropertyFieldView>,
         val getters: List<GetterView>
     )
     private fun toPropertyView(vo: ComplexStructureDefinition): PropertyValueObjectView {
         return PropertyValueObjectView(
             name = vo.name,
-            fields = vo.fields.map { FieldView(it.name, toViewType(it.type)) },
+            fields = vo.fields.map {
+                val typeView = viewType(it.type)
+                val accessor = if (typeView is SimpleVOViewType) {
+                    "private "
+                } else {
+                    ""
+                }
+                PropertyFieldView(it.name, accessor + it.name, typeView)
+           },
             getters = vo.fields
                 .filter { viewType(it.type) is SimpleVOViewType }
-                .map { GetterView(it.name, toViewType(it.type), it.name) }
+                .map { GetterView(getterName(it.name), viewType(it.type), it.name) }
         )
+    }
+
+    private fun getterName(fieldName: String): String {
+        return "get${camelToPascalCase(fieldName)}"
     }
 
     private fun toView(interf: InterfaceDefinition): InterfaceView {

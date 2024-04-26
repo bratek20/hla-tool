@@ -2,7 +2,7 @@ namespace $moduleName {
     #foreach($vo in $valueObjects)
     export class ${vo.name} {
         #foreach($field in $vo.fields)
-        $field.declaration = $oc.map($field.type.unbox().name())
+        $field.declaration = $oc.map($field.type.unboxedName())
         #end
 
         static create(
@@ -12,7 +12,7 @@ namespace $moduleName {
         ): ${vo.name} {
             const instance = new ${vo.name}()
             #foreach($field in $vo.fields)
-            ${field.unboxedAssignment("instance")}
+            instance.$field.name = ${field.type.unboxedAssignment("$field.name")}
             #end
             return instance
         }

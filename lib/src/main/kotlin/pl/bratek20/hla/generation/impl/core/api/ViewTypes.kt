@@ -6,6 +6,18 @@ import pl.bratek20.hla.definitions.*
 
 interface ViewType {
     fun name(): String
+
+    fun constructor(arg: String): String {
+        return arg
+    }
+
+    fun unboxedName(): String {
+        return name()
+    }
+
+    fun unboxedAssignment(name: String): String {
+        return name
+    }
 }
 
 data class BaseViewType(
@@ -19,10 +31,23 @@ data class BaseViewType(
 
 data class SimpleVOViewType(
     val name: String,
-    val boxedType: BaseViewType
+    val boxedType: BaseViewType,
+    val languageTypes: LanguageTypes
 ) : ViewType {
     override fun name(): String {
         return name;
+    }
+
+    override fun unboxedAssignment(name: String): String {
+        return "$name.value"
+    }
+
+    override fun unboxedName(): String {
+        return boxedType.name()
+    }
+
+    override fun constructor(arg: String): String {
+        return languageTypes.classConstructor(name, arg)
     }
 }
 
@@ -57,7 +82,7 @@ class ViewTypeFactory(
     private fun createFromDomainType(type: DomainType): ViewType {
         return when (type) {
             is ListDomainType -> ListViewType(createFromDomainType(type.wrappedType), languageTypes)
-            is SimpleVODomainType -> SimpleVOViewType(type.name, BaseViewType(type.boxedType.name, languageTypes))
+            is SimpleVODomainType -> SimpleVOViewType(type.name, BaseViewType(type.boxedType.name, languageTypes), languageTypes)
             is ComplexVODomainType -> ComplexVOViewType(type.name)
             is BaseDomainType -> BaseViewType(type.name, languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")

@@ -2,7 +2,7 @@ package pl.bratek20.hla.generation.impl.core.api
 
 data class FieldView(
     val name: String,
-    val type: String
+    val type: ViewType
 )
 data class ComplexValueObjectView(
     val name: String,

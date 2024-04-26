@@ -11,7 +11,7 @@ class ${vo.name} {
 class ${vo.name} {
     constructor(
         #foreach($field in $vo.fields)
-        public readonly $field.name: $field.type,
+        public readonly $field.name: $field.type.name(),
         #end
     ) {}
 }#if($foreach.hasNext)

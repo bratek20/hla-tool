@@ -4,17 +4,17 @@ namespace OtherModule {
         name = STRING
 
         static create(
-            id: string,
+            id: OtherId,
             name: string,
         ): OtherProperty {
             const instance = new OtherProperty()
-            instance.id = id
+            instance.id = id.value
             instance.name = name
             return instance
         }
 
-        getId(): SomeId {
-            return new SomeId(this.id)
+        getId(): OtherId {
+            return new OtherId(this.id)
         }
     }
 }
