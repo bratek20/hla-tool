@@ -2,7 +2,7 @@ namespace $moduleName {
     #foreach($vo in $valueObjects)
     export class ${vo.name} {
         #foreach($field in $vo.fields)
-        $field.declaration = $oc.map($field.type.unboxedName())
+        $field.accessor$field.name = $oc.map($field.type.unboxedName())
         #end
 
         static create(

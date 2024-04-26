@@ -96,7 +96,7 @@ class ApiGenerator(
     )
     data class PropertyFieldView(
         val name: String,
-        val declaration: String,
+        val accessor: String,
         val type: ViewType
     )
     data class PropertyValueObjectView(
@@ -114,7 +114,7 @@ class ApiGenerator(
                 } else {
                     ""
                 }
-                PropertyFieldView(it.name, accessor + it.name, typeView)
+                PropertyFieldView(it.name, accessor, typeView)
            },
             getters = vo.fields
                 .filter { viewType(it.type) is SimpleVOViewType }

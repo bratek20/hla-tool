@@ -1,0 +1,16 @@
+package ${packageName}.api
+
+#foreach($vo in $valueObjects)
+data class ${vo.name}(
+    #foreach($field in $vo.fields)
+    ${field.accessor}val $field.name: $field.type.unboxedName(),
+    #end
+) {
+    #foreach($getter in $vo.getters)
+    fun ${getter.name}(): ${getter.type.name()} {
+        return ${getter.type.constructor("this.${getter.field}")}
+    }
+    #end
+}#if($foreach.hasNext)
+
+#end#end
