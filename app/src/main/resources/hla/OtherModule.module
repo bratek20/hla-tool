@@ -5,6 +5,7 @@ ValueObjects
         id: OtherId
         amount: int
         enabled: bool
+        enabled2: bool
 
 Interfaces
     MyApi

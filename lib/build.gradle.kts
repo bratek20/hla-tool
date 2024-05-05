@@ -6,6 +6,9 @@ dependencies {
     // TODO use version catalog
     implementation("org.apache.velocity:velocity-engine-core:2.3")
 
+    implementation(libs.bratek20.architecture)
+    testImplementation(testFixtures(libs.bratek20.architecture))
+
     //TODO add to convention
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")
 }

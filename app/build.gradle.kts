@@ -4,6 +4,8 @@ plugins {
 
 dependencies {
     implementation(project(":lib"))
+
+    implementation(libs.bratek20.architecture)
 }
 
 application {

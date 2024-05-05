@@ -7,10 +7,15 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
+import pl.bratek20.architecture.context.guice.GuiceContextBuilder
+import pl.bratek20.architecture.context.someContextBuilder
+import pl.bratek20.architecture.context.spring.SpringContextBuilder
 import pl.bratek20.hla.directory.DirectoriesMock
+import pl.bratek20.hla.directory.DirectoriesMockContextModule
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
+import pl.bratek20.hla.facade.impl.FacadeContextModule
 import pl.bratek20.hla.facade.impl.HlaFacadeImpl
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
@@ -47,8 +52,14 @@ class HlaFacadeTest {
     @ArgumentsSource(MyArgumentsProvider::class)
     fun `should generate module`(moduleName: String, path: String, lang: ModuleLanguage) {
         //given
-        val directoriesMock = DirectoriesMock()
-        val facade = HlaFacadeImpl(directoriesMock)
+        val context = someContextBuilder()
+            .withModule(DirectoriesMockContextModule())
+            .withModule(FacadeContextModule())
+            .build()
+
+        val directoriesMock = context.get(DirectoriesMock::class.java)
+        val facade = context.get(HlaFacade::class.java)
+
         val inPath = Path("src/test/resources/facade")
         val outPath = Path("somePath")
 
