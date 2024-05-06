@@ -113,6 +113,7 @@ fun moduleDefinition(ov: HlaModuleDef.() -> Unit): ModuleDefinition {
         simpleValueObjects = def.simpleValueObjects.map { simpleValueObject(it) },
         complexValueObjects = def.complexValueObjects.map { complexValueObject(it) },
         interfaces = def.interfaces.map { interfaceDef(it) },
-        propertyValueObjects = emptyList()
+        propertyValueObjects = emptyList(),
+        propertyMappings = emptyList()
     )
 }

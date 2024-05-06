@@ -4,3 +4,7 @@ PropertyValueObjects
 
     SomeConfig
         enabled: bool
+
+Properties
+    "someElements" -> SomeElement[]
+    "someConfig" -> SomeConfig

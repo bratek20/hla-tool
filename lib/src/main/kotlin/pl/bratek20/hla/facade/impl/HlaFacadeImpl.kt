@@ -3,7 +3,7 @@ package pl.bratek20.hla.facade.impl
 import pl.bratek20.architecture.context.api.ContextBuilder
 import pl.bratek20.architecture.context.api.ContextModule
 import pl.bratek20.hla.directory.api.Directories
-import pl.bratek20.hla.facade.api.GeneratedModuleArgs
+import pl.bratek20.hla.facade.api.GenerateModuleArgs
 import pl.bratek20.hla.facade.api.HlaFacade
 import pl.bratek20.hla.generation.impl.core.ModuleGeneratorImpl
 import pl.bratek20.hla.parsing.impl.ModuleDefinitionsParserImpl
@@ -11,7 +11,7 @@ import pl.bratek20.hla.parsing.impl.ModuleDefinitionsParserImpl
 class HlaFacadeImpl(
     private val directories: Directories
 ) : HlaFacade {
-    override fun generateModule(args: GeneratedModuleArgs) {
+    override fun generateModule(args: GenerateModuleArgs) {
         val parser = ModuleDefinitionsParserImpl()
         val generator = ModuleGeneratorImpl()
 
@@ -21,7 +21,7 @@ class HlaFacadeImpl(
     }
 }
 
-class FacadeContextModule: ContextModule {
+class FacadeModule: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder.setImpl(HlaFacade::class.java, HlaFacadeImpl::class.java)
     }

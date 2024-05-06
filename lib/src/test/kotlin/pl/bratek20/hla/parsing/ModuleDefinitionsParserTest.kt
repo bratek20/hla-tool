@@ -1,14 +1,20 @@
-package pl.bratek20.hla.parsing.api
+package pl.bratek20.hla.parsing
 
 import org.junit.jupiter.api.Test
+import pl.bratek20.architecture.context.someContextBuilder
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.definitions.ModuleDefinition
 import pl.bratek20.hla.definitions.TypeWrapper
 import pl.bratek20.hla.definitions.assertModules
+import pl.bratek20.hla.parsing.api.ModuleDefinitionsParser
 import pl.bratek20.hla.parsing.impl.ModuleDefinitionsParserImpl
+import pl.bratek20.hla.parsing.impl.ParsingContextModule
 
 class ModuleDefinitionsParserTest {
-    private val parser = ModuleDefinitionsParserImpl()
+    private val parser = someContextBuilder()
+        .withModule(ParsingContextModule())
+        .build()
+        .get(ModuleDefinitionsParser::class.java)
 
     private fun parse(pathSuffix: String): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
@@ -220,6 +226,23 @@ class ModuleDefinitionsParserTest {
                         type = {
                             name = "bool"
                         }
+                    }
+                }
+            )
+            propertyMappings = listOf(
+                {
+                    key = "someElements"
+                    type = {
+                        name = "SomeElement"
+                        wrappers = listOf(
+                            TypeWrapper.LIST
+                        )
+                    }
+                },
+                {
+                    key = "someConfig"
+                    type = {
+                        name = "SomeConfig"
                     }
                 }
             )

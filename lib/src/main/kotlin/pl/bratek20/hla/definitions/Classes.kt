@@ -19,12 +19,18 @@ enum class BaseType {
     }
 }
 
+data class PropertyMapping(
+    val key: String,
+    val type: TypeDefinition
+)
+
 data class ModuleDefinition(
     val name: ModuleName,
     val simpleValueObjects: List<SimpleStructureDefinition>,
     val complexValueObjects: List<ComplexStructureDefinition>,
     val interfaces: List<InterfaceDefinition>,
-    val propertyValueObjects: List<ComplexStructureDefinition>
+    val propertyValueObjects: List<ComplexStructureDefinition>,
+    val propertyMappings: List<PropertyMapping>,
 )
 
 enum class TypeWrapper {

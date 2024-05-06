@@ -1,22 +1,20 @@
-package pl.bratek20.hla.facade.api
+package pl.bratek20.hla.facade
 
 import org.assertj.core.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
-import pl.bratek20.architecture.context.guice.GuiceContextBuilder
 import pl.bratek20.architecture.context.someContextBuilder
-import pl.bratek20.architecture.context.spring.SpringContextBuilder
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.DirectoriesMockContextModule
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
-import pl.bratek20.hla.facade.impl.FacadeContextModule
-import pl.bratek20.hla.facade.impl.HlaFacadeImpl
+import pl.bratek20.hla.facade.api.GenerateModuleArgs
+import pl.bratek20.hla.facade.api.HlaFacade
+import pl.bratek20.hla.facade.impl.FacadeModule
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
 import java.util.stream.Stream
@@ -54,7 +52,7 @@ class HlaFacadeTest {
         //given
         val context = someContextBuilder()
             .withModule(DirectoriesMockContextModule())
-            .withModule(FacadeContextModule())
+            .withModule(FacadeModule())
             .build()
 
         val directoriesMock = context.get(DirectoriesMock::class.java)
@@ -64,7 +62,7 @@ class HlaFacadeTest {
         val outPath = Path("somePath")
 
         //when
-        facade.generateModule(GeneratedModuleArgs(ModuleName(moduleName), lang, inPath, outPath))
+        facade.generateModule(GenerateModuleArgs(ModuleName(moduleName), lang, inPath, outPath))
 
         //then
         val writtenDirectory = directoriesMock.assertOneWriteAndGetDirectory(outPath.value)

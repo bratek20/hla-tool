@@ -1,4 +1,4 @@
-package pl.bratek20.hla.generation.api
+package pl.bratek20.hla.generation
 
 import pl.bratek20.hla.generation.impl.core.ModuleGeneratorImpl
 

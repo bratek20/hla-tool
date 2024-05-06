@@ -138,12 +138,29 @@ fun assertInterface(given: InterfaceDefinition, init: ExpectedInterface.() -> Un
     }
 }
 
+data class ExpectedPropertyMapping(
+    var key: String? = null,
+    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
+)
+fun assertPropertyMapping(given: PropertyMapping, init: ExpectedPropertyMapping.() -> Unit) {
+    val expected = ExpectedPropertyMapping().apply(init)
+
+    expected.key?.let {
+        assertThat(given.key).isEqualTo(it)
+    }
+
+    expected.type?.let {
+        assertTypeDefinition(given.type, it)
+    }
+}
+
 data class ExpectedModule(
     var name: String? = null,
     var simpleValueObjects: List<ExpectedSimpleStructureDefinition.() -> Unit>? = null,
     var complexValueObjects: List<ExpectedComplexStructureDefinition.() -> Unit>? = null,
     var interfaces: List<ExpectedInterface.() -> Unit>? = null,
     var propertyValueObjects: List<ExpectedComplexStructureDefinition.() -> Unit>? = null,
+    var propertyMappings: List<ExpectedPropertyMapping.() -> Unit>? = null,
 )
 fun assertModule(given: ModuleDefinition, init: ExpectedModule.() -> Unit) {
     val expected = ExpectedModule().apply(init)
@@ -177,6 +194,13 @@ fun assertModule(given: ModuleDefinition, init: ExpectedModule.() -> Unit) {
         assertThat(given.propertyValueObjects).hasSameSizeAs(it)
         given.propertyValueObjects.zip(it).forEach { (property, expected) ->
             assertComplexStructureDefinition(property, expected)
+        }
+    }
+
+    expected.propertyMappings?.let {
+        assertThat(given.propertyMappings).hasSameSizeAs(it)
+        given.propertyMappings.zip(it).forEach { (mapping, expected) ->
+            assertPropertyMapping(mapping, expected)
         }
     }
 }

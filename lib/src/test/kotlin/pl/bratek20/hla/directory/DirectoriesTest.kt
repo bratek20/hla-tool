@@ -1,10 +1,8 @@
-package pl.bratek20.hla.directory.api
+package pl.bratek20.hla.directory
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import pl.bratek20.hla.directory.assertCompareResult
-import pl.bratek20.hla.directory.assertDirectory
-import pl.bratek20.hla.directory.directory
+import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 
 class DirectoriesTest {

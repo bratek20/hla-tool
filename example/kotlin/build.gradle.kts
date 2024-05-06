@@ -5,4 +5,6 @@ plugins {
 
 dependencies {
     implementation(libs.assertj.core)
+
+    implementation(libs.bratek20.architecture)
 }

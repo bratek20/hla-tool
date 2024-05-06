@@ -1,4 +1,6 @@
 namespace OtherModule {
+    export const OTHER_PROPERTY_KEY = new PropertyKey("otherProperty")
+
     export class OtherProperty {
         private id = STRING
         name = STRING

@@ -28,7 +28,8 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
             interfaces = interfaces,
-            propertyValueObjects = propertyValueObjects
+            propertyValueObjects = propertyValueObjects,
+            propertyMappings = emptyList()
         )
     }
 

@@ -4,7 +4,7 @@ import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.api.ModuleName
 
-data class GeneratedModuleArgs(
+data class GenerateModuleArgs(
     val moduleName: ModuleName,
     val language: ModuleLanguage,
     val inPath: Path,
@@ -12,5 +12,5 @@ data class GeneratedModuleArgs(
 )
 
 interface HlaFacade {
-    fun generateModule(args: GeneratedModuleArgs)
+    fun generateModule(args: GenerateModuleArgs)
 }
