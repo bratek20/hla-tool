@@ -23,13 +23,15 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val valueObjects = parseValueObjects(elements)
         val interfaces = parseInterfaces(elements)
         val propertyValueObjects = parsePropertyValueObjects(elements)
+        val propertyMappings = parsePropertyMappings(elements)
+
         return ModuleDefinition(
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
             interfaces = interfaces,
             propertyValueObjects = propertyValueObjects,
-            propertyMappings = emptyList()
+            propertyMappings = propertyMappings
         )
     }
 
@@ -62,6 +64,12 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val name: String,
         val args: List<ParsedArg>,
         val returnType: String?
+    ) : ParsedElement(indent)
+
+    class ParsedMapping(
+        indent: Int,
+        val key: String,
+        val value: String
     ) : ParsedElement(indent)
 
     private fun parseElements(content: FileContent): List<ParsedElement> {
@@ -112,6 +120,11 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         else if(noIndentLine.contains(":"))  {
             noIndentLine.split(":").let {
                 return Assignment(indent, it[0], it[1].trim())
+            }
+        } else if(noIndentLine.contains("->"))  {
+            noIndentLine.split("->").let {
+                val key = it[0].replace("\"", "").trim()
+                return ParsedMapping(indent, key, it[1].trim())
             }
         } else {
             return Section(indent, noIndentLine)
@@ -191,6 +204,16 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
     private fun parsePropertyValueObjects(elements: List<ParsedElement>): List<ComplexStructureDefinition> {
         val propertyVosSection = elements.find { it is Section && it.name == "PropertyValueObjects" } as Section?
         return parseComplexStructureDefinitions(propertyVosSection)
+    }
+
+    private fun parsePropertyMappings(elements: List<ParsedElement>): List<PropertyMapping> {
+        val propertyMappingsSection = elements.find { it is Section && it.name == "Properties" } as Section?
+        return propertyMappingsSection?.elements?.filterIsInstance<ParsedMapping>()?.map {
+            PropertyMapping(
+                key = it.key,
+                type = parseType(it.value),
+            )
+        } ?: emptyList()
     }
 
     private fun parseComplexStructureDefinitions(section: Section?): List<ComplexStructureDefinition> {
