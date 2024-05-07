@@ -1,15 +1,12 @@
 package pl.bratek20.hla.generation.impl.core.api
 
+import pl.bratek20.hla.definitions.*
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
-import pl.bratek20.hla.definitions.ComplexStructureDefinition
-import pl.bratek20.hla.definitions.InterfaceDefinition
-import pl.bratek20.hla.definitions.SimpleStructureDefinition
-import pl.bratek20.hla.definitions.TypeDefinition
 import pl.bratek20.hla.utils.camelToPascalCase
-import pl.bratek20.hla.utils.pascalToCamelCase
+import pl.bratek20.hla.utils.camelToScreamingSnakeCase
 
 class ApiGenerator(
     c: ModuleGenerationContext
@@ -66,7 +63,8 @@ class ApiGenerator(
         }
 
         val fileContent = contentBuilder("properties.vm")
-            .put("valueObjects", module.propertyValueObjects.map { toPropertyView(it) })
+            .put("valueObjects", module.propertyValueObjects.map { toPropertyVoView(it) })
+            .put("keys", module.propertyMappings.map { toKeyView(it) })
             .build()
 
         return File(
@@ -104,7 +102,7 @@ class ApiGenerator(
         val fields: List<PropertyFieldView>,
         val getters: List<GetterView>
     )
-    private fun toPropertyView(vo: ComplexStructureDefinition): PropertyValueObjectView {
+    private fun toPropertyVoView(vo: ComplexStructureDefinition): PropertyValueObjectView {
         return PropertyValueObjectView(
             name = vo.name,
             fields = vo.fields.map {
@@ -120,6 +118,15 @@ class ApiGenerator(
                 .filter { viewType(it.type) is SimpleVOViewType }
                 .map { GetterView(getterName(it.name), viewType(it.type), it.name) }
         )
+    }
+
+    data class KeyView(
+        val name: String,
+        val value: String
+    )
+    private fun toKeyView(mapping: PropertyMapping): KeyView {
+        val name = camelToScreamingSnakeCase(mapping.key + "Key")
+        return KeyView(name, mapping.key)
     }
 
     private fun getterName(fieldName: String): String {

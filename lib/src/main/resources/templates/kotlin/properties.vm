@@ -1,5 +1,9 @@
 package ${packageName}.api
 
+#foreach($key in $keys)
+val $key.name = pl.bratek20.architecture.properties.api.PropertyKey("$key.value")
+#end
+
 #foreach($vo in $valueObjects)
 data class ${vo.name}(
     #foreach($field in $vo.fields)

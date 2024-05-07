@@ -9,3 +9,6 @@ PropertyValueObjects
     OtherProperty
         id: OtherId
         name: string
+
+Properties
+    "otherProperty" -> OtherProperty

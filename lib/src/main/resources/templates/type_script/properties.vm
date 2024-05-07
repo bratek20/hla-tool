@@ -1,4 +1,8 @@
 namespace $moduleName {
+    #foreach($key in $keys)
+    export const $key.name = new PropertyKey("$key.value")
+    #end
+
     #foreach($vo in $valueObjects)
     export class ${vo.name} {
         #foreach($field in $vo.fields)
