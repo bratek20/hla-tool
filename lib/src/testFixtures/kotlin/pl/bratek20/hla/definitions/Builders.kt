@@ -65,9 +65,9 @@ fun argument(ov: ArgumentDef.() -> Unit): ArgumentDefinition {
 data class ExceptionDef(
     var name: String = "test",
 )
-fun exception(ov: ExceptionDef.() -> Unit): Exception {
+fun exception(ov: ExceptionDef.() -> Unit): ExceptionDefinition {
     val def = ExceptionDef().apply(ov)
-    return Exception(
+    return ExceptionDefinition(
         name = def.name
     )
 }
@@ -114,6 +114,7 @@ fun moduleDefinition(ov: HlaModuleDef.() -> Unit): ModuleDefinition {
         complexValueObjects = def.complexValueObjects.map { complexValueObject(it) },
         interfaces = def.interfaces.map { interfaceDef(it) },
         propertyValueObjects = emptyList(),
-        propertyMappings = emptyList()
+        propertyMappings = emptyList(),
+        enums = emptyList()
     )
 }

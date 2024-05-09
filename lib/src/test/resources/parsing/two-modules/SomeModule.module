@@ -1,4 +1,9 @@
 // some comment
+Enums
+    SomeEnum
+        VALUE_A
+        VALUE_B
+
 ValueObjects
     SomeId: string
 

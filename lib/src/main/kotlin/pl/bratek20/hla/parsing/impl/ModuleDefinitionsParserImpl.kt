@@ -24,6 +24,7 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val interfaces = parseInterfaces(elements)
         val propertyValueObjects = parsePropertyValueObjects(elements)
         val propertyMappings = parsePropertyMappings(elements)
+        val enums = parseEnums(elements)
 
         return ModuleDefinition(
             name = moduleName,
@@ -31,7 +32,8 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
             complexValueObjects = valueObjects.complex,
             interfaces = interfaces,
             propertyValueObjects = propertyValueObjects,
-            propertyMappings = propertyMappings
+            propertyMappings = propertyMappings,
+            enums = enums
         )
     }
 
@@ -199,10 +201,10 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         )
     }
 
-    private fun parseExceptions(elements: List<ParsedElement>): List<Exception> {
+    private fun parseExceptions(elements: List<ParsedElement>): List<ExceptionDefinition> {
         val exceptionsSection = elements.find { it is Section && it.name == "throws" } as Section?
         return exceptionsSection?.elements?.filterIsInstance<Section>()?.map {
-            Exception(
+            ExceptionDefinition(
                 name = it.name
             )
         } ?: emptyList()
@@ -238,6 +240,18 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
     private fun parseComplexStructureDefinitions(section: Section?): List<ComplexStructureDefinition> {
         return section?.elements?.filterIsInstance<Section>()?.map {
             parseComplexValueObject(it)
+        } ?: emptyList()
+    }
+
+    private fun parseEnums(elements: List<ParsedElement>): List<EnumDefinition> {
+        val enumsSection = elements.find { it is Section && it.name == "Enums" } as Section?
+        return enumsSection?.elements?.filterIsInstance<Section>()?.map {
+            EnumDefinition(
+                name = it.name,
+                values = it.elements.filterIsInstance<Section>().map {
+                    it.name
+                }
+            )
         } ?: emptyList()
     }
 }

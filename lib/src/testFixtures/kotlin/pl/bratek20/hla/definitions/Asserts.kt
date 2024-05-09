@@ -89,7 +89,7 @@ fun assertArg(given: ArgumentDefinition, init: ExpectedArg.() -> Unit) {
 data class ExpectedException(
     var name: String? = null,
 )
-fun assertException(given: Exception, init: ExpectedException.() -> Unit) {
+fun assertException(given: ExceptionDefinition, init: ExpectedException.() -> Unit) {
     val expected = ExpectedException().apply(init)
 
     expected.name?.let {
@@ -173,6 +173,25 @@ fun assertPropertyMapping(given: PropertyMapping, init: ExpectedPropertyMapping.
     }
 }
 
+data class ExpectedEnum(
+    var name: String? = null,
+    var values: List<String>? = null,
+)
+fun assertEnum(given: EnumDefinition, init: ExpectedEnum.() -> Unit) {
+    val expected = ExpectedEnum().apply(init)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.values?.let {
+        assertThat(given.values).hasSize(it.size)
+        given.values.zip(it).forEach { (value, expected) ->
+            assertThat(value).isEqualTo(expected)
+        }
+    }
+}
+
 data class ExpectedModule(
     var name: String? = null,
     var simpleValueObjects: List<ExpectedSimpleStructureDefinition.() -> Unit>? = null,
@@ -180,6 +199,7 @@ data class ExpectedModule(
     var interfaces: List<ExpectedInterface.() -> Unit>? = null,
     var propertyValueObjects: List<ExpectedComplexStructureDefinition.() -> Unit>? = null,
     var propertyMappings: List<ExpectedPropertyMapping.() -> Unit>? = null,
+    var enums: List<ExpectedEnum.() -> Unit>? = null,
 )
 fun assertModule(given: ModuleDefinition, init: ExpectedModule.() -> Unit) {
     val expected = ExpectedModule().apply(init)
@@ -220,6 +240,13 @@ fun assertModule(given: ModuleDefinition, init: ExpectedModule.() -> Unit) {
         assertThat(given.propertyMappings).hasSameSizeAs(it)
         given.propertyMappings.zip(it).forEach { (mapping, expected) ->
             assertPropertyMapping(mapping, expected)
+        }
+    }
+
+    expected.enums?.let {
+        assertThat(given.enums).hasSameSizeAs(it)
+        given.enums.zip(it).forEach { (enum, expected) ->
+            assertEnum(enum, expected)
         }
     }
 }

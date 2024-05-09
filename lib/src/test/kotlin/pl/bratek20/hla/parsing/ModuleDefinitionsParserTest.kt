@@ -208,6 +208,13 @@ class ModuleDefinitionsParserTest {
                         }
                     )
                 }
+                enums = listOf {
+                    name = "SomeEnum"
+                    values = listOf(
+                        "VALUE_A",
+                        "VALUE_B"
+                    )
+                }
             }
         ))
     }

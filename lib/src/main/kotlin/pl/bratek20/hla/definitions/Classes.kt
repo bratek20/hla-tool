@@ -24,6 +24,11 @@ data class PropertyMapping(
     val type: TypeDefinition
 )
 
+data class EnumDefinition(
+    val name: String,
+    val values: List<String>
+)
+
 data class ModuleDefinition(
     val name: ModuleName,
     val simpleValueObjects: List<SimpleStructureDefinition>,
@@ -31,6 +36,7 @@ data class ModuleDefinition(
     val interfaces: List<InterfaceDefinition>,
     val propertyValueObjects: List<ComplexStructureDefinition>,
     val propertyMappings: List<PropertyMapping>,
+    val enums: List<EnumDefinition>,
 )
 
 enum class TypeWrapper {
@@ -71,7 +77,7 @@ data class ArgumentDefinition(
     val type: TypeDefinition
 )
 
-data class Exception(
+data class ExceptionDefinition(
     val name: String
 )
 
@@ -79,5 +85,5 @@ data class MethodDefinition(
     val name: String,
     val returnType: TypeDefinition?,
     val args: List<ArgumentDefinition>,
-    val throws: List<Exception> = emptyList()
+    val throws: List<ExceptionDefinition> = emptyList()
 )
