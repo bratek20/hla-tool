@@ -30,10 +30,3 @@ Interfaces
         someQuery(id: SomeId): SomeClass
             throws
                 SomeException
-
-Properties
-    someElements: SomeElement[]
-        id: SomeId
-
-    someConfig: SomeConfig
-        enabled: bool
