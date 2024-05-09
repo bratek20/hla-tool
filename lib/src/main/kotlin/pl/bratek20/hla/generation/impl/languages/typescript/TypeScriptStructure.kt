@@ -26,6 +26,10 @@ class TypeScriptStructure(private val c: DomainContext)
         return "Properties.ts"
     }
 
+    override fun exceptionsFileName(): String {
+        return "Exceptions.ts"
+    }
+
     override fun fixturesDirName(): String {
         return "Fixtures"
     }

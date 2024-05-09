@@ -17,6 +17,7 @@ class ApiGenerator(
         valueObjectsFile()?.let { files.add(it) }
         interfacesFile()?.let { files.add(it) }
         propertiesFile()?.let { files.add(it) }
+        exceptionsFile()?.let { files.add(it) }
 
         return Directory(
             name = language.structure().apiDirName(),
@@ -24,6 +25,26 @@ class ApiGenerator(
         )
     }
 
+    private fun exceptionsFile(): File? {
+        val exceptions = module.interfaces
+            .flatMap { it.methods }
+            .flatMap { it.throws }
+            .map { it.name }
+            .distinct()
+
+        if (exceptions.isEmpty()) {
+            return null
+        }
+
+        val fileContent = contentBuilder("exceptions.vm")
+            .put("exceptions", exceptions)
+            .build()
+
+        return File(
+            name = language.structure().exceptionsFileName(),
+            content = fileContent
+        )
+    }
     private fun valueObjectsFile(): File? {
         if (module.simpleValueObjects.isEmpty() && module.complexValueObjects.isEmpty()) {
             return null

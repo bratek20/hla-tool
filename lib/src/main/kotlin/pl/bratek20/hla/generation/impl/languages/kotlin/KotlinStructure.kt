@@ -24,6 +24,10 @@ class KotlinStructure(private val c: DomainContext) : LanguageStructure {
         return "Properties.kt"
     }
 
+    override fun exceptionsFileName(): String {
+        return "Exceptions.kt"
+    }
+
     override fun fixturesDirName(): String {
         return "fixtures"
     }
