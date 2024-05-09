@@ -1,7 +1,17 @@
 #foreach($interface in $interfaces)
 interface $interface.name {
 #foreach($method in $interface.methods)
+    #if($method.throws.size() > 0)
+    /**
+    #foreach($exception in $method.throws)
+     * @throws { ${exception} }
+    #end
+     */
+    #end
     ${method.name}(#foreach($arg in $method.args)$arg.name: $arg.type, #{end}c: HandlerContext): $method.returnType
+    #if($foreach.hasNext)
+
+    #end
 #end
 }#if($foreach.hasNext)
 

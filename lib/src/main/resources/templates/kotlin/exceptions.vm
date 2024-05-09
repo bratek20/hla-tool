@@ -3,7 +3,7 @@ package ${packageName}.api
 import pl.bratek20.architecture.exceptions.ApiException
 
 #foreach($exception in $exceptions)
-class $exception(message: String) : ApiException(message)#if($foreach.hasNext)
+class $exception(message: String = "") : ApiException(message)#if($foreach.hasNext)
 
 
 #end#end
