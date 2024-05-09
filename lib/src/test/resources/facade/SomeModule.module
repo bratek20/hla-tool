@@ -24,7 +24,12 @@ ValueObjects
 Interfaces
     SomeInterface
         someCommand(id: SomeId, amount: int)
+            throws
+                SomeException
+                Some2Exception
         someQuery(id: SomeId): SomeClass
+            throws
+                SomeException
 
 Properties
     someElements: SomeElement[]
