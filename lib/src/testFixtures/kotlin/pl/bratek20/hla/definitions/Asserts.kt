@@ -86,11 +86,23 @@ fun assertArg(given: ArgumentDefinition, init: ExpectedArg.() -> Unit) {
     }
 }
 
+data class ExpectedException(
+    var name: String? = null,
+)
+fun assertException(given: Exception, init: ExpectedException.() -> Unit) {
+    val expected = ExpectedException().apply(init)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+}
+
 data class ExpectedMethod(
     var name: String? = null,
     var emptyReturnType: Boolean? = null,
     var returnType: (ExpectedTypeDefinition.() -> Unit)? = null,
     var args: List<ExpectedArg.() -> Unit>? = null,
+    var throws: List<ExpectedException.() -> Unit>? = null,
 )
 fun assertMethod(given: MethodDefinition, init: ExpectedMethod.() -> Unit) {
     val expected = ExpectedMethod().apply(init)
@@ -115,6 +127,13 @@ fun assertMethod(given: MethodDefinition, init: ExpectedMethod.() -> Unit) {
         assertThat(given.args).hasSize(it.size)
         given.args.zip(it).forEach { (arg, expected) ->
             assertArg(arg, expected)
+        }
+    }
+
+    expected.throws?.let {
+        assertThat(given.throws).hasSize(it.size)
+        given.throws.zip(it).forEach { (exception, expected) ->
+            assertException(exception, expected)
         }
     }
 }

@@ -185,6 +185,14 @@ class ModuleDefinitionsParserTest {
                                     }
                                 }
                             )
+                            throws = listOf (
+                                {
+                                    name = "SomeException"
+                                },
+                                {
+                                    name = "SomeException2"
+                                }
+                            )
                         },
                         {
                             name = "someQuery"

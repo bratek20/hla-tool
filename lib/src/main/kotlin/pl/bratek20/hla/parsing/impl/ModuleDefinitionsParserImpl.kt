@@ -39,21 +39,31 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val indent: Int
     )
 
-    class Section(
+    open class ParsedLeaf(
         indent: Int,
-        val name: String,
-        val elements: MutableList<ParsedElement> = mutableListOf()
+    ) : ParsedElement(indent)
+
+    open class ParsedNode(
+        indent: Int
     ) : ParsedElement(indent) {
+        val elements: MutableList<ParsedElement> = mutableListOf()
+
         fun addElement(element: ParsedElement) {
             elements.add(element)
         }
+    }
+
+    class Section(
+        indent: Int,
+        val name: String,
+    ) : ParsedNode(indent) {
     }
 
     class Assignment(
         indent: Int,
         val name: String,
         val value: String
-    ) : ParsedElement(indent)
+    ) : ParsedLeaf(indent)
 
     class ParsedArg(
         val name: String,
@@ -64,13 +74,13 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val name: String,
         val args: List<ParsedArg>,
         val returnType: String?
-    ) : ParsedElement(indent)
+    ) : ParsedNode(indent)
 
     class ParsedMapping(
         indent: Int,
         val key: String,
         val value: String
-    ) : ParsedElement(indent)
+    ) : ParsedLeaf(indent)
 
     private fun parseElements(content: FileContent): List<ParsedElement> {
         val initialElements = content.lines
@@ -78,23 +88,23 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
             .map { parseElement(it) }
 
         val result = mutableListOf<ParsedElement>()
-        val sectionsStack: ArrayDeque<Section> = ArrayDeque()
+        val nodesStack: ArrayDeque<ParsedNode> = ArrayDeque()
 
         for (element in initialElements) {
-            if(element is Section) {
-                while((sectionsStack.lastOrNull()?.indent ?: -1) >= element.indent) {
-                    sectionsStack.removeLast()
+            if(element is ParsedNode) {
+                while((nodesStack.lastOrNull()?.indent ?: -1) >= element.indent) {
+                    nodesStack.removeLast()
                 }
 
-                if (sectionsStack.isEmpty()) {
+                if (nodesStack.isEmpty()) {
                     result.add(element)
                 } else {
-                    sectionsStack.last().addElement(element)
+                    nodesStack.last().addElement(element)
                 }
 
-                sectionsStack.add(element)
+                nodesStack.add(element)
             } else {
-                sectionsStack.last.addElement(element)
+                nodesStack.last.addElement(element)
             }
         }
 
@@ -185,8 +195,17 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
                     type = parseType(it.value)
                 )
             },
-            throws = listOf()
+            throws = parseExceptions(method.elements)
         )
+    }
+
+    private fun parseExceptions(elements: List<ParsedElement>): List<Exception> {
+        val exceptionsSection = elements.find { it is Section && it.name == "throws" } as Section?
+        return exceptionsSection?.elements?.filterIsInstance<Section>()?.map {
+            Exception(
+                name = it.name
+            )
+        } ?: emptyList()
     }
 
     private fun parseInterfaces(elements: List<ParsedElement>): List<InterfaceDefinition> {
