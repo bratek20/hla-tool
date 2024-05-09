@@ -25,7 +25,7 @@ class HlaFacadeTest {
             Stream.of(
                 Arguments.of(
                     "OtherModule",
-                    "../example/kotlin/src/main/java/pl/bratek20/othermodule",
+                    "../example/kotlin/src/main/kotlin/pl/bratek20/othermodule",
                     ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
@@ -35,7 +35,7 @@ class HlaFacadeTest {
                 ),
                 Arguments.of(
                     "SomeModule",
-                    "../example/kotlin/src/main/java/pl/bratek20/somemodule",
+                    "../example/kotlin/src/main/kotlin/pl/bratek20/somemodule",
                     ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
