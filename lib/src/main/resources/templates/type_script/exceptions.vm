@@ -1,7 +1,7 @@
 #foreach($exception in $exceptions)
 class $exception extends ApiException<$exception> {
-    constructor() {
-        super($exception)
+    constructor(message?: string) {
+        super($exception, message)
     }
 
     getType(): string {

@@ -1,6 +1,6 @@
 class SomeException extends ApiException<SomeException> {
-    constructor() {
-        super(SomeException)
+    constructor(message?: string) {
+        super(SomeException, message)
     }
 
     getType(): string {
@@ -9,8 +9,8 @@ class SomeException extends ApiException<SomeException> {
 }
 
 class Some2Exception extends ApiException<Some2Exception> {
-    constructor() {
-        super(Some2Exception)
+    constructor(message?: string) {
+        super(Some2Exception, message)
     }
 
     getType(): string {
