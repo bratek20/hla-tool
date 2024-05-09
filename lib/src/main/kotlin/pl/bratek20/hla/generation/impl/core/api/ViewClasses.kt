@@ -24,7 +24,8 @@ data class ArgumentView(
 data class MethodView(
     val name: String,
     val returnType: String?,
-    val args: List<ArgumentView>
+    val args: List<ArgumentView>,
+    val throws: List<String>,
 )
 data class InterfaceView(
     val name: String,
