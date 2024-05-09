@@ -3,12 +3,12 @@ package pl.bratek20.somemodule.api
 interface SomeInterface {
     @Throws(
         SomeException::class,
-        Some2Exception::class
+        Some2Exception::class,
     )
     fun someCommand(id: SomeId, amount: Int): Unit
 
     @Throws(
-        SomeException::class
+        SomeException::class,
     )
     fun someQuery(id: SomeId): SomeClass
 }

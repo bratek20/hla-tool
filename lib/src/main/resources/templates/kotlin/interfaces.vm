@@ -3,7 +3,17 @@ package ${packageName}.api
 #foreach($interface in $interfaces)
 interface $interface.name {
 #foreach($method in $interface.methods)
+    #if($method.throws.size() > 0)
+    @Throws(
+    #foreach($exception in $method.throws)
+        ${exception}::class,
+    #end
+    )
+    #end
     fun ${method.name}(#foreach($arg in $method.args)$arg.name: $arg.type#if($foreach.hasNext), #end#end): $method.returnType
+    #if($foreach.hasNext)
+
+    #end
 #end
 }#if($foreach.hasNext)
 

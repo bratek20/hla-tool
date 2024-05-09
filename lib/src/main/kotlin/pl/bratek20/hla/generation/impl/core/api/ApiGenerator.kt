@@ -161,7 +161,8 @@ class ApiGenerator(
                 MethodView(
                     name = method.name,
                     returnType = toViewType(method.returnType),
-                    args = method.args.map { ArgumentView(it.name, toViewType(it.type)) }
+                    args = method.args.map { ArgumentView(it.name, toViewType(it.type)) },
+                    throws = method.throws.map { it.name }
                 )
             }
         )
