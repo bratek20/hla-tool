@@ -29,7 +29,7 @@ class ModuleDefinitionsParserTest {
                 name = "OtherModule"
                 simpleValueObjects = listOf {
                     name = "OtherId"
-                    type = "string"
+                    typeName = "string"
                 }
                 complexValueObjects = listOf {
                     name = "OtherClass"
@@ -53,7 +53,7 @@ class ModuleDefinitionsParserTest {
                 name = "SomeModule"
                 simpleValueObjects = listOf {
                     name = "SomeId"
-                    type = "string"
+                    typeName = "string"
                 }
                 complexValueObjects = listOf(
                     {

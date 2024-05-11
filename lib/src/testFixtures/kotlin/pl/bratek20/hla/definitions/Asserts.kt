@@ -3,158 +3,12 @@ package pl.bratek20.hla.definitions
 import org.assertj.core.api.Assertions.assertThat
 import pl.bratek20.hla.definitions.api.*
 
-data class ExpectedSimpleStructureDefinition(
-    var name: String? = null,
-    var type: String? = null,
-)
-fun assertSimpleValueObject(given: SimpleStructureDefinition, init: ExpectedSimpleStructureDefinition.() -> Unit) {
-    val expected = ExpectedSimpleStructureDefinition().apply(init)
-
-    if (expected.name != null) {
-        assertThat(given.name).isEqualTo(expected.name)
-    }
-    if (expected.type != null) {
-        assertThat(given.typeName).isEqualTo(expected.type)
-    }
-}
-
-data class ExpectedTypeDefinition(
-    var name: String? = null,
-    var wrappers: List<TypeWrapper>? = null,
-)
-fun assertTypeDefinition(given: TypeDefinition, init: ExpectedTypeDefinition.() -> Unit) {
-    val expected = ExpectedTypeDefinition().apply(init)
-
-    if (expected.name != null) {
-        assertThat(given.name).isEqualTo(expected.name)
-    }
-
-    expected.wrappers?.let {
-        assertThat(given.wrappers).hasSize(it.size)
-        given.wrappers.zip(it).forEach { (wrapper, expected) ->
-            assertThat(wrapper.name).isEqualTo(expected.name)
-        }
-    }
-}
-
-data class ExpectedFieldDefinition(
-    var name: String? = null,
-    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
-)
-fun assertField(given: FieldDefinition, init: ExpectedFieldDefinition.() -> Unit) {
-    val expected = ExpectedFieldDefinition().apply(init)
-
-    if (expected.name != null) {
-        assertThat(given.name).isEqualTo(expected.name)
-    }
-    expected.type?.let {
-        assertTypeDefinition(given.type, it)
-    }
-}
-
-data class ExpectedComplexStructureDefinition(
-    var name: String? = null,
-    var fields: List<ExpectedFieldDefinition.() -> Unit>? = null,
-)
-fun assertComplexStructureDefinition(given: ComplexStructureDefinition, init: ExpectedComplexStructureDefinition.() -> Unit) {
-    val expected = ExpectedComplexStructureDefinition().apply(init)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.fields?.let {
-        assertThat(given.fields).hasSize(it.size)
-        given.fields.zip(it).forEach { (field, expected) ->
-            assertField(field, expected)
-        }
-    }
-}
-
-data class ExpectedArg(
-    var name: String? = null,
-    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
-)
-fun assertArg(given: ArgumentDefinition, init: ExpectedArg.() -> Unit) {
-    val expected = ExpectedArg().apply(init)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.type?.let {
-        assertTypeDefinition(given.type, it)
-    }
-}
-
-data class ExpectedException(
-    var name: String? = null,
-)
-fun assertException(given: ExceptionDefinition, init: ExpectedException.() -> Unit) {
-    val expected = ExpectedException().apply(init)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-}
-
-data class ExpectedMethod(
-    var name: String? = null,
-    var returnType: (ExpectedTypeDefinition.() -> Unit)? = null,
-    var args: List<ExpectedArg.() -> Unit>? = null,
-    var throws: List<ExpectedException.() -> Unit>? = null,
-)
-fun assertMethod(given: MethodDefinition, init: ExpectedMethod.() -> Unit) {
-    val expected = ExpectedMethod().apply(init)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.returnType?.let {
-        assertTypeDefinition(given.returnType!!, it)
-    }
-
-    expected.args?.let {
-        assertThat(given.args).hasSize(it.size)
-        given.args.zip(it).forEach { (arg, expected) ->
-            assertArg(arg, expected)
-        }
-    }
-
-    expected.throws?.let {
-        assertThat(given.throws).hasSize(it.size)
-        given.throws.zip(it).forEach { (exception, expected) ->
-            assertException(exception, expected)
-        }
-    }
-}
-
-data class ExpectedInterface(
-    var name: String? = null,
-    var methods: List<ExpectedMethod.() -> Unit>? = null,
-)
-fun assertInterface(given: InterfaceDefinition, init: ExpectedInterface.() -> Unit) {
-    val expected = ExpectedInterface().apply(init)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.methods?.let {
-        assertThat(given.methods).hasSize(it.size)
-        given.methods.zip(it).forEach { (method, expected) ->
-            assertMethod(method, expected)
-        }
-    }
-}
-
 data class ExpectedPropertyMapping(
     var key: String? = null,
     var type: (ExpectedTypeDefinition.() -> Unit)? = null,
 )
-fun assertPropertyMapping(given: PropertyMapping, init: ExpectedPropertyMapping.() -> Unit) {
-    val expected = ExpectedPropertyMapping().apply(init)
+fun assertPropertyMapping(given: PropertyMapping, expectedInit: ExpectedPropertyMapping.() -> Unit) {
+    val expected = ExpectedPropertyMapping().apply(expectedInit)
 
     expected.key?.let {
         assertThat(given.key).isEqualTo(it)
@@ -165,12 +19,12 @@ fun assertPropertyMapping(given: PropertyMapping, init: ExpectedPropertyMapping.
     }
 }
 
-data class ExpectedEnum(
+data class ExpectedEnumDefinition(
     var name: String? = null,
     var values: List<String>? = null,
 )
-fun assertEnum(given: EnumDefinition, init: ExpectedEnum.() -> Unit) {
-    val expected = ExpectedEnum().apply(init)
+fun assertEnumDefinition(given: EnumDefinition, expectedInit: ExpectedEnumDefinition.() -> Unit) {
+    val expected = ExpectedEnumDefinition().apply(expectedInit)
 
     expected.name?.let {
         assertThat(given.name).isEqualTo(it)
@@ -178,74 +32,191 @@ fun assertEnum(given: EnumDefinition, init: ExpectedEnum.() -> Unit) {
 
     expected.values?.let {
         assertThat(given.values).hasSize(it.size)
-        given.values.zip(it).forEach { (value, expected) ->
-            assertThat(value).isEqualTo(expected)
-        }
+        given.values.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
     }
 }
 
-data class ExpectedModule(
+data class ExpectedModuleDefinition(
     var name: String? = null,
-    var simpleValueObjects: List<ExpectedSimpleStructureDefinition.() -> Unit>? = null,
-    var complexValueObjects: List<ExpectedComplexStructureDefinition.() -> Unit>? = null,
-    var interfaces: List<ExpectedInterface.() -> Unit>? = null,
-    var propertyValueObjects: List<ExpectedComplexStructureDefinition.() -> Unit>? = null,
-    var propertyMappings: List<ExpectedPropertyMapping.() -> Unit>? = null,
-    var enums: List<ExpectedEnum.() -> Unit>? = null,
+    var simpleValueObjects: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
+    var complexValueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
+    var propertyValueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var propertyMappings: List<(ExpectedPropertyMapping.() -> Unit)>? = null,
+    var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
 )
-fun assertModule(given: ModuleDefinition, init: ExpectedModule.() -> Unit) {
-    val expected = ExpectedModule().apply(init)
+fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit) {
+    val expected = ExpectedModuleDefinition().apply(expectedInit)
 
     expected.name?.let {
         assertThat(given.name.value).isEqualTo(it)
     }
 
     expected.simpleValueObjects?.let {
-        assertThat(given.simpleValueObjects).hasSameSizeAs(it)
-        given.simpleValueObjects.zip(it).forEach { (simpleValueObject, expected) ->
-            assertSimpleValueObject(simpleValueObject, expected)
-        }
+        assertThat(given.simpleValueObjects).hasSize(it.size)
+        given.simpleValueObjects.forEachIndexed { idx, entry -> assertSimpleStructureDefinition(entry, it[idx]) }
     }
 
     expected.complexValueObjects?.let {
-        assertThat(given.complexValueObjects).hasSameSizeAs(it)
-        given.complexValueObjects.zip(it).forEach { (complexValueObject, expected) ->
-            assertComplexStructureDefinition(complexValueObject, expected)
-        }
+        assertThat(given.complexValueObjects).hasSize(it.size)
+        given.complexValueObjects.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }
 
     expected.interfaces?.let {
-        assertThat(given.interfaces).hasSameSizeAs(it)
-        given.interfaces.zip(it).forEach { (interf, expected) ->
-            assertInterface(interf, expected)
-        }
+        assertThat(given.interfaces).hasSize(it.size)
+        given.interfaces.forEachIndexed { idx, entry -> assertInterfaceDefinition(entry, it[idx]) }
     }
 
     expected.propertyValueObjects?.let {
-        assertThat(given.propertyValueObjects).hasSameSizeAs(it)
-        given.propertyValueObjects.zip(it).forEach { (property, expected) ->
-            assertComplexStructureDefinition(property, expected)
-        }
+        assertThat(given.propertyValueObjects).hasSize(it.size)
+        given.propertyValueObjects.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }
 
     expected.propertyMappings?.let {
-        assertThat(given.propertyMappings).hasSameSizeAs(it)
-        given.propertyMappings.zip(it).forEach { (mapping, expected) ->
-            assertPropertyMapping(mapping, expected)
-        }
+        assertThat(given.propertyMappings).hasSize(it.size)
+        given.propertyMappings.forEachIndexed { idx, entry -> assertPropertyMapping(entry, it[idx]) }
     }
 
     expected.enums?.let {
-        assertThat(given.enums).hasSameSizeAs(it)
-        given.enums.zip(it).forEach { (enum, expected) ->
-            assertEnum(enum, expected)
-        }
+        assertThat(given.enums).hasSize(it.size)
+        given.enums.forEachIndexed { idx, entry -> assertEnumDefinition(entry, it[idx]) }
     }
 }
 
-fun assertModules(given: List<ModuleDefinition>, init: List<ExpectedModule.() -> Unit>) {
-    assertThat(given).hasSize(init.size)
-    given.zip(init).forEach { (module, expected) ->
-        assertModule(module, expected)
+data class ExpectedTypeDefinition(
+    var name: String? = null,
+    var wrappers: List<TypeWrapper>? = null,
+)
+fun assertTypeDefinition(given: TypeDefinition, expectedInit: ExpectedTypeDefinition.() -> Unit) {
+    val expected = ExpectedTypeDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.wrappers?.let {
+        assertThat(given.wrappers).hasSize(it.size)
+        given.wrappers.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
+    }
+}
+
+data class ExpectedFieldDefinition(
+    var name: String? = null,
+    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
+)
+fun assertFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDefinition.() -> Unit) {
+    val expected = ExpectedFieldDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.type?.let {
+        assertTypeDefinition(given.type, it)
+    }
+}
+
+data class ExpectedSimpleStructureDefinition(
+    var name: String? = null,
+    var typeName: String? = null,
+)
+fun assertSimpleStructureDefinition(given: SimpleStructureDefinition, expectedInit: ExpectedSimpleStructureDefinition.() -> Unit) {
+    val expected = ExpectedSimpleStructureDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.typeName?.let {
+        assertThat(given.typeName).isEqualTo(it)
+    }
+}
+
+data class ExpectedComplexStructureDefinition(
+    var name: String? = null,
+    var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
+)
+fun assertComplexStructureDefinition(given: ComplexStructureDefinition, expectedInit: ExpectedComplexStructureDefinition.() -> Unit) {
+    val expected = ExpectedComplexStructureDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.fields?.let {
+        assertThat(given.fields).hasSize(it.size)
+        given.fields.forEachIndexed { idx, entry -> assertFieldDefinition(entry, it[idx]) }
+    }
+}
+
+data class ExpectedInterfaceDefinition(
+    var name: String? = null,
+    var methods: List<(ExpectedMethodDefinition.() -> Unit)>? = null,
+)
+fun assertInterfaceDefinition(given: InterfaceDefinition, expectedInit: ExpectedInterfaceDefinition.() -> Unit) {
+    val expected = ExpectedInterfaceDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.methods?.let {
+        assertThat(given.methods).hasSize(it.size)
+        given.methods.forEachIndexed { idx, entry -> assertMethodDefinition(entry, it[idx]) }
+    }
+}
+
+data class ExpectedArgumentDefinition(
+    var name: String? = null,
+    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
+)
+fun assertArgumentDefinition(given: ArgumentDefinition, expectedInit: ExpectedArgumentDefinition.() -> Unit) {
+    val expected = ExpectedArgumentDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.type?.let {
+        assertTypeDefinition(given.type, it)
+    }
+}
+
+data class ExpectedExceptionDefinition(
+    var name: String? = null,
+)
+fun assertExceptionDefinition(given: ExceptionDefinition, expectedInit: ExpectedExceptionDefinition.() -> Unit) {
+    val expected = ExpectedExceptionDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+}
+
+data class ExpectedMethodDefinition(
+    var name: String? = null,
+    var returnType: (ExpectedTypeDefinition.() -> Unit)? = null,
+    var args: List<(ExpectedArgumentDefinition.() -> Unit)>? = null,
+    var throws: List<(ExpectedExceptionDefinition.() -> Unit)>? = null,
+)
+fun assertMethodDefinition(given: MethodDefinition, expectedInit: ExpectedMethodDefinition.() -> Unit) {
+    val expected = ExpectedMethodDefinition().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.returnType?.let {
+        assertTypeDefinition(given.returnType, it)
+    }
+
+    expected.args?.let {
+        assertThat(given.args).hasSize(it.size)
+        given.args.forEachIndexed { idx, entry -> assertArgumentDefinition(entry, it[idx]) }
+    }
+
+    expected.throws?.let {
+        assertThat(given.throws).hasSize(it.size)
+        given.throws.forEachIndexed { idx, entry -> assertExceptionDefinition(entry, it[idx]) }
     }
 }

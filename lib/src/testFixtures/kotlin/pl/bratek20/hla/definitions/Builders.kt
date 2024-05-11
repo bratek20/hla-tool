@@ -2,119 +2,146 @@ package pl.bratek20.hla.definitions
 
 import pl.bratek20.hla.definitions.api.*
 
-data class TypeDef(
-    var name: String = "test",
-    var wrappers: List<TypeWrapper> = emptyList(),
+data class PropertyMappingDef(
+    var key: String = "someValue",
+    var type: (TypeDefinitionDef.() -> Unit) = {},
 )
-fun type(ov: TypeDef.() -> Unit): TypeDefinition {
-    val def = TypeDef().apply(ov)
-    return TypeDefinition(
+fun propertyMapping(init: PropertyMappingDef.() -> Unit = {}): PropertyMapping {
+    val def = PropertyMappingDef().apply(init)
+    return PropertyMapping(
+        key = def.key,
+        type = typeDefinition(def.type),
+    )
+}
+
+data class EnumDefinitionDef(
+    var name: String = "someValue",
+    var values: List<String> = emptyList(),
+)
+fun enumDefinition(init: EnumDefinitionDef.() -> Unit = {}): EnumDefinition {
+    val def = EnumDefinitionDef().apply(init)
+    return EnumDefinition(
         name = def.name,
-        wrappers = def.wrappers
+        values = def.values,
     )
 }
 
-data class FieldDef(
-    var name: String = "test",
-    var type: TypeDef.() -> Unit = {},
+data class ModuleDefinitionDef(
+    var name: String = "someValue",
+    var simpleValueObjects: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var complexValueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var interfaces: List<(InterfaceDefinitionDef.() -> Unit)> = emptyList(),
+    var propertyValueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var propertyMappings: List<(PropertyMappingDef.() -> Unit)> = emptyList(),
+    var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
 )
-fun field(ov: FieldDef.() -> Unit): FieldDefinition {
-    val def = FieldDef().apply(ov)
-    return FieldDefinition(
-        name = def.name,
-        type = type(def.type)
-    )
-}
-
-data class SimpleValueObjectDef(
-    var name: String = "test",
-    var type: String = "String",
-)
-fun simpleValueObject(ov: SimpleValueObjectDef.() -> Unit): SimpleStructureDefinition {
-    val def = SimpleValueObjectDef().apply(ov)
-    return SimpleStructureDefinition(
-        name = def.name,
-        typeName = def.type
-    )
-}
-
-data class ComplexValueObjectDef(
-    var name: String = "test",
-    var fields: List<FieldDef.() -> Unit> = listOf(),
-)
-fun complexValueObject(ov: ComplexValueObjectDef.() -> Unit): ComplexStructureDefinition {
-    val def = ComplexValueObjectDef().apply(ov)
-    return ComplexStructureDefinition(
-        name = def.name,
-        fields = def.fields.map { field(it) }
-    )
-}
-
-data class ArgumentDef(
-    var name: String = "test",
-    var type: TypeDef.() -> Unit = {},
-)
-fun argument(ov: ArgumentDef.() -> Unit): ArgumentDefinition {
-    val def = ArgumentDef().apply(ov)
-    return ArgumentDefinition(
-        name = def.name,
-        type = type(def.type)
-    )
-}
-
-data class ExceptionDef(
-    var name: String = "test",
-)
-fun exception(ov: ExceptionDef.() -> Unit): ExceptionDefinition {
-    val def = ExceptionDef().apply(ov)
-    return ExceptionDefinition(
-        name = def.name
-    )
-}
-
-data class MethodDef(
-    var name: String = "test",
-    var returnType: (TypeDef.() -> Unit) = {},
-    var args: List<ArgumentDef.()->Unit> = listOf(),
-    var throws: List<ExceptionDef.()->Unit> = listOf(),
-)
-fun method(ov: MethodDef.() -> Unit): MethodDefinition {
-    val def = MethodDef().apply(ov)
-    return MethodDefinition(
-        name = def.name,
-        returnType = type(def.returnType),
-        args = def.args.map { argument(it) },
-        throws = def.throws.map { exception(it) }
-    )
-}
-
-data class InterfaceDef(
-    var name: String = "test",
-    var methods: List<MethodDef.()->Unit> = listOf(),
-)
-fun interfaceDef(ov: InterfaceDef.() -> Unit): InterfaceDefinition {
-    val def = InterfaceDef().apply(ov)
-    return InterfaceDefinition(
-        name = def.name,
-        methods = def.methods.map { method(it) }
-    )
-}
-
-data class HlaModuleDef(
-    var name: String = "test",
-    var simpleValueObjects: List<SimpleValueObjectDef.()->Unit> = listOf(),
-    var complexValueObjects: List<ComplexValueObjectDef.()->Unit> = listOf(),
-    var interfaces: List<InterfaceDef.()->Unit> = listOf(),
-)
-fun moduleDefinition(ov: HlaModuleDef.() -> Unit): ModuleDefinition {
-    val def = HlaModuleDef().apply(ov)
+fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
+    val def = ModuleDefinitionDef().apply(init)
     return ModuleDefinition(
         name = ModuleName(def.name),
-        simpleValueObjects = def.simpleValueObjects.map { simpleValueObject(it) },
-        complexValueObjects = def.complexValueObjects.map { complexValueObject(it) },
-        interfaces = def.interfaces.map { interfaceDef(it) },
-        propertyValueObjects = emptyList(),
-        propertyMappings = emptyList(),
-        enums = emptyList()
+        simpleValueObjects = def.simpleValueObjects.map { it -> simpleStructureDefinition(it) },
+        complexValueObjects = def.complexValueObjects.map { it -> complexStructureDefinition(it) },
+        interfaces = def.interfaces.map { it -> interfaceDefinition(it) },
+        propertyValueObjects = def.propertyValueObjects.map { it -> complexStructureDefinition(it) },
+        propertyMappings = def.propertyMappings.map { it -> propertyMapping(it) },
+        enums = def.enums.map { it -> enumDefinition(it) },
+    )
+}
+
+data class TypeDefinitionDef(
+    var name: String = "someValue",
+    var wrappers: List<TypeWrapper> = emptyList(),
+)
+fun typeDefinition(init: TypeDefinitionDef.() -> Unit = {}): TypeDefinition {
+    val def = TypeDefinitionDef().apply(init)
+    return TypeDefinition(
+        name = def.name,
+        wrappers = def.wrappers.map { it -> it },
+    )
+}
+
+data class FieldDefinitionDef(
+    var name: String = "someValue",
+    var type: (TypeDefinitionDef.() -> Unit) = {},
+)
+fun fieldDefinition(init: FieldDefinitionDef.() -> Unit = {}): FieldDefinition {
+    val def = FieldDefinitionDef().apply(init)
+    return FieldDefinition(
+        name = def.name,
+        type = typeDefinition(def.type),
+    )
+}
+
+data class SimpleStructureDefinitionDef(
+    var name: String = "someValue",
+    var typeName: String = "someValue",
+)
+fun simpleStructureDefinition(init: SimpleStructureDefinitionDef.() -> Unit = {}): SimpleStructureDefinition {
+    val def = SimpleStructureDefinitionDef().apply(init)
+    return SimpleStructureDefinition(
+        name = def.name,
+        typeName = def.typeName,
+    )
+}
+
+data class ComplexStructureDefinitionDef(
+    var name: String = "someValue",
+    var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
+)
+fun complexStructureDefinition(init: ComplexStructureDefinitionDef.() -> Unit = {}): ComplexStructureDefinition {
+    val def = ComplexStructureDefinitionDef().apply(init)
+    return ComplexStructureDefinition(
+        name = def.name,
+        fields = def.fields.map { it -> fieldDefinition(it) },
+    )
+}
+
+data class InterfaceDefinitionDef(
+    var name: String = "someValue",
+    var methods: List<(MethodDefinitionDef.() -> Unit)> = emptyList(),
+)
+fun interfaceDefinition(init: InterfaceDefinitionDef.() -> Unit = {}): InterfaceDefinition {
+    val def = InterfaceDefinitionDef().apply(init)
+    return InterfaceDefinition(
+        name = def.name,
+        methods = def.methods.map { it -> methodDefinition(it) },
+    )
+}
+
+data class ArgumentDefinitionDef(
+    var name: String = "someValue",
+    var type: (TypeDefinitionDef.() -> Unit) = {},
+)
+fun argumentDefinition(init: ArgumentDefinitionDef.() -> Unit = {}): ArgumentDefinition {
+    val def = ArgumentDefinitionDef().apply(init)
+    return ArgumentDefinition(
+        name = def.name,
+        type = typeDefinition(def.type),
+    )
+}
+
+data class ExceptionDefinitionDef(
+    var name: String = "someValue",
+)
+fun exceptionDefinition(init: ExceptionDefinitionDef.() -> Unit = {}): ExceptionDefinition {
+    val def = ExceptionDefinitionDef().apply(init)
+    return ExceptionDefinition(
+        name = def.name,
+    )
+}
+
+data class MethodDefinitionDef(
+    var name: String = "someValue",
+    var returnType: (TypeDefinitionDef.() -> Unit) = {},
+    var args: List<(ArgumentDefinitionDef.() -> Unit)> = emptyList(),
+    var throws: List<(ExceptionDefinitionDef.() -> Unit)> = emptyList(),
+)
+fun methodDefinition(init: MethodDefinitionDef.() -> Unit = {}): MethodDefinition {
+    val def = MethodDefinitionDef().apply(init)
+    return MethodDefinition(
+        name = def.name,
+        returnType = typeDefinition(def.returnType),
+        args = def.args.map { it -> argumentDefinition(it) },
+        throws = def.throws.map { it -> exceptionDefinition(it) },
     )
 }
