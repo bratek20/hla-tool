@@ -1,4 +1,4 @@
-package pl.bratek20.othermodule.api
+package com.some.path.othermodule.api
 
 val OTHER_PROPERTY_KEY = pl.bratek20.architecture.properties.api.PropertyKey("otherProperty")
 

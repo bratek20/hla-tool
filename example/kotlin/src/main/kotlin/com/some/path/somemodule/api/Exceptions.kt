@@ -1,4 +1,4 @@
-package pl.bratek20.somemodule.api
+package com.some.path.somemodule.api
 
 import pl.bratek20.architecture.exceptions.ApiException
 

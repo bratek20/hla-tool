@@ -1,5 +1,7 @@
-package pl.bratek20.othermodule.web
+package com.some.path.othermodule.web
 
+import com.some.path.othermodule.api.OtherClass
+import com.some.path.othermodule.api.OtherId
 import pl.bratek20.othermodule.api.*
 
 data class OtherClassDto(

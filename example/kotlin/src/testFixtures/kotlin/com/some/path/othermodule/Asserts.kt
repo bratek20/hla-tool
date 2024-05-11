@@ -1,5 +1,6 @@
-package pl.bratek20.othermodule.fixtures
+package com.some.path.othermodule
 
+import com.some.path.othermodule.api.OtherClass
 import org.assertj.core.api.Assertions.assertThat
 import pl.bratek20.othermodule.api.*
 

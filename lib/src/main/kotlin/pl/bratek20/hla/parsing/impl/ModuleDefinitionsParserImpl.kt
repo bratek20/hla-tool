@@ -13,7 +13,9 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val directories = DirectoriesLogic()
 
         val modulesDir = directories.readDirectory(path)
-        return modulesDir.files.map { parseModuleFile(it) }
+        return modulesDir.files
+            .filter { it.name.endsWith(".module") }
+            .map { parseModuleFile(it) }
     }
 
     private fun parseModuleFile(file: File): ModuleDefinition {

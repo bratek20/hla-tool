@@ -1,5 +1,7 @@
-package pl.bratek20.somemodule.fixtures
+package com.some.path.somemodule
 
+import com.some.path.othermodule.api.OtherId
+import com.some.path.somemodule.api.*
 import pl.bratek20.othermodule.api.*
 import pl.bratek20.othermodule.fixtures.*
 
