@@ -20,6 +20,14 @@ class DirectoriesMock: Directories {
         return directory
     }
 
+    fun assertWriteCount(expectedCount: Int) {
+        assertThat(directoryWrites).hasSize(expectedCount)
+    }
+
+    fun getWrittenDirectory(writeNumber: Int): Directory {
+        return directoryWrites[writeNumber - 1].second
+    }
+
     override fun readDirectory(path: Path): Directory {
         TODO("Not yet implemented")
     }

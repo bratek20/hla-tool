@@ -11,20 +11,21 @@ import pl.bratek20.architecture.properties.PropertiesMock
 import pl.bratek20.architecture.properties.PropertiesMockContextModule
 import pl.bratek20.architecture.properties.api.PropertiesSourceName
 import pl.bratek20.architecture.properties.api.PropertyKey
+import pl.bratek20.architecture.properties.impl.PropertiesModule
+import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
+import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSourceModule
 import pl.bratek20.hla.definitions.api.ModuleName
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
-import pl.bratek20.hla.facade.api.GenerateModuleArgs
-import pl.bratek20.hla.facade.api.HlaFacade
-import pl.bratek20.hla.facade.api.HlaProperties
-import pl.bratek20.hla.facade.api.JavaProperties
+import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
 import pl.bratek20.hla.generation.api.ModuleLanguage
 import pl.bratek20.hla.generation.context.GenerationImpl
 import pl.bratek20.hla.velocity.context.VelocityImpl
+import pl.bratek20.hla.writing.context.WritingImpl
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -34,46 +35,58 @@ class HlaFacadeTest {
                 Arguments.of(
                     "OtherModule",
                     "../example/kotlin/src/main/kotlin/pl/bratek20/othermodule",
+                    "../example/kotlin/src/main/kotlin/pl/bratek20/othermodule",
                     ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
                     "OtherModule",
+                    "../example/typescript/OtherModule",
                     "../example/typescript/OtherModule",
                     ModuleLanguage.TYPE_SCRIPT
                 ),
                 Arguments.of(
                     "SomeModule",
                     "../example/kotlin/src/main/kotlin/pl/bratek20/somemodule",
+                    "../example/kotlin/src/main/kotlin/pl/bratek20/somemodule",
                     ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
                     "SomeModule",
+                    "../example/typescript/SomeModule",
                     "../example/typescript/SomeModule",
                     ModuleLanguage.TYPE_SCRIPT
                 ),
             )
     }
 
-    @ParameterizedTest(name = "{0} ({2})")
+    @ParameterizedTest(name = "{0} ({3})")
     @ArgumentsSource(MyArgumentsProvider::class)
-    fun `should generate module`(moduleName: String, path: String, lang: ModuleLanguage) {
+    fun `should generate module`(
+        moduleName: String,
+        mainPath: String,
+        testFixturesPath: String,
+        lang: ModuleLanguage
+    ) {
         //given
         val context = someContextBuilder()
             .withModules(
                 DirectoriesMocks(),
-                PropertiesMockContextModule(),
+
+                PropertiesModule(),
+                InMemoryPropertiesSourceModule(),
+
                 VelocityImpl(),
                 GenerationImpl(),
-                FacadeImpl()
+                WritingImpl(),
+                FacadeImpl(),
             )
             .build()
 
         val directoriesMock = context.get(DirectoriesMock::class.java)
-        val propertiesMock = context.get(PropertiesMock::class.java)
+        val propertiesSource = context.get(InMemoryPropertiesSource::class.java)
 
-        propertiesMock.setProperty(
-            PropertiesSourceName("files"),
-            PropertyKey("properties"),
+        propertiesSource.set(
+            HLA_PROPERTIES_KEY,
             HlaProperties(
                 java = JavaProperties(
                     rootPackage = "pl.bratek20",
@@ -90,8 +103,12 @@ class HlaFacadeTest {
         facade.generateModule(GenerateModuleArgs(ModuleName(moduleName), lang, inPath, outPath))
 
         //then
-        val writtenDirectory = directoriesMock.assertOneWriteAndGetDirectory(outPath.value)
-        assertWrittenDirectoryWithExample(writtenDirectory, path)
+        directoriesMock.assertWriteCount(2)
+        val mainDirectory = directoriesMock.getWrittenDirectory(1)
+        val testFixturesDirectory = directoriesMock.getWrittenDirectory(2)
+
+        assertWrittenDirectoryWithExample(mainDirectory, mainPath)
+        assertWrittenDirectoryWithExample(testFixturesDirectory, testFixturesPath)
     }
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {
