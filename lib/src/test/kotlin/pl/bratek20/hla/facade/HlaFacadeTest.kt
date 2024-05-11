@@ -99,9 +99,6 @@ class HlaFacadeTest {
                 PropertiesModule(),
                 InMemoryPropertiesSourceModule(),
 
-                VelocityImpl(),
-                GenerationImpl(),
-                WritingImpl(),
                 FacadeImpl(),
             )
             .build()
