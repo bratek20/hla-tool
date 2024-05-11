@@ -30,6 +30,10 @@ class TypeScriptStructure(private val c: DomainContext)
         return "Exceptions.ts"
     }
 
+    override fun enumsFileName(): String {
+        return "Enums.ts"
+    }
+
     override fun fixturesDirName(): String {
         return "Fixtures"
     }

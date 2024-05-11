@@ -69,6 +69,18 @@ data class ListViewType(
     }
 }
 
+data class EnumViewType(
+    private val domain: EnumDomainType
+) : ViewType {
+    override fun name(): String {
+        return domain.name
+    }
+
+    fun defaultValue(): String {
+        return name() + "." + domain.defaultValue()
+    }
+}
+
 class ViewTypeFactory(
     private val modules: HlaModules,
     private val languageTypes: LanguageTypes
@@ -85,6 +97,7 @@ class ViewTypeFactory(
             is SimpleVODomainType -> SimpleVOViewType(type.name, BaseViewType(type.boxedType.name, languageTypes), languageTypes)
             is ComplexVODomainType -> ComplexVOViewType(type.name)
             is BaseDomainType -> BaseViewType(type.name, languageTypes)
+            is EnumDomainType -> EnumViewType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

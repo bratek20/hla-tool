@@ -51,6 +51,7 @@ fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> U
 data class ExpectedSomeClass3(
     var class2Object: (ExpectedSomeClass2.() -> Unit)? = null,
     var class2List: List<(ExpectedSomeClass2.() -> Unit)>? = null,
+    var someEnum: SomeEnum? = null,
 )
 fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Unit) {
     val expected = ExpectedSomeClass3().apply(expectedInit)
@@ -62,6 +63,10 @@ fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> U
     expected.class2List?.let {
         assertThat(given.class2List).hasSize(it.size)
         given.class2List.forEachIndexed { idx, entry -> assertSomeClass2(entry, it[idx]) }
+    }
+
+    expected.someEnum?.let {
+        assertThat(given.someEnum).isEqualTo(it)
     }
 }
 

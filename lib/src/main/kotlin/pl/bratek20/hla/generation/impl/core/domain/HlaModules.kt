@@ -1,10 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.domain
 
+import pl.bratek20.hla.definitions.*
 import pl.bratek20.hla.generation.api.ModuleName
-import pl.bratek20.hla.definitions.ComplexStructureDefinition
-import pl.bratek20.hla.definitions.ModuleDefinition
-import pl.bratek20.hla.definitions.SimpleStructureDefinition
-import pl.bratek20.hla.definitions.TypeDefinition
 
 class HlaModules(
     private val currentName: ModuleName,
@@ -23,6 +20,14 @@ class HlaModules(
 
     fun findComplexVO(type: TypeDefinition): ComplexStructureDefinition? {
         return modules.firstNotNullOfOrNull { findComplexVO(type, it) }
+    }
+
+    fun findEnum(type: TypeDefinition): EnumDefinition? {
+        return modules.firstNotNullOfOrNull { findEnum(type, it) }
+    }
+
+    private fun findEnum(type: TypeDefinition, module: ModuleDefinition): EnumDefinition? {
+        return module.enums.find { it.name == type.name }
     }
 
     private fun findSimpleVO(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {

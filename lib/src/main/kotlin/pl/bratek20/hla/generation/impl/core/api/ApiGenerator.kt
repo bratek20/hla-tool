@@ -18,6 +18,7 @@ class ApiGenerator(
         interfacesFile()?.let { files.add(it) }
         propertiesFile()?.let { files.add(it) }
         exceptionsFile()?.let { files.add(it) }
+        enumsFile()?.let { files.add(it) }
 
         return Directory(
             name = language.structure().apiDirName(),
@@ -45,6 +46,22 @@ class ApiGenerator(
             content = fileContent
         )
     }
+
+    private fun enumsFile(): File? {
+        if (module.enums.isEmpty()) {
+            return null
+        }
+
+        val fileContent = contentBuilder("enums.vm")
+            .put("enums", module.enums)
+            .build()
+
+        return File(
+            name = language.structure().enumsFileName(),
+            content = fileContent
+        )
+    }
+
     private fun valueObjectsFile(): File? {
         if (module.simpleValueObjects.isEmpty() && module.complexValueObjects.isEmpty()) {
             return null

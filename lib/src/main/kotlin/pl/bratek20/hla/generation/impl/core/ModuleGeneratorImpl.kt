@@ -45,7 +45,7 @@ class ModuleGeneratorImpl : ModuleGenerator {
                 webSubmodule
             )
         )
-        if (moduleName.value == "SomeModule" && language == ModuleLanguage.TYPE_SCRIPT) {
+        if (moduleName.value == "SomeModule" && language == ModuleLanguage.KOTLIN) {
             DirectoriesLogic().deleteDirectory(Path("../tmp"))
             DirectoriesLogic().write(Path("../tmp"), x)
         }

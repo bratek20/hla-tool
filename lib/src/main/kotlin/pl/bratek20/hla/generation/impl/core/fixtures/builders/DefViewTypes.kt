@@ -85,6 +85,23 @@ data class ListDefViewType(
     }
 }
 
+data class EnumDefViewType(
+    val view: EnumViewType,
+    val languageTypes: LanguageTypes
+) : DefViewType {
+    override fun name(): String {
+        return view.name()
+    }
+
+    override fun defaultValue(): String {
+        return view.defaultValue()
+    }
+
+    override fun constructor(arg: String): String {
+        return arg
+    }
+}
+
 class DefTypeFactory(
     private val languageTypes: LanguageTypes,
     private val more: LanguageBuildersPattern
@@ -95,6 +112,7 @@ class DefTypeFactory(
             is SimpleVOViewType -> SimpleVODefViewType(type, create(type.boxedType) as BaseDefViewType, languageTypes)
             is ComplexVOViewType -> ComplexVODefViewType(type.name, languageTypes, more)
             is ListViewType -> ListDefViewType(create(type.wrappedType), languageTypes)
+            is EnumViewType -> EnumDefViewType(type, languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

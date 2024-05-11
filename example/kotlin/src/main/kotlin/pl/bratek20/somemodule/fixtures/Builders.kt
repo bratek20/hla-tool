@@ -36,12 +36,14 @@ fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
 data class SomeClass3Def(
     var class2Object: (SomeClass2Def.() -> Unit) = {},
     var class2List: List<(SomeClass2Def.() -> Unit)> = emptyList(),
+    var someEnum: SomeEnum = SomeEnum.VALUE_A,
 )
 fun someClass3(init: SomeClass3Def.() -> Unit = {}): SomeClass3 {
     val def = SomeClass3Def().apply(init)
     return SomeClass3(
         class2Object = someClass2(def.class2Object),
         class2List = def.class2List.map { it -> someClass2(it) },
+        someEnum = def.someEnum,
     )
 }
 

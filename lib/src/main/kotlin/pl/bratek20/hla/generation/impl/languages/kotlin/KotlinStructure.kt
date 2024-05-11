@@ -28,6 +28,10 @@ class KotlinStructure(private val c: DomainContext) : LanguageStructure {
         return "Exceptions.kt"
     }
 
+    override fun enumsFileName(): String {
+        return "Enums.kt"
+    }
+
     override fun fixturesDirName(): String {
         return "fixtures"
     }

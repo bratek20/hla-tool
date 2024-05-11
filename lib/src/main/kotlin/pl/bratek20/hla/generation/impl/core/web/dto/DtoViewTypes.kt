@@ -85,6 +85,22 @@ data class ListDtoViewType(
     }
 }
 
+data class EnumDtoViewType(
+    val view: EnumViewType
+) : DtoViewType {
+    override fun name(): String {
+        return "String"
+    }
+
+    override fun constructor(arg: String): String {
+        return "${view.name()}.valueOf($arg)"
+    }
+
+    override fun assignment(name: String): String {
+        return "$name.name"
+    }
+}
+
 class DtoViewTypeFactory(
     private val languageTypes: LanguageTypes,
     private val languageDtoPattern: LanguageDtoPattern
@@ -95,6 +111,7 @@ class DtoViewTypeFactory(
             is SimpleVOViewType -> SimpleVODtoViewType(type, create(type.boxedType) as BaseDtoViewType, languageTypes)
             is ComplexVOViewType -> ComplexVODtoViewType(type.name, languageDtoPattern)
             is ListViewType -> ListDtoViewType(create(type.wrappedType), languageTypes)
+            is EnumViewType -> EnumDtoViewType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

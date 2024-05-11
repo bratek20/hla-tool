@@ -1,3 +1,8 @@
+Enums
+    SomeEnum
+        VALUE_A
+        VALUE_B
+
 ValueObjects
     SomeId: string
 
@@ -14,6 +19,7 @@ ValueObjects
     SomeClass3
         class2Object: SomeClass2
         class2List: SomeClass2[]
+        someEnum: SomeEnum
 
     SomeClass4
         otherId: OtherId

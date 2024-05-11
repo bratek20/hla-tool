@@ -21,6 +21,7 @@ data class SomeClass2(
 data class SomeClass3(
     val class2Object: SomeClass2,
     val class2List: List<SomeClass2>,
+    val someEnum: SomeEnum,
 )
 
 data class SomeClass4(

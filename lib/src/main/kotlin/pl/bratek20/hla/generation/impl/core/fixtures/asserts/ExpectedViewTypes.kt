@@ -4,18 +4,22 @@ import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
-interface ExpectedViewType {
-    fun name(): String
+abstract class ExpectedViewType(
+    protected val languageTypes: LanguageTypes
+) {
+    abstract fun name(): String
 
-    fun defaultValue(): String
+    abstract fun defaultValue(): String
 
-    fun assertion(given: String, expected: String): String
+    open fun assertion(given: String, expected: String): String {
+        return languageTypes.assertEquals(given, expected)
+    }
 }
 
-data class BaseExpectedViewType(
+class BaseExpectedViewType(
     val domain: BaseViewType,
-    val languageTypes: LanguageTypes
-) : ExpectedViewType {
+    languageTypes: LanguageTypes,
+) : ExpectedViewType(languageTypes) {
     override fun name(): String {
         return domain.name()
     }
@@ -23,17 +27,13 @@ data class BaseExpectedViewType(
     override fun defaultValue(): String {
         return languageTypes.defaultValueForBaseType(domain.name)
     }
-
-    override fun assertion(given: String, expected: String): String {
-        return languageTypes.assertEquals(given, expected)
-    }
 }
 
-data class SimpleVOExpectedViewType(
+class SimpleVOExpectedViewType(
     val domain: SimpleVOViewType,
-    val boxedType: BaseExpectedViewType,
-    val languageTypes: LanguageTypes
-) : ExpectedViewType {
+    private val boxedType: BaseExpectedViewType,
+    languageTypes: LanguageTypes,
+) : ExpectedViewType(languageTypes) {
     override fun name(): String {
         return boxedType.name()
     }
@@ -47,11 +47,11 @@ data class SimpleVOExpectedViewType(
     }
 }
 
-data class ComplexVOExpectedViewType(
+class ComplexVOExpectedViewType(
     val name: String,
-    val types: LanguageTypes,
-    val fixture: LanguageAssertsPattern
-) : ExpectedViewType {
+    private val fixture: LanguageAssertsPattern,
+    languageTypes: LanguageTypes,
+) : ExpectedViewType(languageTypes) {
     override fun name(): String {
         return fixture.expectedClassType(name)
     }
@@ -65,21 +65,21 @@ data class ComplexVOExpectedViewType(
     }
 }
 
-data class ListExpectedViewType(
+class ListExpectedViewType(
     val wrappedType: ExpectedViewType,
-    val types: LanguageTypes,
-    val fixture: LanguageAssertsPattern
-) : ExpectedViewType {
+    val fixture: LanguageAssertsPattern,
+    languageTypes: LanguageTypes,
+) : ExpectedViewType(languageTypes) {
     override fun name(): String {
-        return types.wrapWithList(wrappedType.name())
+        return languageTypes.wrapWithList(wrappedType.name())
     }
 
     override fun defaultValue(): String {
-        return types.defaultValueForList()
+        return languageTypes.defaultValueForList()
     }
 
     override fun assertion(given: String, expected: String): String {
-        val entriesAssertion = types.listIndexedIteration(
+        val entriesAssertion = languageTypes.listIndexedIteration(
             given,
             "idx",
             "entry",
@@ -89,9 +89,22 @@ data class ListExpectedViewType(
         val indention = " ".repeat(fixture.indentionForAssertListElements())
 
         return """
-        |${types.assertListLength(given, expected)}
+        |${languageTypes.assertListLength(given, expected)}
         |$indention$entriesAssertion
         """.trimMargin()
+    }
+}
+
+class ExpectedEnumViewType(
+    val view: EnumViewType,
+    languageTypes: LanguageTypes
+) : ExpectedViewType(languageTypes) {
+    override fun name(): String {
+        return view.name()
+    }
+
+    override fun defaultValue(): String {
+        return view.defaultValue()
     }
 }
 
@@ -103,8 +116,9 @@ class ExpectedTypeFactory(
         return when (type) {
             is BaseViewType -> BaseExpectedViewType(type, languageTypes)
             is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType, languageTypes)
-            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name, languageTypes, languageFixture)
-            is ListViewType -> ListExpectedViewType(create(type.wrappedType), languageTypes, languageFixture)
+            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name, languageFixture, languageTypes)
+            is ListViewType -> ListExpectedViewType(create(type.wrappedType), languageFixture, languageTypes)
+            is EnumViewType -> ExpectedEnumViewType(type, languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }
