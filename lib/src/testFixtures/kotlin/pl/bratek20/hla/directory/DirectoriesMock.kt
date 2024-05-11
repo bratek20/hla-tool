@@ -1,8 +1,6 @@
 package pl.bratek20.hla.directory
 
 import org.assertj.core.api.Assertions.assertThat
-import pl.bratek20.architecture.context.api.ContextBuilder
-import pl.bratek20.architecture.context.api.ContextModule
 import pl.bratek20.hla.directory.api.CompareResult
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Directories
@@ -37,8 +35,3 @@ class DirectoriesMock: Directories {
     }
 }
 
-class DirectoriesMockContextModule: ContextModule {
-    override fun apply(builder: ContextBuilder) {
-        builder.setImpl(Directories::class.java, DirectoriesMock::class.java)
-    }
-}

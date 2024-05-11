@@ -7,16 +7,24 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.architecture.context.someContextBuilder
+import pl.bratek20.architecture.properties.PropertiesMock
+import pl.bratek20.architecture.properties.PropertiesMockContextModule
+import pl.bratek20.architecture.properties.api.PropertiesSourceName
+import pl.bratek20.architecture.properties.api.PropertyKey
 import pl.bratek20.hla.definitions.api.ModuleName
 import pl.bratek20.hla.directory.DirectoriesMock
-import pl.bratek20.hla.directory.DirectoriesMockContextModule
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.GenerateModuleArgs
 import pl.bratek20.hla.facade.api.HlaFacade
-import pl.bratek20.hla.facade.impl.FacadeModule
+import pl.bratek20.hla.facade.api.HlaProperties
+import pl.bratek20.hla.facade.api.JavaProperties
+import pl.bratek20.hla.facade.context.FacadeImpl
 import pl.bratek20.hla.generation.api.ModuleLanguage
+import pl.bratek20.hla.generation.context.GenerationImpl
+import pl.bratek20.hla.velocity.context.VelocityImpl
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -51,11 +59,28 @@ class HlaFacadeTest {
     fun `should generate module`(moduleName: String, path: String, lang: ModuleLanguage) {
         //given
         val context = someContextBuilder()
-            .withModule(DirectoriesMockContextModule())
-            .withModule(FacadeModule())
+            .withModules(
+                DirectoriesMocks(),
+                PropertiesMockContextModule(),
+                VelocityImpl(),
+                GenerationImpl(),
+                FacadeImpl()
+            )
             .build()
 
         val directoriesMock = context.get(DirectoriesMock::class.java)
+        val propertiesMock = context.get(PropertiesMock::class.java)
+
+        propertiesMock.setProperty(
+            PropertiesSourceName("files"),
+            PropertyKey("properties"),
+            HlaProperties(
+                java = JavaProperties(
+                    rootPackage = "pl.bratek20",
+                )
+            )
+        )
+
         val facade = context.get(HlaFacade::class.java)
 
         val inPath = Path("src/test/resources/facade")

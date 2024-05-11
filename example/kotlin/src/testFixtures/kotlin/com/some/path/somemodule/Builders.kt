@@ -1,11 +1,9 @@
 package com.some.path.somemodule
 
+import com.some.path.othermodule.OtherClassDef
 import com.some.path.othermodule.api.OtherId
+import com.some.path.othermodule.otherClass
 import com.some.path.somemodule.api.*
-import pl.bratek20.othermodule.api.*
-import pl.bratek20.othermodule.fixtures.*
-
-import pl.bratek20.somemodule.api.*
 
 data class SomeClassDef(
     var id: String = "someValue",

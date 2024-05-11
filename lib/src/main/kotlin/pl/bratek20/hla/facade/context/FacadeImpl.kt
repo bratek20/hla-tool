@@ -1,0 +1,15 @@
+package pl.bratek20.hla.facade.context
+
+import pl.bratek20.architecture.context.api.ContextBuilder
+import pl.bratek20.architecture.context.api.ContextModule
+import pl.bratek20.hla.facade.api.HlaFacade
+import pl.bratek20.hla.facade.impl.HlaFacadeImpl
+import pl.bratek20.hla.generation.context.GenerationImpl
+import pl.bratek20.hla.velocity.context.VelocityImpl
+
+class FacadeImpl: ContextModule {
+    override fun apply(builder: ContextBuilder) {
+        builder
+            .setImpl(HlaFacade::class.java, HlaFacadeImpl::class.java)
+    }
+}

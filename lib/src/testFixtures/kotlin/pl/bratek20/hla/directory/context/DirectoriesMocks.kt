@@ -1,11 +1,12 @@
-package pl.bratek20.hla.directory.impl
+package pl.bratek20.hla.directory.context
 
 import pl.bratek20.architecture.context.api.ContextBuilder
 import pl.bratek20.architecture.context.api.ContextModule
+import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directories
 
-class DirectoryModule: ContextModule {
+class DirectoriesMocks: ContextModule {
     override fun apply(builder: ContextBuilder) {
-        builder.setImpl(Directories::class.java, DirectoriesLogic::class.java)
+        builder.setImpl(Directories::class.java, DirectoriesMock::class.java)
     }
 }
