@@ -1,6 +1,6 @@
 package pl.bratek20.hla.definitions.api
 
-import pl.bratek20.hla.facade.api.ModuleName
+import pl.bratek20.hla.facade.api.*
 
 data class PropertyMapping(
     val key: String,
