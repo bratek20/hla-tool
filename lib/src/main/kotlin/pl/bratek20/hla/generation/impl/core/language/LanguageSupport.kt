@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.language
 
-import pl.bratek20.hla.generation.api.ModuleLanguage
+import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
 
 interface LanguageSupport {

@@ -6,7 +6,7 @@ import pl.bratek20.hla.directory.api.Directories
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.facade.api.HLA_PROPERTIES_KEY
 import pl.bratek20.hla.facade.api.HlaProperties
-import pl.bratek20.hla.generation.api.ModuleLanguage
+import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.writing.api.ModuleWriter
 import pl.bratek20.hla.writing.api.WriteArgs
 

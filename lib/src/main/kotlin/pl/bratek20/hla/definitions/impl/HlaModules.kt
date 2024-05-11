@@ -1,6 +1,7 @@
 package pl.bratek20.hla.definitions.impl
 
 import pl.bratek20.hla.definitions.api.*
+import pl.bratek20.hla.facade.api.ModuleName
 
 fun ofBaseType(value: String): BaseType {
     return BaseType.valueOf(value.uppercase())

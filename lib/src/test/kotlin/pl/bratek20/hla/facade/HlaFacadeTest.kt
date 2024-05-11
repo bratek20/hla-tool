@@ -10,7 +10,7 @@ import pl.bratek20.architecture.context.someContextBuilder
 import pl.bratek20.architecture.properties.impl.PropertiesModule
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSourceModule
-import pl.bratek20.hla.definitions.api.ModuleName
+import pl.bratek20.hla.facade.api.ModuleName
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
@@ -18,10 +18,6 @@ import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
-import pl.bratek20.hla.generation.api.ModuleLanguage
-import pl.bratek20.hla.generation.context.GenerationImpl
-import pl.bratek20.hla.velocity.context.VelocityImpl
-import pl.bratek20.hla.writing.context.WritingImpl
 import java.util.stream.Stream
 
 class HlaFacadeTest {

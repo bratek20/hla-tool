@@ -9,8 +9,6 @@ Enums
         LIST
 
 ValueObjects
-    ModuleName: string
-
     PropertyMapping
         key: string
         type: TypeDefinition

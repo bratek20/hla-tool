@@ -1,6 +1,7 @@
 package pl.bratek20.hla.definitions.fixtures
 
 import pl.bratek20.hla.definitions.api.*
+import pl.bratek20.hla.facade.api.ModuleName
 
 data class PropertyMappingDef(
     var key: String = "someValue",
