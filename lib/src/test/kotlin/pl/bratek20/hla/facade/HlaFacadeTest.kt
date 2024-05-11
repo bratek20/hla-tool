@@ -33,11 +33,11 @@ class HlaFacadeTest {
     )
     class MyArgumentsProvider : ArgumentsProvider {
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
-            val kotlinSrcMainPath = "/src/main/kotlin/com/some/pkg/"
-            val kotlinSrcTestFixturesPath = "/src/testFixtures/kotlin/com/some/pkg/"
+            val kotlinSrcMainPath = "/src/main/kotlin/com/some/pkg"
+            val kotlinSrcTestFixturesPath = "/src/testFixtures/kotlin/com/some/pkg"
 
-            val kotlinMainPathPrefix = "../example/kotlin$kotlinSrcMainPath"
-            val kotlinTestFixturesPrefix = "../example/kotlin$kotlinSrcTestFixturesPath"
+            val kotlinMainPathPrefix = "../example/kotlin/$kotlinSrcMainPath/"
+            val kotlinTestFixturesPrefix = "../example/kotlin/$kotlinSrcTestFixturesPath/"
 
             return Stream.of(
                 Arguments.of(
@@ -46,8 +46,8 @@ class HlaFacadeTest {
                     TestPaths(
                         exampleMainPath = kotlinMainPathPrefix + "othermodule",
                         exampleTestFixturesPath = kotlinTestFixturesPrefix + "othermodule",
-                        expectedMainPathSuffix = kotlinSrcMainPath + "othermodule",
-                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath + "othermodule"
+                        expectedMainPathSuffix = kotlinSrcMainPath,
+                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath
                     )
                 ),
                 Arguments.of(
@@ -66,8 +66,8 @@ class HlaFacadeTest {
                     TestPaths(
                         exampleMainPath = kotlinMainPathPrefix + "somemodule",
                         exampleTestFixturesPath = kotlinTestFixturesPrefix + "somemodule",
-                        expectedMainPathSuffix = kotlinSrcMainPath + "somemodule",
-                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath + "somemodule"
+                        expectedMainPathSuffix = kotlinSrcMainPath,
+                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath
                     )
                 ),
                 Arguments.of(

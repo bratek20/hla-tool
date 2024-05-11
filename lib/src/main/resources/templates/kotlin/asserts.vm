@@ -2,10 +2,11 @@ package ${packageName}.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 #if($imports.size() > 0)
+
 #foreach($import in $imports)
 import ${import}.fixtures.*
-#end
-#end
+#end#end
+
 import ${packageName}.api.*
 #foreach($a in $asserts)
 

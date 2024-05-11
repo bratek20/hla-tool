@@ -1,9 +1,10 @@
-package com.some.pkg.somemodule
+package com.some.pkg.somemodule.fixtures
 
-import com.some.pkg.othermodule.ExpectedOtherClass
-import com.some.pkg.othermodule.assertOtherClass
-import com.some.pkg.somemodule.api.*
 import org.assertj.core.api.Assertions.assertThat
+
+import com.some.pkg.othermodule.fixtures.*
+
+import com.some.pkg.somemodule.api.*
 
 data class ExpectedSomeClass(
     var id: String? = null,

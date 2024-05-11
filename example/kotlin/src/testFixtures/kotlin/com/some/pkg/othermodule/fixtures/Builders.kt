@@ -1,7 +1,6 @@
-package com.some.pkg.othermodule
+package com.some.pkg.othermodule.fixtures
 
-import com.some.pkg.othermodule.api.OtherClass
-import com.some.pkg.othermodule.api.OtherId
+import com.some.pkg.othermodule.api.*
 
 data class OtherClassDef(
     var id: String = "someValue",

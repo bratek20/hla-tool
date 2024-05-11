@@ -1,7 +1,8 @@
 package com.some.pkg.somemodule.web
 
-import com.some.pkg.othermodule.api.OtherId
-import com.some.pkg.othermodule.web.OtherClassDto
+import com.some.pkg.othermodule.api.*
+import com.some.pkg.othermodule.web.*
+
 import com.some.pkg.somemodule.api.*
 
 data class SomeClassDto(

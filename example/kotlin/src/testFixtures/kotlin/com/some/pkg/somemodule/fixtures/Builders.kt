@@ -1,8 +1,8 @@
-package com.some.pkg.somemodule
+package com.some.pkg.somemodule.fixtures
 
-import com.some.pkg.othermodule.OtherClassDef
-import com.some.pkg.othermodule.api.OtherId
-import com.some.pkg.othermodule.otherClass
+import com.some.pkg.othermodule.api.*
+import com.some.pkg.othermodule.fixtures.*
+
 import com.some.pkg.somemodule.api.*
 
 data class SomeClassDef(

@@ -1,7 +1,6 @@
 package com.some.pkg.somemodule.api
 
-import com.some.pkg.othermodule.api.OtherClass
-import com.some.pkg.othermodule.api.OtherId
+import com.some.pkg.othermodule.api.*
 
 data class SomeId(
     val value: String

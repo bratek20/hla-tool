@@ -9,6 +9,11 @@ enum class ModuleLanguage {
     TYPE_SCRIPT,
 }
 
+data class GenerateResult(
+    val main: Directory,
+    val testFixtures: Directory
+)
+
 interface ModuleGenerator {
-    fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): Directory
+    fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): GenerateResult
 }

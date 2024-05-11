@@ -14,9 +14,9 @@ class HlaFacadeImpl(
         val parser = ModuleDefinitionsParserImpl()
 
         val modules = parser.parse(args.hlaFolderPath)
-        val moduleDirectory = generator.generate(args.moduleName, args.language, modules)
+        val generateResult = generator.generate(args.moduleName, args.language, modules)
 
-        writer.write(args.projectPath, moduleDirectory)
+        writer.write(args.projectPath, generateResult)
     }
 }
 

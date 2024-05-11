@@ -18,6 +18,7 @@ import pl.bratek20.hla.definitions.api.ModuleName
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.facade.api.HLA_PROPERTIES_KEY
 import pl.bratek20.hla.facade.api.HlaProperties
+import pl.bratek20.hla.generation.api.GenerateResult
 import pl.bratek20.hla.velocity.api.VelocityFacade
 
 class ModuleGeneratorLogic(
@@ -25,7 +26,7 @@ class ModuleGeneratorLogic(
     private val properties: Properties,
 ) : ModuleGenerator {
 
-    override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): Directory {
+    override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): GenerateResult {
         val hlaProperties = properties.get(
             InMemoryPropertiesSource.name,
             HLA_PROPERTIES_KEY,
@@ -47,21 +48,26 @@ class ModuleGeneratorLogic(
         )
 
         val apiSubmodule = ApiGenerator(context).generateDirectory()
-        val fixturesSubmodule = FixturesGenerator(context).generateDirectory()
         val webSubmodule = WebGenerator(context).generateDirectory()
-
-        val x = Directory(
+        val main = Directory(
             name = context.language.structure().moduleDirName(),
             directories = listOf(
                 apiSubmodule,
-                fixturesSubmodule,
                 webSubmodule
             )
         )
-        if (moduleName.value == "OtherModule" && language == ModuleLanguage.KOTLIN) {
-            DirectoriesLogic().deleteDirectory(Path("../tmp"))
-            DirectoriesLogic().write(Path("../tmp"), x)
-        }
-        return x
+
+        val fixturesDirectory = FixturesGenerator(context).generateDirectory()
+        val testFixtures = Directory(
+            name = context.language.structure().moduleDirName(),
+            directories = listOf(
+                fixturesDirectory
+            )
+        )
+
+        return GenerateResult(
+            main = main,
+            testFixtures = testFixtures
+        )
     }
 }
