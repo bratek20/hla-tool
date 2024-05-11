@@ -1,6 +1,6 @@
 package pl.bratek20.hla.facade.api
 
-import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.api.*
 
 data class ModuleName(
     val value: String

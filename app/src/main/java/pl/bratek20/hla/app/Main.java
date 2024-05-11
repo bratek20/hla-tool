@@ -30,6 +30,7 @@ public class Main {
         propertiesSource.set(
             new PropertyKey("properties"),
             new HlaProperties(
+                false,
                new JavaProperties(
                    "pl.bratek20.hla"
                )

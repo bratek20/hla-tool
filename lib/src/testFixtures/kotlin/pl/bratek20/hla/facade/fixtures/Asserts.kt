@@ -2,6 +2,8 @@ package pl.bratek20.hla.facade.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import pl.bratek20.hla.directory.fixtures.*
+
 import pl.bratek20.hla.facade.api.*
 
 data class ExpectedGenerateModuleArgs(

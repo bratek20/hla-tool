@@ -7,6 +7,7 @@ data class JavaProperties(
 ) {
 }
 data class HlaProperties(
+    val generateWeb: Boolean,
     val java: JavaProperties,
 ) {
 }

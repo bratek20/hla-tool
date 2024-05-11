@@ -1,4 +1,4 @@
-package pl.bratek20.hla.directory
+package pl.bratek20.hla.directory.fixtures
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File

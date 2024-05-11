@@ -1,10 +1,9 @@
-package pl.bratek20.hla.directory
+package pl.bratek20.hla.directory.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 import pl.bratek20.hla.directory.api.CompareResult
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.directory.api.FileContent
 
 data class ExpectedDirectory(
     var name: String? = null,

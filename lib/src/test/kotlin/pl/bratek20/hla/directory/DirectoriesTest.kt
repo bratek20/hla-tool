@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.fixtures.assertCompareResult
+import pl.bratek20.hla.directory.fixtures.assertDirectory
+import pl.bratek20.hla.directory.fixtures.directory
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 
 

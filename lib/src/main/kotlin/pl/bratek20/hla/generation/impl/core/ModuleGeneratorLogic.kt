@@ -47,12 +47,16 @@ class ModuleGeneratorLogic(
 
         val apiSubmodule = ApiGenerator(context).generateDirectory()
         val webSubmodule = WebGenerator(context).generateDirectory()
+
+        val mainDirectories: MutableList<Directory> = mutableListOf()
+        mainDirectories.add(apiSubmodule)
+        if (hlaProperties.generateWeb) {
+            mainDirectories.add(webSubmodule)
+        }
+
         val main = Directory(
             name = context.language.structure().moduleDirName(),
-            directories = listOf(
-                apiSubmodule,
-                webSubmodule
-            )
+            directories = mainDirectories
         )
 
         val fixturesDirectory = FixturesGenerator(context).generateDirectory()

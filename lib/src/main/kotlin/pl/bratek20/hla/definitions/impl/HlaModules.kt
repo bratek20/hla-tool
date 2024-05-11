@@ -50,11 +50,20 @@ class HlaModules(
         return x
     }
 
+    //TODO full impl
     fun getCurrentDependencies(): List<ModuleName> {
-        if (currentName.value == "SomeModule") {
-            return listOf(ModuleName("OtherModule"))
-        }
-        return emptyList()
+        val typeNames = current.complexValueObjects
+            .map { it.fields }.flatten()
+            .map { it.type.name }
+
+        return modules
+            .filter { it.name != currentName }
+            .filter { module ->
+                val dependentSimpleTypes = module.simpleValueObjects
+                    .filter { typeNames.contains(it.name) }
+                return@filter dependentSimpleTypes.isNotEmpty()
+            }
+            .map { it.name }
     }
 
     fun getComplexVoModule(complexVoName: String): ModuleName {

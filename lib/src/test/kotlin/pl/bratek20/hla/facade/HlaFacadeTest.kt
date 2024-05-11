@@ -105,6 +105,7 @@ class HlaFacadeTest {
         propertiesSource.set(
             PROPERTIES_KEY,
             HlaProperties(
+                generateWeb = true,
                 java = JavaProperties(
                     rootPackage = "com.some.pkg",
                 )

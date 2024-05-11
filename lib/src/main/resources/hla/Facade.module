@@ -3,6 +3,7 @@ PropertyValueObjects
         rootPackage: string
 
     HlaProperties
+        generateWeb: bool
         java: JavaProperties
 
 Properties
