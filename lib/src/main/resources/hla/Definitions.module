@@ -7,7 +7,6 @@ Enums
 
     TypeWrapper
         LIST
-        OPTIONAL
 
 ValueObjects
     ModuleName: string
