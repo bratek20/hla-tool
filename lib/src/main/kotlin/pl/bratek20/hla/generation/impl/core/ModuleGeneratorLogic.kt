@@ -1,8 +1,6 @@
 package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.architecture.properties.api.Properties
-import pl.bratek20.architecture.properties.api.PropertiesSourceName
-import pl.bratek20.architecture.properties.api.PropertyKey
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
@@ -21,9 +19,8 @@ import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.facade.api.HLA_PROPERTIES_KEY
 import pl.bratek20.hla.facade.api.HlaProperties
 import pl.bratek20.hla.velocity.api.VelocityFacade
-import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
-class ModuleGeneratorImpl(
+class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
     private val properties: Properties,
 ) : ModuleGenerator {
@@ -61,7 +58,7 @@ class ModuleGeneratorImpl(
                 webSubmodule
             )
         )
-        if (moduleName.value == "SomeModule" && language == ModuleLanguage.KOTLIN) {
+        if (moduleName.value == "OtherModule" && language == ModuleLanguage.KOTLIN) {
             DirectoriesLogic().deleteDirectory(Path("../tmp"))
             DirectoriesLogic().write(Path("../tmp"), x)
         }

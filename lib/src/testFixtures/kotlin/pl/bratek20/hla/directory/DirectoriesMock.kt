@@ -13,19 +13,14 @@ class DirectoriesMock: Directories {
         directoryWrites.add(path to directory)
     }
 
-    fun assertOneWriteAndGetDirectory(expectedPath: String): Directory {
-        assertThat(directoryWrites).hasSize(1)
-        val (path, directory) = directoryWrites[0]
+    fun assertWriteAndGetDirectory(writeNumber: Int, expectedPath: String): Directory {
+        val (path, directory) = directoryWrites[writeNumber - 1]
         assertThat(path).isEqualTo(Path(expectedPath))
         return directory
     }
 
     fun assertWriteCount(expectedCount: Int) {
         assertThat(directoryWrites).hasSize(expectedCount)
-    }
-
-    fun getWrittenDirectory(writeNumber: Int): Directory {
-        return directoryWrites[writeNumber - 1].second
     }
 
     override fun readDirectory(path: Path): Directory {

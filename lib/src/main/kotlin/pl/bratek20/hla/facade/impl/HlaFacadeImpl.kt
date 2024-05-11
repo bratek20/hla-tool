@@ -1,6 +1,5 @@
 package pl.bratek20.hla.facade.impl
 
-import pl.bratek20.hla.directory.api.Directories
 import pl.bratek20.hla.facade.api.GenerateModuleArgs
 import pl.bratek20.hla.facade.api.HlaFacade
 import pl.bratek20.hla.generation.api.ModuleGenerator
@@ -14,10 +13,10 @@ class HlaFacadeImpl(
     override fun generateModule(args: GenerateModuleArgs) {
         val parser = ModuleDefinitionsParserImpl()
 
-        val modules = parser.parse(args.inPath)
+        val modules = parser.parse(args.hlaFolderPath)
         val moduleDirectory = generator.generate(args.moduleName, args.language, modules)
 
-        writer.write(args.outPath, moduleDirectory)
+        writer.write(args.projectPath, moduleDirectory)
     }
 }
 

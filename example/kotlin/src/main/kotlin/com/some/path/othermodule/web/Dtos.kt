@@ -1,8 +1,6 @@
 package com.some.path.othermodule.web
 
-import com.some.path.othermodule.api.OtherClass
-import com.some.path.othermodule.api.OtherId
-import pl.bratek20.othermodule.api.*
+import com.some.path.othermodule.api.*
 
 data class OtherClassDto(
     val id: String,

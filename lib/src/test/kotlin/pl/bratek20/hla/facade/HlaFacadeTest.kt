@@ -25,6 +25,12 @@ import pl.bratek20.hla.writing.context.WritingImpl
 import java.util.stream.Stream
 
 class HlaFacadeTest {
+    data class TestPaths(
+        val exampleMainPath: String,
+        val exampleTestFixturesPath: String,
+        val expectedMainPathSuffix: String,
+        val expectedTestFixturesPathSuffix: String
+    )
     class MyArgumentsProvider : ArgumentsProvider {
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             val kotlinMainPathPrefix = "../example/kotlin/src/main/kotlin/com/some/path/"
@@ -32,39 +38,54 @@ class HlaFacadeTest {
             return Stream.of(
                 Arguments.of(
                     "OtherModule",
-                    kotlinMainPathPrefix + "othermodule",
-                    kotlinTestFixturesPrefix + "othermodule",
-                    ModuleLanguage.KOTLIN
+                    ModuleLanguage.KOTLIN,
+                    TestPaths(
+                        exampleMainPath = kotlinMainPathPrefix + "othermodule",
+                        exampleTestFixturesPath = kotlinTestFixturesPrefix + "othermodule",
+                        expectedMainPathSuffix = "",
+                        expectedTestFixturesPathSuffix = ""
+                    )
                 ),
                 Arguments.of(
                     "OtherModule",
-                    "../example/typescript/OtherModule",
-                    "../example/typescript/OtherModule",
-                    ModuleLanguage.TYPE_SCRIPT
+                    ModuleLanguage.TYPE_SCRIPT,
+                    TestPaths(
+                        exampleMainPath = "../example/typescript/OtherModule",
+                        exampleTestFixturesPath = "../example/typescript/OtherModule",
+                        expectedMainPathSuffix = "",
+                        expectedTestFixturesPathSuffix = ""
+                    )
                 ),
                 Arguments.of(
                     "SomeModule",
-                    kotlinMainPathPrefix + "somemodule",
-                    kotlinTestFixturesPrefix + "somemodule",
-                    ModuleLanguage.KOTLIN
+                    ModuleLanguage.KOTLIN,
+                    TestPaths(
+                        exampleMainPath = kotlinMainPathPrefix + "somemodule",
+                        exampleTestFixturesPath = kotlinTestFixturesPrefix + "somemodule",
+                        expectedMainPathSuffix = "",
+                        expectedTestFixturesPathSuffix = ""
+                    )
                 ),
                 Arguments.of(
                     "SomeModule",
-                    "../example/typescript/SomeModule",
-                    "../example/typescript/SomeModule",
-                    ModuleLanguage.TYPE_SCRIPT
+                    ModuleLanguage.TYPE_SCRIPT,
+                    TestPaths(
+                        exampleMainPath = "../example/typescript/SomeModule",
+                        exampleTestFixturesPath = "../example/typescript/SomeModule",
+                        expectedMainPathSuffix = "",
+                        expectedTestFixturesPathSuffix = ""
+                    )
                 ),
             )
         }
     }
 
-    @ParameterizedTest(name = "{0} ({3})")
+    @ParameterizedTest(name = "{0} ({1})")
     @ArgumentsSource(MyArgumentsProvider::class)
     fun `should generate module`(
         moduleName: String,
-        mainPath: String,
-        testFixturesPath: String,
-        lang: ModuleLanguage
+        lang: ModuleLanguage,
+        paths: TestPaths
     ) {
         //given
         val context = someContextBuilder()
@@ -88,26 +109,39 @@ class HlaFacadeTest {
             HLA_PROPERTIES_KEY,
             HlaProperties(
                 java = JavaProperties(
-                    rootPackage = "pl.bratek20",
+                    rootPackage = "com.some.path",
                 )
             )
         )
 
         val facade = context.get(HlaFacade::class.java)
 
-        val inPath = Path("src/test/resources/facade")
-        val outPath = Path("somePath")
+        val hlaFolderPath = Path("src/test/resources/facade")
+        val projectPath = Path("some/project/path")
 
         //when
-        facade.generateModule(GenerateModuleArgs(ModuleName(moduleName), lang, inPath, outPath))
+        facade.generateModule(
+            GenerateModuleArgs(
+                moduleName = ModuleName(moduleName),
+                language = lang,
+                hlaFolderPath = hlaFolderPath,
+                projectPath = projectPath
+            )
+        )
 
         //then
         directoriesMock.assertWriteCount(2)
-        val mainDirectory = directoriesMock.getWrittenDirectory(1)
-        val testFixturesDirectory = directoriesMock.getWrittenDirectory(2)
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            "some/project/path" + paths.expectedMainPathSuffix
+        )
+        val testFixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+            2,
+            "some/project/path" + paths.expectedTestFixturesPathSuffix
+        )
 
-        assertWrittenDirectoryWithExample(mainDirectory, mainPath)
-        assertWrittenDirectoryWithExample(testFixturesDirectory, testFixturesPath)
+        assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
+        assertWrittenDirectoryWithExample(testFixturesDirectory, paths.exampleTestFixturesPath)
     }
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {
