@@ -1,6 +1,7 @@
-package pl.bratek20.hla.definitions
+package pl.bratek20.hla.definitions.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
+
 import pl.bratek20.hla.definitions.api.*
 
 data class ExpectedPropertyMapping(

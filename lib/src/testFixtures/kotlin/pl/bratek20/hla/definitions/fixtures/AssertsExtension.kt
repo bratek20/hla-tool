@@ -1,4 +1,4 @@
-package pl.bratek20.hla.definitions
+package pl.bratek20.hla.definitions.fixtures
 
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 

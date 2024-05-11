@@ -5,7 +5,7 @@ import pl.bratek20.architecture.context.someContextBuilder
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 import pl.bratek20.hla.definitions.api.TypeWrapper
-import pl.bratek20.hla.definitions.assertModules
+import pl.bratek20.hla.definitions.fixtures.assertModules
 import pl.bratek20.hla.parsing.api.ModuleDefinitionsParser
 import pl.bratek20.hla.parsing.impl.ParsingContextModule
 
