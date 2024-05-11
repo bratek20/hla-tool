@@ -169,7 +169,9 @@ class ModuleDefinitionsParserTest {
                     methods = listOf (
                         {
                             name = "someCommand"
-                            emptyReturnType = true
+                            returnType = {
+                                name = "void"
+                            }
                             args = listOf (
                                 {
                                     name = "id"
@@ -262,4 +264,6 @@ class ModuleDefinitionsParserTest {
             )
         })
     }
+
+    //TODO bug when simple VO is after complex VO
 }

@@ -10,6 +10,8 @@ Enums
         OPTIONAL
 
 ValueObjects
+    ModuleName: string
+
     PropertyMapping
         key: string
         type: TypeDefinition
@@ -17,8 +19,6 @@ ValueObjects
     EnumDefinition
         name: string
         values: string[]
-
-    ModuleName: string
 
     ModuleDefinition
         name: ModuleName

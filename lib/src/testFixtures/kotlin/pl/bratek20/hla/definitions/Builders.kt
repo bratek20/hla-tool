@@ -74,7 +74,7 @@ fun exception(ov: ExceptionDef.() -> Unit): ExceptionDefinition {
 
 data class MethodDef(
     var name: String = "test",
-    var returnType: (TypeDef.() -> Unit)? = null,
+    var returnType: (TypeDef.() -> Unit) = {},
     var args: List<ArgumentDef.()->Unit> = listOf(),
     var throws: List<ExceptionDef.()->Unit> = listOf(),
 )
@@ -82,7 +82,7 @@ fun method(ov: MethodDef.() -> Unit): MethodDefinition {
     val def = MethodDef().apply(ov)
     return MethodDefinition(
         name = def.name,
-        returnType = def.returnType?.let { type(it) },
+        returnType = type(def.returnType),
         args = def.args.map { argument(it) },
         throws = def.throws.map { exception(it) }
     )

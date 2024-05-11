@@ -190,7 +190,7 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
     private fun parseMethod(method: ParsedMethod): MethodDefinition {
         return MethodDefinition(
             name = method.name,
-            returnType = method.returnType?.let { parseType(it) },
+            returnType = method.returnType?.let { parseType(it) } ?: TypeDefinition("void", emptyList()),
             args = method.args.map {
                 ArgumentDefinition(
                     name = it.name,

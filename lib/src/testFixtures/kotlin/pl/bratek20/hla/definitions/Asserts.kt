@@ -100,7 +100,6 @@ fun assertException(given: ExceptionDefinition, init: ExpectedException.() -> Un
 
 data class ExpectedMethod(
     var name: String? = null,
-    var emptyReturnType: Boolean? = null,
     var returnType: (ExpectedTypeDefinition.() -> Unit)? = null,
     var args: List<ExpectedArg.() -> Unit>? = null,
     var throws: List<ExpectedException.() -> Unit>? = null,
@@ -110,14 +109,6 @@ fun assertMethod(given: MethodDefinition, init: ExpectedMethod.() -> Unit) {
 
     expected.name?.let {
         assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.emptyReturnType?.let {
-        if (it) {
-            assertThat(given.returnType).isNull()
-        } else {
-            assertThat(given.returnType).isNotNull()
-        }
     }
 
     expected.returnType?.let {

@@ -1,16 +1,18 @@
 package pl.bratek20.hla.definitions.api
 
+data class ModuleName(
+    val value: String
+)
+
 data class PropertyMapping(
     val key: String,
-    val type: TypeDefinition
+    val type: TypeDefinition,
 )
 
 data class EnumDefinition(
     val name: String,
-    val values: List<String>
+    val values: List<String>,
 )
-
-data class ModuleName(val value: String)
 
 data class ModuleDefinition(
     val name: ModuleName,
@@ -24,41 +26,41 @@ data class ModuleDefinition(
 
 data class TypeDefinition(
     val name: String,
-    val wrappers: List<TypeWrapper>
+    val wrappers: List<TypeWrapper>,
 )
 
 data class FieldDefinition(
     val name: String,
-    val type: TypeDefinition
+    val type: TypeDefinition,
 )
 
 data class SimpleStructureDefinition(
     val name: String,
-    val typeName: String
+    val typeName: String,
 )
 
 data class ComplexStructureDefinition(
     val name: String,
-    val fields: List<FieldDefinition>
+    val fields: List<FieldDefinition>,
 )
 
 data class InterfaceDefinition(
     val name: String,
-    val methods: List<MethodDefinition>
+    val methods: List<MethodDefinition>,
 )
 
 data class ArgumentDefinition(
     val name: String,
-    val type: TypeDefinition
+    val type: TypeDefinition,
 )
 
 data class ExceptionDefinition(
-    val name: String
+    val name: String,
 )
 
 data class MethodDefinition(
     val name: String,
-    val returnType: TypeDefinition?,
+    val returnType: TypeDefinition,
     val args: List<ArgumentDefinition>,
-    val throws: List<ExceptionDefinition>
+    val throws: List<ExceptionDefinition>,
 )

@@ -69,7 +69,6 @@ class HlaFacadeTest {
         assertWrittenDirectoryWithExample(writtenDirectory, path)
     }
 
-
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {
         val directories = DirectoriesLogic()
         val exampleDirectory = directories.readDirectory(Path(examplePath))
