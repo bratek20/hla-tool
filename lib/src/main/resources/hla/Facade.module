@@ -1,0 +1,23 @@
+PropertiesValueObjects
+    JavaProperties
+        rootPackage: string
+
+    HlaProperties
+        java: JavaProperties
+
+PropertiesMapping
+    "properties" -> HlaProperties
+
+Enums
+    ModuleLanguage
+        KOTLIN
+        TYPE_SCRIPT
+
+ValueObjects
+    ModuleName: string
+
+    GenerateModuleArgs
+        moduleName: ModuleName
+        language: ModuleLanguage
+        hlaFolderPath: Path
+        projectPath: Path
