@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
-import pl.bratek20.hla.generation.impl.core.domain.HlaModules
+import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern

@@ -1,6 +1,7 @@
 package pl.bratek20.hla.definitions
 
 import org.assertj.core.api.Assertions.assertThat
+import pl.bratek20.hla.definitions.api.*
 
 data class ExpectedSimpleStructureDefinition(
     var name: String? = null,

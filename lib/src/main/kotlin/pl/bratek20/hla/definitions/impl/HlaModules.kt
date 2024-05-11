@@ -1,6 +1,6 @@
-package pl.bratek20.hla.generation.impl.core.domain
+package pl.bratek20.hla.definitions.impl
 
-import pl.bratek20.hla.definitions.*
+import pl.bratek20.hla.definitions.api.*
 import pl.bratek20.hla.generation.api.ModuleName
 
 class HlaModules(
@@ -47,9 +47,5 @@ class HlaModules(
 
     fun getComplexVoModule(complexVoName: String): ModuleName {
         return modules.first { it.complexValueObjects.any { it.name == complexVoName } }.name
-    }
-
-    private fun otherModules(): List<ModuleDefinition> {
-        return modules.filter { it.name != currentName }
     }
 }

@@ -1,9 +1,10 @@
 package pl.bratek20.hla.generation.impl.core.domain
 
-import pl.bratek20.hla.definitions.BaseType
-import pl.bratek20.hla.definitions.EnumDefinition
-import pl.bratek20.hla.definitions.TypeDefinition
-import pl.bratek20.hla.definitions.TypeWrapper
+import pl.bratek20.hla.definitions.api.BaseType
+import pl.bratek20.hla.definitions.api.EnumDefinition
+import pl.bratek20.hla.definitions.api.TypeDefinition
+import pl.bratek20.hla.definitions.api.TypeWrapper
+import pl.bratek20.hla.definitions.impl.HlaModules
 
 interface DomainType
 

@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.api
 
-import pl.bratek20.hla.definitions.*
+import pl.bratek20.hla.definitions.api.*
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
@@ -110,12 +110,12 @@ class ApiGenerator(
             content = fileContent
         )
     }
-
-
+    
     private fun toView(vo: SimpleStructureDefinition): SimpleValueObjectView {
+        val type = TypeDefinition(vo.typeName, emptyList())
         return SimpleValueObjectView(
             name = vo.name,
-            type = toViewType(vo.type())
+            type = toViewType(type)
         )
     }
     private fun toView(vo: ComplexStructureDefinition): ComplexValueObjectView {

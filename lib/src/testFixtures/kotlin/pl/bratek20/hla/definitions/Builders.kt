@@ -1,5 +1,6 @@
 package pl.bratek20.hla.definitions
 
+import pl.bratek20.hla.definitions.api.*
 import pl.bratek20.hla.generation.api.ModuleName
 
 data class TypeDef(

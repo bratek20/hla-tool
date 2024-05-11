@@ -1,23 +1,6 @@
-package pl.bratek20.hla.definitions
+package pl.bratek20.hla.definitions.api
 
 import pl.bratek20.hla.generation.api.ModuleName
-
-enum class BaseType {
-    STRING,
-    INT,
-    BOOL,
-    VOID;
-
-    companion object {
-        fun of(value: String): BaseType {
-            return BaseType.valueOf(value.uppercase())
-        }
-
-        fun isBaseType(value: String): Boolean {
-            return entries.any { it.name == value.uppercase() }
-        }
-    }
-}
 
 data class PropertyMapping(
     val key: String,
@@ -39,15 +22,11 @@ data class ModuleDefinition(
     val enums: List<EnumDefinition>,
 )
 
-enum class TypeWrapper {
-    LIST,
-    OPTIONAL
-}
-
 data class TypeDefinition(
     val name: String,
-    val wrappers: List<TypeWrapper> = emptyList()
+    val wrappers: List<TypeWrapper>
 )
+
 data class FieldDefinition(
     val name: String,
     val type: TypeDefinition
@@ -56,11 +35,7 @@ data class FieldDefinition(
 data class SimpleStructureDefinition(
     val name: String,
     val typeName: String
-) {
-    fun type(): TypeDefinition {
-        return TypeDefinition(name = typeName)
-    }
-}
+)
 
 data class ComplexStructureDefinition(
     val name: String,
@@ -85,5 +60,5 @@ data class MethodDefinition(
     val name: String,
     val returnType: TypeDefinition?,
     val args: List<ArgumentDefinition>,
-    val throws: List<ExceptionDefinition> = emptyList()
+    val throws: List<ExceptionDefinition>
 )

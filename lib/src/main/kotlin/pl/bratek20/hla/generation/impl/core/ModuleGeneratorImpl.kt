@@ -12,7 +12,8 @@ import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.*
 import pl.bratek20.hla.generation.impl.languages.typescript.*
-import pl.bratek20.hla.definitions.ModuleDefinition
+import pl.bratek20.hla.definitions.api.ModuleDefinition
+import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 
 class ModuleGeneratorImpl : ModuleGenerator {

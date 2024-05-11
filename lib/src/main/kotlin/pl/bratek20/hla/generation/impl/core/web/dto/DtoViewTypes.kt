@@ -1,6 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.web.dto
 
-import pl.bratek20.hla.definitions.BaseType
+import pl.bratek20.hla.definitions.api.BaseType
 import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes

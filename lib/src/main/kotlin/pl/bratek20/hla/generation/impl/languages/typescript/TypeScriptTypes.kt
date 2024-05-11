@@ -1,7 +1,7 @@
 package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.definitions.BaseType
+import pl.bratek20.hla.definitions.api.BaseType
 
 class TypeScriptTypes: LanguageTypes {
     override fun mapBaseType(type: BaseType): String {
