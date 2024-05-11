@@ -3,6 +3,14 @@ package pl.bratek20.hla.definitions.impl
 import pl.bratek20.hla.definitions.api.*
 import pl.bratek20.hla.generation.api.ModuleName
 
+fun ofBaseType(value: String): BaseType {
+    return BaseType.valueOf(value.uppercase())
+}
+
+fun isBaseType(value: String): Boolean {
+    return BaseType.entries.any { it.name == value.uppercase() }
+}
+
 class HlaModules(
     private val currentName: ModuleName,
     private val modules: List<ModuleDefinition>

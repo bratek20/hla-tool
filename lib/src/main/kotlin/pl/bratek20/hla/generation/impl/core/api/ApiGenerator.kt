@@ -110,7 +110,7 @@ class ApiGenerator(
             content = fileContent
         )
     }
-    
+
     private fun toView(vo: SimpleStructureDefinition): SimpleValueObjectView {
         val type = TypeDefinition(vo.typeName, emptyList())
         return SimpleValueObjectView(

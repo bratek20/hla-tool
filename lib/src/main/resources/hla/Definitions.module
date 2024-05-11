@@ -1,0 +1,61 @@
+Enums
+    BaseType
+        STRING
+        INT
+        BOOL
+        VOID
+
+    TypeWrapper
+        LIST
+        OPTIONAL
+
+ValueObjects
+    PropertyMapping
+        key: string
+        type: TypeDefinition
+
+    EnumDefinition
+        name: string
+        values: string[]
+
+    ModuleDefinition
+        name: string
+        simpleValueObjects: SimpleStructureDefinition[]
+        complexValueObjects: ComplexStructureDefinition[]
+        interfaces: InterfaceDefinition[]
+        propertyValueObjects: ComplexStructureDefinition[]
+        propertyMappings: PropertyMapping[]
+        enums: EnumDefinition[]
+
+    TypeDefinition
+        name: string
+        wrappers: TypeWrapper[]
+
+    FieldDefinition
+        name: string
+        type: TypeDefinition
+
+    SimpleStructureDefinition
+        name: string
+        typeName: string
+
+    ComplexStructureDefinition
+        name: string
+        fields: FieldDefinition[]
+
+    InterfaceDefinition
+        name: string
+        methods: MethodDefinition[]
+
+    ArgumentDefinition
+        name: string
+        type: TypeDefinition
+
+    ExceptionDefinition
+        name: string
+
+    MethodDefinition
+        name: string
+        returnType: TypeDefinition
+        args: ArgumentDefinition[]
+        throws: ExceptionDefinition[]

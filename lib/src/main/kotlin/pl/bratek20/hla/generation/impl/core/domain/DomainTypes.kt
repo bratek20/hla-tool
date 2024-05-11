@@ -5,6 +5,8 @@ import pl.bratek20.hla.definitions.api.EnumDefinition
 import pl.bratek20.hla.definitions.api.TypeDefinition
 import pl.bratek20.hla.definitions.api.TypeWrapper
 import pl.bratek20.hla.definitions.impl.HlaModules
+import pl.bratek20.hla.definitions.impl.isBaseType
+import pl.bratek20.hla.definitions.impl.ofBaseType
 
 interface DomainType
 
@@ -49,14 +51,14 @@ class DomainTypeFactory(
         val simpleVO = modules.findSimpleVO(type)
         val complexVO = modules.findComplexVO(type)
         val isList = type.wrappers.contains(TypeWrapper.LIST)
-        val isBaseType = BaseType.isBaseType(type.name)
+        val isBaseType = isBaseType(type.name)
         val enum = modules.findEnum(type)
         
         return when {
             isList -> ListDomainType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
-            simpleVO != null -> SimpleVODomainType(type.name, BaseDomainType(BaseType.of(simpleVO.typeName)))
+            simpleVO != null -> SimpleVODomainType(type.name, BaseDomainType(ofBaseType(simpleVO.typeName)))
             complexVO != null -> ComplexVODomainType(type.name)
-            isBaseType -> BaseDomainType(BaseType.of(type.name))
+            isBaseType -> BaseDomainType(ofBaseType(type.name))
             enum != null -> EnumDomainType(enum)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }

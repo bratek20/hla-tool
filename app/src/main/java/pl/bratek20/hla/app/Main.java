@@ -24,14 +24,16 @@ public class Main {
 
         var moduleName = new ModuleName(args[0]);
         var language = ModuleLanguage.valueOf(args[1]);
+        var inPath = new Path(args[2]);
 
         var outPath = new Path("../tmp");
         directories.deleteDirectory(outPath);
+
         facade.generateModule(
             new GenerateModuleArgs(
                 moduleName,
                 language,
-                new Path("src/main/resources/hla"),
+                inPath,
                 outPath
             )
         );
