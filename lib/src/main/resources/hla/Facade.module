@@ -1,11 +1,11 @@
-PropertiesValueObjects
+PropertyValueObjects
     JavaProperties
         rootPackage: string
 
     HlaProperties
         java: JavaProperties
 
-PropertiesMapping
+Properties
     "properties" -> HlaProperties
 
 Enums
