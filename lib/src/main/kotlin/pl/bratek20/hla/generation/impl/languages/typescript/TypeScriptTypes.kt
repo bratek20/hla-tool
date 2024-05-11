@@ -50,5 +50,13 @@ class TypeScriptTypes: LanguageTypes {
     override fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String {
         return "$listName.forEach(($entry, $idx) => $body)"
     }
+
+    override fun enumConstructor(enumName: String, variable: String): String {
+        return "$enumName.fromName($variable).get()"
+    }
+
+    override fun enumGetName(variableName: String): String {
+        return "$variableName.getName()"
+    }
 }
 

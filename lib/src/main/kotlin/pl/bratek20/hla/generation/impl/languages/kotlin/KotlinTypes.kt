@@ -49,4 +49,12 @@ class KotlinTypes: LanguageTypes {
     override fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String {
         return "$listName.forEachIndexed { $idx, $entry -> $body }"
     }
+
+    override fun enumConstructor(enumName: String, variable: String): String {
+        return "$enumName.valueOf($variable)"
+    }
+
+    override fun enumGetName(variableName: String): String {
+        return "$variableName.name"
+    }
 }

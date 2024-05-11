@@ -28,11 +28,13 @@ namespace SomeModule.Builder {
     export interface SomeClass3Def {
         class2Object?: SomeClass2Def,
         class2List?: SomeClass2Def[],
+        someEnum?: SomeEnum,
     }
     export function someClass3(def?: SomeClass3Def): SomeClass3 {
         return new SomeClass3(
             someClass2(def?.class2Object ?? {}),
             (def?.class2List ?? []).map(it => someClass2(it)),
+            def?.someEnum ?? SomeEnum.VALUE_A,
         )
     }
 

@@ -1,5 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.web.dto
 
+import pl.bratek20.hla.definitions.BaseType
 import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
@@ -9,8 +10,8 @@ interface DtoViewType {
 
     fun constructor(arg: String): String
 
-    fun assignment(name: String): String {
-        return name
+    fun assignment(fieldName: String): String {
+        return fieldName
     }
 }
 
@@ -40,8 +41,8 @@ data class SimpleVODtoViewType(
         return languageTypes.classConstructor(domain.name, arg)
     }
 
-    override fun assignment(name: String): String {
-        return "$name.value"
+    override fun assignment(fieldName: String): String {
+        return "$fieldName.value"
     }
 }
 
@@ -57,8 +58,8 @@ data class ComplexVODtoViewType(
         return "$arg.toApi()"
     }
 
-    override fun assignment(name: String): String {
-        return "${this.name()}.fromApi($name)"
+    override fun assignment(fieldName: String): String {
+        return "${this.name()}.fromApi($fieldName)"
     }
 }
 
@@ -77,27 +78,28 @@ data class ListDtoViewType(
         return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
     }
 
-    override fun assignment(name: String): String {
+    override fun assignment(fieldName: String): String {
         if (wrappedType is BaseDtoViewType) {
-            return name
+            return fieldName
         }
-        return languageTypes.mapListElements(name, "it", wrappedType.assignment("it"))
+        return languageTypes.mapListElements(fieldName, "it", wrappedType.assignment("it"))
     }
 }
 
 data class EnumDtoViewType(
-    val view: EnumViewType
+    val view: EnumViewType,
+    val languageTypes: LanguageTypes
 ) : DtoViewType {
     override fun name(): String {
-        return "String"
+        return languageTypes.mapBaseType(BaseType.STRING)
     }
 
     override fun constructor(arg: String): String {
-        return "${view.name()}.valueOf($arg)"
+        return languageTypes.enumConstructor(view.name(), arg)
     }
 
-    override fun assignment(name: String): String {
-        return "$name.name"
+    override fun assignment(fieldName: String): String {
+        return languageTypes.enumGetName(fieldName)
     }
 }
 
@@ -111,7 +113,7 @@ class DtoViewTypeFactory(
             is SimpleVOViewType -> SimpleVODtoViewType(type, create(type.boxedType) as BaseDtoViewType, languageTypes)
             is ComplexVOViewType -> ComplexVODtoViewType(type.name, languageDtoPattern)
             is ListViewType -> ListDtoViewType(create(type.wrappedType), languageTypes)
-            is EnumViewType -> EnumDtoViewType(type)
+            is EnumViewType -> EnumDtoViewType(type, languageTypes)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

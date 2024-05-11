@@ -16,5 +16,8 @@ interface LanguageTypes {
     fun assertListLength(given: String, expected: String): String
 
     fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String
+
+    fun enumConstructor(enumName: String, variable: String): String
+    fun enumGetName(variableName: String): String
 }
 

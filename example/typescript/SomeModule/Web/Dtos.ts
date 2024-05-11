@@ -46,11 +46,13 @@ namespace SomeModule.Web {
     export class SomeClass3Dto {
         class2Object = new SomeClass2Dto
         class2List = [new SomeClass2Dto]
+        someEnum = STRING
 
         static toApi(dto: SomeClass3Dto): SomeClass3 {
             return new SomeClass3(
                 dto.class2Object.toApi(),
                 dto.class2List.map(it => it.toApi()),
+                SomeEnum.fromName(dto.someEnum).get(),
             )
         }
 
@@ -58,6 +60,7 @@ namespace SomeModule.Web {
             const dto = new SomeClass3Dto()
             dto.class2Object = SomeClass2Dto.fromApi(api.class2Object)
             dto.class2List = api.class2List.map(it => SomeClass2Dto.fromApi(it))
+            dto.someEnum = api.someEnum.getName()
             return dto
         }
     }

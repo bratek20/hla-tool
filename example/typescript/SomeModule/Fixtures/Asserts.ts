@@ -42,6 +42,7 @@ namespace SomeModule.Assert {
     export interface ExpectedSomeClass3 {
         class2Object?: ExpectedSomeClass2,
         class2List?: ExpectedSomeClass2[],
+        someEnum?: SomeEnum,
     }
     export function someClass3(given: SomeClass3, expected: ExpectedSomeClass3) {
         if (expected.class2Object !== undefined) {
@@ -51,6 +52,10 @@ namespace SomeModule.Assert {
         if (expected.class2List !== undefined) {
             AssertEquals(given.class2List.length, expected.class2List.length)
             given.class2List.forEach((entry, idx) => someClass2(entry, expected.class2List[idx]))
+        }
+
+        if (expected.someEnum !== undefined) {
+            AssertEquals(given.someEnum, expected.someEnum)
         }
     }
 
