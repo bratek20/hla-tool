@@ -7,10 +7,6 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.architecture.context.someContextBuilder
-import pl.bratek20.architecture.properties.PropertiesMock
-import pl.bratek20.architecture.properties.PropertiesMockContextModule
-import pl.bratek20.architecture.properties.api.PropertiesSourceName
-import pl.bratek20.architecture.properties.api.PropertyKey
 import pl.bratek20.architecture.properties.impl.PropertiesModule
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSourceModule
@@ -30,12 +26,14 @@ import java.util.stream.Stream
 
 class HlaFacadeTest {
     class MyArgumentsProvider : ArgumentsProvider {
-        override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> =
-            Stream.of(
+        override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
+            val kotlinMainPathPrefix = "../example/kotlin/src/main/kotlin/com/some/path/"
+            val kotlinTestFixturesPrefix = "../example/kotlin/src/testFixtures/kotlin/com/some/path/"
+            return Stream.of(
                 Arguments.of(
                     "OtherModule",
-                    "../example/kotlin/src/main/kotlin/pl/bratek20/othermodule",
-                    "../example/kotlin/src/main/kotlin/pl/bratek20/othermodule",
+                    kotlinMainPathPrefix + "othermodule",
+                    kotlinTestFixturesPrefix + "othermodule",
                     ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
@@ -46,8 +44,8 @@ class HlaFacadeTest {
                 ),
                 Arguments.of(
                     "SomeModule",
-                    "../example/kotlin/src/main/kotlin/pl/bratek20/somemodule",
-                    "../example/kotlin/src/main/kotlin/pl/bratek20/somemodule",
+                    kotlinMainPathPrefix + "somemodule",
+                    kotlinTestFixturesPrefix + "somemodule",
                     ModuleLanguage.KOTLIN
                 ),
                 Arguments.of(
@@ -57,6 +55,7 @@ class HlaFacadeTest {
                     ModuleLanguage.TYPE_SCRIPT
                 ),
             )
+        }
     }
 
     @ParameterizedTest(name = "{0} ({3})")

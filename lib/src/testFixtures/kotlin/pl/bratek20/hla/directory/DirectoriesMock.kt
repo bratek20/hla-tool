@@ -36,8 +36,6 @@ class DirectoriesMock: Directories {
         TODO("Not yet implemented")
     }
 
-
-
     override fun compare(dir1: Directory, dir2: Directory): CompareResult {
         TODO("Not yet implemented")
     }
