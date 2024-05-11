@@ -1,9 +1,9 @@
-package com.some.path.somemodule
+package com.some.pkg.somemodule
 
-import com.some.path.othermodule.OtherClassDef
-import com.some.path.othermodule.api.OtherId
-import com.some.path.othermodule.otherClass
-import com.some.path.somemodule.api.*
+import com.some.pkg.othermodule.OtherClassDef
+import com.some.pkg.othermodule.api.OtherId
+import com.some.pkg.othermodule.otherClass
+import com.some.pkg.somemodule.api.*
 
 data class SomeClassDef(
     var id: String = "someValue",

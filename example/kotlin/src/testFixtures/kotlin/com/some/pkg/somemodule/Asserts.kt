@@ -1,8 +1,8 @@
-package com.some.path.somemodule
+package com.some.pkg.somemodule
 
-import com.some.path.othermodule.ExpectedOtherClass
-import com.some.path.othermodule.assertOtherClass
-import com.some.path.somemodule.api.*
+import com.some.pkg.othermodule.ExpectedOtherClass
+import com.some.pkg.othermodule.assertOtherClass
+import com.some.pkg.somemodule.api.*
 import org.assertj.core.api.Assertions.assertThat
 
 data class ExpectedSomeClass(

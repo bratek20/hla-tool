@@ -1,12 +1,8 @@
-package com.some.path.somemodule.web
+package com.some.pkg.somemodule.web
 
-import com.some.path.othermodule.api.OtherId
-import com.some.path.othermodule.web.OtherClassDto
-import com.some.path.somemodule.api.*
-import pl.bratek20.othermodule.api.*
-import pl.bratek20.othermodule.web.*
-
-import pl.bratek20.somemodule.api.*
+import com.some.pkg.othermodule.api.OtherId
+import com.some.pkg.othermodule.web.OtherClassDto
+import com.some.pkg.somemodule.api.*
 
 data class SomeClassDto(
     val id: String,

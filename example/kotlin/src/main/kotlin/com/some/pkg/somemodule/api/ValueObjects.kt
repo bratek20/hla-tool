@@ -1,8 +1,7 @@
-package com.some.path.somemodule.api
+package com.some.pkg.somemodule.api
 
-import com.some.path.othermodule.api.OtherClass
-import com.some.path.othermodule.api.OtherId
-import pl.bratek20.othermodule.api.*
+import com.some.pkg.othermodule.api.OtherClass
+import com.some.pkg.othermodule.api.OtherId
 
 data class SomeId(
     val value: String

@@ -1,6 +1,6 @@
-package com.some.path.othermodule.web
+package com.some.pkg.othermodule.web
 
-import com.some.path.othermodule.api.*
+import com.some.pkg.othermodule.api.*
 
 data class OtherClassDto(
     val id: String,

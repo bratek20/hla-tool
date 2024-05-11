@@ -1,8 +1,7 @@
-package com.some.path.othermodule
+package com.some.pkg.othermodule
 
-import com.some.path.othermodule.api.OtherClass
-import com.some.path.othermodule.api.OtherId
-import pl.bratek20.othermodule.api.*
+import com.some.pkg.othermodule.api.OtherClass
+import com.some.pkg.othermodule.api.OtherId
 
 data class OtherClassDef(
     var id: String = "someValue",

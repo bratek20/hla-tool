@@ -1,4 +1,4 @@
-package com.some.path.somemodule.api
+package com.some.pkg.somemodule.api
 
 interface SomeInterface {
     @Throws(

@@ -33,8 +33,12 @@ class HlaFacadeTest {
     )
     class MyArgumentsProvider : ArgumentsProvider {
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
-            val kotlinMainPathPrefix = "../example/kotlin/src/main/kotlin/com/some/path/"
-            val kotlinTestFixturesPrefix = "../example/kotlin/src/testFixtures/kotlin/com/some/path/"
+            val kotlinSrcMainPath = "/src/main/kotlin/com/some/pkg/"
+            val kotlinSrcTestFixturesPath = "/src/testFixtures/kotlin/com/some/pkg/"
+
+            val kotlinMainPathPrefix = "../example/kotlin$kotlinSrcMainPath"
+            val kotlinTestFixturesPrefix = "../example/kotlin$kotlinSrcTestFixturesPath"
+
             return Stream.of(
                 Arguments.of(
                     "OtherModule",
@@ -42,8 +46,8 @@ class HlaFacadeTest {
                     TestPaths(
                         exampleMainPath = kotlinMainPathPrefix + "othermodule",
                         exampleTestFixturesPath = kotlinTestFixturesPrefix + "othermodule",
-                        expectedMainPathSuffix = "",
-                        expectedTestFixturesPathSuffix = ""
+                        expectedMainPathSuffix = kotlinSrcMainPath + "othermodule",
+                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath + "othermodule"
                     )
                 ),
                 Arguments.of(
@@ -62,8 +66,8 @@ class HlaFacadeTest {
                     TestPaths(
                         exampleMainPath = kotlinMainPathPrefix + "somemodule",
                         exampleTestFixturesPath = kotlinTestFixturesPrefix + "somemodule",
-                        expectedMainPathSuffix = "",
-                        expectedTestFixturesPathSuffix = ""
+                        expectedMainPathSuffix = kotlinSrcMainPath + "somemodule",
+                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath + "somemodule"
                     )
                 ),
                 Arguments.of(
@@ -109,7 +113,7 @@ class HlaFacadeTest {
             HLA_PROPERTIES_KEY,
             HlaProperties(
                 java = JavaProperties(
-                    rootPackage = "com.some.path",
+                    rootPackage = "com.some.pkg",
                 )
             )
         )

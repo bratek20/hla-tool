@@ -1,8 +1,7 @@
-package com.some.path.othermodule
+package com.some.pkg.othermodule
 
-import com.some.path.othermodule.api.OtherClass
+import com.some.pkg.othermodule.api.OtherClass
 import org.assertj.core.api.Assertions.assertThat
-import pl.bratek20.othermodule.api.*
 
 data class ExpectedOtherClass(
     var id: String? = null,
