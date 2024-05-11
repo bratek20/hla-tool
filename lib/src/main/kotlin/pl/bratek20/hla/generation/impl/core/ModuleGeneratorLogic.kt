@@ -14,8 +14,8 @@ import pl.bratek20.hla.generation.impl.languages.typescript.*
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 import pl.bratek20.hla.facade.api.ModuleName
 import pl.bratek20.hla.definitions.impl.HlaModules
-import pl.bratek20.hla.facade.api.HLA_PROPERTIES_KEY
 import pl.bratek20.hla.facade.api.HlaProperties
+import pl.bratek20.hla.facade.api.PROPERTIES_KEY
 import pl.bratek20.hla.generation.api.GenerateResult
 import pl.bratek20.hla.velocity.api.VelocityFacade
 
@@ -27,7 +27,7 @@ class ModuleGeneratorLogic(
     override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): GenerateResult {
         val hlaProperties = properties.get(
             InMemoryPropertiesSource.name,
-            HLA_PROPERTIES_KEY,
+            PROPERTIES_KEY,
             HlaProperties::class.java,
         )
 

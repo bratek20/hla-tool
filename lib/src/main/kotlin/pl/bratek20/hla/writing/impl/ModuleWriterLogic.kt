@@ -4,9 +4,9 @@ import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.hla.directory.api.Directories
 import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.facade.api.HLA_PROPERTIES_KEY
 import pl.bratek20.hla.facade.api.HlaProperties
 import pl.bratek20.hla.facade.api.ModuleLanguage
+import pl.bratek20.hla.facade.api.PROPERTIES_KEY
 import pl.bratek20.hla.writing.api.ModuleWriter
 import pl.bratek20.hla.writing.api.WriteArgs
 
@@ -21,7 +21,7 @@ class ModuleWriterLogic(
 
         val hlaProperties = properties.get(
             InMemoryPropertiesSource.name,
-            HLA_PROPERTIES_KEY,
+            PROPERTIES_KEY,
             HlaProperties::class.java
         )
 

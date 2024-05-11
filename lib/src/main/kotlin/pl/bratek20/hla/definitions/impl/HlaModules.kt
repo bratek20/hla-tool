@@ -43,7 +43,11 @@ class HlaModules(
     }
 
     private fun findComplexVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.complexValueObjects.find { it.name == type.name }
+        val x = module.complexValueObjects.find { it.name == type.name }
+        if (x == null) {
+            return module.propertyValueObjects.find { it.name == type.name }
+        }
+        return x
     }
 
     fun getCurrentDependencies(): List<ModuleName> {

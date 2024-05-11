@@ -21,3 +21,7 @@ ValueObjects
         language: ModuleLanguage
         hlaFolderPath: Path
         projectPath: Path
+
+Interfaces
+    HlaFacade
+        generateModule(args: GenerateModuleArgs)

@@ -103,7 +103,7 @@ class HlaFacadeTest {
         val propertiesSource = context.get(InMemoryPropertiesSource::class.java)
 
         propertiesSource.set(
-            HLA_PROPERTIES_KEY,
+            PROPERTIES_KEY,
             HlaProperties(
                 java = JavaProperties(
                     rootPackage = "com.some.pkg",

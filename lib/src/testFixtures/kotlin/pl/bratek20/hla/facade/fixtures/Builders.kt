@@ -1,5 +1,6 @@
 package pl.bratek20.hla.facade.fixtures
 
+import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.facade.api.*
 
 data class GenerateModuleArgsDef(
