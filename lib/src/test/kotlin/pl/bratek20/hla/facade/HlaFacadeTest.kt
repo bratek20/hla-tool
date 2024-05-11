@@ -54,10 +54,10 @@ class HlaFacadeTest {
                     "OtherModule",
                     ModuleLanguage.TYPE_SCRIPT,
                     TestPaths(
-                        exampleMainPath = "../example/typescript/OtherModule",
-                        exampleTestFixturesPath = "../example/typescript/OtherModule",
-                        expectedMainPathSuffix = "",
-                        expectedTestFixturesPathSuffix = ""
+                        exampleMainPath = "../example/typescript/main/OtherModule",
+                        exampleTestFixturesPath = "../example/typescript/test/OtherModule",
+                        expectedMainPathSuffix = "/main",
+                        expectedTestFixturesPathSuffix = "/test"
                     )
                 ),
                 Arguments.of(
@@ -74,10 +74,10 @@ class HlaFacadeTest {
                     "SomeModule",
                     ModuleLanguage.TYPE_SCRIPT,
                     TestPaths(
-                        exampleMainPath = "../example/typescript/SomeModule",
-                        exampleTestFixturesPath = "../example/typescript/SomeModule",
-                        expectedMainPathSuffix = "",
-                        expectedTestFixturesPathSuffix = ""
+                        exampleMainPath = "../example/typescript/main/SomeModule",
+                        exampleTestFixturesPath = "../example/typescript/test/SomeModule",
+                        expectedMainPathSuffix = "/main",
+                        expectedTestFixturesPathSuffix = "/test"
                     )
                 ),
             )

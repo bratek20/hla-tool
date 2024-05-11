@@ -5,6 +5,7 @@ import pl.bratek20.hla.facade.api.HlaFacade
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.parsing.impl.ModuleDefinitionsParserImpl
 import pl.bratek20.hla.writing.api.ModuleWriter
+import pl.bratek20.hla.writing.api.WriteArgs
 
 class HlaFacadeImpl(
     private val generator: ModuleGenerator,
@@ -16,7 +17,11 @@ class HlaFacadeImpl(
         val modules = parser.parse(args.hlaFolderPath)
         val generateResult = generator.generate(args.moduleName, args.language, modules)
 
-        writer.write(args.projectPath, generateResult)
+        writer.write(WriteArgs(
+            projectPath = args.projectPath,
+            generateResult = generateResult,
+            language = args.language
+        ))
     }
 }
 
