@@ -4,7 +4,6 @@ import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
-import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.definitions.api.*
 import pl.bratek20.hla.parsing.api.ModuleDefinitionsParser
 import java.util.ArrayDeque

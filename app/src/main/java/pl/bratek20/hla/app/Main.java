@@ -1,6 +1,7 @@
 package pl.bratek20.hla.app;
 
 import pl.bratek20.architecture.context.spring.SpringContextBuilder;
+import pl.bratek20.hla.definitions.api.ModuleName;
 import pl.bratek20.hla.directory.api.Path;
 import pl.bratek20.hla.directory.impl.DirectoriesLogic;
 import pl.bratek20.hla.directory.impl.DirectoryModule;
@@ -8,7 +9,6 @@ import pl.bratek20.hla.facade.api.GenerateModuleArgs;
 import pl.bratek20.hla.facade.api.HlaFacade;
 import pl.bratek20.hla.facade.impl.FacadeModule;
 import pl.bratek20.hla.generation.api.ModuleLanguage;
-import pl.bratek20.hla.generation.api.ModuleName;
 
 public class Main {
     public static void main(String[] args) {

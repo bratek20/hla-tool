@@ -1,7 +1,5 @@
 package pl.bratek20.hla.definitions.api
 
-import pl.bratek20.hla.generation.api.ModuleName
-
 data class PropertyMapping(
     val key: String,
     val type: TypeDefinition
@@ -11,6 +9,8 @@ data class EnumDefinition(
     val name: String,
     val values: List<String>
 )
+
+data class ModuleName(val value: String)
 
 data class ModuleDefinition(
     val name: ModuleName,

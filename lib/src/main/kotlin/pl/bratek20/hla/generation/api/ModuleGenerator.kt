@@ -2,8 +2,7 @@ package pl.bratek20.hla.generation.api
 
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.definitions.api.ModuleDefinition
-
-data class ModuleName(val value: String)
+import pl.bratek20.hla.definitions.api.ModuleName
 
 enum class ModuleLanguage {
     KOTLIN,

@@ -5,7 +5,6 @@ import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.api.ModuleLanguage
-import pl.bratek20.hla.generation.api.ModuleName
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.generation.impl.core.domain.*
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
@@ -13,6 +12,7 @@ import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.*
 import pl.bratek20.hla.generation.impl.languages.typescript.*
 import pl.bratek20.hla.definitions.api.ModuleDefinition
+import pl.bratek20.hla.definitions.api.ModuleName
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.velocity.impl.VelocityFacadeImpl
 

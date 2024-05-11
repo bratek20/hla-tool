@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.architecture.context.someContextBuilder
+import pl.bratek20.hla.definitions.api.ModuleName
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.DirectoriesMockContextModule
 import pl.bratek20.hla.directory.api.Directory
@@ -16,7 +17,6 @@ import pl.bratek20.hla.facade.api.GenerateModuleArgs
 import pl.bratek20.hla.facade.api.HlaFacade
 import pl.bratek20.hla.facade.impl.FacadeModule
 import pl.bratek20.hla.generation.api.ModuleLanguage
-import pl.bratek20.hla.generation.api.ModuleName
 import java.util.stream.Stream
 
 class HlaFacadeTest {

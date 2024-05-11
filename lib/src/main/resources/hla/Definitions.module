@@ -18,8 +18,10 @@ ValueObjects
         name: string
         values: string[]
 
+    ModuleName: string
+
     ModuleDefinition
-        name: string
+        name: ModuleName
         simpleValueObjects: SimpleStructureDefinition[]
         complexValueObjects: ComplexStructureDefinition[]
         interfaces: InterfaceDefinition[]
