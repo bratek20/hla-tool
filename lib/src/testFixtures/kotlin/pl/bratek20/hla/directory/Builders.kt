@@ -6,10 +6,14 @@ import pl.bratek20.hla.directory.api.FileContent
 
 data class FileDef(
     var name: String = "SomeName",
-    var content: String = ""
+    var content: String = "",
+    var contentLines: List<String> = emptyList(),
 )
 fun file(init: FileDef.() -> Unit): File {
     val def = FileDef().apply(init)
+    if (def.contentLines.isNotEmpty()) {
+        return File(def.name, FileContent(def.contentLines))
+    }
     return File(def.name, FileContent.fromString(def.content))
 }
 

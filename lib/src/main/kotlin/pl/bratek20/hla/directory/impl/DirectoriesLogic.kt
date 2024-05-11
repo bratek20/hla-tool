@@ -38,8 +38,10 @@ class DirectoriesLogic: Directories {
         val file = nioPath.toFile()
 
         val newDir = java.io.File(file, directory.name)
-        check(newDir.mkdirs()) {
-            "Could not create directory: $newDir"
+        if (!newDir.exists()) {
+            check(newDir.mkdir()) {
+                "Could not create directory: $newDir"
+            }
         }
 
         directory.files.forEach {

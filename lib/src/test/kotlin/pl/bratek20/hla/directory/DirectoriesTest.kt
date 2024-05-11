@@ -1,12 +1,79 @@
 package pl.bratek20.hla.directory
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 
+
 class DirectoriesTest {
     private val api = DirectoriesLogic()
+
+    @TempDir
+    lateinit var tempDirNio: java.nio.file.Path
+    lateinit var tempDir: Path
+
+    @BeforeEach
+    fun setup() {
+        tempDir = Path(tempDirNio.toAbsolutePath().toString())
+    }
+
+    @Test
+    fun shouldWrite() {
+        val dir = directory {
+            name = "dir"
+            files = listOf {
+                name = "someFile.txt"
+                content = "abc"
+            }
+        }
+        api.write(tempDir, dir)
+
+        val result = api.readDirectory(tempDir)
+        assertDirectory(result) {
+            hasDirectory = {
+                name = "dir"
+                hasFile = {
+                    name = "someFile.txt"
+                    content = listOf("abc")
+                }
+            }
+        }
+    }
+
+    @Test
+    fun shouldOverwriteFiles() {
+        val dir = directory {
+            name = "dir"
+            files = listOf {
+                name = "someFile.txt"
+                content = "abc"
+            }
+        }
+        api.write(tempDir, dir)
+
+        val updatedDir = directory {
+            name = "dir"
+            files = listOf {
+                name = "someFile.txt"
+                content = "def"
+            }
+        }
+        api.write(tempDir, updatedDir)
+
+        val result = api.readDirectory(tempDir)
+        assertDirectory(result) {
+            hasDirectory = {
+                name = "dir"
+                hasFile = {
+                    name = "someFile.txt"
+                    content = listOf("def")
+                }
+            }
+        }
+    }
 
     @Test
     fun shouldReadDirectory() {
