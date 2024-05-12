@@ -19,6 +19,8 @@ class ApiGenerator(
         propertiesFile()?.let { files.add(it) }
         exceptionsFile()?.let { files.add(it) }
         enumsFile()?.let { files.add(it) }
+        customTypesFile()?.let { files.add(it) }
+        customTypesMapperFile()?.let { files.add(it) }
 
         return Directory(
             name = language.structure().apiDirName(),
@@ -187,5 +189,37 @@ class ApiGenerator(
 
     private fun toViewType(type: TypeDefinition?): String {
         return viewType(type).name()
+    }
+
+    private fun customTypesFile(): File? {
+        if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
+            return null
+        }
+
+        val classNames = module.simpleCustomTypes.map { it.name } +
+            module.complexCustomTypes.map { it.name }
+
+        val fileContent = contentBuilder("customTypes.vm")
+            .put("classNames", classNames)
+            .build()
+
+        return File(
+            name = language.structure().customTypesFileName(),
+            content = fileContent
+        )
+    }
+
+    private fun customTypesMapperFile(): File? {
+        if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
+            return null
+        }
+
+        val fileContent = contentBuilder("customTypesMapper.vm")
+            .build()
+
+        return File(
+            name = language.structure().customTypesMapperFileName(),
+            content = fileContent
+        )
     }
 }

@@ -9,6 +9,8 @@ interface LanguageStructure {
     fun propertiesFileName(): String
     fun exceptionsFileName(): String
     fun enumsFileName(): String
+    fun customTypesFileName(): String
+    fun customTypesMapperFileName(): String
 
     fun fixturesDirName(): String
     fun buildersFileName(): String

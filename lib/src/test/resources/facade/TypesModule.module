@@ -1,7 +1,7 @@
 CustomTypes
     Date: string
 
-    DateRange:
+    DateRange
         from: Date
         to: Date
 

@@ -34,6 +34,14 @@ class TypeScriptStructure(private val c: DomainContext)
         return "Enums.ts"
     }
 
+    override fun customTypesFileName(): String {
+        return "CustomTypes.ts"
+    }
+
+    override fun customTypesMapperFileName(): String {
+        return "CustomTypesMapper.ts"
+    }
+
     override fun fixturesDirName(): String {
         return "Fixtures"
     }
