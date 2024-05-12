@@ -53,7 +53,7 @@ data class SimpleVOViewType(
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.classConstructor(name, arg)
+        return languageTypes.classConstructor(name) + "($arg)"
     }
 
     override fun unboxedType(): ViewType {

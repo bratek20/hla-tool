@@ -43,7 +43,7 @@ data class SimpleVODefViewType(
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.classConstructor(domain.name, arg)
+        return languageTypes.classConstructor(domain.name) + "($arg)"
     }
 }
 

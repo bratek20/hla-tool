@@ -35,8 +35,8 @@ class TypeScriptTypes: LanguageTypes {
         return "$finalListName.map($elementName => $mapping)"
     }
 
-    override fun classConstructor(name: String, params: String): String {
-        return "new $name($params)"
+    override fun classConstructor(className: String): String {
+        return "new $className"
     }
 
     override fun assertEquals(given: String, expected: String): String {
@@ -57,6 +57,10 @@ class TypeScriptTypes: LanguageTypes {
 
     override fun enumGetName(variableName: String): String {
         return "$variableName.getName()"
+    }
+
+    override fun propertyClassConstructor(className: String): String {
+        return "$className.create"
     }
 }
 

@@ -1,5 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.fixtures.builders
 
+import pl.bratek20.hla.definitions.api.TypeDefinition
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
@@ -16,7 +17,8 @@ data class BuilderView(
     val funName: String,
     val defName: String,
     val voName: String,
-    val fields: List<BuilderFieldView>
+    val fields: List<BuilderFieldView>,
+    val constructor: String
 )
 
 class BuildersGenerator(
@@ -25,7 +27,8 @@ class BuildersGenerator(
 ): ModulePartFileGenerator(c) {
 
     override fun generateFile(): File {
-        val complexVoBuilders = module.complexValueObjects.map {
+        val builders = (module.complexValueObjects +  module.propertyValueObjects).map {
+            val isProperty = modules.findPropertyVO(TypeDefinition(it.name, emptyList())) != null
             BuilderView(
                 funName = pascalToCamelCase(it.name),
                 defName = it.name + "Def",
@@ -33,30 +36,17 @@ class BuildersGenerator(
                 fields = it.fields.map {
                     BuilderFieldView(
                         name = it.name,
-                        defType = defType(viewType(it.type)),
+                        defType = if (isProperty) defType(viewType(it.type).unboxedType())
+                            else defType(viewType(it.type)),
                     )
-                }
-            )
-        }
-
-        val propertyVoBuilders = module.propertyValueObjects.map {
-            BuilderView(
-                funName = pascalToCamelCase(it.name),
-                defName = it.name + "Def",
-                voName = it.name,
-                fields = it.fields.map {
-                    BuilderFieldView(
-                        name = it.name,
-                        defType = defType(viewType(it.type).unboxedType()),
-                    )
-                }
+                },
+                constructor = if (isProperty) language.types().propertyClassConstructor(it.name)
+                    else language.types().classConstructor(it.name)
             )
         }
 
         val fileContent = contentBuilder("builders.vm")
-            .put("builders", complexVoBuilders + propertyVoBuilders)
-            .put("complexVoBuilders", complexVoBuilders)
-            .put("propertyVoBuilders", propertyVoBuilders)
+            .put("builders", builders)
             .build()
 
         return File(

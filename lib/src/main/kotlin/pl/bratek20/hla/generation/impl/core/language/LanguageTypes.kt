@@ -10,7 +10,7 @@ interface LanguageTypes {
     fun defaultValueForList(): String
     fun mapListElements(listName: String, elementName: String, mapping: String): String
 
-    fun classConstructor(name: String, params: String): String
+    fun classConstructor(className: String): String
 
     fun assertEquals(given: String, expected: String): String
     fun assertListLength(given: String, expected: String): String
@@ -19,5 +19,7 @@ interface LanguageTypes {
 
     fun enumConstructor(enumName: String, variable: String): String
     fun enumGetName(variableName: String): String
+
+    fun propertyClassConstructor(className: String): String
 }
 

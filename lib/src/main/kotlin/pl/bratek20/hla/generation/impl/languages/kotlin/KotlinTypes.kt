@@ -34,8 +34,8 @@ class KotlinTypes: LanguageTypes {
         return "$listName.map { $elementName -> $mapping }"
     }
 
-    override fun classConstructor(name: String, params: String): String {
-        return "$name($params)"
+    override fun classConstructor(className: String): String {
+        return className
     }
 
     override fun assertEquals(given: String, expected: String): String {
@@ -56,5 +56,9 @@ class KotlinTypes: LanguageTypes {
 
     override fun enumGetName(variableName: String): String {
         return "$variableName.name"
+    }
+
+    override fun propertyClassConstructor(className: String): String {
+        return className
     }
 }

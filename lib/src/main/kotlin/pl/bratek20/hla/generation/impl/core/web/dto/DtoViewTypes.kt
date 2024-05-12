@@ -38,7 +38,7 @@ data class SimpleVODtoViewType(
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.classConstructor(domain.name, arg)
+        return languageTypes.classConstructor(domain.name) + "($arg)"
     }
 
     override fun assignment(fieldName: String): String {
