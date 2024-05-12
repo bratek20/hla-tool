@@ -19,8 +19,16 @@ data class SimpleVODomainType(
     val boxedType: BaseDomainType
 ) : DomainType
 
+data class SimpleCustomDomainType(
+    val name: String,
+    val boxedType: BaseDomainType
+) : DomainType
 
 data class ComplexVODomainType(
+    val name: String
+) : DomainType
+
+data class ComplexCustomDomainType(
     val name: String
 ) : DomainType
 
@@ -58,6 +66,8 @@ class DomainTypeFactory(
         val isBaseType = isBaseType(type.name)
         val enum = modules.findEnum(type)
         val propertyVO = modules.findPropertyVO(type)
+        val simpleCustomType = modules.findSimpleCustomType(type)
+        val complexCustomType = modules.findComplexCustomType(type)
         
         return when {
             isList -> ListDomainType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
@@ -66,6 +76,8 @@ class DomainTypeFactory(
             isBaseType -> BaseDomainType(ofBaseType(type.name))
             enum != null -> EnumDomainType(enum)
             propertyVO != null -> PropertyVODomainType(type.name)
+            simpleCustomType != null -> SimpleCustomDomainType(type.name, BaseDomainType(ofBaseType(simpleCustomType.typeName)))
+            complexCustomType != null -> ComplexCustomDomainType(type.name)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }

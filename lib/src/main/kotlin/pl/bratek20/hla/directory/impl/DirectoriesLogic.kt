@@ -39,7 +39,7 @@ class DirectoriesLogic: Directories {
 
         val newDir = java.io.File(file, directory.name)
         if (!newDir.exists()) {
-            check(newDir.mkdir()) {
+            check(newDir.mkdirs()) {
                 "Could not create directory: $newDir"
             }
         }

@@ -38,6 +38,14 @@ class HlaModules(
         return modules.firstNotNullOfOrNull { findEnum(type, it) }
     }
 
+    fun findSimpleCustomType(type: TypeDefinition): SimpleStructureDefinition? {
+        return modules.firstNotNullOfOrNull { findSimpleCustomType(type, it) }
+    }
+
+    fun findComplexCustomType(type: TypeDefinition): ComplexStructureDefinition? {
+        return modules.firstNotNullOfOrNull { findComplexCustomType(type, it) }
+    }
+
     private fun findEnum(type: TypeDefinition, module: ModuleDefinition): EnumDefinition? {
         return module.enums.find { it.name == type.name }
     }
@@ -52,6 +60,14 @@ class HlaModules(
 
     private fun findPropertyVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
         return module.propertyValueObjects.find { it.name == type.name }
+    }
+
+    private fun findSimpleCustomType(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
+        return module.simpleCustomTypes.find { it.name == type.name }
+    }
+
+    private fun findComplexCustomType(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
+        return module.complexCustomTypes.find { it.name == type.name }
     }
 
     //TODO full impl

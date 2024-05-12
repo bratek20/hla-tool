@@ -4,6 +4,7 @@ import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.hla.directory.api.Directories
 import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.HlaProperties
 import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.facade.api.PROPERTIES_KEY
@@ -43,5 +44,15 @@ class ModuleWriterLogic(
 
         directories.write(mainPath, generateResult.main)
         directories.write(testFixturesPath, generateResult.testFixtures)
+
+        //test helping
+        val dirs = DirectoriesLogic()
+        val moduleName = generateResult.main.name
+        if (args.language == ModuleLanguage.KOTLIN && moduleName.lowercase() == "TypesModule".lowercase()) {
+            val debugPath = Path("../tmp")
+            dirs.deleteDirectory(debugPath)
+            dirs.write(debugPath, generateResult.main)
+            dirs.write(debugPath, generateResult.testFixtures)
+        }
     }
 }

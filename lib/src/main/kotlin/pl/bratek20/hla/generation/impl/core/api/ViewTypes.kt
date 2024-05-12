@@ -61,8 +61,42 @@ data class SimpleVOViewType(
     }
 }
 
+data class SimpleCustomViewType(
+    val name: String,
+    val boxedType: BaseViewType,
+    val languageTypes: LanguageTypes
+) : ViewType {
+    override fun name(): String {
+        return name;
+    }
+
+    override fun unboxedAssignment(name: String): String {
+        return "$name.value"
+    }
+
+    override fun unboxedName(): String {
+        return boxedType.name()
+    }
+
+    override fun constructor(arg: String): String {
+        return languageTypes.classConstructor(name) + "($arg)"
+    }
+
+    override fun unboxedType(): ViewType {
+        return boxedType
+    }
+}
+
 
 data class ComplexVOViewType(
+    val name: String
+) : ViewType {
+    override fun name(): String {
+        return name
+    }
+}
+
+data class ComplexCustomViewType(
     val name: String
 ) : ViewType {
     override fun name(): String {
@@ -108,6 +142,8 @@ class ViewTypeFactory(
             is ComplexVODomainType -> ComplexVOViewType(type.name)
             is BaseDomainType -> BaseViewType(type.name, languageTypes)
             is EnumDomainType -> EnumViewType(type)
+            is SimpleCustomDomainType -> SimpleCustomViewType(type.name, BaseViewType(type.boxedType.name, languageTypes), languageTypes)
+            is ComplexCustomDomainType -> ComplexCustomViewType(type.name)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
     }
