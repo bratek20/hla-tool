@@ -20,6 +20,8 @@ data class ModuleDefinition(
     val propertyValueObjects: List<ComplexStructureDefinition>,
     val propertyMappings: List<PropertyMapping>,
     val enums: List<EnumDefinition>,
+    val simpleCustomTypes: List<SimpleStructureDefinition>,
+    val complexCustomTypes: List<ComplexStructureDefinition>,
 )
 
 data class TypeDefinition(

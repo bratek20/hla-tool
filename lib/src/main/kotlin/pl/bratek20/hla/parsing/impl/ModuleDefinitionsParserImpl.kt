@@ -22,11 +22,12 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
     private fun parseModuleFile(file: File): ModuleDefinition {
         val moduleName = ModuleName(file.name.split(".module").get(0))
         val elements = parseElements(file.content)
-        val valueObjects = parseValueObjects(elements)
+        val valueObjects = parseStructures("ValueObjects", elements)
         val interfaces = parseInterfaces(elements)
         val propertyValueObjects = parsePropertyValueObjects(elements)
         val propertyMappings = parsePropertyMappings(elements)
         val enums = parseEnums(elements)
+        val customTypes = parseStructures("CustomTypes", elements)
 
         return ModuleDefinition(
             name = moduleName,
@@ -35,7 +36,9 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
             interfaces = interfaces,
             propertyValueObjects = propertyValueObjects,
             propertyMappings = propertyMappings,
-            enums = enums
+            enums = enums,
+            simpleCustomTypes = customTypes.simple,
+            complexCustomTypes = customTypes.complex
         )
     }
 
@@ -145,12 +148,12 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         }
     }
 
-    data class ValueObjects(
+    data class Structures(
         val simple: List<SimpleStructureDefinition>,
         val complex: List<ComplexStructureDefinition>
     )
-    private fun parseValueObjects(elements: List<ParsedElement>): ValueObjects {
-        val voSection = elements.find { it is Section && it.name == "ValueObjects" } as Section?
+    private fun parseStructures(sectionName: String, elements: List<ParsedElement>): Structures {
+        val voSection = elements.find { it is Section && it.name == sectionName } as Section?
         val simple = voSection?.elements?.filterIsInstance<Assignment>()?.map {
             SimpleStructureDefinition(
                 name = it.name,
@@ -160,7 +163,7 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
 
         val complex = parseComplexStructureDefinitions(voSection)
 
-        return ValueObjects(
+        return Structures(
             simple = simple,
             complex = complex
         )

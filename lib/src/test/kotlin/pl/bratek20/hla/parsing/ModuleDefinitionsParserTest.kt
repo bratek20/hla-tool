@@ -265,5 +265,34 @@ class ModuleDefinitionsParserTest {
         })
     }
 
+    @Test
+    fun `should parse custom types`() {
+        val modules = parse("only-custom-types")
+
+        assertModules(modules, listOf {
+            simpleCustomTypes = listOf {
+                name = "SimpleType"
+                typeName = "string"
+            }
+            complexCustomTypes = listOf {
+                name = "ComplexType"
+                fields = listOf (
+                    {
+                        name = "field1"
+                        type = {
+                            name = "string"
+                        }
+                    },
+                    {
+                        name = "field2"
+                        type = {
+                            name = "int"
+                        }
+                    }
+                )
+            }
+        })
+    }
+
     //TODO bug when simple VO is after complex VO
 }
