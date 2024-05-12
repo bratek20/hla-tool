@@ -11,12 +11,12 @@ namespace $moduleName {
 
         static create(
             #foreach($field in $vo.fields)
-            $field.name: $field.type.name(),
+            $field.name: $field.type.unboxedName(),
             #end
         ): ${vo.name} {
             const instance = new ${vo.name}()
             #foreach($field in $vo.fields)
-            instance.$field.name = ${field.type.unboxedAssignment("$field.name")}
+            instance.$field.name = $field.name
             #end
             return instance
         }
