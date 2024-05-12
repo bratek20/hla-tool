@@ -1,0 +1,11 @@
+CustomTypes
+    Date: string
+
+    DateRange:
+        from: Date
+        to: Date
+
+PropertyValueObjects
+    DateRangeProperty
+        from: Date
+        to: Date
