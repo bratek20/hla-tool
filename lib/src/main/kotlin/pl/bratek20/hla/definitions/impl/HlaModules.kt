@@ -30,6 +30,10 @@ class HlaModules(
         return modules.firstNotNullOfOrNull { findComplexVO(type, it) }
     }
 
+    fun findPropertyVO(type: TypeDefinition): ComplexStructureDefinition? {
+        return modules.firstNotNullOfOrNull { findPropertyVO(type, it) }
+    }
+
     fun findEnum(type: TypeDefinition): EnumDefinition? {
         return modules.firstNotNullOfOrNull { findEnum(type, it) }
     }
@@ -43,11 +47,11 @@ class HlaModules(
     }
 
     private fun findComplexVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        val x = module.complexValueObjects.find { it.name == type.name }
-        if (x == null) {
-            return module.propertyValueObjects.find { it.name == type.name }
-        }
-        return x
+        return module.complexValueObjects.find { it.name == type.name }
+    }
+
+    private fun findPropertyVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
+        return module.propertyValueObjects.find { it.name == type.name }
     }
 
     //TODO full impl

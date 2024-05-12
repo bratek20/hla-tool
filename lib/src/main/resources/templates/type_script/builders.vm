@@ -1,5 +1,5 @@
 namespace ${moduleName}.Builder {
-#foreach($b in $builders)
+#foreach($b in $complexVoBuilders)
     export interface ${b.defName} {
         #foreach($field in $b.fields)
         $field.name?: $field.defType.name(),
@@ -7,6 +7,24 @@ namespace ${moduleName}.Builder {
     }
     export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
         return new ${b.voName}(
+        #foreach($field in $b.fields)
+            $field.defType.constructor("def?.$field.name ?? $field.defType.defaultValue()"),
+        #end
+        )
+    }
+    #if($foreach.hasNext)
+
+    #end
+#end
+#foreach($b in $propertyVoBuilders)
+
+    export interface ${b.defName} {
+        #foreach($field in $b.fields)
+        $field.name?: $field.defType.name(),
+        #end
+    }
+    export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
+        return ${b.voName}.create(
         #foreach($field in $b.fields)
             $field.defType.constructor("def?.$field.name ?? $field.defType.defaultValue()"),
         #end

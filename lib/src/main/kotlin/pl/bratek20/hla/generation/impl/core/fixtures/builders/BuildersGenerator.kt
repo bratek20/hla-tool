@@ -25,7 +25,7 @@ class BuildersGenerator(
 ): ModulePartFileGenerator(c) {
 
     override fun generateFile(): File {
-        val builders = module.complexValueObjects.map {
+        val complexVoBuilders = module.complexValueObjects.map {
             BuilderView(
                 funName = pascalToCamelCase(it.name),
                 defName = it.name + "Def",
@@ -39,8 +39,24 @@ class BuildersGenerator(
             )
         }
 
+        val propertyVoBuilders = module.propertyValueObjects.map {
+            BuilderView(
+                funName = pascalToCamelCase(it.name),
+                defName = it.name + "Def",
+                voName = it.name,
+                fields = it.fields.map {
+                    BuilderFieldView(
+                        name = it.name,
+                        defType = defType(viewType(it.type).unboxedType()),
+                    )
+                }
+            )
+        }
+
         val fileContent = contentBuilder("builders.vm")
-            .put("builders", builders)
+            .put("builders", complexVoBuilders + propertyVoBuilders)
+            .put("complexVoBuilders", complexVoBuilders)
+            .put("propertyVoBuilders", propertyVoBuilders)
             .build()
 
         return File(

@@ -20,6 +20,10 @@ interface ViewType {
     fun unboxedAssignment(name: String): String {
         return name
     }
+
+    fun unboxedType(): ViewType {
+        return this
+    }
 }
 
 data class BaseViewType(
@@ -50,6 +54,10 @@ data class SimpleVOViewType(
 
     override fun constructor(arg: String): String {
         return languageTypes.classConstructor(name, arg)
+    }
+
+    override fun unboxedType(): ViewType {
+        return boxedType
     }
 }
 
