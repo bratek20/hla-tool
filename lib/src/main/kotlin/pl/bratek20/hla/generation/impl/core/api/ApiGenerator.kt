@@ -215,6 +215,10 @@ class ApiGenerator(
         }
 
         val fileContent = contentBuilder("customTypesMapper.vm")
+            .put("valueObjects", ValueObjectsView(
+                simpleList = module.simpleCustomTypes.map { toView(it) },
+                complexList = module.complexCustomTypes.map { toView(it) }
+            ))
             .build()
 
         return File(
