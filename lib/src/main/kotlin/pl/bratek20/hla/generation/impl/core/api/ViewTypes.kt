@@ -6,43 +6,53 @@ import pl.bratek20.hla.definitions.api.BaseType
 import pl.bratek20.hla.definitions.api.TypeDefinition
 import pl.bratek20.hla.definitions.impl.HlaModules
 
-interface ViewType {
-    fun name(): String
+abstract class ViewType {
+    lateinit var languageTypes: LanguageTypes
 
-    fun constructor(arg: String): String {
+    abstract fun name(): String
+
+    open fun constructor(arg: String): String {
         return arg
     }
 
-    fun unboxedName(): String {
+    open fun unboxedName(): String {
         return name()
     }
 
-    fun unboxedAssignment(name: String): String {
+    open fun unboxedAssignment(name: String): String {
         return name
     }
 
-    fun unboxedType(): ViewType {
+    open fun unboxedType(): ViewType {
         return this
     }
 }
 
-data class BaseViewType(
-    val name: BaseType,
-    val languageTypes: LanguageTypes
-) : ViewType {
+class BaseViewType(
+    val name: BaseType
+) : ViewType() {
     override fun name(): String {
         return languageTypes.mapBaseType(name)
     }
 }
 
-data class SimpleVOViewType(
+open class SimpleStructureViewType(
     val name: String,
-    val boxedType: BaseViewType,
-    val languageTypes: LanguageTypes
-) : ViewType {
+    val boxedType: BaseViewType
+) : ViewType() {
     override fun name(): String {
-        return name;
+        return name
     }
+
+    override fun unboxedType(): ViewType {
+        return boxedType
+    }
+}
+
+class SimpleVOViewType(
+    name: String,
+    boxedType: BaseViewType
+) : SimpleStructureViewType(name, boxedType) {
 
     override fun unboxedAssignment(name: String): String {
         return "$name.value"
@@ -55,20 +65,12 @@ data class SimpleVOViewType(
     override fun constructor(arg: String): String {
         return languageTypes.classConstructor(name) + "($arg)"
     }
-
-    override fun unboxedType(): ViewType {
-        return boxedType
-    }
 }
 
-data class SimpleCustomViewType(
-    val name: String,
-    val boxedType: BaseViewType,
-    val languageTypes: LanguageTypes
-) : ViewType {
-    override fun name(): String {
-        return name;
-    }
+class SimpleCustomViewType(
+    name: String,
+    boxedType: BaseViewType
+) : SimpleStructureViewType(name, boxedType) {
 
     override fun unboxedAssignment(name: String): String {
         return "$name.value"
@@ -81,41 +83,36 @@ data class SimpleCustomViewType(
     override fun constructor(arg: String): String {
         return languageTypes.classConstructor(name) + "($arg)"
     }
-
-    override fun unboxedType(): ViewType {
-        return boxedType
-    }
 }
 
 
-data class ComplexVOViewType(
+class ComplexVOViewType(
     val name: String
-) : ViewType {
+) : ViewType() {
     override fun name(): String {
         return name
     }
 }
 
-data class ComplexCustomViewType(
-    val name: String
-) : ViewType {
+class ComplexCustomViewType(
+    val name: String,
+) : ViewType() {
     override fun name(): String {
         return name
     }
 }
 
-data class ListViewType(
+class ListViewType(
     val wrappedType: ViewType,
-    val languageTypes: LanguageTypes
-) : ViewType {
+) : ViewType() {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
     }
 }
 
-data class EnumViewType(
-    private val domain: EnumDomainType
-) : ViewType {
+class EnumViewType(
+    private val domain: EnumDomainType,
+) : ViewType() {
     override fun name(): String {
         return domain.name
     }
@@ -135,16 +132,26 @@ class ViewTypeFactory(
         return createFromDomainType(type)
     }
 
+    private fun createBaseViewType(type: BaseType): BaseViewType {
+        val result = BaseViewType(type)
+        result.languageTypes = languageTypes
+        return result
+    }
+
     private fun createFromDomainType(type: DomainType): ViewType {
-        return when (type) {
-            is ListDomainType -> ListViewType(createFromDomainType(type.wrappedType), languageTypes)
-            is SimpleVODomainType -> SimpleVOViewType(type.name, BaseViewType(type.boxedType.name, languageTypes), languageTypes)
+        val viewType = when (type) {
+            is ListDomainType -> ListViewType(createFromDomainType(type.wrappedType))
+            is SimpleVODomainType -> SimpleVOViewType(type.name, createBaseViewType(type.boxedType.name))
             is ComplexVODomainType -> ComplexVOViewType(type.name)
-            is BaseDomainType -> BaseViewType(type.name, languageTypes)
+            is BaseDomainType -> BaseViewType(type.name)
             is EnumDomainType -> EnumViewType(type)
-            is SimpleCustomDomainType -> SimpleCustomViewType(type.name, BaseViewType(type.boxedType.name, languageTypes), languageTypes)
+            is SimpleCustomDomainType -> SimpleCustomViewType(type.name, createBaseViewType(type.boxedType.name))
             is ComplexCustomDomainType -> ComplexCustomViewType(type.name)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
+
+        viewType.languageTypes = languageTypes
+
+        return viewType
     }
 }

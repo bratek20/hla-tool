@@ -1,8 +1,9 @@
 package ${packageName}.api
+#if($keys.size() > 0)
 
 #foreach($key in $keys)
 val $key.name = pl.bratek20.architecture.properties.api.PropertyKey("$key.value")
-#end
+#end#end
 
 #foreach($vo in $valueObjects)
 data class ${vo.name}(
@@ -14,6 +15,9 @@ data class ${vo.name}(
     fun ${getter.name}(): ${getter.type.name()} {
         return ${getter.type.constructor("this.${getter.field}")}
     }
+    #if($foreach.hasNext)
+
+    #end
     #end
 }#if($foreach.hasNext)
 

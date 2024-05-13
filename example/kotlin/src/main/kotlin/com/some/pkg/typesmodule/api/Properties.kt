@@ -1,6 +1,6 @@
 package com.some.pkg.typesmodule.api
 
-data class DataRangeProperty(
+data class DateRangeProperty(
     private val from: String,
     private val to: String,
 ) {

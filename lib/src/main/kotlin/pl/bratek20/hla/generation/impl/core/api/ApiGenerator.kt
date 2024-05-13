@@ -147,7 +147,7 @@ class ApiGenerator(
             name = vo.name,
             fields = vo.fields.map {
                 val typeView = viewType(it.type)
-                val accessor = if (typeView is SimpleVOViewType) {
+                val accessor = if (typeView is SimpleStructureViewType) {
                     "private "
                 } else {
                     ""
@@ -155,7 +155,7 @@ class ApiGenerator(
                 PropertyFieldView(it.name, accessor, typeView)
            },
             getters = vo.fields
-                .filter { viewType(it.type) is SimpleVOViewType }
+                .filter { viewType(it.type) is SimpleStructureViewType }
                 .map { GetterView(getterName(it.name), viewType(it.type), it.name) }
         )
     }
