@@ -86,21 +86,27 @@ class SimpleCustomViewType(
 }
 
 
-class ComplexVOViewType(
-    val name: String
-) : ViewType() {
-    override fun name(): String {
-        return name
-    }
-}
 
-class ComplexCustomViewType(
+
+open class ComplexStructureViewType(
     val name: String,
 ) : ViewType() {
     override fun name(): String {
         return name
     }
 }
+
+class ComplexVOViewType(
+    name: String
+) : ComplexStructureViewType(name)
+
+class ComplexCustomViewType(
+    name: String,
+) : ComplexStructureViewType(name)
+
+class PropertyVOViewType(
+    name: String,
+) : ComplexStructureViewType(name)
 
 class ListViewType(
     val wrappedType: ViewType,
@@ -147,6 +153,7 @@ class ViewTypeFactory(
             is EnumDomainType -> EnumViewType(type)
             is SimpleCustomDomainType -> SimpleCustomViewType(type.name, createBaseViewType(type.boxedType.name))
             is ComplexCustomDomainType -> ComplexCustomViewType(type.name)
+            is PropertyVODomainType -> PropertyVOViewType(type.name)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

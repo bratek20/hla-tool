@@ -9,7 +9,7 @@ PropertyValueObjects
     HlaProperties
         generateWeb: bool
         kotlin: KotlinProperties
-        typeScript: TypeScript
+        typeScript: TypeScriptProperties
 
 Properties
     "properties" -> HlaProperties
