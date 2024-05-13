@@ -27,8 +27,9 @@ class BuildersGenerator(
 ): ModulePartFileGenerator(c) {
 
     override fun generateFile(): File {
-        val builders = (module.complexValueObjects +  module.propertyValueObjects).map {
+        val builders = (module.complexValueObjects + module.complexCustomTypes + module.propertyValueObjects).map {
             val isProperty = modules.findPropertyVO(TypeDefinition(it.name, emptyList())) != null
+            val isCustom = modules.findComplexCustomType(TypeDefinition(it.name, emptyList())) != null
             BuilderView(
                 funName = pascalToCamelCase(it.name),
                 defName = it.name + "Def",
@@ -41,6 +42,7 @@ class BuildersGenerator(
                     )
                 },
                 constructor = if (isProperty) language.types().propertyClassConstructor(it.name)
+                    else if (isCustom) language.types().customTypeClassConstructor(it.name)
                     else language.types().classConstructor(it.name)
             )
         }

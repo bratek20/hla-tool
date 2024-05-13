@@ -36,7 +36,7 @@ class BaseDefViewType(
     }
 }
 
-open class SimpleStructureDefViewType(
+abstract class SimpleStructureDefViewType(
     val domain: SimpleStructureViewType,
     val boxedType: BaseDefViewType
 ) : DefViewType() {
@@ -47,21 +47,26 @@ open class SimpleStructureDefViewType(
     override fun defaultValue(): String {
         return boxedType.defaultValue()
     }
-
-    override fun constructor(arg: String): String {
-        return types.classConstructor(domain.name) + "($arg)"
-    }
 }
 
 class SimpleVODefViewType(
     domain: SimpleVOViewType,
     boxedType: BaseDefViewType
-) : SimpleStructureDefViewType(domain, boxedType)
+) : SimpleStructureDefViewType(domain, boxedType) {
+    override fun constructor(arg: String): String {
+        return types.classConstructor(domain.name) + "($arg)"
+    }
+}
 
 class SimpleCustomDefViewType(
     domain: SimpleCustomViewType,
     boxedType: BaseDefViewType
-) : SimpleStructureDefViewType(domain, boxedType)
+) : SimpleStructureDefViewType(domain, boxedType) {
+    override fun constructor(arg: String): String {
+        return types.customTypeClassConstructor(domain.name) + "($arg)"
+    }
+
+}
 
 open class ComplexStructureDefViewType(
     val name: String
