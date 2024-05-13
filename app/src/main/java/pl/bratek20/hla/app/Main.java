@@ -5,15 +5,10 @@ import pl.bratek20.architecture.properties.api.PropertyKey;
 import pl.bratek20.architecture.properties.impl.PropertiesModule;
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource;
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSourceModule;
-import pl.bratek20.hla.facade.api.ModuleName;
+import pl.bratek20.hla.facade.api.*;
 import pl.bratek20.hla.directory.api.Path;
 import pl.bratek20.hla.directory.context.DirectoryImpl;
-import pl.bratek20.hla.facade.api.GenerateModuleArgs;
-import pl.bratek20.hla.facade.api.HlaFacade;
-import pl.bratek20.hla.facade.api.HlaProperties;
-import pl.bratek20.hla.facade.api.JavaProperties;
 import pl.bratek20.hla.facade.context.FacadeImpl;
-import pl.bratek20.hla.facade.api.ModuleLanguage;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,9 +26,13 @@ public class Main {
             new PropertyKey("properties"),
             new HlaProperties(
                 false,
-               new JavaProperties(
+                new KotlinProperties(
                    "pl.bratek20.hla"
-               )
+                ),
+                new TypeScriptProperties(
+                     "Src",
+                    "Test/TS"
+                )
             )
         );
 

@@ -29,14 +29,14 @@ class ModuleWriterLogic(
         var mainPathSuffix = Path("")
         var testFixturesPathSuffix = Path("")
         if (args.language == ModuleLanguage.KOTLIN) {
-            hlaProperties.java.rootPackage.let {
+            hlaProperties.kotlin.rootPackage.let {
                 mainPathSuffix = Path("src/main/kotlin/" + it.replace(".", "/"))
                 testFixturesPathSuffix = Path("src/testFixtures/kotlin/" + it.replace(".", "/"))
             }
         }
         if (args.language == ModuleLanguage.TYPE_SCRIPT) {
-            mainPathSuffix = Path("main")
-            testFixturesPathSuffix = Path("test")
+            mainPathSuffix = Path(hlaProperties.typeScript.srcPath)
+            testFixturesPathSuffix = Path(hlaProperties.typeScript.testPath)
         }
 
         val mainPath = projectPath.add(mainPathSuffix)

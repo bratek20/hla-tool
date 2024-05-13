@@ -8,7 +8,7 @@ class PackageNameAndImportsExtension(
     private val c: DomainContext
 ) : ContentBuilderExtension {
     override fun extend(builder: VelocityFileContentBuilder) {
-        val rootPackage = c.properties.java.rootPackage;
+        val rootPackage = c.properties.kotlin.rootPackage;
 
         val imports = c.modules.getCurrentDependencies()
             .map { "$rootPackage.${it.value.lowercase()}" }

@@ -18,6 +18,7 @@ import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
+import pl.bratek20.hla.facade.fixtures.hlaProperties
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -107,12 +108,16 @@ class HlaFacadeTest {
 
         propertiesSource.set(
             PROPERTIES_KEY,
-            HlaProperties(
-                generateWeb = true,
-                java = JavaProperties(
-                    rootPackage = "com.some.pkg",
-                )
-            )
+            hlaProperties {
+                generateWeb = true
+                kotlin = {
+                    rootPackage = "com.some.pkg"
+                }
+                typeScript = {
+                    srcPath = "main"
+                    testPath = "test"
+                }
+            }
         )
 
         val facade = context.get(HlaFacade::class.java)
