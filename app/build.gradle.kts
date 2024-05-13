@@ -14,7 +14,7 @@ application {
 }
 
 tasks.shadowJar {
-    archiveClassifier.set("") // Remove any classifier to replace the default JAR
+    archiveClassifier.set("")
     manifest {
         attributes("Main-Class" to "pl.bratek20.hla.app.Main")
     }

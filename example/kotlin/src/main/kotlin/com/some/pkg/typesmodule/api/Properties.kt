@@ -5,10 +5,10 @@ data class DateRangeProperty(
     private val to: String,
 ) {
     fun getFrom(): Date {
-        return createDate(from)
+        return createDate(this.from)
     }
 
     fun getTo(): Date {
-        return createDate(to)
+        return createDate(this.to)
     }
 }

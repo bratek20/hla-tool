@@ -81,7 +81,7 @@ class SimpleCustomViewType(
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.classConstructor(name) + "($arg)"
+        return languageTypes.customTypeClassConstructor(name) + "($arg)"
     }
 }
 

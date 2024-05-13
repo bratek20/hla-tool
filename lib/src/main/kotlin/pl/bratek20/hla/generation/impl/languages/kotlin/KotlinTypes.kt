@@ -61,4 +61,8 @@ class KotlinTypes: LanguageTypes {
     override fun propertyClassConstructor(className: String): String {
         return className
     }
+
+    override fun customTypeClassConstructor(className: String): String {
+        return "create$className"
+    }
 }

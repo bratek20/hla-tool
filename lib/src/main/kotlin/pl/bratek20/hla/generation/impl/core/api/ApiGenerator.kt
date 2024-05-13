@@ -127,6 +127,13 @@ class ApiGenerator(
         )
     }
 
+    private fun toCustomTypeView(vo: ComplexStructureDefinition): ComplexCustomTypeView {
+        return ComplexCustomTypeView(
+            name = vo.name,
+            fields = vo.fields.map { FieldView(it.name, viewType(it.type)) }
+        )
+    }
+
     data class GetterView(
         val name: String,
         val type: ViewType,
@@ -209,15 +216,19 @@ class ApiGenerator(
         )
     }
 
+    private fun getCustomTypeGetterName(className: String, fieldName: String): String {
+        return "get$className${camelToPascalCase(fieldName)}"
+    }
+
     private fun customTypesMapperFile(): File? {
         if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
             return null
         }
 
         val fileContent = contentBuilder("customTypesMapper.vm")
-            .put("valueObjects", ValueObjectsView(
+            .put("customTypes", CustomTypesView(
                 simpleList = module.simpleCustomTypes.map { toView(it) },
-                complexList = module.complexCustomTypes.map { toView(it) }
+                complexList = module.complexCustomTypes.map { toCustomTypeView(it) }
             ))
             .build()
 

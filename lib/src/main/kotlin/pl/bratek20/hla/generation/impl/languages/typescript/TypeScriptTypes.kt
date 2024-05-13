@@ -62,5 +62,9 @@ class TypeScriptTypes: LanguageTypes {
     override fun propertyClassConstructor(className: String): String {
         return "$className.create"
     }
+
+    override fun customTypeClassConstructor(className: String): String {
+        return "CustomTypeMapper.create$className"
+    }
 }
 

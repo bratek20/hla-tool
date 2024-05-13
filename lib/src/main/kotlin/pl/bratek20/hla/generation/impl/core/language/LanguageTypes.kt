@@ -21,5 +21,6 @@ interface LanguageTypes {
     fun enumGetName(variableName: String): String
 
     fun propertyClassConstructor(className: String): String
+    fun customTypeClassConstructor(className: String): String
 }
 

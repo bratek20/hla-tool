@@ -1,5 +1,5 @@
 package ${packageName}.api
-#foreach($vo in $valueObjects.simpleList)
+#foreach($vo in $customTypes.simpleList)
 
 fun create${vo.name}(value: ${vo.type}): ${vo.name} {
     TODO()
@@ -9,14 +9,14 @@ fun get${vo.name}Value(it: ${vo.name}): ${vo.type} {
     TODO()
 }
 #end
-#foreach($vo in $valueObjects.complexList)
+#foreach($vo in $customTypes.complexList)
 
 fun create${vo.name}(#foreach($f in $vo.fields)$f.name: $f.type.name()#if($foreach.hasNext), #end#end): ${vo.name} {
     TODO()
 }
 
 #foreach($field in $vo.fields)
-fun get${vo.name}${field.name}(it: ${vo.name}): ${field.type.name()} {
+fun $vo.getterName(${field.name})(it: ${vo.name}): ${field.type.name()} {
     TODO()
 }#if($foreach.hasNext)
 
