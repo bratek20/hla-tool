@@ -16,10 +16,6 @@ abstract class DtoViewType {
     open fun assignment(fieldName: String): String {
         return fieldName
     }
-
-    open fun getter(variableName: String, fieldName: String): String {
-        return "$variableName.$fieldName"
-    }
 }
 
 class BaseDtoViewType(
@@ -51,10 +47,6 @@ class SimpleVODtoViewType(
         return languageTypes.classConstructor(domain.name) + "($arg)"
     }
 
-    override fun getter(variableName: String, fieldName: String): String {
-        return "$variableName.$fieldName.value"
-    }
-
     override fun assignment(fieldName: String): String {
         return "$fieldName.value"
     }
@@ -68,8 +60,8 @@ class SimpleCustomDtoViewType(
         return languageTypes.customTypeClassConstructor(domain.name) + "($arg)"
     }
 
-    override fun getter(variableName: String, fieldName: String): String {
-        return languageTypes.customTypeGetterName(domain.name, fieldName) + "($variableName)"
+    override fun assignment(fieldName: String): String {
+        return "get${domain.name}Value($fieldName)"
     }
 }
 
@@ -88,9 +80,6 @@ abstract class ComplexStructureDtoViewType(
 class ComplexVODtoViewType(
     name: String,
 ) : ComplexStructureDtoViewType(name) {
-    override fun getter(variableName: String, fieldName: String): String {
-        return "${this.name()}.fromApi($fieldName)"
-    }
 
     override fun assignment(fieldName: String): String {
         return "${this.name()}.fromApi($fieldName)"
@@ -100,9 +89,6 @@ class ComplexVODtoViewType(
 class ComplexCustomDtoViewType(
     name: String,
 ) : ComplexStructureDtoViewType(name) {
-    override fun getter(variableName: String, fieldName: String): String {
-        return languageTypes.customTypeGetterName(name, fieldName) + "($variableName)"
-    }
 }
 
 data class ListDtoViewType(
@@ -117,13 +103,6 @@ data class ListDtoViewType(
             return arg
         }
         return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
-    }
-
-    override fun getter(variableName: String, fieldName: String): String {
-        if (wrappedType is BaseDtoViewType) {
-            return fieldName
-        }
-        return languageTypes.mapListElements(fieldName, "it", wrappedType.getter(variableName, "it"))
     }
 
     override fun assignment(fieldName: String): String {
@@ -143,10 +122,6 @@ data class EnumDtoViewType(
 
     override fun constructor(arg: String): String {
         return languageTypes.enumConstructor(view.name(), arg)
-    }
-
-    override fun getter(variableName: String, fieldName: String): String {
-        return languageTypes.enumGetName(fieldName)
     }
 
     override fun assignment(fieldName: String): String {
