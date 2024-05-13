@@ -18,9 +18,9 @@ data class DateRangePropertyDef(
     var from: String = "someValue",
     var to: String = "someValue"
 )
-fun dateRangeProperty(init: DateRangePropertyDef.() -> Unit = {}): DataRangeProperty {
+fun dateRangeProperty(init: DateRangePropertyDef.() -> Unit = {}): DateRangeProperty {
     val def = DateRangePropertyDef().apply(init)
-    return DataRangeProperty(
+    return DateRangeProperty(
         from = def.from,
         to = def.to
     )
