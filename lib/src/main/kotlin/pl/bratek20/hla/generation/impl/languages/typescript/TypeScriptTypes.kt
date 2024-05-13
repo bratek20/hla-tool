@@ -2,6 +2,7 @@ package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.api.BaseType
+import pl.bratek20.hla.utils.camelToPascalCase
 
 class TypeScriptTypes: LanguageTypes {
     override fun mapBaseType(type: BaseType): String {
@@ -65,6 +66,10 @@ class TypeScriptTypes: LanguageTypes {
 
     override fun customTypeClassConstructor(className: String): String {
         return "CustomTypeMapper.create$className"
+    }
+
+    override fun customTypeGetterName(className: String, fieldName: String): String {
+        return "get$className${camelToPascalCase(fieldName)}"
     }
 }
 

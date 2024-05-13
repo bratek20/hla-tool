@@ -5,20 +5,26 @@ import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
-interface DtoViewType {
-    fun name(): String
+abstract class DtoViewType {
+    lateinit var languageTypes: LanguageTypes
+    lateinit var pattern: LanguageDtoPattern
 
-    fun constructor(arg: String): String
+    abstract fun name(): String
 
-    fun assignment(fieldName: String): String {
+    abstract fun constructor(arg: String): String
+
+    open fun assignment(fieldName: String): String {
         return fieldName
+    }
+
+    open fun getter(variableName: String, fieldName: String): String {
+        return "$variableName.$fieldName"
     }
 }
 
-data class BaseDtoViewType(
+class BaseDtoViewType(
     val domain: BaseViewType,
-    val languageTypes: LanguageTypes
-) : DtoViewType {
+) : DtoViewType() {
     override fun name(): String {
         return domain.name()
     }
@@ -28,17 +34,25 @@ data class BaseDtoViewType(
     }
 }
 
-data class SimpleVODtoViewType(
-    val domain: SimpleVOViewType,
+abstract class SimpleStructureDtoViewType(
+    val domain: SimpleStructureViewType,
     val boxedType: BaseDtoViewType,
-    val languageTypes: LanguageTypes
-) : DtoViewType {
+) : DtoViewType() {
     override fun name(): String {
         return boxedType.name()
     }
+}
 
+class SimpleVODtoViewType(
+    domain: SimpleVOViewType,
+    boxedType: BaseDtoViewType,
+) : SimpleStructureDtoViewType(domain, boxedType) {
     override fun constructor(arg: String): String {
         return languageTypes.classConstructor(domain.name) + "($arg)"
+    }
+
+    override fun getter(variableName: String, fieldName: String): String {
+        return "$variableName.$fieldName.value"
     }
 
     override fun assignment(fieldName: String): String {
@@ -46,10 +60,22 @@ data class SimpleVODtoViewType(
     }
 }
 
-data class ComplexVODtoViewType(
+class SimpleCustomDtoViewType(
+    domain: SimpleCustomViewType,
+    boxedType: BaseDtoViewType,
+) : SimpleStructureDtoViewType(domain, boxedType) {
+    override fun constructor(arg: String): String {
+        return languageTypes.customTypeClassConstructor(domain.name) + "($arg)"
+    }
+
+    override fun getter(variableName: String, fieldName: String): String {
+        return languageTypes.customTypeGetterName(domain.name, fieldName) + "($variableName)"
+    }
+}
+
+abstract class ComplexStructureDtoViewType(
     val name: String,
-    val pattern: LanguageDtoPattern
-) : DtoViewType {
+) : DtoViewType() {
     override fun name(): String {
         return pattern.dtoClassType(name)
     }
@@ -57,16 +83,31 @@ data class ComplexVODtoViewType(
     override fun constructor(arg: String): String {
         return "$arg.toApi()"
     }
+}
+
+class ComplexVODtoViewType(
+    name: String,
+) : ComplexStructureDtoViewType(name) {
+    override fun getter(variableName: String, fieldName: String): String {
+        return "${this.name()}.fromApi($fieldName)"
+    }
 
     override fun assignment(fieldName: String): String {
         return "${this.name()}.fromApi($fieldName)"
     }
 }
 
+class ComplexCustomDtoViewType(
+    name: String,
+) : ComplexStructureDtoViewType(name) {
+    override fun getter(variableName: String, fieldName: String): String {
+        return languageTypes.customTypeGetterName(name, fieldName) + "($variableName)"
+    }
+}
+
 data class ListDtoViewType(
     val wrappedType: DtoViewType,
-    val languageTypes: LanguageTypes
-) : DtoViewType {
+) : DtoViewType() {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
     }
@@ -76,6 +117,13 @@ data class ListDtoViewType(
             return arg
         }
         return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
+    }
+
+    override fun getter(variableName: String, fieldName: String): String {
+        if (wrappedType is BaseDtoViewType) {
+            return fieldName
+        }
+        return languageTypes.mapListElements(fieldName, "it", wrappedType.getter(variableName, "it"))
     }
 
     override fun assignment(fieldName: String): String {
@@ -88,14 +136,17 @@ data class ListDtoViewType(
 
 data class EnumDtoViewType(
     val view: EnumViewType,
-    val languageTypes: LanguageTypes
-) : DtoViewType {
+) : DtoViewType() {
     override fun name(): String {
         return languageTypes.mapBaseType(BaseType.STRING)
     }
 
     override fun constructor(arg: String): String {
         return languageTypes.enumConstructor(view.name(), arg)
+    }
+
+    override fun getter(variableName: String, fieldName: String): String {
+        return languageTypes.enumGetName(fieldName)
     }
 
     override fun assignment(fieldName: String): String {
@@ -108,13 +159,20 @@ class DtoViewTypeFactory(
     private val languageDtoPattern: LanguageDtoPattern
 ) {
     fun create(type: ViewType): DtoViewType {
-        return when (type) {
-            is BaseViewType -> BaseDtoViewType(type, languageTypes)
-            is SimpleVOViewType -> SimpleVODtoViewType(type, create(type.boxedType) as BaseDtoViewType, languageTypes)
-            is ComplexVOViewType -> ComplexVODtoViewType(type.name, languageDtoPattern)
-            is ListViewType -> ListDtoViewType(create(type.wrappedType), languageTypes)
-            is EnumViewType -> EnumDtoViewType(type, languageTypes)
+        val result = when (type) {
+            is BaseViewType -> BaseDtoViewType(type)
+            is SimpleVOViewType -> SimpleVODtoViewType(type, create(type.boxedType) as BaseDtoViewType)
+            is ComplexVOViewType -> ComplexVODtoViewType(type.name)
+            is ListViewType -> ListDtoViewType(create(type.wrappedType))
+            is EnumViewType -> EnumDtoViewType(type)
+            is SimpleCustomViewType -> SimpleCustomDtoViewType(type, create(type.boxedType) as BaseDtoViewType)
+            is ComplexCustomViewType -> ComplexCustomDtoViewType(type.name)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
+
+        result.languageTypes = languageTypes
+        result.pattern = languageDtoPattern
+
+        return result
     }
 }

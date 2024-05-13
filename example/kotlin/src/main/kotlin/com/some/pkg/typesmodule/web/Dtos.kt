@@ -8,8 +8,8 @@ data class DateRangeDto(
 ) {
     fun toApi(): DateRange {
         return createDateRange(
-            createDate(from),
-            createDate(to)
+            from = createDate(from),
+            to = createDate(to),
         )
     }
 

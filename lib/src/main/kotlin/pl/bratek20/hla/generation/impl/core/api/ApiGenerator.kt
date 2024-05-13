@@ -216,10 +216,6 @@ class ApiGenerator(
         )
     }
 
-    private fun getCustomTypeGetterName(className: String, fieldName: String): String {
-        return "get$className${camelToPascalCase(fieldName)}"
-    }
-
     private fun customTypesMapperFile(): File? {
         if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
             return null

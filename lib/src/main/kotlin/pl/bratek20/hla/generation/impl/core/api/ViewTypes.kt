@@ -26,6 +26,10 @@ abstract class ViewType {
     open fun unboxedType(): ViewType {
         return this
     }
+
+    open fun constructorName(): String {
+        return name()
+    }
 }
 
 class BaseViewType(
@@ -65,6 +69,10 @@ class SimpleVOViewType(
     override fun constructor(arg: String): String {
         return languageTypes.classConstructor(name) + "($arg)"
     }
+
+    override fun constructorName(): String {
+        return languageTypes.classConstructor(name)
+    }
 }
 
 class SimpleCustomViewType(
@@ -82,6 +90,10 @@ class SimpleCustomViewType(
 
     override fun constructor(arg: String): String {
         return languageTypes.customTypeClassConstructor(name) + "($arg)"
+    }
+
+    override fun constructorName(): String {
+        return languageTypes.customTypeClassConstructor(name)
     }
 }
 
@@ -102,7 +114,15 @@ class ComplexVOViewType(
 
 class ComplexCustomViewType(
     name: String,
-) : ComplexStructureViewType(name)
+) : ComplexStructureViewType(name) {
+    override fun constructor(arg: String): String {
+        return languageTypes.customTypeClassConstructor(name) + "($arg)"
+    }
+
+    override fun constructorName(): String {
+        return languageTypes.customTypeClassConstructor(name)
+    }
+}
 
 class PropertyVOViewType(
     name: String,

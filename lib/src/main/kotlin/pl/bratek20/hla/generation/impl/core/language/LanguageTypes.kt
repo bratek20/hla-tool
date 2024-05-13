@@ -22,5 +22,6 @@ interface LanguageTypes {
 
     fun propertyClassConstructor(className: String): String
     fun customTypeClassConstructor(className: String): String
+    fun customTypeGetterName(className: String, fieldName: String): String
 }
 
