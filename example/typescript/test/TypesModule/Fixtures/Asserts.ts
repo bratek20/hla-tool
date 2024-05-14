@@ -5,11 +5,11 @@ namespace TypeModule.Assert {
     }
     export function dateRange(given: DateRange, expected: ExpectedDateRange) {
         if (expected.from !== undefined) {
-            AssertEquals(getDateValue(getDateRangeFrom(given)), expected.from)
+            AssertEquals(dateGetValue(dateRangeGetFrom(given)), expected.from)
         }
 
         if (expected.to !== undefined) {
-            AssertEquals(getDateValue(getDateRangeTo(given)), expected.to)
+            AssertEquals(dateGetValue(dateRangeGetTo(given)), expected.to)
         }
     }
 }

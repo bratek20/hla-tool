@@ -52,7 +52,7 @@ class SimpleCustomDtoType(view: SimpleCustomViewType): SimpleStructureDtoType(vi
     }
 
     override fun assignment(fieldName: String): String {
-        return "get${view.name}Value($fieldName)"
+        return languageTypes.customTypeGetterName(view.name, "value") + "($fieldName)"
     }
 }
 
@@ -73,7 +73,11 @@ class ComplexVODtoType(view: ComplexVOViewType): ComplexStructureDtoType(view) {
     }
 }
 
-class ComplexCustomDtoType(view: ComplexCustomViewType): ComplexStructureDtoType(view)
+class ComplexCustomDtoType(view: ComplexCustomViewType): ComplexStructureDtoType(view) {
+    override fun assignment(fieldName: String): String {
+        return languageTypes.customTypeGetterName(view.name, fieldName)
+    }
+}
 
 class ListDtoType(
     private val wrappedType: DtoType<*>,

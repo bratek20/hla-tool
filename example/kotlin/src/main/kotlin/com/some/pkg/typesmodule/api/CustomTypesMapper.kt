@@ -1,21 +1,21 @@
 package com.some.pkg.typesmodule.api
 
-fun createDate(value: String): Date {
+fun dateCreate(value: String): Date {
     TODO()
 }
 
-fun getDateValue(it: Date): String {
+fun dateGetValue(it: Date): String {
     TODO()
 }
 
-fun createDateRange(from: Date, to: Date): DateRange {
+fun dateRangeCreate(from: Date, to: Date): DateRange {
     TODO()
 }
 
-fun getDateRangeFrom(it: DateRange): Date {
+fun dateRangeGetFrom(it: DateRange): Date {
     TODO()
 }
 
-fun getDateRangeTo(it: DateRange): Date {
+fun dateRangeGetTo(it: DateRange): Date {
     TODO()
 }

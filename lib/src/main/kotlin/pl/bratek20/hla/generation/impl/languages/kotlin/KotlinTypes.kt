@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl.languages.kotlin
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.api.BaseType
 import pl.bratek20.hla.utils.camelToPascalCase
+import pl.bratek20.hla.utils.pascalToCamelCase
 
 class KotlinTypes: LanguageTypes {
     override fun mapBaseType(type: BaseType): String {
@@ -64,10 +65,10 @@ class KotlinTypes: LanguageTypes {
     }
 
     override fun customTypeClassConstructor(className: String): String {
-        return "create$className"
+        return "${pascalToCamelCase(className)}Create"
     }
 
     override fun customTypeGetterName(className: String, fieldName: String): String {
-        return "get$className${camelToPascalCase(fieldName)}"
+        return "${pascalToCamelCase(className)}Get${camelToPascalCase(fieldName)}"
     }
 }

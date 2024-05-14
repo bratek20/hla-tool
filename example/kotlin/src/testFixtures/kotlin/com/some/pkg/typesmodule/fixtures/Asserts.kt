@@ -12,10 +12,10 @@ fun assertDateRange(given: DateRange, expectedInit: ExpectedDateRange.() -> Unit
     val expected = ExpectedDateRange().apply(expectedInit)
 
     expected.from?.let {
-        assertThat(getDateValue(getDateRangeFrom(given))).isEqualTo(it)
+        assertThat(dateGetValue(dateRangeGetFrom(given))).isEqualTo(it)
     }
 
     expected.to?.let {
-        assertThat(getDateValue(getDateRangeTo(given))).isEqualTo(it)
+        assertThat(dateGetValue(dateRangeGetTo(given))).isEqualTo(it)
     }
 }

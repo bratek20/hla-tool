@@ -127,6 +127,14 @@ class ApiGenerator(
         )
     }
 
+    private fun toCustomTypeView(vo: SimpleStructureDefinition): SimpleCustomTypeView {
+        val type = TypeDefinition(vo.typeName, emptyList())
+        return SimpleCustomTypeView(
+            name = vo.name,
+            type = toViewType(type)
+        )
+    }
+
     private fun toCustomTypeView(vo: ComplexStructureDefinition): ComplexCustomTypeView {
         return ComplexCustomTypeView(
             name = vo.name,
@@ -223,7 +231,7 @@ class ApiGenerator(
 
         val fileContent = contentBuilder("customTypesMapper.vm")
             .put("customTypes", CustomTypesView(
-                simpleList = module.simpleCustomTypes.map { toView(it) },
+                simpleList = module.simpleCustomTypes.map { toCustomTypeView(it) },
                 complexList = module.complexCustomTypes.map { toCustomTypeView(it) }
             ))
             .build()

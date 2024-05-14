@@ -14,11 +14,11 @@ namespace TypesModule {
         }
 
         getFrom(): Date {
-            return CustomTypesMapper.createDate(this.from)
+            return CustomTypesMapper.dateCreate(this.from)
         }
 
         getTo(): Date {
-            return CustomTypesMapper.createDate(this.to)
+            return CustomTypesMapper.dateCreate(this.to)
         }
     }
 }

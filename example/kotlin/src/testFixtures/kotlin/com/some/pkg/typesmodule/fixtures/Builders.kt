@@ -8,9 +8,9 @@ data class DateRangeDef(
 )
 fun dateRange(init: DateRangeDef.() -> Unit = {}): DateRange {
     val def = DateRangeDef().apply(init)
-    return createDateRange(
-        from = createDate(def.from),
-        to = createDate(def.to),
+    return dateRangeCreate(
+        from = dateCreate(def.from),
+        to = dateCreate(def.to),
     )
 }
 

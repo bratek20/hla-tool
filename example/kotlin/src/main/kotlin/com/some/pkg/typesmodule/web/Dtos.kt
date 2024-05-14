@@ -7,17 +7,17 @@ data class DateRangeDto(
     val to: String,
 ) {
     fun toApi(): DateRange {
-        return createDateRange(
-            from = createDate(from),
-            to = createDate(to),
+        return dateRangeCreate(
+            from = dateCreate(from),
+            to = dateCreate(to),
         )
     }
 
     companion object {
         fun fromApi(api: DateRange): DateRangeDto {
             return DateRangeDto(
-                from = getDateValue(getDateRangeFrom(api)),
-                to = getDateValue(getDateRangeTo(api)),
+                from = dateGetValue(dateRangeGetFrom(api)),
+                to = dateGetValue(dateRangeGetTo(api)),
             )
         }
     }

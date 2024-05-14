@@ -4,16 +4,16 @@ namespace TypesModule.Web {
         to = STRING
 
         static toApi(dto: DateRangeDto): DateRange {
-            return CustomTypesMapper.createDateRange(
-                CustomTypesMapper.createDate(dto.from),
-                CustomTypesMapper.createDate(dto.to),
+            return CustomTypesMapper.dateRangeCreate(
+                CustomTypesMapper.dateCreate(dto.from),
+                CustomTypesMapper.dateCreate(dto.to),
             )
         }
 
         static fromApi(api: DateRange): DateRangeDto {
             const dto = new DateRangeDto()
-            dto.from = CustomTypesMapper.getDateValue(CustomTypesMapper.getDateRangeFrom(api))
-            dto.to = CustomTypesMapper.getDateValue(CustomTypesMapper.getDateRangeTo(api))
+            dto.from = CustomTypesMapper.dateGetValue(CustomTypesMapper.dateRangeGetFrom(api))
+            dto.to = CustomTypesMapper.dateGetValue(CustomTypesMapper.dateRangeGetTo(api))
             return dto
         }
     }
