@@ -1,0 +1,11 @@
+package com.some.pkg.somemodule.api
+
+import com.some.pkg.typesmodule.api.*
+
+fun dateRangeWrapperCreate(range: DateRange): DateRangeWrapper {
+    TODO()
+}
+
+fun dateRangeWrapperGetRange(it: DateRangeWrapper): DateRange {
+    TODO()
+}

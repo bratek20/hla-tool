@@ -3,6 +3,14 @@ Enums
         VALUE_A
         VALUE_B
 
+CustomTypes
+    DateRangeWrapper
+        range: DateRange
+
+PropertyValueObjects
+    SomeProperty
+        other: OtherProperty
+
 ValueObjects
     SomeId: string
 
@@ -26,6 +34,13 @@ ValueObjects
         otherClass: OtherClass
         otherIdList: OtherId[]
         otherClassList: OtherClass[]
+
+    SomeClass5
+        date: Date
+        dateRange: DateRange
+        dateRangeWrapper: DateRangeWrapper
+        someProperty: SomeProperty
+        otherProperty: OtherProperty
 
 Interfaces
     SomeInterface

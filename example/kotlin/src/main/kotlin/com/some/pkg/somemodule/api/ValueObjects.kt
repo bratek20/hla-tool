@@ -1,6 +1,7 @@
 package com.some.pkg.somemodule.api
 
 import com.some.pkg.othermodule.api.*
+import com.some.pkg.typesmodule.api.*
 
 data class SomeId(
     val value: String
@@ -29,4 +30,12 @@ data class SomeClass4(
     val otherClass: OtherClass,
     val otherIdList: List<OtherId>,
     val otherClassList: List<OtherClass>,
+)
+
+data class SomeClass5(
+    val date: Date,
+    val dateRange: DateRange,
+    val dateRangeWrapper: DateRangeWrapper,
+    val someProperty: SomeProperty,
+    val otherProperty: OtherProperty,
 )
