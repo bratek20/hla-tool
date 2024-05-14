@@ -10,7 +10,7 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
 data class DtoFieldView(
     val name: String,
-    val type: DtoViewType
+    val type: DtoType<*>
 )
 
 data class DtoView(
@@ -18,11 +18,11 @@ data class DtoView(
     val apiConstructor: String,
     val dtoName: String,
     val fields: List<DtoFieldView>,
-    val type: DtoViewType,
+    val type: DtoType<*>,
     val languageTypes: LanguageTypes
 ) {
     fun getter(variableName: String, field: DtoFieldView): String {
-        if (type is ComplexCustomDtoViewType) {
+        if (type is ComplexCustomDtoType) {
             val x = languageTypes.customTypeGetterName(apiName, field.name)
             return field.type.assignment("$x($variableName)")
         }
@@ -40,7 +40,7 @@ class DtosGenerator(
         return viewType(type)
     }
 
-    private fun myDtoViewType(def: ComplexStructureDefinition): DtoViewType {
+    private fun myDtoViewType(def: ComplexStructureDefinition): DtoType<*> {
         return dtoViewTypeFactory.create(myViewType(def))
     }
 

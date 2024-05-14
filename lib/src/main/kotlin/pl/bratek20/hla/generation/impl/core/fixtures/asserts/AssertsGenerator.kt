@@ -7,8 +7,6 @@ import pl.bratek20.hla.generation.impl.core.api.ViewType
 import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.generation.impl.core.web.dto.DtoViewType
-import pl.bratek20.hla.generation.impl.core.web.dto.DtoViewTypeFactory
 
 data class AssertFieldView(
     val name: String,

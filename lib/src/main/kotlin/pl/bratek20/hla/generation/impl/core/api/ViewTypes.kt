@@ -28,7 +28,7 @@ abstract class ViewType {
     }
 
     open fun constructorName(): String {
-        return name()
+        return languageTypes.classConstructor(name())
     }
 }
 
