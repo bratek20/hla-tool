@@ -64,7 +64,7 @@ class SimpleCustomExpectedViewType(
 
     //TODO fix copy paste
     override fun assignment(fieldName: String): String {
-        return "get${domain.name}Value($fieldName)"
+        return languageTypes.customTypeGetterName(domain.name, "value") + "($fieldName)"
     }
 }
 
