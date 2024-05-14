@@ -10,7 +10,7 @@ dependencies {
 }
 
 application {
-    mainClass = "pl.bratek20.hla.app.Main"
+    mainClass.set("pl.bratek20.hla.app.Main")
 }
 
 tasks.shadowJar {
