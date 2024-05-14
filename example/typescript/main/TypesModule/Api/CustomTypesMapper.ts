@@ -1,21 +1,21 @@
 namespace TypesModule.CustomTypesMapper {
-    export function dateCreate(value: String): Date {
+    export function createDate(value: string): Date {
         //TODO
     }
 
-    export function dateGetValue(it: Date): string {
+    export function getDateValue(it: Date): string {
         //TODO
     }
 
-    export function dateRangeCreate(from: Date, to: Date): DateRange {
+    export function createDateRange(from: Date, to: Date): DateRange {
         //TODO
     }
 
-    export function dateRangeGetFrom(it: DateRange): Date {
+    export function getDateRangeFrom(it: DateRange): Date {
         //TODO
     }
 
-    export function dateRangeGetTo(it: DateRange): Date {
+    export function getDateRangeTo(it: DateRange): Date {
         //TODO
     }
 }

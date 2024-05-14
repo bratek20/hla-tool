@@ -1,8 +1,10 @@
 namespace $moduleName {
+    #if($keys.size() > 0)
     #foreach($key in $keys)
     export const $key.name = new PropertyKey("$key.value")
     #end
 
+    #end
     #foreach($vo in $valueObjects)
     export class ${vo.name} {
         #foreach($field in $vo.fields)
@@ -20,8 +22,8 @@ namespace $moduleName {
             #end
             return instance
         }
-
         #foreach($getter in $vo.getters)
+
         ${getter.name}(): ${getter.type.name()} {
             return ${getter.type.constructor("this.${getter.field}")}
         }

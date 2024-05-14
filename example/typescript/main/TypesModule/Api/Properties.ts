@@ -4,21 +4,21 @@ namespace TypesModule {
         private to = STRING
 
         static create(
-            from: Date,
-            to: Date,
+            from: string,
+            to: string,
         ): DateRangeProperty {
             const instance = new DateRangeProperty()
-            instance.from = CustomTypesMapper.dateGetValue(from)
-            instance.to = CustomTypesMapper.dateGetValue(to)
+            instance.from = from
+            instance.to = to
             return instance
         }
 
         getFrom(): Date {
-            return CustomTypesMapper.dateCreate(this.from)
+            return CustomTypesMapper.createDate(this.from)
         }
 
         getTo(): Date {
-            return CustomTypesMapper.dateCreate(this.to)
+            return CustomTypesMapper.createDate(this.to)
         }
     }
 }
