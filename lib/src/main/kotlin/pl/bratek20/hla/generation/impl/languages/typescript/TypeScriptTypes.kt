@@ -2,6 +2,8 @@ package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.api.BaseType
+import pl.bratek20.hla.utils.camelToPascalCase
+import pl.bratek20.hla.utils.pascalToCamelCase
 
 class TypeScriptTypes: LanguageTypes {
     override fun mapBaseType(type: BaseType): String {
@@ -35,8 +37,8 @@ class TypeScriptTypes: LanguageTypes {
         return "$finalListName.map($elementName => $mapping)"
     }
 
-    override fun classConstructor(name: String, params: String): String {
-        return "new $name($params)"
+    override fun classConstructor(className: String): String {
+        return "new $className"
     }
 
     override fun assertEquals(given: String, expected: String): String {
@@ -57,6 +59,18 @@ class TypeScriptTypes: LanguageTypes {
 
     override fun enumGetName(variableName: String): String {
         return "$variableName.getName()"
+    }
+
+    override fun propertyClassConstructor(className: String): String {
+        return "$className.create"
+    }
+
+    override fun customTypeClassConstructor(className: String): String {
+        return "CustomTypesMapper.${pascalToCamelCase(className)}Create"
+    }
+
+    override fun customTypeGetterName(className: String, fieldName: String): String {
+        return "CustomTypesMapper.${pascalToCamelCase(className)}Get${camelToPascalCase(fieldName)}"
     }
 }
 

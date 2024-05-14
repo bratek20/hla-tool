@@ -2,6 +2,8 @@ package pl.bratek20.hla.generation.impl.languages.kotlin
 
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.api.BaseType
+import pl.bratek20.hla.utils.camelToPascalCase
+import pl.bratek20.hla.utils.pascalToCamelCase
 
 class KotlinTypes: LanguageTypes {
     override fun mapBaseType(type: BaseType): String {
@@ -34,8 +36,8 @@ class KotlinTypes: LanguageTypes {
         return "$listName.map { $elementName -> $mapping }"
     }
 
-    override fun classConstructor(name: String, params: String): String {
-        return "$name($params)"
+    override fun classConstructor(className: String): String {
+        return className
     }
 
     override fun assertEquals(given: String, expected: String): String {
@@ -56,5 +58,17 @@ class KotlinTypes: LanguageTypes {
 
     override fun enumGetName(variableName: String): String {
         return "$variableName.name"
+    }
+
+    override fun propertyClassConstructor(className: String): String {
+        return className
+    }
+
+    override fun customTypeClassConstructor(className: String): String {
+        return "${pascalToCamelCase(className)}Create"
+    }
+
+    override fun customTypeGetterName(className: String, fieldName: String): String {
+        return "${pascalToCamelCase(className)}Get${camelToPascalCase(fieldName)}"
     }
 }

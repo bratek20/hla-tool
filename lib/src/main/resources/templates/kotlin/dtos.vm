@@ -16,7 +16,7 @@ data class ${d.dtoName}(
     #end
 ) {
     fun toApi(): ${d.apiName} {
-        return ${d.apiName}(
+        return ${d.apiConstructor}(
             #foreach($field in $d.fields)
             $field.name = $field.type.constructor($field.name),
             #end
@@ -27,7 +27,7 @@ data class ${d.dtoName}(
         fun fromApi(api: ${d.apiName}): ${d.dtoName} {
             return ${d.dtoName}(
                 #foreach($field in $d.fields)
-                $field.name = $field.type.assignment("api.${field.name}"),
+                $field.name = $d.getter("api", $field),
                 #end
             )
         }

@@ -13,3 +13,15 @@ fun otherClass(init: OtherClassDef.() -> Unit = {}): OtherClass {
         amount = def.amount,
     )
 }
+
+data class OtherPropertyDef(
+    var id: String = "someValue",
+    var name: String = "someValue",
+)
+fun otherProperty(init: OtherPropertyDef.() -> Unit = {}): OtherProperty {
+    val def = OtherPropertyDef().apply(init)
+    return OtherProperty(
+        id = def.id,
+        name = def.name,
+    )
+}

@@ -17,7 +17,7 @@ data class ${b.defName}(
 )
 fun ${b.funName}(init: ${b.defName}.() -> Unit = {}): ${b.voName} {
     val def = ${b.defName}().apply(init)
-    return ${b.voName}(
+    return ${b.constructor}(
     #foreach($field in $b.fields)
         $field.name = $field.defType.constructor("def.$field.name"),
     #end

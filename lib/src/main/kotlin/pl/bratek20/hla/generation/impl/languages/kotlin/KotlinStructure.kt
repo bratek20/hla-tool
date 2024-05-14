@@ -32,6 +32,14 @@ class KotlinStructure(private val c: DomainContext) : LanguageStructure {
         return "Enums.kt"
     }
 
+    override fun customTypesFileName(): String {
+        return "CustomTypes.kt"
+    }
+
+    override fun customTypesMapperFileName(): String {
+        return "CustomTypesMapper.kt"
+    }
+
     override fun fixturesDirName(): String {
         return "fixtures"
     }

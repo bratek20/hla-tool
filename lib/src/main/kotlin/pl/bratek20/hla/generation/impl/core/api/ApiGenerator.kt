@@ -19,6 +19,8 @@ class ApiGenerator(
         propertiesFile()?.let { files.add(it) }
         exceptionsFile()?.let { files.add(it) }
         enumsFile()?.let { files.add(it) }
+        customTypesFile()?.let { files.add(it) }
+        customTypesMapperFile()?.let { files.add(it) }
 
         return Directory(
             name = language.structure().apiDirName(),
@@ -125,6 +127,21 @@ class ApiGenerator(
         )
     }
 
+    private fun toCustomTypeView(vo: SimpleStructureDefinition): SimpleCustomTypeView {
+        val type = TypeDefinition(vo.typeName, emptyList())
+        return SimpleCustomTypeView(
+            name = vo.name,
+            type = toViewType(type)
+        )
+    }
+
+    private fun toCustomTypeView(vo: ComplexStructureDefinition): ComplexCustomTypeView {
+        return ComplexCustomTypeView(
+            name = vo.name,
+            fields = vo.fields.map { FieldView(it.name, viewType(it.type)) }
+        )
+    }
+
     data class GetterView(
         val name: String,
         val type: ViewType,
@@ -145,7 +162,7 @@ class ApiGenerator(
             name = vo.name,
             fields = vo.fields.map {
                 val typeView = viewType(it.type)
-                val accessor = if (typeView is SimpleVOViewType) {
+                val accessor = if (typeView is SimpleStructureViewType) {
                     "private "
                 } else {
                     ""
@@ -153,7 +170,7 @@ class ApiGenerator(
                 PropertyFieldView(it.name, accessor, typeView)
            },
             getters = vo.fields
-                .filter { viewType(it.type) is SimpleVOViewType }
+                .filter { viewType(it.type) is SimpleStructureViewType }
                 .map { GetterView(getterName(it.name), viewType(it.type), it.name) }
         )
     }
@@ -187,5 +204,41 @@ class ApiGenerator(
 
     private fun toViewType(type: TypeDefinition?): String {
         return viewType(type).name()
+    }
+
+    private fun customTypesFile(): File? {
+        if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
+            return null
+        }
+
+        val classNames = module.simpleCustomTypes.map { it.name } +
+            module.complexCustomTypes.map { it.name }
+
+        val fileContent = contentBuilder("customTypes.vm")
+            .put("classNames", classNames)
+            .build()
+
+        return File(
+            name = language.structure().customTypesFileName(),
+            content = fileContent
+        )
+    }
+
+    private fun customTypesMapperFile(): File? {
+        if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
+            return null
+        }
+
+        val fileContent = contentBuilder("customTypesMapper.vm")
+            .put("customTypes", CustomTypesView(
+                simpleList = module.simpleCustomTypes.map { toCustomTypeView(it) },
+                complexList = module.complexCustomTypes.map { toCustomTypeView(it) }
+            ))
+            .build()
+
+        return File(
+            name = language.structure().customTypesMapperFileName(),
+            content = fileContent
+        )
     }
 }

@@ -25,6 +25,8 @@ ValueObjects
         propertyValueObjects: ComplexStructureDefinition[]
         propertyMappings: PropertyMapping[]
         enums: EnumDefinition[]
+        simpleCustomTypes: SimpleStructureDefinition[]
+        complexCustomTypes: ComplexStructureDefinition[]
 
     TypeDefinition
         name: string

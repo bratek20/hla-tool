@@ -47,6 +47,8 @@ data class ExpectedModuleDefinition(
     var propertyValueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var propertyMappings: List<(ExpectedPropertyMapping.() -> Unit)>? = null,
     var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
+    var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
+    var complexCustomTypes: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
 )
 fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit) {
     val expected = ExpectedModuleDefinition().apply(expectedInit)
@@ -83,6 +85,16 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
     expected.enums?.let {
         assertThat(given.enums).hasSize(it.size)
         given.enums.forEachIndexed { idx, entry -> assertEnumDefinition(entry, it[idx]) }
+    }
+
+    expected.simpleCustomTypes?.let {
+        assertThat(given.simpleCustomTypes).hasSize(it.size)
+        given.simpleCustomTypes.forEachIndexed { idx, entry -> assertSimpleStructureDefinition(entry, it[idx]) }
+    }
+
+    expected.complexCustomTypes?.let {
+        assertThat(given.complexCustomTypes).hasSize(it.size)
+        given.complexCustomTypes.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }
 }
 

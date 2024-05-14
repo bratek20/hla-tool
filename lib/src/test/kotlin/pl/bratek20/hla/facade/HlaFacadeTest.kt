@@ -18,6 +18,7 @@ import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
+import pl.bratek20.hla.facade.fixtures.hlaProperties
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -27,54 +28,57 @@ class HlaFacadeTest {
         val expectedMainPathSuffix: String,
         val expectedTestFixturesPathSuffix: String
     )
+
     class MyArgumentsProvider : ArgumentsProvider {
+        private fun kotlinTestPaths(packageName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/kotlin/src/main/kotlin/com/some/pkg/$packageName",
+                exampleTestFixturesPath = "../example/kotlin/src/testFixtures/kotlin/com/some/pkg/$packageName",
+                expectedMainPathSuffix = "/src/main/kotlin/com/some/pkg",
+                expectedTestFixturesPathSuffix = "/src/testFixtures/kotlin/com/some/pkg"
+            )
+        }
+
+        private fun typescriptTestPaths(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/typescript/main/$moduleName",
+                exampleTestFixturesPath = "../example/typescript/test/$moduleName",
+                expectedMainPathSuffix = "/main",
+                expectedTestFixturesPathSuffix = "/test"
+            )
+        }
+
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
-            val kotlinSrcMainPath = "/src/main/kotlin/com/some/pkg"
-            val kotlinSrcTestFixturesPath = "/src/testFixtures/kotlin/com/some/pkg"
-
-            val kotlinMainPathPrefix = "../example/kotlin/$kotlinSrcMainPath/"
-            val kotlinTestFixturesPrefix = "../example/kotlin/$kotlinSrcTestFixturesPath/"
-
             return Stream.of(
                 Arguments.of(
                     "OtherModule",
                     ModuleLanguage.KOTLIN,
-                    TestPaths(
-                        exampleMainPath = kotlinMainPathPrefix + "othermodule",
-                        exampleTestFixturesPath = kotlinTestFixturesPrefix + "othermodule",
-                        expectedMainPathSuffix = kotlinSrcMainPath,
-                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath
-                    )
+                    kotlinTestPaths("othermodule")
                 ),
                 Arguments.of(
                     "OtherModule",
                     ModuleLanguage.TYPE_SCRIPT,
-                    TestPaths(
-                        exampleMainPath = "../example/typescript/main/OtherModule",
-                        exampleTestFixturesPath = "../example/typescript/test/OtherModule",
-                        expectedMainPathSuffix = "/main",
-                        expectedTestFixturesPathSuffix = "/test"
-                    )
+                    typescriptTestPaths("OtherModule")
                 ),
                 Arguments.of(
                     "SomeModule",
                     ModuleLanguage.KOTLIN,
-                    TestPaths(
-                        exampleMainPath = kotlinMainPathPrefix + "somemodule",
-                        exampleTestFixturesPath = kotlinTestFixturesPrefix + "somemodule",
-                        expectedMainPathSuffix = kotlinSrcMainPath,
-                        expectedTestFixturesPathSuffix = kotlinSrcTestFixturesPath
-                    )
+                    kotlinTestPaths("somemodule")
                 ),
                 Arguments.of(
                     "SomeModule",
                     ModuleLanguage.TYPE_SCRIPT,
-                    TestPaths(
-                        exampleMainPath = "../example/typescript/main/SomeModule",
-                        exampleTestFixturesPath = "../example/typescript/test/SomeModule",
-                        expectedMainPathSuffix = "/main",
-                        expectedTestFixturesPathSuffix = "/test"
-                    )
+                    typescriptTestPaths("SomeModule")
+                ),
+                Arguments.of(
+                    "TypesModule",
+                    ModuleLanguage.KOTLIN,
+                    kotlinTestPaths("typesmodule")
+                ),
+                Arguments.of(
+                    "TypesModule",
+                    ModuleLanguage.TYPE_SCRIPT,
+                    typescriptTestPaths("TypesModule")
                 ),
             )
         }
@@ -104,17 +108,21 @@ class HlaFacadeTest {
 
         propertiesSource.set(
             PROPERTIES_KEY,
-            HlaProperties(
-                generateWeb = true,
-                java = JavaProperties(
-                    rootPackage = "com.some.pkg",
-                )
-            )
+            hlaProperties {
+                generateWeb = true
+                kotlin = {
+                    rootPackage = "com.some.pkg"
+                }
+                typeScript = {
+                    srcPath = "main"
+                    testPath = "test"
+                }
+            }
         )
 
         val facade = context.get(HlaFacade::class.java)
 
-        val hlaFolderPath = Path("src/test/resources/facade")
+        val hlaFolderPath = Path("../example/hla")
         val projectPath = Path("some/project/path")
 
         //when

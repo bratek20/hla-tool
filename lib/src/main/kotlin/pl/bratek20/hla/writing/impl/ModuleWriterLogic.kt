@@ -4,6 +4,7 @@ import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.hla.directory.api.Directories
 import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.HlaProperties
 import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.facade.api.PROPERTIES_KEY
@@ -28,14 +29,14 @@ class ModuleWriterLogic(
         var mainPathSuffix = Path("")
         var testFixturesPathSuffix = Path("")
         if (args.language == ModuleLanguage.KOTLIN) {
-            hlaProperties.java.rootPackage.let {
+            hlaProperties.kotlin.rootPackage.let {
                 mainPathSuffix = Path("src/main/kotlin/" + it.replace(".", "/"))
                 testFixturesPathSuffix = Path("src/testFixtures/kotlin/" + it.replace(".", "/"))
             }
         }
         if (args.language == ModuleLanguage.TYPE_SCRIPT) {
-            mainPathSuffix = Path("main")
-            testFixturesPathSuffix = Path("test")
+            mainPathSuffix = Path(hlaProperties.typeScript.srcPath)
+            testFixturesPathSuffix = Path(hlaProperties.typeScript.testPath)
         }
 
         val mainPath = projectPath.add(mainPathSuffix)
@@ -43,5 +44,15 @@ class ModuleWriterLogic(
 
         directories.write(mainPath, generateResult.main)
         directories.write(testFixturesPath, generateResult.testFixtures)
+
+        //test helping
+        val dirs = DirectoriesLogic()
+        val moduleName = generateResult.main.name
+        if (args.language == ModuleLanguage.TYPE_SCRIPT && moduleName.lowercase() == "TypesModule".lowercase()) {
+            val debugPath = Path("../tmp")
+            dirs.deleteDirectory(debugPath)
+            dirs.write(debugPath, generateResult.main)
+            dirs.write(debugPath, generateResult.testFixtures)
+        }
     }
 }

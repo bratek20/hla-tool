@@ -1,10 +1,15 @@
 PropertyValueObjects
-    JavaProperties
+    KotlinProperties
         rootPackage: string
+
+    TypeScriptProperties
+        srcPath: string
+        testPath: string
 
     HlaProperties
         generateWeb: bool
-        java: JavaProperties
+        kotlin: KotlinProperties
+        typeScript: TypeScriptProperties
 
 Properties
     "properties" -> HlaProperties

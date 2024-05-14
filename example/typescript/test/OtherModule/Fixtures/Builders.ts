@@ -9,4 +9,15 @@ namespace OtherModule.Builder {
             def?.amount ?? 0,
         )
     }
+
+    export interface OtherPropertyDef {
+        id?: string,
+        name?: string,
+    }
+    export function otherProperty(def?: OtherPropertyDef): OtherProperty {
+        return OtherProperty.create(
+            def?.id ?? "someValue",
+            def?.name ?? "someValue",
+        )
+    }
 }

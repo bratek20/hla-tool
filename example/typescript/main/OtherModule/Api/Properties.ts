@@ -6,11 +6,11 @@ namespace OtherModule {
         name = STRING
 
         static create(
-            id: OtherId,
+            id: string,
             name: string,
         ): OtherProperty {
             const instance = new OtherProperty()
-            instance.id = id.value
+            instance.id = id
             instance.name = name
             return instance
         }

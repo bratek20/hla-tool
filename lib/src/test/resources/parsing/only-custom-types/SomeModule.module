@@ -1,0 +1,5 @@
+CustomTypes
+    SimpleType: string
+    ComplexType
+        field1: string
+        field2: int

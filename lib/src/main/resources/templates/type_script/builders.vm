@@ -6,7 +6,7 @@ namespace ${moduleName}.Builder {
         #end
     }
     export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
-        return new ${b.voName}(
+        return ${b.constructor}(
         #foreach($field in $b.fields)
             $field.defType.constructor("def?.$field.name ?? $field.defType.defaultValue()"),
         #end

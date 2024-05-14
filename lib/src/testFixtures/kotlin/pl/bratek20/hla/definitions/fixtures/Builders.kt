@@ -37,6 +37,8 @@ data class ModuleDefinitionDef(
     var propertyValueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var propertyMappings: List<(PropertyMappingDef.() -> Unit)> = emptyList(),
     var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
+    var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var complexCustomTypes: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
@@ -48,6 +50,8 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         propertyValueObjects = def.propertyValueObjects.map { it -> complexStructureDefinition(it) },
         propertyMappings = def.propertyMappings.map { it -> propertyMapping(it) },
         enums = def.enums.map { it -> enumDefinition(it) },
+        simpleCustomTypes = def.simpleCustomTypes.map { it -> simpleStructureDefinition(it) },
+        complexCustomTypes = def.complexCustomTypes.map { it -> complexStructureDefinition(it) },
     )
 }
 
