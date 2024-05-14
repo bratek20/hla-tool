@@ -2,7 +2,7 @@
 
 class ${vo.name} {
     constructor(
-        public readonly value: ${vo.type}
+        public readonly value: ${vo.boxedType.name()}
     ) {}
 }
 #end

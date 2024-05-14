@@ -1,11 +1,11 @@
 package ${packageName}.api
 #foreach($vo in $customTypes.simpleList)
 
-fun ${vo.createName()}(value: ${vo.type}): ${vo.name} {
+fun ${vo.createName()}(value: ${vo.boxedType.name()}): ${vo.name} {
     TODO()
 }
 
-fun ${vo.getterName()}(it: ${vo.name}): ${vo.type} {
+fun ${vo.getterName()}(it: ${vo.name}): ${vo.boxedType.name()} {
     TODO()
 }
 #end

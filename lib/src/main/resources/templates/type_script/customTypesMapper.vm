@@ -1,10 +1,10 @@
 namespace ${moduleName}.CustomTypesMapper {
     #foreach($vo in $customTypes.simpleList)
-    export function ${vo.createName()}(value: ${vo.type}): ${vo.name} {
+    export function ${vo.createName()}(value: ${vo.boxedType.name()}): ${vo.name} {
         //TODO
     }
 
-    export function ${vo.getterName()}(it: ${vo.name}): ${vo.type} {
+    export function ${vo.getterName()}(it: ${vo.name}): ${vo.boxedType.name()} {
         //TODO
     }
     #if($foreach.hasNext)
