@@ -5,7 +5,7 @@ import pl.bratek20.hla.definitions.api.TypeDefinition
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
-import pl.bratek20.hla.generation.impl.core.api.ViewType
+import pl.bratek20.hla.generation.impl.core.api.ApiType
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
 data class DtoFieldView(
@@ -35,7 +35,7 @@ class DtosGenerator(
     private val dtoViewTypeFactory: DtoViewTypeFactory = DtoViewTypeFactory(c.language.types(), c.language.dtoPattern())
 ): ModulePartFileGenerator(c) {
 
-    private fun myViewType(def: ComplexStructureDefinition): ViewType {
+    private fun myViewType(def: ComplexStructureDefinition): ApiType {
         val type = TypeDefinition(def.name, emptyList())
         return viewType(type)
     }

@@ -4,7 +4,7 @@ import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
-abstract class ExpectedViewType {
+abstract class ExpectedType {
     lateinit var languageTypes: LanguageTypes
     lateinit var fixture: LanguageAssertsPattern
 
@@ -21,9 +21,9 @@ abstract class ExpectedViewType {
     }
 }
 
-class BaseExpectedViewType(
-    val domain: BaseViewType,
-) : ExpectedViewType() {
+class BaseExpectedType(
+    val domain: BaseApiType,
+) : ExpectedType() {
     override fun name(): String {
         return domain.name()
     }
@@ -33,10 +33,10 @@ class BaseExpectedViewType(
     }
 }
 
-open class SimpleStructureExpectedViewType(
-    val domain: SimpleStructureViewType,
-    val boxedType: BaseExpectedViewType,
-) : ExpectedViewType() {
+open class SimpleStructureExpectedType(
+    val domain: SimpleStructureApiType,
+    val boxedType: BaseExpectedType,
+) : ExpectedType() {
     override fun name(): String {
         return boxedType.name()
     }
@@ -46,10 +46,10 @@ open class SimpleStructureExpectedViewType(
     }
 }
 
-class SimpleVOExpectedViewType(
-    domain: SimpleVOViewType,
-    boxedType: BaseExpectedViewType,
-) : SimpleStructureExpectedViewType(domain, boxedType) {
+class SimpleVOExpectedType(
+    domain: SimpleVOApiType,
+    boxedType: BaseExpectedType,
+) : SimpleStructureExpectedType(domain, boxedType) {
 
     //TODO assignment and assertion duplicate logic?
     override fun assertion(given: String, expected: String): String {
@@ -57,10 +57,10 @@ class SimpleVOExpectedViewType(
     }
 }
 
-class SimpleCustomExpectedViewType(
-    domain: SimpleCustomViewType,
-    boxedType: BaseExpectedViewType,
-) : SimpleStructureExpectedViewType(domain, boxedType) {
+class SimpleCustomExpectedType(
+    domain: SimpleCustomApiType,
+    boxedType: BaseExpectedType,
+) : SimpleStructureExpectedType(domain, boxedType) {
 
     //TODO fix copy paste
     override fun assignment(fieldName: String): String {
@@ -68,9 +68,9 @@ class SimpleCustomExpectedViewType(
     }
 }
 
-open class ComplexStructureExpectedViewType(
+open class ComplexStructureExpectedType(
     val name: String
-) : ExpectedViewType() {
+) : ExpectedType() {
     override fun name(): String {
         return fixture.expectedClassType(name)
     }
@@ -84,17 +84,22 @@ open class ComplexStructureExpectedViewType(
     }
 }
 
-class ComplexVOExpectedViewType(
+class ComplexVOExpectedType(
     name: String
-) : ComplexStructureExpectedViewType(name)
+) : ComplexStructureExpectedType(name)
 
-class ComplexCustomExpectedViewType(
+class ComplexCustomExpectedType(
     name: String
-) : ComplexStructureExpectedViewType(name)
+) : ComplexStructureExpectedType(name)
 
-class ListExpectedViewType(
-    val wrappedType: ExpectedViewType,
-) : ExpectedViewType() {
+
+class PropertyExpectedType(
+    name: String,
+) : ComplexStructureExpectedType(name)
+
+class ListExpectedType(
+    val wrappedType: ExpectedType,
+) : ExpectedType() {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
     }
@@ -120,9 +125,9 @@ class ListExpectedViewType(
     }
 }
 
-class ExpectedEnumViewType(
-    val view: EnumViewType,
-) : ExpectedViewType() {
+class ExpectedEnumType(
+    val view: EnumApiType,
+) : ExpectedType() {
     override fun name(): String {
         return view.name()
     }
@@ -136,15 +141,16 @@ class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
     private val languageFixture: LanguageAssertsPattern,
 ) {
-    fun create(type: ViewType): ExpectedViewType {
+    fun create(type: ApiType): ExpectedType {
         val result =  when (type) {
-            is BaseViewType -> BaseExpectedViewType(type)
-            is SimpleVOViewType -> SimpleVOExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType)
-            is ComplexVOViewType -> ComplexVOExpectedViewType(type.name)
-            is ListViewType -> ListExpectedViewType(create(type.wrappedType))
-            is EnumViewType -> ExpectedEnumViewType(type)
-            is SimpleCustomViewType -> SimpleCustomExpectedViewType(type, create(type.boxedType) as BaseExpectedViewType)
-            is ComplexCustomViewType -> ComplexCustomExpectedViewType(type.name)
+            is BaseApiType -> BaseExpectedType(type)
+            is SimpleVOApiType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
+            is ComplexVOApiType -> ComplexVOExpectedType(type.name)
+            is ListApiType -> ListExpectedType(create(type.wrappedType))
+            is EnumApiType -> ExpectedEnumType(type)
+            is PropertyApiType -> PropertyExpectedType(type.name)
+            is SimpleCustomApiType -> SimpleCustomExpectedType(type, create(type.boxedType) as BaseExpectedType)
+            is ComplexCustomApiType -> ComplexCustomExpectedType(type.name)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

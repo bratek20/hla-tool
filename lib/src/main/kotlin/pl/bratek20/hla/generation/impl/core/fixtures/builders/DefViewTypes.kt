@@ -21,7 +21,7 @@ abstract class DefViewType {
 }
 
 class BaseDefViewType(
-    val domain: BaseViewType,
+    val domain: BaseApiType,
 ) : DefViewType() {
     override fun name(): String {
         return domain.name()
@@ -37,7 +37,7 @@ class BaseDefViewType(
 }
 
 abstract class SimpleStructureDefViewType(
-    val domain: SimpleStructureViewType,
+    val domain: SimpleStructureApiType,
     val boxedType: BaseDefViewType
 ) : DefViewType() {
     override fun name(): String {
@@ -50,7 +50,7 @@ abstract class SimpleStructureDefViewType(
 }
 
 class SimpleVODefViewType(
-    domain: SimpleVOViewType,
+    domain: SimpleVOApiType,
     boxedType: BaseDefViewType
 ) : SimpleStructureDefViewType(domain, boxedType) {
     override fun constructor(arg: String): String {
@@ -59,7 +59,7 @@ class SimpleVODefViewType(
 }
 
 class SimpleCustomDefViewType(
-    domain: SimpleCustomViewType,
+    domain: SimpleCustomApiType,
     boxedType: BaseDefViewType
 ) : SimpleStructureDefViewType(domain, boxedType) {
     override fun constructor(arg: String): String {
@@ -116,7 +116,7 @@ data class ListDefViewType(
 }
 
 data class EnumDefViewType(
-    val view: EnumViewType
+    val view: EnumApiType
 ) : DefViewType() {
     override fun name(): String {
         return view.name()
@@ -135,16 +135,16 @@ class DefTypeFactory(
     private val languageTypes: LanguageTypes,
     private val pattern: LanguageBuildersPattern
 ) {
-    fun create(type: ViewType): DefViewType {
+    fun create(type: ApiType): DefViewType {
         val result = when (type) {
-            is BaseViewType -> BaseDefViewType(type)
-            is SimpleVOViewType -> SimpleVODefViewType(type, create(type.boxedType) as BaseDefViewType)
-            is ComplexVOViewType -> ComplexVODefViewType(type.name)
-            is ListViewType -> ListDefViewType(create(type.wrappedType))
-            is EnumViewType -> EnumDefViewType(type)
-            is SimpleCustomViewType -> SimpleCustomDefViewType(type, create(type.boxedType) as BaseDefViewType)
-            is ComplexCustomViewType -> ComplexCustomDefViewType(type.name)
-            is PropertyVOViewType -> PropertyVODefViewType(type.name)
+            is BaseApiType -> BaseDefViewType(type)
+            is SimpleVOApiType -> SimpleVODefViewType(type, create(type.boxedType) as BaseDefViewType)
+            is ComplexVOApiType -> ComplexVODefViewType(type.name)
+            is ListApiType -> ListDefViewType(create(type.wrappedType))
+            is EnumApiType -> EnumDefViewType(type)
+            is SimpleCustomApiType -> SimpleCustomDefViewType(type, create(type.boxedType) as BaseDefViewType)
+            is ComplexCustomApiType -> ComplexCustomDefViewType(type.name)
+            is PropertyApiType -> PropertyVODefViewType(type.name)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

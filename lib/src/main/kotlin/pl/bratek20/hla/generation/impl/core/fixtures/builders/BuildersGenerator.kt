@@ -4,8 +4,7 @@ import pl.bratek20.hla.definitions.api.TypeDefinition
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import pl.bratek20.hla.generation.impl.core.ModulePartFileGenerator
-import pl.bratek20.hla.generation.impl.core.api.ViewType
-import pl.bratek20.hla.generation.impl.core.api.ViewTypeFactory
+import pl.bratek20.hla.generation.impl.core.api.ApiType
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 data class BuilderFieldView(
@@ -57,7 +56,7 @@ class BuildersGenerator(
         )
     }
 
-    private fun defType(type: ViewType): DefViewType {
+    private fun defType(type: ApiType): DefViewType {
         return defTypeFactory.create(type)
     }
 }

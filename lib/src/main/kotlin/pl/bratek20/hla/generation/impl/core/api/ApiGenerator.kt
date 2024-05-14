@@ -64,6 +64,15 @@ class ApiGenerator(
         )
     }
 
+    private fun toView(value: SimpleStructureDefinition): SimpleVOApiType {
+        return viewType(TypeDefinition(value.name, emptyList())) as SimpleVOApiType
+    }
+
+    private fun toView(value: ComplexStructureDefinition): ComplexVOApiType {
+        return viewType(TypeDefinition(value.name, emptyList())) as ComplexVOApiType
+    }
+
+
     private fun valueObjectsFile(): File? {
         if (module.simpleValueObjects.isEmpty() && module.complexValueObjects.isEmpty()) {
             return null
@@ -113,44 +122,15 @@ class ApiGenerator(
         )
     }
 
-    private fun toView(vo: SimpleStructureDefinition): SimpleValueObjectView {
-        val type = TypeDefinition(vo.typeName, emptyList())
-        return SimpleValueObjectView(
-            name = vo.name,
-            type = toViewType(type)
-        )
-    }
-    private fun toView(vo: ComplexStructureDefinition): ComplexValueObjectView {
-        return ComplexValueObjectView(
-            name = vo.name,
-            fields = vo.fields.map { FieldView(it.name, viewType(it.type)) }
-        )
-    }
-
-    private fun toCustomTypeView(vo: SimpleStructureDefinition): SimpleCustomTypeView {
-        val type = TypeDefinition(vo.typeName, emptyList())
-        return SimpleCustomTypeView(
-            name = vo.name,
-            type = toViewType(type)
-        )
-    }
-
-    private fun toCustomTypeView(vo: ComplexStructureDefinition): ComplexCustomTypeView {
-        return ComplexCustomTypeView(
-            name = vo.name,
-            fields = vo.fields.map { FieldView(it.name, viewType(it.type)) }
-        )
-    }
-
     data class GetterView(
         val name: String,
-        val type: ViewType,
+        val type: ApiType,
         val field: String
     )
     data class PropertyFieldView(
         val name: String,
         val accessor: String,
-        val type: ViewType
+        val type: ApiType
     )
     data class PropertyValueObjectView(
         val name: String,
@@ -162,7 +142,7 @@ class ApiGenerator(
             name = vo.name,
             fields = vo.fields.map {
                 val typeView = viewType(it.type)
-                val accessor = if (typeView is SimpleStructureViewType) {
+                val accessor = if (typeView is SimpleStructureApiType) {
                     "private "
                 } else {
                     ""
@@ -170,7 +150,7 @@ class ApiGenerator(
                 PropertyFieldView(it.name, accessor, typeView)
            },
             getters = vo.fields
-                .filter { viewType(it.type) is SimpleStructureViewType }
+                .filter { viewType(it.type) is SimpleStructureApiType }
                 .map { GetterView(getterName(it.name), viewType(it.type), it.name) }
         )
     }
@@ -223,6 +203,15 @@ class ApiGenerator(
             content = fileContent
         )
     }
+
+    private fun toCustomTypeView(value: SimpleStructureDefinition): SimpleCustomApiType {
+        return viewType(TypeDefinition(value.name, emptyList())) as SimpleCustomApiType
+    }
+
+    private fun toCustomTypeView(value: ComplexStructureDefinition): ComplexCustomApiType {
+        return viewType(TypeDefinition(value.name, emptyList())) as ComplexCustomApiType
+    }
+
 
     private fun customTypesMapperFile(): File? {
         if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {

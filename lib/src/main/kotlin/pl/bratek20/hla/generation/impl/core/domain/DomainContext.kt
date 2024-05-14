@@ -7,7 +7,6 @@ import pl.bratek20.hla.facade.api.HlaProperties
 data class DomainContext(
     val modules: HlaModules,
     val properties: HlaProperties,
-    val typeFactory: DomainTypeFactory = DomainTypeFactory(modules),
 ) {
     val module: ModuleDefinition
         get() = modules.current
