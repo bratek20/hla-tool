@@ -122,7 +122,7 @@ class HlaFacadeTest {
 
         val facade = context.get(HlaFacade::class.java)
 
-        val hlaFolderPath = Path("src/test/resources/facade")
+        val hlaFolderPath = Path("../example/hla")
         val projectPath = Path("some/project/path")
 
         //when
