@@ -40,6 +40,10 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseDefType
 ) : DefType<T>(api) {
+    override fun constructor(arg: String): String {
+        return api.constructor(arg)
+    }
+
     override fun name(): String {
         return boxedType.name()
     }
@@ -53,18 +57,12 @@ class SimpleVODefType(
     api: SimpleVOApiType,
     boxedType: BaseDefType
 ) : SimpleStructureDefType<SimpleVOApiType>(api, boxedType) {
-    override fun constructor(arg: String): String {
-        return api.constructor(arg)
-    }
 }
 
 class SimpleCustomDefType(
     api: SimpleCustomApiType,
     boxedType: BaseDefType
 ) : SimpleStructureDefType<SimpleCustomApiType>(api, boxedType) {
-    override fun constructor(arg: String): String {
-        return api.constructor(arg)
-    }
 }
 
 class DefField(
@@ -109,7 +107,7 @@ class ComplexCustomDefType(
     fields: List<DefField>
 ) : ComplexStructureDefType(api, fields)
 
-class PropertyVODefType(
+class PropertyDefType(
     api: ComplexStructureApiType,
     fields: List<DefField>
 ) : ComplexStructureDefType(api, fields)
@@ -162,7 +160,7 @@ class DefTypeFactory(
             is EnumApiType -> EnumDefType(type)
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
-            is PropertyApiType -> PropertyVODefType(type, createFields(type.fields))
+            is PropertyApiType -> PropertyDefType(type, createFields(type.fields))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
