@@ -5,6 +5,8 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.definitions.impl.isBaseType
 import pl.bratek20.hla.definitions.impl.ofBaseType
+import pl.bratek20.hla.generation.impl.core.web.dto.ComplexStructureDtoType
+import pl.bratek20.hla.generation.impl.core.web.dto.DtoField
 import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 

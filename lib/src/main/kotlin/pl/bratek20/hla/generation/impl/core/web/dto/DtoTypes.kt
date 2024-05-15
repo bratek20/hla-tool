@@ -26,8 +26,6 @@ abstract class DtoType<T: ApiType>(
 
 class BaseDtoType(api: BaseApiType): DtoType<BaseApiType>(api)
 
-
-
 abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<SimpleStructureApiType>(view) {
     override fun name(): String {
         return api.boxedType.name()
@@ -44,13 +42,17 @@ class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
     }
 }
 
-class SimpleCustomDtoType(view: SimpleCustomApiType): SimpleStructureDtoType(view) {
+class SimpleCustomDtoType(api: SimpleCustomApiType): SimpleStructureDtoType(api) {
     override fun toApi(arg: String): String {
         return languageTypes.customTypeClassConstructor(api.name) + "($arg)"
     }
+
+    override fun fromApi(variableName: String): String {
+        return languageTypes.customTypeGetterName(api.name, "value") + "($variableName)"
+    }
 }
 
-data class DtoField(
+class DtoField(
     val type: DtoType<*>,
     val api: ApiTypeField<*>
 ) {
@@ -65,6 +67,10 @@ data class DtoField(
     fun toApi(variable: String): String {
         return type.toApi("$variable.$name")
     }
+
+    fun fromApi(variableName: String): String {
+        return type.fromApi(api.access(variableName))
+    }
 }
 
 abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexStructureApiType): DtoType<ComplexStructureApiType>(api) {
@@ -76,8 +82,12 @@ abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexS
         return "$arg.toApi()"
     }
 
-    open fun fieldFromApi(field: DtoField, variableName: String): String {
-        return field.type.fromApi(field.api.access(variableName))
+    override fun fromApi(variableName: String): String {
+        return api.accessField(variableName, "fromApi")
+    }
+
+    fun fieldFromApi(field: DtoField, variableName: String): String {
+        return field.fromApi(field.api.access(variableName))
     }
 }
 
@@ -87,11 +97,7 @@ class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexSt
     }
 }
 
-class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api) {
-    override fun fieldFromApi(field: DtoField, variableName: String): String {
-        return field.api.access(languageTypes.customTypeGetterName(api.name, field.name) + "($variableName)")
-    }
-}
+class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api)
 
 class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType(fields, api)
 
