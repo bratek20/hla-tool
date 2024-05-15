@@ -86,7 +86,11 @@ class HlaModules(
             .map { it.name }
     }
 
-    fun getComplexVoModule(complexVoName: String): ModuleName {
-        return modules.first { it.complexValueObjects.any { it.name == complexVoName } }.name
+    fun getTypeModule(typeName: String): ModuleName {
+        //TODO full impl needed
+        return modules.first {
+            (it.complexValueObjects + it.complexCustomTypes + it.propertyValueObjects)
+                .any { it.name == typeName }
+            }.name
     }
 }

@@ -7,12 +7,11 @@ namespace ${moduleName}.CustomTypesMapper {
     export function ${vo.getterName()}(it: ${vo.name}): ${vo.boxedType.name()} {
         //TODO
     }
-    #if($foreach.hasNext)
-
-    #end
     #end
     #foreach($vo in $customTypes.complexList)
+    #if($foreach.count == 1 && $customTypes.simpleList.size() > 0)
 
+    #end
     export function ${vo.createName()}(#foreach($f in $vo.fields)$f.name: $f.type.name()#if($foreach.hasNext), #end#end): ${vo.name} {
         //TODO
     }

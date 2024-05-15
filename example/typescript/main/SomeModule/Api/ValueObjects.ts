@@ -37,3 +37,13 @@ class SomeClass4 {
         public readonly otherClassList: OtherClass[],
     ) {}
 }
+
+class SomeClass5 {
+    constructor(
+        public readonly date: Date,
+        public readonly dateRange: DateRange,
+        public readonly dateRangeWrapper: DateRangeWrapper,
+        public readonly someProperty: SomeProperty,
+        public readonly otherProperty: OtherProperty,
+    ) {}
+}

@@ -46,7 +46,7 @@ class TypeScriptDtoPattern(private val modules: HlaModules) : LanguageDtoPattern
 }
 
 private fun handleReferencing(modules: HlaModules, name: String, base: String, submodule: String): String {
-    val module = modules.getComplexVoModule(name);
+    val module = modules.getTypeModule(name);
     return if (module == modules.current.name) {
         base
     } else {
