@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl.core.fixtures.builders
 import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
+import pl.bratek20.hla.utils.pascalToCamelCase
 
 abstract class DefType<T: ApiType>(
     val api: T
@@ -77,6 +78,14 @@ open class ComplexStructureDefType(
     api: ComplexStructureApiType,
     val fields: List<DefField>
 ) : DefType<ComplexStructureApiType>(api) {
+    fun funName(): String {
+        return pascalToCamelCase(api.name())
+    }
+
+    fun defName(): String {
+        return api.name() + "Def"
+    }
+
     override fun name(): String {
         return pattern.defClassType(api.name());
     }

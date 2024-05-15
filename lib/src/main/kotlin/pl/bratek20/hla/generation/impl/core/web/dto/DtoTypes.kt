@@ -34,7 +34,7 @@ abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<Sim
 
 class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
     override fun toApi(arg: String): String {
-        return languageTypes.classConstructor(api.name) + "($arg)"
+        return languageTypes.classConstructorCall(api.name) + "($arg)"
     }
 
     override fun fromApi(variableName: String): String {

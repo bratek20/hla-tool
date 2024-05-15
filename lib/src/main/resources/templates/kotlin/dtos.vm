@@ -16,7 +16,7 @@ data class ${d.name()}(
     #end
 ) {
     fun toApi(): ${d.api.name()} {
-        return ${d.api.constructorName()}(
+        return ${d.api.constructorCall()}(
             #foreach($field in $d.fields)
             $field.name = $field.toApi(),
             #end

@@ -1,6 +1,6 @@
 #foreach($vo in $valueObjects.simpleList)
 
-class ${vo.name} {
+class ${vo.name()} {
     constructor(
         public readonly value: ${vo.boxedType.name()}
     ) {}
@@ -8,7 +8,7 @@ class ${vo.name} {
 #end
 #foreach($vo in $valueObjects.complexList)
 
-class ${vo.name} {
+class ${vo.name()} {
     constructor(
         #foreach($field in $vo.fields)
         public readonly $field.name: $field.type.name(),

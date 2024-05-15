@@ -1,14 +1,14 @@
 namespace ${moduleName}.Builder {
 #foreach($b in $builders)
-    export interface ${b.defName} {
+    export interface ${b.defName()} {
         #foreach($field in $b.fields)
-        $field.name?: $field.defType.name(),
+        $field.name?: $field.type.name(),
         #end
     }
-    export function ${b.funName}(def?: ${b.defName}): ${b.voName} {
-        return ${b.constructor}(
+    export function ${b.funName()}(def?: ${b.defName()}): ${b.api.name()} {
+        return ${b.api.constructorCall()}(
         #foreach($field in $b.fields)
-            $field.defType.constructor("def?.$field.name ?? $field.defType.defaultValue()"),
+            $field.type.constructor("def?.$field.name ?? $field.type.defaultValue()"),
         #end
         )
     }

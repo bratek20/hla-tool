@@ -37,7 +37,7 @@ class TypeScriptTypes: LanguageTypes {
         return "$finalListName.map($elementName => $mapping)"
     }
 
-    override fun classConstructor(className: String): String {
+    override fun classConstructorCall(className: String): String {
         return "new $className"
     }
 

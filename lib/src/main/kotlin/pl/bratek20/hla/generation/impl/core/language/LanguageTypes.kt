@@ -10,7 +10,7 @@ interface LanguageTypes {
     fun defaultValueForList(): String
     fun mapListElements(listName: String, elementName: String, mapping: String): String
 
-    fun classConstructor(className: String): String
+    fun classConstructorCall(className: String): String
 
     fun assertEquals(given: String, expected: String): String
     fun assertListLength(given: String, expected: String): String

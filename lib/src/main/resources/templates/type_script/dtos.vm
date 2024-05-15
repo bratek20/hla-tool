@@ -6,7 +6,7 @@ namespace ${moduleName}.Web {
         #end
 
         toApi(): ${d.api.name()} {
-            return ${d.api.constructorName()}(
+            return ${d.api.constructorCall()}(
                 #foreach($field in $d.fields)
                 $field.toApi("this"),
                 #end

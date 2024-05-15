@@ -36,7 +36,7 @@ class KotlinTypes: LanguageTypes {
         return "$listName.map { $elementName -> $mapping }"
     }
 
-    override fun classConstructor(className: String): String {
+    override fun classConstructorCall(className: String): String {
         return className
     }
 

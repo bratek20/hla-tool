@@ -28,8 +28,8 @@ abstract class ApiType {
         return this
     }
 
-    open fun constructorName(): String {
-        return languageTypes.classConstructor(name())
+    open fun constructorCall(): String {
+        return languageTypes.classConstructorCall(name())
     }
 }
 
@@ -68,11 +68,11 @@ class SimpleVOApiType(
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.classConstructor(name) + "($arg)"
+        return languageTypes.classConstructorCall(name) + "($arg)"
     }
 
-    override fun constructorName(): String {
-        return languageTypes.classConstructor(name)
+    override fun constructorCall(): String {
+        return languageTypes.classConstructorCall(name)
     }
 }
 
@@ -93,7 +93,7 @@ class SimpleCustomApiType(
         return languageTypes.customTypeConstructorCall(name) + "($arg)"
     }
 
-    override fun constructorName(): String {
+    override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name)
     }
 
@@ -154,7 +154,7 @@ class ComplexCustomApiType(
         return languageTypes.customTypeConstructorCall(name()) + "($arg)"
     }
 
-    override fun constructorName(): String {
+    override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name())
     }
 
