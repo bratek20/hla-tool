@@ -227,6 +227,15 @@ class ModuleDefinitionsParserTest {
         assertModules(modules, listOf {
             propertyValueObjects = listOf(
                 {
+                    name = "SomeProperty"
+                    fields = listOf {
+                        name = "value"
+                        type = {
+                            name = "string"
+                        }
+                    }
+                },
+                {
                     name = "SomeElement"
                     fields = listOf {
                         name = "id"

@@ -9,7 +9,7 @@ import pl.bratek20.hla.facade.api.ModuleName
 import pl.bratek20.hla.parsing.api.ModuleDefinitionsParser
 import java.util.ArrayDeque
 
-class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
+class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     override fun parse(path: Path): List<ModuleDefinition> {
         val directories = DirectoriesLogic()
 
@@ -24,8 +24,7 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         val elements = parseElements(file.content)
         val valueObjects = parseStructures("ValueObjects", elements)
         val interfaces = parseInterfaces(elements)
-        val propertyValueObjects = parsePropertyValueObjects(elements)
-        val propertyMappings = parsePropertyMappings(elements)
+        val properties = parseProperties(elements)
         val enums = parseEnums(elements)
         val customTypes = parseStructures("CustomTypes", elements)
 
@@ -34,8 +33,8 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
             interfaces = interfaces,
-            propertyValueObjects = propertyValueObjects,
-            propertyMappings = propertyMappings,
+            propertyValueObjects = properties.vos,
+            propertyMappings = properties.mappings,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
             complexCustomTypes = customTypes.complex
@@ -57,6 +56,10 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
 
         fun addElement(element: ParsedElement) {
             elements.add(element)
+        }
+
+        fun addElements(elements: List<ParsedElement>) {
+            this.elements.addAll(elements)
         }
     }
 
@@ -87,7 +90,7 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         indent: Int,
         val key: String,
         val value: String
-    ) : ParsedLeaf(indent)
+    ) : ParsedNode(indent)
 
     private fun parseElements(content: FileContent): List<ParsedElement> {
         val initialElements = content.lines
@@ -181,7 +184,7 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
             wrappers = emptyList()
         )
     }
-    private fun parseComplexValueObject(section: Section): ComplexStructureDefinition {
+    private fun parseComplexStructureDefinition(section: Section): ComplexStructureDefinition {
         return ComplexStructureDefinition(
             name = section.name,
             fields = section.elements.filterIsInstance<Assignment>().map {
@@ -228,24 +231,36 @@ class ModuleDefinitionsParserImpl: ModuleDefinitionsParser {
         } ?: emptyList()
     }
 
-    private fun parsePropertyValueObjects(elements: List<ParsedElement>): List<ComplexStructureDefinition> {
-        val propertyVosSection = elements.find { it is Section && it.name == "PropertyValueObjects" } as Section?
-        return parseComplexStructureDefinitions(propertyVosSection)
-    }
+    data class Properties(
+        val vos: List<ComplexStructureDefinition>,
+        val mappings: List<PropertyMapping>
+    )
+    private fun parseProperties(elements: List<ParsedElement>): Properties {
+        val vos: MutableList<ComplexStructureDefinition> = mutableListOf()
+        val mappings: MutableList<PropertyMapping> = mutableListOf()
 
-    private fun parsePropertyMappings(elements: List<ParsedElement>): List<PropertyMapping> {
-        val propertyMappingsSection = elements.find { it is Section && it.name == "Properties" } as Section?
-        return propertyMappingsSection?.elements?.filterIsInstance<ParsedMapping>()?.map {
-            PropertyMapping(
-                key = it.key,
-                type = parseType(it.value),
-            )
-        } ?: emptyList()
+        val propertiesSection = elements.find { it is Section && it.name == "Properties" } as Section?
+        propertiesSection?.elements?.forEach {
+            if(it is Section) {
+                vos.add(parseComplexStructureDefinition(it))
+            } else if(it is ParsedMapping) {
+                mappings.add(PropertyMapping(it.key, parseType(it.value)))
+
+                val voSection = Section(it.indent, parseType(it.value).name)
+                voSection.addElements(it.elements)
+                vos.add(parseComplexStructureDefinition(voSection))
+            }
+        }
+
+        return Properties(
+            vos = vos,
+            mappings = mappings
+        )
     }
 
     private fun parseComplexStructureDefinitions(section: Section?): List<ComplexStructureDefinition> {
         return section?.elements?.filterIsInstance<Section>()?.map {
-            parseComplexValueObject(it)
+            parseComplexStructureDefinition(it)
         } ?: emptyList()
     }
 

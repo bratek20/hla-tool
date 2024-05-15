@@ -1,10 +1,9 @@
-PropertyValueObjects
-    SomeElement
+Properties
+    SomeProperty
+        value: string
+
+    "someElements" -> SomeElement[]
         id: SomeId
 
-    SomeConfig
-        enabled: bool
-
-Properties
-    "someElements" -> SomeElement[]
     "someConfig" -> SomeConfig
+        enabled: bool
