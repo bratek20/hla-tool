@@ -3,14 +3,14 @@ namespace SomeModule.Web {
         range = new TypesModule.Web.DateRangeDto
 
         toApi(): DateRangeWrapper {
-            return SomeModule.CustomTypesMapper.dateRangeWrapperCreate(
+            return CustomTypesMapper.dateRangeWrapperCreate(
                 this.range.toApi(),
             )
         }
 
         static fromApi(api: DateRangeWrapper): DateRangeWrapperDto {
             const dto = new DateRangeWrapperDto()
-            dto.range = TypesModule.Web.DateRangeDto.fromApi(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(api))
+            dto.range = TypesModule.Web.DateRangeDto.fromApi(CustomTypesMapper.dateRangeWrapperGetRange(api))
             return dto
         }
     }
@@ -40,12 +40,12 @@ namespace SomeModule.Web {
         names = [STRING]
         ids = [STRING]
 
-        toApi(dto: SomeClass2Dto): SomeClass2 {
+        toApi(): SomeClass2 {
             return new SomeClass2(
-                new SomeId(dto.id),
-                dto.enabled,
-                dto.names,
-                dto.ids.map(it => new SomeId(it)),
+                new SomeId(this.id),
+                this.enabled,
+                this.names,
+                this.ids.map(it => new SomeId(it)),
             )
         }
 
@@ -64,11 +64,11 @@ namespace SomeModule.Web {
         class2List = [new SomeClass2Dto]
         someEnum = STRING
 
-        toApi(dto: SomeClass3Dto): SomeClass3 {
+        toApi(): SomeClass3 {
             return new SomeClass3(
-                dto.class2Object.toApi(),
-                dto.class2List.map(it => it.toApi()),
-                SomeEnum.fromName(dto.someEnum).get(),
+                this.class2Object.toApi(),
+                this.class2List.map(it => it.toApi()),
+                SomeEnum.fromName(this.someEnum).get(),
             )
         }
 
@@ -87,12 +87,12 @@ namespace SomeModule.Web {
         otherIdList = [STRING]
         otherClassList = [new OtherModule.Web.OtherClassDto]
 
-        static toApi(dto: SomeClass4Dto): SomeClass4 {
+        toApi(): SomeClass4 {
             return new SomeClass4(
-                new OtherId(dto.otherId),
-                dto.otherClass.toApi(),
-                dto.otherIdList.map(it => new OtherId(it)),
-                dto.otherClassList.map(it => it.toApi()),
+                new OtherId(this.otherId),
+                this.otherClass.toApi(),
+                this.otherIdList.map(it => new OtherId(it)),
+                this.otherClassList.map(it => it.toApi()),
             )
         }
 
@@ -113,13 +113,13 @@ namespace SomeModule.Web {
         someProperty = new SomeProperty
         otherProperty = new OtherModule.OtherProperty
 
-        static toApi(dto: SomeClass5Dto): SomeClass5 {
+        toApi(): SomeClass5 {
             return new SomeClass5(
-                TypesModule.CustomTypesMapper.dateCreate(dto.date),
-                dto..toApi(dto.dateRange),
-                DateRangeWrapperDto.toApi(dto.dateRangeWrapper),
-                dto.someProperty,
-                dto.otherProperty,
+                TypesModule.CustomTypesMapper.dateCreate(this.date),
+                this.dateRange.toApi(),
+                this.dateRangeWrapper.toApi(),
+                this.someProperty,
+                this.otherProperty,
             )
         }
 
