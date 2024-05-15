@@ -5,10 +5,7 @@ ValueObjects
         id: OtherId
         amount: int
 
-PropertyValueObjects
-    OtherProperty
-        id: OtherId
-        name: string
-
 Properties
     "otherProperty" -> OtherProperty
+        id: OtherId
+        name: string

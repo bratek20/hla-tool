@@ -5,7 +5,7 @@ CustomTypes
         from: Date
         to: Date
 
-PropertyValueObjects
+Properties
     DateRangeProperty
         from: Date
         to: Date

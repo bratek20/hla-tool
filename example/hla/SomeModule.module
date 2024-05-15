@@ -7,7 +7,7 @@ CustomTypes
     DateRangeWrapper
         range: DateRange
 
-PropertyValueObjects
+Properties
     SomeProperty
         other: OtherProperty
 

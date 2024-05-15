@@ -1,4 +1,4 @@
-PropertyValueObjects
+Properties
     KotlinProperties
         rootPackage: string
 
@@ -6,13 +6,10 @@ PropertyValueObjects
         srcPath: string
         testPath: string
 
-    HlaProperties
+    "properties" -> HlaProperties
         generateWeb: bool
         kotlin: KotlinProperties
         typeScript: TypeScriptProperties
-
-Properties
-    "properties" -> HlaProperties
 
 Enums
     ModuleLanguage
