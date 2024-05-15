@@ -65,12 +65,20 @@ class TypeScriptTypes: LanguageTypes {
         return "$className.create"
     }
 
-    override fun customTypeClassConstructor(className: String): String {
-        return "CustomTypesMapper.${pascalToCamelCase(className)}Create"
+    override fun customTypeConstructorName(className: String): String {
+        return "${pascalToCamelCase(className)}Create"
+    }
+
+    override fun customTypeConstructorCall(className: String): String {
+        return "CustomTypesMapper.${customTypeConstructorName(className)}"
     }
 
     override fun customTypeGetterName(className: String, fieldName: String): String {
-        return "CustomTypesMapper.${pascalToCamelCase(className)}Get${camelToPascalCase(fieldName)}"
+        return "${pascalToCamelCase(className)}Get${camelToPascalCase(fieldName)}"
+    }
+
+    override fun customTypeGetterCall(className: String, fieldName: String): String {
+        return "CustomTypesMapper.${customTypeGetterName(className, fieldName)}"
     }
 }
 

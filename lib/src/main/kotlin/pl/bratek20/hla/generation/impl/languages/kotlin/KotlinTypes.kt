@@ -64,11 +64,19 @@ class KotlinTypes: LanguageTypes {
         return className
     }
 
-    override fun customTypeClassConstructor(className: String): String {
+    override fun customTypeConstructorName(className: String): String {
         return "${pascalToCamelCase(className)}Create"
+    }
+
+    override fun customTypeConstructorCall(className: String): String {
+        return customTypeConstructorName(className)
     }
 
     override fun customTypeGetterName(className: String, fieldName: String): String {
         return "${pascalToCamelCase(className)}Get${camelToPascalCase(fieldName)}"
+    }
+
+    override fun customTypeGetterCall(className: String, fieldName: String): String {
+        return customTypeGetterName(className, fieldName)
     }
 }

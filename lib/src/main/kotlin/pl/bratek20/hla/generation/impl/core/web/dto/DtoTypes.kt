@@ -44,11 +44,11 @@ class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
 
 class SimpleCustomDtoType(api: SimpleCustomApiType): SimpleStructureDtoType(api) {
     override fun toApi(arg: String): String {
-        return languageTypes.customTypeClassConstructor(api.name) + "($arg)"
+        return api.constructor(arg)
     }
 
     override fun fromApi(variableName: String): String {
-        return languageTypes.customTypeGetterName(api.name, "value") + "($variableName)"
+        return languageTypes.customTypeGetterCall(api.name, "value") + "($variableName)"
     }
 }
 
@@ -73,7 +73,7 @@ class DtoField(
     }
 }
 
-abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexStructureApiType): DtoType<ComplexStructureApiType>(api) {
+abstract class ComplexStructureDtoType<T: ComplexStructureApiType>(val fields: List<DtoField>, api: T): DtoType<T>(api) {
     override fun name(): String {
         return pattern.dtoClassType(api.name)
     }
@@ -83,19 +83,19 @@ abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexS
     }
 }
 
-class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType(fields, api) {
+class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType<ComplexVOApiType>(fields, api) {
     override fun fromApi(variableName: String): String {
         return "${this.name()}.fromApi($variableName)"
     }
 }
 
-class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api) {
+class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType<ComplexCustomApiType>(fields, api) {
     override fun fromApi(variableName: String): String {
-        return "XXX"
+        return api.getterCall(variableName)
     }
 }
 
-class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType(fields, api)
+class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType<PropertyApiType>(fields, api)
 
 class ListDtoType(
     private val wrappedType: DtoType<*>,

@@ -5,7 +5,6 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.definitions.impl.isBaseType
 import pl.bratek20.hla.definitions.impl.ofBaseType
-import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -83,7 +82,7 @@ class SimpleCustomApiType(
 ) : SimpleStructureApiType(name, boxedType) {
 
     override fun unboxedAssignment(name: String): String {
-        return "XXX"
+        return "unboxedAssignmentTODO"
     }
 
     override fun unboxedName(): String {
@@ -91,11 +90,11 @@ class SimpleCustomApiType(
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.customTypeClassConstructor(name) + "($arg)"
+        return languageTypes.customTypeConstructorCall(name) + "($arg)"
     }
 
     override fun constructorName(): String {
-        return languageTypes.customTypeClassConstructor(name)
+        return languageTypes.customTypeConstructorCall(name)
     }
 
     fun createName(): String {
@@ -125,7 +124,7 @@ class ComplexCustomApiTypeField(
     private val languageTypes: LanguageTypes
 ) : ApiTypeField(name, type) {
     override fun access(variableName: String): String {
-        return languageTypes.customTypeGetterName(className, name) + "($variableName)"
+        return languageTypes.customTypeGetterCall(className, name) + "($variableName)"
     }
 }
 
@@ -152,11 +151,11 @@ class ComplexCustomApiType(
     fields: List<ApiTypeField>
 ) : ComplexStructureApiType(name, fields) {
     override fun constructor(arg: String): String {
-        return languageTypes.customTypeClassConstructor(name) + "($arg)"
+        return languageTypes.customTypeConstructorCall(name) + "($arg)"
     }
 
     override fun constructorName(): String {
-        return languageTypes.customTypeClassConstructor(name)
+        return languageTypes.customTypeConstructorCall(name)
     }
 
     fun createName(): String {
@@ -164,7 +163,11 @@ class ComplexCustomApiType(
     }
 
     fun getterName(fieldName: String): String {
-        return "${pascalToCamelCase(name)}Get${camelToPascalCase(fieldName)}" //TODO code duplication with language types
+        return languageTypes.customTypeGetterName(name, fieldName)
+    }
+
+    fun getterCall(fieldName: String): String {
+        return languageTypes.customTypeGetterCall(name, fieldName)
     }
 
     override fun accessField(fieldName: String, variableName: String): String {

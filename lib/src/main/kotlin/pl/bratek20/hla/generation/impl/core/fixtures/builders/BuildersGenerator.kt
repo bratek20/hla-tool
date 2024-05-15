@@ -41,7 +41,7 @@ class BuildersGenerator(
                     )
                 },
                 constructor = if (isProperty) language.types().propertyClassConstructor(it.name)
-                    else if (isCustom) language.types().customTypeClassConstructor(it.name)
+                    else if (isCustom) language.types().customTypeConstructorCall(it.name)
                     else language.types().classConstructor(it.name)
             )
         }

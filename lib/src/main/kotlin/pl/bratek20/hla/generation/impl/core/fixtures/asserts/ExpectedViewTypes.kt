@@ -58,13 +58,13 @@ class SimpleVOExpectedType(
 }
 
 class SimpleCustomExpectedType(
-    domain: SimpleCustomApiType,
+    api: SimpleCustomApiType,
     boxedType: BaseExpectedType,
-) : SimpleStructureExpectedType(domain, boxedType) {
+) : SimpleStructureExpectedType(api, boxedType) {
 
     //TODO fix copy paste
     override fun assignment(fieldName: String): String {
-        return languageTypes.customTypeGetterName(domain.name, "value") + "($fieldName)"
+        return languageTypes.customTypeGetterCall(domain.name, "value") + "($fieldName)"
     }
 }
 

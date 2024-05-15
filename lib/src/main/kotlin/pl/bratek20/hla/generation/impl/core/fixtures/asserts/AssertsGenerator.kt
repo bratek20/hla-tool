@@ -24,7 +24,7 @@ data class AssertView(
     //TODO fix copy paste from dto
     fun getter(variableName: String, field: AssertFieldView): String {
         if (type is ComplexCustomExpectedType) {
-            val x = languageTypes.customTypeGetterName(type.name, field.name)
+            val x = languageTypes.customTypeGetterCall(type.name, field.name)
             return field.expectedType.assignment("$x($variableName)")
         }
         return field.expectedType.assignment("$variableName.${field.name}")

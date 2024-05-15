@@ -63,7 +63,7 @@ class SimpleCustomDefViewType(
     boxedType: BaseDefViewType
 ) : SimpleStructureDefViewType(domain, boxedType) {
     override fun constructor(arg: String): String {
-        return types.customTypeClassConstructor(domain.name) + "($arg)"
+        return types.customTypeConstructorCall(domain.name) + "($arg)"
     }
 
 }

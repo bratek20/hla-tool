@@ -13,7 +13,7 @@ class DtosGenerator(
     private val dtoViewTypeFactory: DtoViewTypeFactory = DtoViewTypeFactory(c.language.types(), c.language.dtoPattern())
 ): ModulePartFileGenerator(c) {
 
-    private fun createDtoType(def: ComplexStructureDefinition): ComplexStructureDtoType {
+    private fun createDtoType(def: ComplexStructureDefinition): ComplexStructureDtoType<*> {
         val apiType = apiTypeFactory.create<ComplexStructureApiType>(def)
         return dtoViewTypeFactory.create(apiType) as ComplexStructureDtoType
     }
