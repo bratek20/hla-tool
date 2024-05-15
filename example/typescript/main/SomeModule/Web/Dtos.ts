@@ -1,12 +1,28 @@
 namespace SomeModule.Web {
+    export class DateRangeWrapperDto {
+        range = new TypesModule.Web.DateRangeDto
+
+        toApi(): DateRangeWrapper {
+            return SomeModule.CustomTypesMapper.dateRangeWrapperCreate(
+                this.range.toApi(),
+            )
+        }
+
+        static fromApi(api: DateRangeWrapper): DateRangeWrapperDto {
+            const dto = new DateRangeWrapperDto()
+            dto.range = TypesModule.Web.DateRangeDto.fromApi(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(api))
+            return dto
+        }
+    }
+
     export class SomeClassDto {
         id = STRING
         amount = NUMBER
 
-        static toApi(dto: SomeClassDto): SomeClass {
+        toApi(): SomeClass {
             return new SomeClass(
-                new SomeId(dto.id),
-                dto.amount,
+                new SomeId(this.id),
+                this.amount,
             )
         }
 
@@ -24,7 +40,7 @@ namespace SomeModule.Web {
         names = [STRING]
         ids = [STRING]
 
-        static toApi(dto: SomeClass2Dto): SomeClass2 {
+        toApi(dto: SomeClass2Dto): SomeClass2 {
             return new SomeClass2(
                 new SomeId(dto.id),
                 dto.enabled,
@@ -48,7 +64,7 @@ namespace SomeModule.Web {
         class2List = [new SomeClass2Dto]
         someEnum = STRING
 
-        static toApi(dto: SomeClass3Dto): SomeClass3 {
+        toApi(dto: SomeClass3Dto): SomeClass3 {
             return new SomeClass3(
                 dto.class2Object.toApi(),
                 dto.class2List.map(it => it.toApi()),
@@ -86,6 +102,34 @@ namespace SomeModule.Web {
             dto.otherClass = OtherModule.Web.OtherClassDto.fromApi(api.otherClass)
             dto.otherIdList = api.otherIdList.map(it => it.value)
             dto.otherClassList = api.otherClassList.map(it => OtherModule.Web.OtherClassDto.fromApi(it))
+            return dto
+        }
+    }
+
+    export class SomeClass5Dto {
+        date = STRING
+        dateRange = new TypesModule.Web.DateRangeDto
+        dateRangeWrapper = new DateRangeWrapperDto
+        someProperty = new SomeProperty
+        otherProperty = new OtherModule.OtherProperty
+
+        static toApi(dto: SomeClass5Dto): SomeClass5 {
+            return new SomeClass5(
+                TypesModule.CustomTypesMapper.dateCreate(dto.date),
+                dto..toApi(dto.dateRange),
+                DateRangeWrapperDto.toApi(dto.dateRangeWrapper),
+                dto.someProperty,
+                dto.otherProperty,
+            )
+        }
+
+        static fromApi(api: SomeClass5): SomeClass5Dto {
+            const dto = new SomeClass5Dto()
+            dto.date = TypesModule.CustomTypesMapper.dateGetValue(api.date)
+            dto.dateRange = TypesModule.Web.DateRangeDto.fromApi(api.dateRange)
+            dto.dateRangeWrapper = DateRangeWrapperDto.fromApi(api.dateRangeWrapper)
+            dto.someProperty = api.someProperty
+            dto.otherProperty = api.otherProperty
             return dto
         }
     }

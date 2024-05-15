@@ -50,7 +50,7 @@ class DtosGenerator(
     }
 
     override fun generateFile(): File {
-        val dtos = (module.complexValueObjects + module.complexCustomTypes).map {
+        val dtos = (module.complexCustomTypes + module.complexValueObjects).map {
             DtoView(
                 apiName = it.name,
                 apiConstructor = constructorName(it),

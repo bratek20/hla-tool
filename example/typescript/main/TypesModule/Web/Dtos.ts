@@ -3,10 +3,10 @@ namespace TypesModule.Web {
         from = STRING
         to = STRING
 
-        static toApi(dto: DateRangeDto): DateRange {
+        toApi(): DateRange {
             return CustomTypesMapper.dateRangeCreate(
-                CustomTypesMapper.dateCreate(dto.from),
-                CustomTypesMapper.dateCreate(dto.to),
+                CustomTypesMapper.dateCreate(this.from),
+                CustomTypesMapper.dateCreate(this.to),
             )
         }
 

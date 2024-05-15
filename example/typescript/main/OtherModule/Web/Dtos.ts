@@ -3,10 +3,10 @@ namespace OtherModule.Web {
         id = STRING
         amount = NUMBER
 
-        static toApi(dto: OtherClassDto): OtherClass {
+        toApi(): OtherClass {
             return new OtherClass(
-                new OtherId(dto.id),
-                dto.amount,
+                new OtherId(this.id),
+                this.amount,
             )
         }
 

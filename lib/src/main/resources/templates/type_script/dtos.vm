@@ -5,10 +5,10 @@ namespace ${moduleName}.Web {
         $field.name = $oc.map($field.type.name())
         #end
 
-        static toApi(dto: ${d.dtoName}): ${d.apiName} {
+        toApi(): ${d.apiName} {
             return ${d.apiConstructor}(
                 #foreach($field in $d.fields)
-                $field.type.constructor("dto.$field.name"),
+                $field.type.constructor("this.$field.name"),
                 #end
             )
         }
