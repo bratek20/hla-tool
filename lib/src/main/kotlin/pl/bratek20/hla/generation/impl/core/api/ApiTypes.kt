@@ -125,10 +125,11 @@ class DefaultApiTypeField(
 
 class SimpleCustomApiTypeField(
     name: String,
-    type: SimpleCustomApiType
+    type: SimpleCustomApiType,
+    private val languageTypes: LanguageTypes
 ) : ApiTypeField<SimpleCustomApiType>(name, type) {
     override fun access(variableName: String): String {
-        return "${type.getterName()}($variableName)"
+        return languageTypes.customTypeGetterName(type.name, "value") + "($variableName)"
     }
 }
 
@@ -274,7 +275,7 @@ class ApiTypeFactory(
     private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField<*>> {
         return fields.map {
             when (val type = create(it.type)) {
-                is SimpleCustomApiType -> SimpleCustomApiTypeField(it.name, type)
+                is SimpleCustomApiType -> SimpleCustomApiTypeField(it.name, type, languageTypes)
                 else -> DefaultApiTypeField(it.name, type)
             }
         }
