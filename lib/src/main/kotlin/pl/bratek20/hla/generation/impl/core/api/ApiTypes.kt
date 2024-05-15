@@ -133,6 +133,16 @@ class SimpleCustomApiTypeField(
     }
 }
 
+class ComplexCustomApiTypeField(
+    name: String,
+    type: ComplexCustomApiType,
+    private val languageTypes: LanguageTypes
+) : ApiTypeField<ComplexCustomApiType>(name, type) {
+    override fun access(variableName: String): String {
+        return languageTypes.customTypeGetterName(type.name, name) + "($variableName)"
+    }
+}
+
 open class ComplexStructureApiType(
     val name: String,
     val fields: List<ApiTypeField<*>>
@@ -276,6 +286,7 @@ class ApiTypeFactory(
         return fields.map {
             when (val type = create(it.type)) {
                 is SimpleCustomApiType -> SimpleCustomApiTypeField(it.name, type, languageTypes)
+                is ComplexCustomApiType -> ComplexCustomApiTypeField(it.name, type, languageTypes)
                 else -> DefaultApiTypeField(it.name, type)
             }
         }

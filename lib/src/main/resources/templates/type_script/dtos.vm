@@ -16,7 +16,7 @@ namespace ${moduleName}.Web {
         static fromApi(api: ${d.api.name()}): ${d.name()} {
             const dto = new ${d.name()}()
             #foreach($field in $d.fields)
-            dto.$field.name = $d.fromApi($field, "api")
+            dto.$field.name = $d.fieldFromApi($field, "api")
             #end
             return dto
         }

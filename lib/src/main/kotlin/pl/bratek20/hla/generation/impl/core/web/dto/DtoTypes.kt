@@ -56,14 +56,12 @@ data class DtoField(
 ) {
     val name = api.name
 
-    fun fromApi(variableName: String): String {
-        return type.fromApi(api.access(variableName))
-    }
-
+    // used by velocity
     fun toApi(): String {
         return type.toApi(name)
     }
 
+    // used by velocity
     fun toApi(variable: String): String {
         return type.toApi("$variable.$name")
     }
@@ -78,24 +76,19 @@ abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexS
         return "$arg.toApi()"
     }
 
-    open fun fromApi(field: DtoField, variableName: String): String {
-        return field.fromApi(variableName)
+    open fun fieldFromApi(field: DtoField, variableName: String): String {
+        return field.type.fromApi(field.api.access(variableName))
     }
 }
 
 class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType(fields, api) {
-
     override fun fromApi(variableName: String): String {
         return "${this.name()}.fromApi($variableName)"
     }
 }
 
 class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api) {
-    override fun fromApi(variableName: String): String {
-        return languageTypes.customTypeGetterName(api.name, variableName)
-    }
-
-    override fun fromApi(field: DtoField, variableName: String): String {
+    override fun fieldFromApi(field: DtoField, variableName: String): String {
         return field.api.access(languageTypes.customTypeGetterName(api.name, field.name) + "($variableName)")
     }
 }
