@@ -11,43 +11,22 @@ abstract class DtoType<T: ApiType>(
     lateinit var languageTypes: LanguageTypes
     lateinit var pattern: LanguageDtoPattern
 
-    abstract fun name(): String
-
-    abstract fun constructor(arg: String): String
-
-    open fun assignment(fieldName: String): String {
-        return fieldName
-    }
-}
-
-class BaseDtoType(api: BaseApiType): DtoType<BaseApiType>(api) {
-    override fun name(): String {
+    open fun name(): String {
         return api.name()
     }
 
-    override fun constructor(arg: String): String {
+    open fun toApi(arg: String): String {
         return arg
     }
-}
 
-data class DtoField(
-    val type: DtoType<*>,
-    val api: ApiField
-) {
-    val name = api.name
-
-    fun fromApi(fieldName: String): String {
-        return type.assignment("$fieldName.$name")
-    }
-
-    fun toApi(): String {
-        return type.constructor(name)
-    }
-
-    fun toApi(variable: String): String {
-        return type.constructor("$variable.$name")
+    open fun fromApi(variableName: String): String {
+        return variableName
     }
 }
+
+class BaseDtoType(api: BaseApiType): DtoType<BaseApiType>(api)
+
+
 
 abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<SimpleStructureApiType>(view) {
     override fun name(): String {
@@ -56,22 +35,37 @@ abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<Sim
 }
 
 class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
-    override fun constructor(arg: String): String {
+    override fun toApi(arg: String): String {
         return languageTypes.classConstructor(api.name) + "($arg)"
     }
 
-    override fun assignment(fieldName: String): String {
-        return "$fieldName.value"
+    override fun fromApi(variableName: String): String {
+        return "$variableName.value"
     }
 }
 
 class SimpleCustomDtoType(view: SimpleCustomApiType): SimpleStructureDtoType(view) {
-    override fun constructor(arg: String): String {
+    override fun toApi(arg: String): String {
         return languageTypes.customTypeClassConstructor(api.name) + "($arg)"
     }
+}
 
-    override fun assignment(fieldName: String): String {
-        return languageTypes.customTypeGetterName(api.name, "value") + "($fieldName)"
+data class DtoField(
+    val type: DtoType<*>,
+    val api: ApiTypeField<*>
+) {
+    val name = api.name
+
+    fun fromApi(variableName: String): String {
+        return type.fromApi(api.access(variableName))
+    }
+
+    fun toApi(): String {
+        return type.toApi(name)
+    }
+
+    fun toApi(variable: String): String {
+        return type.toApi("$variable.$name")
     }
 }
 
@@ -80,21 +74,29 @@ abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexS
         return pattern.dtoClassType(api.name)
     }
 
-    override fun constructor(arg: String): String {
+    override fun toApi(arg: String): String {
         return "$arg.toApi()"
+    }
+
+    open fun fromApi(field: DtoField, variableName: String): String {
+        return field.fromApi(variableName)
     }
 }
 
 class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType(fields, api) {
 
-    override fun assignment(fieldName: String): String {
-        return "${this.name()}.fromApi($fieldName)"
+    override fun fromApi(variableName: String): String {
+        return "${this.name()}.fromApi($variableName)"
     }
 }
 
 class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api) {
-    override fun assignment(fieldName: String): String {
-        return languageTypes.customTypeGetterName(api.name, fieldName)
+    override fun fromApi(variableName: String): String {
+        return languageTypes.customTypeGetterName(api.name, variableName)
+    }
+
+    override fun fromApi(field: DtoField, variableName: String): String {
+        return field.api.access(languageTypes.customTypeGetterName(api.name, field.name) + "($variableName)")
     }
 }
 
@@ -108,18 +110,18 @@ class ListDtoType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun constructor(arg: String): String {
+    override fun toApi(arg: String): String {
         if (wrappedType is BaseDtoType) {
             return arg
         }
-        return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
+        return languageTypes.mapListElements(arg, "it", wrappedType.toApi("it"))
     }
 
-    override fun assignment(fieldName: String): String {
+    override fun fromApi(variableName: String): String {
         if (wrappedType is BaseDtoType) {
-            return fieldName
+            return variableName
         }
-        return languageTypes.mapListElements(fieldName, "it", wrappedType.assignment("it"))
+        return languageTypes.mapListElements(variableName, "it", wrappedType.fromApi("it"))
     }
 }
 
@@ -128,12 +130,12 @@ class EnumDtoType(api: EnumApiType): DtoType<EnumApiType>(api) {
         return languageTypes.mapBaseType(BaseType.STRING)
     }
 
-    override fun constructor(arg: String): String {
+    override fun toApi(arg: String): String {
         return languageTypes.enumConstructor(api.name(), arg)
     }
 
-    override fun assignment(fieldName: String): String {
-        return languageTypes.enumGetName(fieldName)
+    override fun fromApi(variableName: String): String {
+        return languageTypes.enumGetName(variableName)
     }
 }
 
@@ -160,7 +162,7 @@ class DtoViewTypeFactory(
         return result
     }
 
-    private fun createFields(fields: List<ApiField>): List<DtoField> {
+    private fun createFields(fields: List<ApiTypeField<*>>): List<DtoField> {
         return fields.map {
             DtoField(
                 type = create(it.type),

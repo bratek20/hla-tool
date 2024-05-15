@@ -83,7 +83,7 @@ class SimpleCustomApiType(
 ) : SimpleStructureApiType(name, boxedType) {
 
     override fun unboxedAssignment(name: String): String {
-        return "$name.value"
+        return "XXX"
     }
 
     override fun unboxedName(): String {
@@ -107,28 +107,52 @@ class SimpleCustomApiType(
     }
 }
 
-data class ApiField(
+abstract class ApiTypeField<T: ApiType>(
     val name: String,
-    val type: ApiType
-)
+    val type: T
+) {
+    abstract fun access(variableName: String): String
+}
+
+class DefaultApiTypeField(
+    name: String,
+    type: ApiType
+): ApiTypeField<ApiType>(name, type) {
+    override fun access(variableName: String): String {
+        return "$variableName.$name"
+    }
+}
+
+class SimpleCustomApiTypeField(
+    name: String,
+    type: SimpleCustomApiType
+) : ApiTypeField<SimpleCustomApiType>(name, type) {
+    override fun access(variableName: String): String {
+        return "${type.getterName()}($variableName)"
+    }
+}
 
 open class ComplexStructureApiType(
     val name: String,
-    val fields: List<ApiField>
+    val fields: List<ApiTypeField<*>>
 ) : ApiType() {
     override fun name(): String {
         return name
+    }
+
+    open fun accessField(fieldName: String, variableName: String): String {
+        return "$variableName.$fieldName"
     }
 }
 
 class ComplexVOApiType(
     name: String,
-    fields: List<ApiField>
+    fields: List<ApiTypeField<*>>
 ) : ComplexStructureApiType(name, fields)
 
 class ComplexCustomApiType(
     name: String,
-    fields: List<ApiField>
+    fields: List<ApiTypeField<*>>
 ) : ComplexStructureApiType(name, fields) {
     override fun constructor(arg: String): String {
         return languageTypes.customTypeClassConstructor(name) + "($arg)"
@@ -145,11 +169,15 @@ class ComplexCustomApiType(
     fun getterName(fieldName: String): String {
         return "${pascalToCamelCase(name)}Get${camelToPascalCase(fieldName)}" //TODO code duplication with language types
     }
+
+    override fun accessField(fieldName: String, variableName: String): String {
+        return getterName(fieldName) + "($variableName)"
+    }
 }
 
 class PropertyApiType(
     name: String,
-    fields: List<ApiField>
+    fields: List<ApiTypeField<*>>
 ) : ComplexStructureApiType(name, fields)
 
 class ListApiType(
@@ -243,9 +271,12 @@ class ApiTypeFactory(
         return result
     }
 
-    private fun createFields(fields: List<FieldDefinition>): List<ApiField> {
+    private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField<*>> {
         return fields.map {
-            ApiField(it.name, create(it.type))
+            when (val type = create(it.type)) {
+                is SimpleCustomApiType -> SimpleCustomApiTypeField(it.name, type)
+                else -> DefaultApiTypeField(it.name, type)
+            }
         }
     }
 }
