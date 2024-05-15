@@ -5,8 +5,6 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.definitions.impl.isBaseType
 import pl.bratek20.hla.definitions.impl.ofBaseType
-import pl.bratek20.hla.generation.impl.core.web.dto.ComplexStructureDtoType
-import pl.bratek20.hla.generation.impl.core.web.dto.DtoField
 import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 
@@ -109,45 +107,31 @@ class SimpleCustomApiType(
     }
 }
 
-abstract class ApiTypeField<T: ApiType>(
-    val name: String,
-    val type: T
-) {
-    abstract fun access(variableName: String): String
-}
 
-class DefaultApiTypeField(
-    name: String,
-    type: ApiType
-): ApiTypeField<ApiType>(name, type) {
-    override fun access(variableName: String): String {
+
+open class ApiTypeField(
+    val name: String,
+    val type: ApiType
+) {
+    open fun access(variableName: String): String {
         return "$variableName.$name"
     }
 }
 
-class SimpleCustomApiTypeField(
-    name: String,
-    type: SimpleCustomApiType,
-    private val languageTypes: LanguageTypes
-) : ApiTypeField<SimpleCustomApiType>(name, type) {
-    override fun access(variableName: String): String {
-        return languageTypes.customTypeGetterName(type.name, "value") + "($variableName)"
-    }
-}
-
 class ComplexCustomApiTypeField(
+    private val className: String,
     name: String,
-    type: ComplexCustomApiType,
+    type: ApiType,
     private val languageTypes: LanguageTypes
-) : ApiTypeField<ComplexCustomApiType>(name, type) {
+) : ApiTypeField(name, type) {
     override fun access(variableName: String): String {
-        return languageTypes.customTypeGetterName(type.name, name) + "($variableName)"
+        return languageTypes.customTypeGetterName(className, name) + "($variableName)"
     }
 }
 
 open class ComplexStructureApiType(
     val name: String,
-    val fields: List<ApiTypeField<*>>
+    val fields: List<ApiTypeField>
 ) : ApiType() {
     override fun name(): String {
         return name
@@ -160,12 +144,12 @@ open class ComplexStructureApiType(
 
 class ComplexVOApiType(
     name: String,
-    fields: List<ApiTypeField<*>>
+    fields: List<ApiTypeField>
 ) : ComplexStructureApiType(name, fields)
 
 class ComplexCustomApiType(
     name: String,
-    fields: List<ApiTypeField<*>>
+    fields: List<ApiTypeField>
 ) : ComplexStructureApiType(name, fields) {
     override fun constructor(arg: String): String {
         return languageTypes.customTypeClassConstructor(name) + "($arg)"
@@ -190,7 +174,7 @@ class ComplexCustomApiType(
 
 class PropertyApiType(
     name: String,
-    fields: List<ApiTypeField<*>>
+    fields: List<ApiTypeField>
 ) : ComplexStructureApiType(name, fields)
 
 class ListApiType(
@@ -263,7 +247,7 @@ class ApiTypeFactory(
             simpleCustomType != null -> SimpleCustomApiType(type.name, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
             complexVO != null -> ComplexVOApiType(type.name, createFields(complexVO.fields))
             propertyVO != null -> PropertyApiType(type.name, createFields(propertyVO.fields))
-            complexCustomType != null -> ComplexCustomApiType(type.name, createFields(complexCustomType.fields))
+            complexCustomType != null -> ComplexCustomApiType(type.name, createComplexCustomTypeFields(type.name, complexCustomType.fields))
             isBaseType -> BaseApiType(ofBaseType(type.name))
             enum != null -> EnumApiType(enum)
             else -> throw IllegalArgumentException("Unknown type: $type")
@@ -284,13 +268,15 @@ class ApiTypeFactory(
         return result
     }
 
-    private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField<*>> {
+    private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField> {
         return fields.map {
-            when (val type = create(it.type)) {
-                is SimpleCustomApiType -> SimpleCustomApiTypeField(it.name, type, languageTypes)
-                is ComplexCustomApiType -> ComplexCustomApiTypeField(it.name, type, languageTypes)
-                else -> DefaultApiTypeField(it.name, type)
-            }
+            ApiTypeField(it.name, create(it.type))
+        }
+    }
+
+    private fun createComplexCustomTypeFields(className: String, fields: List<FieldDefinition>): List<ComplexCustomApiTypeField> {
+        return fields.map {
+            ComplexCustomApiTypeField(className, it.name, create(it.type), languageTypes)
         }
     }
 }

@@ -27,7 +27,7 @@ data class ${d.name()}(
         fun fromApi(api: ${d.api.name()}): ${d.name()} {
             return ${d.name()}(
                 #foreach($field in $d.fields)
-                $field.name = $d.fieldFromApi($field, "api"),
+                $field.name = $field.fromApi("api"),
                 #end
             )
         }

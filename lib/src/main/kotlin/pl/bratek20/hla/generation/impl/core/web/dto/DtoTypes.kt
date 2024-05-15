@@ -54,7 +54,7 @@ class SimpleCustomDtoType(api: SimpleCustomApiType): SimpleStructureDtoType(api)
 
 class DtoField(
     val type: DtoType<*>,
-    val api: ApiTypeField<*>
+    val api: ApiTypeField
 ) {
     val name = api.name
 
@@ -81,14 +81,6 @@ abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexS
     override fun toApi(arg: String): String {
         return "$arg.toApi()"
     }
-
-    override fun fromApi(variableName: String): String {
-        return api.accessField(variableName, "fromApi")
-    }
-
-    fun fieldFromApi(field: DtoField, variableName: String): String {
-        return field.fromApi(field.api.access(variableName))
-    }
 }
 
 class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType(fields, api) {
@@ -97,7 +89,11 @@ class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexSt
     }
 }
 
-class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api)
+class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api) {
+    override fun fromApi(variableName: String): String {
+        return "XXX"
+    }
+}
 
 class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType(fields, api)
 
@@ -161,7 +157,7 @@ class DtoViewTypeFactory(
         return result
     }
 
-    private fun createFields(fields: List<ApiTypeField<*>>): List<DtoField> {
+    private fun createFields(fields: List<ApiTypeField>): List<DtoField> {
         return fields.map {
             DtoField(
                 type = create(it.type),
