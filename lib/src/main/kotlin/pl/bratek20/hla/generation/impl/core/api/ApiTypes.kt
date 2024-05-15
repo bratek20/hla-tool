@@ -1,7 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.definitions.api.*
-import pl.bratek20.hla.generation.impl.core.domain.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.definitions.impl.isBaseType
@@ -198,7 +197,7 @@ data class InterfaceView(
     val methods: List<MethodView>
 )
 
-class ViewTypeFactory(
+class ApiTypeFactory(
     private val modules: HlaModules,
     private val languageTypes: LanguageTypes
 ) {
@@ -232,6 +231,10 @@ class ViewTypeFactory(
         apiType.languageTypes = languageTypes
 
         return apiType
+    }
+
+    inline fun <reified T: ComplexStructureApiType> create(def: ComplexStructureDefinition): T {
+        return create(TypeDefinition(def.name, emptyList())) as T
     }
 
     private fun createBaseApiType(type: BaseType): BaseApiType {

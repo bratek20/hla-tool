@@ -6,7 +6,7 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
 abstract class DtoType<T: ApiType>(
-    val view: T
+    val api: T
 ) {
     lateinit var languageTypes: LanguageTypes
     lateinit var pattern: LanguageDtoPattern
@@ -20,9 +20,9 @@ abstract class DtoType<T: ApiType>(
     }
 }
 
-class BaseDtoType(view: BaseApiType): DtoType<BaseApiType>(view) {
+class BaseDtoType(api: BaseApiType): DtoType<BaseApiType>(api) {
     override fun name(): String {
-        return view.name()
+        return api.name()
     }
 
     override fun constructor(arg: String): String {
@@ -30,15 +30,30 @@ class BaseDtoType(view: BaseApiType): DtoType<BaseApiType>(view) {
     }
 }
 
+data class DtoField(
+    val dtoType: DtoType<*>,
+    val api: ApiField
+) {
+    val name = api.name
+
+    fun fromApi(fieldName: String): String {
+        return dtoType.assignment("$fieldName.$name")
+    }
+
+    fun toApi(fieldName: String): String {
+        return dtoType.constructor(fieldName)
+    }
+}
+
 abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<SimpleStructureApiType>(view) {
     override fun name(): String {
-        return view.boxedType.name()
+        return api.boxedType.name()
     }
 }
 
 class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
     override fun constructor(arg: String): String {
-        return languageTypes.classConstructor(view.name) + "($arg)"
+        return languageTypes.classConstructor(api.name) + "($arg)"
     }
 
     override fun assignment(fieldName: String): String {
@@ -48,17 +63,17 @@ class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
 
 class SimpleCustomDtoType(view: SimpleCustomApiType): SimpleStructureDtoType(view) {
     override fun constructor(arg: String): String {
-        return languageTypes.customTypeClassConstructor(view.name) + "($arg)"
+        return languageTypes.customTypeClassConstructor(api.name) + "($arg)"
     }
 
     override fun assignment(fieldName: String): String {
-        return languageTypes.customTypeGetterName(view.name, "value") + "($fieldName)"
+        return languageTypes.customTypeGetterName(api.name, "value") + "($fieldName)"
     }
 }
 
-abstract class ComplexStructureDtoType(view: ComplexStructureApiType): DtoType<ComplexStructureApiType>(view) {
+abstract class ComplexStructureDtoType(val fields: List<DtoField>, api: ComplexStructureApiType): DtoType<ComplexStructureApiType>(api) {
     override fun name(): String {
-        return pattern.dtoClassType(view.name)
+        return pattern.dtoClassType(api.name)
     }
 
     override fun constructor(arg: String): String {
@@ -66,27 +81,25 @@ abstract class ComplexStructureDtoType(view: ComplexStructureApiType): DtoType<C
     }
 }
 
-class ComplexVODtoType(view: ComplexVOApiType): ComplexStructureDtoType(view) {
+class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType(fields, api) {
 
     override fun assignment(fieldName: String): String {
         return "${this.name()}.fromApi($fieldName)"
     }
 }
 
-class ComplexCustomDtoType(view: ComplexCustomApiType): ComplexStructureDtoType(view) {
+class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType(fields, api) {
     override fun assignment(fieldName: String): String {
-        return languageTypes.customTypeGetterName(view.name, fieldName)
+        return languageTypes.customTypeGetterName(api.name, fieldName)
     }
 }
 
-class PropertyDtoType(
-    view: PropertyApiType
-): ComplexStructureDtoType(view)
+class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType(fields, api)
 
 class ListDtoType(
     private val wrappedType: DtoType<*>,
-    view: ListApiType
-): DtoType<ListApiType>(view) {
+    api: ListApiType
+): DtoType<ListApiType>(api) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
     }
@@ -106,13 +119,13 @@ class ListDtoType(
     }
 }
 
-class EnumDtoType(view: EnumApiType): DtoType<EnumApiType>(view) {
+class EnumDtoType(api: EnumApiType): DtoType<EnumApiType>(api) {
     override fun name(): String {
         return languageTypes.mapBaseType(BaseType.STRING)
     }
 
     override fun constructor(arg: String): String {
-        return languageTypes.enumConstructor(view.name(), arg)
+        return languageTypes.enumConstructor(api.name(), arg)
     }
 
     override fun assignment(fieldName: String): String {
@@ -128,12 +141,12 @@ class DtoViewTypeFactory(
         val result = when (type) {
             is BaseApiType -> BaseDtoType(type)
             is SimpleVOApiType -> SimpleVODtoType(type)
-            is ComplexVOApiType -> ComplexVODtoType(type)
+            is SimpleCustomApiType -> SimpleCustomDtoType(type)
             is ListApiType -> ListDtoType(create(type.wrappedType), type)
             is EnumApiType -> EnumDtoType(type)
-            is PropertyApiType -> PropertyDtoType(type)
-            is SimpleCustomApiType -> SimpleCustomDtoType(type)
-            is ComplexCustomApiType -> ComplexCustomDtoType(type)
+            is PropertyApiType -> PropertyDtoType(createFields(type.fields), type)
+            is ComplexVOApiType -> ComplexVODtoType(createFields(type.fields), type)
+            is ComplexCustomApiType -> ComplexCustomDtoType(createFields(type.fields), type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
@@ -141,5 +154,14 @@ class DtoViewTypeFactory(
         result.pattern = languageDtoPattern
 
         return result
+    }
+
+    private fun createFields(fields: List<ApiField>): List<DtoField> {
+        return fields.map {
+            DtoField(
+                dtoType = create(it.type),
+                api = it
+            )
+        }
     }
 }

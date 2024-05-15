@@ -36,8 +36,8 @@ class BuildersGenerator(
                 fields = it.fields.map {
                     BuilderFieldView(
                         name = it.name,
-                        defType = if (isProperty) defType(viewType(it.type).unboxedType())
-                            else defType(viewType(it.type)),
+                        defType = if (isProperty) defType(apiType(it.type).unboxedType())
+                            else defType(apiType(it.type)),
                     )
                 },
                 constructor = if (isProperty) language.types().propertyClassConstructor(it.name)

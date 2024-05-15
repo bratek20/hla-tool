@@ -39,7 +39,7 @@ class AssertsGenerator(
     //TODO fix copy paste from dto
     private fun myViewType(def: ComplexStructureDefinition): ApiType {
         val type = TypeDefinition(def.name, emptyList())
-        return viewType(type)
+        return apiType(type)
     }
 
     private fun myExpectedViewType(def: ComplexStructureDefinition): ExpectedType {
@@ -59,7 +59,7 @@ class AssertsGenerator(
                 fields = it.fields.map {
                     AssertFieldView(
                         name = it.name,
-                        expectedType = expectedType(viewType(it.type))
+                        expectedType = expectedType(apiType(it.type))
                     )
                 },
                 type = myExpectedViewType(it),

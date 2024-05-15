@@ -10,24 +10,24 @@ import ${import}.web.*
 import ${packageName}.api.*
 #foreach($d in $dtos)
 
-data class ${d.dtoName}(
+data class ${d.name()}(
     #foreach($field in $d.fields)
-    val $field.name: $field.type.name(),
+    val $field.name: $field.dtoType.name(),
     #end
 ) {
-    fun toApi(): ${d.apiName} {
-        return ${d.apiConstructor}(
+    fun toApi(): ${d.api.name()} {
+        return ${d.api.constructorName()}(
             #foreach($field in $d.fields)
-            $field.name = $field.type.constructor($field.name),
+            $field.name = $field.toApi($field.name),
             #end
         )
     }
 
     companion object {
-        fun fromApi(api: ${d.apiName}): ${d.dtoName} {
-            return ${d.dtoName}(
+        fun fromApi(api: ${d.api.name()}): ${d.name()} {
+            return ${d.name()}(
                 #foreach($field in $d.fields)
-                $field.name = $d.getter("api", $field),
+                $field.name = $field.fromApi("api"),
                 #end
             )
         }

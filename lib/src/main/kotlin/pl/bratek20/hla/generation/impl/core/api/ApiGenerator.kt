@@ -65,11 +65,11 @@ class ApiGenerator(
     }
 
     private fun toView(value: SimpleStructureDefinition): SimpleVOApiType {
-        return viewType(TypeDefinition(value.name, emptyList())) as SimpleVOApiType
+        return apiType(TypeDefinition(value.name, emptyList())) as SimpleVOApiType
     }
 
     private fun toView(value: ComplexStructureDefinition): ComplexVOApiType {
-        return viewType(TypeDefinition(value.name, emptyList())) as ComplexVOApiType
+        return apiType(TypeDefinition(value.name, emptyList())) as ComplexVOApiType
     }
 
 
@@ -141,7 +141,7 @@ class ApiGenerator(
         return PropertyValueObjectView(
             name = vo.name,
             fields = vo.fields.map {
-                val typeView = viewType(it.type)
+                val typeView = apiType(it.type)
                 val accessor = if (typeView is SimpleStructureApiType) {
                     "private "
                 } else {
@@ -150,8 +150,8 @@ class ApiGenerator(
                 PropertyFieldView(it.name, accessor, typeView)
            },
             getters = vo.fields
-                .filter { viewType(it.type) is SimpleStructureApiType }
-                .map { GetterView(getterName(it.name), viewType(it.type), it.name) }
+                .filter { apiType(it.type) is SimpleStructureApiType }
+                .map { GetterView(getterName(it.name), apiType(it.type), it.name) }
         )
     }
 
@@ -183,7 +183,7 @@ class ApiGenerator(
     }
 
     private fun toViewType(type: TypeDefinition?): String {
-        return viewType(type).name()
+        return apiType(type).name()
     }
 
     private fun customTypesFile(): File? {
@@ -205,11 +205,11 @@ class ApiGenerator(
     }
 
     private fun toCustomTypeView(value: SimpleStructureDefinition): SimpleCustomApiType {
-        return viewType(TypeDefinition(value.name, emptyList())) as SimpleCustomApiType
+        return apiType(TypeDefinition(value.name, emptyList())) as SimpleCustomApiType
     }
 
     private fun toCustomTypeView(value: ComplexStructureDefinition): ComplexCustomApiType {
-        return viewType(TypeDefinition(value.name, emptyList())) as ComplexCustomApiType
+        return apiType(TypeDefinition(value.name, emptyList())) as ComplexCustomApiType
     }
 
 

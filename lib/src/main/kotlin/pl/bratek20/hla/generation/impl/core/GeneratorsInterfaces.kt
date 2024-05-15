@@ -1,8 +1,9 @@
 package pl.bratek20.hla.generation.impl.core
 
+import pl.bratek20.hla.definitions.api.ComplexStructureDefinition
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.api.ViewTypeFactory
+import pl.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.definitions.api.ModuleDefinition
@@ -25,7 +26,7 @@ interface ContentBuilderExtension{
 
 abstract class ModulePartGenerator(
     private val c: ModuleGenerationContext,
-    private val viewTypeFactory: ViewTypeFactory = ViewTypeFactory(c.domain.modules, c.language.types())
+    protected val apiTypeFactory: ApiTypeFactory = ApiTypeFactory(c.domain.modules, c.language.types())
 ) {
     protected val module
         get() = c.module
@@ -47,7 +48,7 @@ abstract class ModulePartGenerator(
         return builder
     }
 
-    protected fun viewType(type: TypeDefinition?) = viewTypeFactory.create(type)
+    protected fun apiType(type: TypeDefinition?) = apiTypeFactory.create(type)
 }
 
 abstract class ModulePartFileGenerator(c: ModuleGenerationContext)
