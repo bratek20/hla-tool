@@ -1,22 +1,22 @@
 namespace ${moduleName}.Web {
     #foreach($d in $dtos)
-    export class ${d.dtoName} {
+    export class ${d.name()} {
         #foreach($field in $d.fields)
         $field.name = $oc.map($field.type.name())
         #end
 
-        toApi(): ${d.apiName} {
-            return ${d.apiConstructor}(
+        toApi(): ${d.api.name()} {
+            return ${d.api.constructorName()}(
                 #foreach($field in $d.fields)
-                $field.type.constructor("this.$field.name"),
+                $field.toApi("this"),
                 #end
             )
         }
 
-        static fromApi(api: ${d.apiName}): ${d.dtoName} {
-            const dto = new ${d.dtoName}()
+        static fromApi(api: ${d.api.name()}): ${d.name()} {
+            const dto = new ${d.name()}()
             #foreach($field in $d.fields)
-            dto.$field.name = $d.getter("api", $field)
+            dto.$field.name = $field.fromApi("api")
             #end
             return dto
         }

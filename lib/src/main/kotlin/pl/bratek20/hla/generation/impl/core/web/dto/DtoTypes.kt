@@ -31,17 +31,21 @@ class BaseDtoType(api: BaseApiType): DtoType<BaseApiType>(api) {
 }
 
 data class DtoField(
-    val dtoType: DtoType<*>,
+    val type: DtoType<*>,
     val api: ApiField
 ) {
     val name = api.name
 
     fun fromApi(fieldName: String): String {
-        return dtoType.assignment("$fieldName.$name")
+        return type.assignment("$fieldName.$name")
     }
 
-    fun toApi(fieldName: String): String {
-        return dtoType.constructor(fieldName)
+    fun toApi(): String {
+        return type.constructor(name)
+    }
+
+    fun toApi(variable: String): String {
+        return type.constructor("$variable.$name")
     }
 }
 
@@ -159,7 +163,7 @@ class DtoViewTypeFactory(
     private fun createFields(fields: List<ApiField>): List<DtoField> {
         return fields.map {
             DtoField(
-                dtoType = create(it.type),
+                type = create(it.type),
                 api = it
             )
         }
