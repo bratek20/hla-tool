@@ -129,7 +129,7 @@ class ComplexCustomApiTypeField(
 }
 
 open class ComplexStructureApiType(
-    val name: String,
+    private val name: String,
     val fields: List<ApiTypeField>
 ) : ApiType() {
     override fun name(): String {
@@ -151,23 +151,23 @@ class ComplexCustomApiType(
     fields: List<ApiTypeField>
 ) : ComplexStructureApiType(name, fields) {
     override fun constructor(arg: String): String {
-        return languageTypes.customTypeConstructorCall(name) + "($arg)"
+        return languageTypes.customTypeConstructorCall(name()) + "($arg)"
     }
 
     override fun constructorName(): String {
-        return languageTypes.customTypeConstructorCall(name)
+        return languageTypes.customTypeConstructorCall(name())
     }
 
     fun createName(): String {
-        return "${pascalToCamelCase(name)}Create"
+        return "${pascalToCamelCase(name())}Create"
     }
 
     fun getterName(fieldName: String): String {
-        return languageTypes.customTypeGetterName(name, fieldName)
+        return languageTypes.customTypeGetterName(name(), fieldName)
     }
 
     fun getterCall(fieldName: String): String {
-        return languageTypes.customTypeGetterCall(name, fieldName)
+        return languageTypes.customTypeGetterCall(name(), fieldName)
     }
 
     override fun accessField(fieldName: String, variableName: String): String {

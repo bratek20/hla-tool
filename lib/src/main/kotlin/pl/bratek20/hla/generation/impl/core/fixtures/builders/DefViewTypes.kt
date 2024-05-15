@@ -4,14 +4,13 @@ import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
-abstract class DefViewType {
-    protected lateinit var types: LanguageTypes
-    protected lateinit var pattern: LanguageBuildersPattern
+abstract class DefType<T: ApiType>(
+    val api: T
+) {
+    protected val languageTypes: LanguageTypes
+        get() = api.languageTypes
 
-    fun init(languageTypes: LanguageTypes, fixture: LanguageBuildersPattern) {
-        this.types = languageTypes
-        this.pattern = fixture
-    }
+    lateinit var pattern: LanguageBuildersPattern
 
     abstract fun name(): String
 
@@ -20,15 +19,15 @@ abstract class DefViewType {
     abstract fun constructor(arg: String): String
 }
 
-class BaseDefViewType(
-    val domain: BaseApiType,
-) : DefViewType() {
+class BaseDefType(
+    api: BaseApiType,
+) : DefType<BaseApiType>(api) {
     override fun name(): String {
-        return domain.name()
+        return api.name()
     }
 
     override fun defaultValue(): String {
-        return types.defaultValueForBaseType(domain.name)
+        return api.languageTypes.defaultValueForBaseType(api.name)
     }
 
     override fun constructor(arg: String): String {
@@ -36,10 +35,10 @@ class BaseDefViewType(
     }
 }
 
-abstract class SimpleStructureDefViewType(
-    val domain: SimpleStructureApiType,
-    val boxedType: BaseDefViewType
-) : DefViewType() {
+abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
+    api: T,
+    private val boxedType: BaseDefType
+) : DefType<T>(api) {
     override fun name(): String {
         return boxedType.name()
     }
@@ -49,30 +48,37 @@ abstract class SimpleStructureDefViewType(
     }
 }
 
-class SimpleVODefViewType(
-    domain: SimpleVOApiType,
-    boxedType: BaseDefViewType
-) : SimpleStructureDefViewType(domain, boxedType) {
+class SimpleVODefType(
+    api: SimpleVOApiType,
+    boxedType: BaseDefType
+) : SimpleStructureDefType<SimpleVOApiType>(api, boxedType) {
     override fun constructor(arg: String): String {
-        return types.classConstructor(domain.name) + "($arg)"
+        return api.constructor(arg)
     }
 }
 
-class SimpleCustomDefViewType(
-    domain: SimpleCustomApiType,
-    boxedType: BaseDefViewType
-) : SimpleStructureDefViewType(domain, boxedType) {
+class SimpleCustomDefType(
+    api: SimpleCustomApiType,
+    boxedType: BaseDefType
+) : SimpleStructureDefType<SimpleCustomApiType>(api, boxedType) {
     override fun constructor(arg: String): String {
-        return types.customTypeConstructorCall(domain.name) + "($arg)"
+        return api.constructor(arg)
     }
-
 }
 
-open class ComplexStructureDefViewType(
-    val name: String
-) : DefViewType() {
+class DefField(
+    val type: DefType<*>,
+    val api: ApiTypeField
+) {
+    val name = api.name
+}
+
+open class ComplexStructureDefType(
+    api: ComplexStructureApiType,
+    val fields: List<DefField>
+) : DefType<ComplexStructureApiType>(api) {
     override fun name(): String {
-        return pattern.defClassType(name);
+        return pattern.defClassType(api.name());
     }
 
     override fun defaultValue(): String {
@@ -80,50 +86,54 @@ open class ComplexStructureDefViewType(
     }
 
     override fun constructor(arg: String): String {
-        return pattern.complexVoDefConstructor(name, arg)
+        return pattern.complexVoDefConstructor(api.name(), arg)
     }
 }
 
-class ComplexVODefViewType(
-    name: String
-) : ComplexStructureDefViewType(name)
+class ComplexVODefType(
+    api: ComplexStructureApiType,
+    fields: List<DefField>
+) : ComplexStructureDefType(api, fields)
 
-class ComplexCustomDefViewType(
-    name: String
-) : ComplexStructureDefViewType(name)
+class ComplexCustomDefType(
+    api: ComplexStructureApiType,
+    fields: List<DefField>
+) : ComplexStructureDefType(api, fields)
 
-class PropertyVODefViewType(
-    name: String
-) : ComplexStructureDefViewType(name)
+class PropertyVODefType(
+    api: ComplexStructureApiType,
+    fields: List<DefField>
+) : ComplexStructureDefType(api, fields)
 
-data class ListDefViewType(
-    val wrappedType: DefViewType
-) : DefViewType() {
+class ListDefType(
+    api: ListApiType,
+    val wrappedType: DefType<*>
+) : DefType<ListApiType>(api) {
     override fun name(): String {
-        return types.wrapWithList(wrappedType.name())
+        return languageTypes.wrapWithList(wrappedType.name())
     }
 
     override fun defaultValue(): String {
-        return types.defaultValueForList()
+        return languageTypes.defaultValueForList()
     }
 
     override fun constructor(arg: String): String {
-        if (wrappedType is BaseDefViewType) {
+        if (wrappedType is BaseDefType) {
             return arg
         }
-        return types.mapListElements(arg, "it", wrappedType.constructor("it"))
+        return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
     }
 }
 
-data class EnumDefViewType(
-    val view: EnumApiType
-) : DefViewType() {
+class EnumDefType(
+    api: EnumApiType
+) : DefType<EnumApiType>(api) {
     override fun name(): String {
-        return view.name()
+        return api.name()
     }
 
     override fun defaultValue(): String {
-        return view.defaultValue()
+        return api.defaultValue()
     }
 
     override fun constructor(arg: String): String {
@@ -132,23 +142,27 @@ data class EnumDefViewType(
 }
 
 class DefTypeFactory(
-    private val languageTypes: LanguageTypes,
     private val pattern: LanguageBuildersPattern
 ) {
-    fun create(type: ApiType): DefViewType {
+    fun create(type: ApiType): DefType<*> {
         val result = when (type) {
-            is BaseApiType -> BaseDefViewType(type)
-            is SimpleVOApiType -> SimpleVODefViewType(type, create(type.boxedType) as BaseDefViewType)
-            is ComplexVOApiType -> ComplexVODefViewType(type.name)
-            is ListApiType -> ListDefViewType(create(type.wrappedType))
-            is EnumApiType -> EnumDefViewType(type)
-            is SimpleCustomApiType -> SimpleCustomDefViewType(type, create(type.boxedType) as BaseDefViewType)
-            is ComplexCustomApiType -> ComplexCustomDefViewType(type.name)
-            is PropertyApiType -> PropertyVODefViewType(type.name)
+            is BaseApiType -> BaseDefType(type)
+            is SimpleVOApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
+            is ComplexVOApiType -> ComplexVODefType(type, createFields(type.fields))
+            is ListApiType -> ListDefType(type, create(type.wrappedType))
+            is EnumApiType -> EnumDefType(type)
+            is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
+            is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
+            is PropertyApiType -> PropertyVODefType(type, createFields(type.fields))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
-        result.init(languageTypes, pattern)
+        result.pattern = pattern
+
         return result
+    }
+
+    private fun createFields(fields: List<ApiTypeField>): List<DefField> {
+        return fields.map { DefField(create(it.type), it) }
     }
 }

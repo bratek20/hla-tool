@@ -4,7 +4,9 @@ import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 
-abstract class ExpectedType {
+abstract class ExpectedType<T: ApiType>(
+    val api: T
+) {
     lateinit var languageTypes: LanguageTypes
     lateinit var fixture: LanguageAssertsPattern
 
@@ -22,21 +24,21 @@ abstract class ExpectedType {
 }
 
 class BaseExpectedType(
-    val domain: BaseApiType,
-) : ExpectedType() {
+    api: BaseApiType,
+) : ExpectedType<BaseApiType>(api) {
     override fun name(): String {
-        return domain.name()
+        return api.name()
     }
 
     override fun defaultValue(): String {
-        return languageTypes.defaultValueForBaseType(domain.name)
+        return languageTypes.defaultValueForBaseType(api.name)
     }
 }
 
-open class SimpleStructureExpectedType(
-    val domain: SimpleStructureApiType,
+open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
+    api: T,
     val boxedType: BaseExpectedType,
-) : ExpectedType() {
+) : ExpectedType<T>(api) {
     override fun name(): String {
         return boxedType.name()
     }
@@ -47,9 +49,9 @@ open class SimpleStructureExpectedType(
 }
 
 class SimpleVOExpectedType(
-    domain: SimpleVOApiType,
+    api: SimpleVOApiType,
     boxedType: BaseExpectedType,
-) : SimpleStructureExpectedType(domain, boxedType) {
+) : SimpleStructureExpectedType<SimpleVOApiType>(api, boxedType) {
 
     //TODO assignment and assertion duplicate logic?
     override fun assertion(given: String, expected: String): String {
@@ -60,19 +62,25 @@ class SimpleVOExpectedType(
 class SimpleCustomExpectedType(
     api: SimpleCustomApiType,
     boxedType: BaseExpectedType,
-) : SimpleStructureExpectedType(api, boxedType) {
+) : SimpleStructureExpectedType<SimpleCustomApiType>(api, boxedType) {
 
     //TODO fix copy paste
     override fun assignment(fieldName: String): String {
-        return languageTypes.customTypeGetterCall(domain.name, "value") + "($fieldName)"
+        return languageTypes.customTypeGetterCall(api.name, "value") + "($fieldName)"
     }
 }
 
+class ExpectedField(
+    val name: String,
+    val type: ExpectedType<*>
+)
+
 open class ComplexStructureExpectedType(
-    val name: String
-) : ExpectedType() {
+    api: ComplexStructureApiType,
+    val fields: List<ExpectedField>
+) : ExpectedType<ComplexStructureApiType>(api) {
     override fun name(): String {
-        return fixture.expectedClassType(name)
+        return fixture.expectedClassType(api.name())
     }
 
     override fun defaultValue(): String {
@@ -80,26 +88,30 @@ open class ComplexStructureExpectedType(
     }
 
     override fun assertion(given: String, expected: String): String {
-        return fixture.complexVoAssertion(name, given, expected)
+        return fixture.complexVoAssertion(api.name(), given, expected)
     }
 }
 
 class ComplexVOExpectedType(
-    name: String
-) : ComplexStructureExpectedType(name)
+    api: ComplexStructureApiType,
+    fields: List<ExpectedField>
+) : ComplexStructureExpectedType(api, fields)
 
 class ComplexCustomExpectedType(
-    name: String
-) : ComplexStructureExpectedType(name)
+    api: ComplexStructureApiType,
+    fields: List<ExpectedField>
+) : ComplexStructureExpectedType(api, fields)
 
 
 class PropertyExpectedType(
-    name: String,
-) : ComplexStructureExpectedType(name)
+    api: ComplexStructureApiType,
+    fields: List<ExpectedField>
+) : ComplexStructureExpectedType(api, fields)
 
 class ListExpectedType(
-    val wrappedType: ExpectedType,
-) : ExpectedType() {
+    api: ListApiType,
+    val wrappedType: ExpectedType<*>,
+) : ExpectedType<ListApiType>(api) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
     }
@@ -126,14 +138,14 @@ class ListExpectedType(
 }
 
 class ExpectedEnumType(
-    val view: EnumApiType,
-) : ExpectedType() {
+    api: EnumApiType,
+) : ExpectedType<EnumApiType>(api) {
     override fun name(): String {
-        return view.name()
+        return api.name()
     }
 
     override fun defaultValue(): String {
-        return view.defaultValue()
+        return api.defaultValue()
     }
 }
 
@@ -141,16 +153,16 @@ class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
     private val languageFixture: LanguageAssertsPattern,
 ) {
-    fun create(type: ApiType): ExpectedType {
+    fun create(type: ApiType): ExpectedType<*> {
         val result =  when (type) {
             is BaseApiType -> BaseExpectedType(type)
             is SimpleVOApiType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
-            is ComplexVOApiType -> ComplexVOExpectedType(type.name)
-            is ListApiType -> ListExpectedType(create(type.wrappedType))
+            is ComplexVOApiType -> ComplexVOExpectedType(type, createFields(type.fields))
+            is ListApiType -> ListExpectedType(type, create(type.wrappedType))
             is EnumApiType -> ExpectedEnumType(type)
-            is PropertyApiType -> PropertyExpectedType(type.name)
+            is PropertyApiType -> PropertyExpectedType(type, createFields(type.fields))
             is SimpleCustomApiType -> SimpleCustomExpectedType(type, create(type.boxedType) as BaseExpectedType)
-            is ComplexCustomApiType -> ComplexCustomExpectedType(type.name)
+            is ComplexCustomApiType -> ComplexCustomExpectedType(type, createFields(type.fields))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
@@ -158,5 +170,9 @@ class ExpectedTypeFactory(
         result.fixture = languageFixture
 
         return result
+    }
+
+    private fun createFields(fields: List<ApiTypeField>): List<ExpectedField> {
+        return fields.map { ExpectedField(it.name, create(it.type)) }
     }
 }

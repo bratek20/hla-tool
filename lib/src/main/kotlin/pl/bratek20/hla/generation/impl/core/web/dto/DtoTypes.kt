@@ -75,27 +75,35 @@ class DtoField(
 
 abstract class ComplexStructureDtoType<T: ComplexStructureApiType>(val fields: List<DtoField>, api: T): DtoType<T>(api) {
     override fun name(): String {
-        return pattern.dtoClassType(api.name)
+        return pattern.dtoClassType(api.name())
     }
 
     override fun toApi(arg: String): String {
         return "$arg.toApi()"
     }
-}
 
-class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType<ComplexVOApiType>(fields, api) {
     override fun fromApi(variableName: String): String {
         return "${this.name()}.fromApi($variableName)"
     }
 }
 
-class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType<ComplexCustomApiType>(fields, api) {
+class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexStructureDtoType<ComplexVOApiType>(fields, api)
+
+class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType<ComplexCustomApiType>(fields, api)
+
+class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType<PropertyApiType>(fields, api) {
+    override fun name(): String {
+        return api.name()
+    }
+
+    override fun toApi(arg: String): String {
+        return "$arg.toApi()"
+    }
+
     override fun fromApi(variableName: String): String {
-        return api.getterCall(variableName)
+        return "${this.name()}.fromApi($variableName)"
     }
 }
-
-class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType<PropertyApiType>(fields, api)
 
 class ListDtoType(
     private val wrappedType: DtoType<*>,
