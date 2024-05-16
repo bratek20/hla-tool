@@ -10,17 +10,17 @@ import ${import}.fixtures.*
 import ${packageName}.api.*
 #foreach($a in $asserts)
 
-data class ${a.expectedName}(
+data class ${a.expectedName()}(
     #foreach($field in $a.fields)
-    var $field.name: $field.expectedType.name()? = null,
+    var $field.name: $field.type.name()? = null,
     #end
 )
-fun ${a.funName}(given: ${a.givenName}, expectedInit: ${a.expectedName}.() -> Unit) {
-    val expected = ${a.expectedName}().apply(expectedInit)
+fun ${a.funName()}(given: ${a.givenName()}, expectedInit: ${a.expectedName()}.() -> Unit) {
+    val expected = ${a.expectedName()}().apply(expectedInit)
 
     #foreach($field in $a.fields)
     expected.${field.name}?.let {
-        $field.expectedType.assertion($a.getter("given", $field), "it")
+        $field.type.assertion($a.getter("given", $field), "it")
     }
         #if($foreach.hasNext)
 

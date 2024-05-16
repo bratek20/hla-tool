@@ -1,14 +1,14 @@
 namespace ${moduleName}.Assert {
 #foreach($a in $asserts)
-    export interface ${a.expectedName} {
+    export interface ${a.expectedName()} {
     #foreach($field in $a.fields)
-        $field.name?: $field.expectedType.name(),
+        $field.name?: $field.type.name(),
     #end
     }
-    export function ${a.funName}(given: ${a.givenName}, expected: ${a.expectedName}) {
+    export function ${a.funName()}(given: ${a.givenName()}, expected: ${a.expectedName()}) {
         #foreach($field in $a.fields)
         if (expected.${field.name} !== undefined) {
-            $field.expectedType.assertion($a.getter("given", $field), "expected.${field.name}")
+            $field.type.assertion($a.getter("given", $field), "expected.${field.name}")
         }
         #if($foreach.hasNext)
 

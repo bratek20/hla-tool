@@ -10,7 +10,9 @@ abstract class ExpectedType<T: ApiType>(
     lateinit var languageTypes: LanguageTypes
     lateinit var fixture: LanguageAssertsPattern
 
-    abstract fun name(): String
+    open fun name(): String {
+        return api.name()
+    }
 
     abstract fun defaultValue(): String
 
@@ -26,10 +28,6 @@ abstract class ExpectedType<T: ApiType>(
 class BaseExpectedType(
     api: BaseApiType,
 ) : ExpectedType<BaseApiType>(api) {
-    override fun name(): String {
-        return api.name()
-    }
-
     override fun defaultValue(): String {
         return languageTypes.defaultValueForBaseType(api.name)
     }
@@ -37,14 +35,14 @@ class BaseExpectedType(
 
 open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
     api: T,
-    val boxedType: BaseExpectedType,
+    private val boxedType: BaseExpectedType,
 ) : ExpectedType<T>(api) {
-    override fun name(): String {
-        return boxedType.name()
-    }
-
     override fun defaultValue(): String {
         return boxedType.defaultValue()
+    }
+
+    override fun name(): String {
+        return api.serializableName()
     }
 }
 
@@ -90,6 +88,27 @@ open class ComplexStructureExpectedType(
     override fun assertion(given: String, expected: String): String {
         return fixture.complexVoAssertion(api.name(), given, expected)
     }
+
+    fun funName(): String {
+        return fixture.assertFunName(api.name())
+    }
+
+    fun givenName(): String {
+        return api.name()
+    }
+
+    fun expectedName(): String {
+        return "Expected${api.name()}"
+    }
+
+    //TODO refactor
+    fun getter(variableName: String, field: ExpectedField): String {
+        if (api is ComplexCustomApiType) {
+            val x = languageTypes.customTypeGetterName(api.name(), field.name)
+            return field.type.assignment("$x($variableName)")
+        }
+        return field.type.assignment("$variableName.${field.name}")
+    }
 }
 
 class ComplexVOExpectedType(
@@ -110,7 +129,7 @@ class PropertyExpectedType(
 
 class ListExpectedType(
     api: ListApiType,
-    val wrappedType: ExpectedType<*>,
+    private val wrappedType: ExpectedType<*>,
 ) : ExpectedType<ListApiType>(api) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
@@ -140,10 +159,6 @@ class ListExpectedType(
 class ExpectedEnumType(
     api: EnumApiType,
 ) : ExpectedType<EnumApiType>(api) {
-    override fun name(): String {
-        return api.name()
-    }
-
     override fun defaultValue(): String {
         return api.defaultValue()
     }

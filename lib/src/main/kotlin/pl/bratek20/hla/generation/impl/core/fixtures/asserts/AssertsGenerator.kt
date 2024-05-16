@@ -30,14 +30,9 @@ class AssertsGenerator(
     c: ModuleGenerationContext,
     private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.assertsFixture())
 ): ModulePartFileGenerator(c) {
-
-    private fun myExpectedViewType(def: ComplexStructureDefinition): ExpectedType<*> {
-        return expectedTypeFactory.create(apiTypeFactory.create(def))
-    }
-
     override fun generateFile(): File {
         val asserts = (module.complexValueObjects + module.complexCustomTypes).map {
-            myExpectedViewType(it)
+            expectedTypeFactory.create(apiTypeFactory.create(it))
         }
 
         val fileContent = contentBuilder("asserts.vm")
