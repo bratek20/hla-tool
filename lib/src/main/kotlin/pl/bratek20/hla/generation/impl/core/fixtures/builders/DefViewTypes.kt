@@ -17,7 +17,7 @@ abstract class DefType<T: ApiType>(
 
     abstract fun defaultValue(): String
 
-    abstract fun constructor(arg: String): String
+    abstract fun build(variableName: String): String
 }
 
 class BaseDefType(
@@ -31,8 +31,8 @@ class BaseDefType(
         return api.languageTypes.defaultValueForBaseType(api.name)
     }
 
-    override fun constructor(arg: String): String {
-        return arg
+    override fun build(variableName: String): String {
+        return variableName
     }
 }
 
@@ -40,8 +40,8 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseDefType
 ) : DefType<T>(api) {
-    override fun constructor(arg: String): String {
-        return api.constructor(arg)
+    override fun build(variableName: String): String {
+        return api.deserialize(variableName)
     }
 
     override fun name(): String {
@@ -92,8 +92,8 @@ open class ComplexStructureDefType(
         return "{}"
     }
 
-    override fun constructor(arg: String): String {
-        return pattern.complexVoDefConstructor(api.name(), arg)
+    override fun build(variableName: String): String {
+        return pattern.complexVoDefConstructor(api.name(), variableName)
     }
 }
 
@@ -124,11 +124,11 @@ class ListDefType(
         return languageTypes.defaultValueForList()
     }
 
-    override fun constructor(arg: String): String {
+    override fun build(variableName: String): String {
         if (wrappedType is BaseDefType) {
-            return arg
+            return variableName
         }
-        return languageTypes.mapListElements(arg, "it", wrappedType.constructor("it"))
+        return languageTypes.mapListElements(variableName, "it", wrappedType.build("it"))
     }
 }
 
@@ -143,8 +143,8 @@ class EnumDefType(
         return api.defaultValue()
     }
 
-    override fun constructor(arg: String): String {
-        return arg
+    override fun build(variableName: String): String {
+        return variableName
     }
 }
 

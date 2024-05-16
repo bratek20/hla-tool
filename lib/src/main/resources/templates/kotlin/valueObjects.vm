@@ -7,7 +7,7 @@ import ${import}.api.*
 #foreach($vo in $valueObjects.simpleList)
 
 data class ${vo.name()}(
-    val value: ${vo.boxedType.name()}
+    val value: ${vo.serializableName()}
 )
 #end
 #foreach($vo in $valueObjects.complexList)

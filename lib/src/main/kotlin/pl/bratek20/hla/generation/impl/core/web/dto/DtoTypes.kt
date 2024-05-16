@@ -15,8 +15,8 @@ abstract class DtoType<T: ApiType>(
         return api.name()
     }
 
-    open fun toApi(arg: String): String {
-        return arg
+    open fun toApi(variableName: String): String {
+        return variableName
     }
 
     open fun fromApi(variableName: String): String {
@@ -33,8 +33,8 @@ abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<Sim
 }
 
 class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
-    override fun toApi(arg: String): String {
-        return languageTypes.classConstructorCall(api.name) + "($arg)"
+    override fun toApi(variableName: String): String {
+        return languageTypes.classConstructorCall(api.name) + "($variableName)"
     }
 
     override fun fromApi(variableName: String): String {
@@ -43,8 +43,8 @@ class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
 }
 
 class SimpleCustomDtoType(api: SimpleCustomApiType): SimpleStructureDtoType(api) {
-    override fun toApi(arg: String): String {
-        return api.constructor(arg)
+    override fun toApi(variableName: String): String {
+        return api.deserialize(variableName)
     }
 
     override fun fromApi(variableName: String): String {
@@ -64,8 +64,8 @@ class DtoField(
     }
 
     // used by velocity
-    fun toApi(variable: String): String {
-        return type.toApi("$variable.$name")
+    fun toApi(variableName: String): String {
+        return type.toApi("$variableName.$name")
     }
 
     fun fromApi(variableName: String): String {
@@ -78,8 +78,8 @@ abstract class ComplexStructureDtoType<T: ComplexStructureApiType<*>>(val fields
         return pattern.dtoClassType(api.name())
     }
 
-    override fun toApi(arg: String): String {
-        return "$arg.toApi()"
+    override fun toApi(variableName: String): String {
+        return "$variableName.toApi()"
     }
 
     override fun fromApi(variableName: String): String {
@@ -96,8 +96,8 @@ class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStru
         return api.name()
     }
 
-    override fun toApi(arg: String): String {
-        return "$arg.toApi()"
+    override fun toApi(variableName: String): String {
+        return "$variableName.toApi()"
     }
 
     override fun fromApi(variableName: String): String {
@@ -113,11 +113,11 @@ class ListDtoType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun toApi(arg: String): String {
+    override fun toApi(variableName: String): String {
         if (wrappedType is BaseDtoType) {
-            return arg
+            return variableName
         }
-        return languageTypes.mapListElements(arg, "it", wrappedType.toApi("it"))
+        return languageTypes.mapListElements(variableName, "it", wrappedType.toApi("it"))
     }
 
     override fun fromApi(variableName: String): String {
@@ -133,8 +133,8 @@ class EnumDtoType(api: EnumApiType): DtoType<EnumApiType>(api) {
         return languageTypes.mapBaseType(BaseType.STRING)
     }
 
-    override fun toApi(arg: String): String {
-        return languageTypes.enumConstructor(api.name(), arg)
+    override fun toApi(variableName: String): String {
+        return languageTypes.enumConstructor(api.name(), variableName)
     }
 
     override fun fromApi(variableName: String): String {

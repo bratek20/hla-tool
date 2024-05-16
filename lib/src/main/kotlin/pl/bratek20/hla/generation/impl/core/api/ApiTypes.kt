@@ -17,10 +17,6 @@ abstract class ApiType {
         return name()
     }
 
-    open fun constructor(arg: String): String {
-        return arg
-    }
-
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
     }
@@ -46,8 +42,8 @@ open class SimpleStructureApiType(
         return boxedType.name()
     }
 
-    fun unboxedType(): ApiType {
-        return boxedType
+    fun deserialize(variableName: String) : String {
+        return constructorCall() + "($variableName)"
     }
 }
 
@@ -56,13 +52,9 @@ class SimpleVOApiType(
     boxedType: BaseApiType
 ) : SimpleStructureApiType(name, boxedType) {
 
-    fun unboxedAssignment(name: String): String {
-        return "$name.value"
-    }
-
-    override fun constructor(arg: String): String {
-        return languageTypes.classConstructorCall(name) + "($arg)"
-    }
+//    fun unboxedAssignment(name: String): String {
+//        return "$name.value"
+//    }
 
     override fun constructorCall(): String {
         return languageTypes.classConstructorCall(name)
@@ -74,9 +66,9 @@ class SimpleCustomApiType(
     boxedType: BaseApiType
 ) : SimpleStructureApiType(name, boxedType) {
 
-    override fun constructor(arg: String): String {
-        return languageTypes.customTypeConstructorCall(name) + "($arg)"
-    }
+//    override fun constructor(arg: String): String {
+//        return languageTypes.customTypeConstructorCall(name) + "($arg)"
+//    }
 
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name)
@@ -135,9 +127,9 @@ class ComplexCustomApiType(
     name: String,
     fields: List<ApiTypeField>
 ) : ComplexStructureApiType<ApiTypeField>(name, fields) {
-    override fun constructor(arg: String): String {
-        return languageTypes.customTypeConstructorCall(name()) + "($arg)"
-    }
+//    override fun constructor(arg: String): String {
+//        return languageTypes.customTypeConstructorCall(name()) + "($arg)"
+//    }
 
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name())

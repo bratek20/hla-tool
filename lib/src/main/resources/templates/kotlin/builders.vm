@@ -19,7 +19,7 @@ fun ${b.funName()}(init: ${b.defName()}.() -> Unit = {}): ${b.api.name()} {
     val def = ${b.defName()}().apply(init)
     return ${b.api.constructorCall()}(
     #foreach($field in $b.fields)
-        $field.name = $field.type.constructor("def.$field.name"),
+        $field.name = $field.type.build("def.$field.name"),
     #end
     )
 }#if($foreach.hasNext)
