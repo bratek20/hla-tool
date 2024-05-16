@@ -6,7 +6,7 @@ import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 
-class TypeScriptTypes: LanguageTypes {
+class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
     override fun mapBaseType(type: BaseType): String {
         return when (type) {
             BaseType.STRING -> "string"
@@ -71,7 +71,7 @@ class TypeScriptTypes: LanguageTypes {
     }
 
     override fun customTypeConstructorCall(className: String): String {
-        return "CustomTypesMapper.${customTypeConstructorName(className)}"
+        return handleReferencing(modules, className, "CustomTypesMapper.${customTypeConstructorName(className)}")
     }
 
     override fun customTypeGetterName(className: String, fieldName: String): String {
@@ -79,7 +79,7 @@ class TypeScriptTypes: LanguageTypes {
     }
 
     override fun customTypeGetterCall(className: String, fieldName: String): String {
-        return "CustomTypesMapper.${customTypeGetterName(className, fieldName)}"
+        return handleReferencing(modules, className, "CustomTypesMapper.${customTypeGetterName(className, fieldName)}")
     }
 }
 

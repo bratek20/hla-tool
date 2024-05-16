@@ -93,11 +93,11 @@ class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStru
     }
 
     override fun toApi(variableName: String): String {
-        return "$variableName.toApi()"
+        return variableName
     }
 
     override fun fromApi(variableName: String): String {
-        return "${this.name()}.fromApi($variableName)"
+        return variableName
     }
 }
 

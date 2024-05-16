@@ -13,7 +13,7 @@ class TypeScriptSupport(private val c: DomainContext)
     }
 
     override fun types(): LanguageTypes {
-        return TypeScriptTypes()
+        return TypeScriptTypes(c.modules)
     }
 
     override fun structure(): LanguageStructure {
