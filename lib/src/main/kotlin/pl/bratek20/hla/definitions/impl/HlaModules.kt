@@ -86,11 +86,30 @@ class HlaModules(
             .map { it.name }
     }
 
+    //TODO refactor
     fun getTypeModule(typeName: String): ModuleName {
-        //TODO full impl needed
-        return modules.first {
+        val complexResult = modules.firstOrNull {
             (it.complexValueObjects + it.complexCustomTypes + it.propertyValueObjects)
                 .any { it.name == typeName }
-            }.name
+            }?.name
+
+        if (complexResult != null) {
+            return complexResult
+        }
+
+        val simpleResult = modules.firstOrNull {
+            (it.simpleValueObjects + it.simpleCustomTypes)
+                .any { it.name == typeName }
+            }?.name
+        if (simpleResult != null) {
+            return simpleResult
+        }
+
+        val enumResult = modules.firstOrNull { it.enums.any { it.name == typeName } }?.name
+        if (enumResult != null) {
+            return enumResult
+        }
+
+        throw IllegalStateException("Type $typeName not found in any module")
     }
 }

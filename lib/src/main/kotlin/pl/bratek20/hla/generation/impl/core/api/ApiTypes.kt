@@ -32,13 +32,18 @@ class BaseApiType(
     }
 }
 
-abstract class SimpleStructureApiType(
-    val name: String,
-    val boxedType: BaseApiType
+open class StructureApiType(
+    val name: String
 ) : ApiType() {
     override fun name(): String {
         return name
     }
+}
+
+abstract class SimpleStructureApiType(
+    name: String,
+    val boxedType: BaseApiType
+) : StructureApiType(name) {
 
     override fun serializableName(): String {
         return boxedType.name()
@@ -108,12 +113,9 @@ class ComplexCustomApiTypeField(
 }
 
 open class ComplexStructureApiType<T: ApiTypeField>(
-    private val name: String,
+    name: String,
     val fields: List<T>
-) : ApiType() {
-    override fun name(): String {
-        return name
-    }
+) : StructureApiType(name) {
 
     open fun accessField(fieldName: String, variableName: String): String {
         return "$variableName.$fieldName"

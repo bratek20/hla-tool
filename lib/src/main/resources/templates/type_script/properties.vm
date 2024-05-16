@@ -1,35 +1,33 @@
+#if($keys.size() > 0)
 namespace $moduleName {
-    #if($keys.size() > 0)
     #foreach($key in $keys)
     export const $key.name = new PropertyKey("$key.value")
     #end
-
-    #end
-    #foreach($p in $properties)
-    export class ${p.name()} {
-        #foreach($field in $p.fields)
-        $field.accessor()$field.name = $oc.map($field.type.serializableName())
-        #end
-
-        static create(
-            #foreach($field in $p.fields)
-            $field.name: $field.type.serializableName(),
-            #end
-        ): ${p.name()} {
-            const instance = new ${p.name()}()
-            #foreach($field in $p.fields)
-            instance.$field.name = $field.name
-            #end
-            return instance
-        }
-        #foreach($getter in $p.getters())
-
-        ${getter.name}(): ${getter.type.name()} {
-            return ${getter.type.deserialize("this.${getter.field}")}
-        }
-        #end
-    }
-    #if($foreach.hasNext)
-
-    #end#end
 }
+
+#end#foreach($p in $properties)
+class ${p.name()} {
+    #foreach($field in $p.fields)
+    $field.accessor()$field.name = $oc.map($field.type.serializableName())
+    #end
+
+    static create(
+        #foreach($field in $p.fields)
+        $field.name: $field.type.serializableName(),
+        #end
+    ): ${p.name()} {
+        const instance = new ${p.name()}()
+        #foreach($field in $p.fields)
+        instance.$field.name = $field.name
+        #end
+        return instance
+    }
+    #foreach($getter in $p.getters())
+
+    ${getter.name}(): ${getter.type.name()} {
+        return ${getter.type.deserialize("this.${getter.field}")}
+    }
+    #end
+}#if($foreach.hasNext)
+
+#end#end

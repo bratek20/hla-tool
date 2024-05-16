@@ -1,22 +1,22 @@
 namespace OtherModule {
     export const OTHER_PROPERTY_KEY = new PropertyKey("otherProperty")
+}
 
-    export class OtherProperty {
-        private id = STRING
-        name = STRING
+class OtherProperty {
+    private id = STRING
+    name = STRING
 
-        static create(
-            id: string,
-            name: string,
-        ): OtherProperty {
-            const instance = new OtherProperty()
-            instance.id = id
-            instance.name = name
-            return instance
-        }
+    static create(
+        id: string,
+        name: string,
+    ): OtherProperty {
+        const instance = new OtherProperty()
+        instance.id = id
+        instance.name = name
+        return instance
+    }
 
-        getId(): OtherId {
-            return new OtherId(this.id)
-        }
+    getId(): OtherId {
+        return new OtherId(this.id)
     }
 }

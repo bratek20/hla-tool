@@ -111,7 +111,7 @@ namespace SomeModule.Web {
         dateRange = new TypesModule.Web.DateRangeDto
         dateRangeWrapper = new DateRangeWrapperDto
         someProperty = new SomeProperty
-        otherProperty = new OtherModule.OtherProperty
+        otherProperty = new OtherProperty
 
         toApi(): SomeClass5 {
             return new SomeClass5(

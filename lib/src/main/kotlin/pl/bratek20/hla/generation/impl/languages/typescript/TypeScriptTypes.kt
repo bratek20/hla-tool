@@ -2,6 +2,7 @@ package pl.bratek20.hla.generation.impl.languages.typescript
 
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.api.BaseType
+import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 
