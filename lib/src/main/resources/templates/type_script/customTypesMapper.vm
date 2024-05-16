@@ -1,10 +1,10 @@
 namespace ${moduleName}.CustomTypesMapper {
     #foreach($vo in $customTypes.simpleList)
-    export function ${vo.createName()}(value: ${vo.boxedType.name()}): ${vo.name} {
+    export function ${vo.createName()}(value: ${vo.boxedType.name()}): ${vo.name()} {
         //TODO
     }
 
-    export function ${vo.getterName()}(it: ${vo.name}): ${vo.boxedType.name()} {
+    export function ${vo.getterName()}(it: ${vo.name()}): ${vo.boxedType.name()} {
         //TODO
     }
     #end
@@ -12,12 +12,12 @@ namespace ${moduleName}.CustomTypesMapper {
     #if($foreach.count == 1 && $customTypes.simpleList.size() > 0)
 
     #end
-    export function ${vo.createName()}(#foreach($f in $vo.fields)$f.name: $f.type.name()#if($foreach.hasNext), #end#end): ${vo.name} {
+    export function ${vo.createName()}(#foreach($f in $vo.fields)$f.name: $f.type.name()#if($foreach.hasNext), #end#end): ${vo.name()} {
         //TODO
     }
     #foreach($field in $vo.fields)
 
-    export function $vo.getterName(${field.name})(it: ${vo.name}): ${field.type.name()} {
+    export function $vo.getterName(${field.name})(it: ${vo.name()}): ${field.type.name()} {
         //TODO
     }
     #end#end
