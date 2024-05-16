@@ -8,7 +8,7 @@ val $key.name = pl.bratek20.architecture.properties.api.PropertyKey("$key.value"
 #foreach($p in $properties)
 data class ${p.name()}(
     #foreach($field in $p.fields)
-    ${field.accessor()}val $field.name: $field.type.unboxedName(),
+    ${field.accessor()}val $field.name: $field.type.serializableName(),
     #end
 ) {
     #foreach($getter in $p.getters())

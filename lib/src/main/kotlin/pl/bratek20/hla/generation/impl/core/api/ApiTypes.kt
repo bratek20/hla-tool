@@ -13,20 +13,12 @@ abstract class ApiType {
 
     abstract fun name(): String
 
-    open fun constructor(arg: String): String {
-        return arg
-    }
-
-    open fun unboxedName(): String {
+    open fun serializableName(): String {
         return name()
     }
 
-    open fun unboxedAssignment(name: String): String {
-        return name
-    }
-
-    open fun unboxedType(): ApiType {
-        return this
+    open fun constructor(arg: String): String {
+        return arg
     }
 
     open fun constructorCall(): String {
@@ -50,7 +42,11 @@ open class SimpleStructureApiType(
         return name
     }
 
-    override fun unboxedType(): ApiType {
+    override fun serializableName(): String {
+        return boxedType.name()
+    }
+
+    fun unboxedType(): ApiType {
         return boxedType
     }
 }
@@ -60,12 +56,8 @@ class SimpleVOApiType(
     boxedType: BaseApiType
 ) : SimpleStructureApiType(name, boxedType) {
 
-    override fun unboxedAssignment(name: String): String {
+    fun unboxedAssignment(name: String): String {
         return "$name.value"
-    }
-
-    override fun unboxedName(): String {
-        return boxedType.name()
     }
 
     override fun constructor(arg: String): String {
@@ -81,14 +73,6 @@ class SimpleCustomApiType(
     name: String,
     boxedType: BaseApiType
 ) : SimpleStructureApiType(name, boxedType) {
-
-    override fun unboxedAssignment(name: String): String {
-        return "unboxedAssignmentTODO"
-    }
-
-    override fun unboxedName(): String {
-        return boxedType.name()
-    }
 
     override fun constructor(arg: String): String {
         return languageTypes.customTypeConstructorCall(name) + "($arg)"
