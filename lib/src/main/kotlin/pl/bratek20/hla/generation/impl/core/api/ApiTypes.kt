@@ -185,6 +185,10 @@ class PropertyApiType(
     fun getters(): List<PropertyGetter> {
         return fields.mapNotNull { it.getter() }
     }
+
+    override fun constructorCall(): String {
+        return languageTypes.propertyClassConstructor(name())
+    }
 }
 
 class ListApiType(

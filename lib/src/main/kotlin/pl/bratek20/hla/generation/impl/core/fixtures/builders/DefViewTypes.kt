@@ -74,6 +74,10 @@ open class DefField(
     open fun build(variableName: String): String {
         return type.build("${variableName}.${name}")
     }
+
+    open fun build(): String {
+        return type.build(name)
+    }
 }
 
 class PropertyDefField(
@@ -85,6 +89,13 @@ class PropertyDefField(
             return "${variableName}.${name}"
         }
         return super.build(variableName)
+    }
+
+    override fun build(): String {
+        if(type.api is SimpleStructureApiType) {
+            return name
+        }
+        return super.build()
     }
 }
 

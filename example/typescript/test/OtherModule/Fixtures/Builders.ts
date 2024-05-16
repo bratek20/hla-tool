@@ -4,9 +4,12 @@ namespace OtherModule.Builder {
         amount?: number,
     }
     export function otherClass(def?: OtherClassDef): OtherClass {
+        const id = def?.id ?? "someValue"
+        const amount = def?.amount ?? 0
+
         return new OtherClass(
-            new OtherId(def?.id ?? "someValue"),
-            def?.amount ?? 0,
+            new OtherId(id),
+            amount,
         )
     }
 
@@ -15,9 +18,12 @@ namespace OtherModule.Builder {
         name?: string,
     }
     export function otherProperty(def?: OtherPropertyDef): OtherProperty {
+        const id = def?.id ?? "someValue"
+        const name = def?.name ?? "someValue"
+
         return OtherProperty.create(
-            def?.id ?? "someValue",
-            def?.name ?? "someValue",
+            id,
+            name,
         )
     }
 }

@@ -25,7 +25,7 @@ namespace $moduleName {
         #foreach($getter in $p.getters())
 
         ${getter.name}(): ${getter.type.name()} {
-            return ${getter.type.constructor("this.${getter.field}")}
+            return ${getter.type.deserialize("this.${getter.field}")}
         }
         #end
     }
