@@ -5,24 +5,24 @@ namespace $moduleName {
     #end
 
     #end
-    #foreach($vo in $valueObjects)
-    export class ${vo.name} {
-        #foreach($field in $vo.fields)
-        $field.accessor$field.name = $oc.map($field.type.unboxedName())
+    #foreach($p in $properties)
+    export class ${p.name()} {
+        #foreach($field in $p.fields)
+        $field.accessor()$field.name = $oc.map($field.type.unboxedName())
         #end
 
         static create(
-            #foreach($field in $vo.fields)
+            #foreach($field in $p.fields)
             $field.name: $field.type.unboxedName(),
             #end
-        ): ${vo.name} {
-            const instance = new ${vo.name}()
-            #foreach($field in $vo.fields)
+        ): ${p.name()} {
+            const instance = new ${p.name()}()
+            #foreach($field in $p.fields)
             instance.$field.name = $field.name
             #end
             return instance
         }
-        #foreach($getter in $vo.getters)
+        #foreach($getter in $p.getters())
 
         ${getter.name}(): ${getter.type.name()} {
             return ${getter.type.constructor("this.${getter.field}")}

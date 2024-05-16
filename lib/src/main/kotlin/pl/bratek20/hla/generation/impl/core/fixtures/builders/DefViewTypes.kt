@@ -73,9 +73,9 @@ class DefField(
 }
 
 open class ComplexStructureDefType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     val fields: List<DefField>
-) : DefType<ComplexStructureApiType>(api) {
+) : DefType<ComplexStructureApiType<*>>(api) {
     fun funName(): String {
         return pascalToCamelCase(api.name())
     }
@@ -98,17 +98,17 @@ open class ComplexStructureDefType(
 }
 
 class ComplexVODefType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     fields: List<DefField>
 ) : ComplexStructureDefType(api, fields)
 
 class ComplexCustomDefType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     fields: List<DefField>
 ) : ComplexStructureDefType(api, fields)
 
 class PropertyDefType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     fields: List<DefField>
 ) : ComplexStructureDefType(api, fields)
 

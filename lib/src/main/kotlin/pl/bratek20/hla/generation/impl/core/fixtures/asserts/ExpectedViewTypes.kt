@@ -76,9 +76,9 @@ class ExpectedField(
 )
 
 open class ComplexStructureExpectedType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     val fields: List<ExpectedField>
-) : ExpectedType<ComplexStructureApiType>(api) {
+) : ExpectedType<ComplexStructureApiType<*>>(api) {
     override fun name(): String {
         return fixture.expectedClassType(api.name())
     }
@@ -93,18 +93,18 @@ open class ComplexStructureExpectedType(
 }
 
 class ComplexVOExpectedType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     fields: List<ExpectedField>
 ) : ComplexStructureExpectedType(api, fields)
 
 class ComplexCustomExpectedType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     fields: List<ExpectedField>
 ) : ComplexStructureExpectedType(api, fields)
 
 
 class PropertyExpectedType(
-    api: ComplexStructureApiType,
+    api: ComplexStructureApiType<*>,
     fields: List<ExpectedField>
 ) : ComplexStructureExpectedType(api, fields)
 

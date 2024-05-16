@@ -79,7 +79,7 @@ class ApiGenerator(
         }
 
         val fileContent = contentBuilder("valueObjects.vm")
-            .put("valueObjects", ValueObjectsView(
+            .put("valueObjects", ApiValueObjects(
                 simpleList = module.simpleValueObjects.map { toView(it) },
                 complexList = module.complexValueObjects.map { toView(it) }
             ))
@@ -112,8 +112,10 @@ class ApiGenerator(
         }
 
         val fileContent = contentBuilder("properties.vm")
-            .put("valueObjects", module.propertyValueObjects.map { toPropertyVoView(it) })
-            .put("keys", module.propertyMappings.map { toKeyView(it) })
+            .put("properties", module.propertyValueObjects.map {
+                apiTypeFactory.create<PropertyApiType>(it)
+            })
+            .put("keys", module.propertyMappings.map { toApiPropertyKey(it) })
             .build()
 
         return File(
@@ -122,50 +124,13 @@ class ApiGenerator(
         )
     }
 
-    data class GetterView(
-        val name: String,
-        val type: ApiType,
-        val field: String
-    )
-    data class PropertyFieldView(
-        val name: String,
-        val accessor: String,
-        val type: ApiType
-    )
-    data class PropertyValueObjectView(
-        val name: String,
-        val fields: List<PropertyFieldView>,
-        val getters: List<GetterView>
-    )
-    private fun toPropertyVoView(vo: ComplexStructureDefinition): PropertyValueObjectView {
-        return PropertyValueObjectView(
-            name = vo.name,
-            fields = vo.fields.map {
-                val typeView = apiType(it.type)
-                val accessor = if (typeView is SimpleStructureApiType) {
-                    "private "
-                } else {
-                    ""
-                }
-                PropertyFieldView(it.name, accessor, typeView)
-           },
-            getters = vo.fields
-                .filter { apiType(it.type) is SimpleStructureApiType }
-                .map { GetterView(getterName(it.name), apiType(it.type), it.name) }
-        )
-    }
-
-    data class KeyView(
+    data class ApiPropertyKey(
         val name: String,
         val value: String
     )
-    private fun toKeyView(mapping: PropertyMapping): KeyView {
+    private fun toApiPropertyKey(mapping: PropertyMapping): ApiPropertyKey {
         val name = camelToScreamingSnakeCase(mapping.key + "Key")
-        return KeyView(name, mapping.key)
-    }
-
-    private fun getterName(fieldName: String): String {
-        return "get${camelToPascalCase(fieldName)}"
+        return ApiPropertyKey(name, mapping.key)
     }
 
     private fun toView(interf: InterfaceDefinition): InterfaceView {
@@ -219,7 +184,7 @@ class ApiGenerator(
         }
 
         val fileContent = contentBuilder("customTypesMapper.vm")
-            .put("customTypes", CustomTypesView(
+            .put("customTypes", ApiCustomTypes(
                 simpleList = module.simpleCustomTypes.map { toCustomTypeView(it) },
                 complexList = module.complexCustomTypes.map { toCustomTypeView(it) }
             ))

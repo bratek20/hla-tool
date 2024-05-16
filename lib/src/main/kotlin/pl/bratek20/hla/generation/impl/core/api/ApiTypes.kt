@@ -5,6 +5,7 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.definitions.impl.isBaseType
 import pl.bratek20.hla.definitions.impl.ofBaseType
+import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -128,9 +129,9 @@ class ComplexCustomApiTypeField(
     }
 }
 
-open class ComplexStructureApiType(
+open class ComplexStructureApiType<T: ApiTypeField>(
     private val name: String,
-    val fields: List<ApiTypeField>
+    val fields: List<T>
 ) : ApiType() {
     override fun name(): String {
         return name
@@ -144,12 +145,12 @@ open class ComplexStructureApiType(
 class ComplexVOApiType(
     name: String,
     fields: List<ApiTypeField>
-) : ComplexStructureApiType(name, fields)
+) : ComplexStructureApiType<ApiTypeField>(name, fields)
 
 class ComplexCustomApiType(
     name: String,
     fields: List<ApiTypeField>
-) : ComplexStructureApiType(name, fields) {
+) : ComplexStructureApiType<ApiTypeField>(name, fields) {
     override fun constructor(arg: String): String {
         return languageTypes.customTypeConstructorCall(name()) + "($arg)"
     }
@@ -175,10 +176,40 @@ class ComplexCustomApiType(
     }
 }
 
+data class PropertyGetter(
+    val name: String,
+    val type: ApiType,
+    val field: String
+)
+class PropertyApiTypeField(
+    name: String,
+    type: ApiType,
+): ApiTypeField(name, type) {
+    fun accessor(): String {
+        return if(type is SimpleStructureApiType) "private " else ""
+    }
+
+    fun getter(): PropertyGetter? {
+        if(type is SimpleStructureApiType) {
+            return PropertyGetter(getterName(name), type, name)
+        }
+        return null
+    }
+
+    private fun getterName(fieldName: String): String {
+        return "get${camelToPascalCase(fieldName)}"
+    }
+}
+
 class PropertyApiType(
     name: String,
-    fields: List<ApiTypeField>
-) : ComplexStructureApiType(name, fields)
+    fields: List<PropertyApiTypeField>
+) : ComplexStructureApiType<PropertyApiTypeField>(name, fields) {
+    // used by velocity
+    fun getters(): List<PropertyGetter> {
+        return fields.mapNotNull { it.getter() }
+    }
+}
 
 class ListApiType(
     val wrappedType: ApiType,
@@ -200,12 +231,12 @@ class EnumApiType(
     }
 }
 
-data class ValueObjectsView(
+data class ApiValueObjects(
     val simpleList: List<SimpleVOApiType>,
     val complexList: List<ComplexVOApiType>
 )
 
-data class CustomTypesView(
+data class ApiCustomTypes(
     val simpleList: List<SimpleCustomApiType>,
     val complexList: List<ComplexCustomApiType>
 )
@@ -249,7 +280,7 @@ class ApiTypeFactory(
             simpleVO != null -> SimpleVOApiType(type.name, createBaseApiType(ofBaseType(simpleVO.typeName)))
             simpleCustomType != null -> SimpleCustomApiType(type.name, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
             complexVO != null -> ComplexVOApiType(type.name, createFields(complexVO.fields))
-            propertyVO != null -> PropertyApiType(type.name, createFields(propertyVO.fields))
+            propertyVO != null -> PropertyApiType(type.name, createPropertyFields(propertyVO.fields))
             complexCustomType != null -> ComplexCustomApiType(type.name, createComplexCustomTypeFields(type.name, complexCustomType.fields))
             isBaseType -> BaseApiType(ofBaseType(type.name))
             enum != null -> EnumApiType(enum)
@@ -261,7 +292,7 @@ class ApiTypeFactory(
         return apiType
     }
 
-    inline fun <reified T: ComplexStructureApiType> create(def: ComplexStructureDefinition): T {
+    inline fun <reified T: ComplexStructureApiType<*>> create(def: ComplexStructureDefinition): T {
         return create(TypeDefinition(def.name, emptyList())) as T
     }
 
@@ -274,6 +305,12 @@ class ApiTypeFactory(
     private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField> {
         return fields.map {
             ApiTypeField(it.name, create(it.type))
+        }
+    }
+
+    private fun createPropertyFields(fields: List<FieldDefinition>): List<PropertyApiTypeField> {
+        return fields.map {
+            PropertyApiTypeField(it.name, create(it.type))
         }
     }
 

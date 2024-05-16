@@ -5,13 +5,13 @@ package ${packageName}.api
 val $key.name = pl.bratek20.architecture.properties.api.PropertyKey("$key.value")
 #end#end
 
-#foreach($vo in $valueObjects)
-data class ${vo.name}(
-    #foreach($field in $vo.fields)
-    ${field.accessor}val $field.name: $field.type.unboxedName(),
+#foreach($p in $properties)
+data class ${p.name()}(
+    #foreach($field in $p.fields)
+    ${field.accessor()}val $field.name: $field.type.unboxedName(),
     #end
 ) {
-    #foreach($getter in $vo.getters)
+    #foreach($getter in $p.getters())
     fun ${getter.name}(): ${getter.type.name()} {
         return ${getter.type.constructor("this.${getter.field}")}
     }

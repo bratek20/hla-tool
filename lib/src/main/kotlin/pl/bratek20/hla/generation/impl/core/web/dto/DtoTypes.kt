@@ -73,7 +73,7 @@ class DtoField(
     }
 }
 
-abstract class ComplexStructureDtoType<T: ComplexStructureApiType>(val fields: List<DtoField>, api: T): DtoType<T>(api) {
+abstract class ComplexStructureDtoType<T: ComplexStructureApiType<*>>(val fields: List<DtoField>, api: T): DtoType<T>(api) {
     override fun name(): String {
         return pattern.dtoClassType(api.name())
     }
