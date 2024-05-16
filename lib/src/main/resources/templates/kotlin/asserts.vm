@@ -20,7 +20,7 @@ fun ${a.funName()}(given: ${a.givenName()}, expectedInit: ${a.expectedName()}.()
 
     #foreach($field in $a.fields)
     expected.${field.name}?.let {
-        $field.type.assertion($a.getter("given", $field), "it")
+        $field.assertion("given", "it")
     }
         #if($foreach.hasNext)
 

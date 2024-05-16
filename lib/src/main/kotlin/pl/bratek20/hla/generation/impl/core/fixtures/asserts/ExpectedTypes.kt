@@ -16,12 +16,8 @@ abstract class ExpectedType<T: ApiType>(
 
     abstract fun defaultValue(): String
 
-    open fun assertion(given: String, expected: String): String {
-        return languageTypes.assertEquals(given, expected)
-    }
-
-    open fun assignment(fieldName: String): String {
-        return fieldName
+    open fun assertion(givenVariable: String, expectedVariable: String): String {
+        return languageTypes.assertEquals(givenVariable, expectedVariable)
     }
 }
 
@@ -44,38 +40,37 @@ open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
     override fun name(): String {
         return api.serializableName()
     }
+
+    override fun assertion(givenVariable: String, expectedVariable: String): String {
+        return languageTypes.assertEquals(api.unbox(givenVariable), expectedVariable)
+    }
 }
 
 class SimpleVOExpectedType(
     api: SimpleVOApiType,
     boxedType: BaseExpectedType,
-) : SimpleStructureExpectedType<SimpleVOApiType>(api, boxedType) {
-
-    //TODO assignment and assertion duplicate logic?
-    override fun assertion(given: String, expected: String): String {
-        return languageTypes.assertEquals("${given}.value", expected)
-    }
-}
+) : SimpleStructureExpectedType<SimpleVOApiType>(api, boxedType)
 
 class SimpleCustomExpectedType(
     api: SimpleCustomApiType,
     boxedType: BaseExpectedType,
-) : SimpleStructureExpectedType<SimpleCustomApiType>(api, boxedType) {
+) : SimpleStructureExpectedType<SimpleCustomApiType>(api, boxedType)
 
-    //TODO fix copy paste
-    override fun assignment(fieldName: String): String {
-        return languageTypes.customTypeGetterCall(api.name, "value") + "($fieldName)"
+class ExpectedTypeField(
+    val api: ApiTypeField,
+    val type: ExpectedType<*>
+) {
+    val name = api.name
+
+    // used by velocity
+    fun assertion(givenVariable: String, expectedVariable: String): String {
+        return type.assertion(api.access(givenVariable), expectedVariable)
     }
 }
 
-class ExpectedField(
-    val name: String,
-    val type: ExpectedType<*>
-)
-
 open class ComplexStructureExpectedType(
     api: ComplexStructureApiType<*>,
-    val fields: List<ExpectedField>
+    val fields: List<ExpectedTypeField>
 ) : ExpectedType<ComplexStructureApiType<*>>(api) {
     override fun name(): String {
         return fixture.expectedClassType(api.name())
@@ -85,46 +80,40 @@ open class ComplexStructureExpectedType(
         return "{}"
     }
 
-    override fun assertion(given: String, expected: String): String {
-        return fixture.complexVoAssertion(api.name(), given, expected)
+    override fun assertion(givenVariable: String, expectedVariable: String): String {
+        return fixture.complexVoAssertion(api.name(), givenVariable, expectedVariable)
     }
 
+    // used by velocity
     fun funName(): String {
         return fixture.assertFunName(api.name())
     }
 
+    // used by velocity
     fun givenName(): String {
         return api.name()
     }
 
+    // used by velocity
     fun expectedName(): String {
         return "Expected${api.name()}"
-    }
-
-    //TODO refactor
-    fun getter(variableName: String, field: ExpectedField): String {
-        if (api is ComplexCustomApiType) {
-            val x = languageTypes.customTypeGetterName(api.name(), field.name)
-            return field.type.assignment("$x($variableName)")
-        }
-        return field.type.assignment("$variableName.${field.name}")
     }
 }
 
 class ComplexVOExpectedType(
     api: ComplexStructureApiType<*>,
-    fields: List<ExpectedField>
+    fields: List<ExpectedTypeField>
 ) : ComplexStructureExpectedType(api, fields)
 
 class ComplexCustomExpectedType(
     api: ComplexStructureApiType<*>,
-    fields: List<ExpectedField>
+    fields: List<ExpectedTypeField>
 ) : ComplexStructureExpectedType(api, fields)
 
 
 class PropertyExpectedType(
     api: ComplexStructureApiType<*>,
-    fields: List<ExpectedField>
+    fields: List<ExpectedTypeField>
 ) : ComplexStructureExpectedType(api, fields)
 
 class ListExpectedType(
@@ -139,18 +128,18 @@ class ListExpectedType(
         return languageTypes.defaultValueForList()
     }
 
-    override fun assertion(given: String, expected: String): String {
+    override fun assertion(givenVariable: String, expectedVariable: String): String {
         val entriesAssertion = languageTypes.listIndexedIteration(
-            given,
+            givenVariable,
             "idx",
             "entry",
-            wrappedType.assertion("entry", "$expected[idx]")
+            wrappedType.assertion("entry", "$expectedVariable[idx]")
         )
 
         val indention = " ".repeat(fixture.indentionForAssertListElements())
 
         return """
-        |${languageTypes.assertListLength(given, expected)}
+        |${languageTypes.assertListLength(givenVariable, expectedVariable)}
         |$indention$entriesAssertion
         """.trimMargin()
     }
@@ -187,7 +176,7 @@ class ExpectedTypeFactory(
         return result
     }
 
-    private fun createFields(fields: List<ApiTypeField>): List<ExpectedField> {
-        return fields.map { ExpectedField(it.name, create(it.type)) }
+    private fun createFields(fields: List<ApiTypeField>): List<ExpectedTypeField> {
+        return fields.map { ExpectedTypeField(it, create(it.type)) }
     }
 }

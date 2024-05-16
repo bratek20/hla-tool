@@ -8,7 +8,7 @@ namespace ${moduleName}.Assert {
     export function ${a.funName()}(given: ${a.givenName()}, expected: ${a.expectedName()}) {
         #foreach($field in $a.fields)
         if (expected.${field.name} !== undefined) {
-            $field.type.assertion($a.getter("given", $field), "expected.${field.name}")
+            $field.assertion("given", "expected.${field.name}")
         }
         #if($foreach.hasNext)
 

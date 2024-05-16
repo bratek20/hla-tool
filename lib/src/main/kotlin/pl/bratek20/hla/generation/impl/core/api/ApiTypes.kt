@@ -17,6 +17,8 @@ abstract class ApiType {
         return name()
     }
 
+
+    //TODO move up
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
     }
@@ -30,7 +32,7 @@ class BaseApiType(
     }
 }
 
-open class SimpleStructureApiType(
+abstract class SimpleStructureApiType(
     val name: String,
     val boxedType: BaseApiType
 ) : ApiType() {
@@ -45,19 +47,20 @@ open class SimpleStructureApiType(
     fun deserialize(variableName: String) : String {
         return constructorCall() + "($variableName)"
     }
+
+    abstract fun unbox(variableName: String): String;
 }
 
 class SimpleVOApiType(
     name: String,
     boxedType: BaseApiType
 ) : SimpleStructureApiType(name, boxedType) {
-
-//    fun unboxedAssignment(name: String): String {
-//        return "$name.value"
-//    }
-
     override fun constructorCall(): String {
         return languageTypes.classConstructorCall(name)
+    }
+
+    override fun unbox(variableName: String): String {
+        return "$variableName.value"
     }
 }
 
@@ -65,25 +68,24 @@ class SimpleCustomApiType(
     name: String,
     boxedType: BaseApiType
 ) : SimpleStructureApiType(name, boxedType) {
-
-//    override fun constructor(arg: String): String {
-//        return languageTypes.customTypeConstructorCall(name) + "($arg)"
-//    }
+    override fun unbox(variableName: String): String {
+        return languageTypes.customTypeGetterCall(name, "value") + "($variableName)"
+    }
 
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name)
     }
 
+    // used by velocity
     fun createName(): String {
-        return "${pascalToCamelCase(name)}Create"
+        return "${pascalToCamelCase(name)}Create"    //TODO duplicated logic
     }
 
+    // used by velocity
     fun getterName(): String {
-        return "${pascalToCamelCase(name)}GetValue"
+        return "${pascalToCamelCase(name)}GetValue"    //TODO duplicated logic
     }
 }
-
-
 
 open class ApiTypeField(
     val name: String,
@@ -127,10 +129,6 @@ class ComplexCustomApiType(
     name: String,
     fields: List<ApiTypeField>
 ) : ComplexStructureApiType<ApiTypeField>(name, fields) {
-//    override fun constructor(arg: String): String {
-//        return languageTypes.customTypeConstructorCall(name()) + "($arg)"
-//    }
-
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name())
     }
@@ -139,6 +137,7 @@ class ComplexCustomApiType(
         return "${pascalToCamelCase(name())}Create"
     }
 
+    // used by velocity
     fun getterName(fieldName: String): String {
         return languageTypes.customTypeGetterName(name(), fieldName)
     }

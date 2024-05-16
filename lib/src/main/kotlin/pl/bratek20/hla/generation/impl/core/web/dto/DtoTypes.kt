@@ -30,25 +30,21 @@ abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<Sim
     override fun name(): String {
         return api.boxedType.name()
     }
+
+    override fun fromApi(variableName: String): String {
+        return api.unbox(variableName)
+    }
 }
 
 class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
     override fun toApi(variableName: String): String {
         return languageTypes.classConstructorCall(api.name) + "($variableName)"
     }
-
-    override fun fromApi(variableName: String): String {
-        return "$variableName.value"
-    }
 }
 
 class SimpleCustomDtoType(api: SimpleCustomApiType): SimpleStructureDtoType(api) {
     override fun toApi(variableName: String): String {
         return api.deserialize(variableName)
-    }
-
-    override fun fromApi(variableName: String): String {
-        return languageTypes.customTypeGetterCall(api.name, "value") + "($variableName)"
     }
 }
 

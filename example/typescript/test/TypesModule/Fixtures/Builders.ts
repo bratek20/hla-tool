@@ -4,9 +4,12 @@ namespace TypesModule.Builder {
         to?: string,
     }
     export function dateRange(def?: DateRangeDef): DateRange {
+        const from = def?.from ?? "someValue"
+        const to = def?.to ?? "someValue"
+
         return CustomTypesMapper.dateRangeCreate(
-            CustomTypesMapper.dateCreate(def?.from ?? "someValue"),
-            CustomTypesMapper.dateCreate(def?.to ?? "someValue"),
+            CustomTypesMapper.dateCreate(from),
+            CustomTypesMapper.dateCreate(to),
         )
     }
 
@@ -15,9 +18,12 @@ namespace TypesModule.Builder {
         to?: string,
     }
     export function dateRangeProperty(def?: DateRangePropertyDef): DateRangeProperty {
+        const from = def?.from ?? "someValue"
+        const to = def?.to ?? "someValue"
+
         return DateRangeProperty.create(
-            def?.from ?? "someValue",
-            def?.to ?? "someValue",
+            from,
+            to,
         )
     }
 }
