@@ -1,18 +1,4 @@
 namespace OtherModule.Builder {
-    export interface OtherClassDef {
-        id?: string,
-        amount?: number,
-    }
-    export function otherClass(def?: OtherClassDef): OtherClass {
-        const id = def?.id ?? "someValue"
-        const amount = def?.amount ?? 0
-
-        return new OtherClass(
-            new OtherId(id),
-            amount,
-        )
-    }
-
     export interface OtherPropertyDef {
         id?: string,
         name?: string,
@@ -24,6 +10,20 @@ namespace OtherModule.Builder {
         return OtherProperty.create(
             id,
             name,
+        )
+    }
+
+    export interface OtherClassDef {
+        id?: string,
+        amount?: number,
+    }
+    export function otherClass(def?: OtherClassDef): OtherClass {
+        const id = def?.id ?? "someValue"
+        const amount = def?.amount ?? 0
+
+        return new OtherClass(
+            new OtherId(id),
+            amount,
         )
     }
 }

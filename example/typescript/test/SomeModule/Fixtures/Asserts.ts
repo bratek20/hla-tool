@@ -1,4 +1,13 @@
 namespace SomeModule.Assert {
+    export interface ExpectedDateRangeWrapper {
+        range?: TypesModule.Assert.ExpectedDateRange,
+    }
+    export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
+        if (expected.range !== undefined) {
+            TypesModule.Assert.dateRange(CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range)
+        }
+    }
+
     export interface ExpectedSomeClass {
         id?: string,
         amount?: number,
@@ -82,6 +91,35 @@ namespace SomeModule.Assert {
         if (expected.otherClassList !== undefined) {
             AssertEquals(given.otherClassList.length, expected.otherClassList.length)
             given.otherClassList.forEach((entry, idx) => OtherModule.Assert.otherClass(entry, expected.otherClassList[idx]))
+        }
+    }
+
+    export interface ExpectedSomeClass5 {
+        date?: string,
+        dateRange?: TypesModule.Assert.ExpectedDateRange,
+        dateRangeWrapper?: ExpectedDateRangeWrapper,
+        someProperty?: ExpectedSomeProperty,
+        otherProperty?: OtherModule.Assert.ExpectedOtherProperty,
+    }
+    export function someClass5(given: SomeClass5, expected: ExpectedSomeClass5) {
+        if (expected.date !== undefined) {
+            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(given.date), expected.date)
+        }
+
+        if (expected.dateRange !== undefined) {
+            TypesModule.Assert.dateRange(given.dateRange, expected.dateRange)
+        }
+
+        if (expected.dateRangeWrapper !== undefined) {
+            dateRangeWrapper(given.dateRangeWrapper, expected.dateRangeWrapper)
+        }
+
+        if (expected.someProperty !== undefined) {
+            someProperty(given.someProperty, expected.someProperty)
+        }
+
+        if (expected.otherProperty !== undefined) {
+            OtherModule.Assert.otherProperty(given.otherProperty, expected.otherProperty)
         }
     }
 }

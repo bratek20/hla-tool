@@ -31,7 +31,7 @@ class AssertsGenerator(
     private val expectedTypeFactory: ExpectedTypeFactory = ExpectedTypeFactory(c.language.types(), c.language.assertsFixture())
 ): ModulePartFileGenerator(c) {
     override fun generateFile(): File {
-        val asserts = (module.complexValueObjects + module.complexCustomTypes).map {
+        val asserts = (module.complexCustomTypes + module.propertyValueObjects + module.complexValueObjects).map {
             expectedTypeFactory.create(apiTypeFactory.create(it))
         }
 

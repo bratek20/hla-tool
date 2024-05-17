@@ -28,7 +28,7 @@ class BuildersGenerator(
 ): ModulePartFileGenerator(c) {
 
     override fun generateFile(): File {
-        val builders = (module.complexValueObjects + module.complexCustomTypes + module.propertyValueObjects).map {
+        val builders = (module.complexCustomTypes + module.propertyValueObjects + module.complexValueObjects).map {
             defTypeFactory.create(apiTypeFactory.create(it))
         }
 
