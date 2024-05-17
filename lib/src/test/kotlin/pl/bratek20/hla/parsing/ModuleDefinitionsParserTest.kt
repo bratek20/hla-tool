@@ -303,5 +303,18 @@ class ModuleDefinitionsParserTest {
         })
     }
 
-    //TODO bug when simple VO is after complex VO
+    @Test
+    fun `should parse module with comments`() {
+        val modules = parse("comments")
+
+        assertModules(modules, listOf {
+            name = "SomeModule"
+            simpleValueObjects = listOf {
+                name = "SomeId"
+                typeName = "string"
+            }
+        })
+    }
+
+        //TODO bug when simple VO is after complex VO
 }

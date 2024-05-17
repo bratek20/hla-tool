@@ -22,7 +22,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     private fun parseModuleFile(file: File): ModuleDefinition {
         val moduleName = ModuleName(file.name.split(".module").get(0))
         val elements = parseElements(file.content)
-        val valueObjects = parseStructures("ValueObjects", elements)
+        val namedTypes = parseSimpleStructureDefinitions("NamedTypes", elements)
+        val complexValueObjects = parseComplexStructureDefinitions("ValueObjects", elements)
         val interfaces = parseInterfaces(elements)
         val properties = parseProperties(elements)
         val enums = parseEnums(elements)
@@ -30,8 +31,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
         return ModuleDefinition(
             name = moduleName,
-            simpleValueObjects = valueObjects.simple,
-            complexValueObjects = valueObjects.complex,
+            simpleValueObjects = namedTypes,
+            complexValueObjects = complexValueObjects,
             interfaces = interfaces,
             propertyValueObjects = properties.vos,
             propertyMappings = properties.mappings,
@@ -92,8 +93,13 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val value: String
     ) : ParsedNode(indent)
 
+    private fun removeComments(line: String): String {
+        return line.substringBefore("//")
+    }
+
     private fun parseElements(content: FileContent): List<ParsedElement> {
         val initialElements = content.lines
+            .map { removeComments(it) }
             .filter { it.isNotBlank() }
             .map { parseElement(it) }
 
@@ -156,20 +162,28 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val complex: List<ComplexStructureDefinition>
     )
     private fun parseStructures(sectionName: String, elements: List<ParsedElement>): Structures {
-        val voSection = elements.find { it is Section && it.name == sectionName } as Section?
-        val simple = voSection?.elements?.filterIsInstance<Assignment>()?.map {
-            SimpleStructureDefinition(
-                name = it.name,
-                typeName = it.value
-            )
-        } ?: emptyList()
-
-        val complex = parseComplexStructureDefinitions(voSection)
+        val simple = parseSimpleStructureDefinitions(sectionName, elements)
+        val complex = parseComplexStructureDefinitions(sectionName, elements)
 
         return Structures(
             simple = simple,
             complex = complex
         )
+    }
+
+    private fun parseSimpleStructureDefinitions(sectionName: String, elements: List<ParsedElement>): List<SimpleStructureDefinition> {
+        val voSection = elements.find { it is Section && it.name == sectionName } as Section?
+        return voSection?.elements?.filterIsInstance<Assignment>()?.map {
+            SimpleStructureDefinition(
+                name = it.name,
+                typeName = it.value
+            )
+        } ?: emptyList()
+    }
+
+    private fun parseComplexStructureDefinitions(sectionName: String, elements: List<ParsedElement>): List<ComplexStructureDefinition> {
+        val voSection = elements.find { it is Section && it.name == sectionName } as Section?
+        return parseComplexStructureDefinitions(voSection)
     }
 
     private fun parseType(typeValue: String): TypeDefinition {

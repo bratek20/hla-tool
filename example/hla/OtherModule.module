@@ -1,11 +1,13 @@
-ValueObjects
+NamedTypes
     OtherId: string
-
-    OtherClass
-        id: OtherId
-        amount: int
 
 Properties
     "otherProperty" -> OtherProperty
         id: OtherId
         name: string
+
+ValueObjects
+    OtherClass
+        id: OtherId
+        amount: int
+

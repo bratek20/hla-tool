@@ -1,6 +1,7 @@
-ValueObjects
+NamedTypes
     OtherId: string
 
+ValueObjects
     OtherClass
         id: OtherId
         amount: int

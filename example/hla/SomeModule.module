@@ -11,9 +11,10 @@ Properties
     SomeProperty
         other: OtherProperty
 
-ValueObjects
+NamedTypes
     SomeId: string
 
+ValueObjects
     SomeClass
         id: SomeId
         amount: int

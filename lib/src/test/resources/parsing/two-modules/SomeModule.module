@@ -4,9 +4,10 @@ Enums
         VALUE_A
         VALUE_B
 
-ValueObjects
+NamedTypes
     SomeId: string
 
+ValueObjects
     SomeClass
         id: SomeId
         amount: int
