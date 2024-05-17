@@ -12,18 +12,4 @@ namespace TypesModule.Builder {
             CustomTypesMapper.dateCreate(to),
         )
     }
-
-    export interface DateRangePropertyDef {
-        from?: string,
-        to?: string,
-    }
-    export function dateRangeProperty(def?: DateRangePropertyDef): DateRangeProperty {
-        const from = def?.from ?? "someValue"
-        const to = def?.to ?? "someValue"
-
-        return DateRangeProperty.create(
-            from,
-            to,
-        )
-    }
 }

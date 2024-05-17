@@ -13,15 +13,3 @@ fun dateRange(init: DateRangeDef.() -> Unit = {}): DateRange {
         to = dateCreate(def.to),
     )
 }
-
-data class DateRangePropertyDef(
-    var from: String = "someValue",
-    var to: String = "someValue",
-)
-fun dateRangeProperty(init: DateRangePropertyDef.() -> Unit = {}): DateRangeProperty {
-    val def = DateRangePropertyDef().apply(init)
-    return DateRangeProperty(
-        from = def.from,
-        to = def.to,
-    )
-}
