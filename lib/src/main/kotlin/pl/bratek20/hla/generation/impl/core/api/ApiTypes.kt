@@ -162,19 +162,26 @@ class PropertyApiTypeField(
     name: String,
     type: ApiType,
 ): ApiTypeField(name, type) {
+    override fun access(variableName: String): String {
+        if (type is SimpleStructureApiType) {
+            return "$variableName.${getterName()}()"
+        }
+        return "$variableName.$name"
+    }
+
     fun accessor(): String {
         return if(type is SimpleStructureApiType) "private " else ""
     }
 
     fun getter(): PropertyGetter? {
         if(type is SimpleStructureApiType) {
-            return PropertyGetter(getterName(name), type, name)
+            return PropertyGetter(getterName(), type, name)
         }
         return null
     }
 
-    private fun getterName(fieldName: String): String {
-        return "get${camelToPascalCase(fieldName)}"
+    private fun getterName(): String {
+        return "get${camelToPascalCase(name)}"
     }
 }
 
