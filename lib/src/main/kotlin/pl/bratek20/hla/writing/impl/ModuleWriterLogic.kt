@@ -48,7 +48,7 @@ class ModuleWriterLogic(
         //test helping
         val dirs = DirectoriesLogic()
         val moduleName = generateResult.main.name
-        if (args.language == ModuleLanguage.TYPE_SCRIPT && moduleName.lowercase() == "TypesModule".lowercase()) {
+        if (args.language == ModuleLanguage.KOTLIN && moduleName.lowercase() == "SomeModule".lowercase()) {
             val debugPath = Path("../tmp")
             dirs.deleteDirectory(debugPath)
             dirs.write(debugPath, generateResult.main)

@@ -70,46 +70,50 @@ class HlaModules(
         return module.complexCustomTypes.find { it.name == type.name }
     }
 
-    //TODO full impl
     fun getCurrentDependencies(): List<ModuleName> {
-        val typeNames = current.complexValueObjects
-            .map { it.fields }.flatten()
+        val typeNames = allComplexStructureDefinitions(current)
+            .map { it.fields }
+            .flatten()
             .map { it.type.name }
 
         return modules
             .filter { it.name != currentName }
             .filter { module ->
-                val dependentSimpleTypes = module.simpleValueObjects
-                    .filter { typeNames.contains(it.name) }
-                return@filter dependentSimpleTypes.isNotEmpty()
+                typeNames.any { typeName ->
+                    hasType(module, typeName)
+                }
             }
             .map { it.name }
     }
 
-    //TODO refactor
     fun getTypeModule(typeName: String): ModuleName {
-        val complexResult = modules.firstOrNull {
-            (it.complexValueObjects + it.complexCustomTypes + it.propertyValueObjects)
-                .any { it.name == typeName }
-            }?.name
-
-        if (complexResult != null) {
-            return complexResult
-        }
-
-        val simpleResult = modules.firstOrNull {
-            (it.simpleValueObjects + it.simpleCustomTypes)
-                .any { it.name == typeName }
-            }?.name
-        if (simpleResult != null) {
-            return simpleResult
-        }
-
-        val enumResult = modules.firstOrNull { it.enums.any { it.name == typeName } }?.name
-        if (enumResult != null) {
-            return enumResult
+        allTypeNames().forEach { (moduleName, typeNames) ->
+            if (typeNames.contains(typeName)) {
+                return moduleName
+            }
         }
 
         throw IllegalStateException("Type $typeName not found in any module")
+    }
+
+    private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
+        return module.enums.map { it.name } +
+                module.simpleValueObjects.map { it.name } +
+                module.complexValueObjects.map { it.name } +
+                module.simpleCustomTypes.map { it.name } +
+                module.complexCustomTypes.map { it.name } +
+                module.propertyValueObjects.map { it.name }
+    }
+
+    private fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
+        return module.complexValueObjects + module.complexCustomTypes + module.propertyValueObjects
+    }
+
+    private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {
+        return modules.map { it.name to allModuleTypeNames(it) }
+    }
+
+    private fun hasType(module: ModuleDefinition, typeName: String): Boolean {
+        return allModuleTypeNames(module).contains(typeName)
     }
 }

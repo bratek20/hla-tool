@@ -2,9 +2,34 @@ package com.some.pkg.somemodule.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.typesmodule.api.*
+import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
+
+data class ExpectedDateRangeWrapper(
+    var range: (ExpectedDateRange.() -> Unit)? = null,
+)
+fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
+    val expected = ExpectedDateRangeWrapper().apply(expectedInit)
+
+    expected.range?.let {
+        assertDateRange(dateRangeWrapperGetRange(given), it)
+    }
+}
+
+data class ExpectedSomeProperty(
+    var other: (ExpectedOtherProperty.() -> Unit)? = null,
+)
+fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
+    val expected = ExpectedSomeProperty().apply(expectedInit)
+
+    expected.other?.let {
+        assertOtherProperty(given.other, it)
+    }
+}
 
 data class ExpectedSomeClass(
     var id: String? = null,
@@ -97,5 +122,36 @@ fun assertSomeClass4(given: SomeClass4, expectedInit: ExpectedSomeClass4.() -> U
     expected.otherClassList?.let {
         assertThat(given.otherClassList).hasSize(it.size)
         given.otherClassList.forEachIndexed { idx, entry -> assertOtherClass(entry, it[idx]) }
+    }
+}
+
+data class ExpectedSomeClass5(
+    var date: String? = null,
+    var dateRange: (ExpectedDateRange.() -> Unit)? = null,
+    var dateRangeWrapper: (ExpectedDateRangeWrapper.() -> Unit)? = null,
+    var someProperty: (ExpectedSomeProperty.() -> Unit)? = null,
+    var otherProperty: (ExpectedOtherProperty.() -> Unit)? = null,
+)
+fun assertSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> Unit) {
+    val expected = ExpectedSomeClass5().apply(expectedInit)
+
+    expected.date?.let {
+        assertThat(dateGetValue(given.date)).isEqualTo(it)
+    }
+
+    expected.dateRange?.let {
+        assertDateRange(given.dateRange, it)
+    }
+
+    expected.dateRangeWrapper?.let {
+        assertDateRangeWrapper(given.dateRangeWrapper, it)
+    }
+
+    expected.someProperty?.let {
+        assertSomeProperty(given.someProperty, it)
+    }
+
+    expected.otherProperty?.let {
+        assertOtherProperty(given.otherProperty, it)
     }
 }

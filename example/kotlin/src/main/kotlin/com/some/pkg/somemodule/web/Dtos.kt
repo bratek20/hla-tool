@@ -2,8 +2,28 @@ package com.some.pkg.somemodule.web
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.web.*
+import com.some.pkg.typesmodule.api.*
+import com.some.pkg.typesmodule.web.*
 
 import com.some.pkg.somemodule.api.*
+
+data class DateRangeWrapperDto(
+    val range: DateRangeDto,
+) {
+    fun toApi(): DateRangeWrapper {
+        return dateRangeWrapperCreate(
+            range = range.toApi(),
+        )
+    }
+
+    companion object {
+        fun fromApi(api: DateRangeWrapper): DateRangeWrapperDto {
+            return DateRangeWrapperDto(
+                range = DateRangeDto.fromApi(dateRangeWrapperGetRange(api)),
+            )
+        }
+    }
+}
 
 data class SomeClassDto(
     val id: String,
@@ -99,6 +119,36 @@ data class SomeClass4Dto(
                 otherClass = OtherClassDto.fromApi(api.otherClass),
                 otherIdList = api.otherIdList.map { it -> it.value },
                 otherClassList = api.otherClassList.map { it -> OtherClassDto.fromApi(it) },
+            )
+        }
+    }
+}
+
+data class SomeClass5Dto(
+    val date: String,
+    val dateRange: DateRangeDto,
+    val dateRangeWrapper: DateRangeWrapperDto,
+    val someProperty: SomeProperty,
+    val otherProperty: OtherProperty,
+) {
+    fun toApi(): SomeClass5 {
+        return SomeClass5(
+            date = dateCreate(date),
+            dateRange = dateRange.toApi(),
+            dateRangeWrapper = dateRangeWrapper.toApi(),
+            someProperty = someProperty,
+            otherProperty = otherProperty,
+        )
+    }
+
+    companion object {
+        fun fromApi(api: SomeClass5): SomeClass5Dto {
+            return SomeClass5Dto(
+                date = dateGetValue(api.date),
+                dateRange = DateRangeDto.fromApi(api.dateRange),
+                dateRangeWrapper = DateRangeWrapperDto.fromApi(api.dateRangeWrapper),
+                someProperty = api.someProperty,
+                otherProperty = api.otherProperty,
             )
         }
     }

@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 #if($imports.size() > 0)
 
 #foreach($import in $imports)
+import ${import}.api.*
 import ${import}.fixtures.*
 #end#end
 

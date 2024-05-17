@@ -8,6 +8,15 @@ namespace SomeModule.Assert {
         }
     }
 
+    export interface ExpectedSomeProperty {
+        other?: OtherModule.Assert.ExpectedOtherProperty,
+    }
+    export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
+        if (expected.other !== undefined) {
+            OtherModule.Assert.otherProperty(given.other, expected.other)
+        }
+    }
+
     export interface ExpectedSomeClass {
         id?: string,
         amount?: number,

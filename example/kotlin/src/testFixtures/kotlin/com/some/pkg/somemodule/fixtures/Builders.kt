@@ -2,8 +2,30 @@ package com.some.pkg.somemodule.fixtures
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.typesmodule.api.*
+import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
+
+data class DateRangeWrapperDef(
+    var range: (DateRangeDef.() -> Unit) = {},
+)
+fun dateRangeWrapper(init: DateRangeWrapperDef.() -> Unit = {}): DateRangeWrapper {
+    val def = DateRangeWrapperDef().apply(init)
+    return dateRangeWrapperCreate(
+        range = dateRange(def.range),
+    )
+}
+
+data class SomePropertyDef(
+    var other: (OtherPropertyDef.() -> Unit) = {},
+)
+fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
+    val def = SomePropertyDef().apply(init)
+    return SomeProperty(
+        other = otherProperty(def.other),
+    )
+}
 
 data class SomeClassDef(
     var id: String = "someValue",
@@ -60,5 +82,23 @@ fun someClass4(init: SomeClass4Def.() -> Unit = {}): SomeClass4 {
         otherClass = otherClass(def.otherClass),
         otherIdList = def.otherIdList.map { it -> OtherId(it) },
         otherClassList = def.otherClassList.map { it -> otherClass(it) },
+    )
+}
+
+data class SomeClass5Def(
+    var date: String = "someValue",
+    var dateRange: (DateRangeDef.() -> Unit) = {},
+    var dateRangeWrapper: (DateRangeWrapperDef.() -> Unit) = {},
+    var someProperty: (SomePropertyDef.() -> Unit) = {},
+    var otherProperty: (OtherPropertyDef.() -> Unit) = {},
+)
+fun someClass5(init: SomeClass5Def.() -> Unit = {}): SomeClass5 {
+    val def = SomeClass5Def().apply(init)
+    return SomeClass5(
+        date = dateCreate(def.date),
+        dateRange = dateRange(def.dateRange),
+        dateRangeWrapper = dateRangeWrapper(def.dateRangeWrapper),
+        someProperty = someProperty(def.someProperty),
+        otherProperty = otherProperty(def.otherProperty),
     )
 }
