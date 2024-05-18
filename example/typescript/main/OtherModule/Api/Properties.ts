@@ -1,5 +1,5 @@
 namespace OtherModule {
-    export const OTHER_PROPERTY_KEY = new PropertyKey("otherProperty")
+    export const OTHER_PROPERTY_KEY = new TableNameVo("otherProperty")
 }
 
 class OtherProperty {

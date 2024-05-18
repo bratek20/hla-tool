@@ -1,7 +1,7 @@
 #if($keys.size() > 0)
 namespace $moduleName {
     #foreach($key in $keys)
-    export const $key.name = new PropertyKey("$key.value")
+    export const $key.name = new TableNameVo("$key.value")
     #end
 }
 

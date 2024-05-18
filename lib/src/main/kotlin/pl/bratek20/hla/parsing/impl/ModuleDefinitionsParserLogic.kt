@@ -133,10 +133,13 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
         if (noIndentLine.contains("(")) {
             val methodName = noIndentLine.substringBefore("(")
-            val args = noIndentLine.substringAfter("(").substringBefore(")").split(",").map {
-                val split = it.split(":")
-                ParsedArg(split[0].trim(), split[1].trim())
-            }
+            val args = noIndentLine.substringAfter("(").substringBefore(")").split(",")
+                .filter { it.isNotBlank() }
+                .map {
+                    val split = it.split(":")
+                    require(split.size == 2) { "Invalid argument definition: $it" }
+                    ParsedArg(split[0].trim(), split[1].trim())
+                }
             val returnTypeStr = noIndentLine.substringAfter(")").trim()
             val returnType = returnTypeStr.contains(":").let {
                 if(it) returnTypeStr.substringAfter(":").trim() else null

@@ -1,5 +1,6 @@
 package pl.bratek20.hla.parsing
 
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import pl.bratek20.architecture.context.someContextBuilder
 import pl.bratek20.hla.directory.api.Path
@@ -206,6 +207,13 @@ class ModuleDefinitionsParserTest {
                                     name = "SomeId"
                                 }
                             }
+                        },
+                        {
+                            name = "noArgQuery"
+                            returnType = {
+                                name = "SomeClass"
+                            }
+                            args = emptyList()
                         }
                     )
                 }
@@ -316,5 +324,10 @@ class ModuleDefinitionsParserTest {
         })
     }
 
-        //TODO bug when simple VO is after complex VO
+    @Test
+    fun `should not crash for bug`() {
+        assertThatCode{
+            parse("bug")
+        }.doesNotThrowAnyException()
+    }
 }
