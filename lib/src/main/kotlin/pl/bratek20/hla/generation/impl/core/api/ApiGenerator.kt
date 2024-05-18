@@ -1,136 +1,59 @@
 package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.definitions.api.*
-import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.generation.impl.core.ModulePartDirectoryGenerator
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
-import pl.bratek20.hla.utils.camelToPascalCase
+import pl.bratek20.hla.directory.api.FileContent
+import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
+import pl.bratek20.hla.generation.impl.core.FileGenerator
 import pl.bratek20.hla.utils.camelToScreamingSnakeCase
 
-class ApiGenerator(
-    c: ModuleGenerationContext
-): ModulePartDirectoryGenerator(c) {
-
-    override fun generateDirectory(): Directory {
-        val files = mutableListOf<File>()
-        valueObjectsFile()?.let { files.add(it) }
-        interfacesFile()?.let { files.add(it) }
-        propertiesFile()?.let { files.add(it) }
-        exceptionsFile()?.let { files.add(it) }
-        enumsFile()?.let { files.add(it) }
-        customTypesFile()?.let { files.add(it) }
-        customTypesMapperFile()?.let { files.add(it) }
-
-        return Directory(
-            name = language.structure().apiDirName(),
-            files = files
-        )
+class ValueObjectsFileGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "ValueObjects"
     }
 
-    private fun exceptionsFile(): File? {
-        val exceptions = module.interfaces
-            .flatMap { it.methods }
-            .flatMap { it.throws }
-            .map { it.name }
-            .distinct()
-
-        if (exceptions.isEmpty()) {
-            return null
-        }
-
-        val fileContent = contentBuilder("exceptions.vm")
-            .put("exceptions", exceptions)
-            .build()
-
-        return File(
-            name = language.structure().exceptionsFileName(),
-            content = fileContent
-        )
-    }
-
-    private fun enumsFile(): File? {
-        if (module.enums.isEmpty()) {
-            return null
-        }
-
-        val fileContent = contentBuilder("enums.vm")
-            .put("enums", module.enums)
-            .build()
-
-        return File(
-            name = language.structure().enumsFileName(),
-            content = fileContent
-        )
-    }
-
-    private fun toView(value: SimpleStructureDefinition): SimpleVOApiType {
-        return apiType(TypeDefinition(value.name, emptyList())) as SimpleVOApiType
-    }
-
-    private fun toView(value: ComplexStructureDefinition): ComplexVOApiType {
-        return apiType(TypeDefinition(value.name, emptyList())) as ComplexVOApiType
-    }
-
-
-    private fun valueObjectsFile(): File? {
+    override fun generateFileContent(): FileContent? {
         if (module.simpleValueObjects.isEmpty() && module.complexValueObjects.isEmpty()) {
             return null
         }
 
-        val fileContent = contentBuilder("valueObjects.vm")
+        return contentBuilder("valueObjects.vm")
             .put("valueObjects", ApiValueObjects(
-                simpleList = module.simpleValueObjects.map { toView(it) },
-                complexList = module.complexValueObjects.map { toView(it) }
+                simpleList = module.simpleValueObjects.map { apiTypeFactory.create(it) },
+                complexList = module.complexValueObjects.map { apiTypeFactory.create(it) }
             ))
             .build()
-
-        return File(
-            name = language.structure().valueObjectsFileName(),
-            content = fileContent
-        )
     }
 
-    private fun interfacesFile(): File? {
+}
+
+class InterfaceFileGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "Interfaces"
+    }
+
+    data class ArgumentView(
+        val name: String,
+        val type: String
+    )
+    data class MethodView(
+        val name: String,
+        val returnType: String?,
+        val args: List<ArgumentView>,
+        val throws: List<String>,
+    )
+    data class InterfaceView(
+        val name: String,
+        val methods: List<MethodView>
+    )
+
+    override fun generateFileContent(): FileContent?{
         if (module.interfaces.isEmpty()) {
             return null
         }
 
-        val fileContent = contentBuilder("interfaces.vm")
+        return contentBuilder("interfaces.vm")
             .put("interfaces", module.interfaces.map { toView(it) })
             .build()
-
-        return File(
-            name = language.structure().interfacesFileName(),
-            content = fileContent
-        )
-    }
-
-    private fun propertiesFile(): File? {
-        if (module.propertyValueObjects.isEmpty()) {
-            return null
-        }
-
-        val fileContent = contentBuilder("properties.vm")
-            .put("properties", module.propertyValueObjects.map {
-                apiTypeFactory.create<PropertyApiType>(it)
-            })
-            .put("keys", module.propertyMappings.map { toApiPropertyKey(it) })
-            .build()
-
-        return File(
-            name = language.structure().propertiesFileName(),
-            content = fileContent
-        )
-    }
-
-    data class ApiPropertyKey(
-        val name: String,
-        val value: String
-    )
-    private fun toApiPropertyKey(mapping: PropertyMapping): ApiPropertyKey {
-        val name = camelToScreamingSnakeCase(mapping.key + "Key")
-        return ApiPropertyKey(name, mapping.key)
     }
 
     private fun toView(interf: InterfaceDefinition): InterfaceView {
@@ -150,8 +73,82 @@ class ApiGenerator(
     private fun toViewType(type: TypeDefinition?): String {
         return apiType(type).name()
     }
+}
 
-    private fun customTypesFile(): File? {
+class PropertiesFileGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "Properties"
+    }
+
+    data class ApiPropertyKey(
+        val name: String,
+        val value: String
+    )
+
+    override fun generateFileContent(): FileContent?{
+        if (module.propertyValueObjects.isEmpty()) {
+            return null
+        }
+
+        return contentBuilder("properties.vm")
+            .put("properties", module.propertyValueObjects.map {
+                apiTypeFactory.create<PropertyApiType>(it)
+            })
+            .put("keys", module.propertyMappings.map { toApiPropertyKey(it) })
+            .build()
+    }
+
+
+    private fun toApiPropertyKey(mapping: PropertyMapping): ApiPropertyKey {
+        val name = camelToScreamingSnakeCase(mapping.key + "Key")
+        return ApiPropertyKey(name, mapping.key)
+    }
+}
+
+class ExceptionsFileGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "Exceptions"
+    }
+
+    override fun generateFileContent(): FileContent?{
+        val exceptions = module.interfaces
+            .flatMap { it.methods }
+            .flatMap { it.throws }
+            .map { it.name }
+            .distinct()
+
+        if (exceptions.isEmpty()) {
+            return null
+        }
+
+        return contentBuilder("exceptions.vm")
+            .put("exceptions", exceptions)
+            .build()
+    }
+}
+
+class EnumsFileGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "Enums"
+    }
+
+    override fun generateFileContent(): FileContent?{
+        if (module.enums.isEmpty()) {
+            return null
+        }
+
+        return contentBuilder("enums.vm")
+            .put("enums", module.enums)
+            .build()
+    }
+}
+
+class CustomTypesFileGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "CustomTypes"
+    }
+
+    override fun generateFileContent(): FileContent?{
         if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
             return null
         }
@@ -159,40 +156,45 @@ class ApiGenerator(
         val classNames = module.simpleCustomTypes.map { it.name } +
             module.complexCustomTypes.map { it.name }
 
-        val fileContent = contentBuilder("customTypes.vm")
+        return contentBuilder("customTypes.vm")
             .put("classNames", classNames)
             .build()
+    }
+}
 
-        return File(
-            name = language.structure().customTypesFileName(),
-            content = fileContent
-        )
+class CustomTypesMapperFileGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "CustomTypesMapper"
     }
 
-    private fun toCustomTypeView(value: SimpleStructureDefinition): SimpleCustomApiType {
-        return apiType(TypeDefinition(value.name, emptyList())) as SimpleCustomApiType
-    }
-
-    private fun toCustomTypeView(value: ComplexStructureDefinition): ComplexCustomApiType {
-        return apiType(TypeDefinition(value.name, emptyList())) as ComplexCustomApiType
-    }
-
-
-    private fun customTypesMapperFile(): File? {
+    override fun generateFileContent(): FileContent?{
         if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
             return null
         }
 
-        val fileContent = contentBuilder("customTypesMapper.vm")
+        return contentBuilder("customTypesMapper.vm")
             .put("customTypes", ApiCustomTypes(
-                simpleList = module.simpleCustomTypes.map { toCustomTypeView(it) },
-                complexList = module.complexCustomTypes.map { toCustomTypeView(it) }
+                simpleList = module.simpleCustomTypes.map { apiTypeFactory.create(it) },
+                complexList = module.complexCustomTypes.map { apiTypeFactory.create(it) }
             ))
             .build()
+    }
+}
 
-        return File(
-            name = language.structure().customTypesMapperFileName(),
-            content = fileContent
+class ApiGenerator: DirectoryGenerator() {
+    override fun getDirectoryName(): String {
+        return "api"
+    }
+
+    override fun getFileGenerators(): List<FileGenerator> {
+        return listOf(
+            ValueObjectsFileGenerator(),
+            InterfaceFileGenerator(),
+            PropertiesFileGenerator(),
+            ExceptionsFileGenerator(),
+            EnumsFileGenerator(),
+            CustomTypesFileGenerator(),
+            CustomTypesMapperFileGenerator()
         )
     }
 }

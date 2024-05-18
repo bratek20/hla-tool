@@ -16,8 +16,8 @@ class KotlinSupport(private val c: DomainContext)
         return KotlinTypes()
     }
 
-    override fun structure(): LanguageStructure {
-        return KotlinStructure(c)
+    override fun filesExtension(): String {
+        return "kt"
     }
 
     override fun assertsFixture(): LanguageAssertsPattern {

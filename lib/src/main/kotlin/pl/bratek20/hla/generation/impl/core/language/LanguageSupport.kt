@@ -8,7 +8,7 @@ interface LanguageSupport {
 
     fun types(): LanguageTypes
 
-    fun structure(): LanguageStructure
+    fun filesExtension(): String
 
     fun assertsFixture(): LanguageAssertsPattern
     fun buildersFixture(): LanguageBuildersPattern

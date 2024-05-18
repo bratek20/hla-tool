@@ -2,27 +2,65 @@ package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
-import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.generation.api.ModuleGenerator
-import pl.bratek20.hla.facade.api.ModuleLanguage
-import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
-import pl.bratek20.hla.generation.impl.core.domain.*
-import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
-import pl.bratek20.hla.generation.impl.core.web.WebGenerator
-import pl.bratek20.hla.generation.impl.languages.kotlin.*
-import pl.bratek20.hla.generation.impl.languages.typescript.*
 import pl.bratek20.hla.definitions.api.ModuleDefinition
-import pl.bratek20.hla.facade.api.ModuleName
 import pl.bratek20.hla.definitions.impl.HlaModules
+import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.facade.api.HlaProperties
+import pl.bratek20.hla.facade.api.ModuleLanguage
+import pl.bratek20.hla.facade.api.ModuleName
 import pl.bratek20.hla.facade.api.PROPERTIES_KEY
 import pl.bratek20.hla.generation.api.GenerateResult
+import pl.bratek20.hla.generation.api.ModuleGenerator
+import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
+import pl.bratek20.hla.generation.impl.core.domain.DomainContext
+import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
+import pl.bratek20.hla.generation.impl.core.web.WebGenerator
+import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
+import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import pl.bratek20.hla.velocity.api.VelocityFacade
 
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
     private val properties: Properties,
 ) : ModuleGenerator {
+
+    class MainDirectoryGenerator: DirectoryGenerator() {
+        override fun getDirectoryName(): String {
+            return module.name.value
+        }
+
+        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
+            return listOf(
+                ApiGenerator(),
+                WebGenerator()
+            )
+        }
+    }
+
+    class TestFixturesGenerator: DirectoryGenerator() {
+        override fun getDirectoryName(): String {
+            return module.name.value
+        }
+
+        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
+            return listOf(
+                FixturesGenerator()
+            )
+        }
+    }
+
+    class GenerationRoot: DirectoryGenerator() {
+        override fun getDirectoryName(): String {
+            return "root"
+        }
+
+        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
+            return listOf(
+                MainDirectoryGenerator(),
+                TestFixturesGenerator()
+            )
+        }
+    }
 
     override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): GenerateResult {
         val hlaProperties = properties.get(
@@ -45,31 +83,15 @@ class ModuleGeneratorLogic(
             }
         )
 
-        val apiSubmodule = ApiGenerator(context).generateDirectory()
-        val webSubmodule = WebGenerator(context).generateDirectory()
+        val root = GenerationRoot()
+        root.init(context)
 
-        val mainDirectories: MutableList<Directory> = mutableListOf()
-        mainDirectories.add(apiSubmodule)
-        if (hlaProperties.generateWeb) {
-            mainDirectories.add(webSubmodule)
-        }
-
-        val main = Directory(
-            name = context.language.structure().moduleDirName(),
-            directories = mainDirectories
-        )
-
-        val fixturesDirectory = FixturesGenerator(context).generateDirectory()
-        val testFixtures = Directory(
-            name = context.language.structure().moduleDirName(),
-            directories = listOf(
-                fixturesDirectory
-            )
-        )
+        val result = root.generateDirectory()
+        requireNotNull(result)
 
         return GenerateResult(
-            main = main,
-            testFixtures = testFixtures
+            main = result.directories[0],
+            testFixtures = result.directories[1]
         )
     }
 }

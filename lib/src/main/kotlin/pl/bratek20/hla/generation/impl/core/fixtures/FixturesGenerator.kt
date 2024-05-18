@@ -1,23 +1,19 @@
 package pl.bratek20.hla.generation.impl.core.fixtures
 
-import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
+import pl.bratek20.hla.generation.impl.core.FileGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 
-class FixturesGenerator(
-    private val c: ModuleGenerationContext,
-) {
-    fun generateDirectory(): Directory {
-        val buildersFile = BuildersGenerator(c).generateFile()
-        val assertsFile = AssertsGenerator(c).generateFile()
+class FixturesGenerator: DirectoryGenerator() {
+    override fun getDirectoryName(): String {
+        return "fixtures"
+    }
 
-        return Directory(
-            name = c.language.structure().fixturesDirName(),
-            files = listOf(
-                buildersFile,
-                assertsFile
-            )
+    override fun getFileGenerators(): List<FileGenerator> {
+        return listOf(
+            BuildersGenerator(),
+            AssertsGenerator()
         )
     }
 }

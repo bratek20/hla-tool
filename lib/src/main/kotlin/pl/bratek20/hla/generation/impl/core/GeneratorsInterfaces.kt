@@ -1,6 +1,5 @@
 package pl.bratek20.hla.generation.impl.core
 
-import pl.bratek20.hla.definitions.api.ComplexStructureDefinition
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.generation.impl.core.api.ApiTypeFactory
@@ -8,6 +7,7 @@ import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 import pl.bratek20.hla.definitions.api.TypeDefinition
+import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
@@ -24,10 +24,15 @@ interface ContentBuilderExtension{
     fun extend(builder: VelocityFileContentBuilder)
 }
 
-abstract class ModulePartGenerator(
-    private val c: ModuleGenerationContext,
-    protected val apiTypeFactory: ApiTypeFactory = ApiTypeFactory(c.domain.modules, c.language.types())
-) {
+abstract class ModulePartGenerator {
+    lateinit var c: ModuleGenerationContext
+    lateinit var  apiTypeFactory: ApiTypeFactory
+
+    open fun init(c: ModuleGenerationContext) {
+        this.c = c
+        this.apiTypeFactory = ApiTypeFactory(c.domain.modules, c.language.types())
+    }
+
     protected val module
         get() = c.module
 
@@ -51,14 +56,59 @@ abstract class ModulePartGenerator(
     protected fun apiType(type: TypeDefinition?) = apiTypeFactory.create(type)
 }
 
-abstract class ModulePartFileGenerator(c: ModuleGenerationContext)
-    : ModulePartGenerator(c)
+abstract class FileGenerator
+    : ModulePartGenerator()
 {
-    abstract fun generateFile(): File
+    abstract fun getBaseFileName(): String
+    abstract fun generateFileContent(): FileContent?
+
+    fun generateFile(): File? {
+        val content = generateFileContent() ?: return null
+        return File(
+            name = getBaseFileName() + "." + language.filesExtension(),
+            content = content
+        )
+    }
 }
 
-abstract class ModulePartDirectoryGenerator(c: ModuleGenerationContext)
-    : ModulePartGenerator(c)
+abstract class DirectoryGenerator
+    : ModulePartGenerator()
 {
-    abstract fun generateDirectory(): Directory
+    abstract fun getDirectoryName(): String
+
+    open fun shouldGenerateDirectory(): Boolean {
+        return true
+    }
+
+    open fun getFileGenerators(): List<FileGenerator> {
+        return emptyList()
+    }
+
+    open fun getDirectoryGenerators(): List<DirectoryGenerator> {
+        return emptyList()
+    }
+
+    fun generateDirectory(): Directory? {
+        if (!shouldGenerateDirectory()) {
+            return null
+        }
+
+        val files = mutableListOf<File>()
+        getFileGenerators().forEach { fileGenerator ->
+            fileGenerator.init(c)
+            fileGenerator.generateFile()?.let { files.add(it) }
+        }
+
+        val directories = mutableListOf<Directory>()
+        getDirectoryGenerators().forEach { dirGenerator ->
+            dirGenerator.init(c)
+            dirGenerator.generateDirectory()?.let { directories.add(it) }
+        }
+
+        return Directory(
+            name = getDirectoryName(),
+            files = files,
+            directories = directories
+        )
+    }
 }

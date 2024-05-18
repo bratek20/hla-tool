@@ -16,8 +16,8 @@ class TypeScriptSupport(private val c: DomainContext)
         return TypeScriptTypes(c.modules)
     }
 
-    override fun structure(): LanguageStructure {
-        return TypeScriptStructure(c)
+    override fun filesExtension(): String {
+        return "ts"
     }
 
     override fun assertsFixture(): LanguageAssertsPattern {

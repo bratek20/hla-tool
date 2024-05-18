@@ -138,7 +138,7 @@ class EnumDtoType(api: EnumApiType): DtoType<EnumApiType>(api) {
     }
 }
 
-class DtoViewTypeFactory(
+class DtoTypeFactory(
     private val languageTypes: LanguageTypes,
     private val languageDtoPattern: LanguageDtoPattern
 ) {

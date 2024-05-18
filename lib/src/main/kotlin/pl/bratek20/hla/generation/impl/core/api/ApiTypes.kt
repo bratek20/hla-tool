@@ -229,21 +229,6 @@ data class ApiCustomTypes(
     val complexList: List<ComplexCustomApiType>
 )
 
-data class ArgumentView(
-    val name: String,
-    val type: String
-)
-data class MethodView(
-    val name: String,
-    val returnType: String?,
-    val args: List<ArgumentView>,
-    val throws: List<String>,
-)
-data class InterfaceView(
-    val name: String,
-    val methods: List<MethodView>
-)
-
 class ApiTypeFactory(
     private val modules: HlaModules,
     private val languageTypes: LanguageTypes
@@ -278,6 +263,10 @@ class ApiTypeFactory(
         apiType.languageTypes = languageTypes
 
         return apiType
+    }
+
+    inline fun <reified T: SimpleStructureApiType> create(def: SimpleStructureDefinition): T {
+        return create(TypeDefinition(def.name, emptyList())) as T
     }
 
     inline fun <reified T: ComplexStructureApiType<*>> create(def: ComplexStructureDefinition): T {
