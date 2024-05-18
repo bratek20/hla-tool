@@ -4,7 +4,6 @@ import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 import pl.bratek20.hla.definitions.impl.HlaModules
-import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.facade.api.HlaProperties
 import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.facade.api.ModuleName
@@ -12,13 +11,22 @@ import pl.bratek20.hla.facade.api.PROPERTIES_KEY
 import pl.bratek20.hla.generation.api.GenerateResult
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
-import pl.bratek20.hla.generation.impl.core.domain.DomainContext
+import pl.bratek20.hla.generation.impl.core.context.ContextGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
+import pl.bratek20.hla.generation.impl.core.impl.ImplGenerator
 import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import pl.bratek20.hla.velocity.api.VelocityFacade
+
+data class DomainContext(
+    val modules: HlaModules,
+    val properties: HlaProperties,
+) {
+    val module: ModuleDefinition
+        get() = modules.current
+}
 
 private fun moduleDirectoryName(moduleName: ModuleName, languageSupport: LanguageSupport): String {
     return languageSupport.moduleNameToDirectoryName(moduleName.value)
@@ -37,7 +45,9 @@ class ModuleGeneratorLogic(
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
             return listOf(
                 ApiGenerator(),
-                WebGenerator()
+                ImplGenerator(),
+                WebGenerator(),
+                ContextGenerator()
             )
         }
     }

@@ -2,7 +2,7 @@ package pl.bratek20.hla.generation.impl.languages.kotlin
 
 import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
-import pl.bratek20.hla.generation.impl.core.domain.DomainContext
+import pl.bratek20.hla.generation.impl.core.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.*
 
 class KotlinSupport(private val c: DomainContext)
