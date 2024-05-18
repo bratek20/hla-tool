@@ -14,10 +14,15 @@ import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
+import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import pl.bratek20.hla.velocity.api.VelocityFacade
+
+private fun moduleDirectoryName(moduleName: ModuleName, languageSupport: LanguageSupport): String {
+    return languageSupport.moduleNameToDirectoryName(moduleName.value)
+}
 
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
@@ -26,7 +31,7 @@ class ModuleGeneratorLogic(
 
     class MainDirectoryGenerator: DirectoryGenerator() {
         override fun getDirectoryName(): String {
-            return module.name.value
+            return moduleDirectoryName(module.name, c.language)
         }
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
@@ -39,7 +44,7 @@ class ModuleGeneratorLogic(
 
     class TestFixturesGenerator: DirectoryGenerator() {
         override fun getDirectoryName(): String {
-            return module.name.value
+            return moduleDirectoryName(module.name, c.language)
         }
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {

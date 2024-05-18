@@ -106,7 +106,7 @@ abstract class DirectoryGenerator
         }
 
         return Directory(
-            name = getDirectoryName(),
+            name = language.adjustDirectoryName(getDirectoryName()),
             files = files,
             directories = directories
         )

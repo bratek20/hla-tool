@@ -4,6 +4,7 @@ import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import pl.bratek20.hla.generation.impl.core.domain.DomainContext
 import pl.bratek20.hla.generation.impl.core.language.*
+import pl.bratek20.hla.utils.camelToPascalCase
 
 class TypeScriptSupport(private val c: DomainContext)
     : LanguageSupport
@@ -18,6 +19,14 @@ class TypeScriptSupport(private val c: DomainContext)
 
     override fun filesExtension(): String {
         return "ts"
+    }
+
+    override fun moduleNameToDirectoryName(moduleName: String): String {
+        return moduleName
+    }
+
+    override fun adjustDirectoryName(directoryName: String): String {
+        return camelToPascalCase(directoryName)
     }
 
     override fun assertsFixture(): LanguageAssertsPattern {
