@@ -43,8 +43,8 @@ public class Main {
         var hlaFolderPath = new Path(args[2]);
         var projectPath = new Path(args[3]);
 
-        facade.generateModule(
-            new GenerateModuleArgs(
+        facade.startModule(
+            new ModuleOperationArgs(
                 moduleName,
                 language,
                 hlaFolderPath,

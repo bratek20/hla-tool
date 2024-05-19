@@ -126,8 +126,8 @@ class HlaFacadeTest {
         val projectPath = Path("some/project/path")
 
         //when
-        facade.generateModule(
-            GenerateModuleArgs(
+        facade.startModule(
+            ModuleOperationArgs(
                 moduleName = ModuleName(moduleName),
                 language = lang,
                 hlaFolderPath = hlaFolderPath,
