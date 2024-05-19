@@ -10,7 +10,9 @@ class ImplContextGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent {
-        return FileContent(listOf("xxx"))
+        return contentBuilder("impl.vm")
+            .put("interfaces", module.interfaces)
+            .build()
     }
 }
 
