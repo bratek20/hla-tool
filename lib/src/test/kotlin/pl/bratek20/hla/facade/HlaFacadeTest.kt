@@ -217,7 +217,10 @@ class HlaFacadeTest {
         val mainCompareResult = DirectoriesLogic().compare(mainDirectoryStart, mainDirectoryUpdate)
         val testFixturesCompareResult = DirectoriesLogic().compare(testFixturesDirectoryStart, testFixturesDirectoryUpdate)
 
-        assertThat(mainCompareResult.same).isTrue()
-        assertThat(testFixturesCompareResult.same).isTrue()
+        assertThat(mainCompareResult.differences).containsExactlyInAnyOrder(
+            "File somemodule/api/CustomTypes.kt not found in second directory"
+        )
+
+        assertThat(testFixturesCompareResult.differences).isEmpty()
     }
 }

@@ -8,6 +8,7 @@ import pl.bratek20.hla.facade.api.HlaProperties
 import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.facade.api.ModuleName
 import pl.bratek20.hla.facade.api.PROPERTIES_KEY
+import pl.bratek20.hla.generation.api.GenerateArgs
 import pl.bratek20.hla.generation.api.GenerateResult
 import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
@@ -77,7 +78,11 @@ class ModuleGeneratorLogic(
         }
     }
 
-    override fun generate(moduleName: ModuleName, language: ModuleLanguage, modules: List<ModuleDefinition>): GenerateResult {
+    override fun generate(args: GenerateArgs): GenerateResult {
+        val moduleName = args.moduleName
+        val language = args.language
+        val modules = args.modules
+
         val hlaProperties = properties.get(
             InMemoryPropertiesSource.name,
             PROPERTIES_KEY,
@@ -95,7 +100,8 @@ class ModuleGeneratorLogic(
             language = when (language) {
                 ModuleLanguage.KOTLIN -> KotlinSupport(domainContext)
                 ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
-            }
+            },
+            onlyUpdate = args.onlyUpdate,
         )
 
         val root = GenerationRoot()

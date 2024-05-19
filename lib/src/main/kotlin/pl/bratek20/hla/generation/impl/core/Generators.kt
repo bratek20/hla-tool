@@ -12,7 +12,8 @@ import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 class ModuleGenerationContext(
     val domain: DomainContext,
     val velocity: VelocityFacade,
-    val language: LanguageSupport
+    val language: LanguageSupport,
+    val onlyUpdate: Boolean
 ) {
     val module: ModuleDefinition
         get() = domain.module

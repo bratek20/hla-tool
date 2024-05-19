@@ -106,6 +106,10 @@ class CustomTypesFileGenerator: FileGenerator() {
             return null
         }
 
+        if (c.onlyUpdate) {
+            return null
+        }
+
         val classNames = module.simpleCustomTypes.map { it.name } +
             module.complexCustomTypes.map { it.name }
 
