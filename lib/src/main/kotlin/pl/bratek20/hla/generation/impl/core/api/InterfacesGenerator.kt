@@ -16,8 +16,18 @@ data class MethodView(
     val throws: List<String>,
 ) {
     // used by velocity
-    fun arguments(): String {
+    fun argsDeclaration(): String {
         return args.joinToString(", ") { "${it.name}: ${it.type}" }
+    }
+
+    // used by velocity
+    fun hasArgs(): Boolean {
+        return args.isNotEmpty()
+    }
+
+    // used by velocity
+    fun argsPass(): String {
+        return args.joinToString(", ") { it.name }
     }
 }
 
@@ -29,6 +39,10 @@ data class InterfaceView(
 class InterfaceViewFactory(
     private val apiTypeFactory: ApiTypeFactory
 ) {
+    fun create(definitions: List<InterfaceDefinition>): List<InterfaceView> {
+        return definitions.map { create(it) }
+    }
+
     fun create(definition: InterfaceDefinition): InterfaceView {
         return InterfaceView(
             name = definition.name,
@@ -61,7 +75,7 @@ class InterfacesGenerator: FileGenerator() {
         val factory = InterfaceViewFactory(apiTypeFactory)
 
         return contentBuilder("interfaces.vm")
-            .put("interfaces", module.interfaces.map { factory.create(it) })
+            .put("interfaces", factory.create(module.interfaces))
             .build()
     }
 

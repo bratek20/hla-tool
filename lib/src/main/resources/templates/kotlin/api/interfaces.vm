@@ -10,7 +10,7 @@ interface $interface.name {
     #end
     )
     #end
-    fun ${method.name}($method.arguments()): $method.returnType
+    fun ${method.name}($method.argsDeclaration()): $method.returnType
     #if($foreach.hasNext)
 
     #end

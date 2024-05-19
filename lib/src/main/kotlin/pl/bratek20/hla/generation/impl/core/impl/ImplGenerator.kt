@@ -14,7 +14,7 @@ class LogicGenerator: FileGenerator() {
         val factory = InterfaceViewFactory(apiTypeFactory)
 
         return contentBuilder("logic.vm")
-            .put("interfaces", module.interfaces.map { factory.create(it) })
+            .put("interfaces", factory.create(module.interfaces))
             .build()
     }
 }

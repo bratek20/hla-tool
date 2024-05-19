@@ -8,7 +8,7 @@ interface $interface.name {
     #end
      */
     #end
-    ${method.name}($method.arguments()): $method.returnType
+    ${method.name}($method.argsDeclaration()): $method.returnType
     #if($foreach.hasNext)
 
     #end

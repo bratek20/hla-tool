@@ -6,7 +6,7 @@ namespace ${moduleName}.Impl {
         ) {}
         #foreach($method in $interface.methods)
 
-        ${method.name}(${method.arguments()}): ${method.returnType} {
+        ${method.name}(${method.argsDeclaration()}): ${method.returnType} {
             // TODO
             return undefined
         }

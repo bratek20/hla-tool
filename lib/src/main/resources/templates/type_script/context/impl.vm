@@ -1,16 +1,16 @@
-package ${packageName}.context
-
-import pl.bratek20.architecture.context.api.ContextBuilder
-import pl.bratek20.architecture.context.api.ContextModule
-
-import ${packageName}.api.*
-import ${packageName}.impl.*
-
-class ${moduleName}Impl: ContextModule {
-    override fun apply(builder: ContextBuilder) {
-        builder
-            #foreach($interface in $interfaces)
-            .setImpl(${interface.name}::class.java, ${interface.name}Impl::class.java)
-            #end
+namespace ${moduleName}.Api {
+#foreach($interface in $interfaces)
+    #foreach($method in $interface.methods)
+    export function ${method.name}(${method.argsDeclaration()}#if(${method.hasArgs()}), #{end}c: HandlerContext): ${method.returnType} {
+        #set($return = "")
+        #if($method.returnType != "void")
+            #set($return = "return ")
+        #end
+        ${return}new ${interface.name}Impl(c).${method.name}(${method.argsPass()})
     }
+    #if($foreach.hasNext)
+
+    #end
+    #end
+#end
 }
