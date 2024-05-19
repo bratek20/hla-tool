@@ -3,7 +3,7 @@ package ${packageName}.impl
 import ${packageName}.api.*
 #foreach($interface in $interfaces)
 
-class ${interface.name}Impl: ${interface.name} {
+class ${interface.name}Logic: ${interface.name} {
     #foreach($method in $interface.methods)
     override fun ${method.name}(${method.argsDeclaration()}): ${method.returnType} {
         TODO("Not yet implemented")

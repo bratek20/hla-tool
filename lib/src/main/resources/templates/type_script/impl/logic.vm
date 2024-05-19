@@ -1,6 +1,6 @@
 namespace ${moduleName}.Impl {
     #foreach($interface in $interfaces)
-    export class ${interface.name}Impl implements ${interface.name} {
+    export class ${interface.name}Logic implements ${interface.name} {
         constructor(
             private readonly c: HandlerContext,
         ) {}

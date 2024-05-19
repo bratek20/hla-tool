@@ -10,7 +10,7 @@ class ${moduleName}Impl: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
             #foreach($interface in $interfaces)
-            .setImpl(${interface.name}::class.java, ${interface.name}Impl::class.java)
+            .setImpl(${interface.name}::class.java, ${interface.name}Logic::class.java)
             #end
     }
 }

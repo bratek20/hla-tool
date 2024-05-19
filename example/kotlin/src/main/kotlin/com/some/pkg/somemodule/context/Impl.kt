@@ -9,6 +9,6 @@ import com.some.pkg.somemodule.impl.*
 class SomeModuleImpl: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
-            .setImpl(SomeInterface::class.java, SomeInterfaceImpl::class.java)
+            .setImpl(SomeInterface::class.java, SomeInterfaceLogic::class.java)
     }
 }

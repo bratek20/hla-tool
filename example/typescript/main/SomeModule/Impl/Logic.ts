@@ -1,5 +1,5 @@
 namespace SomeModule.Impl {
-    export class SomeInterfaceImpl implements SomeInterface {
+    export class SomeInterfaceLogic implements SomeInterface {
         constructor(
             private readonly c: HandlerContext,
         ) {}

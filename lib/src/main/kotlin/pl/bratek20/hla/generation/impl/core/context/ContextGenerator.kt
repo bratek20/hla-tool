@@ -7,7 +7,7 @@ import pl.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 
 class ImplContextGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
-        return module.name.value + "Impl"
+        return "Impl"
     }
 
     override fun generateFileContent(): FileContent {
