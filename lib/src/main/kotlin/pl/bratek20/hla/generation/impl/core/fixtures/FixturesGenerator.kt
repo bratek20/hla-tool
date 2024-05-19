@@ -10,6 +10,10 @@ class FixturesGenerator: DirectoryGenerator() {
         return "fixtures"
     }
 
+    override fun velocityDirPath(): String {
+        return "fixtures"
+    }
+
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
             BuildersGenerator(),

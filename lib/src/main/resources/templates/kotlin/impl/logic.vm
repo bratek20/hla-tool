@@ -1,0 +1,15 @@
+package ${packageName}.impl
+
+import ${packageName}.api.*
+#foreach($interface in $interfaces)
+
+class ${interface.name}Impl: ${interface.name} {
+    #foreach($method in $interface.methods)
+    override fun ${method.name}(${method.arguments()}): ${method.returnType} {
+        TODO("Not yet implemented")
+    }
+    #if($foreach.hasNext)
+
+    #end
+    #end
+}#end

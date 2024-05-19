@@ -19,6 +19,10 @@ class ContextGenerator: DirectoryGenerator() {
         return "context"
     }
 
+    override fun velocityDirPath(): String {
+        return "context"
+    }
+
     override fun shouldGenerateDirectory(): Boolean {
         return module.interfaces.isNotEmpty()
     }

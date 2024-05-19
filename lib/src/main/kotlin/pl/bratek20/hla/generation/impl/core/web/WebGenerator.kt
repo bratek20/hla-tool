@@ -9,6 +9,10 @@ class WebGenerator: DirectoryGenerator() {
         return "web"
     }
 
+    override fun velocityDirPath(): String {
+        return "web"
+    }
+
     override fun shouldGenerateDirectory(): Boolean {
         return c.domain.properties.generateWeb
     }

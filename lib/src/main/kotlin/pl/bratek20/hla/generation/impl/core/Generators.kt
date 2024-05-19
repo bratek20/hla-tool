@@ -1,7 +1,6 @@
 package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.definitions.api.ModuleDefinition
-import pl.bratek20.hla.definitions.api.TypeDefinition
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.directory.api.FileContent
@@ -25,11 +24,13 @@ interface ContentBuilderExtension{
 
 abstract class ModulePartGenerator {
     lateinit var c: ModuleGenerationContext
-    lateinit var  apiTypeFactory: ApiTypeFactory
+    lateinit var apiTypeFactory: ApiTypeFactory
+    lateinit var velocityPath: String
 
-    open fun init(c: ModuleGenerationContext) {
+    open fun init(c: ModuleGenerationContext, velocityPath: String) {
         this.c = c
         this.apiTypeFactory = ApiTypeFactory(c.domain.modules, c.language.types())
+        this.velocityPath = velocityPath
     }
 
     protected val module
@@ -42,7 +43,7 @@ abstract class ModulePartGenerator {
         get() = c.language
 
     protected fun contentBuilder(fileName: String): VelocityFileContentBuilder {
-        val path = "templates/${c.language.name().name.lowercase()}/$fileName"
+        val path = "templates/${c.language.name().name.lowercase()}/${velocityPath}/$fileName"
 
         val builder = c.velocity.contentBuilder(path)
             .put("moduleName", module.name.value)
@@ -51,8 +52,6 @@ abstract class ModulePartGenerator {
 
         return builder
     }
-
-    protected fun apiType(type: TypeDefinition?) = apiTypeFactory.create(type)
 }
 
 abstract class FileGenerator
@@ -75,6 +74,10 @@ abstract class DirectoryGenerator
 {
     abstract fun getDirectoryName(): String
 
+    open fun velocityDirPath(): String {
+        return ""
+    }
+
     open fun shouldGenerateDirectory(): Boolean {
         return true
     }
@@ -94,13 +97,13 @@ abstract class DirectoryGenerator
 
         val files = mutableListOf<File>()
         getFileGenerators().forEach { fileGenerator ->
-            fileGenerator.init(c)
+            fileGenerator.init(c, velocityDirPath())
             fileGenerator.generateFile()?.let { files.add(it) }
         }
 
         val directories = mutableListOf<Directory>()
         getDirectoryGenerators().forEach { dirGenerator ->
-            dirGenerator.init(c)
+            dirGenerator.init(c, velocityDirPath())
             dirGenerator.generateDirectory()?.let { directories.add(it) }
         }
 

@@ -1,0 +1,20 @@
+package ${packageName}.api
+
+#foreach($interface in $interfaces)
+interface $interface.name {
+#foreach($method in $interface.methods)
+    #if($method.throws.size() > 0)
+    @Throws(
+    #foreach($exception in $method.throws)
+        ${exception}::class,
+    #end
+    )
+    #end
+    fun ${method.name}($method.arguments()): $method.returnType
+    #if($foreach.hasNext)
+
+    #end
+#end
+}#if($foreach.hasNext)
+
+#end#end

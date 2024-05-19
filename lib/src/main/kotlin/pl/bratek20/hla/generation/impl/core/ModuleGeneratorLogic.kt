@@ -99,7 +99,7 @@ class ModuleGeneratorLogic(
         )
 
         val root = GenerationRoot()
-        root.init(context)
+        root.init(context, "")
 
         val result = root.generateDirectory()
         requireNotNull(result)

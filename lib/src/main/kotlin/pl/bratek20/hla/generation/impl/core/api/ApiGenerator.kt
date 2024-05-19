@@ -26,54 +26,7 @@ class ValueObjectsFileGenerator: FileGenerator() {
 
 }
 
-class InterfaceFileGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
-        return "Interfaces"
-    }
 
-    data class ArgumentView(
-        val name: String,
-        val type: String
-    )
-    data class MethodView(
-        val name: String,
-        val returnType: String?,
-        val args: List<ArgumentView>,
-        val throws: List<String>,
-    )
-    data class InterfaceView(
-        val name: String,
-        val methods: List<MethodView>
-    )
-
-    override fun generateFileContent(): FileContent?{
-        if (module.interfaces.isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("interfaces.vm")
-            .put("interfaces", module.interfaces.map { toView(it) })
-            .build()
-    }
-
-    private fun toView(interf: InterfaceDefinition): InterfaceView {
-        return InterfaceView(
-            name = interf.name,
-            methods = interf.methods.map { method ->
-                MethodView(
-                    name = method.name,
-                    returnType = toViewType(method.returnType),
-                    args = method.args.map { ArgumentView(it.name, toViewType(it.type)) },
-                    throws = method.throws.map { it.name }
-                )
-            }
-        )
-    }
-
-    private fun toViewType(type: TypeDefinition?): String {
-        return apiType(type).name()
-    }
-}
 
 class PropertiesFileGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
@@ -186,10 +139,14 @@ class ApiGenerator: DirectoryGenerator() {
         return "api"
     }
 
+    override fun velocityDirPath(): String {
+        return "api"
+    }
+
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
             ValueObjectsFileGenerator(),
-            InterfaceFileGenerator(),
+            InterfacesGenerator(),
             PropertiesFileGenerator(),
             ExceptionsFileGenerator(),
             EnumsFileGenerator(),
