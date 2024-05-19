@@ -1,6 +1,8 @@
 package pl.bratek20.hla.facade
 
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -84,14 +86,11 @@ class HlaFacadeTest {
         }
     }
 
-    @ParameterizedTest(name = "{0} ({1})")
-    @ArgumentsSource(MyArgumentsProvider::class)
-    fun `should generate module`(
-        moduleName: String,
-        lang: ModuleLanguage,
-        paths: TestPaths
-    ) {
-        //given
+    data class SetupResult(
+        val directoriesMock: DirectoriesMock,
+        val facade: HlaFacade
+    )
+    private fun setup(): SetupResult {
         val context = someContextBuilder()
             .withModules(
                 DirectoriesMocks(),
@@ -121,6 +120,19 @@ class HlaFacadeTest {
         )
 
         val facade = context.get(HlaFacade::class.java)
+
+        return SetupResult(directoriesMock, facade)
+    }
+
+    @ParameterizedTest(name = "{0} ({1})")
+    @ArgumentsSource(MyArgumentsProvider::class)
+    fun `should start module`(
+        moduleName: String,
+        lang: ModuleLanguage,
+        paths: TestPaths
+    ) {
+        //given
+        val (directoriesMock, facade) = setup()
 
         val hlaFolderPath = Path("../example/hla")
         val projectPath = Path("some/project/path")
@@ -158,8 +170,54 @@ class HlaFacadeTest {
         val failMessage = "${compareResult.differences.size} differences found!\n" +
                 compareResult.differences.joinToString("\n")
 
-        Assertions.assertThat(compareResult.same)
+        assertThat(compareResult.same)
             .withFailMessage(failMessage)
             .isTrue()
+    }
+
+    @Test
+    fun `should update module`() {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        val hlaFolderPath = Path("../example/hla")
+        val projectPath = Path("some/project/path")
+
+        val args = ModuleOperationArgs(
+            moduleName = ModuleName("SomeModule"),
+            language = ModuleLanguage.KOTLIN,
+            hlaFolderPath = hlaFolderPath,
+            projectPath = projectPath
+        )
+        facade.startModule(args)
+        //when
+        facade.updateModule(args)
+
+        //then
+        directoriesMock.assertWriteCount(4)
+        val mainDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            "some/project/path/src/main/kotlin/com/some/pkg"
+        )
+        val testFixturesDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
+            2,
+            "some/project/path/src/testFixtures/kotlin/com/some/pkg"
+        )
+
+        val mainDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
+            3,
+            "some/project/path/src/main/kotlin/com/some/pkg"
+        )
+
+        val testFixturesDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
+            4,
+            "some/project/path/src/testFixtures/kotlin/com/some/pkg"
+        )
+
+        val mainCompareResult = DirectoriesLogic().compare(mainDirectoryStart, mainDirectoryUpdate)
+        val testFixturesCompareResult = DirectoriesLogic().compare(testFixturesDirectoryStart, testFixturesDirectoryUpdate)
+
+        assertThat(mainCompareResult.same).isTrue()
+        assertThat(testFixturesCompareResult.same).isTrue()
     }
 }
