@@ -1,5 +1,7 @@
 package pl.bratek20.hla.facade.api
 
+import pl.bratek20.hla.directory.api.*
+
 val PROPERTIES_KEY = pl.bratek20.architecture.properties.api.PropertyKey("properties")
 
 data class KotlinProperties(

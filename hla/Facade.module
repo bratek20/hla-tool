@@ -16,10 +16,11 @@ Enums
         KOTLIN
         TYPE_SCRIPT
 
-ValueObjects
+NamedTypes
     ModuleName: string
 
-    GenerateModuleArgs
+ValueObjects
+    ModuleOperationArgs
         moduleName: ModuleName
         language: ModuleLanguage
         hlaFolderPath: Path
@@ -27,4 +28,6 @@ ValueObjects
 
 Interfaces
     HlaFacade
-        generateModule(args: GenerateModuleArgs)
+        startModule(args: ModuleOperationArgs)
+
+        updateModule(args: ModuleOperationArgs)

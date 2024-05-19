@@ -6,7 +6,7 @@ data class ModuleName(
     val value: String
 )
 
-data class GenerateModuleArgs(
+data class ModuleOperationArgs(
     val moduleName: ModuleName,
     val language: ModuleLanguage,
     val hlaFolderPath: Path,

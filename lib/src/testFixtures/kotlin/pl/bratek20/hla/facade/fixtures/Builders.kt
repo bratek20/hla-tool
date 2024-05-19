@@ -5,22 +5,6 @@ import pl.bratek20.hla.directory.fixtures.*
 
 import pl.bratek20.hla.facade.api.*
 
-data class GenerateModuleArgsDef(
-    var moduleName: String = "someValue",
-    var language: ModuleLanguage = ModuleLanguage.KOTLIN,
-    var hlaFolderPath: String = "someValue",
-    var projectPath: String = "someValue",
-)
-fun generateModuleArgs(init: GenerateModuleArgsDef.() -> Unit = {}): GenerateModuleArgs {
-    val def = GenerateModuleArgsDef().apply(init)
-    return GenerateModuleArgs(
-        moduleName = ModuleName(def.moduleName),
-        language = def.language,
-        hlaFolderPath = Path(def.hlaFolderPath),
-        projectPath = Path(def.projectPath),
-    )
-}
-
 data class KotlinPropertiesDef(
     var rootPackage: String = "someValue",
 )
@@ -54,5 +38,21 @@ fun hlaProperties(init: HlaPropertiesDef.() -> Unit = {}): HlaProperties {
         generateWeb = def.generateWeb,
         kotlin = kotlinProperties(def.kotlin),
         typeScript = typeScriptProperties(def.typeScript),
+    )
+}
+
+data class ModuleOperationArgsDef(
+    var moduleName: String = "someValue",
+    var language: ModuleLanguage = ModuleLanguage.KOTLIN,
+    var hlaFolderPath: String = "someValue",
+    var projectPath: String = "someValue",
+)
+fun moduleOperationArgs(init: ModuleOperationArgsDef.() -> Unit = {}): ModuleOperationArgs {
+    val def = ModuleOperationArgsDef().apply(init)
+    return ModuleOperationArgs(
+        moduleName = ModuleName(def.moduleName),
+        language = def.language,
+        hlaFolderPath = pathCreate(def.hlaFolderPath),
+        projectPath = pathCreate(def.projectPath),
     )
 }
