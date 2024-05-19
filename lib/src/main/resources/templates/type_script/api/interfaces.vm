@@ -8,7 +8,7 @@ interface $interface.name {
     #end
      */
     #end
-    ${method.name}(#foreach($arg in $method.args)$arg.name: $arg.type, #{end}c: HandlerContext): $method.returnType
+    ${method.name}($method.arguments()): $method.returnType
     #if($foreach.hasNext)
 
     #end

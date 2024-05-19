@@ -1,0 +1,16 @@
+namespace ${moduleName}.Impl {
+    #foreach($interface in $interfaces)
+    export class ${interface.name}Impl implements ${interface.name} {
+        constructor(
+            private readonly c: HandlerContext,
+        ) {}
+        #foreach($method in $interface.methods)
+
+        ${method.name}(${method.arguments()}): ${method.returnType} {
+            // TODO
+            return undefined
+        }
+        #end
+    }
+    #end
+}

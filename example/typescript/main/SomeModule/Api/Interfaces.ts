@@ -3,10 +3,10 @@ interface SomeInterface {
      * @throws { SomeException }
      * @throws { Some2Exception }
      */
-    someCommand(id: SomeId, amount: number, c: HandlerContext): void
+    someCommand(id: SomeId, amount: number): void
 
     /**
      * @throws { SomeException }
      */
-    someQuery(id: SomeId, c: HandlerContext): SomeClass
+    someQuery(id: SomeId): SomeClass
 }
