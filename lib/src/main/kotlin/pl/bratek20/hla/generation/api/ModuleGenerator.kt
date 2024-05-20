@@ -9,7 +9,8 @@ data class GenerateArgs(
     val moduleName: ModuleName,
     val language: ModuleLanguage,
     val modules: List<ModuleDefinition>,
-    val onlyUpdate: Boolean
+    val onlyUpdate: Boolean,
+    val onlyParts: List<String>
 )
 
 data class GenerateResult(

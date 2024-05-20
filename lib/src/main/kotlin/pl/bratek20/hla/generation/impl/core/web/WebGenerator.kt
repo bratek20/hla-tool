@@ -5,7 +5,7 @@ import pl.bratek20.hla.generation.impl.core.FileGenerator
 import pl.bratek20.hla.generation.impl.core.web.dto.DtosGenerator
 
 class WebGenerator: DirectoryGenerator() {
-    override fun getDirectoryName(): String {
+    override fun name(): String {
         return "web"
     }
 

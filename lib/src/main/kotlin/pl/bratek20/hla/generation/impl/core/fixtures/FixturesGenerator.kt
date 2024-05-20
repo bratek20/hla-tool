@@ -6,7 +6,7 @@ import pl.bratek20.hla.generation.impl.core.fixtures.asserts.AssertsGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 
 class FixturesGenerator: DirectoryGenerator() {
-    override fun getDirectoryName(): String {
+    override fun name(): String {
         return "fixtures"
     }
 

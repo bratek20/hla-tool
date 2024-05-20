@@ -39,7 +39,7 @@ class ModuleGeneratorLogic(
 ) : ModuleGenerator {
 
     class MainDirectoryGenerator: DirectoryGenerator() {
-        override fun getDirectoryName(): String {
+        override fun name(): String {
             return moduleDirectoryName(module.name, c.language)
         }
 
@@ -54,7 +54,7 @@ class ModuleGeneratorLogic(
     }
 
     class TestFixturesGenerator: DirectoryGenerator() {
-        override fun getDirectoryName(): String {
+        override fun name(): String {
             return moduleDirectoryName(module.name, c.language)
         }
 
@@ -66,7 +66,7 @@ class ModuleGeneratorLogic(
     }
 
     class GenerationRoot: DirectoryGenerator() {
-        override fun getDirectoryName(): String {
+        override fun name(): String {
             return "root"
         }
 
@@ -102,6 +102,7 @@ class ModuleGeneratorLogic(
                 ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
             },
             onlyUpdate = args.onlyUpdate,
+            onlyParts = args.onlyParts,
         )
 
         val root = GenerationRoot()

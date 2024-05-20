@@ -8,7 +8,7 @@ import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.utils.camelToScreamingSnakeCase
 
 class NamedTypesGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "NamedTypes"
     }
 
@@ -26,7 +26,7 @@ class NamedTypesGenerator: FileGenerator() {
 }
 
 class ValueObjectsGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "ValueObjects"
     }
 
@@ -44,7 +44,7 @@ class ValueObjectsGenerator: FileGenerator() {
 }
 
 class PropertiesGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "Properties"
     }
 
@@ -74,7 +74,7 @@ class PropertiesGenerator: FileGenerator() {
 }
 
 class ExceptionsGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "Exceptions"
     }
 
@@ -96,7 +96,7 @@ class ExceptionsGenerator: FileGenerator() {
 }
 
 class EnumsGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "Enums"
     }
 
@@ -112,7 +112,7 @@ class EnumsGenerator: FileGenerator() {
 }
 
 class CustomTypesGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "CustomTypes"
     }
 
@@ -135,7 +135,7 @@ class CustomTypesGenerator: FileGenerator() {
 }
 
 class CustomTypesMapperGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "CustomTypesMapper"
     }
 
@@ -158,7 +158,7 @@ class CustomTypesMapperGenerator: FileGenerator() {
 }
 
 class ApiGenerator: DirectoryGenerator() {
-    override fun getDirectoryName(): String {
+    override fun name(): String {
         return "api"
     }
 

@@ -27,7 +27,8 @@ class HlaFacadeLogic(
             moduleName = args.moduleName,
             language = args.language,
             modules = modules,
-            onlyUpdate = onlyUpdate
+            onlyUpdate = onlyUpdate,
+            onlyParts = args.onlyParts
         ))
 
         writer.write(

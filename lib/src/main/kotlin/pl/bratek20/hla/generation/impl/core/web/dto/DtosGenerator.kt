@@ -4,7 +4,7 @@ import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.generation.impl.core.FileGenerator
 
 class DtosGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "Dtos"
     }
 

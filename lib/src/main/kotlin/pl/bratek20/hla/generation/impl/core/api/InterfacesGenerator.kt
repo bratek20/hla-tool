@@ -63,7 +63,7 @@ class InterfaceViewFactory(
 }
 
 class InterfacesGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "Interfaces"
     }
 

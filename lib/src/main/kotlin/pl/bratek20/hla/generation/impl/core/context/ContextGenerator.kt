@@ -7,7 +7,7 @@ import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 
 class ImplContextGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "Impl"
     }
 
@@ -20,7 +20,7 @@ class ImplContextGenerator: FileGenerator() {
 }
 
 class ContextGenerator: DirectoryGenerator() {
-    override fun getDirectoryName(): String {
+    override fun name(): String {
         return "context"
     }
 

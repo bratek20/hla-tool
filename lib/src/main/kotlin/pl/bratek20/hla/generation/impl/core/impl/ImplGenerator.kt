@@ -7,7 +7,7 @@ import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 
 class LogicGenerator: FileGenerator() {
-    override fun getBaseFileName(): String {
+    override fun name(): String {
         return "Logic"
     }
 
@@ -21,7 +21,7 @@ class LogicGenerator: FileGenerator() {
 }
 
 class ImplGenerator: DirectoryGenerator() {
-    override fun getDirectoryName(): String {
+    override fun name(): String {
         return "impl"
     }
 

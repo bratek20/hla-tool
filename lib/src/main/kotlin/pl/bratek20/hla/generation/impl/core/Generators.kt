@@ -13,7 +13,8 @@ class ModuleGenerationContext(
     val domain: DomainContext,
     val velocity: VelocityFacade,
     val language: LanguageSupport,
-    val onlyUpdate: Boolean
+    val onlyUpdate: Boolean,
+    val onlyParts: List<String>
 ) {
     val module: ModuleDefinition
         get() = domain.module
@@ -62,18 +63,37 @@ abstract class ModulePartGenerator {
     open fun mode(): GeneratorMode {
         return GeneratorMode.START_AND_UPDATE
     }
+
+    fun shouldSkip(): Boolean {
+        if(c.onlyUpdate && mode() == GeneratorMode.ONLY_START) {
+            return true
+        }
+
+        if(c.onlyParts.isNotEmpty()) {
+            if (c.onlyParts.contains(name())) {
+                return false
+            }
+            return children().all { it.shouldSkip() }
+        }
+        return false
+    }
+
+    abstract fun name(): String
+
+    open fun children(): List<ModulePartGenerator> {
+        return emptyList()
+    }
 }
 
 abstract class FileGenerator
     : ModulePartGenerator()
 {
-    abstract fun getBaseFileName(): String
     abstract fun generateFileContent(): FileContent?
 
     fun generateFile(): File? {
         val content = generateFileContent() ?: return null
         return File(
-            name = getBaseFileName() + "." + language.filesExtension(),
+            name = name() + "." + language.filesExtension(),
             content = content
         )
     }
@@ -82,7 +102,17 @@ abstract class FileGenerator
 abstract class DirectoryGenerator
     : ModulePartGenerator()
 {
-    abstract fun getDirectoryName(): String
+    private lateinit var fileGenerators: List<FileGenerator>
+    private lateinit var directoryGenerators: List<DirectoryGenerator>
+
+    override fun init(c: ModuleGenerationContext, velocityPath: String) {
+        super.init(c, velocityPath)
+
+        fileGenerators = getFileGenerators()
+        directoryGenerators = getDirectoryGenerators()
+
+        children().forEach { it.init(c, velocityDirPath()) }
+    }
 
     open fun velocityDirPath(): String {
         return ""
@@ -100,33 +130,33 @@ abstract class DirectoryGenerator
         return emptyList()
     }
 
+    override fun children(): List<ModulePartGenerator> {
+        return fileGenerators + directoryGenerators
+    }
+
     fun generateDirectory(): Directory? {
         if (!shouldGenerateDirectory()) {
             return null
         }
 
         val files = mutableListOf<File>()
-        getFileGenerators().forEach { fileGenerator ->
-            if (c.onlyUpdate && fileGenerator.mode() == GeneratorMode.ONLY_START) {
+        fileGenerators.forEach { fileGenerator ->
+            if (fileGenerator.shouldSkip()) {
                 return@forEach
             }
-
-            fileGenerator.init(c, velocityDirPath())
             fileGenerator.generateFile()?.let { files.add(it) }
         }
 
         val directories = mutableListOf<Directory>()
-        getDirectoryGenerators().forEach { dirGenerator ->
-            if (c.onlyUpdate && dirGenerator.mode() == GeneratorMode.ONLY_START) {
+        directoryGenerators.forEach { dirGenerator ->
+            if (dirGenerator.shouldSkip()) {
                 return@forEach
             }
-
-            dirGenerator.init(c, velocityDirPath())
             dirGenerator.generateDirectory()?.let { directories.add(it) }
         }
 
         return Directory(
-            name = language.adjustDirectoryName(getDirectoryName()),
+            name = language.adjustDirectoryName(name()),
             files = files,
             directories = directories
         )
