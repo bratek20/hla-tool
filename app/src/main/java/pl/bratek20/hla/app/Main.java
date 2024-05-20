@@ -38,18 +38,28 @@ public class Main {
 
         var facade = context.get(HlaFacade.class);
 
-        var moduleName = new ModuleName(args[0]);
-        var language = ModuleLanguage.valueOf(args[1]);
-        var hlaFolderPath = new Path(args[2]);
-        var projectPath = new Path(args[3]);
+        var operationName = args[0];
+        var moduleName = new ModuleName(args[1]);
+        var language = ModuleLanguage.valueOf(args[2]);
+        var hlaFolderPath = new Path(args[3]);
+        var projectPath = new Path(args[4]);
 
-        facade.startModule(
-            new ModuleOperationArgs(
-                moduleName,
-                language,
-                hlaFolderPath,
-                projectPath
-            )
+        var operationArgs = new ModuleOperationArgs(
+            moduleName,
+            language,
+            hlaFolderPath,
+            projectPath
         );
+
+        switch (operationName) {
+            case "start":
+                facade.startModule(operationArgs);
+                break;
+            case "update":
+                facade.updateModule(operationArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown operation: " + operationName);
+        }
     }
 }
