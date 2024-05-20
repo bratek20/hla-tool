@@ -23,6 +23,11 @@ interface ContentBuilderExtension{
     fun extend(builder: VelocityFileContentBuilder)
 }
 
+enum class GeneratorMode {
+    START_AND_UPDATE,
+    ONLY_START,
+}
+
 abstract class ModulePartGenerator {
     lateinit var c: ModuleGenerationContext
     lateinit var apiTypeFactory: ApiTypeFactory
@@ -52,6 +57,10 @@ abstract class ModulePartGenerator {
         c.language.contentBuilderExtensions().forEach { it.extend(builder) }
 
         return builder
+    }
+
+    open fun mode(): GeneratorMode {
+        return GeneratorMode.START_AND_UPDATE
     }
 }
 
@@ -98,12 +107,20 @@ abstract class DirectoryGenerator
 
         val files = mutableListOf<File>()
         getFileGenerators().forEach { fileGenerator ->
+            if (c.onlyUpdate && fileGenerator.mode() == GeneratorMode.ONLY_START) {
+                return@forEach
+            }
+
             fileGenerator.init(c, velocityDirPath())
             fileGenerator.generateFile()?.let { files.add(it) }
         }
 
         val directories = mutableListOf<Directory>()
         getDirectoryGenerators().forEach { dirGenerator ->
+            if (c.onlyUpdate && dirGenerator.mode() == GeneratorMode.ONLY_START) {
+                return@forEach
+            }
+
             dirGenerator.init(c, velocityDirPath())
             dirGenerator.generateDirectory()?.let { directories.add(it) }
         }

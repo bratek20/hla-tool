@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl.core.context
 import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.FileGenerator
+import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 
 class ImplContextGenerator: FileGenerator() {
@@ -21,6 +22,10 @@ class ImplContextGenerator: FileGenerator() {
 class ContextGenerator: DirectoryGenerator() {
     override fun getDirectoryName(): String {
         return "context"
+    }
+
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
     }
 
     override fun velocityDirPath(): String {

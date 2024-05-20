@@ -4,6 +4,7 @@ import pl.bratek20.hla.definitions.api.*
 import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.FileGenerator
+import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.utils.camelToScreamingSnakeCase
 
 class ValueObjectsFileGenerator: FileGenerator() {
@@ -23,10 +24,7 @@ class ValueObjectsFileGenerator: FileGenerator() {
             ))
             .build()
     }
-
 }
-
-
 
 class PropertiesFileGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
@@ -101,12 +99,12 @@ class CustomTypesFileGenerator: FileGenerator() {
         return "CustomTypes"
     }
 
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
+    }
+
     override fun generateFileContent(): FileContent?{
         if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
-            return null
-        }
-
-        if (c.onlyUpdate) {
             return null
         }
 
@@ -122,6 +120,10 @@ class CustomTypesFileGenerator: FileGenerator() {
 class CustomTypesMapperFileGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
         return "CustomTypesMapper"
+    }
+
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
     }
 
     override fun generateFileContent(): FileContent?{

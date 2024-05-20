@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl.core.impl
 import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.FileGenerator
+import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 
 class LogicGenerator: FileGenerator() {
@@ -26,6 +27,10 @@ class ImplGenerator: DirectoryGenerator() {
 
     override fun velocityDirPath(): String {
         return "impl"
+    }
+
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
     }
 
     override fun shouldGenerateDirectory(): Boolean {

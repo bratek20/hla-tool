@@ -1,6 +1,5 @@
 package pl.bratek20.hla.facade
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -12,7 +11,6 @@ import pl.bratek20.architecture.context.someContextBuilder
 import pl.bratek20.architecture.properties.impl.PropertiesModule
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSourceModule
-import pl.bratek20.hla.facade.api.ModuleName
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
@@ -190,6 +188,17 @@ class HlaFacadeTest {
             projectPath = projectPath
         )
         facade.startModule(args)
+
+        val expectedFilesToSkipUpdate = setOf(
+            "api/CustomTypes",
+            "api/CustomTypesMapper",
+        )
+
+        val expectedDirectoriesToSkipUpdate = setOf(
+            "context",
+            "impl"
+        )
+
         //when
         facade.updateModule(args)
 
@@ -217,8 +226,14 @@ class HlaFacadeTest {
         val mainCompareResult = DirectoriesLogic().compare(mainDirectoryStart, mainDirectoryUpdate)
         val testFixturesCompareResult = DirectoriesLogic().compare(testFixturesDirectoryStart, testFixturesDirectoryUpdate)
 
-        assertThat(mainCompareResult.differences).containsExactlyInAnyOrder(
-            "File somemodule/api/CustomTypes.kt not found in second directory"
+        val expectedMainDifference = expectedFilesToSkipUpdate.map {
+                "File somemodule/$it.kt not found in second directory"
+            } + expectedDirectoriesToSkipUpdate.map {
+                "Directory somemodule/$it not found in second directory"
+            }
+
+        assertThat(mainCompareResult.differences).containsExactlyInAnyOrderElementsOf(
+            expectedMainDifference
         )
 
         assertThat(testFixturesCompareResult.differences).isEmpty()
