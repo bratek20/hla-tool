@@ -13,7 +13,7 @@ class NamedTypesGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val namedTypes = module.simpleValueObjects.map { apiTypeFactory.create<SimpleVOApiType>(it) }
+        val namedTypes = module.namedTypes.map { apiTypeFactory.create<NamedApiType>(it) }
 
         if (namedTypes.isEmpty()) {
             return null
@@ -31,7 +31,7 @@ class ValueObjectsGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val valueObjects = module.complexValueObjects.map { apiTypeFactory.create<ComplexVOApiType>(it) }
+        val valueObjects = module.valueObjects.map { apiTypeFactory.create<ComplexVOApiType>(it) }
 
         if (valueObjects.isEmpty()) {
             return null
@@ -54,12 +54,12 @@ class PropertiesGenerator: FileGenerator() {
     )
 
     override fun generateFileContent(): FileContent?{
-        if (module.propertyValueObjects.isEmpty()) {
+        if (module.properties.isEmpty()) {
             return null
         }
 
         return contentBuilder("properties.vm")
-            .put("properties", module.propertyValueObjects.map {
+            .put("properties", module.properties.map {
                 apiTypeFactory.create<PropertyApiType>(it)
             })
             .put("keys", module.propertyMappings.map { toApiPropertyKey(it) })

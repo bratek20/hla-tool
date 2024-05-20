@@ -56,7 +56,7 @@ abstract class SimpleStructureApiType(
     abstract fun unbox(variableName: String): String;
 }
 
-class SimpleVOApiType(
+class NamedApiType(
     name: String,
     boxedType: BaseApiType
 ) : SimpleStructureApiType(name, boxedType) {
@@ -220,7 +220,7 @@ class EnumApiType(
 }
 
 data class ApiValueObjects(
-    val simpleList: List<SimpleVOApiType>,
+    val simpleList: List<NamedApiType>,
     val complexList: List<ComplexVOApiType>
 )
 
@@ -250,7 +250,7 @@ class ApiTypeFactory(
 
         val apiType = when {
             isList -> ListApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
-            simpleVO != null -> SimpleVOApiType(type.name, createBaseApiType(ofBaseType(simpleVO.typeName)))
+            simpleVO != null -> NamedApiType(type.name, createBaseApiType(ofBaseType(simpleVO.typeName)))
             simpleCustomType != null -> SimpleCustomApiType(type.name, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
             complexVO != null -> ComplexVOApiType(type.name, createFields(complexVO.fields))
             propertyVO != null -> PropertyApiType(type.name, createPropertyFields(propertyVO.fields))

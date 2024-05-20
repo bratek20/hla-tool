@@ -47,9 +47,9 @@ open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
 }
 
 class SimpleVOExpectedType(
-    api: SimpleVOApiType,
+    api: NamedApiType,
     boxedType: BaseExpectedType,
-) : SimpleStructureExpectedType<SimpleVOApiType>(api, boxedType)
+) : SimpleStructureExpectedType<NamedApiType>(api, boxedType)
 
 class SimpleCustomExpectedType(
     api: SimpleCustomApiType,
@@ -160,7 +160,7 @@ class ExpectedTypeFactory(
     fun create(type: ApiType): ExpectedType<*> {
         val result =  when (type) {
             is BaseApiType -> BaseExpectedType(type)
-            is SimpleVOApiType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
+            is NamedApiType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is ComplexVOApiType -> ComplexVOExpectedType(type, createFields(type.fields))
             is ListApiType -> ListExpectedType(type, create(type.wrappedType))
             is EnumApiType -> ExpectedEnumType(type)

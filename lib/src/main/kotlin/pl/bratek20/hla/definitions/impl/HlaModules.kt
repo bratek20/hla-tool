@@ -51,15 +51,15 @@ class HlaModules(
     }
 
     private fun findSimpleVO(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
-        return module.simpleValueObjects.find { it.name == type.name }
+        return module.namedTypes.find { it.name == type.name }
     }
 
     private fun findComplexVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.complexValueObjects.find { it.name == type.name }
+        return module.valueObjects.find { it.name == type.name }
     }
 
     private fun findPropertyVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.propertyValueObjects.find { it.name == type.name }
+        return module.properties.find { it.name == type.name }
     }
 
     private fun findSimpleCustomType(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
@@ -98,15 +98,15 @@ class HlaModules(
 
     private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
         return module.enums.map { it.name } +
-                module.simpleValueObjects.map { it.name } +
-                module.complexValueObjects.map { it.name } +
+                module.namedTypes.map { it.name } +
+                module.valueObjects.map { it.name } +
                 module.simpleCustomTypes.map { it.name } +
                 module.complexCustomTypes.map { it.name } +
-                module.propertyValueObjects.map { it.name }
+                module.properties.map { it.name }
     }
 
     private fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return module.complexValueObjects + module.complexCustomTypes + module.propertyValueObjects
+        return module.valueObjects + module.complexCustomTypes + module.properties
     }
 
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {

@@ -9,7 +9,7 @@ class AssertsGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val assertTypes = module.complexCustomTypes + module.propertyValueObjects + module.complexValueObjects
+        val assertTypes = module.complexCustomTypes + module.properties + module.valueObjects
         if (assertTypes.isEmpty()) {
             return null
         }

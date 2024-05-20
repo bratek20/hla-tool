@@ -1,7 +1,6 @@
 package pl.bratek20.hla.definitions.fixtures
 
 import pl.bratek20.hla.facade.api.*
-import pl.bratek20.hla.facade.fixtures.*
 
 import pl.bratek20.hla.definitions.api.*
 
@@ -44,10 +43,10 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
     val def = ModuleDefinitionDef().apply(init)
     return ModuleDefinition(
         name = ModuleName(def.name),
-        simpleValueObjects = def.simpleValueObjects.map { it -> simpleStructureDefinition(it) },
-        complexValueObjects = def.complexValueObjects.map { it -> complexStructureDefinition(it) },
+        namedTypes = def.simpleValueObjects.map { it -> simpleStructureDefinition(it) },
+        valueObjects = def.complexValueObjects.map { it -> complexStructureDefinition(it) },
         interfaces = def.interfaces.map { it -> interfaceDefinition(it) },
-        propertyValueObjects = def.propertyValueObjects.map { it -> complexStructureDefinition(it) },
+        properties = def.propertyValueObjects.map { it -> complexStructureDefinition(it) },
         propertyMappings = def.propertyMappings.map { it -> propertyMapping(it) },
         enums = def.enums.map { it -> enumDefinition(it) },
         simpleCustomTypes = def.simpleCustomTypes.map { it -> simpleStructureDefinition(it) },

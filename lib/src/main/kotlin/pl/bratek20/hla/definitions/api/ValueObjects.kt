@@ -14,10 +14,10 @@ data class EnumDefinition(
 
 data class ModuleDefinition(
     val name: ModuleName,
-    val simpleValueObjects: List<SimpleStructureDefinition>,
-    val complexValueObjects: List<ComplexStructureDefinition>,
+    val namedTypes: List<SimpleStructureDefinition>,
+    val valueObjects: List<ComplexStructureDefinition>,
     val interfaces: List<InterfaceDefinition>,
-    val propertyValueObjects: List<ComplexStructureDefinition>,
+    val properties: List<ComplexStructureDefinition>,
     val propertyMappings: List<PropertyMapping>,
     val enums: List<EnumDefinition>,
     val simpleCustomTypes: List<SimpleStructureDefinition>,

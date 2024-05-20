@@ -36,7 +36,7 @@ abstract class SimpleStructureDtoType(view: SimpleStructureApiType): DtoType<Sim
     }
 }
 
-class SimpleVODtoType(view: SimpleVOApiType): SimpleStructureDtoType(view) {
+class SimpleVODtoType(view: NamedApiType): SimpleStructureDtoType(view) {
     override fun toApi(variableName: String): String {
         return languageTypes.classConstructorCall(api.name) + "($variableName)"
     }
@@ -145,7 +145,7 @@ class DtoTypeFactory(
     fun create(type: ApiType): DtoType<*> {
         val result = when (type) {
             is BaseApiType -> BaseDtoType(type)
-            is SimpleVOApiType -> SimpleVODtoType(type)
+            is NamedApiType -> SimpleVODtoType(type)
             is SimpleCustomApiType -> SimpleCustomDtoType(type)
             is ListApiType -> ListDtoType(create(type.wrappedType), type)
             is EnumApiType -> EnumDtoType(type)

@@ -10,7 +10,7 @@ class DtosGenerator: FileGenerator() {
 
     override fun generateFileContent(): FileContent? {
         val dtoTypeFactory = DtoTypeFactory(c.language.types(), c.language.dtoPattern())
-        val dtos = (module.complexCustomTypes + module.complexValueObjects).map {
+        val dtos = (module.complexCustomTypes + module.valueObjects).map {
             dtoTypeFactory.create(apiTypeFactory.create(it))
         }
 

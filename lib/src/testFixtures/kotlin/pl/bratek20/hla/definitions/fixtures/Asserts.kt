@@ -2,8 +2,6 @@ package pl.bratek20.hla.definitions.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
-import pl.bratek20.hla.facade.fixtures.*
-
 import pl.bratek20.hla.definitions.api.*
 
 data class ExpectedPropertyMapping(
@@ -58,13 +56,13 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
     }
 
     expected.simpleValueObjects?.let {
-        assertThat(given.simpleValueObjects).hasSize(it.size)
-        given.simpleValueObjects.forEachIndexed { idx, entry -> assertSimpleStructureDefinition(entry, it[idx]) }
+        assertThat(given.namedTypes).hasSize(it.size)
+        given.namedTypes.forEachIndexed { idx, entry -> assertSimpleStructureDefinition(entry, it[idx]) }
     }
 
     expected.complexValueObjects?.let {
-        assertThat(given.complexValueObjects).hasSize(it.size)
-        given.complexValueObjects.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
+        assertThat(given.valueObjects).hasSize(it.size)
+        given.valueObjects.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }
 
     expected.interfaces?.let {
@@ -73,8 +71,8 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
     }
 
     expected.propertyValueObjects?.let {
-        assertThat(given.propertyValueObjects).hasSize(it.size)
-        given.propertyValueObjects.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
+        assertThat(given.properties).hasSize(it.size)
+        given.properties.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }
 
     expected.propertyMappings?.let {

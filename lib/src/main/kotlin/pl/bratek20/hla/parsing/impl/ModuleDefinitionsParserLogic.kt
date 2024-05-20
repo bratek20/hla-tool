@@ -31,10 +31,10 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
         return ModuleDefinition(
             name = moduleName,
-            simpleValueObjects = namedTypes,
-            complexValueObjects = complexValueObjects,
+            namedTypes = namedTypes,
+            valueObjects = complexValueObjects,
             interfaces = interfaces,
-            propertyValueObjects = properties.vos,
+            properties = properties.vos,
             propertyMappings = properties.mappings,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
