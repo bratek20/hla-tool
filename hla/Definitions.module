@@ -19,10 +19,10 @@ ValueObjects
 
     ModuleDefinition
         name: ModuleName
-        simpleValueObjects: SimpleStructureDefinition[]
-        complexValueObjects: ComplexStructureDefinition[]
+        namedTypes: SimpleStructureDefinition[]
+        valueObjects: ComplexStructureDefinition[]
         interfaces: InterfaceDefinition[]
-        propertyValueObjects: ComplexStructureDefinition[]
+        properties: ComplexStructureDefinition[]
         propertyMappings: PropertyMapping[]
         enums: EnumDefinition[]
         simpleCustomTypes: SimpleStructureDefinition[]

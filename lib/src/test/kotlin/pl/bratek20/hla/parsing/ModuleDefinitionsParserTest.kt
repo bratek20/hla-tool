@@ -28,11 +28,11 @@ class ModuleDefinitionsParserTest {
         assertModules(modules, listOf(
             {
                 name = "OtherModule"
-                simpleValueObjects = listOf {
+                namedTypes = listOf {
                     name = "OtherId"
                     typeName = "string"
                 }
-                complexValueObjects = listOf {
+                valueObjects = listOf {
                     name = "OtherClass"
                     fields = listOf(
                         {
@@ -52,11 +52,11 @@ class ModuleDefinitionsParserTest {
             },
             {
                 name = "SomeModule"
-                simpleValueObjects = listOf {
+                namedTypes = listOf {
                     name = "SomeId"
                     typeName = "string"
                 }
-                complexValueObjects = listOf(
+                valueObjects = listOf(
                     {
                         name = "SomeClass"
                         fields = listOf(
@@ -233,7 +233,7 @@ class ModuleDefinitionsParserTest {
         val modules = parse("only-properties")
 
         assertModules(modules, listOf {
-            propertyValueObjects = listOf(
+            properties = listOf(
                 {
                     name = "SomeProperty"
                     fields = listOf {
@@ -317,7 +317,7 @@ class ModuleDefinitionsParserTest {
 
         assertModules(modules, listOf {
             name = "SomeModule"
-            simpleValueObjects = listOf {
+            namedTypes = listOf {
                 name = "SomeId"
                 typeName = "string"
             }

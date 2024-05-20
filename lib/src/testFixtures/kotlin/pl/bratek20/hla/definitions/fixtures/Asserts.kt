@@ -2,6 +2,9 @@ package pl.bratek20.hla.definitions.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import pl.bratek20.hla.facade.api.*
+import pl.bratek20.hla.facade.fixtures.*
+
 import pl.bratek20.hla.definitions.api.*
 
 data class ExpectedPropertyMapping(
@@ -39,10 +42,10 @@ fun assertEnumDefinition(given: EnumDefinition, expectedInit: ExpectedEnumDefini
 
 data class ExpectedModuleDefinition(
     var name: String? = null,
-    var simpleValueObjects: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
-    var complexValueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var namedTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
+    var valueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
-    var propertyValueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var properties: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var propertyMappings: List<(ExpectedPropertyMapping.() -> Unit)>? = null,
     var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
     var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
@@ -55,12 +58,12 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
         assertThat(given.name.value).isEqualTo(it)
     }
 
-    expected.simpleValueObjects?.let {
+    expected.namedTypes?.let {
         assertThat(given.namedTypes).hasSize(it.size)
         given.namedTypes.forEachIndexed { idx, entry -> assertSimpleStructureDefinition(entry, it[idx]) }
     }
 
-    expected.complexValueObjects?.let {
+    expected.valueObjects?.let {
         assertThat(given.valueObjects).hasSize(it.size)
         given.valueObjects.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }
@@ -70,7 +73,7 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
         given.interfaces.forEachIndexed { idx, entry -> assertInterfaceDefinition(entry, it[idx]) }
     }
 
-    expected.propertyValueObjects?.let {
+    expected.properties?.let {
         assertThat(given.properties).hasSize(it.size)
         given.properties.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }

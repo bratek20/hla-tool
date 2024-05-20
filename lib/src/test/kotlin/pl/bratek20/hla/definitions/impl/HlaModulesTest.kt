@@ -12,13 +12,13 @@ class HlaModulesTest {
         val modules = listOf(
            moduleDefinition {
                name = "A"
-               simpleValueObjects = listOf {
+               namedTypes =  listOf {
                    name = "AClass"
                }
            },
            moduleDefinition {
                name = "B"
-               complexValueObjects = listOf {
+               valueObjects = listOf {
                    name = "BClass"
                    fields = listOf {
                        name = "field"

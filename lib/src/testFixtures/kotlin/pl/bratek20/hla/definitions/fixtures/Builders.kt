@@ -1,6 +1,7 @@
 package pl.bratek20.hla.definitions.fixtures
 
 import pl.bratek20.hla.facade.api.*
+import pl.bratek20.hla.facade.fixtures.*
 
 import pl.bratek20.hla.definitions.api.*
 
@@ -30,10 +31,10 @@ fun enumDefinition(init: EnumDefinitionDef.() -> Unit = {}): EnumDefinition {
 
 data class ModuleDefinitionDef(
     var name: String = "someValue",
-    var simpleValueObjects: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
-    var complexValueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var namedTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var valueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var interfaces: List<(InterfaceDefinitionDef.() -> Unit)> = emptyList(),
-    var propertyValueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var properties: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var propertyMappings: List<(PropertyMappingDef.() -> Unit)> = emptyList(),
     var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
     var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
@@ -43,10 +44,10 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
     val def = ModuleDefinitionDef().apply(init)
     return ModuleDefinition(
         name = ModuleName(def.name),
-        namedTypes = def.simpleValueObjects.map { it -> simpleStructureDefinition(it) },
-        valueObjects = def.complexValueObjects.map { it -> complexStructureDefinition(it) },
+        namedTypes = def.namedTypes.map { it -> simpleStructureDefinition(it) },
+        valueObjects = def.valueObjects.map { it -> complexStructureDefinition(it) },
         interfaces = def.interfaces.map { it -> interfaceDefinition(it) },
-        properties = def.propertyValueObjects.map { it -> complexStructureDefinition(it) },
+        properties = def.properties.map { it -> complexStructureDefinition(it) },
         propertyMappings = def.propertyMappings.map { it -> propertyMapping(it) },
         enums = def.enums.map { it -> enumDefinition(it) },
         simpleCustomTypes = def.simpleCustomTypes.map { it -> simpleStructureDefinition(it) },
