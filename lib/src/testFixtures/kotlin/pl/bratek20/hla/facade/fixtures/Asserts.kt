@@ -60,6 +60,7 @@ data class ExpectedModuleOperationArgs(
     var language: ModuleLanguage? = null,
     var hlaFolderPath: String? = null,
     var projectPath: String? = null,
+    var onlyParts: List<String>? = null,
 )
 fun assertModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedModuleOperationArgs.() -> Unit) {
     val expected = ExpectedModuleOperationArgs().apply(expectedInit)
@@ -78,5 +79,10 @@ fun assertModuleOperationArgs(given: ModuleOperationArgs, expectedInit: Expected
 
     expected.projectPath?.let {
         assertThat(pathGetValue(given.projectPath)).isEqualTo(it)
+    }
+
+    expected.onlyParts?.let {
+        assertThat(given.onlyParts).hasSize(it.size)
+        given.onlyParts.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
     }
 }

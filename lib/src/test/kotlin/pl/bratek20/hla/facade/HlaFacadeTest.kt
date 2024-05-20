@@ -15,6 +15,7 @@ import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoriesMocks
+import pl.bratek20.hla.directory.fixtures.assertDirectory
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
@@ -141,7 +142,8 @@ class HlaFacadeTest {
                 moduleName = ModuleName(moduleName),
                 language = lang,
                 hlaFolderPath = hlaFolderPath,
-                projectPath = projectPath
+                projectPath = projectPath,
+                onlyParts = emptyList()
             )
         )
 
@@ -185,7 +187,8 @@ class HlaFacadeTest {
             moduleName = ModuleName("SomeModule"),
             language = ModuleLanguage.KOTLIN,
             hlaFolderPath = hlaFolderPath,
-            projectPath = projectPath
+            projectPath = projectPath,
+            onlyParts = emptyList()
         )
         facade.startModule(args)
 
@@ -237,5 +240,63 @@ class HlaFacadeTest {
         )
 
         assertThat(testFixturesCompareResult.differences).isEmpty()
+    }
+
+    @Test
+    fun `should start module using onlyParts`() {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        val hlaFolderPath = Path("../example/hla")
+        val projectPath = Path("some/project/path")
+
+        val args = ModuleOperationArgs(
+            moduleName = ModuleName("SomeModule"),
+            language = ModuleLanguage.KOTLIN,
+            hlaFolderPath = hlaFolderPath,
+            projectPath = projectPath,
+            onlyParts = listOf(
+                "NamedTypes",
+                "Properties",
+                "Builders"
+            )
+        )
+
+        //when
+        facade.startModule(args)
+
+        //then
+        directoriesMock.assertWriteCount(2)
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            "some/project/path/src/main/kotlin/com/some/pkg"
+        )
+        val testFixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+            2,
+            "some/project/path/src/testFixtures/kotlin/com/some/pkg"
+        )
+
+        assertDirectory(mainDirectory) {
+            hasDirectory = {
+                name = "api"
+                files = listOf(
+                    {
+                        name = "NamedTypes.kt"
+                    },
+                    {
+                        name = "Properties.kt"
+                    },
+                )
+            }
+        }
+
+        assertDirectory(testFixturesDirectory) {
+            hasDirectory = {
+                name = "fixtures"
+                files = listOf {
+                    name = "Builders.kt"
+                }
+            }
+        }
     }
 }

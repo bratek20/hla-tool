@@ -25,6 +25,7 @@ ValueObjects
         language: ModuleLanguage
         hlaFolderPath: Path
         projectPath: Path
+        onlyParts: string[]
 
 Interfaces
     HlaFacade

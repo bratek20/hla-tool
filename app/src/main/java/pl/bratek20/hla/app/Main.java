@@ -10,6 +10,10 @@ import pl.bratek20.hla.directory.api.Path;
 import pl.bratek20.hla.directory.context.DirectoryImpl;
 import pl.bratek20.hla.facade.context.FacadeImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class Main {
     public static void main(String[] args) {
         var context = new SpringContextBuilder()
@@ -44,11 +48,18 @@ public class Main {
         var hlaFolderPath = new Path(args[3]);
         var projectPath = new Path(args[4]);
 
+        List<String> onlyParts = new ArrayList<>();
+        if (args.length > 5) {
+            var onlyPartsString = args[5];
+            onlyParts = Stream.of(onlyPartsString.split(",")).toList();
+        }
+
         var operationArgs = new ModuleOperationArgs(
             moduleName,
             language,
             hlaFolderPath,
-            projectPath
+            projectPath,
+            onlyParts
         );
 
         switch (operationName) {

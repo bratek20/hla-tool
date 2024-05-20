@@ -46,6 +46,7 @@ data class ModuleOperationArgsDef(
     var language: ModuleLanguage = ModuleLanguage.KOTLIN,
     var hlaFolderPath: String = "someValue",
     var projectPath: String = "someValue",
+    var onlyParts: List<String> = emptyList(),
 )
 fun moduleOperationArgs(init: ModuleOperationArgsDef.() -> Unit = {}): ModuleOperationArgs {
     val def = ModuleOperationArgsDef().apply(init)
@@ -54,5 +55,6 @@ fun moduleOperationArgs(init: ModuleOperationArgsDef.() -> Unit = {}): ModuleOpe
         language = def.language,
         hlaFolderPath = pathCreate(def.hlaFolderPath),
         projectPath = pathCreate(def.projectPath),
+        onlyParts = def.onlyParts,
     )
 }
