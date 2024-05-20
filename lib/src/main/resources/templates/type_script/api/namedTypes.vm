@@ -1,0 +1,9 @@
+#foreach($nt in $namedTypes)
+class ${nt.name()} {
+    constructor(
+        public readonly value: ${nt.boxedType.name()}
+    ) {}
+}#if($foreach.hasNext)
+
+
+#end#end

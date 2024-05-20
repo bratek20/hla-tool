@@ -7,26 +7,43 @@ import pl.bratek20.hla.generation.impl.core.FileGenerator
 import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.utils.camelToScreamingSnakeCase
 
-class ValueObjectsFileGenerator: FileGenerator() {
+class NamedTypesGenerator: FileGenerator() {
+    override fun getBaseFileName(): String {
+        return "NamedTypes"
+    }
+
+    override fun generateFileContent(): FileContent? {
+        val namedTypes = module.simpleValueObjects.map { apiTypeFactory.create<SimpleVOApiType>(it) }
+
+        if (namedTypes.isEmpty()) {
+            return null
+        }
+
+        return contentBuilder("namedTypes.vm")
+            .put("namedTypes", namedTypes)
+            .build()
+    }
+}
+
+class ValueObjectsGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
         return "ValueObjects"
     }
 
     override fun generateFileContent(): FileContent? {
-        if (module.simpleValueObjects.isEmpty() && module.complexValueObjects.isEmpty()) {
+        val valueObjects = module.complexValueObjects.map { apiTypeFactory.create<ComplexVOApiType>(it) }
+
+        if (valueObjects.isEmpty()) {
             return null
         }
 
         return contentBuilder("valueObjects.vm")
-            .put("valueObjects", ApiValueObjects(
-                simpleList = module.simpleValueObjects.map { apiTypeFactory.create(it) },
-                complexList = module.complexValueObjects.map { apiTypeFactory.create(it) }
-            ))
+            .put("valueObjects", valueObjects)
             .build()
     }
 }
 
-class PropertiesFileGenerator: FileGenerator() {
+class PropertiesGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
         return "Properties"
     }
@@ -56,7 +73,7 @@ class PropertiesFileGenerator: FileGenerator() {
     }
 }
 
-class ExceptionsFileGenerator: FileGenerator() {
+class ExceptionsGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
         return "Exceptions"
     }
@@ -78,7 +95,7 @@ class ExceptionsFileGenerator: FileGenerator() {
     }
 }
 
-class EnumsFileGenerator: FileGenerator() {
+class EnumsGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
         return "Enums"
     }
@@ -94,7 +111,7 @@ class EnumsFileGenerator: FileGenerator() {
     }
 }
 
-class CustomTypesFileGenerator: FileGenerator() {
+class CustomTypesGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
         return "CustomTypes"
     }
@@ -117,7 +134,7 @@ class CustomTypesFileGenerator: FileGenerator() {
     }
 }
 
-class CustomTypesMapperFileGenerator: FileGenerator() {
+class CustomTypesMapperGenerator: FileGenerator() {
     override fun getBaseFileName(): String {
         return "CustomTypesMapper"
     }
@@ -151,13 +168,14 @@ class ApiGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            ValueObjectsFileGenerator(),
+            NamedTypesGenerator(),
+            ValueObjectsGenerator(),
             InterfacesGenerator(),
-            PropertiesFileGenerator(),
-            ExceptionsFileGenerator(),
-            EnumsFileGenerator(),
-            CustomTypesFileGenerator(),
-            CustomTypesMapperFileGenerator()
+            PropertiesGenerator(),
+            ExceptionsGenerator(),
+            EnumsGenerator(),
+            CustomTypesGenerator(),
+            CustomTypesMapperGenerator()
         )
     }
 }

@@ -3,10 +3,6 @@ package com.some.pkg.somemodule.api
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
-data class SomeId(
-    val value: String
-)
-
 data class SomeClass(
     val id: SomeId,
     val amount: Int,
