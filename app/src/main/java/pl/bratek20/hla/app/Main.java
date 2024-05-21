@@ -11,6 +11,7 @@ import pl.bratek20.hla.directory.context.DirectoryImpl;
 import pl.bratek20.hla.facade.context.FacadeImpl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,13 +30,15 @@ public class Main {
         propertiesSource.set(
             new PropertyKey("properties"),
             new HlaProperties(
-                false,
-                new KotlinProperties(
-                   "pl.bratek20.hla"
-                ),
-                new TypeScriptProperties(
-                     "Src",
-                    "Test/TS"
+                List.of(
+                    new HlaProfile(
+                        "hla",
+                        ModuleLanguage.KOTLIN,
+                        "",
+                        "",
+                        "",
+                        Collections.emptyList()
+                    )
                 )
             )
         );
@@ -43,23 +46,14 @@ public class Main {
         var facade = context.get(HlaFacade.class);
 
         var operationName = args[0];
-        var moduleName = new ModuleName(args[1]);
-        var language = ModuleLanguage.valueOf(args[2]);
-        var hlaFolderPath = new Path(args[3]);
-        var projectPath = new Path(args[4]);
-
-        List<String> onlyParts = new ArrayList<>();
-        if (args.length > 5) {
-            var onlyPartsString = args[5];
-            onlyParts = Stream.of(onlyPartsString.split(",")).toList();
-        }
+        var hlaFolderPath = new Path(args[1]);
+        var profileName = new ProfileName(args[2]);
+        var moduleName = new ModuleName(args[3]);
 
         var operationArgs = new ModuleOperationArgs(
-            moduleName,
-            language,
             hlaFolderPath,
-            projectPath,
-            onlyParts
+            profileName,
+            moduleName
         );
 
         switch (operationName) {

@@ -4,18 +4,19 @@ import pl.bratek20.hla.directory.api.*
 
 val PROPERTIES_KEY = pl.bratek20.architecture.properties.api.PropertyKey("properties")
 
-data class KotlinProperties(
-    val rootPackage: String,
-) {
-}
-data class TypeScriptProperties(
+data class HlaProfile(
+    private val name: String,
+    val language: ModuleLanguage,
+    val projectPath: String,
     val srcPath: String,
-    val testPath: String,
+    val fixturesPath: String,
+    val onlyParts: List<String>,
 ) {
+    fun getName(): ProfileName {
+        return ProfileName(this.name)
+    }
 }
 data class HlaProperties(
-    val generateWeb: Boolean,
-    val kotlin: KotlinProperties,
-    val typeScript: TypeScriptProperties,
+    val profiles: List<HlaProfile>,
 ) {
 }

@@ -4,10 +4,7 @@ import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 import pl.bratek20.hla.definitions.impl.HlaModules
-import pl.bratek20.hla.facade.api.HlaProperties
-import pl.bratek20.hla.facade.api.ModuleLanguage
-import pl.bratek20.hla.facade.api.ModuleName
-import pl.bratek20.hla.facade.api.PROPERTIES_KEY
+import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.generation.api.GenerateArgs
 import pl.bratek20.hla.generation.api.GenerateResult
 import pl.bratek20.hla.generation.api.ModuleGenerator
@@ -23,7 +20,7 @@ import pl.bratek20.hla.velocity.api.VelocityFacade
 
 data class DomainContext(
     val modules: HlaModules,
-    val properties: HlaProperties,
+    val profile: HlaProfile,
 ) {
     val module: ModuleDefinition
         get() = modules.current
@@ -35,7 +32,6 @@ private fun moduleDirectoryName(moduleName: ModuleName, languageSupport: Languag
 
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
-    private val properties: Properties,
 ) : ModuleGenerator {
 
     class MainDirectoryGenerator: DirectoryGenerator() {
@@ -80,18 +76,12 @@ class ModuleGeneratorLogic(
 
     override fun generate(args: GenerateArgs): GenerateResult {
         val moduleName = args.moduleName
-        val language = args.language
+        val language = args.profile.language
         val modules = args.modules
-
-        val hlaProperties = properties.get(
-            InMemoryPropertiesSource.name,
-            PROPERTIES_KEY,
-            HlaProperties::class.java,
-        )
 
         val domainContext = DomainContext(
             modules = HlaModules(moduleName, modules),
-            properties = hlaProperties,
+            profile = args.profile,
         )
 
         val context = ModuleGenerationContext(
@@ -102,7 +92,7 @@ class ModuleGeneratorLogic(
                 ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
             },
             onlyUpdate = args.onlyUpdate,
-            onlyParts = args.onlyParts,
+            onlyParts = args.profile.onlyParts,
         )
 
         val root = GenerationRoot()

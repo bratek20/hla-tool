@@ -5,56 +5,46 @@ import pl.bratek20.hla.directory.fixtures.*
 
 import pl.bratek20.hla.facade.api.*
 
-data class KotlinPropertiesDef(
-    var rootPackage: String = "someValue",
-)
-fun kotlinProperties(init: KotlinPropertiesDef.() -> Unit = {}): KotlinProperties {
-    val def = KotlinPropertiesDef().apply(init)
-    return KotlinProperties(
-        rootPackage = def.rootPackage,
-    )
-}
-
-data class TypeScriptPropertiesDef(
+data class HlaProfileDef(
+    var name: String = "someValue",
+    var language: ModuleLanguage = ModuleLanguage.KOTLIN,
+    var projectPath: String = "someValue",
     var srcPath: String = "someValue",
-    var testPath: String = "someValue",
+    var fixturesPath: String = "someValue",
+    var onlyParts: List<String> = emptyList(),
 )
-fun typeScriptProperties(init: TypeScriptPropertiesDef.() -> Unit = {}): TypeScriptProperties {
-    val def = TypeScriptPropertiesDef().apply(init)
-    return TypeScriptProperties(
+fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
+    val def = HlaProfileDef().apply(init)
+    return HlaProfile(
+        name = def.name,
+        language = def.language,
+        projectPath = def.projectPath,
         srcPath = def.srcPath,
-        testPath = def.testPath,
+        fixturesPath = def.fixturesPath,
+        onlyParts = def.onlyParts,
     )
 }
 
 data class HlaPropertiesDef(
-    var generateWeb: Boolean = false,
-    var kotlin: (KotlinPropertiesDef.() -> Unit) = {},
-    var typeScript: (TypeScriptPropertiesDef.() -> Unit) = {},
+    var profiles: List<(HlaProfileDef.() -> Unit)> = emptyList(),
 )
 fun hlaProperties(init: HlaPropertiesDef.() -> Unit = {}): HlaProperties {
     val def = HlaPropertiesDef().apply(init)
     return HlaProperties(
-        generateWeb = def.generateWeb,
-        kotlin = kotlinProperties(def.kotlin),
-        typeScript = typeScriptProperties(def.typeScript),
+        profiles = def.profiles.map { it -> hlaProfile(it) },
     )
 }
 
 data class ModuleOperationArgsDef(
-    var moduleName: String = "someValue",
-    var language: ModuleLanguage = ModuleLanguage.KOTLIN,
     var hlaFolderPath: String = "someValue",
-    var projectPath: String = "someValue",
-    var onlyParts: List<String> = emptyList(),
+    var moduleName: String = "someValue",
+    var profileName: String = "someValue",
 )
 fun moduleOperationArgs(init: ModuleOperationArgsDef.() -> Unit = {}): ModuleOperationArgs {
     val def = ModuleOperationArgsDef().apply(init)
     return ModuleOperationArgs(
-        moduleName = ModuleName(def.moduleName),
-        language = def.language,
         hlaFolderPath = pathCreate(def.hlaFolderPath),
-        projectPath = pathCreate(def.projectPath),
-        onlyParts = def.onlyParts,
+        moduleName = ModuleName(def.moduleName),
+        profileName = ProfileName(def.profileName),
     )
 }

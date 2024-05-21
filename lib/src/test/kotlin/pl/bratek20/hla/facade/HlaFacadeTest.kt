@@ -104,17 +104,25 @@ class HlaFacadeTest {
         val directoriesMock = context.get(DirectoriesMock::class.java)
         val propertiesSource = context.get(InMemoryPropertiesSource::class.java)
 
+        val testProjectPath = "some/project/path"
+
         propertiesSource.set(
             PROPERTIES_KEY,
             hlaProperties {
-                generateWeb = true
-                kotlin = {
-                    rootPackage = "com.some.pkg"
-                }
-                typeScript = {
-                    srcPath = "main"
-                    testPath = "test"
-                }
+                profiles = listOf(
+                    {
+                        name = "kotlin"
+                        srcPath = "main"
+                        fixturesPath = "testFixtures"
+                        projectPath = testProjectPath
+                    },
+                    {
+                        name = "typeScript"
+                        srcPath = "main"
+                        fixturesPath = "test"
+                        projectPath = testProjectPath
+                    }
+                )
             }
         )
 
@@ -127,23 +135,20 @@ class HlaFacadeTest {
     @ArgumentsSource(MyArgumentsProvider::class)
     fun `should start module`(
         moduleName: String,
-        lang: ModuleLanguage,
+        profileName: String,
         paths: TestPaths
     ) {
         //given
         val (directoriesMock, facade) = setup()
 
         val hlaFolderPath = Path("../example/hla")
-        val projectPath = Path("some/project/path")
 
         //when
         facade.startModule(
             ModuleOperationArgs(
                 moduleName = ModuleName(moduleName),
-                language = lang,
+                profileName = ProfileName(profileName),
                 hlaFolderPath = hlaFolderPath,
-                projectPath = projectPath,
-                onlyParts = emptyList()
             )
         )
 
@@ -181,14 +186,11 @@ class HlaFacadeTest {
         val (directoriesMock, facade) = setup()
 
         val hlaFolderPath = Path("../example/hla")
-        val projectPath = Path("some/project/path")
 
         val args = ModuleOperationArgs(
             moduleName = ModuleName("SomeModule"),
-            language = ModuleLanguage.KOTLIN,
+            profileName = ProfileName("kotlin"),
             hlaFolderPath = hlaFolderPath,
-            projectPath = projectPath,
-            onlyParts = emptyList()
         )
         facade.startModule(args)
 
@@ -248,18 +250,17 @@ class HlaFacadeTest {
         val (directoriesMock, facade) = setup()
 
         val hlaFolderPath = Path("../example/hla")
-        val projectPath = Path("some/project/path")
 
+        //TODO
         val args = ModuleOperationArgs(
             moduleName = ModuleName("SomeModule"),
-            language = ModuleLanguage.KOTLIN,
+            profileName = ProfileName("kotlin"),
             hlaFolderPath = hlaFolderPath,
-            projectPath = projectPath,
-            onlyParts = listOf(
-                "NamedTypes",
-                "Properties",
-                "Builders"
-            )
+//            onlyParts = listOf(
+//                "NamedTypes",
+//                "Properties",
+//                "Builders"
+//            )
         )
 
         //when

@@ -1,31 +1,30 @@
-Properties
-    KotlinProperties
-        rootPackage: string
-
-    TypeScriptProperties
-        srcPath: string
-        testPath: string
-
-    "properties" -> HlaProperties
-        generateWeb: bool
-        kotlin: KotlinProperties
-        typeScript: TypeScriptProperties
+NamedTypes
+    ModuleName: string
+    ProfileName: string
 
 Enums
     ModuleLanguage
         KOTLIN
         TYPE_SCRIPT
 
-NamedTypes
-    ModuleName: string
+Properties
+    HlaProfile
+        name: ProfileName
+        language: ModuleLanguage
+        projectPath: string
+        srcPath: string
+        fixturesPath: string
+        onlyParts: string[]
+
+    "properties" -> HlaProperties
+        profiles: HlaProfile[]
+
 
 ValueObjects
     ModuleOperationArgs
-        moduleName: ModuleName
-        language: ModuleLanguage
         hlaFolderPath: Path
-        projectPath: Path
-        onlyParts: string[]
+        moduleName: ModuleName
+        profileName: ProfileName
 
 Interfaces
     HlaFacade
