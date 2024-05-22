@@ -39,6 +39,28 @@ public class Main {
                         "src/testFixtures/kotlin/pl/bratek20/hla",
                         Collections.emptyList(),
                         false
+                    ),
+                    new HlaProfile(
+                        "PlayFab",
+                        ModuleLanguage.TYPE_SCRIPT,
+                        "../lib",
+                        "src/main/kotlin/pl/bratek20/hla",
+                        "src/testFixtures/kotlin/pl/bratek20/hla",
+                        Collections.emptyList(),
+                        false
+                    ),
+                    new HlaProfile(
+                        "Content",
+                        ModuleLanguage.KOTLIN,
+                        "../../common",
+                        "src/main/java/com/rortos/woh/content",
+                        "src/testFixtures/java/com/rortos/woh/content",
+                        List.of(
+                            "NamedTypes",
+                            "Properties",
+                            "Builders"
+                        ),
+                        false
                     )
                 )
             )
