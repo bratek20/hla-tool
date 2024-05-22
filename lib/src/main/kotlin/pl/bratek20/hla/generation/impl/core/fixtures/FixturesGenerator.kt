@@ -7,7 +7,7 @@ import pl.bratek20.hla.generation.impl.core.fixtures.builders.BuildersGenerator
 
 class FixturesGenerator: DirectoryGenerator() {
     override fun name(): String {
-        return "fixtures"
+        return "Fixtures"
     }
 
     override fun velocityDirPath(): String {

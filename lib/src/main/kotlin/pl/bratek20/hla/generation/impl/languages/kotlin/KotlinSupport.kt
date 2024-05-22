@@ -20,12 +20,8 @@ class KotlinSupport(private val c: DomainContext)
         return "kt"
     }
 
-    override fun moduleNameToDirectoryName(moduleName: String): String {
-        return moduleName.lowercase()
-    }
-
     override fun adjustDirectoryName(directoryName: String): String {
-        return directoryName
+        return directoryName.lowercase()
     }
 
     override fun assertsFixture(): LanguageAssertsPattern {

@@ -4,8 +4,11 @@ import pl.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import pl.bratek20.hla.generation.impl.core.DomainContext
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-fun srcPathToRootPackage(srcPath: String): String {
-    return srcPath.replace("/", ".")
+fun srcPathToRootPackage(mainPath: String): String {
+    return mainPath
+        .replace("src/main/kotlin/", "")
+        .replace("src/main/java/", "")
+        .replace("/", ".")
 }
 
 class PackageNameAndImportsExtension(

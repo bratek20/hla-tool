@@ -21,7 +21,7 @@ class ImplContextGenerator: FileGenerator() {
 
 class ContextGenerator: DirectoryGenerator() {
     override fun name(): String {
-        return "context"
+        return "Context"
     }
 
     override fun mode(): GeneratorMode {

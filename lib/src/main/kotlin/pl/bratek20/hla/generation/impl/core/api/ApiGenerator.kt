@@ -159,7 +159,7 @@ class CustomTypesMapperGenerator: FileGenerator() {
 
 class ApiGenerator: DirectoryGenerator() {
     override fun name(): String {
-        return "api"
+        return "Api"
     }
 
     override fun velocityDirPath(): String {

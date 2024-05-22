@@ -6,7 +6,7 @@ import pl.bratek20.hla.generation.impl.core.web.dto.DtosGenerator
 
 class WebGenerator: DirectoryGenerator() {
     override fun name(): String {
-        return "web"
+        return "Web"
     }
 
     override fun velocityDirPath(): String {

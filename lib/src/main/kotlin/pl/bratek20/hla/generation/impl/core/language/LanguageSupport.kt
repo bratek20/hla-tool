@@ -9,7 +9,6 @@ interface LanguageSupport {
     fun types(): LanguageTypes
 
     fun filesExtension(): String
-    fun moduleNameToDirectoryName(moduleName: String): String
     fun adjustDirectoryName(directoryName: String): String
 
     fun assertsFixture(): LanguageAssertsPattern

@@ -21,12 +21,8 @@ class TypeScriptSupport(private val c: DomainContext)
         return "ts"
     }
 
-    override fun moduleNameToDirectoryName(moduleName: String): String {
-        return moduleName
-    }
-
     override fun adjustDirectoryName(directoryName: String): String {
-        return camelToPascalCase(directoryName)
+        return directoryName
     }
 
     override fun assertsFixture(): LanguageAssertsPattern {

@@ -49,36 +49,39 @@ class HlaFacadeTest {
             )
         }
 
+        private val KOTLIN_PROFILE = "kotlin"
+        private val TYPE_SCRIPT_PROFILE = "typeScript"
+
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
                 Arguments.of(
                     "OtherModule",
-                    ModuleLanguage.KOTLIN,
+                    KOTLIN_PROFILE,
                     kotlinTestPaths("othermodule")
                 ),
                 Arguments.of(
                     "OtherModule",
-                    ModuleLanguage.TYPE_SCRIPT,
+                    TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("OtherModule")
                 ),
                 Arguments.of(
                     "SomeModule",
-                    ModuleLanguage.KOTLIN,
+                    KOTLIN_PROFILE,
                     kotlinTestPaths("somemodule")
                 ),
                 Arguments.of(
                     "SomeModule",
-                    ModuleLanguage.TYPE_SCRIPT,
+                    TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("SomeModule")
                 ),
                 Arguments.of(
                     "TypesModule",
-                    ModuleLanguage.KOTLIN,
+                    KOTLIN_PROFILE,
                     kotlinTestPaths("typesmodule")
                 ),
                 Arguments.of(
                     "TypesModule",
-                    ModuleLanguage.TYPE_SCRIPT,
+                    TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("TypesModule")
                 ),
             )
@@ -89,7 +92,11 @@ class HlaFacadeTest {
         val directoriesMock: DirectoriesMock,
         val facade: HlaFacade
     )
-    private fun setup(): SetupResult {
+    data class SetupArgs(
+        var kotlinOnlyParts: List<String> = emptyList(),
+    )
+    private fun setup(init: (SetupArgs.() -> Unit) = {}): SetupResult {
+        val args = SetupArgs().apply(init)
         val context = someContextBuilder()
             .withModules(
                 DirectoriesMocks(),
@@ -112,16 +119,19 @@ class HlaFacadeTest {
                 profiles = listOf(
                     {
                         name = "kotlin"
-                        srcPath = "main"
-                        fixturesPath = "testFixtures"
+                        language = ModuleLanguage.KOTLIN
+                        srcPath = "src/main/kotlin/com/some/pkg"
+                        fixturesPath = "src/testFixtures/kotlin/com/some/pkg"
                         projectPath = testProjectPath
+                        onlyParts = args.kotlinOnlyParts
                     },
                     {
                         name = "typeScript"
+                        language = ModuleLanguage.TYPE_SCRIPT
                         srcPath = "main"
                         fixturesPath = "test"
                         projectPath = testProjectPath
-                    }
+                    },
                 )
             }
         )
@@ -247,20 +257,20 @@ class HlaFacadeTest {
     @Test
     fun `should start module using onlyParts`() {
         //given
-        val (directoriesMock, facade) = setup()
+        val (directoriesMock, facade) = setup {
+            kotlinOnlyParts = listOf(
+                "NamedTypes",
+                "Properties",
+                "Builders"
+            )
+        }
 
         val hlaFolderPath = Path("../example/hla")
 
-        //TODO
         val args = ModuleOperationArgs(
             moduleName = ModuleName("SomeModule"),
             profileName = ProfileName("kotlin"),
             hlaFolderPath = hlaFolderPath,
-//            onlyParts = listOf(
-//                "NamedTypes",
-//                "Properties",
-//                "Builders"
-//            )
         )
 
         //when

@@ -16,11 +16,11 @@ class ModuleWriterLogic(
         val generateResult = args.generateResult
         val profile = args.profile
 
-        val mainPath = projectPath + profile.srcPath
-        val testFixturesPath = projectPath + profile.fixturesPath
+        val mainPath = Path(projectPath).add(Path(profile.srcPath))
+        val testFixturesPath = Path(projectPath).add(Path(profile.fixturesPath))
 
-        directories.write(Path(mainPath), generateResult.main)
-        directories.write(Path(testFixturesPath), generateResult.testFixtures)
+        directories.write(mainPath, generateResult.main)
+        directories.write(testFixturesPath, generateResult.testFixtures)
 
         //test helping
         val dirs = DirectoriesLogic()

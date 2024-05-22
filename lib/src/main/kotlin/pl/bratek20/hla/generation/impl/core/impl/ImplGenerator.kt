@@ -22,7 +22,7 @@ class LogicGenerator: FileGenerator() {
 
 class ImplGenerator: DirectoryGenerator() {
     override fun name(): String {
-        return "impl"
+        return "Impl"
     }
 
     override fun velocityDirPath(): String {

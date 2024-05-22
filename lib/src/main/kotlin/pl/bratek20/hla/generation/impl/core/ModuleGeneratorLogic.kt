@@ -1,7 +1,5 @@
 package pl.bratek20.hla.generation.impl.core
 
-import pl.bratek20.architecture.properties.api.Properties
-import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.facade.api.*
@@ -12,7 +10,6 @@ import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.generation.impl.core.context.ContextGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.impl.ImplGenerator
-import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
@@ -26,17 +23,13 @@ data class DomainContext(
         get() = modules.current
 }
 
-private fun moduleDirectoryName(moduleName: ModuleName, languageSupport: LanguageSupport): String {
-    return languageSupport.moduleNameToDirectoryName(moduleName.value)
-}
-
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
 ) : ModuleGenerator {
 
     class MainDirectoryGenerator: DirectoryGenerator() {
         override fun name(): String {
-            return moduleDirectoryName(module.name, c.language)
+            return module.name.value
         }
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
@@ -51,7 +44,7 @@ class ModuleGeneratorLogic(
 
     class TestFixturesGenerator: DirectoryGenerator() {
         override fun name(): String {
-            return moduleDirectoryName(module.name, c.language)
+            return module.name.value
         }
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
