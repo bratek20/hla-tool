@@ -120,7 +120,7 @@ class HlaFacadeTest {
                     {
                         name = "kotlin"
                         language = ModuleLanguage.KOTLIN
-                        srcPath = "src/main/kotlin/com/some/pkg"
+                        mainPath = "src/main/kotlin/com/some/pkg"
                         fixturesPath = "src/testFixtures/kotlin/com/some/pkg"
                         projectPath = testProjectPath
                         onlyParts = args.kotlinOnlyParts
@@ -128,7 +128,7 @@ class HlaFacadeTest {
                     {
                         name = "typeScript"
                         language = ModuleLanguage.TYPE_SCRIPT
-                        srcPath = "main"
+                        mainPath = "main"
                         fixturesPath = "test"
                         projectPath = testProjectPath
                     },

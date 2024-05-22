@@ -96,7 +96,7 @@ class ModuleGeneratorLogic(
 
         return GenerateResult(
             main = result.directories[0],
-            testFixtures = result.directories[1]
+            fixtures = result.directories[1]
         )
     }
 }

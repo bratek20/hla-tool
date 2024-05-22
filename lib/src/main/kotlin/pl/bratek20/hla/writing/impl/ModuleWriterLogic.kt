@@ -12,15 +12,15 @@ class ModuleWriterLogic(
 ): ModuleWriter {
 
     override fun write(args: WriteArgs) {
-        val projectPath = args.profile.projectPath
+        val projectPath = args.profile.getProjectPath()
         val generateResult = args.generateResult
         val profile = args.profile
 
-        val mainPath = Path(projectPath).add(Path(profile.srcPath))
-        val testFixturesPath = Path(projectPath).add(Path(profile.fixturesPath))
+        val fullMainPath = projectPath.add(profile.getMainPath())
+        val fullFixturesPath = projectPath.add(profile.getFixturesPath())
 
-        directories.write(mainPath, generateResult.main)
-        directories.write(testFixturesPath, generateResult.testFixtures)
+        directories.write(fullMainPath, generateResult.main)
+        directories.write(fullFixturesPath, generateResult.fixtures)
 
         //test helping
         val dirs = DirectoriesLogic()
@@ -29,7 +29,7 @@ class ModuleWriterLogic(
             val debugPath = Path("../tmp")
             dirs.deleteDirectory(debugPath)
             dirs.write(debugPath, generateResult.main)
-            dirs.write(debugPath, generateResult.testFixtures)
+            dirs.write(debugPath, generateResult.fixtures)
         }
     }
 }

@@ -37,7 +37,8 @@ public class Main {
                         "../lib",
                         "src/main/kotlin/pl/bratek20/hla",
                         "src/testFixtures/kotlin/pl/bratek20/hla",
-                        Collections.emptyList()
+                        Collections.emptyList(),
+                        false
                     )
                 )
             )

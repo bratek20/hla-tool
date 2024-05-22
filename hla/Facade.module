@@ -11,10 +11,11 @@ Properties
     HlaProfile
         name: ProfileName
         language: ModuleLanguage
-        projectPath: string
-        srcPath: string
-        fixturesPath: string
+        projectPath: Path
+        mainPath: Path
+        fixturesPath: Path
         onlyParts: string[]
+        generateWeb: bool
 
     "properties" -> HlaProperties
         profiles: HlaProfile[]
@@ -23,8 +24,8 @@ Properties
 ValueObjects
     ModuleOperationArgs
         hlaFolderPath: Path
-        moduleName: ModuleName
         profileName: ProfileName
+        moduleName: ModuleName
 
 Interfaces
     HlaFacade

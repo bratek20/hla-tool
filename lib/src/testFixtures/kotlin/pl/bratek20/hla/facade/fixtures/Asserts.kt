@@ -11,9 +11,10 @@ data class ExpectedHlaProfile(
     var name: String? = null,
     var language: ModuleLanguage? = null,
     var projectPath: String? = null,
-    var srcPath: String? = null,
+    var mainPath: String? = null,
     var fixturesPath: String? = null,
     var onlyParts: List<String>? = null,
+    var generateWeb: Boolean? = null,
 )
 fun assertHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit) {
     val expected = ExpectedHlaProfile().apply(expectedInit)
@@ -27,20 +28,24 @@ fun assertHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> U
     }
 
     expected.projectPath?.let {
-        assertThat(given.projectPath).isEqualTo(it)
+        assertThat(pathGetValue(given.getProjectPath())).isEqualTo(it)
     }
 
-    expected.srcPath?.let {
-        assertThat(given.srcPath).isEqualTo(it)
+    expected.mainPath?.let {
+        assertThat(pathGetValue(given.getMainPath())).isEqualTo(it)
     }
 
     expected.fixturesPath?.let {
-        assertThat(given.fixturesPath).isEqualTo(it)
+        assertThat(pathGetValue(given.getFixturesPath())).isEqualTo(it)
     }
 
     expected.onlyParts?.let {
         assertThat(given.onlyParts).hasSize(it.size)
         given.onlyParts.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
+    }
+
+    expected.generateWeb?.let {
+        assertThat(given.generateWeb).isEqualTo(it)
     }
 }
 
@@ -58,8 +63,8 @@ fun assertHlaProperties(given: HlaProperties, expectedInit: ExpectedHlaPropertie
 
 data class ExpectedModuleOperationArgs(
     var hlaFolderPath: String? = null,
-    var moduleName: String? = null,
     var profileName: String? = null,
+    var moduleName: String? = null,
 )
 fun assertModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedModuleOperationArgs.() -> Unit) {
     val expected = ExpectedModuleOperationArgs().apply(expectedInit)
@@ -68,11 +73,11 @@ fun assertModuleOperationArgs(given: ModuleOperationArgs, expectedInit: Expected
         assertThat(pathGetValue(given.hlaFolderPath)).isEqualTo(it)
     }
 
-    expected.moduleName?.let {
-        assertThat(given.moduleName.value).isEqualTo(it)
-    }
-
     expected.profileName?.let {
         assertThat(given.profileName.value).isEqualTo(it)
+    }
+
+    expected.moduleName?.let {
+        assertThat(given.moduleName.value).isEqualTo(it)
     }
 }
