@@ -34,9 +34,9 @@ public class Main {
                     new HlaProfile(
                         "hla",
                         ModuleLanguage.KOTLIN,
-                        "",
-                        "",
-                        "",
+                        "../lib",
+                        "src/main/kotlin/pl/bratek20/hla",
+                        "src/testFixtures/kotlin/pl/bratek20/hla",
                         Collections.emptyList()
                     )
                 )
@@ -49,6 +49,8 @@ public class Main {
         var hlaFolderPath = new Path(args[1]);
         var profileName = new ProfileName(args[2]);
         var moduleName = new ModuleName(args[3]);
+
+        System.out.println("Operation: " + operationName + ", HLA folder path: " + hlaFolderPath + ", profile name: " + profileName + ", module name: " + moduleName);
 
         var operationArgs = new ModuleOperationArgs(
             hlaFolderPath,
