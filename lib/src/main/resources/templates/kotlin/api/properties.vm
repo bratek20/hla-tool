@@ -7,7 +7,7 @@ import ${import}.api.*
 #if($keys.size() > 0)
 
 #foreach($key in $keys)
-val $key.name = pl.bratek20.architecture.properties.api.PropertyKey("$key.value")
+//val $key.name = pl.bratek20.architecture.properties.api.PropertyKey("$key.value")
 #end#end
 
 #foreach($p in $properties)

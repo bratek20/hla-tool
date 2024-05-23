@@ -19,7 +19,10 @@ class ModuleWriterLogic(
         val fullMainPath = projectPath.add(profile.getMainPath())
         val fullFixturesPath = projectPath.add(profile.getFixturesPath())
 
+        System.out.println("Writing to: $fullMainPath")
         directories.write(fullMainPath, generateResult.main)
+
+        System.out.println("Writing to: $fullFixturesPath")
         directories.write(fullFixturesPath, generateResult.fixtures)
 
         //test helping

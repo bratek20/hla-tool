@@ -50,13 +50,15 @@ public class Main {
                         false
                     ),
                     new HlaProfile(
-                        "Content",
+                        "WohProperties",
                         ModuleLanguage.KOTLIN,
-                        "../../common",
-                        "src/main/java/com/rortos/woh/content",
-                        "src/testFixtures/java/com/rortos/woh/content",
+                        "../woh-properties",
+                        "src/main/java/com/rortos/woh",
+                        "src/testFixtures/java/com/rortos/woh",
                         List.of(
                             "NamedTypes",
+                            "CustomTypes",
+                            "CustomTypesMapper",
                             "Properties",
                             "Builders"
                         ),
