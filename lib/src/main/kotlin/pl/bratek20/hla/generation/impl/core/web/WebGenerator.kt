@@ -14,7 +14,7 @@ class WebGenerator: DirectoryGenerator() {
     }
 
     override fun shouldGenerateDirectory(): Boolean {
-        return true//c.domain.profile.generateWeb
+        return c.domain.profile.generateWeb
     }
 
     override fun getFileGenerators(): List<FileGenerator> {
