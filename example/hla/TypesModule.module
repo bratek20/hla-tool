@@ -3,9 +3,9 @@ CustomTypes
 
     DateRange
         from: Date
-        to: Date
+        to: Date (example: "01/01/2030 00:00")
 
 Properties
     DateRangeProperty
         from: Date
-        to: Date
+        to: Date (example: "01/01/2030 00:00")

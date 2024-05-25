@@ -6,7 +6,7 @@ import com.some.pkg.typesmodule.api.*
 
 data class DateRangeDef(
     var from: String = "01/01/1970 00:00",
-    var to: String = "01/01/1970 00:00",
+    var to: String = "01/01/2030 00:00",
 )
 fun dateRange(init: DateRangeDef.() -> Unit = {}): DateRange {
     val def = DateRangeDef().apply(init)
@@ -18,7 +18,7 @@ fun dateRange(init: DateRangeDef.() -> Unit = {}): DateRange {
 
 data class DateRangePropertyDef(
     var from: String = "01/01/1970 00:00",
-    var to: String = "01/01/1970 00:00",
+    var to: String = "01/01/2030 00:00",
 )
 fun dateRangeProperty(init: DateRangePropertyDef.() -> Unit = {}): DateRangeProperty {
     val def = DateRangePropertyDef().apply(init)

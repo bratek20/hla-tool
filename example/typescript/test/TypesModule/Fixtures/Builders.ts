@@ -7,7 +7,7 @@ namespace TypesModule.Builder {
     }
     export function dateRange(def?: DateRangeDef): DateRange {
         const from = def?.from ?? "01/01/1970 00:00"
-        const to = def?.to ?? "01/01/1970 00:00"
+        const to = def?.to ?? "01/01/2030 00:00"
 
         return TypesModule.CustomTypesMapper.dateRangeCreate(
             TypesModule.CustomTypesMapper.dateCreate(from),
@@ -21,7 +21,7 @@ namespace TypesModule.Builder {
     }
     export function dateRangeProperty(def?: DateRangePropertyDef): DateRangeProperty {
         const from = def?.from ?? "01/01/1970 00:00"
-        const to = def?.to ?? "01/01/1970 00:00"
+        const to = def?.to ?? "01/01/2030 00:00"
 
         return DateRangeProperty.create(
             from,
