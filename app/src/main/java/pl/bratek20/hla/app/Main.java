@@ -3,10 +3,7 @@ package pl.bratek20.hla.app;
 import pl.bratek20.architecture.context.spring.SpringContextBuilder;
 import pl.bratek20.hla.directory.api.Path;
 import pl.bratek20.hla.directory.context.DirectoryImpl;
-import pl.bratek20.hla.facade.api.HlaFacade;
-import pl.bratek20.hla.facade.api.ModuleName;
-import pl.bratek20.hla.facade.api.ModuleOperationArgs;
-import pl.bratek20.hla.facade.api.ProfileName;
+import pl.bratek20.hla.facade.api.*;
 import pl.bratek20.hla.facade.context.FacadeImpl;
 
 public class Main {
@@ -63,27 +60,33 @@ public class Main {
         var facade = context.get(HlaFacade.class);
 
         var operationName = args[0];
-        var hlaFolderPath = new Path(args[1]);
-        var profileName = new ProfileName(args[2]);
-        var moduleName = new ModuleName(args[3]);
-
-        System.out.println("Operation: " + operationName + ", HLA folder path: " + hlaFolderPath + ", profile name: " + profileName + ", module name: " + moduleName);
-
-        var operationArgs = new ModuleOperationArgs(
-            hlaFolderPath,
-            profileName,
-            moduleName
-        );
-
         switch (operationName) {
             case "start":
-                facade.startModule(operationArgs);
+                facade.startModule(parseModuleOperationArgs(args));
                 break;
             case "update":
-                facade.updateModule(operationArgs);
+                facade.updateModule(parseModuleOperationArgs(args));
+                break;
+            case "updateAll":
+                facade.updateAllModules(parseAllModulesOperationArgs(args));
                 break;
             default:
                 throw new IllegalArgumentException("Unknown operation: " + operationName);
         }
+    }
+
+    private static ModuleOperationArgs parseModuleOperationArgs(String[] args) {
+        return new ModuleOperationArgs(
+            new Path(args[1]),
+            new ProfileName(args[2]),
+            new ModuleName(args[3])
+        );
+    }
+
+    private static AllModulesOperationArgs parseAllModulesOperationArgs(String[] args) {
+        return new AllModulesOperationArgs(
+            new Path(args[1]),
+            new ProfileName(args[2])
+        );
     }
 }
