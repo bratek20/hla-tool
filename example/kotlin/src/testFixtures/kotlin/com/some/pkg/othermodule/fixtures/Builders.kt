@@ -5,7 +5,7 @@ package com.some.pkg.othermodule.fixtures
 import com.some.pkg.othermodule.api.*
 
 data class OtherPropertyDef(
-    var id: String = "someValue",
+    var id: Int = 0,
     var name: String = "someValue",
 )
 fun otherProperty(init: OtherPropertyDef.() -> Unit = {}): OtherProperty {
@@ -17,7 +17,7 @@ fun otherProperty(init: OtherPropertyDef.() -> Unit = {}): OtherProperty {
 }
 
 data class OtherClassDef(
-    var id: String = "someValue",
+    var id: Int = 0,
     var amount: Int = 0,
 )
 fun otherClass(init: OtherClassDef.() -> Unit = {}): OtherClass {

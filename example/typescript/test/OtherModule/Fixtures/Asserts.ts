@@ -2,7 +2,7 @@
 
 namespace OtherModule.Assert {
     export interface ExpectedOtherProperty {
-        id?: string,
+        id?: number,
         name?: string,
     }
     export function otherProperty(given: OtherProperty, expected: ExpectedOtherProperty) {
@@ -16,7 +16,7 @@ namespace OtherModule.Assert {
     }
 
     export interface ExpectedOtherClass {
-        id?: string,
+        id?: number,
         amount?: number,
     }
     export function otherClass(given: OtherClass, expected: ExpectedOtherClass) {

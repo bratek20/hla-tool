@@ -100,9 +100,9 @@ data class SomeClass3Dto(
 }
 
 data class SomeClass4Dto(
-    val otherId: String,
+    val otherId: Int,
     val otherClass: OtherClassDto,
-    val otherIdList: List<String>,
+    val otherIdList: List<Int>,
     val otherClassList: List<OtherClassDto>,
 ) {
     fun toApi(): SomeClass4 {

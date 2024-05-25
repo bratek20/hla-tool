@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions.assertThat
 import com.some.pkg.othermodule.api.*
 
 data class ExpectedOtherProperty(
-    var id: String? = null,
+    var id: Int? = null,
     var name: String? = null,
 )
 fun assertOtherProperty(given: OtherProperty, expectedInit: ExpectedOtherProperty.() -> Unit) {
@@ -23,7 +23,7 @@ fun assertOtherProperty(given: OtherProperty, expectedInit: ExpectedOtherPropert
 }
 
 data class ExpectedOtherClass(
-    var id: String? = null,
+    var id: Int? = null,
     var amount: Int? = null,
 )
 fun assertOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Unit) {

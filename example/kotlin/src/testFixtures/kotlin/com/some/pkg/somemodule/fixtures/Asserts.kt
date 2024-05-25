@@ -100,9 +100,9 @@ fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> U
 }
 
 data class ExpectedSomeClass4(
-    var otherId: String? = null,
+    var otherId: Int? = null,
     var otherClass: (ExpectedOtherClass.() -> Unit)? = null,
-    var otherIdList: List<String>? = null,
+    var otherIdList: List<Int>? = null,
     var otherClassList: List<(ExpectedOtherClass.() -> Unit)>? = null,
 )
 fun assertSomeClass4(given: SomeClass4, expectedInit: ExpectedSomeClass4.() -> Unit) {

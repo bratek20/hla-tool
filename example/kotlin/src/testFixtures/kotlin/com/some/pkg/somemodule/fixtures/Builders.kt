@@ -72,9 +72,9 @@ fun someClass3(init: SomeClass3Def.() -> Unit = {}): SomeClass3 {
 }
 
 data class SomeClass4Def(
-    var otherId: String = "someValue",
+    var otherId: Int = 0,
     var otherClass: (OtherClassDef.() -> Unit) = {},
-    var otherIdList: List<String> = emptyList(),
+    var otherIdList: List<Int> = emptyList(),
     var otherClassList: List<(OtherClassDef.() -> Unit)> = emptyList(),
 )
 fun someClass4(init: SomeClass4Def.() -> Unit = {}): SomeClass4 {

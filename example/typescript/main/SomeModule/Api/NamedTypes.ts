@@ -10,6 +10,6 @@ class SomeId {
     }
 
     toString(): string {
-        return this.value
+        return this.value.toString()
     }
 }

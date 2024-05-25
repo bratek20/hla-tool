@@ -1,5 +1,5 @@
 NamedTypes
-    OtherId: string
+    OtherId: int
 
 Properties
     OtherProperty

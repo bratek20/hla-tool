@@ -80,9 +80,9 @@ namespace SomeModule.Assert {
     }
 
     export interface ExpectedSomeClass4 {
-        otherId?: string,
+        otherId?: number,
         otherClass?: OtherModule.Assert.ExpectedOtherClass,
-        otherIdList?: string[],
+        otherIdList?: number[],
         otherClassList?: OtherModule.Assert.ExpectedOtherClass[],
     }
     export function someClass4(given: SomeClass4, expected: ExpectedSomeClass4) {

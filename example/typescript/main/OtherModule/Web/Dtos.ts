@@ -2,7 +2,7 @@
 
 namespace OtherModule.Web {
     export class OtherClassDto {
-        id = STRING
+        id = NUMBER
         amount = NUMBER
 
         toApi(): OtherClass {

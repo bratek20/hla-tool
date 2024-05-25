@@ -5,7 +5,7 @@ package com.some.pkg.othermodule.web
 import com.some.pkg.othermodule.api.*
 
 data class OtherClassDto(
-    val id: String,
+    val id: Int,
     val amount: Int,
 ) {
     fun toApi(): OtherClass {

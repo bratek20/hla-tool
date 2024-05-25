@@ -75,13 +75,13 @@ namespace SomeModule.Builder {
     }
 
     export interface SomeClass4Def {
-        otherId?: string,
+        otherId?: number,
         otherClass?: OtherModule.Builder.OtherClassDef,
-        otherIdList?: string[],
+        otherIdList?: number[],
         otherClassList?: OtherModule.Builder.OtherClassDef[],
     }
     export function someClass4(def?: SomeClass4Def): SomeClass4 {
-        const otherId = def?.otherId ?? "someValue"
+        const otherId = def?.otherId ?? 0
         const otherClass = def?.otherClass ?? {}
         const otherIdList = def?.otherIdList ?? []
         const otherClassList = def?.otherClassList ?? []

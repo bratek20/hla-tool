@@ -2,11 +2,11 @@
 
 namespace OtherModule.Builder {
     export interface OtherPropertyDef {
-        id?: string,
+        id?: number,
         name?: string,
     }
     export function otherProperty(def?: OtherPropertyDef): OtherProperty {
-        const id = def?.id ?? "someValue"
+        const id = def?.id ?? 0
         const name = def?.name ?? "someValue"
 
         return OtherProperty.create(
@@ -16,11 +16,11 @@ namespace OtherModule.Builder {
     }
 
     export interface OtherClassDef {
-        id?: string,
+        id?: number,
         amount?: number,
     }
     export function otherClass(def?: OtherClassDef): OtherClass {
-        const id = def?.id ?? "someValue"
+        const id = def?.id ?? 0
         const amount = def?.amount ?? 0
 
         return new OtherClass(

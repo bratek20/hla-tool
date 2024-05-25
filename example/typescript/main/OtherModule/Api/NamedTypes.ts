@@ -2,7 +2,7 @@
 
 class OtherId {
     constructor(
-        public readonly value: string
+        public readonly value: number
     ) {}
 
     equals(other: OtherId): boolean {
@@ -10,6 +10,6 @@ class OtherId {
     }
 
     toString(): string {
-        return this.value
+        return this.value.toString()
     }
 }

@@ -3,7 +3,7 @@
 package com.some.pkg.othermodule.api
 
 data class OtherProperty(
-    private val id: String,
+    private val id: Int,
     val name: String,
 ) {
     fun getId(): OtherId {

@@ -9,7 +9,7 @@ class ${nt.name()} {
     }
 
     toString(): string {
-        return this.value
+        return this.value.toString()
     }
 }#if($foreach.hasNext)
 

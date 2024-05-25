@@ -84,9 +84,9 @@ namespace SomeModule.Web {
     }
 
     export class SomeClass4Dto {
-        otherId = STRING
+        otherId = NUMBER
         otherClass = new OtherModule.Web.OtherClassDto
-        otherIdList = [STRING]
+        otherIdList = [NUMBER]
         otherClassList = [new OtherModule.Web.OtherClassDto]
 
         toApi(): SomeClass4 {
