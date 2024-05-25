@@ -5,14 +5,14 @@ namespace SomeModule.Web {
         range = new TypesModule.Web.DateRangeDto
 
         toApi(): DateRangeWrapper {
-            return CustomTypesMapper.dateRangeWrapperCreate(
+            return SomeModule.CustomTypesMapper.dateRangeWrapperCreate(
                 this.range.toApi(),
             )
         }
 
         static fromApi(api: DateRangeWrapper): DateRangeWrapperDto {
             const dto = new DateRangeWrapperDto()
-            dto.range = TypesModule.Web.DateRangeDto.fromApi(CustomTypesMapper.dateRangeWrapperGetRange(api))
+            dto.range = TypesModule.Web.DateRangeDto.fromApi(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(api))
             return dto
         }
     }

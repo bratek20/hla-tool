@@ -7,11 +7,25 @@ namespace TypesModule.Assert {
     }
     export function dateRange(given: DateRange, expected: ExpectedDateRange) {
         if (expected.from !== undefined) {
-            AssertEquals(CustomTypesMapper.dateGetValue(CustomTypesMapper.dateRangeGetFrom(given)), expected.from)
+            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(TypesModule.CustomTypesMapper.dateRangeGetFrom(given)), expected.from)
         }
 
         if (expected.to !== undefined) {
-            AssertEquals(CustomTypesMapper.dateGetValue(CustomTypesMapper.dateRangeGetTo(given)), expected.to)
+            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(TypesModule.CustomTypesMapper.dateRangeGetTo(given)), expected.to)
+        }
+    }
+
+    export interface ExpectedDateRangeProperty {
+        from?: string,
+        to?: string,
+    }
+    export function dateRangeProperty(given: DateRangeProperty, expected: ExpectedDateRangeProperty) {
+        if (expected.from !== undefined) {
+            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(given.getFrom()), expected.from)
+        }
+
+        if (expected.to !== undefined) {
+            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(given.getTo()), expected.to)
         }
     }
 }

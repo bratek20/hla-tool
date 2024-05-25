@@ -6,7 +6,7 @@ namespace SomeModule.Assert {
     }
     export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
         if (expected.range !== undefined) {
-            TypesModule.Assert.dateRange(CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range)
+            TypesModule.Assert.dateRange(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range)
         }
     }
 

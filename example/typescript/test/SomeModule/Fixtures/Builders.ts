@@ -7,7 +7,7 @@ namespace SomeModule.Builder {
     export function dateRangeWrapper(def?: DateRangeWrapperDef): DateRangeWrapper {
         const range = def?.range ?? {}
 
-        return CustomTypesMapper.dateRangeWrapperCreate(
+        return SomeModule.CustomTypesMapper.dateRangeWrapperCreate(
             TypesModule.Builder.dateRange(range),
         )
     }
