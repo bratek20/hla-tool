@@ -132,9 +132,26 @@ fun assertFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDef
     }
 }
 
+data class ExpectedAttribute(
+    var name: String? = null,
+    var value: String? = null,
+)
+fun assertAttribute(given: Attribute, expectedInit: ExpectedAttribute.() -> Unit) {
+    val expected = ExpectedAttribute().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
+    }
+
+    expected.value?.let {
+        assertThat(given.value).isEqualTo(it)
+    }
+}
+
 data class ExpectedSimpleStructureDefinition(
     var name: String? = null,
     var typeName: String? = null,
+    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
 )
 fun assertSimpleStructureDefinition(given: SimpleStructureDefinition, expectedInit: ExpectedSimpleStructureDefinition.() -> Unit) {
     val expected = ExpectedSimpleStructureDefinition().apply(expectedInit)
@@ -145,6 +162,11 @@ fun assertSimpleStructureDefinition(given: SimpleStructureDefinition, expectedIn
 
     expected.typeName?.let {
         assertThat(given.typeName).isEqualTo(it)
+    }
+
+    expected.attributes?.let {
+        assertThat(given.attributes).hasSize(it.size)
+        given.attributes.forEachIndexed { idx, entry -> assertAttribute(entry, it[idx]) }
     }
 }
 

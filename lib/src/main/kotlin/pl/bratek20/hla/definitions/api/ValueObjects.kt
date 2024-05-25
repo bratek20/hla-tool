@@ -34,9 +34,15 @@ data class FieldDefinition(
     val type: TypeDefinition,
 )
 
+data class Attribute(
+    val name: String,
+    val value: String,
+)
+
 data class SimpleStructureDefinition(
     val name: String,
     val typeName: String,
+    val attributes: List<Attribute>,
 )
 
 data class ComplexStructureDefinition(

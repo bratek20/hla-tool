@@ -36,9 +36,14 @@ ValueObjects
         name: string
         type: TypeDefinition
 
+    Attribute
+        name: string
+        value: string
+
     SimpleStructureDefinition
         name: string
         typeName: string
+        attributes: Attribute[]
 
     ComplexStructureDefinition
         name: string

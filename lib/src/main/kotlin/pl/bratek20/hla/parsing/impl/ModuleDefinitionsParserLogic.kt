@@ -73,7 +73,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     class Assignment(
         indent: Int,
         val name: String,
-        val value: String
+        val value: String,
+        val attributes: List<Attribute>
     ) : ParsedLeaf(indent)
 
     class ParsedArg(
@@ -131,7 +132,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val indent = line.takeWhile { it == ' ' }.length
         val noIndentLine = line.trim()
 
-        if (noIndentLine.contains("(")) {
+        if (noIndentLine.contains(Regex("[a-zA-Z]\\("))) {
             val methodName = noIndentLine.substringBefore("(")
             val args = noIndentLine.substringAfter("(").substringBefore(")").split(",")
                 .filter { it.isNotBlank() }
@@ -147,9 +148,24 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             return ParsedMethod(indent, methodName, args, returnType)
         }
         else if(noIndentLine.contains(":"))  {
-            noIndentLine.split(":").let {
-                return Assignment(indent, it[0], it[1].trim())
+            val name = noIndentLine.substringBefore(":").trim()
+            val rest = noIndentLine.substringAfter(":").trim()
+            val value: String
+            val attributes: List<Attribute>
+            if (rest.contains("(")) {
+                value = rest.substringBefore("(").trim()
+                attributes = rest.substringAfter("(").substringBefore(")").split(",")
+                    .filter { it.isNotBlank() }
+                    .map {
+                        val split = it.split(":")
+                        require(split.size == 2) { "Invalid attribute definition: $it" }
+                        Attribute(split[0].trim(), split[1].trim())
+                    }
+            } else {
+                value = rest.trim()
+                attributes = emptyList()
             }
+            return Assignment(indent, name, value, attributes)
         } else if(noIndentLine.contains("->"))  {
             noIndentLine.split("->").let {
                 val key = it[0].replace("\"", "").trim()
@@ -179,7 +195,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         return voSection?.elements?.filterIsInstance<Assignment>()?.map {
             SimpleStructureDefinition(
                 name = it.name,
-                typeName = it.value
+                typeName = it.value,
+                attributes = it.attributes
             )
         } ?: emptyList()
     }

@@ -79,15 +79,29 @@ fun fieldDefinition(init: FieldDefinitionDef.() -> Unit = {}): FieldDefinition {
     )
 }
 
+data class AttributeDef(
+    var name: String = "someValue",
+    var value: String = "someValue",
+)
+fun attribute(init: AttributeDef.() -> Unit = {}): Attribute {
+    val def = AttributeDef().apply(init)
+    return Attribute(
+        name = def.name,
+        value = def.value,
+    )
+}
+
 data class SimpleStructureDefinitionDef(
     var name: String = "someValue",
     var typeName: String = "someValue",
+    var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
 )
 fun simpleStructureDefinition(init: SimpleStructureDefinitionDef.() -> Unit = {}): SimpleStructureDefinition {
     val def = SimpleStructureDefinitionDef().apply(init)
     return SimpleStructureDefinition(
         name = def.name,
         typeName = def.typeName,
+        attributes = def.attributes.map { it -> attribute(it) },
     )
 }
 
