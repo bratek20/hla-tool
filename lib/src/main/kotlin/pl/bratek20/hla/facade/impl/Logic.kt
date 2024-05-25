@@ -1,9 +1,7 @@
 package pl.bratek20.hla.facade.impl
 
 import pl.bratek20.architecture.properties.api.Properties
-import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
 import pl.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
-import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.generation.api.GenerateArgs
 import pl.bratek20.hla.generation.api.ModuleGenerator
@@ -23,6 +21,10 @@ class HlaFacadeLogic(
 
     override fun updateModule(args: ModuleOperationArgs): Unit {
         generateModule(args, true)
+    }
+
+    override fun updateAllModules(args: AllModulesOperationArgs) {
+        TODO("Not yet implemented")
     }
 
     private fun generateModule(args: ModuleOperationArgs, onlyUpdate: Boolean) {
