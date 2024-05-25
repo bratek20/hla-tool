@@ -1,0 +1,8 @@
+profiles:
+  - name: "hla"
+    language: "KOTLIN"
+    projectPath: "../lib"
+    mainPath: "src/main/kotlin/pl/bratek20/hla"
+    fixturesPath: "src/testFixtures/kotlin/pl/bratek20/hla"
+    onlyParts: []
+    generateWeb: false
