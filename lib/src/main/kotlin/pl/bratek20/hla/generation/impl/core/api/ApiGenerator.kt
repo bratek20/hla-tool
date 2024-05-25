@@ -49,8 +49,10 @@ class PropertiesGenerator: FileGenerator() {
     }
 
     data class ApiPropertyKey(
-        val name: String,
-        val value: String
+        val constantName: String,
+        val propertyKeyType: String,
+        val keyName: String,
+        val keyType: String
     )
 
     override fun generateFileContent(): FileContent?{
@@ -62,14 +64,18 @@ class PropertiesGenerator: FileGenerator() {
             .put("properties", module.properties.map {
                 apiTypeFactory.create<PropertyApiType>(it)
             })
-            .put("keys", module.propertyMappings.map { toApiPropertyKey(it) })
+            .put("keys", module.propertyKeys.map { toApiPropertyKey(it) })
             .build()
     }
 
 
-    private fun toApiPropertyKey(mapping: PropertyMapping): ApiPropertyKey {
-        val name = camelToScreamingSnakeCase(mapping.key + "Key")
-        return ApiPropertyKey(name, mapping.key)
+    private fun toApiPropertyKey(def: PropertyKey): ApiPropertyKey {
+        return ApiPropertyKey(
+            constantName = camelToScreamingSnakeCase(def.name + "Key"),
+            propertyKeyType = "ObjectPropertyKey",
+            keyName = def.name,
+            keyType = apiTypeFactory.create(def.type).name()
+        )
     }
 }
 

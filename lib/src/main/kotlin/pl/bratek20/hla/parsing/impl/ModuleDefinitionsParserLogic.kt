@@ -35,7 +35,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             valueObjects = complexValueObjects,
             interfaces = interfaces,
             properties = properties.vos,
-            propertyMappings = properties.mappings,
+            propertyKeys = properties.keys,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
             complexCustomTypes = customTypes.complex
@@ -250,18 +250,18 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
     data class Properties(
         val vos: List<ComplexStructureDefinition>,
-        val mappings: List<PropertyMapping>
+        val keys: List<PropertyKey>
     )
     private fun parseProperties(elements: List<ParsedElement>): Properties {
         val vos: MutableList<ComplexStructureDefinition> = mutableListOf()
-        val mappings: MutableList<PropertyMapping> = mutableListOf()
+        val mappings: MutableList<PropertyKey> = mutableListOf()
 
         val propertiesSection = elements.find { it is Section && it.name == "Properties" } as Section?
         propertiesSection?.elements?.forEach {
             if(it is Section) {
                 vos.add(parseComplexStructureDefinition(it))
             } else if(it is ParsedMapping) {
-                mappings.add(PropertyMapping(it.key, parseType(it.value)))
+                mappings.add(PropertyKey(it.key, parseType(it.value)))
 
                 val voSection = Section(it.indent, parseType(it.value).name)
                 voSection.addElements(it.elements)
@@ -271,7 +271,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
         return Properties(
             vos = vos,
-            mappings = mappings
+            keys = mappings
         )
     }
 

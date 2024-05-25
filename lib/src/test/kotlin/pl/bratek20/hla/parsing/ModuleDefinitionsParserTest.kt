@@ -262,9 +262,9 @@ class ModuleDefinitionsParserTest {
                     }
                 }
             )
-            propertyMappings = listOf(
+            propertyKeys = listOf(
                 {
-                    key = "someElements"
+                    name = "someElements"
                     type = {
                         name = "SomeElement"
                         wrappers = listOf(
@@ -273,7 +273,7 @@ class ModuleDefinitionsParserTest {
                     }
                 },
                 {
-                    key = "someConfig"
+                    name = "someConfig"
                     type = {
                         name = "SomeConfig"
                     }

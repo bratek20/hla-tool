@@ -5,14 +5,14 @@ import pl.bratek20.hla.facade.fixtures.*
 
 import pl.bratek20.hla.definitions.api.*
 
-data class PropertyMappingDef(
-    var key: String = "someValue",
+data class PropertyKeyDef(
+    var name: String = "someValue",
     var type: (TypeDefinitionDef.() -> Unit) = {},
 )
-fun propertyMapping(init: PropertyMappingDef.() -> Unit = {}): PropertyMapping {
-    val def = PropertyMappingDef().apply(init)
-    return PropertyMapping(
-        key = def.key,
+fun propertyKey(init: PropertyKeyDef.() -> Unit = {}): PropertyKey {
+    val def = PropertyKeyDef().apply(init)
+    return PropertyKey(
+        name = def.name,
         type = typeDefinition(def.type),
     )
 }
@@ -35,7 +35,7 @@ data class ModuleDefinitionDef(
     var valueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var interfaces: List<(InterfaceDefinitionDef.() -> Unit)> = emptyList(),
     var properties: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
-    var propertyMappings: List<(PropertyMappingDef.() -> Unit)> = emptyList(),
+    var propertyKeys: List<(PropertyKeyDef.() -> Unit)> = emptyList(),
     var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
     var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
     var complexCustomTypes: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
@@ -48,7 +48,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         valueObjects = def.valueObjects.map { it -> complexStructureDefinition(it) },
         interfaces = def.interfaces.map { it -> interfaceDefinition(it) },
         properties = def.properties.map { it -> complexStructureDefinition(it) },
-        propertyMappings = def.propertyMappings.map { it -> propertyMapping(it) },
+        propertyKeys = def.propertyKeys.map { it -> propertyKey(it) },
         enums = def.enums.map { it -> enumDefinition(it) },
         simpleCustomTypes = def.simpleCustomTypes.map { it -> simpleStructureDefinition(it) },
         complexCustomTypes = def.complexCustomTypes.map { it -> complexStructureDefinition(it) },

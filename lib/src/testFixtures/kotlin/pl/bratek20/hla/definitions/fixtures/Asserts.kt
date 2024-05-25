@@ -7,15 +7,15 @@ import pl.bratek20.hla.facade.fixtures.*
 
 import pl.bratek20.hla.definitions.api.*
 
-data class ExpectedPropertyMapping(
-    var key: String? = null,
+data class ExpectedPropertyKey(
+    var name: String? = null,
     var type: (ExpectedTypeDefinition.() -> Unit)? = null,
 )
-fun assertPropertyMapping(given: PropertyMapping, expectedInit: ExpectedPropertyMapping.() -> Unit) {
-    val expected = ExpectedPropertyMapping().apply(expectedInit)
+fun assertPropertyKey(given: PropertyKey, expectedInit: ExpectedPropertyKey.() -> Unit) {
+    val expected = ExpectedPropertyKey().apply(expectedInit)
 
-    expected.key?.let {
-        assertThat(given.key).isEqualTo(it)
+    expected.name?.let {
+        assertThat(given.name).isEqualTo(it)
     }
 
     expected.type?.let {
@@ -46,7 +46,7 @@ data class ExpectedModuleDefinition(
     var valueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
     var properties: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var propertyMappings: List<(ExpectedPropertyMapping.() -> Unit)>? = null,
+    var propertyKeys: List<(ExpectedPropertyKey.() -> Unit)>? = null,
     var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
     var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
     var complexCustomTypes: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
@@ -78,9 +78,9 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
         given.properties.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
     }
 
-    expected.propertyMappings?.let {
-        assertThat(given.propertyMappings).hasSize(it.size)
-        given.propertyMappings.forEachIndexed { idx, entry -> assertPropertyMapping(entry, it[idx]) }
+    expected.propertyKeys?.let {
+        assertThat(given.propertyKeys).hasSize(it.size)
+        given.propertyKeys.forEachIndexed { idx, entry -> assertPropertyKey(entry, it[idx]) }
     }
 
     expected.enums?.let {

@@ -9,8 +9,8 @@ Enums
         LIST
 
 ValueObjects
-    PropertyMapping
-        key: string
+    PropertyKey
+        name: string
         type: TypeDefinition
 
     EnumDefinition
@@ -23,7 +23,7 @@ ValueObjects
         valueObjects: ComplexStructureDefinition[]
         interfaces: InterfaceDefinition[]
         properties: ComplexStructureDefinition[]
-        propertyMappings: PropertyMapping[]
+        propertyKeys: PropertyKey[]
         enums: EnumDefinition[]
         simpleCustomTypes: SimpleStructureDefinition[]
         complexCustomTypes: ComplexStructureDefinition[]
