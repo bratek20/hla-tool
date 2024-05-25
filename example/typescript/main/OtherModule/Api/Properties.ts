@@ -1,7 +1,3 @@
-namespace OtherModule {
-    export const OTHER_PROPERTY_KEY = new TableNameVo("otherProperty")
-}
-
 class OtherProperty {
     private id = STRING
     name = STRING
@@ -19,4 +15,16 @@ class OtherProperty {
     getId(): OtherId {
         return new OtherId(this.id)
     }
+}
+
+namespace OtherModule {
+    export const OTHER_PROPERTY_KEY = new ObjectPropertyKey(
+        "otherProperty",
+        OtherProperty
+    )
+
+    export const OTHER_PROPERTIES_KEY = new ListPropertyKey(
+        "otherProperties",
+        OtherProperty
+    )
 }
