@@ -9,8 +9,16 @@ Properties
     "otherProperty" -> OtherProperty
     "otherProperties" -> OtherProperty[]
 
+Data
+    "otherData" -> OtherData
+        id: OtherId
+
 ValueObjects
     OtherClass
         id: OtherId
         amount: int
 
+Impl
+    Data
+        "otherImplData" -> OtherImplData[]
+            name: string
