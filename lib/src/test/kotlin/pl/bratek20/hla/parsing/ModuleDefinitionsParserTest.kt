@@ -294,11 +294,19 @@ class ModuleDefinitionsParserTest {
                         type = {
                             name = "string"
                         }
+                        attributes = listOf {
+                            name = "example"
+                            value = "\"abc\""
+                        }
                     },
                     {
                         name = "field2"
                         type = {
                             name = "int"
+                        }
+                        attributes = listOf {
+                            name = "example"
+                            value = "123"
                         }
                     }
                 )
