@@ -26,25 +26,25 @@ class HlaFacadeTest {
         val exampleMainPath: String,
         val exampleTestFixturesPath: String,
         val expectedMainPath: String,
-        val expectedTestFixturesPath: String
+        val expectedFixturesPath: String
     )
 
     class MyArgumentsProvider : ArgumentsProvider {
-        private fun kotlinTestPaths(packageName: String): TestPaths {
+        fun kotlinTestPaths(packageName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/kotlin/src/main/kotlin/com/some/pkg/$packageName",
                 exampleTestFixturesPath = "../example/kotlin/src/testFixtures/kotlin/com/some/pkg/$packageName",
                 expectedMainPath = "../kotlin/src/main/kotlin/com/some/pkg",
-                expectedTestFixturesPath = "../kotlin/src/testFixtures/kotlin/com/some/pkg"
+                expectedFixturesPath = "../kotlin/src/testFixtures/kotlin/com/some/pkg"
             )
         }
 
-        private fun typescriptTestPaths(moduleName: String): TestPaths {
+        fun typescriptTestPaths(moduleName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/typescript/main/$moduleName",
                 exampleTestFixturesPath = "../example/typescript/test/$moduleName",
                 expectedMainPath = "../typescript/main",
-                expectedTestFixturesPath = "../typescript/test"
+                expectedFixturesPath = "../typescript/test"
             )
         }
 
@@ -137,7 +137,7 @@ class HlaFacadeTest {
         )
         val testFixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
             2,
-            paths.expectedTestFixturesPath
+            paths.expectedFixturesPath
         )
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
@@ -185,28 +185,29 @@ class HlaFacadeTest {
         facade.updateModule(args)
 
         //then
+        val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
         directoriesMock.assertWriteCount(4)
         val mainDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
             1,
-            "some/project/path/src/main/kotlin/com/some/pkg"
+            paths.expectedMainPath
         )
-        val testFixturesDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
+        val fixturesDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
             2,
-            "some/project/path/src/testFixtures/kotlin/com/some/pkg"
+            paths.expectedFixturesPath
         )
 
         val mainDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
             3,
-            "some/project/path/src/main/kotlin/com/some/pkg"
+            paths.expectedMainPath
         )
 
-        val testFixturesDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
+        val fixturesDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
             4,
-            "some/project/path/src/testFixtures/kotlin/com/some/pkg"
+            paths.expectedFixturesPath
         )
 
         val mainCompareResult = DirectoriesLogic().compare(mainDirectoryStart, mainDirectoryUpdate)
-        val testFixturesCompareResult = DirectoriesLogic().compare(testFixturesDirectoryStart, testFixturesDirectoryUpdate)
+        val testFixturesCompareResult = DirectoriesLogic().compare(fixturesDirectoryStart, fixturesDirectoryUpdate)
 
         val expectedMainDifference = expectedFilesToSkipUpdate.map {
                 "File somemodule/$it.kt not found in second directory"
@@ -225,18 +226,12 @@ class HlaFacadeTest {
     fun `should start module using onlyParts`() {
         //given
         val (directoriesMock, facade) = setup()
-//            kotlinOnlyParts = listOf(
-//                "NamedTypes",
-//                "Properties",
-//                "Builders"
-//            )
-//        }
 
         val hlaFolderPath = Path("../example/hla")
 
         val args = ModuleOperationArgs(
             moduleName = ModuleName("SomeModule"),
-            profileName = ProfileName("kotlin"),
+            profileName = ProfileName("kotlinOnlyParts"),
             hlaFolderPath = hlaFolderPath,
         )
 
@@ -245,13 +240,14 @@ class HlaFacadeTest {
 
         //then
         directoriesMock.assertWriteCount(2)
+        val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
-            "some/project/path/src/main/kotlin/com/some/pkg"
+            paths.expectedMainPath
         )
-        val testFixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
             2,
-            "some/project/path/src/testFixtures/kotlin/com/some/pkg"
+            paths.expectedFixturesPath
         )
 
         assertDirectory(mainDirectory) {
@@ -268,7 +264,7 @@ class HlaFacadeTest {
             }
         }
 
-        assertDirectory(testFixturesDirectory) {
+        assertDirectory(fixturesDirectory) {
             hasDirectory = {
                 name = "fixtures"
                 files = listOf {

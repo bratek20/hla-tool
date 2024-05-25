@@ -6,10 +6,22 @@ profiles:
     fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
     onlyParts: []
     generateWeb: true
+
   - name: "typeScript"
     language: "TYPE_SCRIPT"
     projectPath: "../typescript"
     mainPath: "main"
     fixturesPath: "test"
     onlyParts: []
+    generateWeb: true
+
+  - name: "kotlinOnlyParts"
+    language: "KOTLIN"
+    projectPath: "../kotlin"
+    mainPath: "src/main/kotlin/com/some/pkg"
+    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+    onlyParts:
+        - "NamedTypes"
+        - "Properties"
+        - "Builders"
     generateWeb: true
