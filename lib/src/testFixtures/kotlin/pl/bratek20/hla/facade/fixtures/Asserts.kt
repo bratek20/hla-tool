@@ -9,6 +9,15 @@ import pl.bratek20.hla.directory.fixtures.*
 
 import pl.bratek20.hla.facade.api.*
 
+fun assertModuleName(given: ModuleName, expected: String) {
+    assertThat(given.value).isEqualTo(expected)
+}
+
+
+fun assertProfileName(given: ProfileName, expected: String) {
+    assertThat(given.value).isEqualTo(expected)
+}
+
 data class ExpectedHlaProfile(
     var name: String? = null,
     var language: ModuleLanguage? = null,

@@ -9,12 +9,12 @@ import pl.bratek20.hla.facade.fixtures.*
 
 import pl.bratek20.hla.definitions.api.*
 
-data class ExpectedPropertyKey(
+data class ExpectedKeyDefinition(
     var name: String? = null,
     var type: (ExpectedTypeDefinition.() -> Unit)? = null,
 )
-fun assertPropertyKey(given: PropertyKey, expectedInit: ExpectedPropertyKey.() -> Unit) {
-    val expected = ExpectedPropertyKey().apply(expectedInit)
+fun assertKeyDefinition(given: KeyDefinition, expectedInit: ExpectedKeyDefinition.() -> Unit) {
+    val expected = ExpectedKeyDefinition().apply(expectedInit)
 
     expected.name?.let {
         assertThat(given.name).isEqualTo(it)
@@ -42,16 +42,37 @@ fun assertEnumDefinition(given: EnumDefinition, expectedInit: ExpectedEnumDefini
     }
 }
 
+data class ExpectedImplSubmoduleDefinition(
+    var data: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
+)
+fun assertImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: ExpectedImplSubmoduleDefinition.() -> Unit) {
+    val expected = ExpectedImplSubmoduleDefinition().apply(expectedInit)
+
+    expected.data?.let {
+        assertThat(given.data).hasSize(it.size)
+        given.data.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
+    }
+
+    expected.dataKeys?.let {
+        assertThat(given.dataKeys).hasSize(it.size)
+        given.dataKeys.forEachIndexed { idx, entry -> assertKeyDefinition(entry, it[idx]) }
+    }
+}
+
 data class ExpectedModuleDefinition(
     var name: String? = null,
     var namedTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
     var valueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
     var properties: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var propertyKeys: List<(ExpectedPropertyKey.() -> Unit)>? = null,
+    var propertyKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
     var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
     var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
     var complexCustomTypes: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var data: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
+    var implSubmodule: List<(ExpectedImplSubmoduleDefinition.() -> Unit)>? = null,
 )
 fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit) {
     val expected = ExpectedModuleDefinition().apply(expectedInit)
@@ -82,7 +103,7 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
 
     expected.propertyKeys?.let {
         assertThat(given.propertyKeys).hasSize(it.size)
-        given.propertyKeys.forEachIndexed { idx, entry -> assertPropertyKey(entry, it[idx]) }
+        given.propertyKeys.forEachIndexed { idx, entry -> assertKeyDefinition(entry, it[idx]) }
     }
 
     expected.enums?.let {
@@ -98,6 +119,21 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
     expected.complexCustomTypes?.let {
         assertThat(given.complexCustomTypes).hasSize(it.size)
         given.complexCustomTypes.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
+    }
+
+    expected.data?.let {
+        assertThat(given.data).hasSize(it.size)
+        given.data.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
+    }
+
+    expected.dataKeys?.let {
+        assertThat(given.dataKeys).hasSize(it.size)
+        given.dataKeys.forEachIndexed { idx, entry -> assertKeyDefinition(entry, it[idx]) }
+    }
+
+    expected.implSubmodule?.let {
+        assertThat(given.implSubmodule).hasSize(it.size)
+        given.implSubmodule.forEachIndexed { idx, entry -> assertImplSubmoduleDefinition(entry, it[idx]) }
     }
 }
 

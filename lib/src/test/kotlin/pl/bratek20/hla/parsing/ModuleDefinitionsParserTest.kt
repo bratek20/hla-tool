@@ -333,4 +333,41 @@ class ModuleDefinitionsParserTest {
             parse("bug")
         }.doesNotThrowAnyException()
     }
+
+    @Test
+    fun `should parse data`() {
+        val modules = parse("only-data")
+
+        assertModules(modules, listOf {
+            data = listOf(
+                {
+                    name = "SomeData"
+                    fields = listOf {
+                        name = "value"
+                        type = {
+                            name = "int"
+                        }
+                    }
+                },
+                {
+                    name = "SomeElementData"
+                    fields = listOf {
+                        name = "id"
+                        type = {
+                            name = "SomeId"
+                        }
+                    }
+                },
+            )
+            dataKeys = listOf {
+                name = "someElements"
+                type = {
+                    name = "SomeElementData"
+                    wrappers = listOf(
+                        TypeWrapper.LIST
+                    )
+                }
+            }
+        })
+    }
 }

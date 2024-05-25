@@ -7,13 +7,13 @@ import pl.bratek20.hla.facade.fixtures.*
 
 import pl.bratek20.hla.definitions.api.*
 
-data class PropertyKeyDef(
+data class KeyDefinitionDef(
     var name: String = "someValue",
     var type: (TypeDefinitionDef.() -> Unit) = {},
 )
-fun propertyKey(init: PropertyKeyDef.() -> Unit = {}): PropertyKey {
-    val def = PropertyKeyDef().apply(init)
-    return PropertyKey(
+fun keyDefinition(init: KeyDefinitionDef.() -> Unit = {}): KeyDefinition {
+    val def = KeyDefinitionDef().apply(init)
+    return KeyDefinition(
         name = def.name,
         type = typeDefinition(def.type),
     )
@@ -31,16 +31,31 @@ fun enumDefinition(init: EnumDefinitionDef.() -> Unit = {}): EnumDefinition {
     )
 }
 
+data class ImplSubmoduleDefinitionDef(
+    var data: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
+)
+fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): ImplSubmoduleDefinition {
+    val def = ImplSubmoduleDefinitionDef().apply(init)
+    return ImplSubmoduleDefinition(
+        data = def.data.map { it -> complexStructureDefinition(it) },
+        dataKeys = def.dataKeys.map { it -> keyDefinition(it) },
+    )
+}
+
 data class ModuleDefinitionDef(
     var name: String = "someValue",
     var namedTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
     var valueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var interfaces: List<(InterfaceDefinitionDef.() -> Unit)> = emptyList(),
     var properties: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
-    var propertyKeys: List<(PropertyKeyDef.() -> Unit)> = emptyList(),
+    var propertyKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
     var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
     var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
     var complexCustomTypes: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var data: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
+    var implSubmodule: List<(ImplSubmoduleDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
@@ -50,10 +65,13 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         valueObjects = def.valueObjects.map { it -> complexStructureDefinition(it) },
         interfaces = def.interfaces.map { it -> interfaceDefinition(it) },
         properties = def.properties.map { it -> complexStructureDefinition(it) },
-        propertyKeys = def.propertyKeys.map { it -> propertyKey(it) },
+        propertyKeys = def.propertyKeys.map { it -> keyDefinition(it) },
         enums = def.enums.map { it -> enumDefinition(it) },
         simpleCustomTypes = def.simpleCustomTypes.map { it -> simpleStructureDefinition(it) },
         complexCustomTypes = def.complexCustomTypes.map { it -> complexStructureDefinition(it) },
+        data = def.data.map { it -> complexStructureDefinition(it) },
+        dataKeys = def.dataKeys.map { it -> keyDefinition(it) },
+        implSubmodule = def.implSubmodule.map { it -> implSubmoduleDefinition(it) },
     )
 }
 

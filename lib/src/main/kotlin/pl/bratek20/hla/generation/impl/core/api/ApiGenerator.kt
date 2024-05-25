@@ -69,7 +69,7 @@ class PropertiesGenerator: FileGenerator() {
     }
 
 
-    private fun toApiPropertyKey(def: PropertyKey): ApiPropertyKey {
+    private fun toApiPropertyKey(def: KeyDefinition): ApiPropertyKey {
         val apiType = apiTypeFactory.create(def.type)
 
         val propertyKeyType: String

@@ -9,7 +9,7 @@ Enums
         LIST
 
 ValueObjects
-    PropertyKey
+    KeyDefinition
         name: string
         type: TypeDefinition
 
@@ -17,16 +17,23 @@ ValueObjects
         name: string
         values: string[]
 
+    ImplSubmoduleDefinition
+        data: ComplexStructureDefinition[]
+        dataKeys: KeyDefinition[]
+
     ModuleDefinition
         name: ModuleName
         namedTypes: SimpleStructureDefinition[]
         valueObjects: ComplexStructureDefinition[]
         interfaces: InterfaceDefinition[]
         properties: ComplexStructureDefinition[]
-        propertyKeys: PropertyKey[]
+        propertyKeys: KeyDefinition[]
         enums: EnumDefinition[]
         simpleCustomTypes: SimpleStructureDefinition[]
         complexCustomTypes: ComplexStructureDefinition[]
+        data: ComplexStructureDefinition[]
+        dataKeys: KeyDefinition[]
+        implSubmodule: ImplSubmoduleDefinition[]
 
     TypeDefinition
         name: string

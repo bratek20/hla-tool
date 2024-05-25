@@ -25,9 +25,10 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val namedTypes = parseSimpleStructureDefinitions("NamedTypes", elements)
         val complexValueObjects = parseComplexStructureDefinitions("ValueObjects", elements)
         val interfaces = parseInterfaces(elements)
-        val properties = parseProperties(elements)
+        val properties = parsePropertiesOrData("Properties", elements)
         val enums = parseEnums(elements)
         val customTypes = parseStructures("CustomTypes", elements)
+        val data = parsePropertiesOrData("Data", elements)
 
         return ModuleDefinition(
             name = moduleName,
@@ -38,7 +39,10 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             propertyKeys = properties.keys,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
-            complexCustomTypes = customTypes.complex
+            complexCustomTypes = customTypes.complex,
+            data = data.vos,
+            dataKeys = data.keys,
+            implSubmodule = emptyList()
         )
     }
 
@@ -267,20 +271,20 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         } ?: emptyList()
     }
 
-    data class Properties(
+    data class PropertiesOrData(
         val vos: List<ComplexStructureDefinition>,
-        val keys: List<PropertyKey>
+        val keys: List<KeyDefinition>
     )
-    private fun parseProperties(elements: List<ParsedElement>): Properties {
+    private fun parsePropertiesOrData(sectionName: String, elements: List<ParsedElement>): PropertiesOrData {
         val vos: MutableList<ComplexStructureDefinition> = mutableListOf()
-        val mappings: MutableList<PropertyKey> = mutableListOf()
+        val keys: MutableList<KeyDefinition> = mutableListOf()
 
-        val propertiesSection = elements.find { it is Section && it.name == "Properties" } as Section?
+        val propertiesSection = elements.find { it is Section && it.name == sectionName } as Section?
         propertiesSection?.elements?.forEach {
             if(it is Section) {
                 vos.add(parseComplexStructureDefinition(it))
             } else if(it is ParsedMapping) {
-                mappings.add(PropertyKey(it.key, parseType(it.value)))
+                keys.add(KeyDefinition(it.key, parseType(it.value)))
 
                 val voSection = Section(it.indent, parseType(it.value).name)
                 voSection.addElements(it.elements)
@@ -291,9 +295,9 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             }
         }
 
-        return Properties(
+        return PropertiesOrData(
             vos = vos,
-            keys = mappings
+            keys = keys
         )
     }
 

@@ -4,7 +4,7 @@ package pl.bratek20.hla.definitions.api
 
 import pl.bratek20.hla.facade.api.*
 
-data class PropertyKey(
+data class KeyDefinition(
     val name: String,
     val type: TypeDefinition,
 )
@@ -14,16 +14,24 @@ data class EnumDefinition(
     val values: List<String>,
 )
 
+data class ImplSubmoduleDefinition(
+    val data: List<ComplexStructureDefinition>,
+    val dataKeys: List<KeyDefinition>,
+)
+
 data class ModuleDefinition(
     val name: ModuleName,
     val namedTypes: List<SimpleStructureDefinition>,
     val valueObjects: List<ComplexStructureDefinition>,
     val interfaces: List<InterfaceDefinition>,
     val properties: List<ComplexStructureDefinition>,
-    val propertyKeys: List<PropertyKey>,
+    val propertyKeys: List<KeyDefinition>,
     val enums: List<EnumDefinition>,
     val simpleCustomTypes: List<SimpleStructureDefinition>,
     val complexCustomTypes: List<ComplexStructureDefinition>,
+    val data: List<ComplexStructureDefinition>,
+    val dataKeys: List<KeyDefinition>,
+    val implSubmodule: List<ImplSubmoduleDefinition>,
 )
 
 data class TypeDefinition(

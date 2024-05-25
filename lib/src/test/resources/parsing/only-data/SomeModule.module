@@ -1,6 +1,11 @@
 Data
-    someElements: SomeElementData[]
+    SomeData
+        value: int
+
+    "someElements" -> SomeElementData[]
         id: SomeId
 
-    someObject: SomeObjectData
-        completed: bool
+Impl
+    Data
+        ImplSomeData
+            value: bool
