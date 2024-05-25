@@ -11,6 +11,10 @@ import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
 
+fun assertSomeId(given: SomeId, expected: String) {
+    assertThat(given.value).isEqualTo(expected)
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )

@@ -1,5 +1,5 @@
 namespace ${moduleName}.Assert {
-#foreach($a in $asserts)
+#foreach($a in $complexAsserts)
     export interface ${a.expectedName()} {
     #foreach($field in $a.fields)
         $field.name?: $field.type.name(),

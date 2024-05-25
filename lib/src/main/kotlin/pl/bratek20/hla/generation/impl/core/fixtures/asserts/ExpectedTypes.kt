@@ -14,6 +14,7 @@ abstract class ExpectedType<T: ApiType>(
         return api.name()
     }
 
+    //TODO move up?
     abstract fun defaultValue(): String
 
     open fun assertion(givenVariable: String, expectedVariable: String): String {
@@ -32,7 +33,7 @@ class BaseExpectedType(
 open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseExpectedType,
-) : ExpectedType<T>(api) {
+) : StructureExpectedType<T>(api) {
     override fun defaultValue(): String {
         return boxedType.defaultValue()
     }
@@ -46,7 +47,7 @@ open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
     }
 }
 
-class SimpleVOExpectedType(
+class NamedExpectedType(
     api: NamedApiType,
     boxedType: BaseExpectedType,
 ) : SimpleStructureExpectedType<NamedApiType>(api, boxedType)
@@ -68,10 +69,23 @@ class ExpectedTypeField(
     }
 }
 
+abstract class StructureExpectedType<T: StructureApiType>(
+    api: T,
+) : ExpectedType<T>(api) {
+    override fun name(): String {
+        return api.name()
+    }
+
+    // used by velocity
+    fun funName(): String {
+        return fixture.assertFunName(api.name())
+    }
+}
+
 open class ComplexStructureExpectedType(
     api: ComplexStructureApiType<*>,
     val fields: List<ExpectedTypeField>
-) : ExpectedType<ComplexStructureApiType<*>>(api) {
+) : StructureExpectedType<ComplexStructureApiType<*>>(api) {
     override fun name(): String {
         return fixture.expectedClassType(api.name())
     }
@@ -84,10 +98,7 @@ open class ComplexStructureExpectedType(
         return fixture.complexVoAssertion(api.name(), givenVariable, expectedVariable)
     }
 
-    // used by velocity
-    fun funName(): String {
-        return fixture.assertFunName(api.name())
-    }
+
 
     // used by velocity
     fun givenName(): String {
@@ -160,7 +171,7 @@ class ExpectedTypeFactory(
     fun create(type: ApiType): ExpectedType<*> {
         val result =  when (type) {
             is BaseApiType -> BaseExpectedType(type)
-            is NamedApiType -> SimpleVOExpectedType(type, create(type.boxedType) as BaseExpectedType)
+            is NamedApiType -> NamedExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is ComplexVOApiType -> ComplexVOExpectedType(type, createFields(type.fields))
             is ListApiType -> ListExpectedType(type, create(type.wrappedType))
             is EnumApiType -> ExpectedEnumType(type)

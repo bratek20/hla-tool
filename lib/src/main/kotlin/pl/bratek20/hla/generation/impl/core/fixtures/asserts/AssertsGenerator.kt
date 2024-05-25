@@ -9,18 +9,23 @@ class AssertsGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val assertTypes = module.complexCustomTypes + module.properties + module.valueObjects
-        if (assertTypes.isEmpty()) {
+        val simpleAssertTypes = module.namedTypes + module.simpleCustomTypes
+        val complexAssertTypes = module.complexCustomTypes + module.properties + module.valueObjects
+        if (simpleAssertTypes.isEmpty() && complexAssertTypes.isEmpty()) {
             return null
         }
 
         val factory = ExpectedTypeFactory(c.language.types(), c.language.assertsFixture())
-        val asserts = (assertTypes).map {
+        val simpleAsserts = (simpleAssertTypes).map {
+            factory.create(apiTypeFactory.create(it))
+        }
+        val complexAsserts = (complexAssertTypes).map {
             factory.create(apiTypeFactory.create(it))
         }
 
         return contentBuilder("asserts.vm")
-            .put("asserts", asserts)
+            .put("simpleAsserts", simpleAsserts)
+            .put("complexAsserts", complexAsserts)
             .build()
     }
 }

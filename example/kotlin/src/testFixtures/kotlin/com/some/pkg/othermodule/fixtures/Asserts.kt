@@ -6,6 +6,10 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.some.pkg.othermodule.api.*
 
+fun assertOtherId(given: OtherId, expected: Int) {
+    assertThat(given.value).isEqualTo(expected)
+}
+
 data class ExpectedOtherProperty(
     var id: Int? = null,
     var name: String? = null,

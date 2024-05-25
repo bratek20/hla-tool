@@ -6,6 +6,10 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.some.pkg.typesmodule.api.*
 
+fun assertDate(given: Date, expected: String) {
+    assertThat(dateGetValue(given)).isEqualTo(expected)
+}
+
 data class ExpectedDateRange(
     var from: String? = null,
     var to: String? = null,
