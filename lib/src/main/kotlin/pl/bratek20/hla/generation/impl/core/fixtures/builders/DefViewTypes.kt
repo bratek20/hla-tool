@@ -49,7 +49,7 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     }
 
     override fun defaultValue(): String {
-        return boxedType.defaultValue()
+        return api.exampleValue() ?: boxedType.defaultValue()
     }
 }
 

@@ -41,9 +41,9 @@ open class StructureApiType(
 }
 
 abstract class SimpleStructureApiType(
-    name: String,
+    val def: SimpleStructureDefinition,
     val boxedType: BaseApiType
-) : StructureApiType(name) {
+) : StructureApiType(def.name) {
 
     override fun serializableName(): String {
         return boxedType.name()
@@ -54,12 +54,16 @@ abstract class SimpleStructureApiType(
     }
 
     abstract fun unbox(variableName: String): String;
+
+    fun exampleValue(): String? {
+        return def.attributes.firstOrNull { it.name == "example" }?.value
+    }
 }
 
 class NamedApiType(
-    name: String,
+    def: SimpleStructureDefinition,
     boxedType: BaseApiType
-) : SimpleStructureApiType(name, boxedType) {
+) : SimpleStructureApiType(def, boxedType) {
     override fun constructorCall(): String {
         return languageTypes.classConstructorCall(name)
     }
@@ -70,9 +74,9 @@ class NamedApiType(
 }
 
 class SimpleCustomApiType(
-    name: String,
+    def: SimpleStructureDefinition,
     boxedType: BaseApiType
-) : SimpleStructureApiType(name, boxedType) {
+) : SimpleStructureApiType(def, boxedType) {
     override fun unbox(variableName: String): String {
         return languageTypes.customTypeGetterCall(name, "value") + "($variableName)"
     }
@@ -250,8 +254,8 @@ class ApiTypeFactory(
 
         val apiType = when {
             isList -> ListApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
-            simpleVO != null -> NamedApiType(type.name, createBaseApiType(ofBaseType(simpleVO.typeName)))
-            simpleCustomType != null -> SimpleCustomApiType(type.name, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
+            simpleVO != null -> NamedApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.typeName)))
+            simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
             complexVO != null -> ComplexVOApiType(type.name, createFields(complexVO.fields))
             propertyVO != null -> PropertyApiType(type.name, createPropertyFields(propertyVO.fields))
             complexCustomType != null -> ComplexCustomApiType(type.name, createComplexCustomTypeFields(type.name, complexCustomType.fields))

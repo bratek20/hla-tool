@@ -88,7 +88,7 @@ fun someClass4(init: SomeClass4Def.() -> Unit = {}): SomeClass4 {
 }
 
 data class SomeClass5Def(
-    var date: String = "someValue",
+    var date: String = "01/01/1970 00:00",
     var dateRange: (DateRangeDef.() -> Unit) = {},
     var dateRangeWrapper: (DateRangeWrapperDef.() -> Unit) = {},
     var someProperty: (SomePropertyDef.() -> Unit) = {},

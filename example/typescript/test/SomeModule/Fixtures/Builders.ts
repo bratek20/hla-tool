@@ -102,7 +102,7 @@ namespace SomeModule.Builder {
         otherProperty?: OtherModule.Builder.OtherPropertyDef,
     }
     export function someClass5(def?: SomeClass5Def): SomeClass5 {
-        const date = def?.date ?? "someValue"
+        const date = def?.date ?? "01/01/1970 00:00"
         const dateRange = def?.dateRange ?? {}
         const dateRangeWrapper = def?.dateRangeWrapper ?? {}
         const someProperty = def?.someProperty ?? {}
