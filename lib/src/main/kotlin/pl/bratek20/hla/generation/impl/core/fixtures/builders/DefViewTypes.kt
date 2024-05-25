@@ -78,6 +78,11 @@ open class DefField(
     open fun build(): String {
         return type.build(name)
     }
+
+    // used by velocity
+    fun defaultValue(): String {
+        return api.exampleValue() ?: type.defaultValue()
+    }
 }
 
 class PropertyDefField(

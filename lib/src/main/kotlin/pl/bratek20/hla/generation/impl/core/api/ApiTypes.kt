@@ -97,20 +97,26 @@ class SimpleCustomApiType(
 }
 
 open class ApiTypeField(
-    val name: String,
+    val def: FieldDefinition,
     val type: ApiType
 ) {
+    val name = def.name
+
     open fun access(variableName: String): String {
         return "$variableName.$name"
+    }
+
+    fun exampleValue(): String? {
+        return def.attributes.firstOrNull { it.name == "example" }?.value
     }
 }
 
 class ComplexCustomApiTypeField(
     private val className: String,
-    name: String,
+    def: FieldDefinition,
     type: ApiType,
     private val languageTypes: LanguageTypes
-) : ApiTypeField(name, type) {
+) : ApiTypeField(def, type) {
     override fun access(variableName: String): String {
         return languageTypes.customTypeGetterCall(className, name) + "($variableName)"
     }
@@ -163,9 +169,9 @@ data class PropertyGetter(
     val field: String
 )
 class PropertyApiTypeField(
-    name: String,
+    def: FieldDefinition,
     type: ApiType,
-): ApiTypeField(name, type) {
+): ApiTypeField(def, type) {
     override fun access(variableName: String): String {
         if (type is SimpleStructureApiType) {
             return "$variableName.${getterName()}()"
@@ -285,19 +291,19 @@ class ApiTypeFactory(
 
     private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField> {
         return fields.map {
-            ApiTypeField(it.name, create(it.type))
+            ApiTypeField(it, create(it.type))
         }
     }
 
     private fun createPropertyFields(fields: List<FieldDefinition>): List<PropertyApiTypeField> {
         return fields.map {
-            PropertyApiTypeField(it.name, create(it.type))
+            PropertyApiTypeField(it, create(it.type))
         }
     }
 
     private fun createComplexCustomTypeFields(className: String, fields: List<FieldDefinition>): List<ComplexCustomApiTypeField> {
         return fields.map {
-            ComplexCustomApiTypeField(className, it.name, create(it.type), languageTypes)
+            ComplexCustomApiTypeField(className, it, create(it.type), languageTypes)
         }
     }
 }

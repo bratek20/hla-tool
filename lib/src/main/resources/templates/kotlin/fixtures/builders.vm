@@ -12,7 +12,7 @@ import ${packageName}.api.*
 
 data class ${b.defName()}(
     #foreach($field in $b.fields)
-    var $field.name: $field.type.name() = $field.type.defaultValue(),
+    var $field.name: $field.type.name() = $field.defaultValue(),
     #end
 )
 fun ${b.funName()}(init: ${b.defName()}.() -> Unit = {}): ${b.api.name()} {
