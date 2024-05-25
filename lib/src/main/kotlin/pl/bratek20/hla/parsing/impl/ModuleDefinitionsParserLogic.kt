@@ -321,7 +321,14 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     }
 
     private fun parseImplSubmodule(elements: List<ParsedElement>): ImplSubmoduleDefinition {
-
+        val implSection = elements.find { it is Section && it.name == "Impl" } as Section?
+        if (implSection != null) {
+            val data = parsePropertiesOrData("Data", implSection.elements)
+            return ImplSubmoduleDefinition(
+                data = data.vos,
+                dataKeys = data.keys
+            )
+        }
         return ImplSubmoduleDefinition(
             data = emptyList(),
             dataKeys = emptyList()
