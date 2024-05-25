@@ -29,6 +29,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val enums = parseEnums(elements)
         val customTypes = parseStructures("CustomTypes", elements)
         val data = parsePropertiesOrData("Data", elements)
+        val implSubmodule = parseImplSubmodule(elements)
 
         return ModuleDefinition(
             name = moduleName,
@@ -42,7 +43,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             complexCustomTypes = customTypes.complex,
             data = data.vos,
             dataKeys = data.keys,
-            implSubmodule = emptyList()
+            implSubmodule = implSubmodule
         )
     }
 
@@ -317,5 +318,13 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
                 }
             )
         } ?: emptyList()
+    }
+
+    private fun parseImplSubmodule(elements: List<ParsedElement>): ImplSubmoduleDefinition {
+
+        return ImplSubmoduleDefinition(
+            data = emptyList(),
+            dataKeys = emptyList()
+        )
     }
 }

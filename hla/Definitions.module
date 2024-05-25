@@ -33,7 +33,7 @@ ValueObjects
         complexCustomTypes: ComplexStructureDefinition[]
         data: ComplexStructureDefinition[]
         dataKeys: KeyDefinition[]
-        implSubmodule: ImplSubmoduleDefinition[]
+        implSubmodule: ImplSubmoduleDefinition
 
     TypeDefinition
         name: string

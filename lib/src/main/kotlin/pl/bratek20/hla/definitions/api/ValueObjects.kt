@@ -31,7 +31,7 @@ data class ModuleDefinition(
     val complexCustomTypes: List<ComplexStructureDefinition>,
     val data: List<ComplexStructureDefinition>,
     val dataKeys: List<KeyDefinition>,
-    val implSubmodule: List<ImplSubmoduleDefinition>,
+    val implSubmodule: ImplSubmoduleDefinition,
 )
 
 data class TypeDefinition(

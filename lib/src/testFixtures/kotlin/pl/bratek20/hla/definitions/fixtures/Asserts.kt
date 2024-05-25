@@ -72,7 +72,7 @@ data class ExpectedModuleDefinition(
     var complexCustomTypes: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var data: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
-    var implSubmodule: List<(ExpectedImplSubmoduleDefinition.() -> Unit)>? = null,
+    var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
 )
 fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit) {
     val expected = ExpectedModuleDefinition().apply(expectedInit)
@@ -132,8 +132,7 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
     }
 
     expected.implSubmodule?.let {
-        assertThat(given.implSubmodule).hasSize(it.size)
-        given.implSubmodule.forEachIndexed { idx, entry -> assertImplSubmoduleDefinition(entry, it[idx]) }
+        assertImplSubmoduleDefinition(given.implSubmodule, it)
     }
 }
 

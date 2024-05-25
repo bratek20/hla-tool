@@ -55,7 +55,7 @@ data class ModuleDefinitionDef(
     var complexCustomTypes: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var data: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
-    var implSubmodule: List<(ImplSubmoduleDefinitionDef.() -> Unit)> = emptyList(),
+    var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit) = {},
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
@@ -71,7 +71,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         complexCustomTypes = def.complexCustomTypes.map { it -> complexStructureDefinition(it) },
         data = def.data.map { it -> complexStructureDefinition(it) },
         dataKeys = def.dataKeys.map { it -> keyDefinition(it) },
-        implSubmodule = def.implSubmodule.map { it -> implSubmoduleDefinition(it) },
+        implSubmodule = implSubmoduleDefinition(def.implSubmodule),
     )
 }
 
