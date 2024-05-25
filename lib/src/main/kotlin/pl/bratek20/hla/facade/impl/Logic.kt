@@ -2,6 +2,8 @@ package pl.bratek20.hla.facade.impl
 
 import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
+import pl.bratek20.hla.definitions.api.ModuleDefinition
+import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.generation.api.GenerateArgs
 import pl.bratek20.hla.generation.api.ModuleGenerator
@@ -24,22 +26,27 @@ class HlaFacadeLogic(
     }
 
     override fun updateAllModules(args: AllModulesOperationArgs) {
-        TODO("Not yet implemented")
+        val (modules, profile) = prepare(args.hlaFolderPath, args.profileName)
+
+        modules.forEach {
+            postPrepareGenerateModule(it.name, modules, profile, true)
+        }
     }
 
     private fun generateModule(args: ModuleOperationArgs, onlyUpdate: Boolean) {
-        val parser = ModuleDefinitionsParserLogic()
+        val (modules, profile) = prepare(args.hlaFolderPath, args.profileName)
 
-        propertiesSource.propertiesPath = args.hlaFolderPath.value + "/properties.yaml"
+        postPrepareGenerateModule(args.moduleName, modules, profile, onlyUpdate)
+    }
 
-        val profile = properties.get(PROFILES_KEY)
-            .firstOrNull { it.getName() == args.profileName }
-            ?: throw IllegalArgumentException("Profile with name ${args.profileName} not found")
-
-        val modules = parser.parse(args.hlaFolderPath)
-
+    private fun postPrepareGenerateModule(
+        moduleName: ModuleName,
+        modules: List<ModuleDefinition>,
+        profile: HlaProfile,
+        onlyUpdate: Boolean
+    ) {
         val generateResult = generator.generate(GenerateArgs(
-            moduleName = args.moduleName,
+            moduleName = moduleName,
             modules = modules,
             onlyUpdate = onlyUpdate,
             profile = profile
@@ -51,5 +58,19 @@ class HlaFacadeLogic(
                 profile = profile
             )
         )
+    }
+
+    private fun prepare(hlaFolderPath: Path, profileName: ProfileName): Pair<List<ModuleDefinition>, HlaProfile>{
+        val parser = ModuleDefinitionsParserLogic()
+
+        propertiesSource.propertiesPath = hlaFolderPath.value + "/properties.yaml"
+
+        val profile = properties.get(PROFILES_KEY)
+            .firstOrNull { it.getName() == profileName }
+            ?: throw IllegalArgumentException("Profile with name $profileName not found")
+
+        val modules = parser.parse(hlaFolderPath)
+
+        return Pair(modules, profile)
     }
 }

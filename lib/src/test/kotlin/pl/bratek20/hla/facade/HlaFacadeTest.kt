@@ -14,10 +14,7 @@ import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.fixtures.assertDirectory
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
-import pl.bratek20.hla.facade.api.HlaFacade
-import pl.bratek20.hla.facade.api.ModuleName
-import pl.bratek20.hla.facade.api.ModuleOperationArgs
-import pl.bratek20.hla.facade.api.ProfileName
+import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
 import java.util.stream.Stream
 
@@ -118,14 +115,12 @@ class HlaFacadeTest {
         //given
         val (directoriesMock, facade) = setup()
 
-        val hlaFolderPath = Path("../example/hla")
-
         //when
         facade.startModule(
             ModuleOperationArgs(
                 moduleName = ModuleName(moduleName),
                 profileName = ProfileName(profileName),
-                hlaFolderPath = hlaFolderPath,
+                hlaFolderPath = hlaFolderPath(),
             )
         )
 
@@ -162,12 +157,10 @@ class HlaFacadeTest {
         //given
         val (directoriesMock, facade) = setup()
 
-        val hlaFolderPath = Path("../example/hla")
-
         val args = ModuleOperationArgs(
             moduleName = ModuleName("SomeModule"),
             profileName = ProfileName("kotlin"),
-            hlaFolderPath = hlaFolderPath,
+            hlaFolderPath = hlaFolderPath(),
         )
         facade.startModule(args)
 
@@ -227,12 +220,10 @@ class HlaFacadeTest {
         //given
         val (directoriesMock, facade) = setup()
 
-        val hlaFolderPath = Path("../example/hla")
-
         val args = ModuleOperationArgs(
             moduleName = ModuleName("SomeModule"),
             profileName = ProfileName("kotlinOnlyParts"),
-            hlaFolderPath = hlaFolderPath,
+            hlaFolderPath = hlaFolderPath(),
         )
 
         //when
@@ -272,5 +263,26 @@ class HlaFacadeTest {
                 }
             }
         }
+    }
+
+    private fun hlaFolderPath(): Path {
+        return Path("../example/hla")
+    }
+
+    @Test
+    fun shouldUpdateAllModules() {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        val args = AllModulesOperationArgs(
+            profileName = ProfileName("kotlin"),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.updateAllModules(args)
+
+        //then
+        directoriesMock.assertWriteCount(6)
     }
 }
