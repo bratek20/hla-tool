@@ -4,3 +4,8 @@ CustomTypes
     DateRange
         from: Date
         to: Date
+
+Properties
+    DateRangeProperty
+        from: Date
+        to: Date

@@ -71,7 +71,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
     }
 
     override fun customTypeConstructorCall(className: String): String {
-        return handleReferencing(modules, className, "CustomTypesMapper.${customTypeConstructorName(className)}")
+        return addModuleNamePrefix(modules, className, "CustomTypesMapper.${customTypeConstructorName(className)}")
     }
 
     override fun customTypeGetterName(className: String, fieldName: String): String {
@@ -79,7 +79,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
     }
 
     override fun customTypeGetterCall(className: String, fieldName: String): String {
-        return handleReferencing(modules, className, "CustomTypesMapper.${customTypeGetterName(className, fieldName)}")
+        return addModuleNamePrefix(modules, className, "CustomTypesMapper.${customTypeGetterName(className, fieldName)}")
     }
 }
 
