@@ -1,5 +1,5 @@
 CustomTypes
-    SimpleType: string (example: "simple")
+    SimpleType: string (example: "0:0")
     ComplexType
         field1: string
         field2: int

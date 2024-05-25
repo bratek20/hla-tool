@@ -283,7 +283,7 @@ class ModuleDefinitionsParserTest {
                 typeName = "string"
                 attributes = listOf {
                     name = "example"
-                    value = "\"simple\""
+                    value = "\"0:0\""
                 }
             }
             complexCustomTypes = listOf {

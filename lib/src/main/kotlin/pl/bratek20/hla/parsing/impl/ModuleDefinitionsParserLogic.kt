@@ -157,9 +157,10 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
                 attributes = rest.substringAfter("(").substringBefore(")").split(",")
                     .filter { it.isNotBlank() }
                     .map {
-                        val split = it.split(":")
-                        require(split.size == 2) { "Invalid attribute definition: $it" }
-                        Attribute(split[0].trim(), split[1].trim())
+                        require(it.contains(":")) { "Invalid attribute definition: $it" }
+                        val attName = it.substringBefore(":").trim()
+                        val attValue = it.substringAfter(":").trim()
+                        Attribute(attName, attValue)
                     }
             } else {
                 value = rest.trim()
