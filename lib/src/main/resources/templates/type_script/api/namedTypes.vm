@@ -3,6 +3,14 @@ class ${nt.name()} {
     constructor(
         public readonly value: ${nt.boxedType.name()}
     ) {}
+
+    equals(other: ${nt.name()}): boolean {
+        return this.value === other.value
+    }
+
+    toString(): string {
+        return this.value
+    }
 }#if($foreach.hasNext)
 
 

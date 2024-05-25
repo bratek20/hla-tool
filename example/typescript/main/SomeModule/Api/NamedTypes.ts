@@ -4,4 +4,12 @@ class SomeId {
     constructor(
         public readonly value: string
     ) {}
+
+    equals(other: SomeId): boolean {
+        return this.value === other.value
+    }
+
+    toString(): string {
+        return this.value
+    }
 }
