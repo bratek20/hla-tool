@@ -1,72 +1,64 @@
 package pl.bratek20.hla.app;
 
 import pl.bratek20.architecture.context.spring.SpringContextBuilder;
-import pl.bratek20.architecture.properties.api.PropertyKey;
-import pl.bratek20.architecture.properties.impl.PropertiesModule;
-import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource;
-import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSourceModule;
-import pl.bratek20.hla.facade.api.*;
 import pl.bratek20.hla.directory.api.Path;
 import pl.bratek20.hla.directory.context.DirectoryImpl;
+import pl.bratek20.hla.facade.api.HlaFacade;
+import pl.bratek20.hla.facade.api.ModuleName;
+import pl.bratek20.hla.facade.api.ModuleOperationArgs;
+import pl.bratek20.hla.facade.api.ProfileName;
 import pl.bratek20.hla.facade.context.FacadeImpl;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
         var context = new SpringContextBuilder()
             .withModules(
                 new DirectoryImpl(),
-                new PropertiesModule(),
-                new InMemoryPropertiesSourceModule(),
                 new FacadeImpl()
             )
             .build();
 
-        var propertiesSource = context.get(InMemoryPropertiesSource.class);
-        propertiesSource.set(
-            new PropertyKey("properties"),
-            new HlaProperties(
-                List.of(
-                    new HlaProfile(
-                        "hla",
-                        ModuleLanguage.KOTLIN,
-                        "../lib",
-                        "src/main/kotlin/pl/bratek20/hla",
-                        "src/testFixtures/kotlin/pl/bratek20/hla",
-                        Collections.emptyList(),
-                        false
-                    ),
-                    new HlaProfile(
-                        "PlayFab",
-                        ModuleLanguage.TYPE_SCRIPT,
-                        "../lib",
-                        "src/main/kotlin/pl/bratek20/hla",
-                        "src/testFixtures/kotlin/pl/bratek20/hla",
-                        Collections.emptyList(),
-                        false
-                    ),
-                    new HlaProfile(
-                        "WohProperties",
-                        ModuleLanguage.KOTLIN,
-                        "../woh-properties",
-                        "src/main/java/com/rortos/woh",
-                        "src/testFixtures/java/com/rortos/woh",
-                        List.of(
-                            "NamedTypes",
-                            "CustomTypes",
-                            "CustomTypesMapper",
-                            "Properties",
-                            "Builders"
-                        ),
-                        false
-                    )
-                )
-            )
-        );
+//        var propertiesSource = context.get(InMemoryPropertiesSource.class);
+//        propertiesSource.set(
+//            new PropertyKey("properties"),
+//            new HlaProperties(
+//                List.of(
+//                    new HlaProfile(
+//                        "hla",
+//                        ModuleLanguage.KOTLIN,
+//                        "../lib",
+//                        "src/main/kotlin/pl/bratek20/hla",
+//                        "src/testFixtures/kotlin/pl/bratek20/hla",
+//                        Collections.emptyList(),
+//                        false
+//                    ),
+//                    new HlaProfile(
+//                        "PlayFab",
+//                        ModuleLanguage.TYPE_SCRIPT,
+//                        "../lib",
+//                        "src/main/kotlin/pl/bratek20/hla",
+//                        "src/testFixtures/kotlin/pl/bratek20/hla",
+//                        Collections.emptyList(),
+//                        false
+//                    ),
+//                    new HlaProfile(
+//                        "WohProperties",
+//                        ModuleLanguage.KOTLIN,
+//                        "../woh-properties",
+//                        "src/main/java/com/rortos/woh",
+//                        "src/testFixtures/java/com/rortos/woh",
+//                        List.of(
+//                            "NamedTypes",
+//                            "CustomTypes",
+//                            "CustomTypesMapper",
+//                            "Properties",
+//                            "Builders"
+//                        ),
+//                        false
+//                    )
+//                )
+//            )
+//        );
 
         var facade = context.get(HlaFacade.class);
 
