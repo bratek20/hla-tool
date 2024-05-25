@@ -17,7 +17,6 @@ abstract class ApiType {
         return name()
     }
 
-
     //TODO move up
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
@@ -163,15 +162,9 @@ class ComplexCustomApiType(
     }
 }
 
-data class SerializableTypeGetter(
+data class SerializableTypeGetterOrSetter(
     val name: String,
-    val type: ApiType,
-    val field: String
-)
-
-data class SerializableTypeSetter(
-    val name: String,
-    val type: ApiType,
+    val type: SimpleStructureApiType,
     val field: String
 )
 
@@ -190,16 +183,16 @@ class SerializableTypeApiField(
         return if(type is SimpleStructureApiType) "private " else ""
     }
 
-    fun getter(): SerializableTypeGetter? {
+    fun getter(): SerializableTypeGetterOrSetter? {
         if(type is SimpleStructureApiType) {
-            return SerializableTypeGetter(getterName(), type, name)
+            return SerializableTypeGetterOrSetter(getterName(), type, name)
         }
         return null
     }
 
-    fun setter(): SerializableTypeSetter? {
+    fun setter(): SerializableTypeGetterOrSetter? {
         if(type is SimpleStructureApiType) {
-            return SerializableTypeSetter(setterName(), type, name)
+            return SerializableTypeGetterOrSetter(setterName(), type, name)
         }
         return null
     }
@@ -218,12 +211,12 @@ open class SerializableApiType(
     fields: List<SerializableTypeApiField>
 ) : ComplexStructureApiType<SerializableTypeApiField>(name, fields) {
     // used by velocity
-    fun getters(): List<SerializableTypeGetter> {
+    fun getters(): List<SerializableTypeGetterOrSetter> {
         return fields.mapNotNull { it.getter() }
     }
 
     // used by velocity
-    open fun setters(): List<SerializableTypeSetter> {
+    open fun setters(): List<SerializableTypeGetterOrSetter> {
         return emptyList()
     }
 
@@ -242,7 +235,7 @@ class DataApiType(
     fields: List<SerializableTypeApiField>
 ) : SerializableApiType(name, fields) {
 
-    override fun setters(): List<SerializableTypeSetter> {
+    override fun setters(): List<SerializableTypeGetterOrSetter> {
         return fields.mapNotNull { it.setter() }
     }
 }
