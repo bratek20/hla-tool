@@ -35,6 +35,7 @@ ValueObjects
     FieldDefinition
         name: string
         type: TypeDefinition
+        attributes: Attribute[]
 
     Attribute
         name: string

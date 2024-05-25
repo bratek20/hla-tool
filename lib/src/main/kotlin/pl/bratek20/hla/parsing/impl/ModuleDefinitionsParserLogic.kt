@@ -225,7 +225,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             fields = section.elements.filterIsInstance<Assignment>().map {
                 FieldDefinition(
                     name = it.name,
-                    type = parseType(it.value)
+                    type = parseType(it.value),
+                    attributes = it.attributes
                 )
             }
         )
