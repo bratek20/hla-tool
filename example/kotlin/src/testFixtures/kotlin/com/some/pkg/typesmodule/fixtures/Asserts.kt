@@ -21,3 +21,19 @@ fun assertDateRange(given: DateRange, expectedInit: ExpectedDateRange.() -> Unit
         assertThat(dateGetValue(dateRangeGetTo(given))).isEqualTo(it)
     }
 }
+
+data class ExpectedDateRangeProperty(
+    var from: String? = null,
+    var to: String? = null,
+)
+fun assertDateRangeProperty(given: DateRangeProperty, expectedInit: ExpectedDateRangeProperty.() -> Unit) {
+    val expected = ExpectedDateRangeProperty().apply(expectedInit)
+
+    expected.from?.let {
+        assertThat(dateGetValue(given.getFrom())).isEqualTo(it)
+    }
+
+    expected.to?.let {
+        assertThat(dateGetValue(given.getTo())).isEqualTo(it)
+    }
+}
