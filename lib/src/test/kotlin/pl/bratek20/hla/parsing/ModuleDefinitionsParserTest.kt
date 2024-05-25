@@ -368,6 +368,24 @@ class ModuleDefinitionsParserTest {
                     )
                 }
             }
+            implSubmodule = {
+                data = listOf {
+                    name = "SomeImplData"
+                    fields = listOf {
+                        name = "value"
+                        type = {
+                            name = "bool"
+                        }
+                    }
+                }
+                dataKeys = listOf {
+                    name = "someImplData"
+                    type = {
+                        name = "SomeImplData"
+                        wrappers = emptyList()
+                    }
+                }
+            }
         })
     }
 }

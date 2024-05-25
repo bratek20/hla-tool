@@ -7,5 +7,6 @@ Data
 
 Impl
     Data
-        ImplSomeData
+        SomeImplData
             value: bool
+        "someImplData" -> SomeImplData
