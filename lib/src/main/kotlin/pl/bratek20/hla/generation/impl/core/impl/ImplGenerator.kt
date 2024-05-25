@@ -11,6 +11,10 @@ class LogicGenerator: FileGenerator() {
         return "Logic"
     }
 
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
+    }
+
     override fun generateFileContent(): FileContent {
         val factory = InterfaceViewFactory(apiTypeFactory)
 
