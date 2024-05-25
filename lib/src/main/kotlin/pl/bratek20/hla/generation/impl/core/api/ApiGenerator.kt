@@ -77,7 +77,7 @@ class PropertiesOrDataGenerator(private val data: Boolean): FileGenerator() {
     private fun toApiPropertyKey(def: KeyDefinition, data: Boolean): SerializableTypeKey {
         val apiType = apiTypeFactory.create(def.type)
 
-        val innerWord = if (data) "Data" else "Property"
+        val innerWord = if (data) "Property" else "Property" //TODO change when data keys added in arch
 
         val outerKeyType: String
         val keyType: String

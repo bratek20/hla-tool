@@ -21,7 +21,7 @@ class OtherData {
 }
 
 namespace OtherModule {
-    export const OTHER_DATA_KEY = new ObjectDataKey(
+    export const OTHER_DATA_KEY = new ObjectPropertyKey(
         "otherData",
         OtherData
     )
