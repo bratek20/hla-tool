@@ -87,7 +87,7 @@ class ComplexVODtoType(fields: List<DtoField>, api: ComplexVOApiType): ComplexSt
 
 class ComplexCustomDtoType(fields: List<DtoField>, api: ComplexCustomApiType): ComplexStructureDtoType<ComplexCustomApiType>(fields, api)
 
-class PropertyDtoType(fields: List<DtoField>, api: PropertyApiType): ComplexStructureDtoType<PropertyApiType>(fields, api) {
+class PropertyDtoType(fields: List<DtoField>, api: SerializableApiType): ComplexStructureDtoType<SerializableApiType>(fields, api) {
     override fun name(): String {
         return api.name()
     }
@@ -149,7 +149,7 @@ class DtoTypeFactory(
             is SimpleCustomApiType -> SimpleCustomDtoType(type)
             is ListApiType -> ListDtoType(create(type.wrappedType), type)
             is EnumApiType -> EnumDtoType(type)
-            is PropertyApiType -> PropertyDtoType(createFields(type.fields), type)
+            is SerializableApiType -> PropertyDtoType(createFields(type.fields), type)
             is ComplexVOApiType -> ComplexVODtoType(createFields(type.fields), type)
             is ComplexCustomApiType -> ComplexCustomDtoType(createFields(type.fields), type)
             else -> throw IllegalArgumentException("Unknown type: $type")

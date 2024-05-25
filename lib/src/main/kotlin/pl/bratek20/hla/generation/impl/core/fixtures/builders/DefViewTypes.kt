@@ -87,7 +87,7 @@ open class DefField(
 
 class PropertyDefField(
     type: DefType<*>,
-    api: PropertyApiTypeField
+    api: SerializableApiTypeField
 ) : DefField(type, api) {
     override fun build(variableName: String): String {
         if(type.api is SimpleStructureApiType) {
@@ -192,7 +192,7 @@ class DefTypeFactory(
             is EnumApiType -> EnumDefType(type)
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
-            is PropertyApiType -> PropertyDefType(type, createPropertyFields(type.fields))
+            is SerializableApiType -> PropertyDefType(type, createPropertyFields(type.fields))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
@@ -205,7 +205,7 @@ class DefTypeFactory(
         return fields.map { DefField(create(it.type), it) }
     }
 
-    private fun createPropertyFields(fields: List<PropertyApiTypeField>): List<PropertyDefField> {
+    private fun createPropertyFields(fields: List<SerializableApiTypeField>): List<PropertyDefField> {
         return fields.map { PropertyDefField(create(it.type), it) }
     }
 }

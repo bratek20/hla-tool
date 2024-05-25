@@ -43,49 +43,56 @@ class ValueObjectsGenerator: FileGenerator() {
     }
 }
 
-class PropertiesGenerator: FileGenerator() {
+class PropertiesOrDataGenerator(private val data: Boolean): FileGenerator() {
     override fun name(): String {
-        return "Properties"
+        return if (data) "Data" else "Properties"
     }
 
-    data class ApiPropertyKey(
+    data class SerializableTypeKey(
         val constantName: String,
-        val propertyKeyType: String,
+        val outerKeyType: String,
         val keyName: String,
         val keyType: String
     )
 
     override fun generateFileContent(): FileContent?{
-        if (module.properties.isEmpty()) {
+        if (!data && module.properties.isEmpty()) {
+            return null
+        }
+        if (data && module.data.isEmpty()) {
             return null
         }
 
-        return contentBuilder("properties.vm")
-            .put("properties", module.properties.map {
-                apiTypeFactory.create<PropertyApiType>(it)
+        val serializables = if (data) module.data else module.properties
+        val keys = if (data) module.dataKeys else module.propertyKeys
+        return contentBuilder("serializables.vm")
+            .put("serializables", serializables.map {
+                apiTypeFactory.create<SerializableApiType>(it)
             })
-            .put("keys", module.propertyKeys.map { toApiPropertyKey(it) })
+            .put("keys", keys.map { toApiPropertyKey(it, data) })
             .build()
     }
 
 
-    private fun toApiPropertyKey(def: KeyDefinition): ApiPropertyKey {
+    private fun toApiPropertyKey(def: KeyDefinition, data: Boolean): SerializableTypeKey {
         val apiType = apiTypeFactory.create(def.type)
 
-        val propertyKeyType: String
+        val innerWord = if (data) "Data" else "Property"
+
+        val outerKeyType: String
         val keyType: String
 
         if (apiType is ListApiType) {
-            propertyKeyType = "ListPropertyKey"
+            outerKeyType = "List${innerWord}Key"
             keyType = apiType.wrappedType.name()
         } else {
-            propertyKeyType = "ObjectPropertyKey"
+            outerKeyType = "Object${innerWord}Key"
             keyType = apiType.name()
         }
 
-        return ApiPropertyKey(
+        return SerializableTypeKey(
             constantName = camelToScreamingSnakeCase(def.name + "Key"),
-            propertyKeyType = propertyKeyType,
+            outerKeyType = outerKeyType,
             keyName = def.name,
             keyType = keyType
         )
@@ -190,7 +197,8 @@ class ApiGenerator: DirectoryGenerator() {
             NamedTypesGenerator(),
             ValueObjectsGenerator(),
             InterfacesGenerator(),
-            PropertiesGenerator(),
+            PropertiesOrDataGenerator(false),
+            PropertiesOrDataGenerator(true),
             ExceptionsGenerator(),
             EnumsGenerator(),
             CustomTypesGenerator(),

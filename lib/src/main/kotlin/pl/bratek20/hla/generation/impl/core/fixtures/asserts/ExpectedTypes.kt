@@ -175,7 +175,7 @@ class ExpectedTypeFactory(
             is ComplexVOApiType -> ComplexVOExpectedType(type, createFields(type.fields))
             is ListApiType -> ListExpectedType(type, create(type.wrappedType))
             is EnumApiType -> ExpectedEnumType(type)
-            is PropertyApiType -> PropertyExpectedType(type, createFields(type.fields))
+            is SerializableApiType -> PropertyExpectedType(type, createFields(type.fields))
             is SimpleCustomApiType -> SimpleCustomExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is ComplexCustomApiType -> ComplexCustomExpectedType(type, createFields(type.fields))
             else -> throw IllegalArgumentException("Unknown type: $type")

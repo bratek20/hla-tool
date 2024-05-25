@@ -1,4 +1,4 @@
-#foreach($p in $properties)
+#foreach($p in $serializables)
 class ${p.name()} {
     #foreach($field in $p.fields)
     $field.accessor()$field.name = $oc.map($field.type.serializableName())
@@ -29,7 +29,7 @@ class ${p.name()} {
 
 namespace $moduleName {
     #foreach($k in $keys)
-    export const $k.constantName = new ${k.propertyKeyType}(
+    export const $k.constantName = new ${k.outerKeyType}(
         "${k.keyName}",
         ${k.keyType}
     )

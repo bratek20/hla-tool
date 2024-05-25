@@ -5,7 +5,7 @@ package ${packageName}.api
 import ${import}.api.*
 #end#end
 
-#foreach($p in $properties)
+#foreach($p in $serializables)
 data class ${p.name()}(
     #foreach($field in $p.fields)
     ${field.accessor()}val $field.name: $field.type.serializableName(),
@@ -26,7 +26,7 @@ data class ${p.name()}(
 
 #foreach($k in $keys)
 
-val $k.constantName = pl.bratek20.architecture.properties.api.${k.propertyKeyType}(
+val $k.constantName = pl.bratek20.architecture.properties.api.${k.outerKeyType}(
     "${k.keyName}",
     ${k.keyType}::class
 )#if($foreach.hasNext)

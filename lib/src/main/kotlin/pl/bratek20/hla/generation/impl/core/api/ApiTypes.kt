@@ -163,12 +163,12 @@ class ComplexCustomApiType(
     }
 }
 
-data class PropertyGetter(
+data class SerializableGetter(
     val name: String,
     val type: ApiType,
     val field: String
 )
-class PropertyApiTypeField(
+class SerializableApiTypeField(
     def: FieldDefinition,
     type: ApiType,
 ): ApiTypeField(def, type) {
@@ -183,9 +183,9 @@ class PropertyApiTypeField(
         return if(type is SimpleStructureApiType) "private " else ""
     }
 
-    fun getter(): PropertyGetter? {
+    fun getter(): SerializableGetter? {
         if(type is SimpleStructureApiType) {
-            return PropertyGetter(getterName(), type, name)
+            return SerializableGetter(getterName(), type, name)
         }
         return null
     }
@@ -195,12 +195,12 @@ class PropertyApiTypeField(
     }
 }
 
-class PropertyApiType(
+class SerializableApiType(
     name: String,
-    fields: List<PropertyApiTypeField>
-) : ComplexStructureApiType<PropertyApiTypeField>(name, fields) {
+    fields: List<SerializableApiTypeField>
+) : ComplexStructureApiType<SerializableApiTypeField>(name, fields) {
     // used by velocity
-    fun getters(): List<PropertyGetter> {
+    fun getters(): List<SerializableGetter> {
         return fields.mapNotNull { it.getter() }
     }
 
@@ -263,7 +263,7 @@ class ApiTypeFactory(
             simpleVO != null -> NamedApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.typeName)))
             simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
             complexVO != null -> ComplexVOApiType(type.name, createFields(complexVO.fields))
-            propertyVO != null -> PropertyApiType(type.name, createPropertyFields(propertyVO.fields))
+            propertyVO != null -> SerializableApiType(type.name, createPropertyFields(propertyVO.fields))
             complexCustomType != null -> ComplexCustomApiType(type.name, createComplexCustomTypeFields(type.name, complexCustomType.fields))
             isBaseType -> BaseApiType(ofBaseType(type.name))
             enum != null -> EnumApiType(enum)
@@ -295,9 +295,9 @@ class ApiTypeFactory(
         }
     }
 
-    private fun createPropertyFields(fields: List<FieldDefinition>): List<PropertyApiTypeField> {
+    private fun createPropertyFields(fields: List<FieldDefinition>): List<SerializableApiTypeField> {
         return fields.map {
-            PropertyApiTypeField(it, create(it.type))
+            SerializableApiTypeField(it, create(it.type))
         }
     }
 
