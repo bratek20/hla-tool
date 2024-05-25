@@ -29,4 +29,6 @@ data class ${p.name()}(
 val $k.constantName = pl.bratek20.architecture.properties.api.${k.propertyKeyType}(
     "${k.keyName}",
     ${k.keyType}::class
-)#end#end
+)#if($foreach.hasNext)
+
+#end#end#end

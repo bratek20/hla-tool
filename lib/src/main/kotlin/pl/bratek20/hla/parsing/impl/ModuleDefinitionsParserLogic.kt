@@ -265,7 +265,10 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
                 val voSection = Section(it.indent, parseType(it.value).name)
                 voSection.addElements(it.elements)
-                vos.add(parseComplexStructureDefinition(voSection))
+                val vo = parseComplexStructureDefinition(voSection)
+                if (vo.fields.isNotEmpty()) {
+                    vos.add(vo)
+                }
             }
         }
 

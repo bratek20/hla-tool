@@ -252,15 +252,6 @@ class ModuleDefinitionsParserTest {
                         }
                     }
                 },
-                {
-                    name = "SomeConfig"
-                    fields = listOf {
-                        name = "enabled"
-                        type = {
-                            name = "bool"
-                        }
-                    }
-                }
             )
             propertyKeys = listOf(
                 {
@@ -275,7 +266,7 @@ class ModuleDefinitionsParserTest {
                 {
                     name = "someConfig"
                     type = {
-                        name = "SomeConfig"
+                        name = "SomeProperty"
                     }
                 }
             )

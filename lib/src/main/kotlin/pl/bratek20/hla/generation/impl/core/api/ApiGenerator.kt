@@ -70,11 +70,24 @@ class PropertiesGenerator: FileGenerator() {
 
 
     private fun toApiPropertyKey(def: PropertyKey): ApiPropertyKey {
+        val apiType = apiTypeFactory.create(def.type)
+
+        val propertyKeyType: String
+        val keyType: String
+
+        if (apiType is ListApiType) {
+            propertyKeyType = "ListPropertyKey"
+            keyType = apiType.wrappedType.name()
+        } else {
+            propertyKeyType = "ObjectPropertyKey"
+            keyType = apiType.name()
+        }
+
         return ApiPropertyKey(
             constantName = camelToScreamingSnakeCase(def.name + "Key"),
-            propertyKeyType = "ObjectPropertyKey",
+            propertyKeyType = propertyKeyType,
             keyName = def.name,
-            keyType = apiTypeFactory.create(def.type).name()
+            keyType = keyType
         )
     }
 }

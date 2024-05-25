@@ -2,9 +2,12 @@ NamedTypes
     OtherId: string
 
 Properties
-    "otherProperty" -> OtherProperty
+    OtherProperty
         id: OtherId
         name: string
+
+    "otherProperty" -> OtherProperty
+    "otherProperties" -> OtherProperty[]
 
 ValueObjects
     OtherClass

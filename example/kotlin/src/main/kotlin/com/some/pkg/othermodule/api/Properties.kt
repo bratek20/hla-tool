@@ -13,3 +13,8 @@ val OTHER_PROPERTY_KEY = pl.bratek20.architecture.properties.api.ObjectPropertyK
     "otherProperty",
     OtherProperty::class
 )
+
+val OTHER_PROPERTIES_KEY = pl.bratek20.architecture.properties.api.ListPropertyKey(
+    "otherProperties",
+    OtherProperty::class
+)

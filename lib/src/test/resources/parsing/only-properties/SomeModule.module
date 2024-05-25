@@ -5,5 +5,4 @@ Properties
     "someElements" -> SomeElement[]
         id: SomeId
 
-    "someConfig" -> SomeConfig
-        enabled: bool
+    "someConfig" -> SomeProperty
