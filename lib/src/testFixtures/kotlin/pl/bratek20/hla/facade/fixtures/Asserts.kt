@@ -49,18 +49,6 @@ fun assertHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> U
     }
 }
 
-data class ExpectedHlaProperties(
-    var profiles: List<(ExpectedHlaProfile.() -> Unit)>? = null,
-)
-fun assertHlaProperties(given: HlaProperties, expectedInit: ExpectedHlaProperties.() -> Unit) {
-    val expected = ExpectedHlaProperties().apply(expectedInit)
-
-    expected.profiles?.let {
-        assertThat(given.profiles).hasSize(it.size)
-        given.profiles.forEachIndexed { idx, entry -> assertHlaProfile(entry, it[idx]) }
-    }
-}
-
 data class ExpectedModuleOperationArgs(
     var hlaFolderPath: String? = null,
     var profileName: String? = null,

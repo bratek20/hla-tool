@@ -27,16 +27,6 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
     )
 }
 
-data class HlaPropertiesDef(
-    var profiles: List<(HlaProfileDef.() -> Unit)> = emptyList(),
-)
-fun hlaProperties(init: HlaPropertiesDef.() -> Unit = {}): HlaProperties {
-    val def = HlaPropertiesDef().apply(init)
-    return HlaProperties(
-        profiles = def.profiles.map { it -> hlaProfile(it) },
-    )
-}
-
 data class ModuleOperationArgsDef(
     var hlaFolderPath: String = "someValue",
     var profileName: String = "someValue",

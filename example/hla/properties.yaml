@@ -1,2 +1,15 @@
-kotlin:
-    rootPackage: com.some.path
+profiles:
+  - name: "kotlin"
+    language: "KOTLIN"
+    projectPath: "../kotlin"
+    mainPath: "src/main/kotlin/com/some/pkg"
+    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+    onlyParts: []
+    generateWeb: true
+  - name: "typeScript"
+    language: "TYPE_SCRIPT"
+    projectPath: "../typescript"
+    mainPath: "main"
+    fixturesPath: "test"
+    onlyParts: []
+    generateWeb: true

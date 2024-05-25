@@ -7,27 +7,26 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
-import pl.bratek20.architecture.context.someContextBuilder
-import pl.bratek20.architecture.properties.impl.PropertiesModule
-import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
-import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSourceModule
+import pl.bratek20.architecture.context.stableContextBuilder
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.fixtures.assertDirectory
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
-import pl.bratek20.hla.facade.api.*
+import pl.bratek20.hla.facade.api.HlaFacade
+import pl.bratek20.hla.facade.api.ModuleName
+import pl.bratek20.hla.facade.api.ModuleOperationArgs
+import pl.bratek20.hla.facade.api.ProfileName
 import pl.bratek20.hla.facade.context.FacadeImpl
-import pl.bratek20.hla.facade.fixtures.hlaProperties
 import java.util.stream.Stream
 
 class HlaFacadeTest {
     data class TestPaths(
         val exampleMainPath: String,
         val exampleTestFixturesPath: String,
-        val expectedMainPathSuffix: String,
-        val expectedTestFixturesPathSuffix: String
+        val expectedMainPath: String,
+        val expectedTestFixturesPath: String
     )
 
     class MyArgumentsProvider : ArgumentsProvider {
@@ -35,8 +34,8 @@ class HlaFacadeTest {
             return TestPaths(
                 exampleMainPath = "../example/kotlin/src/main/kotlin/com/some/pkg/$packageName",
                 exampleTestFixturesPath = "../example/kotlin/src/testFixtures/kotlin/com/some/pkg/$packageName",
-                expectedMainPathSuffix = "/src/main/kotlin/com/some/pkg",
-                expectedTestFixturesPathSuffix = "/src/testFixtures/kotlin/com/some/pkg"
+                expectedMainPath = "../kotlin/src/main/kotlin/com/some/pkg",
+                expectedTestFixturesPath = "../kotlin/src/testFixtures/kotlin/com/some/pkg"
             )
         }
 
@@ -44,8 +43,8 @@ class HlaFacadeTest {
             return TestPaths(
                 exampleMainPath = "../example/typescript/main/$moduleName",
                 exampleTestFixturesPath = "../example/typescript/test/$moduleName",
-                expectedMainPathSuffix = "/main",
-                expectedTestFixturesPathSuffix = "/test"
+                expectedMainPath = "../typescript/main",
+                expectedTestFixturesPath = "../typescript/test"
             )
         }
 
@@ -92,49 +91,17 @@ class HlaFacadeTest {
         val directoriesMock: DirectoriesMock,
         val facade: HlaFacade
     )
-    data class SetupArgs(
-        var kotlinOnlyParts: List<String> = emptyList(),
-    )
-    private fun setup(init: (SetupArgs.() -> Unit) = {}): SetupResult {
-        val args = SetupArgs().apply(init)
-        val context = someContextBuilder()
+
+    private fun setup(): SetupResult {
+        val context = stableContextBuilder()
             .withModules(
                 DirectoriesMocks(),
-
-                PropertiesModule(),
-                InMemoryPropertiesSourceModule(),
 
                 FacadeImpl(),
             )
             .build()
 
         val directoriesMock = context.get(DirectoriesMock::class.java)
-        val propertiesSource = context.get(InMemoryPropertiesSource::class.java)
-
-        val testProjectPath = "some/project/path"
-
-        propertiesSource.set(
-            PROPERTIES_KEY,
-            hlaProperties {
-                profiles = listOf(
-                    {
-                        name = "kotlin"
-                        language = ModuleLanguage.KOTLIN
-                        mainPath = "src/main/kotlin/com/some/pkg"
-                        fixturesPath = "src/testFixtures/kotlin/com/some/pkg"
-                        projectPath = testProjectPath
-                        onlyParts = args.kotlinOnlyParts
-                    },
-                    {
-                        name = "typeScript"
-                        language = ModuleLanguage.TYPE_SCRIPT
-                        mainPath = "main"
-                        fixturesPath = "test"
-                        projectPath = testProjectPath
-                    },
-                )
-            }
-        )
 
         val facade = context.get(HlaFacade::class.java)
 
@@ -166,11 +133,11 @@ class HlaFacadeTest {
         directoriesMock.assertWriteCount(2)
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
-            "some/project/path" + paths.expectedMainPathSuffix
+            paths.expectedMainPath
         )
         val testFixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
             2,
-            "some/project/path" + paths.expectedTestFixturesPathSuffix
+            paths.expectedTestFixturesPath
         )
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
@@ -257,13 +224,13 @@ class HlaFacadeTest {
     @Test
     fun `should start module using onlyParts`() {
         //given
-        val (directoriesMock, facade) = setup {
-            kotlinOnlyParts = listOf(
-                "NamedTypes",
-                "Properties",
-                "Builders"
-            )
-        }
+        val (directoriesMock, facade) = setup()
+//            kotlinOnlyParts = listOf(
+//                "NamedTypes",
+//                "Properties",
+//                "Builders"
+//            )
+//        }
 
         val hlaFolderPath = Path("../example/hla")
 

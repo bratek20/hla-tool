@@ -2,7 +2,7 @@ package pl.bratek20.hla.facade.api
 
 import pl.bratek20.hla.directory.api.*
 
-val PROPERTIES_KEY = pl.bratek20.architecture.properties.api.PropertyKey("properties")
+val PROFILES_KEY = pl.bratek20.architecture.properties.api.ListPropertyKey("profiles", HlaProfile::class)
 
 data class HlaProfile(
     private val name: String,
@@ -28,8 +28,4 @@ data class HlaProfile(
     fun getFixturesPath(): Path {
         return pathCreate(this.fixturesPath)
     }
-}
-data class HlaProperties(
-    val profiles: List<HlaProfile>,
-) {
 }

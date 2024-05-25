@@ -2,6 +2,7 @@ package pl.bratek20.hla.facade.impl
 
 import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.inmemory.InMemoryPropertiesSource
+import pl.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.generation.api.GenerateArgs
@@ -13,6 +14,7 @@ import pl.bratek20.hla.writing.api.WriteArgs
 class HlaFacadeLogic(
     private val generator: ModuleGenerator,
     private val writer: ModuleWriter,
+    private val propertiesSource: YamlPropertiesSource,
     private val properties: Properties
 ): HlaFacade {
     override fun startModule(args: ModuleOperationArgs): Unit {
@@ -26,8 +28,11 @@ class HlaFacadeLogic(
     private fun generateModule(args: ModuleOperationArgs, onlyUpdate: Boolean) {
         val parser = ModuleDefinitionsParserLogic()
 
-        val profile = properties.get(InMemoryPropertiesSource.name, PROPERTIES_KEY, HlaProperties::class.java)
-            .profiles.first { it.getName() == args.profileName }
+        propertiesSource.propertiesPath = args.hlaFolderPath.value + "/properties.yaml"
+
+        val profile = properties.get(PROFILES_KEY)
+            .firstOrNull { it.getName() == args.profileName }
+            ?: throw IllegalArgumentException("Profile with name ${args.profileName} not found")
 
         val modules = parser.parse(args.hlaFolderPath)
 
