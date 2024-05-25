@@ -10,6 +10,7 @@ data class ExpectedDirectory(
     var files: List<ExpectedFile.() -> Unit>? = null,
     var hasFile: (ExpectedFile.() -> Unit)? = null,
     var hasDirectory: (ExpectedDirectory.() -> Unit)? = null,
+    var hasNoDirectory: String? = null
 )
 
 fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) {
@@ -38,6 +39,10 @@ fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) 
         val directory = given.directories.find { it.name == expectedDirectory.name }
         assertThat(directory).isNotNull
         assertDirectory(directory!!, expected.hasDirectory!!)
+    }
+
+    if (expected.hasNoDirectory != null) {
+        assertThat(given.directories.find { it.name == expected.hasNoDirectory }).isNull()
     }
 }
 

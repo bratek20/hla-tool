@@ -7,6 +7,14 @@ profiles:
     onlyParts: []
     generateWeb: true
 
+  - name: "kotlinNoWeb"
+    language: "KOTLIN"
+    projectPath: "../kotlin"
+    mainPath: "src/main/kotlin/com/some/pkg"
+    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+    onlyParts: []
+    generateWeb: false
+
   - name: "typeScript"
     language: "TYPE_SCRIPT"
     projectPath: "../typescript"

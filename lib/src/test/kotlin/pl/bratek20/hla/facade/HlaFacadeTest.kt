@@ -285,4 +285,28 @@ class HlaFacadeTest {
         //then
         directoriesMock.assertWriteCount(6)
     }
+
+    @Test
+    fun shouldUpdateRespectingGenerateWebProperty() {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        val args = ModuleOperationArgs(
+            moduleName = ModuleName("SomeModule"),
+            profileName = ProfileName("kotlinNoWeb"),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.updateModule(args)
+
+        //then
+        directoriesMock.assertWriteCount(2)
+
+        val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(1, paths.expectedMainPath)
+        assertDirectory(mainDirectory) {
+            hasNoDirectory = "web"
+        }
+    }
 }
