@@ -1,4 +1,12 @@
 namespace ${moduleName}.Assert {
+#foreach($a in $simpleAsserts)
+    export function ${a.funName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}) {
+        $a.assertion("given", "expected")
+    }
+    #if($foreach.hasNext || $complexAsserts.size() > 0)
+
+    #end
+#end
 #foreach($a in $complexAsserts)
     export interface ${a.expectedName()} {
     #foreach($field in $a.fields)
