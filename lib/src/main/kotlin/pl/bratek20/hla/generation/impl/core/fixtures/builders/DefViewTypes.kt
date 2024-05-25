@@ -87,7 +87,7 @@ open class DefField(
 
 class PropertyDefField(
     type: DefType<*>,
-    api: SerializableApiTypeField
+    api: SerializableTypeApiField
 ) : DefField(type, api) {
     override fun build(variableName: String): String {
         if(type.api is SimpleStructureApiType) {
@@ -205,7 +205,7 @@ class DefTypeFactory(
         return fields.map { DefField(create(it.type), it) }
     }
 
-    private fun createPropertyFields(fields: List<SerializableApiTypeField>): List<PropertyDefField> {
+    private fun createPropertyFields(fields: List<SerializableTypeApiField>): List<PropertyDefField> {
         return fields.map { PropertyDefField(create(it.type), it) }
     }
 }

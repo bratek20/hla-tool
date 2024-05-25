@@ -111,7 +111,7 @@ open class ApiTypeField(
     }
 }
 
-class ComplexCustomApiTypeField(
+class ComplexCustomTypeApiField(
     private val className: String,
     def: FieldDefinition,
     type: ApiType,
@@ -163,12 +163,19 @@ class ComplexCustomApiType(
     }
 }
 
-data class SerializableGetter(
+data class SerializableTypeGetter(
     val name: String,
     val type: ApiType,
     val field: String
 )
-class SerializableApiTypeField(
+
+data class SerializableTypeSetter(
+    val name: String,
+    val type: ApiType,
+    val field: String
+)
+
+class SerializableTypeApiField(
     def: FieldDefinition,
     type: ApiType,
 ): ApiTypeField(def, type) {
@@ -183,9 +190,16 @@ class SerializableApiTypeField(
         return if(type is SimpleStructureApiType) "private " else ""
     }
 
-    fun getter(): SerializableGetter? {
+    fun getter(): SerializableTypeGetter? {
         if(type is SimpleStructureApiType) {
-            return SerializableGetter(getterName(), type, name)
+            return SerializableTypeGetter(getterName(), type, name)
+        }
+        return null
+    }
+
+    fun setter(): SerializableTypeSetter? {
+        if(type is SimpleStructureApiType) {
+            return SerializableTypeSetter(setterName(), type, name)
         }
         return null
     }
@@ -193,21 +207,46 @@ class SerializableApiTypeField(
     private fun getterName(): String {
         return "get${camelToPascalCase(name)}"
     }
+
+    private fun setterName(): String {
+        return "set${camelToPascalCase(name)}"
+    }
 }
 
-class SerializableApiType(
+open class SerializableApiType(
     name: String,
-    fields: List<SerializableApiTypeField>
-) : ComplexStructureApiType<SerializableApiTypeField>(name, fields) {
+    fields: List<SerializableTypeApiField>
+) : ComplexStructureApiType<SerializableTypeApiField>(name, fields) {
     // used by velocity
-    fun getters(): List<SerializableGetter> {
+    fun getters(): List<SerializableTypeGetter> {
         return fields.mapNotNull { it.getter() }
+    }
+
+    // used by velocity
+    open fun setters(): List<SerializableTypeSetter> {
+        return emptyList()
     }
 
     override fun constructorCall(): String {
         return languageTypes.propertyClassConstructor(name())
     }
 }
+
+class PropertyApiType(
+    name: String,
+    fields: List<SerializableTypeApiField>
+) : SerializableApiType(name, fields)
+
+class DataApiType(
+    name: String,
+    fields: List<SerializableTypeApiField>
+) : SerializableApiType(name, fields) {
+
+    override fun setters(): List<SerializableTypeSetter> {
+        return fields.mapNotNull { it.setter() }
+    }
+}
+
 
 class ListApiType(
     val wrappedType: ApiType,
@@ -257,13 +296,15 @@ class ApiTypeFactory(
         val propertyVO = modules.findPropertyVO(type)
         val simpleCustomType = modules.findSimpleCustomType(type)
         val complexCustomType = modules.findComplexCustomType(type)
+        val dataVO = modules.findDataVO(type)
 
         val apiType = when {
             isList -> ListApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
             simpleVO != null -> NamedApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.typeName)))
             simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
             complexVO != null -> ComplexVOApiType(type.name, createFields(complexVO.fields))
-            propertyVO != null -> SerializableApiType(type.name, createPropertyFields(propertyVO.fields))
+            propertyVO != null -> PropertyApiType(type.name, createSerializableTypeFields(propertyVO.fields))
+            dataVO != null -> DataApiType(type.name, createSerializableTypeFields(dataVO.fields))
             complexCustomType != null -> ComplexCustomApiType(type.name, createComplexCustomTypeFields(type.name, complexCustomType.fields))
             isBaseType -> BaseApiType(ofBaseType(type.name))
             enum != null -> EnumApiType(enum)
@@ -295,15 +336,15 @@ class ApiTypeFactory(
         }
     }
 
-    private fun createPropertyFields(fields: List<FieldDefinition>): List<SerializableApiTypeField> {
+    private fun createSerializableTypeFields(fields: List<FieldDefinition>): List<SerializableTypeApiField> {
         return fields.map {
-            SerializableApiTypeField(it, create(it.type))
+            SerializableTypeApiField(it, create(it.type))
         }
     }
 
-    private fun createComplexCustomTypeFields(className: String, fields: List<FieldDefinition>): List<ComplexCustomApiTypeField> {
+    private fun createComplexCustomTypeFields(className: String, fields: List<FieldDefinition>): List<ComplexCustomTypeApiField> {
         return fields.map {
-            ComplexCustomApiTypeField(className, it, create(it.type), languageTypes)
+            ComplexCustomTypeApiField(className, it, create(it.type), languageTypes)
         }
     }
 }
