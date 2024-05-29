@@ -6,9 +6,11 @@ import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.writing.api.ModuleWriter
 import pl.bratek20.hla.writing.api.WriteArgs
+import pl.bratek20.utils.logs.api.Logger
 
 class ModuleWriterLogic(
-    private val directories: Directories
+    private val directories: Directories,
+    private val logger: Logger
 ): ModuleWriter {
 
     override fun write(args: WriteArgs) {
@@ -19,10 +21,10 @@ class ModuleWriterLogic(
         val fullMainPath = projectPath.add(profile.getMainPath())
         val fullFixturesPath = projectPath.add(profile.getFixturesPath())
 
-        System.out.println("Writing to: $fullMainPath")
+        logger.info("Writing to: $fullMainPath")
         directories.write(fullMainPath, generateResult.main)
 
-        System.out.println("Writing to: $fullFixturesPath")
+        logger.info("Writing to: $fullFixturesPath")
         directories.write(fullFixturesPath, generateResult.fixtures)
 
         //test helping

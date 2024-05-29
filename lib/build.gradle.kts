@@ -9,6 +9,8 @@ dependencies {
     implementation(libs.bratek20.architecture)
     testImplementation(testFixtures(libs.bratek20.architecture))
 
+    implementation(libs.bratek20.utils)
+
     //TODO add to convention
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")
 }
