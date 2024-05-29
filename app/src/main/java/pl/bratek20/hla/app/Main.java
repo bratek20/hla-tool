@@ -15,48 +15,6 @@ public class Main {
             )
             .build();
 
-//        var propertiesSource = context.get(InMemoryPropertiesSource.class);
-//        propertiesSource.set(
-//            new PropertyKey("properties"),
-//            new HlaProperties(
-//                List.of(
-//                    new HlaProfile(
-//                        "hla",
-//                        ModuleLanguage.KOTLIN,
-//                        "../lib",
-//                        "src/main/kotlin/pl/bratek20/hla",
-//                        "src/testFixtures/kotlin/pl/bratek20/hla",
-//                        Collections.emptyList(),
-//                        false
-//                    ),
-//                    new HlaProfile(
-//                        "PlayFab",
-//                        ModuleLanguage.TYPE_SCRIPT,
-//                        "../lib",
-//                        "src/main/kotlin/pl/bratek20/hla",
-//                        "src/testFixtures/kotlin/pl/bratek20/hla",
-//                        Collections.emptyList(),
-//                        false
-//                    ),
-//                    new HlaProfile(
-//                        "WohProperties",
-//                        ModuleLanguage.KOTLIN,
-//                        "../woh-properties",
-//                        "src/main/java/com/rortos/woh",
-//                        "src/testFixtures/java/com/rortos/woh",
-//                        List.of(
-//                            "NamedTypes",
-//                            "CustomTypes",
-//                            "CustomTypesMapper",
-//                            "Properties",
-//                            "Builders"
-//                        ),
-//                        false
-//                    )
-//                )
-//            )
-//        );
-
         var facade = context.get(HlaFacade.class);
 
         var operationName = args[0];
