@@ -17,6 +17,15 @@ open class ApiTypeField(
     fun exampleValue(): String? {
         return def.attributes.firstOrNull { it.name == "example" }?.value
     }
+
+    // used by velocity
+    fun declaration(): String {
+        val base = "$name: ${type.name()}"
+        if (def.defaultValue != null) {
+            return "$base = ${def.defaultValue}"
+        }
+        return base
+    }
 }
 
 class ComplexCustomTypeApiField(

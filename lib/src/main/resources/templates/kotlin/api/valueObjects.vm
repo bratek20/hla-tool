@@ -8,7 +8,7 @@ import ${import}.api.*
 
 data class ${vo.name()}(
     #foreach($field in $vo.fields)
-    val $field.name: $field.type.name(),
+    val $field.declaration(),
     #end
 )#if($foreach.hasNext)
 

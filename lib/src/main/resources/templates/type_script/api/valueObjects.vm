@@ -2,7 +2,7 @@
 class ${vo.name()} {
     constructor(
         #foreach($field in $vo.fields)
-        public readonly $field.name: $field.type.name(),
+        public readonly $field.declaration(),
         #end
     ) {}
 }#if($foreach.hasNext)
