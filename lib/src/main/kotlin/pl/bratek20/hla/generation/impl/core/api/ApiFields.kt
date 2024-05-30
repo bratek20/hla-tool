@@ -5,7 +5,7 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.utils.camelToPascalCase
 
 open class ApiTypeField(
-    val def: FieldDefinition,
+    private val def: FieldDefinition,
     val type: ApiType
 ) {
     val name = def.name
@@ -18,13 +18,27 @@ open class ApiTypeField(
         return def.attributes.firstOrNull { it.name == "example" }?.value
     }
 
+    fun defaultValue(): String? {
+        if (def.defaultValue != null) {
+            return mapDefaultValue(def.defaultValue)
+        }
+        return null
+    }
+
     // used by velocity
     fun declaration(): String {
         val base = "$name: ${type.name()}"
-        if (def.defaultValue != null) {
-            return "$base = ${def.defaultValue}"
+        defaultValue()?.let {
+            return "$base = $it"
         }
         return base
+    }
+
+    private fun mapDefaultValue(value: String): String {
+        if (value == "[]") {
+            return type.languageTypes.defaultValueForList()
+        }
+        return value
     }
 }
 

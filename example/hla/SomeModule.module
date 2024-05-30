@@ -27,8 +27,8 @@ ValueObjects
 
     SomeClass3
         class2Object: SomeClass2
-        class2List: SomeClass2[]
         someEnum: SomeEnum
+        class2List: SomeClass2[] = []
 
     SomeClass4
         otherId: OtherId

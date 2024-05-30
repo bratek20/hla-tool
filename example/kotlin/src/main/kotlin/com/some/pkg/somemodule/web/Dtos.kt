@@ -77,14 +77,14 @@ data class SomeClass2Dto(
 
 data class SomeClass3Dto(
     val class2Object: SomeClass2Dto,
-    val class2List: List<SomeClass2Dto>,
     val someEnum: String,
+    val class2List: List<SomeClass2Dto>,
 ) {
     fun toApi(): SomeClass3 {
         return SomeClass3(
             class2Object = class2Object.toApi(),
-            class2List = class2List.map { it -> it.toApi() },
             someEnum = SomeEnum.valueOf(someEnum),
+            class2List = class2List.map { it -> it.toApi() },
         )
     }
 
@@ -92,8 +92,8 @@ data class SomeClass3Dto(
         fun fromApi(api: SomeClass3): SomeClass3Dto {
             return SomeClass3Dto(
                 class2Object = SomeClass2Dto.fromApi(api.class2Object),
-                class2List = api.class2List.map { it -> SomeClass2Dto.fromApi(it) },
                 someEnum = api.someEnum.name,
+                class2List = api.class2List.map { it -> SomeClass2Dto.fromApi(it) },
             )
         }
     }

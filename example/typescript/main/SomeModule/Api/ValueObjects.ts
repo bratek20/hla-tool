@@ -19,8 +19,8 @@ class SomeClass2 {
 class SomeClass3 {
     constructor(
         public readonly class2Object: SomeClass2,
-        public readonly class2List: SomeClass2[],
         public readonly someEnum: SomeEnum,
+        public readonly class2List: SomeClass2[] = [],
     ) {}
 }
 

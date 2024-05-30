@@ -19,8 +19,8 @@ data class SomeClass2(
 
 data class SomeClass3(
     val class2Object: SomeClass2,
-    val class2List: List<SomeClass2>,
     val someEnum: SomeEnum,
+    val class2List: List<SomeClass2> = emptyList(),
 )
 
 data class SomeClass4(

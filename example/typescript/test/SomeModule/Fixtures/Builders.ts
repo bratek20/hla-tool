@@ -59,18 +59,18 @@ namespace SomeModule.Builder {
 
     export interface SomeClass3Def {
         class2Object?: SomeClass2Def,
-        class2List?: SomeClass2Def[],
         someEnum?: SomeEnum,
+        class2List?: SomeClass2Def[],
     }
     export function someClass3(def?: SomeClass3Def): SomeClass3 {
         const class2Object = def?.class2Object ?? {}
-        const class2List = def?.class2List ?? []
         const someEnum = def?.someEnum ?? SomeEnum.VALUE_A
+        const class2List = def?.class2List ?? []
 
         return new SomeClass3(
             someClass2(class2Object),
-            class2List.map(it => someClass2(it)),
             someEnum,
+            class2List.map(it => someClass2(it)),
         )
     }
 
