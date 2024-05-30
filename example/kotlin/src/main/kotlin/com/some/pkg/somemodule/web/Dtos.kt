@@ -161,7 +161,7 @@ data class SomeClass6Dto(
 ) {
     fun toApi(): SomeClass6 {
         return SomeClass6(
-            someClassOpt = someClassOpt?.toApi(),
+            someClassOpt = someClassOpt?.let { it -> it.toApi() },
         )
     }
 

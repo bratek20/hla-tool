@@ -40,6 +40,10 @@ class KotlinTypes: LanguageTypes {
         return "$typeName?"
     }
 
+    override fun mapOptionalElement(optionalName: String, elementName: String, mapping: String): String {
+        return "$optionalName?.let { $elementName -> $mapping }"
+    }
+
     override fun classConstructorCall(className: String): String {
         return className
     }

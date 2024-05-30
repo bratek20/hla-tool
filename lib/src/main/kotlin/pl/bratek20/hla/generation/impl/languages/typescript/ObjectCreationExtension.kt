@@ -8,6 +8,10 @@ class ObjectCreationMapper {
         if (type.contains("[]")) {
             return "[" + map(type.replace("[]", "")) + "]"
         }
+        if (type.contains("Optional<")) {
+            val innerType = type.replace("Optional<", "").replace(">", "")
+            return "Optional.of(" + map(innerType) + ")"
+        }
         return when (type) {
             "string" -> "STRING"
             "number" -> "NUMBER"

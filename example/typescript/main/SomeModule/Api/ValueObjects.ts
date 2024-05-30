@@ -45,6 +45,6 @@ class SomeClass5 {
 
 class SomeClass6 {
     constructor(
-        public readonly someClassOpt: Optional<SomeClass>
+        public readonly someClassOpt: Optional<SomeClass>,
     ) {}
 }

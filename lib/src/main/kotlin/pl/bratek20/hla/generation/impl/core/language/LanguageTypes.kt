@@ -11,6 +11,7 @@ interface LanguageTypes {
     fun mapListElements(listName: String, elementName: String, mapping: String): String
 
     fun wrapWithOptional(typeName: String): String
+    fun mapOptionalElement(optionalName: String, elementName: String, mapping: String): String
 
     fun classConstructorCall(className: String): String
 
