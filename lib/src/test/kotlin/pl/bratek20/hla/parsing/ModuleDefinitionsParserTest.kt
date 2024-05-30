@@ -84,12 +84,6 @@ class ModuleDefinitionsParserTest {
                                 }
                             },
                             {
-                                name = "enabled"
-                                type = {
-                                    name = "bool"
-                                }
-                            },
-                            {
                                 name = "names"
                                 type = {
                                     name = "string"
@@ -106,7 +100,13 @@ class ModuleDefinitionsParserTest {
                                         TypeWrapper.LIST
                                     )
                                 }
-                            }
+                            },
+                            {
+                                name = "enabled"
+                                type = {
+                                    name = "bool"
+                                }
+                            },
                         )
                     },
                     {

@@ -44,6 +44,7 @@ ValueObjects
         name: string
         type: TypeDefinition
         attributes: Attribute[]
+        defaultValue: string?
 
     Attribute
         name: string

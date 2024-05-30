@@ -14,9 +14,9 @@ ValueObjects
 
     SomeClass2
         id: SomeId
-        enabled: bool
         names: string[]
         ids: SomeId[]
+        enabled: bool// = true
 
     SomeClass3
         class2Object: SomeClass2
