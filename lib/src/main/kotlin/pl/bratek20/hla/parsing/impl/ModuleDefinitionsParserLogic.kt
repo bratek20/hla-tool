@@ -15,12 +15,12 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
         val modulesDir = directories.readDirectory(path)
         return modulesDir.files
-            .filter { it.name.endsWith(".module") }
+            .filter { it.name.value.endsWith(".module") }
             .map { parseModuleFile(it) }
     }
 
     private fun parseModuleFile(file: File): ModuleDefinition {
-        val moduleName = ModuleName(file.name.split(".module").get(0))
+        val moduleName = ModuleName(file.name.value.split(".module").get(0))
         val elements = parseElements(file.content)
         val namedTypes = parseSimpleStructureDefinitions("NamedTypes", elements)
         val complexValueObjects = parseComplexStructureDefinitions("ValueObjects", elements)

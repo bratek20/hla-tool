@@ -16,7 +16,7 @@ class DirectoriesLogic: Directories {
         val directories = allFiles.filter { it.isDirectory }.map { readDirectory(Path(it.absolutePath)) }
 
         return Directory(
-            name = file.name,
+            name = DirectoryName(file.name),
             files = files,
             directories = directories
         )
@@ -37,7 +37,7 @@ class DirectoriesLogic: Directories {
         val nioPath = java.nio.file.Paths.get(path.value)
         val file = nioPath.toFile()
 
-        val newDir = java.io.File(file, directory.name)
+        val newDir = java.io.File(file, directory.name.value)
         if (!newDir.exists()) {
             check(newDir.mkdirs()) {
                 "Could not create directory: $newDir"
@@ -45,7 +45,7 @@ class DirectoriesLogic: Directories {
         }
 
         directory.files.forEach {
-            val newFile = java.io.File(newDir, it.name)
+            val newFile = java.io.File(newDir, it.name.value)
             newFile.writeText(it.content.lines.joinToString("\n"))
         }
 
@@ -63,7 +63,8 @@ class DirectoriesLogic: Directories {
         )
     }
 
-    private fun fullPath(path: String, name: String) = if (path.isEmpty()) name else "$path/$name"
+    private fun fullPath(path: String, name: DirectoryName) = if (path.isEmpty()) name.value else "$path/${name.value}"
+    private fun fullPath(path: String, name: FileName) = if (path.isEmpty()) name.value else "$path/${name.value}"
 
     private fun compareDirectories(path: String, dir1: Directory, dir2: Directory): List<String> {
         val differences = mutableListOf<String>()
@@ -133,7 +134,7 @@ class DirectoriesLogic: Directories {
 
     private fun toApiFile(file: java.io.File): File {
         return File(
-            name = file.name,
+            name = FileName(file.name),
             content = FileContent(file.readLines())
         )
     }

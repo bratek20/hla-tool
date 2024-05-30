@@ -1,14 +1,12 @@
 CustomTypes
     Path: string
+    FileContent: string
 
 NamedTypes
     FileName: string
     DirectoryName: string
 
 ValueObjects
-    FileContent
-        lines: string[]
-
     File
         name: FileName
         content: FileContent
@@ -19,7 +17,7 @@ ValueObjects
         directories: Directory[] = []
 
     CompareResult
-        same: boolean
+        same: bool
         differences: string[]
 
 Interfaces

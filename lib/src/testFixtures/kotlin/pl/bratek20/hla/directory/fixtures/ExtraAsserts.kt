@@ -29,20 +29,20 @@ fun assertDirectoryExt(given: Directory, expectedOv: ExpectedDirectoryExt.() -> 
 
     if (expected.hasFile != null) {
         val expectedFile = ExpectedFileExt().apply(expected.hasFile!!)
-        val file = given.files.find { it.name == expectedFile.name }
+        val file = given.files.find { it.name.value == expectedFile.name }
         assertThat(file).isNotNull
         assertFileExt(file!!, expected.hasFile!!)
     }
 
     if (expected.hasDirectory != null) {
         val expectedDirectory = ExpectedDirectoryExt().apply(expected.hasDirectory!!)
-        val directory = given.directories.find { it.name == expectedDirectory.name }
+        val directory = given.directories.find { it.name.value == expectedDirectory.name }
         assertThat(directory).isNotNull
         assertDirectoryExt(directory!!, expected.hasDirectory!!)
     }
 
     if (expected.hasNoDirectory != null) {
-        assertThat(given.directories.find { it.name == expected.hasNoDirectory }).isNull()
+        assertThat(given.directories.find { it.name.value == expected.hasNoDirectory }).isNull()
     }
 }
 

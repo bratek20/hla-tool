@@ -6,6 +6,7 @@ import org.apache.velocity.app.VelocityEngine
 import org.apache.velocity.runtime.RuntimeConstants
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
 import pl.bratek20.hla.directory.api.FileContent
+import pl.bratek20.hla.directory.api.fileContentFromString
 import pl.bratek20.hla.velocity.api.VelocityFacade
 import pl.bratek20.hla.velocity.api.VelocityFileContentBuilder
 import java.io.StringWriter
@@ -23,7 +24,7 @@ class VelocityFileContentBuilderImpl(
     override fun build(): FileContent {
         val writer = StringWriter()
         template.merge(context, writer)
-        return FileContent.fromString(writer.toString())
+        return fileContentFromString(writer.toString())
     }
 }
 

@@ -1,8 +1,6 @@
 package pl.bratek20.hla.directory.fixtures
 
-import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.directory.api.FileContent
+import pl.bratek20.hla.directory.api.*
 
 data class FileDefExt(
     var name: String = "SomeName",
@@ -12,7 +10,7 @@ data class FileDefExt(
 fun fileExt(init: FileDefExt.() -> Unit): File {
     val def = FileDefExt().apply(init)
     if (def.contentLines.isNotEmpty()) {
-        return File(def.name, FileContent(def.contentLines))
+        return File(FileName(def.name), FileContent(def.contentLines))
     }
-    return File(def.name, FileContent.fromString(def.content))
+    return File(FileName(def.name), fileContentFromString(def.content))
 }

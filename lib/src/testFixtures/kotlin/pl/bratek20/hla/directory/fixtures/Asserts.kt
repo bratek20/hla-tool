@@ -6,6 +6,77 @@ import org.assertj.core.api.Assertions.assertThat
 
 import pl.bratek20.hla.directory.api.*
 
+fun assertFileName(given: FileName, expected: String) {
+    assertThat(given.value).isEqualTo(expected)
+}
+
+
+fun assertDirectoryName(given: DirectoryName, expected: String) {
+    assertThat(given.value).isEqualTo(expected)
+}
+
+
 fun assertPath(given: Path, expected: String) {
     assertThat(pathGetValue(given)).isEqualTo(expected)
+}
+
+
+fun assertFileContent(given: FileContent, expected: String) {
+    assertThat(fileContentGetValue(given)).isEqualTo(expected)
+}
+
+data class ExpectedFile(
+    var name: String? = null,
+    var content: String? = null,
+)
+fun assertFile(given: File, expectedInit: ExpectedFile.() -> Unit) {
+    val expected = ExpectedFile().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name.value).isEqualTo(it)
+    }
+
+    expected.content?.let {
+        assertThat(fileContentGetValue(given.content)).isEqualTo(it)
+    }
+}
+
+data class ExpectedDirectory(
+    var name: String? = null,
+    var files: List<(ExpectedFile.() -> Unit)>? = null,
+    var directories: List<(ExpectedDirectory.() -> Unit)>? = null,
+)
+fun assertDirectory(given: Directory, expectedInit: ExpectedDirectory.() -> Unit) {
+    val expected = ExpectedDirectory().apply(expectedInit)
+
+    expected.name?.let {
+        assertThat(given.name.value).isEqualTo(it)
+    }
+
+    expected.files?.let {
+        assertThat(given.files).hasSize(it.size)
+        given.files.forEachIndexed { idx, entry -> assertFile(entry, it[idx]) }
+    }
+
+    expected.directories?.let {
+        assertThat(given.directories).hasSize(it.size)
+        given.directories.forEachIndexed { idx, entry -> assertDirectory(entry, it[idx]) }
+    }
+}
+
+data class ExpectedCompareResult(
+    var same: Boolean? = null,
+    var differences: List<String>? = null,
+)
+fun assertCompareResult(given: CompareResult, expectedInit: ExpectedCompareResult.() -> Unit) {
+    val expected = ExpectedCompareResult().apply(expectedInit)
+
+    expected.same?.let {
+        assertThat(given.same).isEqualTo(it)
+    }
+
+    expected.differences?.let {
+        assertThat(given.differences).hasSize(it.size)
+        given.differences.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
+    }
 }

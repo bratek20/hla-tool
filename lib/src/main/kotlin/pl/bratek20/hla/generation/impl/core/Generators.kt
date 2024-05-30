@@ -1,9 +1,7 @@
 package pl.bratek20.hla.generation.impl.core
 
 import pl.bratek20.hla.definitions.api.ModuleDefinition
-import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.directory.api.File
-import pl.bratek20.hla.directory.api.FileContent
+import pl.bratek20.hla.directory.api.*
 import pl.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import pl.bratek20.hla.generation.impl.core.language.LanguageSupport
 import pl.bratek20.hla.velocity.api.VelocityFacade
@@ -100,7 +98,7 @@ abstract class FileGenerator
             content = FileContent(lines)
         }
         return File(
-            name = name() + "." + language.filesExtension(),
+            name = FileName(name() + "." + language.filesExtension()),
             content = content
         )
     }
@@ -163,7 +161,7 @@ abstract class DirectoryGenerator
         }
 
         return Directory(
-            name = language.adjustDirectoryName(name()),
+            name = DirectoryName(language.adjustDirectoryName(name())),
             files = files,
             directories = directories
         )
