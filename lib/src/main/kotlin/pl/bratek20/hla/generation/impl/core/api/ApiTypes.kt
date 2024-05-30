@@ -193,6 +193,10 @@ class OptionalApiType(
     override fun name(): String {
         return languageTypes.wrapWithOptional(wrappedType.name())
     }
+
+    fun unwrap(variableName: String): String {
+        return languageTypes.unwrapOptional(variableName)
+    }
 }
 
 class EnumApiType(

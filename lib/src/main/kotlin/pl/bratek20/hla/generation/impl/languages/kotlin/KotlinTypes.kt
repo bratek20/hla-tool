@@ -48,6 +48,10 @@ class KotlinTypes: LanguageTypes {
         return "$optionalName?.let { $elementName -> $mapping }"
     }
 
+    override fun unwrapOptional(variableName: String): String {
+        return "$variableName!!"
+    }
+
     override fun classConstructorCall(className: String): String {
         return className
     }

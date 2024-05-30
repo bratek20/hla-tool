@@ -50,6 +50,10 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "$optionalName.map($elementName => $mapping)"
     }
 
+    override fun unwrapOptional(variableName: String): String {
+        return "$variableName.get()"
+    }
+
     override fun classConstructorCall(className: String): String {
         return "new $className"
     }
