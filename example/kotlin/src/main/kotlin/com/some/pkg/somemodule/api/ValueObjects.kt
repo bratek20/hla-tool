@@ -12,9 +12,9 @@ data class SomeClass(
 
 data class SomeClass2(
     val id: SomeId,
-    val enabled: Boolean,
     val names: List<String>,
     val ids: List<SomeId>,
+    val enabled: Boolean = true,
 )
 
 data class SomeClass3(

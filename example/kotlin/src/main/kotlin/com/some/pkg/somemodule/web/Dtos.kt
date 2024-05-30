@@ -50,16 +50,16 @@ data class SomeClassDto(
 
 data class SomeClass2Dto(
     val id: String,
-    val enabled: Boolean,
     val names: List<String>,
     val ids: List<String>,
+    val enabled: Boolean,
 ) {
     fun toApi(): SomeClass2 {
         return SomeClass2(
             id = SomeId(id),
-            enabled = enabled,
             names = names,
             ids = ids.map { it -> SomeId(it) },
+            enabled = enabled,
         )
     }
 
@@ -67,9 +67,9 @@ data class SomeClass2Dto(
         fun fromApi(api: SomeClass2): SomeClass2Dto {
             return SomeClass2Dto(
                 id = api.id.value,
-                enabled = api.enabled,
                 names = api.names,
                 ids = api.ids.map { it -> it.value },
+                enabled = api.enabled,
             )
         }
     }

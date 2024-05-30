@@ -39,17 +39,13 @@ namespace SomeModule.Assert {
 
     export interface ExpectedSomeClass2 {
         id?: string,
-        enabled?: boolean,
         names?: string[],
         ids?: string[],
+        enabled?: boolean,
     }
     export function someClass2(given: SomeClass2, expected: ExpectedSomeClass2) {
         if (expected.id !== undefined) {
             AssertEquals(given.id.value, expected.id)
-        }
-
-        if (expected.enabled !== undefined) {
-            AssertEquals(given.enabled, expected.enabled)
         }
 
         if (expected.names !== undefined) {
@@ -60,6 +56,10 @@ namespace SomeModule.Assert {
         if (expected.ids !== undefined) {
             AssertEquals(given.ids.length, expected.ids.length)
             given.ids.forEach((entry, idx) => AssertEquals(entry.value, expected.ids[idx]))
+        }
+
+        if (expected.enabled !== undefined) {
+            AssertEquals(given.enabled, expected.enabled)
         }
     }
 

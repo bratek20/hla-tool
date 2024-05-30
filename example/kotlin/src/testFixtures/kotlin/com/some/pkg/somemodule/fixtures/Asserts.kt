@@ -55,19 +55,15 @@ fun assertSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit
 
 data class ExpectedSomeClass2(
     var id: String? = null,
-    var enabled: Boolean? = null,
     var names: List<String>? = null,
     var ids: List<String>? = null,
+    var enabled: Boolean? = null,
 )
 fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Unit) {
     val expected = ExpectedSomeClass2().apply(expectedInit)
 
     expected.id?.let {
         assertThat(given.id.value).isEqualTo(it)
-    }
-
-    expected.enabled?.let {
-        assertThat(given.enabled).isEqualTo(it)
     }
 
     expected.names?.let {
@@ -78,6 +74,10 @@ fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> U
     expected.ids?.let {
         assertThat(given.ids).hasSize(it.size)
         given.ids.forEachIndexed { idx, entry -> assertThat(entry.value).isEqualTo(it[idx]) }
+    }
+
+    expected.enabled?.let {
+        assertThat(given.enabled).isEqualTo(it)
     }
 }
 

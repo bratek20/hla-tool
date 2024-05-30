@@ -43,9 +43,9 @@ fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
 
 data class SomeClass2Def(
     var id: String = "someValue",
-    var enabled: Boolean = false,
     var names: List<String> = emptyList(),
     var ids: List<String> = emptyList(),
+    var enabled: Boolean = true,
 )
 fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
     val def = SomeClass2Def().apply(init)

@@ -10,9 +10,9 @@ class SomeClass {
 class SomeClass2 {
     constructor(
         public readonly id: SomeId,
-        public readonly enabled: boolean,
         public readonly names: string[],
         public readonly ids: SomeId[],
+        public readonly enabled: boolean = true,
     ) {}
 }
 

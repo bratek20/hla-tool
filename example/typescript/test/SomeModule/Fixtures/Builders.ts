@@ -39,15 +39,15 @@ namespace SomeModule.Builder {
 
     export interface SomeClass2Def {
         id?: string,
-        enabled?: boolean,
         names?: string[],
         ids?: string[],
+        enabled?: boolean,
     }
     export function someClass2(def?: SomeClass2Def): SomeClass2 {
         const id = def?.id ?? "someValue"
-        const enabled = def?.enabled ?? false
         const names = def?.names ?? []
         const ids = def?.ids ?? []
+        const enabled = def?.enabled ?? true
 
         return new SomeClass2(
             new SomeId(id),

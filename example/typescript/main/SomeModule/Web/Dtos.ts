@@ -38,25 +38,25 @@ namespace SomeModule.Web {
 
     export class SomeClass2Dto {
         id = STRING
-        enabled = BOOLEAN
         names = [STRING]
         ids = [STRING]
+        enabled = BOOLEAN
 
         toApi(): SomeClass2 {
             return new SomeClass2(
                 new SomeId(this.id),
-                this.enabled,
                 this.names,
                 this.ids.map(it => new SomeId(it)),
+                this.enabled,
             )
         }
 
         static fromApi(api: SomeClass2): SomeClass2Dto {
             const dto = new SomeClass2Dto()
             dto.id = api.id.value
-            dto.enabled = api.enabled
             dto.names = api.names
             dto.ids = api.ids.map(it => it.value)
+            dto.enabled = api.enabled
             return dto
         }
     }
