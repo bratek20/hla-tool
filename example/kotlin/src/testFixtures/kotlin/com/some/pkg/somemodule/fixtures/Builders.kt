@@ -51,9 +51,9 @@ fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
     val def = SomeClass2Def().apply(init)
     return SomeClass2(
         id = SomeId(def.id),
-        enabled = def.enabled,
         names = def.names,
         ids = def.ids.map { it -> SomeId(it) },
+        enabled = def.enabled,
     )
 }
 

@@ -81,7 +81,9 @@ open class DefField(
 
     // used by velocity
     fun defaultValue(): String {
-        return api.exampleValue() ?: type.defaultValue()
+        return api.exampleValue() ?:
+            api.def.defaultValue ?:
+            type.defaultValue()
     }
 }
 

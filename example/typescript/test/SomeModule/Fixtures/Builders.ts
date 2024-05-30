@@ -51,9 +51,9 @@ namespace SomeModule.Builder {
 
         return new SomeClass2(
             new SomeId(id),
-            enabled,
             names,
             ids.map(it => new SomeId(it)),
+            enabled,
         )
     }
 
