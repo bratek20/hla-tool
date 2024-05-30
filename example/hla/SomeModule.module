@@ -43,6 +43,9 @@ ValueObjects
         someProperty: SomeProperty
         otherProperty: OtherProperty
 
+    SomeClass6
+        someClassOpt: SomeClass?
+
 Interfaces
     SomeInterface
         someCommand(id: SomeId, amount: int)

@@ -155,3 +155,21 @@ data class SomeClass5Dto(
         }
     }
 }
+
+data class SomeClass6Dto(
+    val someClassOpt: SomeClassDto?,
+) {
+    fun toApi(): SomeClass6 {
+        return SomeClass6(
+            someClassOpt = someClassOpt?.toApi(),
+        )
+    }
+
+    companion object {
+        fun fromApi(api: SomeClass6): SomeClass6Dto {
+            return SomeClass6Dto(
+                someClassOpt = api.someClassOpt?.let { it -> SomeClassDto.fromApi(it) },
+            )
+        }
+    }
+}

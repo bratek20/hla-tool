@@ -37,3 +37,7 @@ data class SomeClass5(
     val someProperty: SomeProperty,
     val otherProperty: OtherProperty,
 )
+
+data class SomeClass6(
+    val someClassOpt: SomeClass?,
+)

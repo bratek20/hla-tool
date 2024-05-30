@@ -161,3 +161,23 @@ fun assertSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> U
         assertOtherProperty(given.otherProperty, it)
     }
 }
+
+data class ExpectedSomeClass6(
+    var someClassOptEmpty: Boolean? = null,
+    var someClassOpt: (ExpectedSomeClass.() -> Unit)? = null,
+)
+fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Unit) {
+    val expected = ExpectedSomeClass6().apply(expectedInit)
+
+    expected.someClassOptEmpty?.let {
+        if (it) {
+            assertThat(given.someClassOpt).isNull()
+        } else {
+            assertThat(given.someClassOpt).isNotNull()
+        }
+    }
+
+    expected.someClassOpt?.let {
+        assertSomeClass(given.someClassOpt!!, it)
+    }
+}
