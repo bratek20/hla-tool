@@ -4,8 +4,6 @@ import pl.bratek20.hla.definitions.api.BaseType
 import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
-import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 
 abstract class ExpectedType<T: ApiType>(
     val api: T
@@ -73,7 +71,7 @@ class DefaultExpectedTypeField(
     }
 }
 
-class SupportingExpectedTypeField(
+class OptionalEmptyExpectedTypeField(
     private val mainField: ApiTypeField,
     private val languageTypes: LanguageTypes
 ): ExpectedTypeField {
@@ -86,13 +84,8 @@ class SupportingExpectedTypeField(
     }
 
     override fun assertion(givenVariable: String, expectedVariable: String): String {
-        if (languageTypes is KotlinTypes) {
-            return "assertThat(given.someClassOpt == null).isEqualTo(it)"
-        }
-        if (languageTypes is TypeScriptTypes) {
-            return "AssertEquals(given.someClassOpt.isEmpty(), expected.someClassOptEmpty)"
-        }
-        return "?????"
+        val emptyCheck = languageTypes.checkOptionalEmpty("$givenVariable.${mainField.name}")
+        return languageTypes.assertEquals(emptyCheck, expectedVariable)
     }
 }
 
@@ -224,7 +217,7 @@ class ExpectedTypeFactory(
         return fields.map {
             if (it.type is OptionalApiType) {
                 listOf(
-                    SupportingExpectedTypeField(it, languageTypes),
+                    OptionalEmptyExpectedTypeField(it, languageTypes),
                     DefaultExpectedTypeField(it, create(it.type))
                 )
             }

@@ -52,6 +52,10 @@ class KotlinTypes: LanguageTypes {
         return "$variableName!!"
     }
 
+    override fun checkOptionalEmpty(variableName: String): String {
+        return "$variableName == null"
+    }
+
     override fun classConstructorCall(className: String): String {
         return className
     }

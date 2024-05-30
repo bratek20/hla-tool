@@ -54,6 +54,10 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "$variableName.get()"
     }
 
+    override fun checkOptionalEmpty(variableName: String): String {
+        return "$variableName.isEmpty()"
+    }
+
     override fun classConstructorCall(className: String): String {
         return "new $className"
     }
