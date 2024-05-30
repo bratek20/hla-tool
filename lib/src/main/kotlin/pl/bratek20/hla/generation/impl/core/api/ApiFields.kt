@@ -4,11 +4,16 @@ import pl.bratek20.hla.definitions.api.FieldDefinition
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.utils.camelToPascalCase
 
+
 open class ApiTypeField(
     private val def: FieldDefinition,
-    val type: ApiType
+    private val factory: ApiTypeFactory
 ) {
     val name = def.name
+
+    val type: ApiType by lazy {
+        factory.create(def.type)
+    }
 
     open fun access(variableName: String): String {
         return "$variableName.$name"
@@ -45,18 +50,17 @@ open class ApiTypeField(
 class ComplexCustomTypeApiField(
     private val className: String,
     def: FieldDefinition,
-    type: ApiType,
-    private val languageTypes: LanguageTypes
-) : ApiTypeField(def, type) {
+    factory: ApiTypeFactory,
+) : ApiTypeField(def, factory) {
     override fun access(variableName: String): String {
-        return languageTypes.customTypeGetterCall(className, name) + "($variableName)"
+        return type.languageTypes.customTypeGetterCall(className, name) + "($variableName)"
     }
 }
 
 class SerializableTypeApiField(
     def: FieldDefinition,
-    type: ApiType,
-): ApiTypeField(def, type) {
+    factory: ApiTypeFactory
+): ApiTypeField(def, factory) {
     override fun access(variableName: String): String {
         if (type is SimpleStructureApiType) {
             return "$variableName.${getterName()}()"
@@ -70,14 +74,14 @@ class SerializableTypeApiField(
 
     fun getter(): SerializableTypeGetterOrSetter? {
         if(type is SimpleStructureApiType) {
-            return SerializableTypeGetterOrSetter(getterName(), type, name)
+            return SerializableTypeGetterOrSetter(getterName(), type as SimpleStructureApiType, name)
         }
         return null
     }
 
     fun setter(): SerializableTypeGetterOrSetter? {
         if(type is SimpleStructureApiType) {
-            return SerializableTypeGetterOrSetter(setterName(), type, name)
+            return SerializableTypeGetterOrSetter(setterName(), type as SimpleStructureApiType, name)
         }
         return null
     }

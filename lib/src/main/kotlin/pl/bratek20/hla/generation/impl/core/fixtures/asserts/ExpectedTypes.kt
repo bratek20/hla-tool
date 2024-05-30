@@ -56,8 +56,12 @@ interface ExpectedTypeField{
 
 class DefaultExpectedTypeField(
     private val api: ApiTypeField,
-    private val type: ExpectedType<*>
+    private val factory: ExpectedTypeFactory
 ): ExpectedTypeField {
+    private val type by lazy {
+        factory.create(api.type)
+    }
+
     override fun typeName(): String {
         return type.name()
     }
@@ -221,11 +225,11 @@ class ExpectedTypeFactory(
             if (it.type is OptionalApiType) {
                 listOf(
                     OptionalEmptyExpectedTypeField(it, languageTypes),
-                    DefaultExpectedTypeField(it, create(it.type))
+                    DefaultExpectedTypeField(it, this)
                 )
             }
             else {
-                listOf(DefaultExpectedTypeField(it, create(it.type)))
+                listOf(DefaultExpectedTypeField(it, this))
             }
         }.flatten()
     }

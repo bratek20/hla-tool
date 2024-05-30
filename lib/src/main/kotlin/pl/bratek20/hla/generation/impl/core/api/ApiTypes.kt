@@ -272,19 +272,19 @@ class ApiTypeFactory(
 
     private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField> {
         return fields.map {
-            ApiTypeField(it, create(it.type))
+            ApiTypeField(it, this)
         }
     }
 
     private fun createSerializableTypeFields(fields: List<FieldDefinition>): List<SerializableTypeApiField> {
         return fields.map {
-            SerializableTypeApiField(it, create(it.type))
+            SerializableTypeApiField(it, this)
         }
     }
 
     private fun createComplexCustomTypeFields(className: String, fields: List<FieldDefinition>): List<ComplexCustomTypeApiField> {
         return fields.map {
-            ComplexCustomTypeApiField(className, it, create(it.type), languageTypes)
+            ComplexCustomTypeApiField(className, it, this)
         }
     }
 }

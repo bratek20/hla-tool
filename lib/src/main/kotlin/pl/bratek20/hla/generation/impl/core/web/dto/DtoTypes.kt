@@ -49,10 +49,14 @@ class SimpleCustomDtoType(api: SimpleCustomApiType): SimpleStructureDtoType(api)
 }
 
 class DtoField(
-    val type: DtoType<*>,
-    val api: ApiTypeField
+    val api: ApiTypeField,
+    private val factory: DtoTypeFactory
 ) {
     val name = api.name
+
+    val type by lazy {
+        factory.create(api.type)
+    }
 
     // used by velocity
     fun toApi(): String {
@@ -188,8 +192,8 @@ class DtoTypeFactory(
     private fun createFields(fields: List<ApiTypeField>): List<DtoField> {
         return fields.map {
             DtoField(
-                type = create(it.type),
-                api = it
+                api = it,
+                factory = this
             )
         }
     }

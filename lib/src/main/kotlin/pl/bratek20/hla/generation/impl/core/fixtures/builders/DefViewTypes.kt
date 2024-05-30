@@ -66,10 +66,14 @@ class SimpleCustomDefType(
 }
 
 open class DefField(
-    val type: DefType<*>,
-    val api: ApiTypeField
+    val api: ApiTypeField,
+    private val factory: DefTypeFactory
 ) {
     val name = api.name
+
+    val type by lazy {
+        factory.create(api.type)
+    }
 
     open fun build(variableName: String): String {
         return type.build("${variableName}.${name}")
@@ -88,9 +92,9 @@ open class DefField(
 }
 
 class PropertyDefField(
-    type: DefType<*>,
-    api: SerializableTypeApiField
-) : DefField(type, api) {
+    api: SerializableTypeApiField,
+    factory: DefTypeFactory
+) : DefField(api, factory) {
     override fun build(variableName: String): String {
         if(type.api is SimpleStructureApiType) {
             return "${variableName}.${name}"
@@ -228,10 +232,10 @@ class DefTypeFactory(
     }
 
     private fun createFields(fields: List<ApiTypeField>): List<DefField> {
-        return fields.map { DefField(create(it.type), it) }
+        return fields.map { DefField(it, this) }
     }
 
     private fun createPropertyFields(fields: List<SerializableTypeApiField>): List<PropertyDefField> {
-        return fields.map { PropertyDefField(create(it.type), it) }
+        return fields.map { PropertyDefField(it, this) }
     }
 }
