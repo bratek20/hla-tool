@@ -120,14 +120,17 @@ namespace SomeModule.Builder {
     export interface SomeClass6Def {
         someClassOpt?: SomeClassDef,
         optString?: string,
+        sameClassList?: SomeClass6Def[],
     }
     export function someClass6(def?: SomeClass6Def): SomeClass6 {
         const someClassOpt = def?.someClassOpt ?? undefined
         const optString = def?.optString ?? undefined
+        const sameClassList = def?.sameClassList ?? []
 
         return new SomeClass6(
             Optional.of(someClassOpt).map(it => someClass(it)),
             Optional.of(optString),
+            sameClassList.map(it => someClass6(it)),
         )
     }
 }

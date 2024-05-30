@@ -174,7 +174,7 @@ data class SomeClass6Dto(
             return SomeClass6Dto(
                 someClassOpt = api.someClassOpt?.let { it -> SomeClassDto.fromApi(it) },
                 optString = api.optString,
-                sameClassList = api.sameClassList.map { it -> fromApi(it) },
+                sameClassList = api.sameClassList.map { it -> SomeClass6Dto.fromApi(it) },
             )
         }
     }

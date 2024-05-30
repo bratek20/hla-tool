@@ -143,6 +143,7 @@ namespace SomeModule.Assert {
         someClassOpt?: ExpectedSomeClass,
         optStringEmpty?: boolean,
         optString?: string,
+        sameClassList?: ExpectedSomeClass6[],
     }
     export function someClass6(given: SomeClass6, expected: ExpectedSomeClass6) {
         if (expected.someClassOptEmpty !== undefined) {
@@ -159,6 +160,11 @@ namespace SomeModule.Assert {
 
         if (expected.optString !== undefined) {
             AssertEquals(given.optString.get(), expected.optString)
+        }
+
+        if (expected.sameClassList !== undefined) {
+            AssertEquals(given.sameClassList.length, expected.sameClassList.length)
+            given.sameClassList.forEach((entry, idx) => someClass6(entry, expected.sameClassList[idx]))
         }
     }
 }

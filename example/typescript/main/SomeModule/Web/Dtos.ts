@@ -139,11 +139,13 @@ namespace SomeModule.Web {
     export class SomeClass6Dto {
         someClassOpt = Optional.of(new SomeClassDto)
         optString = Optional.of(STRING)
+        sameClassList = [new SomeClass6Dto]
 
         toApi(): SomeClass6 {
             return new SomeClass6(
                 this.someClassOpt.map(it => it.toApi()),
                 this.optString,
+                this.sameClassList.map(it => it.toApi()),
             )
         }
 
@@ -151,6 +153,7 @@ namespace SomeModule.Web {
             const dto = new SomeClass6Dto()
             dto.someClassOpt = api.someClassOpt.map(it => SomeClassDto.fromApi(it))
             dto.optString = api.optString
+            dto.sameClassList = api.sameClassList.map(it => SomeClass6Dto.fromApi(it))
             return dto
         }
     }

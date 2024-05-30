@@ -47,5 +47,6 @@ class SomeClass6 {
     constructor(
         public readonly someClassOpt: Optional<SomeClass>,
         public readonly optString: Optional<string>,
+        public readonly sameClassList: SomeClass6[] = [],
     ) {}
 }
