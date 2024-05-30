@@ -10,3 +10,17 @@ data class Path(
         return Path(value + "/" + path.value)
     }
 }
+
+data class FileContent(
+    val lines: List<String>
+) {
+    override fun toString(): String {
+        return lines.joinToString("\n")
+    }
+
+    companion object {
+        fun fromString(content: String): FileContent {
+            return FileContent(content.split("\\n|\\r\\n".toRegex()))
+        }
+    }
+}

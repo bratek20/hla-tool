@@ -7,3 +7,11 @@ fun pathCreate(value: String): Path {
 fun pathGetValue(it: Path): String {
     return it.value
 }
+
+fun fileContentCreate(value: String): FileContent {
+    return FileContent.fromString(value)
+}
+
+fun fileContentGetValue(it: FileContent): String {
+    return it.toString()
+}

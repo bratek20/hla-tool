@@ -17,7 +17,7 @@ fun assertDirectoryExt(given: Directory, expectedOv: ExpectedDirectoryExt.() -> 
     val expected = ExpectedDirectoryExt().apply(expectedOv)
 
     if (expected.name != null) {
-        assertThat(given.name).isEqualTo(expected.name)
+        assertThat(given.name.value).isEqualTo(expected.name)
     }
 
     if (expected.files != null) {
@@ -54,7 +54,7 @@ fun assertFileExt(given: File, expectedOv: ExpectedFileExt.() -> Unit) {
     val expected = ExpectedFileExt().apply(expectedOv)
 
     if (expected.name != null) {
-        assertThat(given.name).isEqualTo(expected.name)
+        assertThat(given.name.value).isEqualTo(expected.name)
     }
 
     if (expected.content != null) {
