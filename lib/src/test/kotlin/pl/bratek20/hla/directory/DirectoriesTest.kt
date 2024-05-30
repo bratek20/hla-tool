@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import pl.bratek20.hla.directory.api.Path
-import pl.bratek20.hla.directory.fixtures.assertCompareResult
-import pl.bratek20.hla.directory.fixtures.assertDirectory
+import pl.bratek20.hla.directory.fixtures.assertCompareResultExt
+import pl.bratek20.hla.directory.fixtures.assertDirectoryExt
 import pl.bratek20.hla.directory.fixtures.directory
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 
@@ -35,7 +35,7 @@ class DirectoriesTest {
         api.write(tempDir, dir)
 
         val result = api.readDirectory(tempDir)
-        assertDirectory(result) {
+        assertDirectoryExt(result) {
             hasDirectory = {
                 name = "dir"
                 hasFile = {
@@ -67,7 +67,7 @@ class DirectoriesTest {
         api.write(tempDir, updatedDir)
 
         val result = api.readDirectory(tempDir)
-        assertDirectory(result) {
+        assertDirectoryExt(result) {
             hasDirectory = {
                 name = "dir"
                 hasFile = {
@@ -81,7 +81,7 @@ class DirectoriesTest {
     @Test
     fun shouldReadDirectory() {
         val result = api.readDirectory(Path("src/test/resources/directory"))
-        assertDirectory(result) {
+        assertDirectoryExt(result) {
             name = "directory"
             hasDirectory = {
                 name = "subdir"
@@ -116,7 +116,7 @@ class DirectoriesTest {
                 content = "content1"
             }
         }
-        assertCompareResult(api.compare(dir1, dir1)) {
+        assertCompareResultExt(api.compare(dir1, dir1)) {
             same = true
         }
 
@@ -127,7 +127,7 @@ class DirectoriesTest {
                 content = "content1"
             }
         }
-        assertCompareResult(api.compare(dir1, wrongFileName)) {
+        assertCompareResultExt(api.compare(dir1, wrongFileName)) {
             differences = listOf(
                 "File dir1/file1 not found in second directory",
                 "File dir1/file2 not found in first directory"
@@ -141,7 +141,7 @@ class DirectoriesTest {
                 content = "content2"
             }
         }
-        assertCompareResult(api.compare(dir1, wrongFileContent)) {
+        assertCompareResultExt(api.compare(dir1, wrongFileContent)) {
             difference = "Different content for file dir1/file1 in line 1: `content1` != `content2`"
         }
     }
@@ -157,14 +157,14 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, dir)) {
+        assertCompareResultExt(api.compare(dir, dir)) {
             same = true
         }
 
         val missingDirectory = directory {
             name = "dir"
         }
-        assertCompareResult(api.compare(dir, missingDirectory)) {
+        assertCompareResultExt(api.compare(dir, missingDirectory)) {
             differences = listOf("Directory dir/dir1 not found in second directory")
         }
 
@@ -177,7 +177,7 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, wrongName)) {
+        assertCompareResultExt(api.compare(dir, wrongName)) {
             difference = "Different directory names: dir != otherDir"
         }
 
@@ -190,7 +190,7 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, wrongNestedName)) {
+        assertCompareResultExt(api.compare(dir, wrongNestedName)) {
             differences = listOf(
                 "Directory dir/dir1 not found in second directory",
                 "Directory dir/dir2 not found in first directory"
@@ -206,7 +206,7 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, wrongFile)) {
+        assertCompareResultExt(api.compare(dir, wrongFile)) {
             differences = listOf(
                 "File dir/dir1/file1 not found in second directory",
                 "File dir/dir1/file2 not found in first directory"

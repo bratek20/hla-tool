@@ -5,16 +5,16 @@ import pl.bratek20.hla.directory.api.CompareResult
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.File
 
-data class ExpectedDirectory(
+data class ExpectedDirectoryExt(
     var name: String? = null,
-    var files: List<ExpectedFile.() -> Unit>? = null,
-    var hasFile: (ExpectedFile.() -> Unit)? = null,
-    var hasDirectory: (ExpectedDirectory.() -> Unit)? = null,
+    var files: List<ExpectedFileExt.() -> Unit>? = null,
+    var hasFile: (ExpectedFileExt.() -> Unit)? = null,
+    var hasDirectory: (ExpectedDirectoryExt.() -> Unit)? = null,
     var hasNoDirectory: String? = null
 )
 
-fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) {
-    val expected = ExpectedDirectory().apply(expectedOv)
+fun assertDirectoryExt(given: Directory, expectedOv: ExpectedDirectoryExt.() -> Unit) {
+    val expected = ExpectedDirectoryExt().apply(expectedOv)
 
     if (expected.name != null) {
         assertThat(given.name).isEqualTo(expected.name)
@@ -23,22 +23,22 @@ fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) 
     if (expected.files != null) {
         assertThat(given.files).hasSameSizeAs(expected.files)
         expected.files!!.forEachIndexed { index, expectedFile ->
-            assertFile(given.files[index], expectedFile)
+            assertFileExt(given.files[index], expectedFile)
         }
     }
 
     if (expected.hasFile != null) {
-        val expectedFile = ExpectedFile().apply(expected.hasFile!!)
+        val expectedFile = ExpectedFileExt().apply(expected.hasFile!!)
         val file = given.files.find { it.name == expectedFile.name }
         assertThat(file).isNotNull
-        assertFile(file!!, expected.hasFile!!)
+        assertFileExt(file!!, expected.hasFile!!)
     }
 
     if (expected.hasDirectory != null) {
-        val expectedDirectory = ExpectedDirectory().apply(expected.hasDirectory!!)
+        val expectedDirectory = ExpectedDirectoryExt().apply(expected.hasDirectory!!)
         val directory = given.directories.find { it.name == expectedDirectory.name }
         assertThat(directory).isNotNull
-        assertDirectory(directory!!, expected.hasDirectory!!)
+        assertDirectoryExt(directory!!, expected.hasDirectory!!)
     }
 
     if (expected.hasNoDirectory != null) {
@@ -46,12 +46,12 @@ fun assertDirectory(given: Directory, expectedOv: ExpectedDirectory.() -> Unit) 
     }
 }
 
-data class ExpectedFile(
+data class ExpectedFileExt(
     var name: String? = null,
     var content: List<String>? = null
 )
-fun assertFile(given: File, expectedOv: ExpectedFile.() -> Unit) {
-    val expected = ExpectedFile().apply(expectedOv)
+fun assertFileExt(given: File, expectedOv: ExpectedFileExt.() -> Unit) {
+    val expected = ExpectedFileExt().apply(expectedOv)
 
     if (expected.name != null) {
         assertThat(given.name).isEqualTo(expected.name)
@@ -64,13 +64,13 @@ fun assertFile(given: File, expectedOv: ExpectedFile.() -> Unit) {
     }
 }
 
-data class ExpectedCompareResult(
+data class ExpectedCompareResultExt(
     var same: Boolean? = null,
     var difference: String? = null,
     var differences: List<String>? = null
 )
-fun assertCompareResult(given: CompareResult, expectedInit: ExpectedCompareResult.() -> Unit) {
-    val expected = ExpectedCompareResult().apply(expectedInit)
+fun assertCompareResultExt(given: CompareResult, expectedInit: ExpectedCompareResultExt.() -> Unit) {
+    val expected = ExpectedCompareResultExt().apply(expectedInit)
     if (expected.same != null) {
         assertThat(given.same).isEqualTo(expected.same)
     }

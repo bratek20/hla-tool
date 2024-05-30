@@ -12,7 +12,7 @@ import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoriesMocks
-import pl.bratek20.hla.directory.fixtures.assertDirectory
+import pl.bratek20.hla.directory.fixtures.assertDirectoryExt
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
@@ -241,7 +241,7 @@ class HlaFacadeTest {
             paths.expectedFixturesPath
         )
 
-        assertDirectory(mainDirectory) {
+        assertDirectoryExt(mainDirectory) {
             hasDirectory = {
                 name = "api"
                 files = listOf(
@@ -255,7 +255,7 @@ class HlaFacadeTest {
             }
         }
 
-        assertDirectory(fixturesDirectory) {
+        assertDirectoryExt(fixturesDirectory) {
             hasDirectory = {
                 name = "fixtures"
                 files = listOf {
@@ -305,7 +305,7 @@ class HlaFacadeTest {
 
         val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(1, paths.expectedMainPath)
-        assertDirectory(mainDirectory) {
+        assertDirectoryExt(mainDirectory) {
             hasNoDirectory = "web"
         }
     }
