@@ -46,6 +46,7 @@ ValueObjects
     SomeClass6
         someClassOpt: SomeClass?
         optString: string?
+        sameClassList: SomeClass6[] = []
 
 Interfaces
     SomeInterface

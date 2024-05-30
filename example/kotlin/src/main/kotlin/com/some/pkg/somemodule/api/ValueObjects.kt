@@ -41,4 +41,5 @@ data class SomeClass5(
 data class SomeClass6(
     val someClassOpt: SomeClass?,
     val optString: String?,
+    val sameClassList: List<SomeClass6> = emptyList(),
 )

@@ -159,11 +159,13 @@ data class SomeClass5Dto(
 data class SomeClass6Dto(
     val someClassOpt: SomeClassDto?,
     val optString: String?,
+    val sameClassList: List<SomeClass6Dto>,
 ) {
     fun toApi(): SomeClass6 {
         return SomeClass6(
             someClassOpt = someClassOpt?.let { it -> it.toApi() },
             optString = optString,
+            sameClassList = sameClassList.map { it -> it.toApi() },
         )
     }
 
@@ -172,6 +174,7 @@ data class SomeClass6Dto(
             return SomeClass6Dto(
                 someClassOpt = api.someClassOpt?.let { it -> SomeClassDto.fromApi(it) },
                 optString = api.optString,
+                sameClassList = api.sameClassList.map { it -> fromApi(it) },
             )
         }
     }

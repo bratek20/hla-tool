@@ -108,11 +108,13 @@ fun someClass5(init: SomeClass5Def.() -> Unit = {}): SomeClass5 {
 data class SomeClass6Def(
     var someClassOpt: (SomeClassDef.() -> Unit)? = null,
     var optString: String? = null,
+    var sameClassList: List<(SomeClass6Def.() -> Unit)> = emptyList(),
 )
 fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
     val def = SomeClass6Def().apply(init)
     return SomeClass6(
         someClassOpt = def.someClassOpt?.let { it -> someClass(it) },
         optString = def.optString,
+        sameClassList = def.sameClassList.map { it -> someClass6(it) },
     )
 }

@@ -167,6 +167,7 @@ data class ExpectedSomeClass6(
     var someClassOpt: (ExpectedSomeClass.() -> Unit)? = null,
     var optStringEmpty: Boolean? = null,
     var optString: String? = null,
+    var sameClassList: List<(ExpectedSomeClass6.() -> Unit)>? = null,
 )
 fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Unit) {
     val expected = ExpectedSomeClass6().apply(expectedInit)
@@ -185,5 +186,10 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
 
     expected.optString?.let {
         assertThat(given.optString!!).isEqualTo(it)
+    }
+
+    expected.sameClassList?.let {
+        assertThat(given.sameClassList).hasSize(it.size)
+        given.sameClassList.forEachIndexed { idx, entry -> assertSomeClass6(entry, it[idx]) }
     }
 }
