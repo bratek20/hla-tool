@@ -170,11 +170,7 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
     val expected = ExpectedSomeClass6().apply(expectedInit)
 
     expected.someClassOptEmpty?.let {
-        if (it) {
-            assertThat(given.someClassOpt).isNull()
-        } else {
-            assertThat(given.someClassOpt).isNotNull()
-        }
+        assertThat(given.someClassOpt == null).isEqualTo(it)
     }
 
     expected.someClassOpt?.let {

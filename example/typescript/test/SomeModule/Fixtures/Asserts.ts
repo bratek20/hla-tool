@@ -137,4 +137,18 @@ namespace SomeModule.Assert {
             OtherModule.Assert.otherProperty(given.otherProperty, expected.otherProperty)
         }
     }
+
+    export interface ExpectedSomeClass6 {
+        someClassOptEmpty?: boolean,
+        someClassOpt?: ExpectedSomeClass,
+    }
+    export function someClass6(given: SomeClass6, expected: ExpectedSomeClass6) {
+        if (expected.someClassOptEmpty !== undefined) {
+            AssertEquals(given.someClassOpt.isEmpty(), expected.someClassOptEmpty)
+        }
+
+        if (expected.someClassOpt !== undefined) {
+            someClass(given.someClassOpt.get(), expected.someClassOpt)
+        }
+    }
 }

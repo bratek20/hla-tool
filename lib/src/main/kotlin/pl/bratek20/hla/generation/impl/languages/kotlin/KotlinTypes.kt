@@ -36,6 +36,10 @@ class KotlinTypes: LanguageTypes {
         return "$listName.map { $elementName -> $mapping }"
     }
 
+    override fun wrapWithOptional(typeName: String): String {
+        return "$typeName?"
+    }
+
     override fun classConstructorCall(className: String): String {
         return className
     }

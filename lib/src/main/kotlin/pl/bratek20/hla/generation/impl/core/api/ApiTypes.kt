@@ -249,6 +249,14 @@ class ListApiType(
     }
 }
 
+class OptionalApiType(
+    val wrappedType: ApiType,
+) : ApiType() {
+    override fun name(): String {
+        return languageTypes.wrapWithOptional(wrappedType.name())
+    }
+}
+
 class EnumApiType(
     private val def: EnumDefinition,
 ) : ApiType() {

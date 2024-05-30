@@ -135,4 +135,20 @@ namespace SomeModule.Web {
             return dto
         }
     }
+
+    export class SomeClass6Dto {
+        someClassOpt = Optional.of(new SomeClassDto)
+
+        toApi(): SomeClass6 {
+            return new SomeClass6(
+                this.someClassOpt.map(it => it.toApi()),
+            )
+        }
+
+        static fromApi(api: SomeClass6): SomeClass6Dto {
+            const dto = new SomeClass6Dto()
+            dto.someClassOpt = api.someClassOpt.map(it => SomeClassDto.fromApi(it))
+            return dto
+        }
+    }
 }

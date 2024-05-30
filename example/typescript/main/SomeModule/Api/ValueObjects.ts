@@ -42,3 +42,9 @@ class SomeClass5 {
         public readonly otherProperty: OtherProperty,
     ) {}
 }
+
+class SomeClass6 {
+    constructor(
+        public readonly someClassOpt: Optional<SomeClass>
+    ) {}
+}
