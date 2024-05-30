@@ -157,6 +157,8 @@ data class ExpectedFieldDefinition(
     var name: String? = null,
     var type: (ExpectedTypeDefinition.() -> Unit)? = null,
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
+    var defaultValueEmpty: Boolean? = null,
+    var defaultValue: String? = null,
 )
 fun assertFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDefinition.() -> Unit) {
     val expected = ExpectedFieldDefinition().apply(expectedInit)
@@ -172,6 +174,14 @@ fun assertFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDef
     expected.attributes?.let {
         assertThat(given.attributes).hasSize(it.size)
         given.attributes.forEachIndexed { idx, entry -> assertAttribute(entry, it[idx]) }
+    }
+
+    expected.defaultValueEmpty?.let {
+        assertThat(given.defaultValue == null).isEqualTo(it)
+    }
+
+    expected.defaultValue?.let {
+        assertThat(given.defaultValue!!).isEqualTo(it)
     }
 }
 

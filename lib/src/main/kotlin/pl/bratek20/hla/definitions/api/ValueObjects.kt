@@ -43,6 +43,7 @@ data class FieldDefinition(
     val name: String,
     val type: TypeDefinition,
     val attributes: List<Attribute>,
+    val defaultValue: String?,
 )
 
 data class Attribute(

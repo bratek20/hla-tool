@@ -237,7 +237,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
                 FieldDefinition(
                     name = it.name,
                     type = parseType(it.value),
-                    attributes = it.attributes
+                    attributes = it.attributes,
+                    defaultValue = null
                 )
             }
         )

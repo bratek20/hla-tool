@@ -91,6 +91,7 @@ data class FieldDefinitionDef(
     var name: String = "someValue",
     var type: (TypeDefinitionDef.() -> Unit) = {},
     var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
+    var defaultValue: String? = null,
 )
 fun fieldDefinition(init: FieldDefinitionDef.() -> Unit = {}): FieldDefinition {
     val def = FieldDefinitionDef().apply(init)
@@ -98,6 +99,7 @@ fun fieldDefinition(init: FieldDefinitionDef.() -> Unit = {}): FieldDefinition {
         name = def.name,
         type = typeDefinition(def.type),
         attributes = def.attributes.map { it -> attribute(it) },
+        defaultValue = def.defaultValue,
     )
 }
 
