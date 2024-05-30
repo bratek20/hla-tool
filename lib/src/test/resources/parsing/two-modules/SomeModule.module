@@ -16,7 +16,7 @@ ValueObjects
         id: SomeId
         names: string[]
         ids: SomeId[]
-        enabled: bool// = true
+        enabled: bool = true
 
     SomeClass3
         class2Object: SomeClass2

@@ -106,6 +106,7 @@ class ModuleDefinitionsParserTest {
                                 type = {
                                     name = "bool"
                                 }
+                                defaultValue = "true"
                             },
                         )
                     },
