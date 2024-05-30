@@ -79,6 +79,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         indent: Int,
         val name: String,
         val value: String,
+        val defaultValue: String? = null,
         val attributes: List<Attribute>
     ) : ParsedLeaf(indent)
 
@@ -154,11 +155,10 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         }
         else if(noIndentLine.contains(":"))  {
             val name = noIndentLine.substringBefore(":").trim()
-            val rest = noIndentLine.substringAfter(":").trim()
-            val value: String
-            val attributes: List<Attribute>
+            var rest = noIndentLine.substringAfter(":").trim()
+            var defaultValue: String? = null
+            var attributes: List<Attribute> = emptyList()
             if (rest.contains("(")) {
-                value = rest.substringBefore("(").trim()
                 attributes = rest.substringAfter("(").substringBefore(")").split(",")
                     .filter { it.isNotBlank() }
                     .map {
@@ -167,11 +167,19 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
                         val attValue = it.substringAfter(":").trim()
                         Attribute(attName, attValue)
                     }
-            } else {
-                value = rest.trim()
-                attributes = emptyList()
+                rest = rest.substringBefore("(").trim()
             }
-            return Assignment(indent, name, value, attributes)
+            if (rest.contains("=")) {
+                defaultValue = rest.substringAfter("=").trim()
+                rest = rest.substringBefore("=").trim()
+            }
+            return Assignment(
+                indent = indent,
+                name = name,
+                value = rest.trim(),
+                attributes = attributes,
+                defaultValue = defaultValue
+            )
         } else if(noIndentLine.contains("->"))  {
             noIndentLine.split("->").let {
                 val key = it[0].replace("\"", "").trim()
@@ -238,7 +246,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
                     name = it.name,
                     type = parseType(it.value),
                     attributes = it.attributes,
-                    defaultValue = null
+                    defaultValue = it.defaultValue
                 )
             }
         )
