@@ -35,8 +35,16 @@ class KotlinBuildersPattern(
         return "(${name}Def.() -> Unit)?"
     }
 
+    override fun defOptionalBaseType(name: String): String {
+        return "$name?"
+    }
+
     override fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String {
         return languageTypes.mapOptionalElement(optionalName, elementName, mapping)
+    }
+
+    override fun mapOptionalDefBaseElement(variableName: String): String {
+        return variableName
     }
 
     override fun complexVoDefConstructor(name: String, arg: String): String {

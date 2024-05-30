@@ -13,7 +13,9 @@ interface LanguageBuildersPattern {
     fun complexVoDefConstructor(name: String, arg: String): String
 
     fun defOptionalType(name: String): String
+    fun defOptionalBaseType(name: String): String
     fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String
+    fun mapOptionalDefBaseElement(variableName: String): String
 }
 
 interface LanguageDtoPattern {

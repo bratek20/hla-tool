@@ -36,8 +36,16 @@ class TypeScriptBuildersPattern(private val modules: HlaModules) : LanguageBuild
         return defClassType(name)
     }
 
+    override fun defOptionalBaseType(name: String): String {
+        return name
+    }
+
     override fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String {
         return "Optional.of($optionalName).map($elementName => $mapping)"
+    }
+
+    override fun mapOptionalDefBaseElement(variableName: String): String {
+        return "Optional.of($variableName)"
     }
 
     override fun complexVoDefConstructor(name: String, arg: String): String {
