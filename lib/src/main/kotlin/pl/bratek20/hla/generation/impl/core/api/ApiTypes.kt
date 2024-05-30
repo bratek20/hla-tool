@@ -95,31 +95,6 @@ class SimpleCustomApiType(
     }
 }
 
-open class ApiTypeField(
-    val def: FieldDefinition,
-    val type: ApiType
-) {
-    val name = def.name
-
-    open fun access(variableName: String): String {
-        return "$variableName.$name"
-    }
-
-    fun exampleValue(): String? {
-        return def.attributes.firstOrNull { it.name == "example" }?.value
-    }
-}
-
-class ComplexCustomTypeApiField(
-    private val className: String,
-    def: FieldDefinition,
-    type: ApiType,
-    private val languageTypes: LanguageTypes
-) : ApiTypeField(def, type) {
-    override fun access(variableName: String): String {
-        return languageTypes.customTypeGetterCall(className, name) + "($variableName)"
-    }
-}
 
 open class ComplexStructureApiType<T: ApiTypeField>(
     name: String,
@@ -130,6 +105,7 @@ open class ComplexStructureApiType<T: ApiTypeField>(
         return "$variableName.$fieldName"
     }
 }
+
 
 class ComplexVOApiType(
     name: String,
@@ -167,44 +143,6 @@ data class SerializableTypeGetterOrSetter(
     val type: SimpleStructureApiType,
     val field: String
 )
-
-class SerializableTypeApiField(
-    def: FieldDefinition,
-    type: ApiType,
-): ApiTypeField(def, type) {
-    override fun access(variableName: String): String {
-        if (type is SimpleStructureApiType) {
-            return "$variableName.${getterName()}()"
-        }
-        return "$variableName.$name"
-    }
-
-    fun accessor(): String {
-        return if(type is SimpleStructureApiType) "private " else ""
-    }
-
-    fun getter(): SerializableTypeGetterOrSetter? {
-        if(type is SimpleStructureApiType) {
-            return SerializableTypeGetterOrSetter(getterName(), type, name)
-        }
-        return null
-    }
-
-    fun setter(): SerializableTypeGetterOrSetter? {
-        if(type is SimpleStructureApiType) {
-            return SerializableTypeGetterOrSetter(setterName(), type, name)
-        }
-        return null
-    }
-
-    private fun getterName(): String {
-        return "get${camelToPascalCase(name)}"
-    }
-
-    private fun setterName(): String {
-        return "set${camelToPascalCase(name)}"
-    }
-}
 
 open class SerializableApiType(
     name: String,
@@ -268,11 +206,6 @@ class EnumApiType(
         return name() + "." + def.values.first()
     }
 }
-
-data class ApiValueObjects(
-    val simpleList: List<NamedApiType>,
-    val complexList: List<ComplexVOApiType>
-)
 
 data class ApiCustomTypes(
     val simpleList: List<SimpleCustomApiType>,

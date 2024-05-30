@@ -14,9 +14,6 @@ abstract class ExpectedType<T: ApiType>(
         return api.name()
     }
 
-    //TODO move up?
-    abstract fun defaultValue(): String
-
     open fun assertion(givenVariable: String, expectedVariable: String): String {
         return languageTypes.assertEquals(givenVariable, expectedVariable)
     }
@@ -24,19 +21,12 @@ abstract class ExpectedType<T: ApiType>(
 
 class BaseExpectedType(
     api: BaseApiType,
-) : ExpectedType<BaseApiType>(api) {
-    override fun defaultValue(): String {
-        return languageTypes.defaultValueForBaseType(api.name)
-    }
-}
+) : ExpectedType<BaseApiType>(api)
 
 open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseExpectedType,
 ) : StructureExpectedType<T>(api) {
-    override fun defaultValue(): String {
-        return boxedType.defaultValue()
-    }
 
     override fun name(): String {
         return api.serializableName()
@@ -57,15 +47,40 @@ class SimpleCustomExpectedType(
     boxedType: BaseExpectedType,
 ) : SimpleStructureExpectedType<SimpleCustomApiType>(api, boxedType)
 
-class ExpectedTypeField(
-    val api: ApiTypeField,
-    val type: ExpectedType<*>
-) {
-    val name = api.name
+interface ExpectedTypeField{
+    fun typeName(): String
+    fun name(): String
+    fun assertion(givenVariable: String, expectedVariable: String): String
+}
 
-    // used by velocity
-    fun assertion(givenVariable: String, expectedVariable: String): String {
+class DefaultExpectedTypeField(
+    private val api: ApiTypeField,
+    private val type: ExpectedType<*>
+): ExpectedTypeField {
+    override fun typeName(): String {
+        return type.name()
+    }
+
+    override fun name(): String {
+        return api.name
+    }
+
+    override fun assertion(givenVariable: String, expectedVariable: String): String {
         return type.assertion(api.access(givenVariable), expectedVariable)
+    }
+}
+
+class SupportingExpectedTypeField(): ExpectedTypeField {
+    override fun typeName(): String {
+        return "Boolean"
+    }
+
+    override fun name(): String {
+        return "someClassOptEmpty"
+    }
+
+    override fun assertion(givenVariable: String, expectedVariable: String): String {
+        return "assertThat(given.someClassOpt == null).isEqualTo(it)"
     }
 }
 
@@ -90,15 +105,15 @@ open class ComplexStructureExpectedType(
         return fixture.expectedClassType(api.name())
     }
 
-    override fun defaultValue(): String {
-        return "{}"
-    }
-
     override fun assertion(givenVariable: String, expectedVariable: String): String {
         return fixture.complexVoAssertion(api.name(), givenVariable, expectedVariable)
     }
 
 
+    // used by velocity
+    fun defaultValue(): String {
+        return "{}"
+    }
 
     // used by velocity
     fun givenName(): String {
@@ -132,27 +147,11 @@ class OptionalExpectedType(
     private val wrappedType: ExpectedType<*>,
 ) : ExpectedType<OptionalApiType>(api) {
     override fun name(): String {
-        return languageTypes.wrapWithList(wrappedType.name())
-    }
-
-    override fun defaultValue(): String {
-        return languageTypes.defaultValueForList()
+        return fixture.expectedClassType(wrappedType.api.name())
     }
 
     override fun assertion(givenVariable: String, expectedVariable: String): String {
-        val entriesAssertion = languageTypes.listIndexedIteration(
-            givenVariable,
-            "idx",
-            "entry",
-            wrappedType.assertion("entry", "$expectedVariable[idx]")
-        )
-
-        val indention = " ".repeat(fixture.indentionForAssertListElements())
-
-        return """
-        |${languageTypes.assertListLength(givenVariable, expectedVariable)}
-        |$indention$entriesAssertion
-        """.trimMargin()
+        return wrappedType.assertion(givenVariable + "!!", expectedVariable)
     }
 }
 
@@ -162,10 +161,6 @@ class ListExpectedType(
 ) : ExpectedType<ListApiType>(api) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
-    }
-
-    override fun defaultValue(): String {
-        return languageTypes.defaultValueForList()
     }
 
     override fun assertion(givenVariable: String, expectedVariable: String): String {
@@ -187,11 +182,7 @@ class ListExpectedType(
 
 class EnumExpectedType(
     api: EnumApiType,
-) : ExpectedType<EnumApiType>(api) {
-    override fun defaultValue(): String {
-        return api.defaultValue()
-    }
-}
+) : ExpectedType<EnumApiType>(api)
 
 class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
@@ -218,6 +209,16 @@ class ExpectedTypeFactory(
     }
 
     private fun createFields(fields: List<ApiTypeField>): List<ExpectedTypeField> {
-        return fields.map { ExpectedTypeField(it, create(it.type)) }
+        return fields.map {
+            if (it.type is OptionalApiType) {
+                listOf(
+                    SupportingExpectedTypeField(),
+                    DefaultExpectedTypeField(it, create(it.type))
+                )
+            }
+            else {
+                listOf(DefaultExpectedTypeField(it, create(it.type)))
+            }
+        }.flatten()
     }
 }

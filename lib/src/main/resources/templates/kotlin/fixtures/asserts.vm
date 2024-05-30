@@ -21,14 +21,14 @@ fun ${a.funName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}
 
 data class ${a.expectedName()}(
     #foreach($field in $a.fields)
-    var $field.name: $field.type.name()? = null,
+    var $field.name(): $field.typeName()? = null,
     #end
 )
 fun ${a.funName()}(given: ${a.givenName()}, expectedInit: ${a.expectedName()}.() -> Unit) {
     val expected = ${a.expectedName()}().apply(expectedInit)
 
     #foreach($field in $a.fields)
-    expected.${field.name}?.let {
+    expected.${field.name()}?.let {
         $field.assertion("given", "it")
     }
         #if($foreach.hasNext)
