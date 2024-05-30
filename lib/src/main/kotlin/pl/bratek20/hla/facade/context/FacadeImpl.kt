@@ -9,6 +9,7 @@ import pl.bratek20.hla.facade.impl.HlaFacadeLogic
 import pl.bratek20.hla.generation.context.GenerationImpl
 import pl.bratek20.hla.velocity.context.VelocityImpl
 import pl.bratek20.hla.writing.context.WritingImpl
+import pl.bratek20.utils.logs.context.Log4jLoggerIntegrationImpl
 import pl.bratek20.utils.logs.context.LoggerImpl
 
 class FacadeImpl: ContextModule {
@@ -17,6 +18,7 @@ class FacadeImpl: ContextModule {
             .setImpl(HlaFacade::class.java, HlaFacadeLogic::class.java)
             .withModules(
                 LoggerImpl(),
+                Log4jLoggerIntegrationImpl(),
 
                 PropertiesImpl(),
                 YamlPropertiesSourceImpl(),
