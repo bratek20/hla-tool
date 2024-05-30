@@ -184,6 +184,6 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
     }
 
     expected.optString?.let {
-        assertThat(given.optString).isEqualTo(it)
+        assertThat(given.optString!!).isEqualTo(it)
     }
 }

@@ -110,10 +110,16 @@ class OptionalDtoType(
     }
 
     override fun toApi(variableName: String): String {
+        if (wrappedType is BaseDtoType) {
+            return variableName
+        }
         return languageTypes.mapOptionalElement(variableName, "it", wrappedType.toApi("it"))
     }
 
     override fun fromApi(variableName: String): String {
+        if (wrappedType is BaseDtoType) {
+            return variableName
+        }
         return languageTypes.mapOptionalElement(variableName, "it", wrappedType.fromApi("it"))
     }
 }

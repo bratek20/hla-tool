@@ -152,6 +152,9 @@ class OptionalExpectedType(
     private val wrappedType: ExpectedType<*>,
 ) : ExpectedType<OptionalApiType>(api) {
     override fun name(): String {
+        if (wrappedType is BaseExpectedType) {
+            return wrappedType.name()
+        }
         return fixture.expectedClassType(wrappedType.api.name())
     }
 

@@ -149,6 +149,9 @@ class OptionalDefType(
     val wrappedType: DefType<*>
 ) : DefType<OptionalApiType>(api) {
     override fun name(): String {
+        if (wrappedType is BaseDefType) {
+            return wrappedType.name() + "?"
+        }
         return pattern.defOptionalType(wrappedType.api.name())
     }
 
@@ -157,6 +160,9 @@ class OptionalDefType(
     }
 
     override fun build(variableName: String): String {
+        if (wrappedType is BaseDefType) {
+            return variableName
+        }
         return pattern.mapOptionalDefElement(variableName, "it", wrappedType.build("it"))
     }
 }
