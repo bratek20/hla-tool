@@ -144,6 +144,26 @@ class PropertyDefType(
     fields: List<PropertyDefField>
 ) : ComplexStructureDefType(api, fields)
 
+class OptionalDefType(
+    api: OptionalApiType,
+    val wrappedType: DefType<*>
+) : DefType<OptionalApiType>(api) {
+    override fun name(): String {
+        return languageTypes.wrapWithList(wrappedType.name())
+    }
+
+    override fun defaultValue(): String {
+        return languageTypes.defaultValueForList()
+    }
+
+    override fun build(variableName: String): String {
+        if (wrappedType is BaseDefType) {
+            return variableName
+        }
+        return languageTypes.mapListElements(variableName, "it", wrappedType.build("it"))
+    }
+}
+
 class ListDefType(
     api: ListApiType,
     val wrappedType: DefType<*>
@@ -188,6 +208,7 @@ class DefTypeFactory(
             is BaseApiType -> BaseDefType(type)
             is NamedApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
             is ComplexVOApiType -> ComplexVODefType(type, createFields(type.fields))
+            is OptionalApiType -> OptionalDefType(type, create(type.wrappedType))
             is ListApiType -> ListDefType(type, create(type.wrappedType))
             is EnumApiType -> EnumDefType(type)
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)

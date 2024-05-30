@@ -101,6 +101,29 @@ class PropertyDtoType(fields: List<DtoField>, api: SerializableApiType): Complex
     }
 }
 
+class OptionalDtoType(
+    private val wrappedType: DtoType<*>,
+    api: OptionalApiType
+): DtoType<OptionalApiType>(api) {
+    override fun name(): String {
+        return languageTypes.wrapWithList(wrappedType.name())
+    }
+
+    override fun toApi(variableName: String): String {
+        if (wrappedType is BaseDtoType) {
+            return variableName
+        }
+        return languageTypes.mapListElements(variableName, "it", wrappedType.toApi("it"))
+    }
+
+    override fun fromApi(variableName: String): String {
+        if (wrappedType is BaseDtoType) {
+            return variableName
+        }
+        return languageTypes.mapListElements(variableName, "it", wrappedType.fromApi("it"))
+    }
+}
+
 class ListDtoType(
     private val wrappedType: DtoType<*>,
     api: ListApiType
@@ -147,6 +170,7 @@ class DtoTypeFactory(
             is BaseApiType -> BaseDtoType(type)
             is NamedApiType -> SimpleVODtoType(type)
             is SimpleCustomApiType -> SimpleCustomDtoType(type)
+            is OptionalApiType -> OptionalDtoType(create(type.wrappedType), type)
             is ListApiType -> ListDtoType(create(type.wrappedType), type)
             is EnumApiType -> EnumDtoType(type)
             is SerializableApiType -> PropertyDtoType(createFields(type.fields), type)

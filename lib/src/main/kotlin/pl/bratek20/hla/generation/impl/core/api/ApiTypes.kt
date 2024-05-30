@@ -291,6 +291,7 @@ class ApiTypeFactory(
 
         val simpleVO = modules.findSimpleVO(type)
         val complexVO = modules.findComplexVO(type)
+        val isOptional = type.wrappers.contains(TypeWrapper.OPTIONAL)
         val isList = type.wrappers.contains(TypeWrapper.LIST)
         val isBaseType = isBaseType(type.name)
         val enum = modules.findEnum(type)
@@ -300,6 +301,7 @@ class ApiTypeFactory(
         val dataVO = modules.findDataVO(type)
 
         val apiType = when {
+            isOptional -> OptionalApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.OPTIONAL)))
             isList -> ListApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
             simpleVO != null -> NamedApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.typeName)))
             simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.typeName)))

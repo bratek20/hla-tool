@@ -127,6 +127,35 @@ class PropertyExpectedType(
     fields: List<ExpectedTypeField>
 ) : ComplexStructureExpectedType(api, fields)
 
+class OptionalExpectedType(
+    api: OptionalApiType,
+    private val wrappedType: ExpectedType<*>,
+) : ExpectedType<OptionalApiType>(api) {
+    override fun name(): String {
+        return languageTypes.wrapWithList(wrappedType.name())
+    }
+
+    override fun defaultValue(): String {
+        return languageTypes.defaultValueForList()
+    }
+
+    override fun assertion(givenVariable: String, expectedVariable: String): String {
+        val entriesAssertion = languageTypes.listIndexedIteration(
+            givenVariable,
+            "idx",
+            "entry",
+            wrappedType.assertion("entry", "$expectedVariable[idx]")
+        )
+
+        val indention = " ".repeat(fixture.indentionForAssertListElements())
+
+        return """
+        |${languageTypes.assertListLength(givenVariable, expectedVariable)}
+        |$indention$entriesAssertion
+        """.trimMargin()
+    }
+}
+
 class ListExpectedType(
     api: ListApiType,
     private val wrappedType: ExpectedType<*>,
@@ -156,7 +185,7 @@ class ListExpectedType(
     }
 }
 
-class ExpectedEnumType(
+class EnumExpectedType(
     api: EnumApiType,
 ) : ExpectedType<EnumApiType>(api) {
     override fun defaultValue(): String {
@@ -173,8 +202,9 @@ class ExpectedTypeFactory(
             is BaseApiType -> BaseExpectedType(type)
             is NamedApiType -> NamedExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is ComplexVOApiType -> ComplexVOExpectedType(type, createFields(type.fields))
+            is OptionalApiType -> OptionalExpectedType(type, create(type.wrappedType))
             is ListApiType -> ListExpectedType(type, create(type.wrappedType))
-            is EnumApiType -> ExpectedEnumType(type)
+            is EnumApiType -> EnumExpectedType(type)
             is SerializableApiType -> PropertyExpectedType(type, createFields(type.fields))
             is SimpleCustomApiType -> SimpleCustomExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is ComplexCustomApiType -> ComplexCustomExpectedType(type, createFields(type.fields))
