@@ -1,2 +1,35 @@
 CustomTypes
     Path: string
+
+NamedTypes
+    FileName: string
+    DirectoryName: string
+
+ValueObjects
+    FileContent
+        lines: string[]
+
+    File
+        name: FileName
+        content: FileContent
+
+    Directory
+        name: DirectoryName
+        files: File[] = []
+        directories: Directory[] = []
+
+    CompareResult
+        same: boolean
+        differences: string[]
+
+Interfaces
+    Directories
+        readDirectory(path: Path): Directory
+
+        //TODO test for that
+        deleteDirectory(path: Path)
+
+        //TODO test for that
+        write(path: Path, directory: Directory)
+
+        compare(dir1: Directory, dir2: Directory): CompareResult
