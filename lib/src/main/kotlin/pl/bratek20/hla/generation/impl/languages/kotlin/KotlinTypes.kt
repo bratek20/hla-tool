@@ -36,6 +36,10 @@ class KotlinTypes: LanguageTypes {
         return "$listName.map { $elementName -> $mapping }"
     }
 
+    override fun defaultValueForDefOptional(): String {
+        return "null"
+    }
+
     override fun wrapWithOptional(typeName: String): String {
         return "$typeName?"
     }

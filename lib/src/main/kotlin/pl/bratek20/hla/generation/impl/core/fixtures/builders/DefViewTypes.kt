@@ -149,18 +149,15 @@ class OptionalDefType(
     val wrappedType: DefType<*>
 ) : DefType<OptionalApiType>(api) {
     override fun name(): String {
-        return languageTypes.wrapWithList(wrappedType.name())
+        return pattern.defOptionalType(wrappedType.api.name())
     }
 
     override fun defaultValue(): String {
-        return languageTypes.defaultValueForList()
+        return languageTypes.defaultValueForDefOptional()
     }
 
     override fun build(variableName: String): String {
-        if (wrappedType is BaseDefType) {
-            return variableName
-        }
-        return languageTypes.mapListElements(variableName, "it", wrappedType.build("it"))
+        return pattern.mapOptionalDefElement(variableName, "it", wrappedType.build("it"))
     }
 }
 

@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl.languages.kotlin
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
+import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 class KotlinAssertsPattern: LanguageAssertsPattern {
@@ -23,9 +24,19 @@ class KotlinAssertsPattern: LanguageAssertsPattern {
     }
 }
 
-class KotlinBuildersPattern: LanguageBuildersPattern {
+class KotlinBuildersPattern(
+    private val languageTypes: LanguageTypes
+): LanguageBuildersPattern {
     override fun defClassType(name: String): String {
         return "(${name}Def.() -> Unit)"
+    }
+
+    override fun defOptionalType(name: String): String {
+        return "(${name}Def.() -> Unit)?"
+    }
+
+    override fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String {
+        return languageTypes.mapOptionalElement(optionalName, elementName, mapping)
     }
 
     override fun complexVoDefConstructor(name: String, arg: String): String {

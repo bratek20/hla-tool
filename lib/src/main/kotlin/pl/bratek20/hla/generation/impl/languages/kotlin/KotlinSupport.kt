@@ -29,7 +29,7 @@ class KotlinSupport(private val c: DomainContext)
     }
 
     override fun buildersFixture(): LanguageBuildersPattern {
-        return KotlinBuildersPattern()
+        return KotlinBuildersPattern(types())
     }
 
     override fun dtoPattern(): LanguageDtoPattern {

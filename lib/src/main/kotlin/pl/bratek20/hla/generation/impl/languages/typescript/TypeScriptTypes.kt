@@ -38,6 +38,10 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "$finalListName.map($elementName => $mapping)"
     }
 
+    override fun defaultValueForDefOptional(): String {
+        return "undefined"
+    }
+
     override fun wrapWithOptional(typeName: String): String {
         return "Optional<$typeName>"
     }

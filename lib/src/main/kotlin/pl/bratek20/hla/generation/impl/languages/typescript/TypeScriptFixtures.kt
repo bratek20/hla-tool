@@ -32,6 +32,14 @@ class TypeScriptBuildersPattern(private val modules: HlaModules) : LanguageBuild
         return handleReferencing(modules, name, base, "Builder")
     }
 
+    override fun defOptionalType(name: String): String {
+        return defClassType(name)
+    }
+
+    override fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String {
+        return "Optional.of($optionalName).map($elementName => $mapping)"
+    }
+
     override fun complexVoDefConstructor(name: String, arg: String): String {
         val base = "${pascalToCamelCase(name)}($arg)"
         return handleReferencing(modules, name, base, "Builder")

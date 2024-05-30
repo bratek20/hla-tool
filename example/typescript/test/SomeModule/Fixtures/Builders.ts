@@ -116,4 +116,15 @@ namespace SomeModule.Builder {
             OtherModule.Builder.otherProperty(otherProperty),
         )
     }
+
+    export interface SomeClass6Def {
+        someClassOpt?: SomeClassDef,
+    }
+    export function someClass6(def?: SomeClass6Def): SomeClass6 {
+        const someClassOpt = def?.someClassOpt ?? undefined
+
+        return new SomeClass6(
+            Optional.of(someClassOpt).map(it => someClass(it)),
+        )
+    }
 }

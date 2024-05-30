@@ -10,6 +10,8 @@ interface LanguageTypes {
     fun defaultValueForList(): String
     fun mapListElements(listName: String, elementName: String, mapping: String): String
 
+    fun defaultValueForDefOptional(): String
+
     fun wrapWithOptional(typeName: String): String
     fun mapOptionalElement(optionalName: String, elementName: String, mapping: String): String
 
