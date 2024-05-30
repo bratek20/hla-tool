@@ -219,6 +219,12 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
                 wrappers = listOf(TypeWrapper.LIST)
             )
         }
+        if (typeValue.contains("?")) {
+            return TypeDefinition(
+                name = typeValue.replace("?", ""),
+                wrappers = listOf(TypeWrapper.OPTIONAL)
+            )
+        }
         return TypeDefinition(
             name = typeValue,
             wrappers = emptyList()

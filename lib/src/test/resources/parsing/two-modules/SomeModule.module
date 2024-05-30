@@ -28,6 +28,9 @@ ValueObjects
         otherIdList: OtherId[]
         otherClassList: OtherClass[]
 
+    SomeClass5
+        otherId: OtherId?
+
 Interfaces
     SomeInterface
         someCommand(id: SomeId, amount: int)
@@ -36,3 +39,4 @@ Interfaces
                 SomeException2
         someQuery(id: SomeId): SomeClass
         noArgQuery(): SomeClass
+        //someOptionalQuery(id: SomeId?): SomeClass?

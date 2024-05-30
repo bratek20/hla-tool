@@ -163,6 +163,18 @@ class ModuleDefinitionsParserTest {
                                 }
                             }
                         )
+                    },
+                    {
+                        name = "SomeClass5"
+                        fields = listOf {
+                            name = "otherId"
+                            type = {
+                                name = "OtherId"
+                                wrappers = listOf(
+                                    TypeWrapper.OPTIONAL
+                                )
+                            }
+                        }
                     }
                 )
                 interfaces = listOf {
