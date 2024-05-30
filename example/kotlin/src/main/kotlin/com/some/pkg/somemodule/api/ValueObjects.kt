@@ -40,4 +40,5 @@ data class SomeClass5(
 
 data class SomeClass6(
     val someClassOpt: SomeClass?,
+    val optString: String?,
 )

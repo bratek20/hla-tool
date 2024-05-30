@@ -141,6 +141,8 @@ namespace SomeModule.Assert {
     export interface ExpectedSomeClass6 {
         someClassOptEmpty?: boolean,
         someClassOpt?: ExpectedSomeClass,
+        optStringEmpty?: boolean,
+        optString?: string,
     }
     export function someClass6(given: SomeClass6, expected: ExpectedSomeClass6) {
         if (expected.someClassOptEmpty !== undefined) {
@@ -149,6 +151,14 @@ namespace SomeModule.Assert {
 
         if (expected.someClassOpt !== undefined) {
             someClass(given.someClassOpt.get(), expected.someClassOpt)
+        }
+
+        if (expected.optStringEmpty !== undefined) {
+            AssertEquals(given.optString.isEmpty(), expected.optStringEmpty)
+        }
+
+        if (expected.optString !== undefined) {
+            AssertEquals(given.optString.get(), expected.optString)
         }
     }
 }

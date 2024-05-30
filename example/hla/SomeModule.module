@@ -45,6 +45,7 @@ ValueObjects
 
     SomeClass6
         someClassOpt: SomeClass?
+        optString: string?
 
 Interfaces
     SomeInterface

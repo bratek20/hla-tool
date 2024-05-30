@@ -165,6 +165,8 @@ fun assertSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> U
 data class ExpectedSomeClass6(
     var someClassOptEmpty: Boolean? = null,
     var someClassOpt: (ExpectedSomeClass.() -> Unit)? = null,
+    var optStringEmpty: Boolean? = null,
+    var optString: String? = null,
 )
 fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Unit) {
     val expected = ExpectedSomeClass6().apply(expectedInit)
@@ -175,5 +177,13 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
 
     expected.someClassOpt?.let {
         assertSomeClass(given.someClassOpt!!, it)
+    }
+
+    expected.optStringEmpty?.let {
+        assertThat(given.optString == null).isEqualTo(it)
+    }
+
+    expected.optString?.let {
+        assertThat(given.optString).isEqualTo(it)
     }
 }

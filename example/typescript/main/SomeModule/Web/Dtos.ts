@@ -138,16 +138,19 @@ namespace SomeModule.Web {
 
     export class SomeClass6Dto {
         someClassOpt = Optional.of(new SomeClassDto)
+        optString = Optional.of(STRING)
 
         toApi(): SomeClass6 {
             return new SomeClass6(
                 this.someClassOpt.map(it => it.toApi()),
+                this.optString,
             )
         }
 
         static fromApi(api: SomeClass6): SomeClass6Dto {
             const dto = new SomeClass6Dto()
             dto.someClassOpt = api.someClassOpt.map(it => SomeClassDto.fromApi(it))
+            dto.optString = api.optString
             return dto
         }
     }
