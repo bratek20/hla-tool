@@ -2,34 +2,17 @@
 
 namespace OtherModule.Assert {
     export function otherId(given: OtherId, expected: number) {
-        AssertEquals(given.value, expected)
+        const diff = Diff.otherId(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedOtherProperty {
-        id?: number,
-        name?: string,
-    }
-    export function otherProperty(given: OtherProperty, expected: ExpectedOtherProperty) {
-        if (expected.id !== undefined) {
-            AssertEquals(given.getId().value, expected.id)
-        }
-
-        if (expected.name !== undefined) {
-            AssertEquals(given.name, expected.name)
-        }
+    export function otherProperty(given: OtherProperty, expected: Diff.ExpectedOtherProperty) {
+        const diff = Diff.otherProperty(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedOtherClass {
-        id?: number,
-        amount?: number,
-    }
-    export function otherClass(given: OtherClass, expected: ExpectedOtherClass) {
-        if (expected.id !== undefined) {
-            AssertEquals(given.id.value, expected.id)
-        }
-
-        if (expected.amount !== undefined) {
-            AssertEquals(given.amount, expected.amount)
-        }
+    export function otherClass(given: OtherClass, expected: Diff.ExpectedOtherClass) {
+        const diff = Diff.otherClass(given, expected)
+        AssertEquals(diff, "", diff)
     }
 }

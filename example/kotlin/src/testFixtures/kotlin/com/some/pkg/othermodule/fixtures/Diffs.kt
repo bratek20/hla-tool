@@ -5,9 +5,7 @@ package com.some.pkg.othermodule.fixtures
 import com.some.pkg.othermodule.api.*
 
 fun diffOtherId(given: OtherId, expected: Int, path: String = ""): String {
-    if (given.value != expected) {
-       return "${path}value ${given.value} != $expected"
-    }
+    if (given.value != expected) { return "${path}value ${given.value} != $expected" }
     return ""
 }
 
