@@ -2,7 +2,6 @@ package pl.bratek20.hla.generation.impl.core.language
 
 interface LanguageAssertsPattern {
     fun assertFunName(name: String): String
-    fun diffFunName(name: String): String
 
     fun expectedClassType(name: String): String
     fun complexVoAssertion(name: String, given: String, expected: String): String

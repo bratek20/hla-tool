@@ -1,7 +1,8 @@
-namespace ${moduleName}.Assert {
+namespace ${moduleName} {
 #foreach($a in $simpleAsserts)
-    export function ${a.funName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}) {
-        $a.assertion("given", "expected")
+    export function ${a.diffFunName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}, path: string = ""): string {
+        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        return ""
     }
     #if($foreach.hasNext || $complexAsserts.size() > 0)
 
@@ -13,14 +14,18 @@ namespace ${moduleName}.Assert {
         $field.name()?: $field.typeName(),
     #end
     }
-    export function ${a.funName()}(given: ${a.givenName()}, expected: ${a.expectedName()}) {
+    export function ${a.diffFunName()}(given: ${a.givenName()}, expected: ${a.expectedName()}, path: string = ""): string {
+        const result: string[] = []
+
         #foreach($field in $a.fields)
         if (expected.${field.name()} !== undefined) {
-            $field.assertion("given", "expected.${field.name()}")
+            $field.diff("given", "expected.${field.name()}")
         }
         #if($foreach.hasNext)
 
         #end#end
+
+        return result.filter(x => x.length > 0).join("\n")
     }
     #if($foreach.hasNext)
 

@@ -2,17 +2,17 @@
 
 namespace OtherModule.Assert {
     export function otherId(given: OtherId, expected: number) {
-        const diff = Diff.otherId(given, expected)
+        const diff = diffOtherId(given, expected)
         AssertEquals(diff, "", diff)
     }
 
-    export function otherProperty(given: OtherProperty, expected: Diff.ExpectedOtherProperty) {
-        const diff = Diff.otherProperty(given, expected)
+    export function otherProperty(given: OtherProperty, expected: ExpectedOtherProperty) {
+        const diff = diffOtherProperty(given, expected)
         AssertEquals(diff, "", diff)
     }
 
-    export function otherClass(given: OtherClass, expected: Diff.ExpectedOtherClass) {
-        const diff = Diff.otherClass(given, expected)
+    export function otherClass(given: OtherClass, expected: ExpectedOtherClass) {
+        const diff = diffOtherClass(given, expected)
         AssertEquals(diff, "", diff)
     }
 }

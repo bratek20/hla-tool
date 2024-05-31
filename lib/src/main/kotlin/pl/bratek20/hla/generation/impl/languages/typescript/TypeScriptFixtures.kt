@@ -11,10 +11,6 @@ class TypeScriptAssertsPattern(private val modules: HlaModules) : LanguageAssert
         return pascalToCamelCase(name)
     }
 
-    override fun diffFunName(name: String): String {
-        return pascalToCamelCase(name)
-    }
-
     override fun expectedClassType(name: String): String {
         val base = "Expected${name}"
         return handleReferencing(modules, name, base, "Assert")

@@ -118,7 +118,7 @@ abstract class StructureExpectedType<T: StructureApiType>(
 
     // used by velocity
     fun diffFunName(): String {
-        return fixture.diffFunName(api.name())
+        return "diff${api.name()}"
     }
 
     // used by velocity
