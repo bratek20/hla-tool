@@ -1,4 +1,4 @@
-package pl.bratek20.hla.generation.impl.core.fixtures.asserts
+package pl.bratek20.hla.generation.impl.core.fixtures
 
 import pl.bratek20.hla.definitions.api.BaseType
 import pl.bratek20.hla.generation.impl.core.api.*

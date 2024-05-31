@@ -1,4 +1,4 @@
-package pl.bratek20.hla.generation.impl.core.fixtures.builders
+package pl.bratek20.hla.generation.impl.core.fixtures
 
 import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
