@@ -32,16 +32,16 @@ data class ExpectedOtherClass(
     var id: Int? = null,
     var amount: Int? = null,
 )
-fun diffOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Unit): String {
+fun diffOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Unit, path: String = ""): String {
     val expected = ExpectedOtherClass().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.id?.let {
-        result.add(diffOtherId(given.id, it, "id."))
+        result.add(diffOtherId(given.id, it, "${path}id."))
     }
 
     expected.amount?.let {
-        if (given.amount != it) { result.add("amount ${given.amount} != $it") }
+        if (given.amount != it) { result.add("${path}amount ${given.amount} != $it") }
     }
 
     return result.filter { it -> it.isNotEmpty() }.joinToString("\n")

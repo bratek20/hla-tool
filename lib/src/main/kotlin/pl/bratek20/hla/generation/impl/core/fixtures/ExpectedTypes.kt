@@ -18,6 +18,10 @@ abstract class ExpectedType<T: ApiType>(
     open fun assertion(givenVariable: String, expectedVariable: String): String {
         return languageTypes.assertEquals(givenVariable, expectedVariable)
     }
+
+    open fun diff(givenVariable: String, expectedVariable: String): String {
+        return "result.add(diffOtherId(given.getId(), it, \"\${path}id.\"))"
+    }
 }
 
 class BaseExpectedType(
@@ -52,6 +56,7 @@ interface ExpectedTypeField{
     fun typeName(): String
     fun name(): String
     fun assertion(givenVariable: String, expectedVariable: String): String
+    fun diff(givenVariable: String, expectedVariable: String): String
 }
 
 class DefaultExpectedTypeField(
@@ -73,6 +78,13 @@ class DefaultExpectedTypeField(
     override fun assertion(givenVariable: String, expectedVariable: String): String {
         return type.assertion(api.access(givenVariable), expectedVariable)
     }
+
+    override fun diff(givenVariable: String, expectedVariable: String): String {
+        if (type is StructureExpectedType<*>) {
+            return "result.add(${(type as StructureExpectedType<*>).diffFunName()}(${api.access(givenVariable)}, $expectedVariable, \"\${path}${name()}.\"))"
+        }
+        return "if (given.${name()} != it) { result.add(\"\${path}${name()} \${given.${name()}} != \$it\") }"
+    }
 }
 
 class OptionalEmptyExpectedTypeField(
@@ -91,6 +103,10 @@ class OptionalEmptyExpectedTypeField(
         val emptyCheck = languageTypes.checkOptionalEmpty("$givenVariable.${mainField.name}")
         return languageTypes.assertEquals(emptyCheck, expectedVariable)
     }
+
+    override fun diff(givenVariable: String, expectedVariable: String): String {
+        return "TODO"
+    }
 }
 
 abstract class StructureExpectedType<T: StructureApiType>(
@@ -101,8 +117,17 @@ abstract class StructureExpectedType<T: StructureApiType>(
     }
 
     // used by velocity
+    fun diffFunName(): String {
+        return fixture.diffFunName(api.name())
+    }
+
+    // used by velocity
     fun funName(): String {
         return fixture.assertFunName(api.name())
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String): String {
+        return "result.add(${diffFunName()}(given.getId(), it, \"\${path}id.\"))"
     }
 }
 

@@ -11,6 +11,10 @@ class KotlinAssertsPattern: LanguageAssertsPattern {
         return "assert${name}"
     }
 
+    override fun diffFunName(name: String): String {
+        return "diff${name}"
+    }
+
     override fun expectedClassType(name: String): String {
         return "(Expected${name}.() -> Unit)"
     }
