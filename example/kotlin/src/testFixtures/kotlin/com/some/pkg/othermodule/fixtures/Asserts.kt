@@ -7,37 +7,16 @@ import org.assertj.core.api.Assertions.assertThat
 import com.some.pkg.othermodule.api.*
 
 fun assertOtherId(given: OtherId, expected: Int) {
-    assertThat(given.value).isEqualTo(expected)
+    val diff = diffOtherId(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedOtherProperty(
-    var id: Int? = null,
-    var name: String? = null,
-)
 fun assertOtherProperty(given: OtherProperty, expectedInit: ExpectedOtherProperty.() -> Unit) {
-    val expected = ExpectedOtherProperty().apply(expectedInit)
-
-    expected.id?.let {
-        assertThat(given.getId().value).isEqualTo(it)
-    }
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
+    val diff = diffOtherProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedOtherClass(
-    var id: Int? = null,
-    var amount: Int? = null,
-)
 fun assertOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Unit) {
-    val expected = ExpectedOtherClass().apply(expectedInit)
-
-    expected.id?.let {
-        assertThat(given.id.value).isEqualTo(it)
-    }
-
-    expected.amount?.let {
-        assertThat(given.amount).isEqualTo(it)
-    }
+    val diff = diffOtherClass(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

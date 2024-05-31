@@ -51,17 +51,31 @@ data class ExpectedFileExt(
     var content: List<String>? = null
 )
 fun assertFileExt(given: File, expectedOv: ExpectedFileExt.() -> Unit) {
+    val diff = diffFile(given, expectedOv)
+    assertThat(diff)
+        .withFailMessage { "File `${given.name.value}` is different: $diff" }
+        .isEmpty()
+}
+
+fun diffFile(given: File, expectedOv: ExpectedFileExt.() -> Unit): String {
     val expected = ExpectedFileExt().apply(expectedOv)
+    val diff = mutableListOf<String>()
 
     if (expected.name != null) {
-        assertThat(given.name.value).isEqualTo(expected.name)
+        if (given.name.value != expected.name) {
+            diff.add("Different name: `${given.name.value}` != `${expected.name}`")
+        }
     }
 
     if (expected.content != null) {
         expected.content!!.forEachIndexed { index, line ->
-            assertThat(given.content.lines.getOrNull(index)).isEqualTo(line)
+            if (given.content.lines.getOrNull(index) != line) {
+                diff.add("Different content in line ${index + 1}: `${given.content.lines.getOrNull(index)}` != `$line`")
+            }
         }
     }
+
+    return diff.joinToString("\n")
 }
 
 data class ExpectedCompareResultExt(
