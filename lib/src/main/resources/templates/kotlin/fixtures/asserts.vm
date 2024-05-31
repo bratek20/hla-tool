@@ -12,29 +12,17 @@ import ${packageName}.api.*
 #foreach($a in $simpleAsserts)
 
 fun ${a.funName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}) {
-    $a.assertion("given", "expected")
+    val diff = ${a.diffFunName()}(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 #if($foreach.hasNext)
 
 #end#end
 #foreach($a in $complexAsserts)
 
-data class ${a.expectedName()}(
-    #foreach($field in $a.fields)
-    var $field.name(): $field.typeName()? = null,
-    #end
-)
 fun ${a.funName()}(given: ${a.givenName()}, expectedInit: ${a.expectedName()}.() -> Unit) {
-    val expected = ${a.expectedName()}().apply(expectedInit)
-
-    #foreach($field in $a.fields)
-    expected.${field.name()}?.let {
-        $field.assertion("given", "it")
-    }
-        #if($foreach.hasNext)
-
-        #end
-    #end
+    val diff = ${a.diffFunName()}(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }#if($foreach.hasNext)
 
 #end#end
