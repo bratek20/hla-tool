@@ -2,7 +2,7 @@
 
 package pl.bratek20.hla.parsing.api
 
-import pl.bratek20.hla.definitions.api.ModuleDefinition
+import pl.bratek20.hla.definitions.api.*
 import pl.bratek20.hla.directory.api.*
 
 interface ModuleDefinitionsParser {
