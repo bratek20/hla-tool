@@ -242,7 +242,7 @@ class HlaFacadeTest {
         )
 
         assertDirectoryExt(mainDirectory) {
-            hasDirectory = {
+            hasSingleDirectories = {
                 name = "api"
                 files = listOf(
                     {
@@ -256,7 +256,7 @@ class HlaFacadeTest {
         }
 
         assertDirectoryExt(fixturesDirectory) {
-            hasDirectory = {
+            hasSingleDirectories = {
                 name = "fixtures"
                 files = listOf {
                     name = "Builders.kt"
@@ -306,7 +306,7 @@ class HlaFacadeTest {
         val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(1, paths.expectedMainPath)
         assertDirectoryExt(mainDirectory) {
-            hasNoDirectory = "web"
+            hasNoDirectories = "web"
         }
     }
 }

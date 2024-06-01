@@ -8,9 +8,9 @@ import pl.bratek20.hla.directory.api.File
 data class ExpectedDirectoryExt(
     var name: String? = null,
     var files: List<ExpectedFileExt.() -> Unit>? = null,
-    var hasFile: (ExpectedFileExt.() -> Unit)? = null,
-    var hasDirectory: (ExpectedDirectoryExt.() -> Unit)? = null,
-    var hasNoDirectory: String? = null
+    var hasSingleFiles: (ExpectedFileExt.() -> Unit)? = null,
+    var hasSingleDirectories: (ExpectedDirectoryExt.() -> Unit)? = null,
+    var hasNoDirectories: String? = null,
 )
 
 fun assertDirectoryExt(given: Directory, expectedOv: ExpectedDirectoryExt.() -> Unit) {
@@ -27,22 +27,20 @@ fun assertDirectoryExt(given: Directory, expectedOv: ExpectedDirectoryExt.() -> 
         }
     }
 
-    if (expected.hasFile != null) {
-        val expectedFile = ExpectedFileExt().apply(expected.hasFile!!)
-        val file = given.files.find { it.name.value == expectedFile.name }
-        assertThat(file).isNotNull
-        assertFileExt(file!!, expected.hasFile!!)
+    if (expected.hasSingleFiles != null) {
+        val singleFiles = given.files.filter { diffFile(it, expected.hasSingleFiles!!) == "" }
+        assertThat(singleFiles.size).withFailMessage("File not found").isEqualTo(1)
     }
 
-    if (expected.hasDirectory != null) {
-        val expectedDirectory = ExpectedDirectoryExt().apply(expected.hasDirectory!!)
+    if (expected.hasSingleDirectories != null) {
+        val expectedDirectory = ExpectedDirectoryExt().apply(expected.hasSingleDirectories!!)
         val directory = given.directories.find { it.name.value == expectedDirectory.name }
         assertThat(directory).isNotNull
-        assertDirectoryExt(directory!!, expected.hasDirectory!!)
+        assertDirectoryExt(directory!!, expected.hasSingleDirectories!!)
     }
 
-    if (expected.hasNoDirectory != null) {
-        assertThat(given.directories.find { it.name.value == expected.hasNoDirectory }).isNull()
+    if (expected.hasNoDirectories != null) {
+        assertThat(given.directories.find { it.name.value == expected.hasNoDirectories }).isNull()
     }
 }
 

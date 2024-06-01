@@ -2,4 +2,3 @@ package directory
 
 class SomeFile {
 }
-
