@@ -16,10 +16,6 @@ abstract class ExpectedType<T: ApiType>(
         return api.name()
     }
 
-    open fun assertion(givenVariable: String, expectedVariable: String): String {
-        return languageTypes.assertEquals(givenVariable, expectedVariable)
-    }
-
     open fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         return languageTypes.wrapWithString("$path \${$givenVariable} != \${$expectedVariable}")
     }
@@ -42,10 +38,6 @@ open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
         return api.serializableName()
     }
 
-    override fun assertion(givenVariable: String, expectedVariable: String): String {
-        return languageTypes.assertEquals(api.unbox(givenVariable), expectedVariable)
-    }
-
     fun diffBody(givenVariable: String, expectedVariable: String): String {
         val result = languageTypes.wrapWithString("\${path}value \${${api.unbox(givenVariable)}} != \${$expectedVariable}")
         return "if (${api.unbox(givenVariable)} != expected) { return $result }"
@@ -65,7 +57,6 @@ class SimpleCustomExpectedType(
 interface ExpectedTypeField{
     fun typeName(): String
     fun name(): String
-    fun assertion(givenVariable: String, expectedVariable: String): String
     fun diff(givenVariable: String, expectedVariable: String): String
 }
 
@@ -85,10 +76,6 @@ open class DefaultExpectedTypeField(
         return api.name
     }
 
-    override fun assertion(givenVariable: String, expectedVariable: String): String {
-        return type.assertion(api.access(givenVariable), expectedVariable)
-    }
-
     override fun diff(givenVariable: String, expectedVariable: String): String {
         val x = type.diff(api.access(givenVariable), expectedVariable, "\${path}${name()}")
         return "if (${type.notEquals(api.access(givenVariable), expectedVariable)}) { ${type.languageTypes.addListElement("result", x)} }"
@@ -105,11 +92,6 @@ class OptionalEmptyExpectedTypeField(
 
     override fun name(): String {
         return mainField.name + "Empty"
-    }
-
-    override fun assertion(givenVariable: String, expectedVariable: String): String {
-        val emptyCheck = languageTypes.checkOptionalEmpty("$givenVariable.${mainField.name}")
-        return languageTypes.assertEquals(emptyCheck, expectedVariable)
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
@@ -163,11 +145,6 @@ open class ComplexStructureExpectedType(
         return fixture.expectedClassType(api.name())
     }
 
-    override fun assertion(givenVariable: String, expectedVariable: String): String {
-        return fixture.complexVoAssertion(api.name(), givenVariable, expectedVariable)
-    }
-
-
     // used by velocity
     fun defaultValue(): String {
         return "{}"
@@ -211,10 +188,6 @@ class OptionalExpectedType(
         return fixture.expectedClassType(wrappedType.api.name())
     }
 
-    override fun assertion(givenVariable: String, expectedVariable: String): String {
-        return wrappedType.assertion(api.unwrap(givenVariable), expectedVariable)
-    }
-
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         return wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
     }
@@ -232,24 +205,8 @@ class ListExpectedType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun assertion(givenVariable: String, expectedVariable: String): String {
-        val entriesAssertion = languageTypes.listIndexedIteration(
-            givenVariable,
-            "idx",
-            "entry",
-            wrappedType.assertion("entry", "$expectedVariable[idx]")
-        )
-
-        val indention = " ".repeat(fixture.indentionForAssertListElements())
-
-        return """
-        |${languageTypes.assertListLength(givenVariable, expectedVariable)}
-        |$indention$entriesAssertion
-        """.trimMargin()
-    }
-
     override fun notEquals(givenVariable: String, expectedVariable: String): String {
-        return "TODO";
+        return "notEquals not needed";
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
