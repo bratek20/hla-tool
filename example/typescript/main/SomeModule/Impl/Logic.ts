@@ -13,5 +13,10 @@ namespace SomeModule.Impl {
             // TODO
             return undefined
         }
+
+        optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
+            // TODO
+            return undefined
+        }
     }
 }

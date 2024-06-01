@@ -11,4 +11,6 @@ interface SomeInterface {
      * @throws { SomeException }
      */
     someQuery(id: SomeId): SomeClass
+
+    optMethod(optId: Optional<SomeId>): Optional<SomeClass>
 }

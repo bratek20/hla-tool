@@ -10,4 +10,8 @@ class SomeInterfaceLogic: SomeInterface {
     override fun someQuery(id: SomeId): SomeClass {
         TODO("Not yet implemented")
     }
+
+    override fun optMethod(optId: SomeId?): SomeClass? {
+        TODO("Not yet implemented")
+    }
 }

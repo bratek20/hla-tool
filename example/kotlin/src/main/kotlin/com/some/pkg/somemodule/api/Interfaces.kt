@@ -16,4 +16,6 @@ interface SomeInterface {
         SomeException::class,
     )
     fun someQuery(id: SomeId): SomeClass
+
+    fun optMethod(optId: SomeId?): SomeClass?
 }

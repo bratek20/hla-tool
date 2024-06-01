@@ -57,3 +57,4 @@ Interfaces
         someQuery(id: SomeId): SomeClass
             throws
                 SomeException
+        optMethod(optId: SomeId?): SomeClass?
