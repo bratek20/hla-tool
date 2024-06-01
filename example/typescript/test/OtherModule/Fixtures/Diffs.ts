@@ -14,14 +14,14 @@ namespace OtherModule {
         const result: string[] = []
 
         if (expected.id !== undefined) {
-            result.push(diffOtherId(given.id, expected.id, `${path}id.`))
+            if (diffOtherId(given.getId(), expected.id) != "") { result.push(diffOtherId(given.getId(), expected.id, `${path}id.`)) }
         }
 
         if (expected.name !== undefined) {
             if (given.name != expected.name) { result.push(`${path}name ${given.name} != ${expected.name}`) }
         }
 
-        return result.filter(x => x.length > 0).join("\n")
+        return result.join("\n")
     }
 
     export interface ExpectedOtherClass {
@@ -32,13 +32,13 @@ namespace OtherModule {
         const result: string[] = []
 
         if (expected.id !== undefined) {
-            result.push(diffOtherId(given.id, expected.id, `${path}id.`))
+            if (diffOtherId(given.id, expected.id) != "") { result.push(diffOtherId(given.id, expected.id, `${path}id.`)) }
         }
 
         if (expected.amount !== undefined) {
             if (given.amount != expected.amount) { result.push(`${path}amount ${given.amount} != ${expected.amount}`) }
         }
 
-        return result.filter(x => x.length > 0).join("\n")
+        return result.join("\n")
     }
 }

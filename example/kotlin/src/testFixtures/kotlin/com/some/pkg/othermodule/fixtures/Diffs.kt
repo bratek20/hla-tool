@@ -22,7 +22,7 @@ fun diffOtherProperty(given: OtherProperty, expectedInit: ExpectedOtherProperty.
     }
 
     expected.name?.let {
-        if (given.name != it) { result.add("${path}name ${given.name} != $it") }
+        if (given.name != it) { result.add("${path}name ${given.name} != ${it}") }
     }
 
     return result.joinToString("\n")
@@ -41,7 +41,7 @@ fun diffOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Uni
     }
 
     expected.amount?.let {
-        if (given.amount != it) { result.add("${path}amount ${given.amount} != $it") }
+        if (given.amount != it) { result.add("${path}amount ${given.amount} != ${it}") }
     }
 
     return result.joinToString("\n")

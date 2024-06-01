@@ -1,8 +1,8 @@
 namespace ${moduleName}.Assert {
 #foreach($a in $simpleAsserts)
     export function ${a.funName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}) {
-        val diff = ${a.diffFunName()}(given, expected)
-        assertThat(diff).withFailMessage(diff).isEqualTo("")
+        const diff = ${a.diffFunName()}(given, expected)
+        AssertEquals(diff, "", diff)
     }
     #if($foreach.hasNext || $complexAsserts.size() > 0)
 
@@ -10,8 +10,8 @@ namespace ${moduleName}.Assert {
 #end
 #foreach($a in $complexAsserts)
     export function ${a.funName()}(given: ${a.givenName()}, expected: ${a.expectedName()}) {
-        val diff = ${a.diffFunName()}(given, expectedInit)
-        assertThat(diff).withFailMessage(diff).isEqualTo("")
+        const diff = ${a.diffFunName()}(given, expected)
+        AssertEquals(diff, "", diff)
     }
     #if($foreach.hasNext)
 

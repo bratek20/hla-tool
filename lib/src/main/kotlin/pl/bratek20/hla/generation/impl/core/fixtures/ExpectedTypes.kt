@@ -130,7 +130,8 @@ abstract class StructureExpectedType<T: StructureApiType>(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        return "${diffFunName()}($givenVariable, $expectedVariable, \"$path.\")"
+        val finalPath = languageTypes.wrapWithString("$path.")
+        return "${diffFunName()}($givenVariable, $expectedVariable, $finalPath)"
     }
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String {
