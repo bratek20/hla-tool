@@ -2,34 +2,17 @@
 
 namespace TypesModule.Assert {
     export function date(given: Date, expected: string) {
-        AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(given), expected)
+        const diff = diffDate(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedDateRange {
-        from?: string,
-        to?: string,
-    }
     export function dateRange(given: DateRange, expected: ExpectedDateRange) {
-        if (expected.from !== undefined) {
-            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(TypesModule.CustomTypesMapper.dateRangeGetFrom(given)), expected.from)
-        }
-
-        if (expected.to !== undefined) {
-            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(TypesModule.CustomTypesMapper.dateRangeGetTo(given)), expected.to)
-        }
+        const diff = diffDateRange(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedDateRangeProperty {
-        from?: string,
-        to?: string,
-    }
     export function dateRangeProperty(given: DateRangeProperty, expected: ExpectedDateRangeProperty) {
-        if (expected.from !== undefined) {
-            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(given.getFrom()), expected.from)
-        }
-
-        if (expected.to !== undefined) {
-            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(given.getTo()), expected.to)
-        }
+        const diff = diffDateRangeProperty(given, expected)
+        AssertEquals(diff, "", diff)
     }
 }

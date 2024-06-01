@@ -2,169 +2,47 @@
 
 namespace SomeModule.Assert {
     export function someId(given: SomeId, expected: string) {
-        AssertEquals(given.value, expected)
+        const diff = diffSomeId(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedDateRangeWrapper {
-        range?: TypesModule.Assert.ExpectedDateRange,
-    }
     export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
-        if (expected.range !== undefined) {
-            TypesModule.Assert.dateRange(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range)
-        }
+        const diff = diffDateRangeWrapper(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedSomeProperty {
-        other?: OtherModule.Assert.ExpectedOtherProperty,
-    }
     export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
-        if (expected.other !== undefined) {
-            OtherModule.Assert.otherProperty(given.other, expected.other)
-        }
+        const diff = diffSomeProperty(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedSomeClass {
-        id?: string,
-        amount?: number,
-    }
     export function someClass(given: SomeClass, expected: ExpectedSomeClass) {
-        if (expected.id !== undefined) {
-            AssertEquals(given.id.value, expected.id)
-        }
-
-        if (expected.amount !== undefined) {
-            AssertEquals(given.amount, expected.amount)
-        }
+        const diff = diffSomeClass(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedSomeClass2 {
-        id?: string,
-        names?: string[],
-        ids?: string[],
-        enabled?: boolean,
-    }
     export function someClass2(given: SomeClass2, expected: ExpectedSomeClass2) {
-        if (expected.id !== undefined) {
-            AssertEquals(given.id.value, expected.id)
-        }
-
-        if (expected.names !== undefined) {
-            AssertEquals(given.names.length, expected.names.length)
-            given.names.forEach((entry, idx) => AssertEquals(entry, expected.names[idx]))
-        }
-
-        if (expected.ids !== undefined) {
-            AssertEquals(given.ids.length, expected.ids.length)
-            given.ids.forEach((entry, idx) => AssertEquals(entry.value, expected.ids[idx]))
-        }
-
-        if (expected.enabled !== undefined) {
-            AssertEquals(given.enabled, expected.enabled)
-        }
+        const diff = diffSomeClass2(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedSomeClass3 {
-        class2Object?: ExpectedSomeClass2,
-        someEnum?: SomeEnum,
-        class2List?: ExpectedSomeClass2[],
-    }
     export function someClass3(given: SomeClass3, expected: ExpectedSomeClass3) {
-        if (expected.class2Object !== undefined) {
-            someClass2(given.class2Object, expected.class2Object)
-        }
-
-        if (expected.someEnum !== undefined) {
-            AssertEquals(given.someEnum, expected.someEnum)
-        }
-
-        if (expected.class2List !== undefined) {
-            AssertEquals(given.class2List.length, expected.class2List.length)
-            given.class2List.forEach((entry, idx) => someClass2(entry, expected.class2List[idx]))
-        }
+        const diff = diffSomeClass3(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedSomeClass4 {
-        otherId?: number,
-        otherClass?: OtherModule.Assert.ExpectedOtherClass,
-        otherIdList?: number[],
-        otherClassList?: OtherModule.Assert.ExpectedOtherClass[],
-    }
     export function someClass4(given: SomeClass4, expected: ExpectedSomeClass4) {
-        if (expected.otherId !== undefined) {
-            AssertEquals(given.otherId.value, expected.otherId)
-        }
-
-        if (expected.otherClass !== undefined) {
-            OtherModule.Assert.otherClass(given.otherClass, expected.otherClass)
-        }
-
-        if (expected.otherIdList !== undefined) {
-            AssertEquals(given.otherIdList.length, expected.otherIdList.length)
-            given.otherIdList.forEach((entry, idx) => AssertEquals(entry.value, expected.otherIdList[idx]))
-        }
-
-        if (expected.otherClassList !== undefined) {
-            AssertEquals(given.otherClassList.length, expected.otherClassList.length)
-            given.otherClassList.forEach((entry, idx) => OtherModule.Assert.otherClass(entry, expected.otherClassList[idx]))
-        }
+        const diff = diffSomeClass4(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedSomeClass5 {
-        date?: string,
-        dateRange?: TypesModule.Assert.ExpectedDateRange,
-        dateRangeWrapper?: ExpectedDateRangeWrapper,
-        someProperty?: ExpectedSomeProperty,
-        otherProperty?: OtherModule.Assert.ExpectedOtherProperty,
-    }
     export function someClass5(given: SomeClass5, expected: ExpectedSomeClass5) {
-        if (expected.date !== undefined) {
-            AssertEquals(TypesModule.CustomTypesMapper.dateGetValue(given.date), expected.date)
-        }
-
-        if (expected.dateRange !== undefined) {
-            TypesModule.Assert.dateRange(given.dateRange, expected.dateRange)
-        }
-
-        if (expected.dateRangeWrapper !== undefined) {
-            dateRangeWrapper(given.dateRangeWrapper, expected.dateRangeWrapper)
-        }
-
-        if (expected.someProperty !== undefined) {
-            someProperty(given.someProperty, expected.someProperty)
-        }
-
-        if (expected.otherProperty !== undefined) {
-            OtherModule.Assert.otherProperty(given.otherProperty, expected.otherProperty)
-        }
+        const diff = diffSomeClass5(given, expected)
+        AssertEquals(diff, "", diff)
     }
 
-    export interface ExpectedSomeClass6 {
-        someClassOptEmpty?: boolean,
-        someClassOpt?: ExpectedSomeClass,
-        optStringEmpty?: boolean,
-        optString?: string,
-        sameClassList?: ExpectedSomeClass6[],
-    }
     export function someClass6(given: SomeClass6, expected: ExpectedSomeClass6) {
-        if (expected.someClassOptEmpty !== undefined) {
-            AssertEquals(given.someClassOpt.isEmpty(), expected.someClassOptEmpty)
-        }
-
-        if (expected.someClassOpt !== undefined) {
-            someClass(given.someClassOpt.get(), expected.someClassOpt)
-        }
-
-        if (expected.optStringEmpty !== undefined) {
-            AssertEquals(given.optString.isEmpty(), expected.optStringEmpty)
-        }
-
-        if (expected.optString !== undefined) {
-            AssertEquals(given.optString.get(), expected.optString)
-        }
-
-        if (expected.sameClassList !== undefined) {
-            AssertEquals(given.sameClassList.length, expected.sameClassList.length)
-            given.sameClassList.forEach((entry, idx) => someClass6(entry, expected.sameClassList[idx]))
-        }
+        const diff = diffSomeClass6(given, expected)
+        AssertEquals(diff, "", diff)
     }
 }
