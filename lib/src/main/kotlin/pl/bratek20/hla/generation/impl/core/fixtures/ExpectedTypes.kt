@@ -238,6 +238,26 @@ class ListExpectedType(
         |$indention$entriesAssertion
         """.trimMargin()
     }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return "TODO";
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        val entriesAssertion = languageTypes.listIndexedIteration(
+            givenVariable,
+            "idx",
+            "entry",
+            wrappedType.assertion("entry", "$expectedVariable[idx]")
+        )
+
+        val indention = " ".repeat(fixture.indentionForAssertListElements())
+
+        return """
+        |${languageTypes.assertListLength(givenVariable, expectedVariable)}
+        |$indention$entriesAssertion
+        """.trimMargin()
+    }
 }
 
 class EnumExpectedType(
