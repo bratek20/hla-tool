@@ -9,6 +9,9 @@ interface LanguageTypes {
     fun wrapWithList(typeName: String): String
     fun defaultValueForList(): String
     fun mapListElements(listName: String, elementName: String, mapping: String): String
+    fun addListElement(listName: String, elementName: String): String
+
+    fun wrapWithString(value: String): String
 
     fun defaultValueForDefOptional(): String
 

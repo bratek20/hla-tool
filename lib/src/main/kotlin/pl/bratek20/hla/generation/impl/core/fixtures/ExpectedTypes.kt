@@ -4,6 +4,7 @@ import pl.bratek20.hla.definitions.api.BaseType
 import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
+import kotlin.math.exp
 
 abstract class ExpectedType<T: ApiType>(
     val api: T
@@ -19,8 +20,12 @@ abstract class ExpectedType<T: ApiType>(
         return languageTypes.assertEquals(givenVariable, expectedVariable)
     }
 
-    open fun diff(givenVariable: String, expectedVariable: String): String {
-        return "result.add(diffOtherId(given.getId(), it, \"\${path}id.\"))"
+    open fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        return languageTypes.wrapWithString("$path \${$givenVariable} != \${$expectedVariable}")
+    }
+
+    open fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return "$givenVariable != $expectedVariable"
     }
 }
 
@@ -80,10 +85,8 @@ class DefaultExpectedTypeField(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
-        if (type is StructureExpectedType<*>) {
-            return "result.add(${(type as StructureExpectedType<*>).diffFunName()}(${api.access(givenVariable)}, $expectedVariable, \"\${path}${name()}.\"))"
-        }
-        return "if (given.${name()} != it) { result.add(\"\${path}${name()} \${given.${name()}} != \$it\") }"
+        val x = type.diff(api.access(givenVariable), expectedVariable, "\${path}${name()}")
+        return "if (${type.notEquals(api.access(givenVariable), expectedVariable)}) { ${type.languageTypes.addListElement("result", x)} }"
     }
 }
 
@@ -126,8 +129,12 @@ abstract class StructureExpectedType<T: StructureApiType>(
         return fixture.assertFunName(api.name())
     }
 
-    override fun diff(givenVariable: String, expectedVariable: String): String {
-        return "result.add(${diffFunName()}(given.getId(), it, \"\${path}id.\"))"
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        return "${diffFunName()}($givenVariable, $expectedVariable, \"$path.\")"
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return "${diffFunName()}($givenVariable, $expectedVariable) != \"\""
     }
 }
 

@@ -36,7 +36,7 @@ fun ${a.diffFunName()}(given: ${a.givenName()}, expectedInit: ${a.expectedName()
         #end
     #end
 
-    return result.filter { it -> it.isNotEmpty() }.joinToString("\n")
+    return result.joinToString("\n")
 }#if($foreach.hasNext)
 
 #end#end
