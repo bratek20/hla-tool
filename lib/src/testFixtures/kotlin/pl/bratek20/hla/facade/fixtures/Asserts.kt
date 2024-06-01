@@ -10,89 +10,27 @@ import pl.bratek20.hla.directory.fixtures.*
 import pl.bratek20.hla.facade.api.*
 
 fun assertModuleName(given: ModuleName, expected: String) {
-    assertThat(given.value).isEqualTo(expected)
+    val diff = diffModuleName(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
 
 fun assertProfileName(given: ProfileName, expected: String) {
-    assertThat(given.value).isEqualTo(expected)
+    val diff = diffProfileName(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedHlaProfile(
-    var name: String? = null,
-    var language: ModuleLanguage? = null,
-    var projectPath: String? = null,
-    var mainPath: String? = null,
-    var fixturesPath: String? = null,
-    var onlyParts: List<String>? = null,
-    var generateWeb: Boolean? = null,
-)
 fun assertHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit) {
-    val expected = ExpectedHlaProfile().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.getName().value).isEqualTo(it)
-    }
-
-    expected.language?.let {
-        assertThat(given.language).isEqualTo(it)
-    }
-
-    expected.projectPath?.let {
-        assertThat(pathGetValue(given.getProjectPath())).isEqualTo(it)
-    }
-
-    expected.mainPath?.let {
-        assertThat(pathGetValue(given.getMainPath())).isEqualTo(it)
-    }
-
-    expected.fixturesPath?.let {
-        assertThat(pathGetValue(given.getFixturesPath())).isEqualTo(it)
-    }
-
-    expected.onlyParts?.let {
-        assertThat(given.onlyParts).hasSize(it.size)
-        given.onlyParts.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
-    }
-
-    expected.generateWeb?.let {
-        assertThat(given.generateWeb).isEqualTo(it)
-    }
+    val diff = diffHlaProfile(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedModuleOperationArgs(
-    var hlaFolderPath: String? = null,
-    var profileName: String? = null,
-    var moduleName: String? = null,
-)
 fun assertModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedModuleOperationArgs.() -> Unit) {
-    val expected = ExpectedModuleOperationArgs().apply(expectedInit)
-
-    expected.hlaFolderPath?.let {
-        assertThat(pathGetValue(given.hlaFolderPath)).isEqualTo(it)
-    }
-
-    expected.profileName?.let {
-        assertThat(given.profileName.value).isEqualTo(it)
-    }
-
-    expected.moduleName?.let {
-        assertThat(given.moduleName.value).isEqualTo(it)
-    }
+    val diff = diffModuleOperationArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedAllModulesOperationArgs(
-    var hlaFolderPath: String? = null,
-    var profileName: String? = null,
-)
 fun assertAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: ExpectedAllModulesOperationArgs.() -> Unit) {
-    val expected = ExpectedAllModulesOperationArgs().apply(expectedInit)
-
-    expected.hlaFolderPath?.let {
-        assertThat(pathGetValue(given.hlaFolderPath)).isEqualTo(it)
-    }
-
-    expected.profileName?.let {
-        assertThat(given.profileName.value).isEqualTo(it)
-    }
+    val diff = diffAllModulesOperationArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

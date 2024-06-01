@@ -9,305 +9,67 @@ import pl.bratek20.hla.facade.fixtures.*
 
 import pl.bratek20.hla.definitions.api.*
 
-data class ExpectedKeyDefinition(
-    var name: String? = null,
-    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
-)
 fun assertKeyDefinition(given: KeyDefinition, expectedInit: ExpectedKeyDefinition.() -> Unit) {
-    val expected = ExpectedKeyDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.type?.let {
-        assertTypeDefinition(given.type, it)
-    }
+    val diff = diffKeyDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedEnumDefinition(
-    var name: String? = null,
-    var values: List<String>? = null,
-)
 fun assertEnumDefinition(given: EnumDefinition, expectedInit: ExpectedEnumDefinition.() -> Unit) {
-    val expected = ExpectedEnumDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.values?.let {
-        assertThat(given.values).hasSize(it.size)
-        given.values.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
-    }
+    val diff = diffEnumDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedImplSubmoduleDefinition(
-    var data: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
-)
 fun assertImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: ExpectedImplSubmoduleDefinition.() -> Unit) {
-    val expected = ExpectedImplSubmoduleDefinition().apply(expectedInit)
-
-    expected.data?.let {
-        assertThat(given.data).hasSize(it.size)
-        given.data.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
-    }
-
-    expected.dataKeys?.let {
-        assertThat(given.dataKeys).hasSize(it.size)
-        given.dataKeys.forEachIndexed { idx, entry -> assertKeyDefinition(entry, it[idx]) }
-    }
+    val diff = diffImplSubmoduleDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedModuleDefinition(
-    var name: String? = null,
-    var namedTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
-    var valueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
-    var properties: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var propertyKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
-    var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
-    var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
-    var complexCustomTypes: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var data: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
-    var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
-)
 fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit) {
-    val expected = ExpectedModuleDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name.value).isEqualTo(it)
-    }
-
-    expected.namedTypes?.let {
-        assertThat(given.namedTypes).hasSize(it.size)
-        given.namedTypes.forEachIndexed { idx, entry -> assertSimpleStructureDefinition(entry, it[idx]) }
-    }
-
-    expected.valueObjects?.let {
-        assertThat(given.valueObjects).hasSize(it.size)
-        given.valueObjects.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
-    }
-
-    expected.interfaces?.let {
-        assertThat(given.interfaces).hasSize(it.size)
-        given.interfaces.forEachIndexed { idx, entry -> assertInterfaceDefinition(entry, it[idx]) }
-    }
-
-    expected.properties?.let {
-        assertThat(given.properties).hasSize(it.size)
-        given.properties.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
-    }
-
-    expected.propertyKeys?.let {
-        assertThat(given.propertyKeys).hasSize(it.size)
-        given.propertyKeys.forEachIndexed { idx, entry -> assertKeyDefinition(entry, it[idx]) }
-    }
-
-    expected.enums?.let {
-        assertThat(given.enums).hasSize(it.size)
-        given.enums.forEachIndexed { idx, entry -> assertEnumDefinition(entry, it[idx]) }
-    }
-
-    expected.simpleCustomTypes?.let {
-        assertThat(given.simpleCustomTypes).hasSize(it.size)
-        given.simpleCustomTypes.forEachIndexed { idx, entry -> assertSimpleStructureDefinition(entry, it[idx]) }
-    }
-
-    expected.complexCustomTypes?.let {
-        assertThat(given.complexCustomTypes).hasSize(it.size)
-        given.complexCustomTypes.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
-    }
-
-    expected.data?.let {
-        assertThat(given.data).hasSize(it.size)
-        given.data.forEachIndexed { idx, entry -> assertComplexStructureDefinition(entry, it[idx]) }
-    }
-
-    expected.dataKeys?.let {
-        assertThat(given.dataKeys).hasSize(it.size)
-        given.dataKeys.forEachIndexed { idx, entry -> assertKeyDefinition(entry, it[idx]) }
-    }
-
-    expected.implSubmodule?.let {
-        assertImplSubmoduleDefinition(given.implSubmodule, it)
-    }
+    val diff = diffModuleDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedTypeDefinition(
-    var name: String? = null,
-    var wrappers: List<TypeWrapper>? = null,
-)
 fun assertTypeDefinition(given: TypeDefinition, expectedInit: ExpectedTypeDefinition.() -> Unit) {
-    val expected = ExpectedTypeDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.wrappers?.let {
-        assertThat(given.wrappers).hasSize(it.size)
-        given.wrappers.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
-    }
+    val diff = diffTypeDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedFieldDefinition(
-    var name: String? = null,
-    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
-    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
-    var defaultValueEmpty: Boolean? = null,
-    var defaultValue: String? = null,
-)
 fun assertFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDefinition.() -> Unit) {
-    val expected = ExpectedFieldDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.type?.let {
-        assertTypeDefinition(given.type, it)
-    }
-
-    expected.attributes?.let {
-        assertThat(given.attributes).hasSize(it.size)
-        given.attributes.forEachIndexed { idx, entry -> assertAttribute(entry, it[idx]) }
-    }
-
-    expected.defaultValueEmpty?.let {
-        assertThat(given.defaultValue == null).isEqualTo(it)
-    }
-
-    expected.defaultValue?.let {
-        assertThat(given.defaultValue!!).isEqualTo(it)
-    }
+    val diff = diffFieldDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedAttribute(
-    var name: String? = null,
-    var value: String? = null,
-)
 fun assertAttribute(given: Attribute, expectedInit: ExpectedAttribute.() -> Unit) {
-    val expected = ExpectedAttribute().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.value?.let {
-        assertThat(given.value).isEqualTo(it)
-    }
+    val diff = diffAttribute(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSimpleStructureDefinition(
-    var name: String? = null,
-    var typeName: String? = null,
-    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
-)
 fun assertSimpleStructureDefinition(given: SimpleStructureDefinition, expectedInit: ExpectedSimpleStructureDefinition.() -> Unit) {
-    val expected = ExpectedSimpleStructureDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.typeName?.let {
-        assertThat(given.typeName).isEqualTo(it)
-    }
-
-    expected.attributes?.let {
-        assertThat(given.attributes).hasSize(it.size)
-        given.attributes.forEachIndexed { idx, entry -> assertAttribute(entry, it[idx]) }
-    }
+    val diff = diffSimpleStructureDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedComplexStructureDefinition(
-    var name: String? = null,
-    var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
-)
 fun assertComplexStructureDefinition(given: ComplexStructureDefinition, expectedInit: ExpectedComplexStructureDefinition.() -> Unit) {
-    val expected = ExpectedComplexStructureDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.fields?.let {
-        assertThat(given.fields).hasSize(it.size)
-        given.fields.forEachIndexed { idx, entry -> assertFieldDefinition(entry, it[idx]) }
-    }
+    val diff = diffComplexStructureDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedInterfaceDefinition(
-    var name: String? = null,
-    var methods: List<(ExpectedMethodDefinition.() -> Unit)>? = null,
-)
 fun assertInterfaceDefinition(given: InterfaceDefinition, expectedInit: ExpectedInterfaceDefinition.() -> Unit) {
-    val expected = ExpectedInterfaceDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.methods?.let {
-        assertThat(given.methods).hasSize(it.size)
-        given.methods.forEachIndexed { idx, entry -> assertMethodDefinition(entry, it[idx]) }
-    }
+    val diff = diffInterfaceDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedArgumentDefinition(
-    var name: String? = null,
-    var type: (ExpectedTypeDefinition.() -> Unit)? = null,
-)
 fun assertArgumentDefinition(given: ArgumentDefinition, expectedInit: ExpectedArgumentDefinition.() -> Unit) {
-    val expected = ExpectedArgumentDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.type?.let {
-        assertTypeDefinition(given.type, it)
-    }
+    val diff = diffArgumentDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedExceptionDefinition(
-    var name: String? = null,
-)
 fun assertExceptionDefinition(given: ExceptionDefinition, expectedInit: ExpectedExceptionDefinition.() -> Unit) {
-    val expected = ExpectedExceptionDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
+    val diff = diffExceptionDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedMethodDefinition(
-    var name: String? = null,
-    var returnType: (ExpectedTypeDefinition.() -> Unit)? = null,
-    var args: List<(ExpectedArgumentDefinition.() -> Unit)>? = null,
-    var throws: List<(ExpectedExceptionDefinition.() -> Unit)>? = null,
-)
 fun assertMethodDefinition(given: MethodDefinition, expectedInit: ExpectedMethodDefinition.() -> Unit) {
-    val expected = ExpectedMethodDefinition().apply(expectedInit)
-
-    expected.name?.let {
-        assertThat(given.name).isEqualTo(it)
-    }
-
-    expected.returnType?.let {
-        assertTypeDefinition(given.returnType, it)
-    }
-
-    expected.args?.let {
-        assertThat(given.args).hasSize(it.size)
-        given.args.forEachIndexed { idx, entry -> assertArgumentDefinition(entry, it[idx]) }
-    }
-
-    expected.throws?.let {
-        assertThat(given.throws).hasSize(it.size)
-        given.throws.forEachIndexed { idx, entry -> assertExceptionDefinition(entry, it[idx]) }
-    }
+    val diff = diffMethodDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
