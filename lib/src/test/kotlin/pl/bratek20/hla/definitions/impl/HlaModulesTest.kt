@@ -37,4 +37,36 @@ class HlaModulesTest {
         assertThat(hlaModules.getCurrentDependencies())
             .containsExactly(ModuleName("A"))
     }
+
+    @Test
+    fun shouldCalculateDependenciesIncludingInterfaces() {
+        // given
+        val modules = listOf(
+            moduleDefinition {
+                name = "A"
+                namedTypes =  listOf {
+                    name = "AClass"
+                }
+            },
+            moduleDefinition {
+                name = "B"
+                interfaces = listOf {
+                    methods = listOf {
+                        args = listOf {
+                            type = {
+                                name = "AClass"
+                            }
+                        }
+                    }
+                }
+            }
+        )
+
+        // when
+        val hlaModules = HlaModules(ModuleName("B"), modules)
+
+        // then
+        assertThat(hlaModules.getCurrentDependencies())
+            .containsExactly(ModuleName("A"))
+    }
 }

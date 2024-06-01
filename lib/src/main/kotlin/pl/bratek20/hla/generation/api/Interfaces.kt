@@ -2,6 +2,10 @@
 
 package pl.bratek20.hla.generation.api
 
+import pl.bratek20.hla.definitions.api.*
+import pl.bratek20.hla.directory.api.*
+import pl.bratek20.hla.facade.api.*
+
 interface ModuleGenerator {
     fun generate(args: GenerateArgs): GenerateResult
 }

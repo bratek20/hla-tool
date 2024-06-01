@@ -82,7 +82,8 @@ class HlaModules(
         val typeNames = allComplexStructureDefinitions(current)
             .map { it.fields }
             .flatten()
-            .map { it.type.name }
+            .map { it.type.name } +
+            interfacesTypeNames(current)
 
         return modules
             .filter { it.name != currentName }
@@ -111,6 +112,16 @@ class HlaModules(
                 module.simpleCustomTypes.map { it.name } +
                 module.complexCustomTypes.map { it.name } +
                 module.properties.map { it.name }
+    }
+
+    private fun interfacesTypeNames(module: ModuleDefinition): List<String> {
+        return module.interfaces.flatMap {
+            it.methods.flatMap {
+                method -> method.args.map {
+                    arg -> arg.type.name
+                }
+            }
+        }
     }
 
     private fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {

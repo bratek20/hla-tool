@@ -2,6 +2,8 @@
 
 package pl.bratek20.hla.facade.api
 
+import pl.bratek20.hla.directory.api.*
+
 interface HlaFacade {
     fun startModule(args: ModuleOperationArgs): Unit
 
