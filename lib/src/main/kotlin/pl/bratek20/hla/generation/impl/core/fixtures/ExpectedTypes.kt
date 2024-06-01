@@ -69,11 +69,11 @@ interface ExpectedTypeField{
     fun diff(givenVariable: String, expectedVariable: String): String
 }
 
-class DefaultExpectedTypeField(
-    private val api: ApiTypeField,
+open class DefaultExpectedTypeField(
+    protected val api: ApiTypeField,
     private val factory: ExpectedTypeFactory
 ): ExpectedTypeField {
-    private val type by lazy {
+    protected val type by lazy {
         factory.create(api.type)
     }
 
@@ -116,6 +116,15 @@ class OptionalEmptyExpectedTypeField(
         val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${($givenVariable.${mainField.name} == null) != $expectedVariable} != \${$expectedVariable}")
         val body = languageTypes.addListElement("result", element)
         return "if (($givenVariable.${mainField.name} == null) != $expectedVariable) { $body }"
+    }
+}
+
+class ListExpectedTypeField(
+    api: ApiTypeField,
+    factory: ExpectedTypeFactory,
+): DefaultExpectedTypeField(api, factory) {
+    override fun diff(givenVariable: String, expectedVariable: String): String {
+        return type.diff(api.access(givenVariable), expectedVariable, "\${path}${name()}")
     }
 }
 
@@ -244,17 +253,23 @@ class ListExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        val sizeElement = "$path.size ${givenVariable}.size != ${expectedVariable}.size"
+        val sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
+        val sizePart = "if (${givenVariable}.size != ${expectedVariable}.size) { $sizeBody }"
+
+        val element = wrappedType.diff("entry", "$expectedVariable[idx]", "$path[idx].")
+        val body = languageTypes.addListElement("result", element)
         val entriesAssertion = languageTypes.listIndexedIteration(
             givenVariable,
             "idx",
             "entry",
-            wrappedType.diff("entry", "$expectedVariable[idx]", "$path[idx].")
+            body
         )
 
         val indention = " ".repeat(fixture.indentionForAssertListElements())
 
         return """
-        |${languageTypes.assertListLength(givenVariable, expectedVariable)}
+        |${sizePart}
         |$indention$entriesAssertion
         """.trimMargin()
     }
@@ -294,6 +309,11 @@ class ExpectedTypeFactory(
                 listOf(
                     OptionalEmptyExpectedTypeField(it, languageTypes),
                     DefaultExpectedTypeField(it, this)
+                )
+            }
+            if (it.type is ListApiType) {
+                listOf(
+                    ListExpectedTypeField(it, this)
                 )
             }
             else {

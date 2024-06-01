@@ -76,13 +76,13 @@ fun diffSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Uni
     }
 
     expected.names?.let {
-        if (given.names.size != it.size) { result.add("${path}names size ${given.names.size} != ${it.size}") }
-        given.names.forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}names[$idx] $entry != ${it[idx]}") } }
+        if (given.names.size != it.size) { result.add("${path}names.size given.names.size != it.size") }
+        given.names.forEachIndexed { idx, entry -> result.add("${path}names[idx]. ${entry} != ${it[idx]}") }
     }
 
     expected.ids?.let {
-        if (given.ids.size != it.size) { result.add("${path}ids size ${given.ids.size} != ${it.size}") }
-        given.ids.forEachIndexed { idx, entry -> if (diffSomeId(entry, it[idx]) != "") { result.add(diffSomeId(entry, it[idx], "${path}ids[$idx].")) } }
+        if (given.ids.size != it.size) { result.add("${path}ids.size given.ids.size != it.size") }
+        given.ids.forEachIndexed { idx, entry -> result.add(diffSomeId(entry, it[idx], "${path}ids[idx]..")) }
     }
 
     expected.enabled?.let {
@@ -110,7 +110,8 @@ fun diffSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Uni
     }
 
     expected.class2List?.let {
-        if (given.class2List != it) { result.add("${path}class2List ${given.class2List} != ${it}") }
+        if (given.class2List.size != it.size) { result.add("${path}class2List.size given.class2List.size != it.size") }
+        given.class2List.forEachIndexed { idx, entry -> result.add(diffSomeClass2(entry, it[idx], "${path}class2List[idx]..")) }
     }
 
     return result.joinToString("\n")
@@ -135,11 +136,13 @@ fun diffSomeClass4(given: SomeClass4, expectedInit: ExpectedSomeClass4.() -> Uni
     }
 
     expected.otherIdList?.let {
-        if (given.otherIdList != it) { result.add("${path}otherIdList ${given.otherIdList} != ${it}") }
+        if (given.otherIdList.size != it.size) { result.add("${path}otherIdList.size given.otherIdList.size != it.size") }
+        given.otherIdList.forEachIndexed { idx, entry -> result.add(diffOtherId(entry, it[idx], "${path}otherIdList[idx]..")) }
     }
 
     expected.otherClassList?.let {
-        if (given.otherClassList != it) { result.add("${path}otherClassList ${given.otherClassList} != ${it}") }
+        if (given.otherClassList.size != it.size) { result.add("${path}otherClassList.size given.otherClassList.size != it.size") }
+        given.otherClassList.forEachIndexed { idx, entry -> result.add(diffOtherClass(entry, it[idx], "${path}otherClassList[idx]..")) }
     }
 
     return result.joinToString("\n")
@@ -180,9 +183,7 @@ fun diffSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> Uni
 }
 
 data class ExpectedSomeClass6(
-    var someClassOptEmpty: Boolean? = null,
     var someClassOpt: (ExpectedSomeClass.() -> Unit)? = null,
-    var optStringEmpty: Boolean? = null,
     var optString: String? = null,
     var sameClassList: List<(ExpectedSomeClass6.() -> Unit)>? = null,
 )
@@ -190,16 +191,8 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     val expected = ExpectedSomeClass6().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.someClassOptEmpty?.let {
-        if ((given.someClassOpt == null) != it) { result.add("${path}someClassOpt empty ${(given.someClassOpt == null) != it} != ${it}") }
-    }
-
     expected.someClassOpt?.let {
         if (diffSomeClass(given.someClassOpt!!, it) != "") { result.add(diffSomeClass(given.someClassOpt!!, it, "${path}someClassOpt.")) }
-    }
-
-    expected.optStringEmpty?.let {
-        if ((given.optString == null) != it) { result.add("${path}optString empty ${(given.optString == null) != it} != ${it}") }
     }
 
     expected.optString?.let {
@@ -207,7 +200,8 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.sameClassList?.let {
-        if (given.sameClassList != it) { result.add("${path}sameClassList ${given.sameClassList} != ${it}") }
+        if (given.sameClassList.size != it.size) { result.add("${path}sameClassList.size given.sameClassList.size != it.size") }
+        given.sameClassList.forEachIndexed { idx, entry -> result.add(diffSomeClass6(entry, it[idx], "${path}sameClassList[idx]..")) }
     }
 
     return result.joinToString("\n")
