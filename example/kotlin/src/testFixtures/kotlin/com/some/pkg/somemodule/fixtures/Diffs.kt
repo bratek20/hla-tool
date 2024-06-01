@@ -77,7 +77,7 @@ fun diffSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Uni
 
     expected.names?.let {
         if (given.names.size != it.size) { result.add("${path}names size ${given.names.size} != ${it.size}") }
-        given.names.forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}names[${idx}]  ${entry} != ${it[idx]}") } }
+        given.names.forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}names[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     expected.ids?.let {
