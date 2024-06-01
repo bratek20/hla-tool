@@ -1,4 +1,9 @@
 package ${packageName}.api
+#if($imports.size() > 0)
+
+#foreach($import in $imports)
+import ${import}.api.*
+#end#end
 
 #foreach($interface in $interfaces)
 interface $interface.name {
