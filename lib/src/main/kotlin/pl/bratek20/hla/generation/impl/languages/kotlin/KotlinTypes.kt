@@ -40,6 +40,10 @@ class KotlinTypes: LanguageTypes {
         return "$listName.add($elementName)"
     }
 
+    override fun listSize(listName: String): String {
+        return "$listName.size"
+    }
+
     override fun wrapWithString(value: String): String {
         return "\"$value\""
     }
@@ -70,10 +74,6 @@ class KotlinTypes: LanguageTypes {
 
     override fun assertEquals(given: String, expected: String): String {
         return "assertThat($given).isEqualTo($expected)"
-    }
-
-    override fun assertListLength(given: String, expected: String): String {
-        return "assertThat($given).hasSize($expected.size)"
     }
 
     override fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String {

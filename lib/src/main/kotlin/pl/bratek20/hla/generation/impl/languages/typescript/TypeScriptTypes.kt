@@ -42,6 +42,10 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "$listName.push($elementName)"
     }
 
+    override fun listSize(listName: String): String {
+        return "$listName.length"
+    }
+
     override fun wrapWithString(value: String): String {
         return "`$value`"
     }
@@ -74,12 +78,8 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "AssertEquals($given, $expected)"
     }
 
-    override fun assertListLength(given: String, expected: String): String {
-        return assertEquals("$given.length", "$expected.length")
-    }
-
     override fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String {
-        return "$listName.forEach(($entry, $idx) => $body)"
+        return "$listName.forEach(($entry, $idx) => { $body })"
     }
 
     override fun enumConstructor(enumName: String, variable: String): String {

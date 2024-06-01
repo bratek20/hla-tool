@@ -64,13 +64,13 @@ namespace SomeModule {
         }
 
         if (expected.names !== undefined) {
-            if (given.names.size != expected.names.size) { result.push(`${path}names size ${given.names.size} != ${expected.names.size}`) }
-            given.names.forEach((entry, idx) => if (entry != expected.names[idx]) { result.push(`${path}names[${idx}] ${entry} != ${expected.names[idx]}`) })
+            if (given.names.length != expected.names.length) { result.push(`${path}names size ${given.names.length} != ${expected.names.length}`) }
+            given.names.forEach((entry, idx) => { if (entry != expected.names[idx]) { result.push(`${path}names[${idx}] ${entry} != ${expected.names[idx]}`) } })
         }
 
         if (expected.ids !== undefined) {
-            if (given.ids.size != expected.ids.size) { result.push(`${path}ids size ${given.ids.size} != ${expected.ids.size}`) }
-            given.ids.forEach((entry, idx) => if (diffSomeId(entry, expected.ids[idx]) != "") { result.push(diffSomeId(entry, expected.ids[idx], `${path}ids[${idx}].`)) })
+            if (given.ids.length != expected.ids.length) { result.push(`${path}ids size ${given.ids.length} != ${expected.ids.length}`) }
+            given.ids.forEach((entry, idx) => { if (diffSomeId(entry, expected.ids[idx]) != "") { result.push(diffSomeId(entry, expected.ids[idx], `${path}ids[${idx}].`)) } })
         }
 
         if (expected.enabled !== undefined) {
@@ -97,8 +97,8 @@ namespace SomeModule {
         }
 
         if (expected.class2List !== undefined) {
-            if (given.class2List.size != expected.class2List.size) { result.push(`${path}class2List size ${given.class2List.size} != ${expected.class2List.size}`) }
-            given.class2List.forEach((entry, idx) => if (diffSomeClass2(entry, expected.class2List[idx]) != "") { result.push(diffSomeClass2(entry, expected.class2List[idx], `${path}class2List[${idx}].`)) })
+            if (given.class2List.length != expected.class2List.length) { result.push(`${path}class2List size ${given.class2List.length} != ${expected.class2List.length}`) }
+            given.class2List.forEach((entry, idx) => { if (diffSomeClass2(entry, expected.class2List[idx]) != "") { result.push(diffSomeClass2(entry, expected.class2List[idx], `${path}class2List[${idx}].`)) } })
         }
 
         return result.join("\n")
@@ -122,13 +122,13 @@ namespace SomeModule {
         }
 
         if (expected.otherIdList !== undefined) {
-            if (given.otherIdList.size != expected.otherIdList.size) { result.push(`${path}otherIdList size ${given.otherIdList.size} != ${expected.otherIdList.size}`) }
-            given.otherIdList.forEach((entry, idx) => if (diffOtherId(entry, expected.otherIdList[idx]) != "") { result.push(diffOtherId(entry, expected.otherIdList[idx], `${path}otherIdList[${idx}].`)) })
+            if (given.otherIdList.length != expected.otherIdList.length) { result.push(`${path}otherIdList size ${given.otherIdList.length} != ${expected.otherIdList.length}`) }
+            given.otherIdList.forEach((entry, idx) => { if (diffOtherId(entry, expected.otherIdList[idx]) != "") { result.push(diffOtherId(entry, expected.otherIdList[idx], `${path}otherIdList[${idx}].`)) } })
         }
 
         if (expected.otherClassList !== undefined) {
-            if (given.otherClassList.size != expected.otherClassList.size) { result.push(`${path}otherClassList size ${given.otherClassList.size} != ${expected.otherClassList.size}`) }
-            given.otherClassList.forEach((entry, idx) => if (diffOtherClass(entry, expected.otherClassList[idx]) != "") { result.push(diffOtherClass(entry, expected.otherClassList[idx], `${path}otherClassList[${idx}].`)) })
+            if (given.otherClassList.length != expected.otherClassList.length) { result.push(`${path}otherClassList size ${given.otherClassList.length} != ${expected.otherClassList.length}`) }
+            given.otherClassList.forEach((entry, idx) => { if (diffOtherClass(entry, expected.otherClassList[idx]) != "") { result.push(diffOtherClass(entry, expected.otherClassList[idx], `${path}otherClassList[${idx}].`)) } })
         }
 
         return result.join("\n")
@@ -184,8 +184,8 @@ namespace SomeModule {
         }
 
         if (expected.sameClassList !== undefined) {
-            if (given.sameClassList.size != expected.sameClassList.size) { result.push(`${path}sameClassList size ${given.sameClassList.size} != ${expected.sameClassList.size}`) }
-            given.sameClassList.forEach((entry, idx) => if (diffSomeClass6(entry, expected.sameClassList[idx]) != "") { result.push(diffSomeClass6(entry, expected.sameClassList[idx], `${path}sameClassList[${idx}].`)) })
+            if (given.sameClassList.length != expected.sameClassList.length) { result.push(`${path}sameClassList size ${given.sameClassList.length} != ${expected.sameClassList.length}`) }
+            given.sameClassList.forEach((entry, idx) => { if (diffSomeClass6(entry, expected.sameClassList[idx]) != "") { result.push(diffSomeClass6(entry, expected.sameClassList[idx], `${path}sameClassList[${idx}].`)) } })
         }
 
         return result.join("\n")

@@ -10,6 +10,7 @@ interface LanguageTypes {
     fun defaultValueForList(): String
     fun mapListElements(listName: String, elementName: String, mapping: String): String
     fun addListElement(listName: String, elementName: String): String
+    fun listSize(listName: String): String
 
     fun wrapWithString(value: String): String
 
@@ -23,7 +24,6 @@ interface LanguageTypes {
     fun classConstructorCall(className: String): String
 
     fun assertEquals(given: String, expected: String): String
-    fun assertListLength(given: String, expected: String): String
 
     fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String
 

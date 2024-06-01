@@ -210,9 +210,9 @@ class ListExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        val sizeElement = "$path size \${${givenVariable}.size} != \${${expectedVariable}.size}"
+        val sizeElement = "$path size \${${languageTypes.listSize(givenVariable)}} != \${${languageTypes.listSize(expectedVariable)}}"
         val sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
-        val sizePart = "if (${givenVariable}.size != ${expectedVariable}.size) { $sizeBody }"
+        val sizePart = "if (${languageTypes.listSize(givenVariable)} != ${languageTypes.listSize(expectedVariable)}) { $sizeBody }"
 
         val element = wrappedType.diff("entry", "$expectedVariable[idx]", "$path[\${idx}]")
         val body = languageTypes.addListElement("result", element)
