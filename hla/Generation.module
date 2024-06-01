@@ -1,0 +1,14 @@
+ValueObjects
+    GenerateArgs
+        moduleName: ModuleName
+        modules: ModuleDefinition[]
+        onlyUpdate: bool
+        profile: HlaProfile
+
+    GenerateResult
+        main: Directory
+        fixtures: Directory
+
+Interfaces
+    ModuleGenerator
+        generate(args: GenerateArgs): GenerateResult
