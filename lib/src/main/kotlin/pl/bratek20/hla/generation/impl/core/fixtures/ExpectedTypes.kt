@@ -259,11 +259,12 @@ class ListExpectedType(
 
         val element = wrappedType.diff("entry", "$expectedVariable[idx]", "$path[idx].")
         val body = languageTypes.addListElement("result", element)
+        val full = "if (${wrappedType.notEquals("entry", "$expectedVariable[idx]")}) { $body }"
         val entriesAssertion = languageTypes.listIndexedIteration(
             givenVariable,
             "idx",
             "entry",
-            body
+            full
         )
 
         val indention = " ".repeat(fixture.indentionForAssertListElements())
