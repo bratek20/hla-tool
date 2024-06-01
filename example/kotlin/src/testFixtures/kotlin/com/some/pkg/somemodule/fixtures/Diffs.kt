@@ -110,8 +110,8 @@ fun diffSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Uni
     }
 
     expected.class2List?.let {
-        if (given.class2List.size != it.size) { result.add("${path}class2List.size given.class2List.size != it.size") }
-        given.class2List.forEachIndexed { idx, entry -> if (diffSomeClass2(entry, it[idx]) != "") { result.add(diffSomeClass2(entry, it[idx], "${path}class2List[idx]..")) } }
+        if (given.class2List.size != it.size) { result.add("${path}class2List size ${given.class2List.size} != ${it.size}") }
+        given.class2List.forEachIndexed { idx, entry -> if (diffSomeClass2(entry, it[idx]) != "") { result.add(diffSomeClass2(entry, it[idx], "${path}class2List[${idx}].")) } }
     }
 
     return result.joinToString("\n")
@@ -136,13 +136,13 @@ fun diffSomeClass4(given: SomeClass4, expectedInit: ExpectedSomeClass4.() -> Uni
     }
 
     expected.otherIdList?.let {
-        if (given.otherIdList.size != it.size) { result.add("${path}otherIdList.size given.otherIdList.size != it.size") }
-        given.otherIdList.forEachIndexed { idx, entry -> if (diffOtherId(entry, it[idx]) != "") { result.add(diffOtherId(entry, it[idx], "${path}otherIdList[idx]..")) } }
+        if (given.otherIdList.size != it.size) { result.add("${path}otherIdList size ${given.otherIdList.size} != ${it.size}") }
+        given.otherIdList.forEachIndexed { idx, entry -> if (diffOtherId(entry, it[idx]) != "") { result.add(diffOtherId(entry, it[idx], "${path}otherIdList[${idx}].")) } }
     }
 
     expected.otherClassList?.let {
-        if (given.otherClassList.size != it.size) { result.add("${path}otherClassList.size given.otherClassList.size != it.size") }
-        given.otherClassList.forEachIndexed { idx, entry -> if (diffOtherClass(entry, it[idx]) != "") { result.add(diffOtherClass(entry, it[idx], "${path}otherClassList[idx]..")) } }
+        if (given.otherClassList.size != it.size) { result.add("${path}otherClassList size ${given.otherClassList.size} != ${it.size}") }
+        given.otherClassList.forEachIndexed { idx, entry -> if (diffOtherClass(entry, it[idx]) != "") { result.add(diffOtherClass(entry, it[idx], "${path}otherClassList[${idx}].")) } }
     }
 
     return result.joinToString("\n")
@@ -200,8 +200,8 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.sameClassList?.let {
-        if (given.sameClassList.size != it.size) { result.add("${path}sameClassList.size given.sameClassList.size != it.size") }
-        given.sameClassList.forEachIndexed { idx, entry -> if (diffSomeClass6(entry, it[idx]) != "") { result.add(diffSomeClass6(entry, it[idx], "${path}sameClassList[idx]..")) } }
+        if (given.sameClassList.size != it.size) { result.add("${path}sameClassList size ${given.sameClassList.size} != ${it.size}") }
+        given.sameClassList.forEachIndexed { idx, entry -> if (diffSomeClass6(entry, it[idx]) != "") { result.add(diffSomeClass6(entry, it[idx], "${path}sameClassList[${idx}].")) } }
     }
 
     return result.joinToString("\n")
