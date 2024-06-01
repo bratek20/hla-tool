@@ -119,7 +119,8 @@ class HlaModules(
             it.methods.flatMap {
                 method -> method.args.map {
                     arg -> arg.type.name
-                }
+                } +
+                method.returnType.name
             }
         }
     }

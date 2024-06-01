@@ -50,6 +50,12 @@ class HlaModulesTest {
             },
             moduleDefinition {
                 name = "B"
+                namedTypes =  listOf {
+                    name = "BClass"
+                }
+            },
+            moduleDefinition {
+                name = "C"
                 interfaces = listOf {
                     methods = listOf {
                         args = listOf {
@@ -57,16 +63,19 @@ class HlaModulesTest {
                                 name = "AClass"
                             }
                         }
+                        returnType = {
+                            name = "BClass"
+                        }
                     }
                 }
             }
         )
 
         // when
-        val hlaModules = HlaModules(ModuleName("B"), modules)
+        val hlaModules = HlaModules(ModuleName("C"), modules)
 
         // then
         assertThat(hlaModules.getCurrentDependencies())
-            .containsExactly(ModuleName("A"))
+            .containsExactly(ModuleName("A"), ModuleName("B"))
     }
 }
