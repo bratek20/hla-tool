@@ -18,32 +18,33 @@ class HlaFacadeLogic(
     private val properties: Properties
 ): HlaFacade {
     override fun startModule(args: ModuleOperationArgs): Unit {
-        generateModule(args, false)
+        generateModule(args, false, args.hlaFolderPath)
     }
 
     override fun updateModule(args: ModuleOperationArgs): Unit {
-        generateModule(args, true)
+        generateModule(args, true, args.hlaFolderPath)
     }
 
     override fun updateAllModules(args: AllModulesOperationArgs) {
         val (modules, profile) = prepare(args.hlaFolderPath, args.profileName)
 
         modules.forEach {
-            postPrepareGenerateModule(it.name, modules, profile, true)
+            postPrepareGenerateModule(it.name, modules, profile, true, args.hlaFolderPath)
         }
     }
 
-    private fun generateModule(args: ModuleOperationArgs, onlyUpdate: Boolean) {
+    private fun generateModule(args: ModuleOperationArgs, onlyUpdate: Boolean, hlaFolderPath: Path) {
         val (modules, profile) = prepare(args.hlaFolderPath, args.profileName)
 
-        postPrepareGenerateModule(args.moduleName, modules, profile, onlyUpdate)
+        postPrepareGenerateModule(args.moduleName, modules, profile, onlyUpdate, hlaFolderPath)
     }
 
     private fun postPrepareGenerateModule(
         moduleName: ModuleName,
         modules: List<ModuleDefinition>,
         profile: HlaProfile,
-        onlyUpdate: Boolean
+        onlyUpdate: Boolean,
+        hlaFolderPath: Path
     ) {
         val generateResult = generator.generate(GenerateArgs(
             moduleName = moduleName,
@@ -54,6 +55,7 @@ class HlaFacadeLogic(
 
         writer.write(
             WriteArgs(
+                hlaFolderPath = hlaFolderPath,
                 generateResult = generateResult,
                 profile = profile
             )

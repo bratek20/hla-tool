@@ -14,12 +14,12 @@ class ModuleWriterLogic(
 ): ModuleWriter {
 
     override fun write(args: WriteArgs) {
-        val projectPath = args.profile.getProjectPath()
+        val rootPath = args.profile.getProjectPath()
         val generateResult = args.generateResult
         val profile = args.profile
 
-        val fullMainPath = projectPath.add(profile.getMainPath())
-        val fullFixturesPath = projectPath.add(profile.getFixturesPath())
+        val fullMainPath = rootPath.add(profile.getMainPath())
+        val fullFixturesPath = rootPath.add(profile.getFixturesPath())
 
         logger.info("Writing to: $fullMainPath")
         directories.write(fullMainPath, generateResult.main)
