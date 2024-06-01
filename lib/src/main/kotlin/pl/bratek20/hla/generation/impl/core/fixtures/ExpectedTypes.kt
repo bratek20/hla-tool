@@ -248,7 +248,7 @@ class ListExpectedType(
             givenVariable,
             "idx",
             "entry",
-            wrappedType.assertion("entry", "$expectedVariable[idx]")
+            wrappedType.diff("entry", "$expectedVariable[idx]", "$path[idx].")
         )
 
         val indention = " ".repeat(fixture.indentionForAssertListElements())
