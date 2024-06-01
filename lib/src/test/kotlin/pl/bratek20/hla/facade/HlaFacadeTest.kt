@@ -12,6 +12,7 @@ import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoriesMocks
+import pl.bratek20.hla.directory.fixtures.assertDirectory
 import pl.bratek20.hla.directory.fixtures.assertDirectoryExt
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.*
@@ -241,8 +242,8 @@ class HlaFacadeTest {
             paths.expectedFixturesPath
         )
 
-        assertDirectoryExt(mainDirectory) {
-            hasSingleDirectories = {
+        assertDirectory(mainDirectory) {
+            directories = listOf {
                 name = "api"
                 files = listOf(
                     {
@@ -255,8 +256,8 @@ class HlaFacadeTest {
             }
         }
 
-        assertDirectoryExt(fixturesDirectory) {
-            hasSingleDirectories = {
+        assertDirectory(fixturesDirectory) {
+            directories = listOf {
                 name = "fixtures"
                 files = listOf {
                     name = "Builders.kt"
