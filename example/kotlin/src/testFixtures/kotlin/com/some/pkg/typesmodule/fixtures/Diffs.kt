@@ -5,7 +5,7 @@ package com.some.pkg.typesmodule.fixtures
 import com.some.pkg.typesmodule.api.*
 
 fun diffDate(given: Date, expected: String, path: String = ""): String {
-    if (given.value != expected) { return "${path}value ${given.value} != $expected" }
+    if (dateGetValue(given) != expected) { return "${path}value ${dateGetValue(given)} != ${expected}" }
     return ""
 }
 

@@ -1,7 +1,7 @@
 namespace ${moduleName} {
 #foreach($a in $simpleAsserts)
     export function ${a.diffFunName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}, path: string = ""): string {
-        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        $a.diffBody("given", "expected")
         return ""
     }
     #if($foreach.hasNext || $complexAsserts.size() > 0)

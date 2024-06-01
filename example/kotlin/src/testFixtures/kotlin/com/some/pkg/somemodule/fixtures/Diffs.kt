@@ -189,15 +189,15 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.someClassOptEmpty?.let {
-        TODO
+        if ((given.someClassOpt == null) != it) { result.add("${path}someClassOpt empty ${(given.someClassOpt == null) != it} != ${it}") }
     }
 
     expected.someClassOpt?.let {
-        if (given.someClassOpt != it) { result.add("${path}someClassOpt ${given.someClassOpt} != ${it}") }
+        if (diffSomeClass(given.someClassOpt!!, it) != "") { result.add(diffSomeClass(given.someClassOpt!!, it, "${path}someClassOpt.")) }
     }
 
     expected.optStringEmpty?.let {
-        TODO
+        if ((given.optString == null) != it) { result.add("${path}optString empty ${(given.optString == null) != it} != ${it}") }
     }
 
     expected.optString?.let {

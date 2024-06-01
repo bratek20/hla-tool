@@ -45,6 +45,11 @@ open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
     override fun assertion(givenVariable: String, expectedVariable: String): String {
         return languageTypes.assertEquals(api.unbox(givenVariable), expectedVariable)
     }
+
+    fun diffBody(givenVariable: String, expectedVariable: String): String {
+        val result = languageTypes.wrapWithString("\${path}value \${${api.unbox(givenVariable)}} != \${$expectedVariable}")
+        return "if (${api.unbox(givenVariable)} != expected) { return $result }"
+    }
 }
 
 class NamedExpectedType(

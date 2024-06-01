@@ -10,7 +10,7 @@ import ${packageName}.api.*
 #foreach($a in $simpleAsserts)
 
 fun ${a.diffFunName()}(given: ${a.api.name()}, expected: ${a.api.serializableName()}, path: String = ""): String {
-    if (given.value != expected) { return "${path}value ${given.value} != $expected" }
+    $a.diffBody("given", "expected")
     return ""
 }
 #if($foreach.hasNext)
