@@ -12,184 +12,46 @@ import com.some.pkg.typesmodule.fixtures.*
 import com.some.pkg.somemodule.api.*
 
 fun assertSomeId(given: SomeId, expected: String) {
-    assertThat(given.value).isEqualTo(expected)
+    val diff = diffSomeId(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedDateRangeWrapper(
-    var range: (ExpectedDateRange.() -> Unit)? = null,
-)
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
-    val expected = ExpectedDateRangeWrapper().apply(expectedInit)
-
-    expected.range?.let {
-        assertDateRange(dateRangeWrapperGetRange(given), it)
-    }
+    val diff = diffDateRangeWrapper(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSomeProperty(
-    var other: (ExpectedOtherProperty.() -> Unit)? = null,
-)
 fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
-    val expected = ExpectedSomeProperty().apply(expectedInit)
-
-    expected.other?.let {
-        assertOtherProperty(given.other, it)
-    }
+    val diff = diffSomeProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSomeClass(
-    var id: String? = null,
-    var amount: Int? = null,
-)
 fun assertSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit) {
-    val expected = ExpectedSomeClass().apply(expectedInit)
-
-    expected.id?.let {
-        assertThat(given.id.value).isEqualTo(it)
-    }
-
-    expected.amount?.let {
-        assertThat(given.amount).isEqualTo(it)
-    }
+    val diff = diffSomeClass(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSomeClass2(
-    var id: String? = null,
-    var names: List<String>? = null,
-    var ids: List<String>? = null,
-    var enabled: Boolean? = null,
-)
 fun assertSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Unit) {
-    val expected = ExpectedSomeClass2().apply(expectedInit)
-
-    expected.id?.let {
-        assertThat(given.id.value).isEqualTo(it)
-    }
-
-    expected.names?.let {
-        assertThat(given.names).hasSize(it.size)
-        given.names.forEachIndexed { idx, entry -> assertThat(entry).isEqualTo(it[idx]) }
-    }
-
-    expected.ids?.let {
-        assertThat(given.ids).hasSize(it.size)
-        given.ids.forEachIndexed { idx, entry -> assertThat(entry.value).isEqualTo(it[idx]) }
-    }
-
-    expected.enabled?.let {
-        assertThat(given.enabled).isEqualTo(it)
-    }
+    val diff = diffSomeClass2(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSomeClass3(
-    var class2Object: (ExpectedSomeClass2.() -> Unit)? = null,
-    var someEnum: SomeEnum? = null,
-    var class2List: List<(ExpectedSomeClass2.() -> Unit)>? = null,
-)
 fun assertSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Unit) {
-    val expected = ExpectedSomeClass3().apply(expectedInit)
-
-    expected.class2Object?.let {
-        assertSomeClass2(given.class2Object, it)
-    }
-
-    expected.someEnum?.let {
-        assertThat(given.someEnum).isEqualTo(it)
-    }
-
-    expected.class2List?.let {
-        assertThat(given.class2List).hasSize(it.size)
-        given.class2List.forEachIndexed { idx, entry -> assertSomeClass2(entry, it[idx]) }
-    }
+    val diff = diffSomeClass3(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSomeClass4(
-    var otherId: Int? = null,
-    var otherClass: (ExpectedOtherClass.() -> Unit)? = null,
-    var otherIdList: List<Int>? = null,
-    var otherClassList: List<(ExpectedOtherClass.() -> Unit)>? = null,
-)
 fun assertSomeClass4(given: SomeClass4, expectedInit: ExpectedSomeClass4.() -> Unit) {
-    val expected = ExpectedSomeClass4().apply(expectedInit)
-
-    expected.otherId?.let {
-        assertThat(given.otherId.value).isEqualTo(it)
-    }
-
-    expected.otherClass?.let {
-        assertOtherClass(given.otherClass, it)
-    }
-
-    expected.otherIdList?.let {
-        assertThat(given.otherIdList).hasSize(it.size)
-        given.otherIdList.forEachIndexed { idx, entry -> assertThat(entry.value).isEqualTo(it[idx]) }
-    }
-
-    expected.otherClassList?.let {
-        assertThat(given.otherClassList).hasSize(it.size)
-        given.otherClassList.forEachIndexed { idx, entry -> assertOtherClass(entry, it[idx]) }
-    }
+    val diff = diffSomeClass4(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSomeClass5(
-    var date: String? = null,
-    var dateRange: (ExpectedDateRange.() -> Unit)? = null,
-    var dateRangeWrapper: (ExpectedDateRangeWrapper.() -> Unit)? = null,
-    var someProperty: (ExpectedSomeProperty.() -> Unit)? = null,
-    var otherProperty: (ExpectedOtherProperty.() -> Unit)? = null,
-)
 fun assertSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> Unit) {
-    val expected = ExpectedSomeClass5().apply(expectedInit)
-
-    expected.date?.let {
-        assertThat(dateGetValue(given.date)).isEqualTo(it)
-    }
-
-    expected.dateRange?.let {
-        assertDateRange(given.dateRange, it)
-    }
-
-    expected.dateRangeWrapper?.let {
-        assertDateRangeWrapper(given.dateRangeWrapper, it)
-    }
-
-    expected.someProperty?.let {
-        assertSomeProperty(given.someProperty, it)
-    }
-
-    expected.otherProperty?.let {
-        assertOtherProperty(given.otherProperty, it)
-    }
+    val diff = diffSomeClass5(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedSomeClass6(
-    var someClassOptEmpty: Boolean? = null,
-    var someClassOpt: (ExpectedSomeClass.() -> Unit)? = null,
-    var optStringEmpty: Boolean? = null,
-    var optString: String? = null,
-    var sameClassList: List<(ExpectedSomeClass6.() -> Unit)>? = null,
-)
 fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Unit) {
-    val expected = ExpectedSomeClass6().apply(expectedInit)
-
-    expected.someClassOptEmpty?.let {
-        assertThat(given.someClassOpt == null).isEqualTo(it)
-    }
-
-    expected.someClassOpt?.let {
-        assertSomeClass(given.someClassOpt!!, it)
-    }
-
-    expected.optStringEmpty?.let {
-        assertThat(given.optString == null).isEqualTo(it)
-    }
-
-    expected.optString?.let {
-        assertThat(given.optString!!).isEqualTo(it)
-    }
-
-    expected.sameClassList?.let {
-        assertThat(given.sameClassList).hasSize(it.size)
-        given.sameClassList.forEachIndexed { idx, entry -> assertSomeClass6(entry, it[idx]) }
-    }
+    val diff = diffSomeClass6(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

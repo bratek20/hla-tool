@@ -7,37 +7,16 @@ import org.assertj.core.api.Assertions.assertThat
 import com.some.pkg.typesmodule.api.*
 
 fun assertDate(given: Date, expected: String) {
-    assertThat(dateGetValue(given)).isEqualTo(expected)
+    val diff = diffDate(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedDateRange(
-    var from: String? = null,
-    var to: String? = null,
-)
 fun assertDateRange(given: DateRange, expectedInit: ExpectedDateRange.() -> Unit) {
-    val expected = ExpectedDateRange().apply(expectedInit)
-
-    expected.from?.let {
-        assertThat(dateGetValue(dateRangeGetFrom(given))).isEqualTo(it)
-    }
-
-    expected.to?.let {
-        assertThat(dateGetValue(dateRangeGetTo(given))).isEqualTo(it)
-    }
+    val diff = diffDateRange(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-data class ExpectedDateRangeProperty(
-    var from: String? = null,
-    var to: String? = null,
-)
 fun assertDateRangeProperty(given: DateRangeProperty, expectedInit: ExpectedDateRangeProperty.() -> Unit) {
-    val expected = ExpectedDateRangeProperty().apply(expectedInit)
-
-    expected.from?.let {
-        assertThat(dateGetValue(given.getFrom())).isEqualTo(it)
-    }
-
-    expected.to?.let {
-        assertThat(dateGetValue(given.getTo())).isEqualTo(it)
-    }
+    val diff = diffDateRangeProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
