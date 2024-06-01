@@ -113,7 +113,9 @@ class OptionalEmptyExpectedTypeField(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
-        return "TODO"
+        val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${($givenVariable.${mainField.name} == null) != $expectedVariable} != \${$expectedVariable}")
+        val body = languageTypes.addListElement("result", element)
+        return "if (($givenVariable.${mainField.name} == null) != $expectedVariable) { $body }"
     }
 }
 
@@ -202,6 +204,14 @@ class OptionalExpectedType(
 
     override fun assertion(givenVariable: String, expectedVariable: String): String {
         return wrappedType.assertion(api.unwrap(givenVariable), expectedVariable)
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        return wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return wrappedType.notEquals(api.unwrap(givenVariable), expectedVariable)
     }
 }
 

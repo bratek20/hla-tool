@@ -10,7 +10,7 @@ import com.some.pkg.typesmodule.fixtures.*
 import com.some.pkg.somemodule.api.*
 
 fun diffSomeId(given: SomeId, expected: String, path: String = ""): String {
-    if (given.value != expected) { return "${path}value ${given.value} != $expected" }
+    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
 
@@ -201,7 +201,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.optString?.let {
-        if (given.optString != it) { result.add("${path}optString ${given.optString} != ${it}") }
+        if (given.optString!! != it) { result.add("${path}optString ${given.optString!!} != ${it}") }
     }
 
     expected.sameClassList?.let {
