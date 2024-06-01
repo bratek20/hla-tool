@@ -14,7 +14,7 @@ class ModuleWriterLogic(
 ): ModuleWriter {
 
     override fun write(args: WriteArgs) {
-        val rootPath = args.profile.getProjectPath()
+        val rootPath = args.hlaFolderPath.add(args.profile.getProjectPath())
         val generateResult = args.generateResult
         val profile = args.profile
 

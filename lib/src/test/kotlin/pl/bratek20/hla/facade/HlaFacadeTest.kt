@@ -31,8 +31,8 @@ class HlaFacadeTest {
             return TestPaths(
                 exampleMainPath = "../example/kotlin/src/main/kotlin/com/some/pkg/$packageName",
                 exampleTestFixturesPath = "../example/kotlin/src/testFixtures/kotlin/com/some/pkg/$packageName",
-                expectedMainPath = "../kotlin/src/main/kotlin/com/some/pkg",
-                expectedFixturesPath = "../kotlin/src/testFixtures/kotlin/com/some/pkg"
+                expectedMainPath = "../example/hla/../kotlin/src/main/kotlin/com/some/pkg",
+                expectedFixturesPath = "../example/hla/../kotlin/src/testFixtures/kotlin/com/some/pkg"
             )
         }
 
@@ -40,8 +40,8 @@ class HlaFacadeTest {
             return TestPaths(
                 exampleMainPath = "../example/typescript/main/$moduleName",
                 exampleTestFixturesPath = "../example/typescript/test/$moduleName",
-                expectedMainPath = "../typescript/main",
-                expectedFixturesPath = "../typescript/test"
+                expectedMainPath = "../example/hla/../typescript/main",
+                expectedFixturesPath = "../example/hla/../typescript/test"
             )
         }
 
