@@ -21,13 +21,28 @@ ValueObjects
         differences: string[]
 
 Interfaces
+    Files
+        write(path: Path, file: File)
+
+        read(path: Path): File
+            throws
+                FileNotFoundException
+
+        delete(path: Path)
+            throws
+                FileNotFoundException
+
+        compare(file1: File, file2: File): CompareResult
+
     Directories
-        readDirectory(path: Path): Directory
+        write(path: Path, dir: Directory)
 
-        //TODO test for that
-        deleteDirectory(path: Path)
+        read(path: Path): Directory
+            throws
+                DirectoryNotFoundException
 
-        //TODO test for that
-        write(path: Path, directory: Directory)
+        delete(path: Path)
+            throws
+                DirectoryNotFoundException
 
         compare(dir1: Directory, dir2: Directory): CompareResult
