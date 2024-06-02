@@ -7,7 +7,7 @@ data class Path(
         if (path.value.isEmpty()) {
             return this.copy()
         }
-        return Path(value + "/" + path.value)
+        return Path(value + "\\" + path.value)
     }
 }
 

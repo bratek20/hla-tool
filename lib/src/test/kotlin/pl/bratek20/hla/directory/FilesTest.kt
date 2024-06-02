@@ -24,7 +24,7 @@ class FilesTest: TempDirTest() {
             {files.read(filePath)},
             {
                 type = FileNotFoundException::class
-                message = "File not found: $filePath"
+                message = "File not found: ${filePath.value}"
             }
         )
 
@@ -32,7 +32,7 @@ class FilesTest: TempDirTest() {
             name = fileName
             content = "abc"
         }
-        files.write(filePath, file)
+        files.write(tempDir, file)
 
         val result = files.read(filePath)
         assertFile(result) {
