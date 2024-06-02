@@ -10,6 +10,7 @@ import pl.bratek20.hla.generation.impl.core.api.ApiGenerator
 import pl.bratek20.hla.generation.impl.core.context.ContextGenerator
 import pl.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import pl.bratek20.hla.generation.impl.core.impl.ImplGenerator
+import pl.bratek20.hla.generation.impl.core.tests.TestsGenerator
 import pl.bratek20.hla.generation.impl.core.web.WebGenerator
 import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import pl.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
@@ -49,7 +50,8 @@ class ModuleGeneratorLogic(
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
             return listOf(
-                FixturesGenerator()
+                FixturesGenerator(),
+                TestsGenerator()
             )
         }
     }

@@ -30,11 +30,13 @@ fun generateArgs(init: GenerateArgsDef.() -> Unit = {}): GenerateArgs {
 data class GenerateResultDef(
     var main: (DirectoryDef.() -> Unit) = {},
     var fixtures: (DirectoryDef.() -> Unit) = {},
+    var tests: (DirectoryDef.() -> Unit) = {},
 )
 fun generateResult(init: GenerateResultDef.() -> Unit = {}): GenerateResult {
     val def = GenerateResultDef().apply(init)
     return GenerateResult(
         main = directory(def.main),
         fixtures = directory(def.fixtures),
+        tests = directory(def.tests),
     )
 }

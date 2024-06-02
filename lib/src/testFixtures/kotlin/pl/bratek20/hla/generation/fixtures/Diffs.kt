@@ -44,6 +44,7 @@ fun diffGenerateArgs(given: GenerateArgs, expectedInit: ExpectedGenerateArgs.() 
 data class ExpectedGenerateResult(
     var main: (ExpectedDirectory.() -> Unit)? = null,
     var fixtures: (ExpectedDirectory.() -> Unit)? = null,
+    var tests: (ExpectedDirectory.() -> Unit)? = null,
 )
 fun diffGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResult.() -> Unit, path: String = ""): String {
     val expected = ExpectedGenerateResult().apply(expectedInit)
@@ -55,6 +56,10 @@ fun diffGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResu
 
     expected.fixtures?.let {
         if (diffDirectory(given.fixtures, it) != "") { result.add(diffDirectory(given.fixtures, it, "${path}fixtures.")) }
+    }
+
+    expected.tests?.let {
+        if (diffDirectory(given.tests, it) != "") { result.add(diffDirectory(given.tests, it, "${path}tests.")) }
     }
 
     return result.joinToString("\n")
