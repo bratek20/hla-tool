@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 import pl.bratek20.architecture.context.stableContextBuilder
 import pl.bratek20.hla.directory.DirectoriesMock
 import pl.bratek20.hla.directory.api.Directory
+import pl.bratek20.hla.directory.api.File
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoriesMocks
 import pl.bratek20.hla.directory.fixtures.assertDirectory
@@ -162,6 +163,19 @@ class HlaFacadeTest {
         assertThat(compareResult.same)
             .withFailMessage(failMessage)
             .isTrue()
+    }
+
+    private fun assertWrittenFileWithExample(writtenFile: File, examplePath: String ) {
+//        val directories = DirectoriesLogic()
+//        val exampleDirectory = directories.readDirectory(Path(examplePath))
+//
+//        val compareResult = directories.compare(writtenDirectory, exampleDirectory)
+//        val failMessage = "${compareResult.differences.size} differences found!\n" +
+//                compareResult.differences.joinToString("\n")
+//
+//        assertThat(compareResult.same)
+//            .withFailMessage(failMessage)
+//            .isTrue()
     }
 
     @Test
@@ -341,4 +355,41 @@ class HlaFacadeTest {
             hasNoDirectories = "web"
         }
     }
+
+//    @Test
+//    fun shouldModifyTypeScriptFilesOnStart() {
+//        //given
+//        val (directoriesMock, facade) = setup()
+//
+//        val args = ModuleOperationArgs(
+//            moduleName = ModuleName("OtherModule"),
+//            profileName = ProfileName("typeScript"),
+//            hlaFolderPath = hlaFolderPath(),
+//        )
+//
+//        //when
+//        facade.startModule(args)
+//
+//        //then
+//        directoriesMock.assertWriteFileCount(2)
+//
+//        val tsconfigPath = "../example/typescriptFileModifies/afterStart/tsconfig.json"
+//        val expectedTsconfigPath = "../example/typescriptFileModifies/afterStart/Tests/tsconfig.json"
+//
+//        val testTsconfigPath = "../example/typescriptFileModifies/afterStart/Tests/tsconfig.json"
+//        val expectedTestTsconfigPath = "../example/typescriptFileModifies/afterStart/Tests/Tests/tsconfig.json"
+//
+//        val tsconfigFile = directoriesMock.assertWriteFileAndGet(
+//            1,
+//            expectedTsconfigPath
+//        )
+//
+//        val testTsconfigFile = directoriesMock.assertWriteFileAndGet(
+//            2,
+//            expectedTestTsconfigPath
+//        )
+//
+//        assertWrittenFileWithExample(tsconfigFile, tsconfigPath)
+//        assertWrittenFileWithExample(testTsconfigFile, testTsconfigPath)
+//    }
 }
