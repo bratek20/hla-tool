@@ -176,14 +176,18 @@ class HlaFacadeTest {
         )
         facade.startModule(args)
 
-        val expectedFilesToSkipUpdate = setOf(
+        val expectedMainFilesToSkipUpdate = setOf(
             "api/CustomTypes",
             "api/CustomTypesMapper",
         )
 
-        val expectedDirectoriesToSkipUpdate = setOf(
+        val expectedMainDirectoriesToSkipUpdate = setOf(
             "context",
             "impl"
+        )
+
+        val expectedTestDirectoriesToSkipUpdate = setOf(
+            "tests"
         )
 
         //when
@@ -192,6 +196,7 @@ class HlaFacadeTest {
         //then
         val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
         directoriesMock.assertWriteCount(6)
+
         val mainDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
@@ -200,23 +205,31 @@ class HlaFacadeTest {
             2,
             paths.expectedFixturesPath
         )
+        val testsDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
+            3,
+            paths.expectedTestsPath
+        )
 
         val mainDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
             4,
             paths.expectedMainPath
         )
-
         val fixturesDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
             5,
             paths.expectedFixturesPath
         )
+        val testsDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
+            6,
+            paths.expectedTestsPath
+        )
 
         val mainCompareResult = DirectoriesLogic().compare(mainDirectoryStart, mainDirectoryUpdate)
-        val testFixturesCompareResult = DirectoriesLogic().compare(fixturesDirectoryStart, fixturesDirectoryUpdate)
+        val fixturesCompareResult = DirectoriesLogic().compare(fixturesDirectoryStart, fixturesDirectoryUpdate)
+        val testsCompareResult = DirectoriesLogic().compare(testsDirectoryStart, testsDirectoryUpdate)
 
-        val expectedMainDifference = expectedFilesToSkipUpdate.map {
+        val expectedMainDifference = expectedMainFilesToSkipUpdate.map {
                 "File somemodule/$it.kt not found in second directory"
-            } + expectedDirectoriesToSkipUpdate.map {
+            } + expectedMainDirectoriesToSkipUpdate.map {
                 "Directory somemodule/$it not found in second directory"
             }
 
@@ -224,7 +237,14 @@ class HlaFacadeTest {
             expectedMainDifference
         )
 
-        assertThat(testFixturesCompareResult.differences).isEmpty()
+        assertThat(fixturesCompareResult.differences).isEmpty()
+
+        val expectedTestsDifference = expectedTestDirectoriesToSkipUpdate.map {
+            "Directory somemodule/$it not found in second directory"
+        }
+        assertThat(testsCompareResult.differences).containsExactlyInAnyOrderElementsOf(
+            expectedTestsDifference
+        )
     }
 
     @Test
