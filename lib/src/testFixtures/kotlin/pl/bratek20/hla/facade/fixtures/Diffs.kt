@@ -24,6 +24,7 @@ data class ExpectedHlaProfile(
     var projectPath: String? = null,
     var mainPath: String? = null,
     var fixturesPath: String? = null,
+    var testsPath: String? = null,
     var onlyParts: List<String>? = null,
     var generateWeb: Boolean? = null,
 )
@@ -49,6 +50,10 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
 
     expected.fixturesPath?.let {
         if (diffPath(given.getFixturesPath(), it) != "") { result.add(diffPath(given.getFixturesPath(), it, "${path}fixturesPath.")) }
+    }
+
+    expected.testsPath?.let {
+        if (diffPath(given.getTestsPath(), it) != "") { result.add(diffPath(given.getTestsPath(), it, "${path}testsPath.")) }
     }
 
     expected.onlyParts?.let {

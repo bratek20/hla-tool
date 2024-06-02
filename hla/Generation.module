@@ -8,7 +8,7 @@ ValueObjects
     GenerateResult
         main: Directory
         fixtures: Directory
-        tests: Directory
+        tests: Directory?
 
 Interfaces
     ModuleGenerator

@@ -13,6 +13,7 @@ data class HlaProfileDef(
     var projectPath: String = "someValue",
     var mainPath: String = "someValue",
     var fixturesPath: String = "someValue",
+    var testsPath: String = "someValue",
     var onlyParts: List<String> = emptyList(),
     var generateWeb: Boolean = false,
 )
@@ -24,6 +25,7 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
         projectPath = def.projectPath,
         mainPath = def.mainPath,
         fixturesPath = def.fixturesPath,
+        testsPath = def.testsPath,
         onlyParts = def.onlyParts,
         generateWeb = def.generateWeb,
     )

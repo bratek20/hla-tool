@@ -59,7 +59,7 @@ fun diffGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResu
     }
 
     expected.tests?.let {
-        if (diffDirectory(given.tests, it) != "") { result.add(diffDirectory(given.tests, it, "${path}tests.")) }
+        if (diffDirectory(given.tests!!, it) != "") { result.add(diffDirectory(given.tests!!, it, "${path}tests.")) }
     }
 
     return result.joinToString("\n")

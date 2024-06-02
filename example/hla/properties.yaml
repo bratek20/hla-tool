@@ -4,6 +4,7 @@ profiles:
     projectPath: "../kotlin"
     mainPath: "src/main/kotlin/com/some/pkg"
     fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+    testsPath: "src/test/kotlin/com/some/pkg"
     onlyParts: []
     generateWeb: true
 
@@ -12,6 +13,7 @@ profiles:
     projectPath: "../kotlin"
     mainPath: "src/main/kotlin/com/some/pkg"
     fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+    testsPath: "src/test/kotlin/com/some/pkg"
     onlyParts: []
     generateWeb: false
 
@@ -19,7 +21,8 @@ profiles:
     language: "TYPE_SCRIPT"
     projectPath: "../typescript"
     mainPath: "main"
-    fixturesPath: "test"
+    fixturesPath: "fixtures"
+    testsPath: "test"
     onlyParts: []
     generateWeb: true
 
@@ -28,6 +31,7 @@ profiles:
     projectPath: "../kotlin"
     mainPath: "src/main/kotlin/com/some/pkg"
     fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+    testsPath: "src/test/kotlin/com/some/pkg"
     onlyParts:
         - "NamedTypes"
         - "Properties"

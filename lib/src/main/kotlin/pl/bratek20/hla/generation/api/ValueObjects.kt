@@ -16,5 +16,5 @@ data class GenerateArgs(
 data class GenerateResult(
     val main: Directory,
     val fixtures: Directory,
-    val tests: Directory,
+    val tests: Directory?,
 )

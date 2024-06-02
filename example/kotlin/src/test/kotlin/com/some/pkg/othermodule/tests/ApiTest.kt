@@ -1,4 +1,4 @@
-package com.some.pkg.typesmodule
+package com.some.pkg.othermodule.tests
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

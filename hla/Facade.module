@@ -14,6 +14,7 @@ Properties
         projectPath: Path
         mainPath: Path
         fixturesPath: Path
+        testsPath: Path
         onlyParts: string[]
         generateWeb: bool
 

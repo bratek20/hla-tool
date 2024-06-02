@@ -28,7 +28,7 @@ class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
 ) : ModuleGenerator {
 
-    class MainDirectoryGenerator: DirectoryGenerator() {
+    class RootMainGenerator: DirectoryGenerator() {
         override fun name(): String {
             return module.name.value
         }
@@ -43,7 +43,7 @@ class ModuleGeneratorLogic(
         }
     }
 
-    class TestFixturesGenerator: DirectoryGenerator() {
+    class RootFixturesGenerator: DirectoryGenerator() {
         override fun name(): String {
             return module.name.value
         }
@@ -51,6 +51,17 @@ class ModuleGeneratorLogic(
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
             return listOf(
                 FixturesGenerator(),
+            )
+        }
+    }
+
+    class RootTestsGenerator: DirectoryGenerator() {
+        override fun name(): String {
+            return module.name.value
+        }
+
+        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
+            return listOf(
                 TestsGenerator()
             )
         }
@@ -63,8 +74,9 @@ class ModuleGeneratorLogic(
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
             return listOf(
-                MainDirectoryGenerator(),
-                TestFixturesGenerator()
+                RootMainGenerator(),
+                RootFixturesGenerator(),
+                RootTestsGenerator()
             )
         }
     }
@@ -98,7 +110,8 @@ class ModuleGeneratorLogic(
 
         return GenerateResult(
             main = result.directories[0],
-            fixtures = result.directories[1]
+            fixtures = result.directories[1],
+            tests = if (result.directories.size > 2) result.directories[2] else null,
         )
     }
 }

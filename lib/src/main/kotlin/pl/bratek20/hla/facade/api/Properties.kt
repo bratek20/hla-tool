@@ -10,6 +10,7 @@ data class HlaProfile(
     private val projectPath: String,
     private val mainPath: String,
     private val fixturesPath: String,
+    private val testsPath: String,
     val onlyParts: List<String>,
     val generateWeb: Boolean,
 ) {
@@ -27,6 +28,10 @@ data class HlaProfile(
 
     fun getFixturesPath(): Path {
         return pathCreate(this.fixturesPath)
+    }
+
+    fun getTestsPath(): Path {
+        return pathCreate(this.testsPath)
     }
 }
 

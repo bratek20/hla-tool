@@ -20,12 +20,12 @@ class ModuleWriterLogic(
 
         val fullMainPath = rootPath.add(profile.getMainPath())
         val fullFixturesPath = rootPath.add(profile.getFixturesPath())
+        val fullTestPath = rootPath.add(profile.getTestsPath())
 
-        logger.info("Writing to: $fullMainPath")
         directories.write(fullMainPath, generateResult.main)
-
-        logger.info("Writing to: $fullFixturesPath")
         directories.write(fullFixturesPath, generateResult.fixtures)
+        if (generateResult.tests != null)
+            directories.write(fullTestPath, generateResult.tests)
 
         //test helping
         val dirs = DirectoriesLogic()
@@ -35,6 +35,8 @@ class ModuleWriterLogic(
             dirs.deleteDirectory(debugPath)
             dirs.write(debugPath, generateResult.main)
             dirs.write(debugPath, generateResult.fixtures)
+            if (generateResult.tests != null)
+                dirs.write(debugPath, generateResult.tests)
         }
     }
 }

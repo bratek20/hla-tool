@@ -1,4 +1,4 @@
-package com.some.pkg.somemodule
+package ${packageName}.tests
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

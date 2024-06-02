@@ -22,27 +22,33 @@ import java.util.stream.Stream
 class HlaFacadeTest {
     data class TestPaths(
         val exampleMainPath: String,
-        val exampleTestFixturesPath: String,
+        val exampleFixturesPath: String,
+        val exampleTestsPath: String,
         val expectedMainPath: String,
-        val expectedFixturesPath: String
+        val expectedFixturesPath: String,
+        val expectedTestsPath: String
     )
 
     class MyArgumentsProvider : ArgumentsProvider {
         fun kotlinTestPaths(packageName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/kotlin/src/main/kotlin/com/some/pkg/$packageName",
-                exampleTestFixturesPath = "../example/kotlin/src/testFixtures/kotlin/com/some/pkg/$packageName",
+                exampleFixturesPath = "../example/kotlin/src/testFixtures/kotlin/com/some/pkg/$packageName",
+                exampleTestsPath = "../example/kotlin/src/test/kotlin/com/some/pkg/$packageName",
                 expectedMainPath = "../example/hla/../kotlin/src/main/kotlin/com/some/pkg",
-                expectedFixturesPath = "../example/hla/../kotlin/src/testFixtures/kotlin/com/some/pkg"
+                expectedFixturesPath = "../example/hla/../kotlin/src/testFixtures/kotlin/com/some/pkg",
+                expectedTestsPath = "../example/hla/../kotlin/src/test/kotlin/com/some/pkg",
             )
         }
 
         fun typescriptTestPaths(moduleName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/typescript/main/$moduleName",
-                exampleTestFixturesPath = "../example/typescript/test/$moduleName",
+                exampleFixturesPath = "../example/typescript/fixtures/$moduleName",
+                exampleTestsPath = "../example/typescript/test/$moduleName",
                 expectedMainPath = "../example/hla/../typescript/main",
-                expectedFixturesPath = "../example/hla/../typescript/test"
+                expectedFixturesPath = "../example/hla/../typescript/fixtures",
+                expectedTestsPath = "../example/hla/../typescript/test",
             )
         }
 
@@ -126,18 +132,23 @@ class HlaFacadeTest {
         )
 
         //then
-        directoriesMock.assertWriteCount(2)
+        directoriesMock.assertWriteCount(3)
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
         )
-        val testFixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
             2,
             paths.expectedFixturesPath
         )
+        val testsDirectory = directoriesMock.assertWriteAndGetDirectory(
+            3,
+            paths.expectedTestsPath
+        )
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
-        assertWrittenDirectoryWithExample(testFixturesDirectory, paths.exampleTestFixturesPath)
+        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
+        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
     }
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {
@@ -180,7 +191,7 @@ class HlaFacadeTest {
 
         //then
         val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
-        directoriesMock.assertWriteCount(4)
+        directoriesMock.assertWriteCount(6)
         val mainDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
@@ -191,12 +202,12 @@ class HlaFacadeTest {
         )
 
         val mainDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
-            3,
+            4,
             paths.expectedMainPath
         )
 
         val fixturesDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
-            4,
+            5,
             paths.expectedFixturesPath
         )
 
@@ -284,7 +295,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(6)
+        directoriesMock.assertWriteCount(9)
     }
 
     @Test
@@ -302,7 +313,7 @@ class HlaFacadeTest {
         facade.updateModule(args)
 
         //then
-        directoriesMock.assertWriteCount(2)
+        directoriesMock.assertWriteCount(3)
 
         val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(1, paths.expectedMainPath)
