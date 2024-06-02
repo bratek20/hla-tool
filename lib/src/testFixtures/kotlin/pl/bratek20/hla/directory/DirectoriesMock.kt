@@ -9,8 +9,8 @@ import pl.bratek20.hla.directory.api.Path
 class DirectoriesMock: Directories {
     private val directoryWrites: MutableList<Pair<Path, Directory>> = mutableListOf()
 
-    override fun write(path: Path, directory: Directory) {
-        directoryWrites.add(path to directory)
+    override fun write(path: Path, dir: Directory) {
+        directoryWrites.add(path to dir)
     }
 
     fun assertWriteAndGetDirectory(writeNumber: Int, expectedPath: String): Directory {
@@ -23,11 +23,11 @@ class DirectoriesMock: Directories {
         assertThat(directoryWrites).hasSize(expectedCount)
     }
 
-    override fun readDirectory(path: Path): Directory {
+    override fun read(path: Path): Directory {
         TODO("Not yet implemented")
     }
 
-    override fun deleteDirectory(path: Path) {
+    override fun delete(path: Path) {
         TODO("Not yet implemented")
     }
 

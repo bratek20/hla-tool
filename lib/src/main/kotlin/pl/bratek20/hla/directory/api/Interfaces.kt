@@ -2,12 +2,33 @@
 
 package pl.bratek20.hla.directory.api
 
+interface Files {
+    fun write(path: Path, file: File): Unit
+
+    @Throws(
+        FileNotFoundException::class,
+    )
+    fun read(path: Path): File
+
+    @Throws(
+        FileNotFoundException::class,
+    )
+    fun delete(path: Path): Unit
+
+    fun compare(file1: File, file2: File): CompareResult
+}
 interface Directories {
-    fun readDirectory(path: Path): Directory
+    fun write(path: Path, dir: Directory): Unit
 
-    fun deleteDirectory(path: Path): Unit
+    @Throws(
+        DirectoryNotFoundException::class,
+    )
+    fun read(path: Path): Directory
 
-    fun write(path: Path, directory: Directory): Unit
+    @Throws(
+        DirectoryNotFoundException::class,
+    )
+    fun delete(path: Path): Unit
 
     fun compare(dir1: Directory, dir2: Directory): CompareResult
 }

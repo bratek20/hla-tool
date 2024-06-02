@@ -13,7 +13,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     override fun parse(path: Path): List<ModuleDefinition> {
         val directories = DirectoriesLogic()
 
-        val modulesDir = directories.readDirectory(path)
+        val modulesDir = directories.read(path)
         return modulesDir.files
             .filter { it.name.value.endsWith(".module") }
             .map { parseModuleFile(it) }

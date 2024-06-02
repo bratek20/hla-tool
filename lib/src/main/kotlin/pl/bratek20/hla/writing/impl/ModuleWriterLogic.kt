@@ -32,7 +32,7 @@ class ModuleWriterLogic(
         val moduleName = generateResult.main.name
         if (profile.language == ModuleLanguage.KOTLIN && moduleName.value.lowercase() == "SomeModule".lowercase()) {
             val debugPath = Path("../tmp")
-            dirs.deleteDirectory(debugPath)
+            dirs.delete(debugPath)
             dirs.write(debugPath, generateResult.main)
             dirs.write(debugPath, generateResult.fixtures)
             if (generateResult.tests != null)

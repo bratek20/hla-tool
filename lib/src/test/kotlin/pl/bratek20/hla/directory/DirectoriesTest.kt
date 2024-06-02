@@ -4,22 +4,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import pl.bratek20.architecture.context.someContextBuilder
+import pl.bratek20.hla.directory.api.Directories
 import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.context.DirectoryImpl
 import pl.bratek20.hla.directory.fixtures.*
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 
 
-class DirectoriesTest {
-    private val api = DirectoriesLogic()
-
-    @TempDir
-    lateinit var tempDirNio: java.nio.file.Path
-    lateinit var tempDir: Path
-
-    @BeforeEach
-    fun setup() {
-        tempDir = Path(tempDirNio.toAbsolutePath().toString())
-    }
+class DirectoriesTest: TempDirTest() {
+    private val directories = someContextBuilder()
+        .withModules(DirectoryImpl())
+        .get(Directories::class.java)
 
     @Test
     fun shouldWrite() {
@@ -30,9 +26,9 @@ class DirectoriesTest {
                 content = "abc"
             }
         }
-        api.write(tempDir, dir)
+        directories.write(tempDir, dir)
 
-        val result = api.readDirectory(tempDir)
+        val result = directories.read(tempDir)
         assertDirectory(result) {
             directories = listOf {
                 name = "dir"
@@ -53,7 +49,7 @@ class DirectoriesTest {
                 content = "abc"
             }
         }
-        api.write(tempDir, dir)
+        directories.write(tempDir, dir)
 
         val updatedDir = directory {
             name = "dir"
@@ -62,9 +58,9 @@ class DirectoriesTest {
                 content = "def"
             }
         }
-        api.write(tempDir, updatedDir)
+        directories.write(tempDir, updatedDir)
 
-        val result = api.readDirectory(tempDir)
+        val result = directories.read(tempDir)
         assertDirectory(result) {
             directories = listOf {
                 name = "dir"
@@ -78,7 +74,7 @@ class DirectoriesTest {
 
     @Test
     fun shouldReadDirectory() {
-        val result = api.readDirectory(Path("src/test/resources/directory"))
+        val result = directories.read(Path("src/test/resources/directory"))
         assertDirectory(result) {
             name = "directory"
             directories = listOf {
@@ -97,7 +93,7 @@ class DirectoriesTest {
     @Test
     fun shouldReadCorrectFileLength() {
         //TODO api.readFile
-        val result = api.readDirectory(Path("src/test/resources/directory/subdir"))
+        val result = directories.read(Path("src/test/resources/directory/subdir"))
         //TODO proper setup for this assertion
         assertThat(result.files[0].content.lines.size).isEqualTo(4)
     }
@@ -111,7 +107,7 @@ class DirectoriesTest {
                 content = "content1"
             }
         }
-        assertCompareResult(api.compare(dir1, dir1)) {
+        assertCompareResult(directories.compare(dir1, dir1)) {
             same = true
         }
 
@@ -122,7 +118,7 @@ class DirectoriesTest {
                 content = "content1"
             }
         }
-        assertCompareResult(api.compare(dir1, wrongFileName)) {
+        assertCompareResult(directories.compare(dir1, wrongFileName)) {
             differences = listOf(
                 "File dir1/file1 not found in second directory",
                 "File dir1/file2 not found in first directory"
@@ -136,7 +132,7 @@ class DirectoriesTest {
                 content = "content2"
             }
         }
-        assertCompareResult(api.compare(dir1, wrongFileContent)) {
+        assertCompareResult(directories.compare(dir1, wrongFileContent)) {
             differences = listOf("Different content for file dir1/file1 in line 1: `content1` != `content2`")
         }
     }
@@ -152,14 +148,14 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, dir)) {
+        assertCompareResult(directories.compare(dir, dir)) {
             same = true
         }
 
         val missingDirectory = directory {
             name = "dir"
         }
-        assertCompareResult(api.compare(dir, missingDirectory)) {
+        assertCompareResult(directories.compare(dir, missingDirectory)) {
             differences = listOf("Directory dir/dir1 not found in second directory")
         }
 
@@ -172,7 +168,7 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, wrongName)) {
+        assertCompareResult(directories.compare(dir, wrongName)) {
             differences = listOf("Different directory names: dir != otherDir")
         }
 
@@ -185,7 +181,7 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, wrongNestedName)) {
+        assertCompareResult(directories.compare(dir, wrongNestedName)) {
             differences = listOf(
                 "Directory dir/dir1 not found in second directory",
                 "Directory dir/dir2 not found in first directory"
@@ -201,7 +197,7 @@ class DirectoriesTest {
                 }
             }
         }
-        assertCompareResult(api.compare(dir, wrongFile)) {
+        assertCompareResult(directories.compare(dir, wrongFile)) {
             differences = listOf(
                 "File dir/dir1/file1 not found in second directory",
                 "File dir/dir1/file2 not found in first directory"

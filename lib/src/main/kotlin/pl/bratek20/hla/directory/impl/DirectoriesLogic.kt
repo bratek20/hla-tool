@@ -3,7 +3,7 @@ package pl.bratek20.hla.directory.impl
 import pl.bratek20.hla.directory.api.*
 
 class DirectoriesLogic: Directories {
-    override fun readDirectory(path: Path): Directory {
+    override fun read(path: Path): Directory {
         val nioPath = java.nio.file.Paths.get(path.value)
         val file = nioPath.toFile()
 
@@ -13,7 +13,7 @@ class DirectoriesLogic: Directories {
 
         val allFiles = file.listFiles()
         val files = allFiles!!.filter { it.isFile }.map { toApiFile(it) }
-        val directories = allFiles.filter { it.isDirectory }.map { readDirectory(Path(it.absolutePath)) }
+        val directories = allFiles.filter { it.isDirectory }.map { read(Path(it.absolutePath)) }
 
         return Directory(
             name = DirectoryName(file.name),
@@ -22,7 +22,7 @@ class DirectoriesLogic: Directories {
         )
     }
 
-    override fun deleteDirectory(path: Path) {
+    override fun delete(path: Path) {
         val nioPath = java.nio.file.Paths.get(path.value)
         val file = nioPath.toFile()
 

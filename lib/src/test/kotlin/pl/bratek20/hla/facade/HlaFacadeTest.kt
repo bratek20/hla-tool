@@ -154,7 +154,7 @@ class HlaFacadeTest {
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {
         val directories = DirectoriesLogic()
-        val exampleDirectory = directories.readDirectory(Path(examplePath))
+        val exampleDirectory = directories.read(Path(examplePath))
 
         val compareResult = directories.compare(writtenDirectory, exampleDirectory)
         val failMessage = "${compareResult.differences.size} differences found!\n" +
