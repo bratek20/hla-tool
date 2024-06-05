@@ -1,10 +1,7 @@
-package pl.bratek20.hla.directory
+package pl.bratek20.hla.directory.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
-import pl.bratek20.hla.directory.api.CompareResult
-import pl.bratek20.hla.directory.api.Directory
-import pl.bratek20.hla.directory.api.Directories
-import pl.bratek20.hla.directory.api.Path
+import pl.bratek20.hla.directory.api.*
 
 class DirectoriesMock: Directories {
     private val directoryWrites: MutableList<Pair<Path, Directory>> = mutableListOf()
@@ -32,6 +29,36 @@ class DirectoriesMock: Directories {
     }
 
     override fun compare(dir1: Directory, dir2: Directory): CompareResult {
+        TODO("Not yet implemented")
+    }
+}
+
+class FilesMock: Files {
+    private val fileWrites: MutableList<Pair<Path, File>> = mutableListOf()
+
+    override fun write(path: Path, file: File) {
+        fileWrites.add(path to file)
+    }
+
+    fun assertWriteAndGetFile(writeNumber: Int, expectedPath: String): File {
+        val (path, file) = fileWrites[writeNumber - 1]
+        assertThat(path).isEqualTo(Path(expectedPath))
+        return file
+    }
+
+    fun assertWriteCount(expectedCount: Int) {
+        assertThat(fileWrites).hasSize(expectedCount)
+    }
+
+    override fun read(path: Path): File {
+        TODO("Not yet implemented")
+    }
+
+    override fun delete(path: Path) {
+        TODO("Not yet implemented")
+    }
+
+    override fun compare(file1: File, file2: File): CompareResult {
         TODO("Not yet implemented")
     }
 }
