@@ -15,8 +15,8 @@ class KotlinAssertsPattern: LanguageAssertsPattern {
         return "(Expected${name}.() -> Unit)"
     }
 
-    override fun complexVoAssertion(name: String, given: String, expected: String): String {
-        return "assert$name($given, $expected)"
+    override fun diffFunName(apiStructureName: String): String {
+        return "diff${apiStructureName}"
     }
 
     override fun indentionForAssertListElements(): Int {

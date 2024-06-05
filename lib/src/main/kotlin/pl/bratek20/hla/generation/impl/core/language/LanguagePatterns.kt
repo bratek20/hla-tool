@@ -4,7 +4,7 @@ interface LanguageAssertsPattern {
     fun assertFunName(name: String): String
 
     fun expectedClassType(name: String): String
-    fun complexVoAssertion(name: String, given: String, expected: String): String
+    fun diffFunName(apiStructureName: String): String
     fun indentionForAssertListElements(): Int
 }
 

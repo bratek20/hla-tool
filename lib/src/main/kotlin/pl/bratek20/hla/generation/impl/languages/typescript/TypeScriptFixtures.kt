@@ -13,12 +13,12 @@ class TypeScriptAssertsPattern(private val modules: HlaModules) : LanguageAssert
 
     override fun expectedClassType(name: String): String {
         val base = "Expected${name}"
-        return handleReferencing(modules, name, base, "Assert")
+        return handleReferencing(modules, name, base, null)
     }
 
-    override fun complexVoAssertion(name: String, given: String, expected: String): String {
-        val base = "${pascalToCamelCase(name)}($given, $expected)"
-        return handleReferencing(modules, name, base, "Assert")
+    override fun diffFunName(apiStructureName: String): String {
+        val base = "diff${apiStructureName}"
+        return handleReferencing(modules, apiStructureName, base, null)
     }
 
     override fun indentionForAssertListElements(): Int {

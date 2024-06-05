@@ -7,13 +7,13 @@ namespace SomeModule {
     }
 
     export interface ExpectedDateRangeWrapper {
-        range?: TypesModule.Assert.ExpectedDateRange,
+        range?: TypesModule.ExpectedDateRange,
     }
     export function diffDateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper, path: string = ""): string {
         const result: string[] = []
 
         if (expected.range !== undefined) {
-            if (diffDateRange(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range) != "") { result.push(diffDateRange(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range, `${path}range.`)) }
+            if (TypesModule.diffDateRange(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range) != "") { result.push(TypesModule.diffDateRange(SomeModule.CustomTypesMapper.dateRangeWrapperGetRange(given), expected.range, `${path}range.`)) }
         }
 
         return result.join("\n")
