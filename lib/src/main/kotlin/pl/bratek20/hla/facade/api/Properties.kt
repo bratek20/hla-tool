@@ -4,6 +4,18 @@ package pl.bratek20.hla.facade.api
 
 import pl.bratek20.hla.directory.api.*
 
+data class TypeScriptInfo(
+    private val mainTsconfigPath: String,
+    private val testTsconfigPath: String,
+) {
+    fun getMainTsconfigPath(): Path {
+        return pathCreate(this.mainTsconfigPath)
+    }
+
+    fun getTestTsconfigPath(): Path {
+        return pathCreate(this.testTsconfigPath)
+    }
+}
 data class HlaProfile(
     private val name: String,
     val language: ModuleLanguage,
@@ -13,6 +25,7 @@ data class HlaProfile(
     private val testsPath: String,
     val onlyParts: List<String>,
     val generateWeb: Boolean,
+    val typeScript: TypeScriptInfo?,
 ) {
     fun getName(): ProfileName {
         return ProfileName(this.name)

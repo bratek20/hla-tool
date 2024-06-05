@@ -37,3 +37,15 @@ profiles:
         - "Properties"
         - "Builders"
     generateWeb: true
+
+  - name: "typeScriptFileModifiers"
+    language: "TYPE_SCRIPT"
+    projectPath: "../typescriptFileModifiers/beforeStart"
+    mainPath: "main"
+    fixturesPath: "fixtures"
+    testsPath: "test"
+    onlyParts: []
+    generateWeb: false
+    typeScript:
+      mainTsconfigPath: "tsconfig.json"
+      testTsconfigPath: "Tests/tsconfig.json"

@@ -18,6 +18,25 @@ fun diffProfileName(given: ProfileName, expected: String, path: String = ""): St
     return ""
 }
 
+data class ExpectedTypeScriptInfo(
+    var mainTsconfigPath: String? = null,
+    var testTsconfigPath: String? = null,
+)
+fun diffTypeScriptInfo(given: TypeScriptInfo, expectedInit: ExpectedTypeScriptInfo.() -> Unit, path: String = ""): String {
+    val expected = ExpectedTypeScriptInfo().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.mainTsconfigPath?.let {
+        if (diffPath(given.getMainTsconfigPath(), it) != "") { result.add(diffPath(given.getMainTsconfigPath(), it, "${path}mainTsconfigPath.")) }
+    }
+
+    expected.testTsconfigPath?.let {
+        if (diffPath(given.getTestTsconfigPath(), it) != "") { result.add(diffPath(given.getTestTsconfigPath(), it, "${path}testTsconfigPath.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedHlaProfile(
     var name: String? = null,
     var language: ModuleLanguage? = null,
@@ -27,6 +46,7 @@ data class ExpectedHlaProfile(
     var testsPath: String? = null,
     var onlyParts: List<String>? = null,
     var generateWeb: Boolean? = null,
+    var typeScript: (ExpectedTypeScriptInfo.() -> Unit)? = null,
 )
 fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit, path: String = ""): String {
     val expected = ExpectedHlaProfile().apply(expectedInit)
@@ -63,6 +83,10 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
 
     expected.generateWeb?.let {
         if (given.generateWeb != it) { result.add("${path}generateWeb ${given.generateWeb} != ${it}") }
+    }
+
+    expected.typeScript?.let {
+        if (diffTypeScriptInfo(given.typeScript!!, it) != "") { result.add(diffTypeScriptInfo(given.typeScript!!, it, "${path}typeScript.")) }
     }
 
     return result.joinToString("\n")

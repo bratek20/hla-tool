@@ -8,6 +8,10 @@ Enums
         TYPE_SCRIPT
 
 Properties
+    TypeScriptInfo
+        mainTsconfigPath: Path
+        testTsconfigPath: Path
+
     "profiles" -> HlaProfile[]
         name: ProfileName
         language: ModuleLanguage
@@ -17,6 +21,7 @@ Properties
         testsPath: Path
         onlyParts: string[]
         generateWeb: bool
+        typeScript: TypeScriptInfo?
 
 
 ValueObjects

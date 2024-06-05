@@ -7,6 +7,18 @@ import pl.bratek20.hla.directory.fixtures.*
 
 import pl.bratek20.hla.facade.api.*
 
+data class TypeScriptInfoDef(
+    var mainTsconfigPath: String = "someValue",
+    var testTsconfigPath: String = "someValue",
+)
+fun typeScriptInfo(init: TypeScriptInfoDef.() -> Unit = {}): TypeScriptInfo {
+    val def = TypeScriptInfoDef().apply(init)
+    return TypeScriptInfo(
+        mainTsconfigPath = def.mainTsconfigPath,
+        testTsconfigPath = def.testTsconfigPath,
+    )
+}
+
 data class HlaProfileDef(
     var name: String = "someValue",
     var language: ModuleLanguage = ModuleLanguage.KOTLIN,
@@ -16,6 +28,7 @@ data class HlaProfileDef(
     var testsPath: String = "someValue",
     var onlyParts: List<String> = emptyList(),
     var generateWeb: Boolean = false,
+    var typeScript: (TypeScriptInfoDef.() -> Unit)? = null,
 )
 fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
     val def = HlaProfileDef().apply(init)
@@ -28,6 +41,7 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
         testsPath = def.testsPath,
         onlyParts = def.onlyParts,
         generateWeb = def.generateWeb,
+        typeScript = def.typeScript?.let { it -> typeScriptInfo(it) },
     )
 }
 

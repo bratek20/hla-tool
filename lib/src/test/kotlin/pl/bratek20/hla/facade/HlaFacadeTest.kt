@@ -367,7 +367,7 @@ class HlaFacadeTest {
 
         val args = ModuleOperationArgs(
             moduleName = ModuleName("OtherModule"),
-            profileName = ProfileName("typeScript"),
+            profileName = ProfileName("typeScriptFileModifiers"),
             hlaFolderPath = hlaFolderPath(),
         )
 
