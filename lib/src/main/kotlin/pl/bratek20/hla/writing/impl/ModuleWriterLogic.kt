@@ -27,19 +27,27 @@ class ModuleWriterLogic(
             directories.write(fullTestPath, generateResult.tests)
         }
 
+        val moduleName = generateResult.main.name.value
+
         if (profile.language == ModuleLanguage.TYPE_SCRIPT && profile.typeScript != null) {
             val fullMainTsconfigPath = rootPath.add(profile.typeScript.getMainTsconfigPath())
             val fullTestTsconfigPath = rootPath.add(profile.typeScript.getTestTsconfigPath())
 
             files.read(fullMainTsconfigPath).let {
-                val newLines = it.content.lines.toMutableList()
-                newLines.add(2, "    \"Src/OtherModule/Api/NamedTypes.ts\",")
-                newLines.add(3, "    \"Src/OtherModule/Api/Properties.ts\",")
-                newLines.add(4, "    \"Src/OtherModule/Api/Data.ts\",")
-                newLines.add(5, "    \"Src/OtherModule/Api/ValueObjects.ts\",")
-                newLines.add(6, "")
-                newLines.add(7, "    \"Src/OtherModule/Web/Dtos.ts\",")
-                files.write(fullMainTsconfigPath, File(it.name, FileContent(newLines)))
+                val currentLines = it.content.lines.toMutableList()
+                val x = extract(generateResult.main)
+                val newLines = mutableListOf<String>()
+                val prefix = "Src/$moduleName/"
+                x.forEach { something ->
+                    something.fileNames.forEach { fileName ->
+                        newLines.add("    \"$prefix${something.submoduleName}/$fileName\",")
+                    }
+                    newLines.add("")
+                }
+                newLines.removeAt(newLines.size - 1)
+
+                currentLines.addAll(2, newLines)
+                files.write(fullMainTsconfigPath, File(it.name, FileContent(currentLines)))
             }
 
             files.read(fullTestTsconfigPath).let {
@@ -55,8 +63,8 @@ class ModuleWriterLogic(
 
         //test helping
         val dirs = DirectoriesLogic()
-        val moduleName = generateResult.main.name
-        if (profile.language == ModuleLanguage.KOTLIN && moduleName.value.lowercase() == "SomeModule".lowercase()) {
+
+        if (profile.language == ModuleLanguage.KOTLIN && moduleName.lowercase() == "SomeModule".lowercase()) {
             val debugPath = Path("../tmp")
             dirs.delete(debugPath)
             dirs.write(debugPath, generateResult.main)
@@ -64,5 +72,19 @@ class ModuleWriterLogic(
             if (generateResult.tests != null)
                 dirs.write(debugPath, generateResult.tests)
         }
+    }
+
+    data class Something(
+        val submoduleName: String,
+        val fileNames: List<String>
+    )
+    fun extract(dir: Directory): List<Something> {
+        val result = mutableListOf<Something>()
+        dir.directories.forEach { subDir ->
+            val submoduleName = subDir.name.value
+            val fileNames = subDir.files.map { it.name.value }
+            result.add(Something(submoduleName, fileNames))
+        }
+        return result
     }
 }

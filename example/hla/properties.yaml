@@ -45,7 +45,7 @@ profiles:
     fixturesPath: "fixtures"
     testsPath: "test"
     onlyParts: []
-    generateWeb: false
+    generateWeb: true
     typeScript:
       mainTsconfigPath: "tsconfig.json"
       testTsconfigPath: "Tests/tsconfig.json"

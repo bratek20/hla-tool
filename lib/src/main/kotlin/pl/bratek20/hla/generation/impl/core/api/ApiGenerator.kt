@@ -195,14 +195,14 @@ class ApiGenerator: DirectoryGenerator() {
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
             NamedTypesGenerator(),
-            ValueObjectsGenerator(),
-            InterfacesGenerator(),
-            PropertiesOrDataGenerator(false),
-            PropertiesOrDataGenerator(true),
-            ExceptionsGenerator(),
             EnumsGenerator(),
             CustomTypesGenerator(),
-            CustomTypesMapperGenerator()
+            CustomTypesMapperGenerator(),
+            PropertiesOrDataGenerator(false),
+            PropertiesOrDataGenerator(true),
+            ValueObjectsGenerator(),
+            ExceptionsGenerator(),
+            InterfacesGenerator(),
         )
     }
 }
