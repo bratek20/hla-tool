@@ -2,6 +2,7 @@ package pl.bratek20.hla.directory.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 import pl.bratek20.hla.directory.api.*
+import pl.bratek20.hla.directory.impl.FilesLogic
 
 class DirectoriesMock: Directories {
     private val directoryWrites: MutableList<Pair<Path, Directory>> = mutableListOf()
@@ -51,7 +52,7 @@ class FilesMock: Files {
     }
 
     override fun read(path: Path): File {
-        TODO("Not yet implemented")
+        return FilesLogic().read(path)
     }
 
     override fun delete(path: Path) {

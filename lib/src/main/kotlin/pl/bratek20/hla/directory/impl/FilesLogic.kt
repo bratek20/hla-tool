@@ -2,6 +2,20 @@ package pl.bratek20.hla.directory.impl
 
 import pl.bratek20.hla.directory.api.*
 
+fun compareFileContent(filePath: String, content1: FileContent, content2: FileContent): List<String> {
+    if (content1.lines.size != content2.lines.size) {
+        return listOf("Different number of lines for file $filePath: ${content1.lines.size} != ${content2.lines.size}")
+    }
+
+    return content1.lines.zip(content2.lines).mapIndexed { index, (line1, line2) ->
+        if (line1 != line2) {
+            "Different content for file $filePath in line ${index + 1}: `$line1` != `$line2`"
+        } else {
+            null
+        }
+    }.filterNotNull()
+}
+
 class FilesLogic: Files {
     override fun write(path: Path, file: File) {
         val nioPath = java.nio.file.Paths.get(path.add(Path(file.name.value)).value)
@@ -36,6 +50,11 @@ class FilesLogic: Files {
     }
 
     override fun compare(file1: File, file2: File): CompareResult {
-        TODO()
+        val differences = compareFileContent(file1.name.value, file1.content, file2.content)
+
+        return CompareResult(
+            differences.isEmpty(),
+            differences
+        )
     }
 }
