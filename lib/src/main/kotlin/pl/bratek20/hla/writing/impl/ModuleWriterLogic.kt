@@ -51,13 +51,31 @@ class ModuleWriterLogic(
             }
 
             files.read(fullTestTsconfigPath).let {
-                val newLines = it.content.lines.toMutableList()
-                newLines.add(2, "    \"OtherModule/Fixtures/Builders.ts\",")
-                newLines.add(3, "    \"OtherModule/Fixtures/Diffs.ts\",")
-                newLines.add(4, "    \"OtherModule/Fixtures/Asserts.ts\",")
-                newLines.add(5, "")
-                newLines.add(6, "    \"OtherModule/Tests/ApiTest.ts\",")
-                files.write(fullTestTsconfigPath, File(it.name, FileContent(newLines)))
+                val currentLines = it.content.lines.toMutableList()
+                val x = extract(generateResult.fixtures)
+                val newLines = mutableListOf<String>()
+                val prefix = "$moduleName/"
+                x.forEach { something ->
+                    something.fileNames.forEach { fileName ->
+                        newLines.add("    \"$prefix${something.submoduleName}/$fileName\",")
+                    }
+                    newLines.add("")
+                }
+
+                if (generateResult.tests != null) {
+                    val y = extract(generateResult.tests)
+                    y.forEach { something ->
+                        something.fileNames.forEach { fileName ->
+                            newLines.add("    \"$prefix${something.submoduleName}/$fileName\",")
+                        }
+                        newLines.add("")
+                    }
+
+                }
+                newLines.removeAt(newLines.size - 1)
+
+                currentLines.addAll(2, newLines)
+                files.write(fullTestTsconfigPath, File(it.name, FileContent(currentLines)))
             }
         }
 
