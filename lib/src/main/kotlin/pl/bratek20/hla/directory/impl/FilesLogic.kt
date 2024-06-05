@@ -15,7 +15,7 @@ class FilesLogic: Files {
         val file = nioPath.toFile()
 
         if (!file.exists() || !file.isFile) {
-            throw FileNotFoundException("File not found: $nioPath")
+            throw FileNotFoundException("File not found: $path")
         }
 
         return File(

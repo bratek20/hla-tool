@@ -1,13 +1,34 @@
 package pl.bratek20.hla.directory.api
 
-data class Path(
-    val value: String
+class Path(
+    initValue: String
 ) {
+    val value = normalized(initValue)
+
     fun add(path: Path): Path {
         if (path.value.isEmpty()) {
-            return this.copy()
+            return Path(value)
         }
         return Path(value + "\\" + path.value)
+    }
+
+    private fun normalized(value: String): String {
+        return value.replace("\\", "/")
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Path) return false
+
+        return value == other.value
+    }
+
+    override fun hashCode(): Int {
+        return value.hashCode()
+    }
+
+    override fun toString(): String {
+        return value
     }
 }
 
