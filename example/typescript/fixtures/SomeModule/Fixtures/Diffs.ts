@@ -20,13 +20,13 @@ namespace SomeModule {
     }
 
     export interface ExpectedSomeProperty {
-        other?: OtherModule.Assert.ExpectedOtherProperty,
+        other?: OtherModule.ExpectedOtherProperty,
     }
     export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
         const result: string[] = []
 
         if (expected.other !== undefined) {
-            if (diffOtherProperty(given.other, expected.other) != "") { result.push(diffOtherProperty(given.other, expected.other, `${path}other.`)) }
+            if (OtherModule.diffOtherProperty(given.other, expected.other) != "") { result.push(OtherModule.diffOtherProperty(given.other, expected.other, `${path}other.`)) }
         }
 
         return result.join("\n")
@@ -106,29 +106,29 @@ namespace SomeModule {
 
     export interface ExpectedSomeClass4 {
         otherId?: number,
-        otherClass?: OtherModule.Assert.ExpectedOtherClass,
+        otherClass?: OtherModule.ExpectedOtherClass,
         otherIdList?: number[],
-        otherClassList?: OtherModule.Assert.ExpectedOtherClass[],
+        otherClassList?: OtherModule.ExpectedOtherClass[],
     }
     export function diffSomeClass4(given: SomeClass4, expected: ExpectedSomeClass4, path: string = ""): string {
         const result: string[] = []
 
         if (expected.otherId !== undefined) {
-            if (diffOtherId(given.otherId, expected.otherId) != "") { result.push(diffOtherId(given.otherId, expected.otherId, `${path}otherId.`)) }
+            if (OtherModule.diffOtherId(given.otherId, expected.otherId) != "") { result.push(OtherModule.diffOtherId(given.otherId, expected.otherId, `${path}otherId.`)) }
         }
 
         if (expected.otherClass !== undefined) {
-            if (diffOtherClass(given.otherClass, expected.otherClass) != "") { result.push(diffOtherClass(given.otherClass, expected.otherClass, `${path}otherClass.`)) }
+            if (OtherModule.diffOtherClass(given.otherClass, expected.otherClass) != "") { result.push(OtherModule.diffOtherClass(given.otherClass, expected.otherClass, `${path}otherClass.`)) }
         }
 
         if (expected.otherIdList !== undefined) {
             if (given.otherIdList.length != expected.otherIdList.length) { result.push(`${path}otherIdList size ${given.otherIdList.length} != ${expected.otherIdList.length}`) }
-            given.otherIdList.forEach((entry, idx) => { if (diffOtherId(entry, expected.otherIdList[idx]) != "") { result.push(diffOtherId(entry, expected.otherIdList[idx], `${path}otherIdList[${idx}].`)) } })
+            given.otherIdList.forEach((entry, idx) => { if (OtherModule.diffOtherId(entry, expected.otherIdList[idx]) != "") { result.push(OtherModule.diffOtherId(entry, expected.otherIdList[idx], `${path}otherIdList[${idx}].`)) } })
         }
 
         if (expected.otherClassList !== undefined) {
             if (given.otherClassList.length != expected.otherClassList.length) { result.push(`${path}otherClassList size ${given.otherClassList.length} != ${expected.otherClassList.length}`) }
-            given.otherClassList.forEach((entry, idx) => { if (diffOtherClass(entry, expected.otherClassList[idx]) != "") { result.push(diffOtherClass(entry, expected.otherClassList[idx], `${path}otherClassList[${idx}].`)) } })
+            given.otherClassList.forEach((entry, idx) => { if (OtherModule.diffOtherClass(entry, expected.otherClassList[idx]) != "") { result.push(OtherModule.diffOtherClass(entry, expected.otherClassList[idx], `${path}otherClassList[${idx}].`)) } })
         }
 
         return result.join("\n")
@@ -136,20 +136,20 @@ namespace SomeModule {
 
     export interface ExpectedSomeClass5 {
         date?: string,
-        dateRange?: TypesModule.Assert.ExpectedDateRange,
+        dateRange?: TypesModule.ExpectedDateRange,
         dateRangeWrapper?: ExpectedDateRangeWrapper,
         someProperty?: ExpectedSomeProperty,
-        otherProperty?: OtherModule.Assert.ExpectedOtherProperty,
+        otherProperty?: OtherModule.ExpectedOtherProperty,
     }
     export function diffSomeClass5(given: SomeClass5, expected: ExpectedSomeClass5, path: string = ""): string {
         const result: string[] = []
 
         if (expected.date !== undefined) {
-            if (diffDate(given.date, expected.date) != "") { result.push(diffDate(given.date, expected.date, `${path}date.`)) }
+            if (TypesModule.diffDate(given.date, expected.date) != "") { result.push(TypesModule.diffDate(given.date, expected.date, `${path}date.`)) }
         }
 
         if (expected.dateRange !== undefined) {
-            if (diffDateRange(given.dateRange, expected.dateRange) != "") { result.push(diffDateRange(given.dateRange, expected.dateRange, `${path}dateRange.`)) }
+            if (TypesModule.diffDateRange(given.dateRange, expected.dateRange) != "") { result.push(TypesModule.diffDateRange(given.dateRange, expected.dateRange, `${path}dateRange.`)) }
         }
 
         if (expected.dateRangeWrapper !== undefined) {
@@ -161,7 +161,7 @@ namespace SomeModule {
         }
 
         if (expected.otherProperty !== undefined) {
-            if (diffOtherProperty(given.otherProperty, expected.otherProperty) != "") { result.push(diffOtherProperty(given.otherProperty, expected.otherProperty, `${path}otherProperty.`)) }
+            if (OtherModule.diffOtherProperty(given.otherProperty, expected.otherProperty) != "") { result.push(OtherModule.diffOtherProperty(given.otherProperty, expected.otherProperty, `${path}otherProperty.`)) }
         }
 
         return result.join("\n")
