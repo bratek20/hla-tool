@@ -57,7 +57,8 @@ class HlaFacadeLogic(
             WriteArgs(
                 hlaFolderPath = hlaFolderPath,
                 generateResult = generateResult,
-                profile = profile
+                profile = profile,
+                onlyUpdate = onlyUpdate
             )
         )
     }

@@ -398,4 +398,22 @@ class HlaFacadeTest {
         assertWrittenFileWithExample(tsconfigFile, exampleTsconfigPath)
         assertWrittenFileWithExample(testTsconfigFile, exampleTestTsconfigPath)
     }
+
+    @Test
+    fun shouldNotModifyTypeScriptFilesOnUpdate() {
+        //given
+        val (_, facade, filesMock) = setup()
+
+        val args = ModuleOperationArgs(
+            moduleName = ModuleName("OtherModule"),
+            profileName = ProfileName("typeScriptFileModifiers"),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.updateModule(args)
+
+        //then
+        filesMock.assertWriteCount(0)
+    }
 }

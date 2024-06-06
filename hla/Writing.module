@@ -1,0 +1,10 @@
+ValueObjects
+    WriteArgs
+        hlaFolderPath: Path
+        generateResult: GenerateResult
+        profile: HlaProfile
+        onlyUpdate: bool
+
+Interfaces
+    ModuleWriter
+        write(args: WriteArgs)

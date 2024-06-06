@@ -27,7 +27,7 @@ class ModuleWriterLogic(
 
         writeDirectories(paths, generateResult)
 
-        if (profile.language == ModuleLanguage.TYPE_SCRIPT && profile.typeScript != null) {
+        if (profile.language == ModuleLanguage.TYPE_SCRIPT && profile.typeScript != null && !args.onlyUpdate) {
             updateTsConfigFiles(rootPath, profile.typeScript, generateResult)
         }
 
