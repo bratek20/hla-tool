@@ -22,6 +22,7 @@ data class SomeProperty(
 data class SomeProperty2(
     val value: String,
     val custom: Any,
+    val someEnum: SomeEnum,
     private val customOpt: Any?,
 ) {
     fun getCustomOpt(): Any? {
@@ -32,11 +33,13 @@ data class SomeProperty2(
         fun create(
             value: String,
             custom: Any,
+            someEnum: SomeEnum,
             customOpt: Any?,
         ): SomeProperty2 {
             return SomeProperty2(
                 value = value,
                 custom = custom,
+                someEnum = someEnum,
                 customOpt = customOpt,
             )
         }

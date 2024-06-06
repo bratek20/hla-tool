@@ -15,16 +15,19 @@ class SomeProperty {
 class SomeProperty2 {
     value = STRING
     custom = ANY
+    someEnum = new SomeEnum
     customOpt? = ANY
 
     static create(
         value: string,
         custom: any,
+        someEnum: SomeEnum,
         customOpt: Optional<any> = Optional.empty(),
     ): SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value
         instance.custom = custom
+        instance.someEnum = someEnum
         instance.customOpt = customOpt.orElse(undefined)
         return instance
     }

@@ -32,6 +32,7 @@ fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
 data class SomeProperty2Def(
     var value: String = "someValue",
     var custom: Any = Any(),
+    var someEnum: SomeEnum = SomeEnum.VALUE_A,
     var customOpt: Any? = null,
 )
 fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
@@ -39,6 +40,7 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
     return SomeProperty2.create(
         value = def.value,
         custom = def.custom,
+        someEnum = def.someEnum,
         customOpt = def.customOpt,
     )
 }

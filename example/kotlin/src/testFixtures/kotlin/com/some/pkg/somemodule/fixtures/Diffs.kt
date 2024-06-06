@@ -45,6 +45,7 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
 data class ExpectedSomeProperty2(
     var value: String? = null,
     var custom: Any? = null,
+    var someEnum: SomeEnum? = null,
     var customOpt: Any? = null,
 )
 fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit, path: String = ""): String {
@@ -57,6 +58,10 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
     expected.custom?.let {
         if (given.custom != it) { result.add("${path}custom ${given.custom} != ${it}") }
+    }
+
+    expected.someEnum?.let {
+        if (given.someEnum != it) { result.add("${path}someEnum ${given.someEnum} != ${it}") }
     }
 
     expected.customOpt?.let {

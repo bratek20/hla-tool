@@ -35,6 +35,7 @@ namespace SomeModule {
     export interface ExpectedSomeProperty2 {
         value?: string,
         custom?: any,
+        someEnum?: SomeEnum,
         customOpt?: any,
     }
     export function diffSomeProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2, path: string = ""): string {
@@ -46,6 +47,10 @@ namespace SomeModule {
 
         if (expected.custom !== undefined) {
             if (given.custom != expected.custom) { result.push(`${path}custom ${given.custom} != ${expected.custom}`) }
+        }
+
+        if (expected.someEnum !== undefined) {
+            if (given.someEnum != expected.someEnum) { result.push(`${path}someEnum ${given.someEnum} != ${expected.someEnum}`) }
         }
 
         if (expected.customOpt !== undefined) {
