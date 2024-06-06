@@ -2,15 +2,12 @@
 
 class OtherData {
     private id = NUMBER
-    custom = ANY
 
     static create(
         id: number,
-        custom: any,
     ): OtherData {
         const instance = new OtherData()
         instance.id = id
-        instance.custom = custom
         return instance
     }
 

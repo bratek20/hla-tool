@@ -12,7 +12,6 @@ Properties
 Data
     "otherData" -> OtherData
         id: OtherId
-        custom: any
 
 ValueObjects
     OtherClass
