@@ -3,7 +3,7 @@
 class SomeData {
     other = new OtherData
     custom = ANY
-    customOpt? = ANY
+    private customOpt? = ANY
 
     static create(
         other: OtherData,

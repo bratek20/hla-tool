@@ -1,7 +1,7 @@
 #foreach($p in $serializables)
 class ${p.name()} {
     #foreach($field in $p.fields)
-    $field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
+    $field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
     #end
 
     static create(

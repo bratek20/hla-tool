@@ -15,8 +15,8 @@ class SomeProperty {
 class SomeProperty2 {
     value = STRING
     custom = ANY
-    someEnum = STRING
-    customOpt? = ANY
+    private someEnum = STRING
+    private customOpt? = ANY
 
     static create(
         value: string,
