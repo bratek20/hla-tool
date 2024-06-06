@@ -10,12 +10,16 @@ import pl.bratek20.hla.facade.api.*
 data class TypeScriptInfoDef(
     var mainTsconfigPath: String = "someValue",
     var testTsconfigPath: String = "someValue",
+    var launchPath: String = "someValue",
+    var packagePath: String = "someValue",
 )
 fun typeScriptInfo(init: TypeScriptInfoDef.() -> Unit = {}): TypeScriptInfo {
     val def = TypeScriptInfoDef().apply(init)
-    return TypeScriptInfo(
-        mainTsconfigPath = def.mainTsconfigPath,
-        testTsconfigPath = def.testTsconfigPath,
+    return TypeScriptInfo.create(
+        mainTsconfigPath = pathCreate(def.mainTsconfigPath),
+        testTsconfigPath = pathCreate(def.testTsconfigPath),
+        launchPath = pathCreate(def.launchPath),
+        packagePath = pathCreate(def.packagePath),
     )
 }
 
@@ -32,13 +36,13 @@ data class HlaProfileDef(
 )
 fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
     val def = HlaProfileDef().apply(init)
-    return HlaProfile(
-        name = def.name,
+    return HlaProfile.create(
+        name = ProfileName(def.name),
         language = def.language,
-        projectPath = def.projectPath,
-        mainPath = def.mainPath,
-        fixturesPath = def.fixturesPath,
-        testsPath = def.testsPath,
+        projectPath = pathCreate(def.projectPath),
+        mainPath = pathCreate(def.mainPath),
+        fixturesPath = pathCreate(def.fixturesPath),
+        testsPath = pathCreate(def.testsPath),
         onlyParts = def.onlyParts,
         generateWeb = def.generateWeb,
         typeScript = def.typeScript?.let { it -> typeScriptInfo(it) },

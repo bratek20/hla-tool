@@ -49,3 +49,5 @@ profiles:
     typeScript:
       mainTsconfigPath: ""
       testTsconfigPath: "Tests"
+      launchPath: ""
+      packagePath: ""

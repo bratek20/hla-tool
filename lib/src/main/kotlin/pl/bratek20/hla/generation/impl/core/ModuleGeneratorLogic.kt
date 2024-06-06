@@ -83,7 +83,7 @@ class ModuleGeneratorLogic(
 
     override fun generate(args: GenerateArgs): GenerateResult {
         val moduleName = args.moduleName
-        val language = args.profile.language
+        val language = args.profile.getLanguage()
         val modules = args.modules
 
         val domainContext = DomainContext(

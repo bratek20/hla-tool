@@ -375,28 +375,54 @@ class HlaFacadeTest {
         facade.startModule(args)
 
         //then
-        filesMock.assertWriteCount(2)
+        filesMock.assertWriteCount(4)
 
-        val exampleTsconfigPath = "../example/typescriptFileModifiers/afterStart/tsconfig.json"
-        val expectedTsconfigPath = "../example/hla/../typescriptFileModifiers/beforeStart"
-
-        val exampleTestTsconfigPath = "../example/typescriptFileModifiers/afterStart/Tests/tsconfig.json"
-        val expectedTestTsconfigPath = "../example/hla/../typescriptFileModifiers/beforeStart/Tests"
-
-        val tsconfigFile = filesMock.assertWriteAndGetFile(
+        assertFileModification(
+            filesMock,
             1,
-            expectedTsconfigPath,
+            "../example/typescriptFileModifiers/afterStart/tsconfig.json",
+            "../example/hla/../typescriptFileModifiers/beforeStart",
             "tsconfig.json"
         )
 
-        val testTsconfigFile = filesMock.assertWriteAndGetFile(
+        assertFileModification(
+            filesMock,
             2,
-            expectedTestTsconfigPath,
+            "../example/typescriptFileModifiers/afterStart/Tests/tsconfig.json",
+            "../example/hla/../typescriptFileModifiers/beforeStart/Tests",
             "tsconfig.json"
         )
 
-        assertWrittenFileWithExample(tsconfigFile, exampleTsconfigPath)
-        assertWrittenFileWithExample(testTsconfigFile, exampleTestTsconfigPath)
+        assertFileModification(
+            filesMock,
+            3,
+            "../example/typescriptFileModifiers/afterStart/package.json",
+            "../example/hla/../typescriptFileModifiers/beforeStart",
+            "package.json"
+        )
+
+        assertFileModification(
+            filesMock,
+            4,
+            "../example/typescriptFileModifiers/afterStart/launch.json",
+            "../example/hla/../typescriptFileModifiers/beforeStart",
+            "launch.json"
+        )
+    }
+
+    private fun assertFileModification(
+        filesMock: FilesMock,
+        writeNumber: Int,
+        examplePath: String,
+        expectedPath: String,
+        fileName: String
+    ) {
+        val file = filesMock.assertWriteAndGetFile(
+            writeNumber,
+            expectedPath,
+            fileName
+        )
+        assertWrittenFileWithExample(file, examplePath)
     }
 
     @Test

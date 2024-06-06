@@ -11,6 +11,8 @@ Properties
     TypeScriptInfo
         mainTsconfigPath: Path
         testTsconfigPath: Path
+        launchPath: Path
+        packagePath: Path
 
     "profiles" -> HlaProfile[]
         name: ProfileName

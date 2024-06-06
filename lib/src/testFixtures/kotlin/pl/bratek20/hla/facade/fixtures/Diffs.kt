@@ -21,6 +21,8 @@ fun diffProfileName(given: ProfileName, expected: String, path: String = ""): St
 data class ExpectedTypeScriptInfo(
     var mainTsconfigPath: String? = null,
     var testTsconfigPath: String? = null,
+    var launchPath: String? = null,
+    var packagePath: String? = null,
 )
 fun diffTypeScriptInfo(given: TypeScriptInfo, expectedInit: ExpectedTypeScriptInfo.() -> Unit, path: String = ""): String {
     val expected = ExpectedTypeScriptInfo().apply(expectedInit)
@@ -32,6 +34,14 @@ fun diffTypeScriptInfo(given: TypeScriptInfo, expectedInit: ExpectedTypeScriptIn
 
     expected.testTsconfigPath?.let {
         if (diffPath(given.getTestTsconfigPath(), it) != "") { result.add(diffPath(given.getTestTsconfigPath(), it, "${path}testTsconfigPath.")) }
+    }
+
+    expected.launchPath?.let {
+        if (diffPath(given.getLaunchPath(), it) != "") { result.add(diffPath(given.getLaunchPath(), it, "${path}launchPath.")) }
+    }
+
+    expected.packagePath?.let {
+        if (diffPath(given.getPackagePath(), it) != "") { result.add(diffPath(given.getPackagePath(), it, "${path}packagePath.")) }
     }
 
     return result.joinToString("\n")
@@ -57,7 +67,7 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
     }
 
     expected.language?.let {
-        if (given.language != it) { result.add("${path}language ${given.language} != ${it}") }
+        if (given.getLanguage() != it) { result.add("${path}language ${given.getLanguage()} != ${it}") }
     }
 
     expected.projectPath?.let {
@@ -86,7 +96,7 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
     }
 
     expected.typeScript?.let {
-        if (diffTypeScriptInfo(given.typeScript!!, it) != "") { result.add(diffTypeScriptInfo(given.typeScript!!, it, "${path}typeScript.")) }
+        if (diffTypeScriptInfo(given.getTypeScript()!!, it) != "") { result.add(diffTypeScriptInfo(given.getTypeScript()!!, it, "${path}typeScript.")) }
     }
 
     return result.joinToString("\n")

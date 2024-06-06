@@ -7,6 +7,8 @@ import pl.bratek20.hla.directory.api.*
 data class TypeScriptInfo(
     private val mainTsconfigPath: String,
     private val testTsconfigPath: String,
+    private val launchPath: String,
+    private val packagePath: String,
 ) {
     fun getMainTsconfigPath(): Path {
         return pathCreate(this.mainTsconfigPath)
@@ -15,20 +17,49 @@ data class TypeScriptInfo(
     fun getTestTsconfigPath(): Path {
         return pathCreate(this.testTsconfigPath)
     }
+
+    fun getLaunchPath(): Path {
+        return pathCreate(this.launchPath)
+    }
+
+    fun getPackagePath(): Path {
+        return pathCreate(this.packagePath)
+    }
+
+    companion object {
+        fun create(
+            mainTsconfigPath: Path,
+            testTsconfigPath: Path,
+            launchPath: Path,
+            packagePath: Path,
+        ): TypeScriptInfo {
+            return TypeScriptInfo(
+                mainTsconfigPath = pathGetValue(mainTsconfigPath),
+                testTsconfigPath = pathGetValue(testTsconfigPath),
+                launchPath = pathGetValue(launchPath),
+                packagePath = pathGetValue(packagePath),
+            )
+        }
+    }
 }
+
 data class HlaProfile(
     private val name: String,
-    val language: ModuleLanguage,
+    private val language: String,
     private val projectPath: String,
     private val mainPath: String,
     private val fixturesPath: String,
     private val testsPath: String,
     val onlyParts: List<String>,
     val generateWeb: Boolean,
-    val typeScript: TypeScriptInfo?,
+    private val typeScript: TypeScriptInfo?,
 ) {
     fun getName(): ProfileName {
         return ProfileName(this.name)
+    }
+
+    fun getLanguage(): ModuleLanguage {
+        return ModuleLanguage.valueOf(this.language)
     }
 
     fun getProjectPath(): Path {
@@ -45,6 +76,36 @@ data class HlaProfile(
 
     fun getTestsPath(): Path {
         return pathCreate(this.testsPath)
+    }
+
+    fun getTypeScript(): TypeScriptInfo? {
+        return this.typeScript
+    }
+
+    companion object {
+        fun create(
+            name: ProfileName,
+            language: ModuleLanguage,
+            projectPath: Path,
+            mainPath: Path,
+            fixturesPath: Path,
+            testsPath: Path,
+            onlyParts: List<String>,
+            generateWeb: Boolean,
+            typeScript: TypeScriptInfo?,
+        ): HlaProfile {
+            return HlaProfile(
+                name = name.value,
+                language = language.name,
+                projectPath = pathGetValue(projectPath),
+                mainPath = pathGetValue(mainPath),
+                fixturesPath = pathGetValue(fixturesPath),
+                testsPath = pathGetValue(testsPath),
+                onlyParts = onlyParts,
+                generateWeb = generateWeb,
+                typeScript = typeScript,
+            )
+        }
     }
 }
 
