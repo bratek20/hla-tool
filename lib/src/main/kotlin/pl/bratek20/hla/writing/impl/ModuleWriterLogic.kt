@@ -63,10 +63,11 @@ class ModuleWriterLogic(
     private fun updateTsConfigFile(tsconfigPath: Path, directory: Directory, prefix: String) {
         files.read(tsconfigPath.add(FileName("tsconfig.json"))).let {
             val currentLines = it.content.lines.toMutableList()
-            val newLines = generateNewLines(directory, prefix)
 
             val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
             val indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
+            val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
+            val newLines = generateNewLines(directory, prefix, padding)
 
             currentLines.addAll(indexToAdd, newLines)
 
@@ -74,12 +75,12 @@ class ModuleWriterLogic(
         }
     }
 
-    private fun generateNewLines(directory: Directory, prefix: String): List<String> {
+    private fun generateNewLines(directory: Directory, prefix: String, padding: String): List<String> {
         val newLines = mutableListOf<String>()
         extractFiles(directory).forEach { item ->
             newLines.add("")
             item.fileNames.forEach { fileName ->
-                newLines.add("    \"$prefix${item.submoduleName}/$fileName\",")
+                newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
             }
         }
         return newLines

@@ -1,13 +1,13 @@
 {
-  "files": [
-    "Src/SomeModule/SomeClass.ts",
-    "Src/SomeModule/SomeClass2.ts",
+    "files": [
+        "Src/SomeModule/SomeClass.ts",
+        "Src/SomeModule/SomeClass2.ts",
 
-    "Src/OtherModule/Api/NamedTypes.ts",
-    "Src/OtherModule/Api/Properties.ts",
-    "Src/OtherModule/Api/Data.ts",
-    "Src/OtherModule/Api/ValueObjects.ts",
+        "Src/OtherModule/Api/NamedTypes.ts",
+        "Src/OtherModule/Api/Properties.ts",
+        "Src/OtherModule/Api/Data.ts",
+        "Src/OtherModule/Api/ValueObjects.ts",
 
-    "Src/OtherModule/Web/Dtos.ts",
-  ]
+        "Src/OtherModule/Web/Dtos.ts",
+    ]
 }

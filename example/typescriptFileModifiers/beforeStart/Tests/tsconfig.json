@@ -1,5 +1,5 @@
 {
-  "include": [
-    "SomeModule/SomeClassTest.ts",
-  ]
+    "include": [
+        "SomeModule/SomeClassTest.ts",
+    ]
 }
