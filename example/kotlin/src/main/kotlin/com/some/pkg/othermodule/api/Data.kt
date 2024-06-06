@@ -4,6 +4,7 @@ package com.some.pkg.othermodule.api
 
 data class OtherData(
     private val id: Int,
+    val custom: Any,
 ) {
     fun getId(): OtherId {
         return OtherId(this.id)

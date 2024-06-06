@@ -12,6 +12,7 @@ class KotlinTypes: LanguageTypes {
             BaseType.INT -> "Int"
             BaseType.BOOL -> "Boolean"
             BaseType.VOID -> "Unit"
+            BaseType.ANY -> "Any"
         }
     }
 
@@ -21,6 +22,7 @@ class KotlinTypes: LanguageTypes {
             BaseType.INT -> "0"
             BaseType.BOOL -> "false"
             BaseType.VOID -> throw IllegalArgumentException("Void type has no default value")
+            BaseType.ANY -> TODO()
         }
     }
 

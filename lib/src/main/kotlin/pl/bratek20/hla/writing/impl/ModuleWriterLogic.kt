@@ -64,7 +64,7 @@ class ModuleWriterLogic(
         files.read(tsconfigPath.add(FileName("tsconfig.json"))).let {
             val currentLines = it.content.lines.toMutableList()
             val newLines = generateNewLines(directory, prefix)
-            
+
             val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
             val indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
 

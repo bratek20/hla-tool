@@ -7,6 +7,7 @@ enum class BaseType {
     INT,
     BOOL,
     VOID,
+    ANY,
 }
 
 enum class TypeWrapper {

@@ -4,6 +4,7 @@ Enums
         INT
         BOOL
         VOID
+        ANY
 
     TypeWrapper
         LIST

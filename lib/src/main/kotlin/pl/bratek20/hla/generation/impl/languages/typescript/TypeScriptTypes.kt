@@ -13,6 +13,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
             BaseType.INT -> "number"
             BaseType.BOOL -> "boolean"
             BaseType.VOID -> "void"
+            BaseType.ANY -> "any"
         }
     }
 
@@ -22,6 +23,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
             BaseType.INT -> "0"
             BaseType.BOOL -> "false"
             BaseType.VOID -> throw IllegalArgumentException("Void type has no default value")
+            BaseType.ANY -> TODO()
         }
     }
 
