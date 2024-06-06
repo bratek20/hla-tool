@@ -1,17 +1,17 @@
 #foreach($p in $serializables)
 class ${p.name()} {
     #foreach($field in $p.fields)
-    $field.accessor()$field.name = $oc.map($field.type.serializableName())
+    $field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
     #end
 
     static create(
         #foreach($field in $p.fields)
-        $field.name: $field.type.serializableName(),
+        $field.name: $field.type.name(),
         #end
     ): ${p.name()} {
         const instance = new ${p.name()}()
         #foreach($field in $p.fields)
-        instance.$field.name = $field.name
+        instance.$field.name = $field.type.serialize($field.name)
         #end
         return instance
     }
@@ -24,7 +24,7 @@ class ${p.name()} {
     #foreach($setter in $p.setters())
 
     ${setter.name}(${setter.field}: ${setter.type.name()}): void {
-        this.${setter.field} = ${setter.type.unbox(${setter.field})}
+        this.${setter.field} = ${setter.type.serialize(${setter.field})}
     }
     #end
 }#if($foreach.hasNext)

@@ -4,10 +4,10 @@ class OtherData {
     private id = NUMBER
 
     static create(
-        id: number,
+        id: OtherId,
     ): OtherData {
         const instance = new OtherData()
-        instance.id = id
+        instance.id = id.value
         return instance
     }
 

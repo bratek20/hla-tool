@@ -3,7 +3,7 @@
 class SomeData {
     other = new OtherData
     custom = ANY
-    customOpt = Optional.of(ANY)
+    private customOpt? = ANY
 
     static create(
         other: OtherData,
@@ -13,7 +13,11 @@ class SomeData {
         const instance = new SomeData()
         instance.other = other
         instance.custom = custom
-        instance.customOpt = customOpt
+        instance.customOpt = customOpt.orElse(undefined)
         return instance
+    }
+
+    getCustomOpt(): Optional<any> {
+        return Optional.of(this.customOpt)
     }
 }

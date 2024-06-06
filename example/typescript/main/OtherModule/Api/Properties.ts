@@ -5,11 +5,11 @@ class OtherProperty {
     name = STRING
 
     static create(
-        id: number,
+        id: OtherId,
         name: string,
     ): OtherProperty {
         const instance = new OtherProperty()
-        instance.id = id
+        instance.id = id.value
         instance.name = name
         return instance
     }

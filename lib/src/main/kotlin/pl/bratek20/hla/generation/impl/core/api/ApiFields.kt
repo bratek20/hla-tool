@@ -1,7 +1,6 @@
 package pl.bratek20.hla.generation.impl.core.api
 
 import pl.bratek20.hla.definitions.api.FieldDefinition
-import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.utils.camelToPascalCase
 
 
@@ -62,26 +61,30 @@ class SerializableTypeApiField(
     factory: ApiTypeFactory
 ): ApiTypeField(def, factory) {
     override fun access(variableName: String): String {
-        if (type is SimpleStructureApiType) {
+        if (typeIsX()) {
             return "$variableName.${getterName()}()"
         }
         return "$variableName.$name"
     }
 
+    private fun typeIsX(): Boolean {
+        return type is OptionalApiType || type is SimpleStructureApiType
+    }
+
     fun accessor(): String {
-        return if(type is SimpleStructureApiType) "private " else ""
+        return if(typeIsX()) "private " else ""
     }
 
     fun getter(): SerializableTypeGetterOrSetter? {
-        if(type is SimpleStructureApiType) {
-            return SerializableTypeGetterOrSetter(getterName(), type as SimpleStructureApiType, name)
+        if(typeIsX()) {
+            return SerializableTypeGetterOrSetter(getterName(), type, name)
         }
         return null
     }
 
     fun setter(): SerializableTypeGetterOrSetter? {
-        if(type is SimpleStructureApiType) {
-            return SerializableTypeGetterOrSetter(setterName(), type as SimpleStructureApiType, name)
+        if(typeIsX()) {
+            return SerializableTypeGetterOrSetter(setterName(), type, name)
         }
         return null
     }

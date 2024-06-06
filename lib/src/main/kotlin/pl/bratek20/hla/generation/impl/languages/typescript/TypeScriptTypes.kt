@@ -23,7 +23,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
             BaseType.INT -> "0"
             BaseType.BOOL -> "false"
             BaseType.VOID -> throw IllegalArgumentException("Void type has no default value")
-            BaseType.ANY -> "TODO"
+            BaseType.ANY -> "{}"
         }
     }
 
@@ -66,6 +66,14 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
 
     override fun unwrapOptional(variableName: String): String {
         return "$variableName.get()"
+    }
+
+    override fun serializeOptional(variableName: String): String {
+        return "$variableName.orElse(undefined)"
+    }
+
+    override fun deserializeOptional(variableName: String): String {
+        return "Optional.of($variableName)"
     }
 
     override fun checkOptionalEmpty(variableName: String): String {

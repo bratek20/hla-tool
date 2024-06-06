@@ -31,7 +31,7 @@ fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
 
 data class SomeProperty2Def(
     var value: String = "someValue",
-    var custom: Any = TODO,
+    var custom: Any = Any(),
     var customOpt: Any? = null,
 )
 fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {

@@ -5,7 +5,6 @@ import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
 import pl.bratek20.hla.definitions.impl.HlaModules
 import pl.bratek20.hla.definitions.impl.isBaseType
 import pl.bratek20.hla.definitions.impl.ofBaseType
-import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -15,6 +14,14 @@ abstract class ApiType {
 
     open fun serializableName(): String {
         return name()
+    }
+
+    open fun deserialize(variableName: String): String {
+        return variableName
+    }
+
+    open fun serialize(variableName: String): String {
+        return variableName
     }
 
     //TODO move up
@@ -48,11 +55,15 @@ abstract class SimpleStructureApiType(
         return boxedType.name()
     }
 
-    fun deserialize(variableName: String) : String {
+    override fun deserialize(variableName: String) : String {
         return constructorCall() + "($variableName)"
     }
 
     abstract fun unbox(variableName: String): String;
+
+    override fun serialize(variableName: String): String {
+        return unbox(variableName)
+    }
 
     fun exampleValue(): String? {
         return def.attributes.firstOrNull { it.name == "example" }?.value
@@ -140,7 +151,7 @@ class ComplexCustomApiType(
 
 data class SerializableTypeGetterOrSetter(
     val name: String,
-    val type: SimpleStructureApiType,
+    val type: ApiType,
     val field: String
 )
 
@@ -196,6 +207,14 @@ class OptionalApiType(
 
     fun unwrap(variableName: String): String {
         return languageTypes.unwrapOptional(variableName)
+    }
+
+    override fun deserialize(variableName: String): String {
+        return languageTypes.serializeOptional(variableName)
+    }
+
+    override fun serialize(variableName: String): String {
+        return languageTypes.deserializeOptional(variableName)
     }
 }
 

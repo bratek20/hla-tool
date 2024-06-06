@@ -10,7 +10,7 @@ class ObjectCreationMapper {
         }
         if (type.contains("Optional<")) {
             val innerType = type.replace("Optional<", "").replace(">", "")
-            return "Optional.of(" + map(innerType) + ")"
+            return map(innerType)
         }
         return when (type) {
             "string" -> "STRING"
@@ -19,6 +19,13 @@ class ObjectCreationMapper {
             "any" -> "ANY"
             else -> "new $type"
         }
+    }
+
+    fun adjustAssignment(type: String): String {
+        if (type.contains("Optional<")) {
+            return "?"
+        }
+        return ""
     }
 }
 class ObjectCreationExtension: ContentBuilderExtension {
