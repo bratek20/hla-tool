@@ -47,5 +47,5 @@ profiles:
     onlyParts: []
     generateWeb: true
     typeScript:
-      mainTsconfigPath: "tsconfig.json"
-      testTsconfigPath: "Tests/tsconfig.json"
+      mainTsconfigPath: ""
+      testTsconfigPath: "Tests"

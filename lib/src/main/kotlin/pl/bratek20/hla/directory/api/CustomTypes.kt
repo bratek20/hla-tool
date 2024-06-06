@@ -12,6 +12,10 @@ class Path(
         return Path(value + "\\" + path.value)
     }
 
+    fun add(fileName: FileName): Path {
+        return Path(value + "\\" + fileName.value)
+    }
+
     private fun normalized(value: String): String {
         return value.replace("\\", "/")
     }

@@ -61,7 +61,7 @@ class ModuleWriterLogic(
     }
 
     private fun updateTsConfigFile(tsconfigPath: Path, directory: Directory, prefix: String) {
-        files.read(tsconfigPath).let {
+        files.read(tsconfigPath.add(FileName("tsconfig.json"))).let {
             val currentLines = it.content.lines.toMutableList()
             val newLines = generateNewLines(directory, prefix)
             currentLines.addAll(2, newLines)

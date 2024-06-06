@@ -378,19 +378,21 @@ class HlaFacadeTest {
         filesMock.assertWriteCount(2)
 
         val exampleTsconfigPath = "../example/typescriptFileModifiers/afterStart/tsconfig.json"
-        val expectedTsconfigPath = "../example/hla/../typescriptFileModifiers/beforeStart/tsconfig.json"
+        val expectedTsconfigPath = "../example/hla/../typescriptFileModifiers/beforeStart"
 
         val exampleTestTsconfigPath = "../example/typescriptFileModifiers/afterStart/Tests/tsconfig.json"
-        val expectedTestTsconfigPath = "../example/hla/../typescriptFileModifiers/beforeStart/Tests/tsconfig.json"
+        val expectedTestTsconfigPath = "../example/hla/../typescriptFileModifiers/beforeStart/Tests"
 
         val tsconfigFile = filesMock.assertWriteAndGetFile(
             1,
-            expectedTsconfigPath
+            expectedTsconfigPath,
+            "tsconfig.json"
         )
 
         val testTsconfigFile = filesMock.assertWriteAndGetFile(
             2,
-            expectedTestTsconfigPath
+            expectedTestTsconfigPath,
+            "tsconfig.json"
         )
 
         assertWrittenFileWithExample(tsconfigFile, exampleTsconfigPath)
