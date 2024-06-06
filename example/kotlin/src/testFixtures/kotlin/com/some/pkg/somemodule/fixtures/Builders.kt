@@ -24,7 +24,7 @@ data class SomePropertyDef(
 )
 fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
     val def = SomePropertyDef().apply(init)
-    return SomeProperty(
+    return SomeProperty.create(
         other = otherProperty(def.other),
     )
 }
@@ -36,7 +36,7 @@ data class SomeProperty2Def(
 )
 fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
     val def = SomeProperty2Def().apply(init)
-    return SomeProperty2(
+    return SomeProperty2.create(
         value = def.value,
         custom = def.custom,
         customOpt = def.customOpt,

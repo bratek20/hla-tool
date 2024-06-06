@@ -16,6 +16,7 @@ data class ${p.name()}(
         return ${getter.type.deserialize("this.${getter.field}")}
     }
 
+    #end
     companion object {
         fun create(
         #foreach($field in $p.fields)
@@ -29,10 +30,6 @@ data class ${p.name()}(
             )
         }
     }
-    #if($foreach.hasNext)
-
-    #end
-    #end
 }#if($foreach.hasNext)
 
 

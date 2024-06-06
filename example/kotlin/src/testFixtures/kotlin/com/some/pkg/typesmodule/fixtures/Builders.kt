@@ -22,7 +22,7 @@ data class DateRangePropertyDef(
 )
 fun dateRangeProperty(init: DateRangePropertyDef.() -> Unit = {}): DateRangeProperty {
     val def = DateRangePropertyDef().apply(init)
-    return DateRangeProperty(
+    return DateRangeProperty.create(
         from = dateCreate(def.from),
         to = dateCreate(def.to),
     )

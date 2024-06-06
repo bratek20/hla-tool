@@ -8,12 +8,21 @@ import com.some.pkg.typesmodule.api.*
 data class SomeProperty(
     val other: OtherProperty,
 ) {
+    companion object {
+        fun create(
+            other: OtherProperty,
+        ): SomeProperty {
+            return SomeProperty(
+                other = other,
+            )
+        }
+    }
 }
 
 data class SomeProperty2(
     val value: String,
     val custom: Any,
-    private val customOpt: Any? = null,
+    private val customOpt: Any?,
 ) {
     fun getCustomOpt(): Any? {
         return this.customOpt
