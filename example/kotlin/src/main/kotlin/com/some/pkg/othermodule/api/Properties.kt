@@ -9,6 +9,18 @@ data class OtherProperty(
     fun getId(): OtherId {
         return OtherId(this.id)
     }
+
+    companion object {
+        fun create(
+            id: OtherId,
+            name: String,
+        ): OtherProperty {
+            return OtherProperty(
+                id = id.value,
+                name = name,
+            )
+        }
+    }
 }
 
 val OTHER_PROPERTY_KEY = pl.bratek20.architecture.properties.api.ObjectPropertyKey(

@@ -15,6 +15,20 @@ data class ${p.name()}(
     fun ${getter.name}(): ${getter.type.name()} {
         return ${getter.type.deserialize("this.${getter.field}")}
     }
+
+    companion object {
+        fun create(
+        #foreach($field in $p.fields)
+            $field.name: $field.type.name(),
+        #end
+        ): ${p.name()} {
+            return ${p.name()}(
+                #foreach($field in $p.fields)
+                ${field.name} = ${field.type.serialize(${field.name})},
+                #end
+            )
+        }
+    }
     #if($foreach.hasNext)
 
     #end

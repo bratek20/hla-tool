@@ -13,4 +13,18 @@ data class SomeData(
     fun getCustomOpt(): Any? {
         return this.customOpt
     }
+
+    companion object {
+        fun create(
+            other: OtherData,
+            custom: Any,
+            customOpt: Any?,
+        ): SomeData {
+            return SomeData(
+                other = other,
+                custom = custom,
+                customOpt = customOpt,
+            )
+        }
+    }
 }

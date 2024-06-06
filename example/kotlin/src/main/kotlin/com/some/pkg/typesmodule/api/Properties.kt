@@ -10,7 +10,31 @@ data class DateRangeProperty(
         return dateCreate(this.from)
     }
 
+    companion object {
+        fun create(
+            from: Date,
+            to: Date,
+        ): DateRangeProperty {
+            return DateRangeProperty(
+                from = dateGetValue(from),
+                to = dateGetValue(to),
+            )
+        }
+    }
+
     fun getTo(): Date {
         return dateCreate(this.to)
+    }
+
+    companion object {
+        fun create(
+            from: Date,
+            to: Date,
+        ): DateRangeProperty {
+            return DateRangeProperty(
+                from = dateGetValue(from),
+                to = dateGetValue(to),
+            )
+        }
     }
 }

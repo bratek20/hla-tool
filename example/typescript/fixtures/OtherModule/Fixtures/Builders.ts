@@ -10,7 +10,7 @@ namespace OtherModule.Builder {
         const name = def?.name ?? "someValue"
 
         return OtherProperty.create(
-            id,
+            new OtherId(id),
             name,
         )
     }

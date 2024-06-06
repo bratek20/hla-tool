@@ -91,25 +91,6 @@ open class DefField(
     }
 }
 
-class PropertyDefField(
-    api: SerializableTypeApiField,
-    factory: DefTypeFactory
-) : DefField(api, factory) {
-    override fun build(variableName: String): String {
-        if(type.api is SimpleStructureApiType) {
-            return "${variableName}.${name}"
-        }
-        return super.build(variableName)
-    }
-
-    override fun build(): String {
-        if(type.api is SimpleStructureApiType) {
-            return name
-        }
-        return super.build()
-    }
-}
-
 open class ComplexStructureDefType(
     api: ComplexStructureApiType<*>,
     val fields: List<DefField>
@@ -143,11 +124,6 @@ class ComplexVODefType(
 class ComplexCustomDefType(
     api: ComplexStructureApiType<*>,
     fields: List<DefField>
-) : ComplexStructureDefType(api, fields)
-
-class PropertyDefType(
-    api: ComplexStructureApiType<*>,
-    fields: List<PropertyDefField>
 ) : ComplexStructureDefType(api, fields)
 
 class OptionalDefType(
@@ -222,7 +198,7 @@ class DefTypeFactory(
             is EnumApiType -> EnumDefType(type)
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
-            is SerializableApiType -> PropertyDefType(type, createPropertyFields(type.fields))
+            is SerializableApiType -> ComplexStructureDefType(type, createFields(type.fields))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
@@ -233,9 +209,5 @@ class DefTypeFactory(
 
     private fun createFields(fields: List<ApiTypeField>): List<DefField> {
         return fields.map { DefField(it, this) }
-    }
-
-    private fun createPropertyFields(fields: List<SerializableTypeApiField>): List<PropertyDefField> {
-        return fields.map { PropertyDefField(it, this) }
     }
 }

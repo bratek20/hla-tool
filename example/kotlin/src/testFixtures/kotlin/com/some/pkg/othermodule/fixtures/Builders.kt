@@ -11,7 +11,7 @@ data class OtherPropertyDef(
 fun otherProperty(init: OtherPropertyDef.() -> Unit = {}): OtherProperty {
     val def = OtherPropertyDef().apply(init)
     return OtherProperty(
-        id = def.id,
+        id = OtherId(def.id),
         name = def.name,
     )
 }

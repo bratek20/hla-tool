@@ -8,6 +8,16 @@ data class OtherData(
     fun getId(): OtherId {
         return OtherId(this.id)
     }
+
+    companion object {
+        fun create(
+            id: OtherId,
+        ): OtherData {
+            return OtherData(
+                id = id.value,
+            )
+        }
+    }
 }
 
 val OTHER_DATA_KEY = pl.bratek20.architecture.properties.api.ObjectPropertyKey(

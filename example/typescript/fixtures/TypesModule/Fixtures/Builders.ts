@@ -24,8 +24,8 @@ namespace TypesModule.Builder {
         const to = def?.to ?? "01/01/2030 00:00"
 
         return DateRangeProperty.create(
-            from,
-            to,
+            TypesModule.CustomTypesMapper.dateCreate(from),
+            TypesModule.CustomTypesMapper.dateCreate(to),
         )
     }
 }

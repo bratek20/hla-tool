@@ -18,4 +18,18 @@ data class SomeProperty2(
     fun getCustomOpt(): Any? {
         return this.customOpt
     }
+
+    companion object {
+        fun create(
+            value: String,
+            custom: Any,
+            customOpt: Any?,
+        ): SomeProperty2 {
+            return SomeProperty2(
+                value = value,
+                custom = custom,
+                customOpt = customOpt,
+            )
+        }
+    }
 }
