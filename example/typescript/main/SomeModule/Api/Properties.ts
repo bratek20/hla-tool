@@ -15,7 +15,7 @@ class SomeProperty {
 class SomeProperty2 {
     value = STRING
     custom = ANY
-    customOpt = Optional.of(ANY)
+    customOpt? = ANY
 
     static create(
         value: string,
@@ -25,7 +25,11 @@ class SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value
         instance.custom = custom
-        instance.customOpt = customOpt
+        instance.customOpt = customOpt.orElse(undefined)
         return instance
+    }
+
+    getCustomOpt(): Optional<any> {
+        return Optional.of(this.customOpt)
     }
 }

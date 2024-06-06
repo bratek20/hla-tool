@@ -49,7 +49,7 @@ namespace SomeModule {
         }
 
         if (expected.customOpt !== undefined) {
-            if (given.customOpt.get() != expected.customOpt) { result.push(`${path}customOpt ${given.customOpt.get()} != ${expected.customOpt}`) }
+            if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
         }
 
         return result.join("\n")

@@ -60,7 +60,7 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
     }
 
     expected.customOpt?.let {
-        if (given.customOpt!! != it) { result.add("${path}customOpt ${given.customOpt!!} != ${it}") }
+        if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

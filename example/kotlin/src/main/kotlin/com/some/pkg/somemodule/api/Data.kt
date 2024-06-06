@@ -8,6 +8,9 @@ import com.some.pkg.typesmodule.api.*
 data class SomeData(
     val other: OtherData,
     val custom: Any,
-    val customOpt: Any?,
+    private val customOpt: Any?,
 ) {
+    fun getCustomOpt(): Any? {
+        return this.customOpt
+    }
 }

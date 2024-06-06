@@ -30,7 +30,7 @@ namespace SomeModule.Builder {
     }
     export function someProperty2(def?: SomeProperty2Def): SomeProperty2 {
         const value = def?.value ?? "someValue"
-        const custom = def?.custom ?? TODO
+        const custom = def?.custom ?? {}
         const customOpt = def?.customOpt ?? undefined
 
         return SomeProperty2.create(

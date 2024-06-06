@@ -3,7 +3,7 @@
 class SomeData {
     other = new OtherData
     custom = ANY
-    private customOpt? = ANY
+    customOpt? = ANY
 
     static create(
         other: OtherData,
@@ -19,5 +19,9 @@ class SomeData {
 
     getCustomOpt(): Optional<any> {
         return Optional.of(this.customOpt)
+    }
+
+    setCustomOpt(customOpt: Optional<any>): void {
+        this.customOpt = customOpt.orElse(undefined)
     }
 }

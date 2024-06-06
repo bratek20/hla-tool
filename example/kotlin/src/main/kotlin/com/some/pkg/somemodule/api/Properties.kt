@@ -13,6 +13,9 @@ data class SomeProperty(
 data class SomeProperty2(
     val value: String,
     val custom: Any,
-    val customOpt: Any?,
+    private val customOpt: Any?,
 ) {
+    fun getCustomOpt(): Any? {
+        return this.customOpt
+    }
 }

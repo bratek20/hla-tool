@@ -210,11 +210,11 @@ class OptionalApiType(
     }
 
     override fun deserialize(variableName: String): String {
-        return languageTypes.serializeOptional(variableName)
+        return languageTypes.deserializeOptional(variableName)
     }
 
     override fun serialize(variableName: String): String {
-        return languageTypes.deserializeOptional(variableName)
+        return languageTypes.serializeOptional(variableName)
     }
 }
 

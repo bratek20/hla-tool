@@ -137,8 +137,8 @@ namespace SomeModule.Web {
     }
 
     export class SomeClass6Dto {
-        someClassOpt = Optional.of(new SomeClassDto)
-        optString = Optional.of(STRING)
+        someClassOpt = new SomeClassDto
+        optString = STRING
         sameClassList = [new SomeClass6Dto]
 
         toApi(): SomeClass6 {
