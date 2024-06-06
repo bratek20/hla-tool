@@ -170,7 +170,7 @@ open class SerializableApiType(
     }
 
     override fun constructorCall(): String {
-        return languageTypes.propertyClassConstructor(name())
+        return languageTypes.propertyClassConstructorCall(name())
     }
 }
 

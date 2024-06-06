@@ -13,7 +13,7 @@ data class SomeProperty(
 data class SomeProperty2(
     val value: String,
     val custom: Any,
-    private val customOpt: Any?,
+    private val customOpt: Any? = null,
 ) {
     fun getCustomOpt(): Any? {
         return this.customOpt

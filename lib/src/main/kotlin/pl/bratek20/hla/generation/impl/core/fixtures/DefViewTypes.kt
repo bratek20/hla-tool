@@ -85,6 +85,9 @@ open class DefField(
 
     // used by velocity
     fun defaultValue(): String {
+        if (api.type is OptionalApiType) {
+            return type.defaultValue()
+        }
         return api.exampleValue() ?:
             api.defaultValue() ?:
             type.defaultValue()

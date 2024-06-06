@@ -42,6 +42,9 @@ open class ApiTypeField(
         if (value == "[]") {
             return type.languageTypes.defaultValueForList()
         }
+        if (value == "empty") {
+            return type.languageTypes.emptyOptional()
+        }
         return value
     }
 }

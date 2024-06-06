@@ -76,6 +76,10 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "Optional.of($variableName)"
     }
 
+    override fun emptyOptional(): String {
+        return "Optional.empty()"
+    }
+
     override fun checkOptionalEmpty(variableName: String): String {
         return "$variableName.isEmpty()"
     }
@@ -100,7 +104,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "$variableName.getName()"
     }
 
-    override fun propertyClassConstructor(className: String): String {
+    override fun propertyClassConstructorCall(className: String): String {
         return "$className.create"
     }
 

@@ -21,6 +21,7 @@ interface LanguageTypes {
     fun unwrapOptional(variableName: String): String
     fun serializeOptional(variableName: String): String
     fun deserializeOptional(variableName: String): String
+    fun emptyOptional(): String
 
     fun checkOptionalEmpty(variableName: String): String
 
@@ -33,7 +34,7 @@ interface LanguageTypes {
     fun enumConstructor(enumName: String, variable: String): String
     fun enumGetName(variableName: String): String
 
-    fun propertyClassConstructor(className: String): String
+    fun propertyClassConstructorCall(className: String): String
 
     fun customTypeConstructorName(className: String): String
     fun customTypeConstructorCall(className: String): String

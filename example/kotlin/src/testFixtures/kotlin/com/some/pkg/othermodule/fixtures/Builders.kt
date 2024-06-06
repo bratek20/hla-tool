@@ -10,7 +10,7 @@ data class OtherPropertyDef(
 )
 fun otherProperty(init: OtherPropertyDef.() -> Unit = {}): OtherProperty {
     val def = OtherPropertyDef().apply(init)
-    return OtherProperty(
+    return OtherProperty.create(
         id = OtherId(def.id),
         name = def.name,
     )

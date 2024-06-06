@@ -20,7 +20,7 @@ class SomeProperty2 {
     static create(
         value: string,
         custom: any,
-        customOpt: Optional<any>,
+        customOpt: Optional<any> = Optional.empty(),
     ): SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value

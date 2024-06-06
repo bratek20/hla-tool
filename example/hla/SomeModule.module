@@ -14,7 +14,7 @@ Properties
     SomeProperty2
         value: string
         custom: any
-        customOpt: any?
+        customOpt: any? = empty
 
 Data
     SomeData
