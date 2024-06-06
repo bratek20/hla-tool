@@ -16,6 +16,7 @@ class ObjectCreationMapper {
             "string" -> "STRING"
             "number" -> "NUMBER"
             "boolean" -> "BOOLEAN"
+            "any" -> "ANY"
             else -> "new $type"
         }
     }

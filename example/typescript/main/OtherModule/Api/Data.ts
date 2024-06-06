@@ -2,7 +2,7 @@
 
 class OtherData {
     private id = NUMBER
-    custom = new any
+    custom = ANY
 
     static create(
         id: number,
