@@ -12,5 +12,7 @@ data class SomeProperty(
 
 data class SomeProperty2(
     val value: String,
+    val custom: Any,
+    val customOpt: Any?,
 ) {
 }

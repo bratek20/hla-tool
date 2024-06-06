@@ -25,12 +25,18 @@ namespace SomeModule.Builder {
 
     export interface SomeProperty2Def {
         value?: string,
+        custom?: any,
+        customOpt?: any,
     }
     export function someProperty2(def?: SomeProperty2Def): SomeProperty2 {
         const value = def?.value ?? "someValue"
+        const custom = def?.custom ?? TODO
+        const customOpt = def?.customOpt ?? undefined
 
         return SomeProperty2.create(
             value,
+            custom,
+            Optional.of(customOpt),
         )
     }
 

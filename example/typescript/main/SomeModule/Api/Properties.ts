@@ -14,12 +14,18 @@ class SomeProperty {
 
 class SomeProperty2 {
     value = STRING
+    custom = ANY
+    customOpt = Optional.of(ANY)
 
     static create(
         value: string,
+        custom: any,
+        customOpt: Optional<any>,
     ): SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value
+        instance.custom = custom
+        instance.customOpt = customOpt
         return instance
     }
 }

@@ -34,12 +34,22 @@ namespace SomeModule {
 
     export interface ExpectedSomeProperty2 {
         value?: string,
+        custom?: any,
+        customOpt?: any,
     }
     export function diffSomeProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2, path: string = ""): string {
         const result: string[] = []
 
         if (expected.value !== undefined) {
             if (given.value != expected.value) { result.push(`${path}value ${given.value} != ${expected.value}`) }
+        }
+
+        if (expected.custom !== undefined) {
+            if (given.custom != expected.custom) { result.push(`${path}custom ${given.custom} != ${expected.custom}`) }
+        }
+
+        if (expected.customOpt !== undefined) {
+            if (given.customOpt.get() != expected.customOpt) { result.push(`${path}customOpt ${given.customOpt.get()} != ${expected.customOpt}`) }
         }
 
         return result.join("\n")

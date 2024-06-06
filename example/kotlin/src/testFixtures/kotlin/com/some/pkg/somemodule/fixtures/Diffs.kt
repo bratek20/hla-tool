@@ -44,6 +44,8 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
 
 data class ExpectedSomeProperty2(
     var value: String? = null,
+    var custom: Any? = null,
+    var customOpt: Any? = null,
 )
 fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeProperty2().apply(expectedInit)
@@ -51,6 +53,14 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
     expected.value?.let {
         if (given.value != it) { result.add("${path}value ${given.value} != ${it}") }
+    }
+
+    expected.custom?.let {
+        if (given.custom != it) { result.add("${path}custom ${given.custom} != ${it}") }
+    }
+
+    expected.customOpt?.let {
+        if (given.customOpt!! != it) { result.add("${path}customOpt ${given.customOpt!!} != ${it}") }
     }
 
     return result.joinToString("\n")

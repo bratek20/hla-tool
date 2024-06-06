@@ -13,6 +13,8 @@ Properties
 
     SomeProperty2
         value: string
+        custom: any
+        customOpt: any?
 
 Data
     SomeData
