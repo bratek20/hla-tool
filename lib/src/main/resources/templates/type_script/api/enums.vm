@@ -1,7 +1,7 @@
 #foreach($enum in $enums)
-class $enum.name extends StringEnumClass<$enum.name> {
+class $enum.name extends StringEnumClass {
     #foreach($value in $enum.values)
-    static $value = new ${enum.name}("$value")
+    static readonly $value = new ${enum.name}("$value")
     #end
 }#if($foreach.hasNext)
 

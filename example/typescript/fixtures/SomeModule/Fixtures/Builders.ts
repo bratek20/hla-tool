@@ -23,6 +23,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeProperty2Def {
+        value?: string,
+    }
+    export function someProperty2(def?: SomeProperty2Def): SomeProperty2 {
+        const value = def?.value ?? "someValue"
+
+        return SomeProperty2.create(
+            value,
+        )
+    }
+
     export interface SomeClassDef {
         id?: string,
         amount?: number,

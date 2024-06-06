@@ -29,6 +29,16 @@ fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
     )
 }
 
+data class SomeProperty2Def(
+    var value: String = "someValue",
+)
+fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
+    val def = SomeProperty2Def().apply(init)
+    return SomeProperty2(
+        value = def.value,
+    )
+}
+
 data class SomeClassDef(
     var id: String = "someValue",
     var amount: Int = 0,

@@ -42,6 +42,20 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeProperty2(
+    var value: String? = null,
+)
+fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeProperty2().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.value?.let {
+        if (given.value != it) { result.add("${path}value ${given.value} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeClass(
     var id: String? = null,
     var amount: Int? = null,

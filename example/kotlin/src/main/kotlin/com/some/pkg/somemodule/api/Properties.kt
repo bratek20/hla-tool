@@ -9,3 +9,8 @@ data class SomeProperty(
     val other: OtherProperty,
 ) {
 }
+
+data class SomeProperty2(
+    val value: String,
+) {
+}

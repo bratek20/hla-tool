@@ -32,6 +32,19 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeProperty2 {
+        value?: string,
+    }
+    export function diffSomeProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.value !== undefined) {
+            if (given.value != expected.value) { result.push(`${path}value ${given.value} != ${expected.value}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeClass {
         id?: string,
         amount?: number,

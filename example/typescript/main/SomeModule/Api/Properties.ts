@@ -11,3 +11,15 @@ class SomeProperty {
         return instance
     }
 }
+
+class SomeProperty2 {
+    value = STRING
+
+    static create(
+        value: string,
+    ): SomeProperty2 {
+        const instance = new SomeProperty2()
+        instance.value = value
+        return instance
+    }
+}

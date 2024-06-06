@@ -11,6 +11,9 @@ Properties
     SomeProperty
         other: OtherProperty
 
+    SomeProperty2
+        value: string
+
 NamedTypes
     SomeId: string
 
