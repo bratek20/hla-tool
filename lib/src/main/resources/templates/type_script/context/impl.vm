@@ -6,7 +6,7 @@ namespace ${moduleName}.Api {
         #if($method.returnType != "void")
             #set($return = "return ")
         #end
-        ${return}new ${interface.name}Logic(c).${method.name}(${method.argsPass()})
+        ${return}new Impl.${interface.name}Logic(c).${method.name}(${method.argsPass()})
     }
     #if($foreach.hasNext)
 
