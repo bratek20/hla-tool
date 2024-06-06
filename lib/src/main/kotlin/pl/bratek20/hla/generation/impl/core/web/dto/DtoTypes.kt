@@ -157,11 +157,11 @@ class EnumDtoType(api: EnumApiType): DtoType<EnumApiType>(api) {
     }
 
     override fun toApi(variableName: String): String {
-        return languageTypes.enumConstructor(api.name(), variableName)
+        return languageTypes.deserializeEnum(api.name(), variableName)
     }
 
     override fun fromApi(variableName: String): String {
-        return languageTypes.enumGetName(variableName)
+        return languageTypes.serializeEnum(variableName)
     }
 }
 

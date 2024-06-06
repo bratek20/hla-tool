@@ -96,11 +96,11 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "$listName.forEach(($entry, $idx) => { $body })"
     }
 
-    override fun enumConstructor(enumName: String, variable: String): String {
+    override fun deserializeEnum(enumName: String, variable: String): String {
         return "$enumName.fromName($variable).get()"
     }
 
-    override fun enumGetName(variableName: String): String {
+    override fun serializeEnum(variableName: String): String {
         return "$variableName.getName()"
     }
 

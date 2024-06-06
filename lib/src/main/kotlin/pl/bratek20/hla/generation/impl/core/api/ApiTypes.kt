@@ -225,8 +225,20 @@ class EnumApiType(
         return def.name
     }
 
+    override fun serializableName(): String {
+        return languageTypes.mapBaseType(BaseType.STRING)
+    }
+
     fun defaultValue(): String {
         return name() + "." + def.values.first()
+    }
+
+    override fun deserialize(variableName: String): String {
+        return languageTypes.deserializeEnum(name(), variableName)
+    }
+
+    override fun serialize(variableName: String): String {
+        return languageTypes.serializeEnum(variableName)
     }
 }
 

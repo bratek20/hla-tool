@@ -15,7 +15,7 @@ class SomeProperty {
 class SomeProperty2 {
     value = STRING
     custom = ANY
-    someEnum = new SomeEnum
+    someEnum = STRING
     customOpt? = ANY
 
     static create(
@@ -27,9 +27,13 @@ class SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value
         instance.custom = custom
-        instance.someEnum = someEnum
+        instance.someEnum = someEnum.getName()
         instance.customOpt = customOpt.orElse(undefined)
         return instance
+    }
+
+    getSomeEnum(): SomeEnum {
+        return SomeEnum.fromName(this.someEnum).get()
     }
 
     getCustomOpt(): Optional<any> {

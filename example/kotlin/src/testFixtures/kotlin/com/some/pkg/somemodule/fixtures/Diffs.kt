@@ -61,7 +61,7 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
     }
 
     expected.someEnum?.let {
-        if (given.someEnum != it) { result.add("${path}someEnum ${given.someEnum} != ${it}") }
+        if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
     }
 
     expected.customOpt?.let {

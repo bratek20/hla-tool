@@ -31,8 +31,8 @@ interface LanguageTypes {
 
     fun listIndexedIteration(listName: String, idx: String, entry: String, body: String): String
 
-    fun enumConstructor(enumName: String, variable: String): String
-    fun enumGetName(variableName: String): String
+    fun deserializeEnum(enumName: String, variable: String): String
+    fun serializeEnum(variableName: String): String
 
     fun propertyClassConstructorCall(className: String): String
 

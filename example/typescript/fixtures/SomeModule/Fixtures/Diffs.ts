@@ -50,7 +50,7 @@ namespace SomeModule {
         }
 
         if (expected.someEnum !== undefined) {
-            if (given.someEnum != expected.someEnum) { result.push(`${path}someEnum ${given.someEnum} != ${expected.someEnum}`) }
+            if (given.getSomeEnum() != expected.someEnum) { result.push(`${path}someEnum ${given.getSomeEnum()} != ${expected.someEnum}`) }
         }
 
         if (expected.customOpt !== undefined) {

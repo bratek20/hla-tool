@@ -64,29 +64,29 @@ class SerializableTypeApiField(
     factory: ApiTypeFactory
 ): ApiTypeField(def, factory) {
     override fun access(variableName: String): String {
-        if (typeIsX()) {
+        if (hasHiddenType()) {
             return "$variableName.${getterName()}()"
         }
         return "$variableName.$name"
     }
 
-    private fun typeIsX(): Boolean {
-        return type is OptionalApiType || type is SimpleStructureApiType
+    private fun hasHiddenType(): Boolean {
+        return type is OptionalApiType || type is SimpleStructureApiType || type is EnumApiType
     }
 
     fun accessor(): String {
-        return if(typeIsX()) "private " else ""
+        return if(hasHiddenType()) "private " else ""
     }
 
     fun getter(): SerializableTypeGetterOrSetter? {
-        if(typeIsX()) {
+        if(hasHiddenType()) {
             return SerializableTypeGetterOrSetter(getterName(), type, name)
         }
         return null
     }
 
     fun setter(): SerializableTypeGetterOrSetter? {
-        if(typeIsX()) {
+        if(hasHiddenType()) {
             return SerializableTypeGetterOrSetter(setterName(), type, name)
         }
         return null
