@@ -1,5 +1,7 @@
 {
   "include": [
+    "SomeModule/SomeClassTest.ts",
+
     "OtherModule/Fixtures/Builders.ts",
     "OtherModule/Fixtures/Diffs.ts",
     "OtherModule/Fixtures/Asserts.ts",

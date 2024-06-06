@@ -1,4 +1,6 @@
 {
   "files": [
+    "Src/SomeModule/SomeClass.ts",
+    "Src/SomeModule/SomeClass2.ts",
   ]
 }

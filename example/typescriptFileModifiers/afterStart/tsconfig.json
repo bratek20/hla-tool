@@ -1,5 +1,8 @@
 {
   "files": [
+    "Src/SomeModule/SomeClass.ts",
+    "Src/SomeModule/SomeClass2.ts",
+
     "Src/OtherModule/Api/NamedTypes.ts",
     "Src/OtherModule/Api/Properties.ts",
     "Src/OtherModule/Api/Data.ts",
