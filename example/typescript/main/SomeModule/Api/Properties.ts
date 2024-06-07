@@ -2,7 +2,7 @@
 
 class SomeProperty {
     private other = new OtherProperty
-    private id2? = new SomeId2
+    private id2? = NUMBER
 
     static create(
         other: OtherProperty,
@@ -19,7 +19,7 @@ class SomeProperty {
     }
 
     getId2(): Optional<SomeId2> {
-        return Optional.of(this.id2)
+        return Optional.of(this.id2).map(it => new SomeId2(it))
     }
 }
 

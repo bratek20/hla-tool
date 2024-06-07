@@ -80,6 +80,10 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "Optional.of($variableName)"
     }
 
+    override fun deserializeOptionalForSimpleStructure(variableName: String, className: String): String {
+        return "Optional.of($variableName).map(it => new $className(it))"
+    }
+
     override fun emptyOptional(): String {
         return "Optional.empty()"
     }

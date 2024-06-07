@@ -214,11 +214,18 @@ class OptionalApiType(
         return languageTypes.wrapWithOptional(wrappedType.name())
     }
 
+    override fun serializableName(): String {
+        return languageTypes.wrapWithOptional(wrappedType.serializableName())
+    }
+
     fun unwrap(variableName: String): String {
         return languageTypes.unwrapOptional(variableName)
     }
 
     override fun deserialize(variableName: String): String {
+        if (wrappedType is SimpleStructureApiType) {
+            return languageTypes.deserializeOptionalForSimpleStructure(variableName, wrappedType.name())
+        }
         return languageTypes.deserializeOptional(variableName)
     }
 
