@@ -8,3 +8,6 @@ import com.some.pkg.typesmodule.api.*
 data class SomeId(
     val value: String
 )
+data class SomeId2(
+    val value: Int
+)

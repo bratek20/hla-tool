@@ -6,6 +6,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffSomeId2(given: SomeId2, expected: number, path: string = ""): string {
+        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        return ""
+    }
+
     export interface ExpectedDateRangeWrapper {
         range?: TypesModule.ExpectedDateRange,
     }
@@ -62,6 +67,7 @@ namespace SomeModule {
 
     export interface ExpectedSomeClass {
         id?: string,
+        id2?: number,
         amount?: number,
     }
     export function diffSomeClass(given: SomeClass, expected: ExpectedSomeClass, path: string = ""): string {
@@ -69,6 +75,10 @@ namespace SomeModule {
 
         if (expected.id !== undefined) {
             if (diffSomeId(given.id, expected.id) != "") { result.push(diffSomeId(given.id, expected.id, `${path}id.`)) }
+        }
+
+        if (expected.id2 !== undefined) {
+            if (diffSomeId2(given.id2, expected.id2) != "") { result.push(diffSomeId2(given.id2, expected.id2, `${path}id2.`)) }
         }
 
         if (expected.amount !== undefined) {

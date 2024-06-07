@@ -3,6 +3,7 @@
 class SomeClass {
     constructor(
         public readonly id: SomeId,
+        public readonly id2: SomeId2,
         public readonly amount: number,
     ) {}
 }

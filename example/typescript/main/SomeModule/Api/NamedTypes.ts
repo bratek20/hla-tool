@@ -13,3 +13,17 @@ class SomeId {
         return this.value.toString()
     }
 }
+
+class SomeId2 {
+    constructor(
+        public readonly value: number
+    ) {}
+
+    equals(other: SomeId2): boolean {
+        return this.value === other.value
+    }
+
+    toString(): string {
+        return this.value.toString()
+    }
+}

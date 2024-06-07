@@ -7,6 +7,7 @@ import com.some.pkg.typesmodule.api.*
 
 data class SomeClass(
     val id: SomeId,
+    val id2: SomeId2,
     val amount: Int,
 )
 

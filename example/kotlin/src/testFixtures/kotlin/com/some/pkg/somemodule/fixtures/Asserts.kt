@@ -16,6 +16,12 @@ fun assertSomeId(given: SomeId, expected: String) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+
+fun assertSomeId2(given: SomeId2, expected: Int) {
+    val diff = diffSomeId2(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

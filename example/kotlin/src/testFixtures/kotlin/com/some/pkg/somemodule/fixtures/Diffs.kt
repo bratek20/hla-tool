@@ -14,6 +14,12 @@ fun diffSomeId(given: SomeId, expected: String, path: String = ""): String {
     return ""
 }
 
+
+fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
+    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )
@@ -73,6 +79,7 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
 data class ExpectedSomeClass(
     var id: String? = null,
+    var id2: Int? = null,
     var amount: Int? = null,
 )
 fun diffSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit, path: String = ""): String {
@@ -81,6 +88,10 @@ fun diffSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit, 
 
     expected.id?.let {
         if (diffSomeId(given.id, it) != "") { result.add(diffSomeId(given.id, it, "${path}id.")) }
+    }
+
+    expected.id2?.let {
+        if (diffSomeId2(given.id2, it) != "") { result.add(diffSomeId2(given.id2, it, "${path}id2.")) }
     }
 
     expected.amount?.let {

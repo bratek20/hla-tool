@@ -25,10 +25,12 @@ Data
 
 NamedTypes
     SomeId: string
+    SomeId2: int
 
 ValueObjects
     SomeClass
         id: SomeId
+        id2: SomeId2
         amount: int
 
     SomeClass2

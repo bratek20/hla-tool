@@ -19,11 +19,13 @@ namespace SomeModule.Web {
 
     export class SomeClassDto {
         id = STRING
+        id2 = NUMBER
         amount = NUMBER
 
         toApi(): SomeClass {
             return new SomeClass(
                 new SomeId(this.id),
+                new SomeId2(this.id2),
                 this.amount,
             )
         }
@@ -31,6 +33,7 @@ namespace SomeModule.Web {
         static fromApi(api: SomeClass): SomeClassDto {
             const dto = new SomeClassDto()
             dto.id = api.id.value
+            dto.id2 = api.id2.value
             dto.amount = api.amount
             return dto
         }

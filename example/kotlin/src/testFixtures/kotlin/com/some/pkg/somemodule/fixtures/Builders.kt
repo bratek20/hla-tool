@@ -47,12 +47,14 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
 
 data class SomeClassDef(
     var id: String = "someValue",
+    var id2: Int = 0,
     var amount: Int = 0,
 )
 fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
     val def = SomeClassDef().apply(init)
     return SomeClass(
         id = SomeId(def.id),
+        id2 = SomeId2(def.id2),
         amount = def.amount,
     )
 }
