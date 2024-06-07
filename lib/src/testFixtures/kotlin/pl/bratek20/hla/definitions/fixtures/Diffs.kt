@@ -69,16 +69,15 @@ fun diffImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: Ex
 
 data class ExpectedModuleDefinition(
     var name: String? = null,
-    var namedTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
-    var valueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
-    var properties: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var propertyKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
-    var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
     var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
     var complexCustomTypes: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
-    var data: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var simpleValueObjects: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
+    var complexValueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var dataClasses: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
+    var propertyKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
     var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
+    var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
     var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
 )
 fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit, path: String = ""): String {
@@ -87,36 +86,6 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
     expected.name?.let {
         if (diffModuleName(given.name, it) != "") { result.add(diffModuleName(given.name, it, "${path}name.")) }
-    }
-
-    expected.namedTypes?.let {
-        if (given.namedTypes.size != it.size) { result.add("${path}namedTypes size ${given.namedTypes.size} != ${it.size}") }
-        given.namedTypes.forEachIndexed { idx, entry -> if (diffSimpleStructureDefinition(entry, it[idx]) != "") { result.add(diffSimpleStructureDefinition(entry, it[idx], "${path}namedTypes[${idx}].")) } }
-    }
-
-    expected.valueObjects?.let {
-        if (given.valueObjects.size != it.size) { result.add("${path}valueObjects size ${given.valueObjects.size} != ${it.size}") }
-        given.valueObjects.forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}valueObjects[${idx}].")) } }
-    }
-
-    expected.interfaces?.let {
-        if (given.interfaces.size != it.size) { result.add("${path}interfaces size ${given.interfaces.size} != ${it.size}") }
-        given.interfaces.forEachIndexed { idx, entry -> if (diffInterfaceDefinition(entry, it[idx]) != "") { result.add(diffInterfaceDefinition(entry, it[idx], "${path}interfaces[${idx}].")) } }
-    }
-
-    expected.properties?.let {
-        if (given.properties.size != it.size) { result.add("${path}properties size ${given.properties.size} != ${it.size}") }
-        given.properties.forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}properties[${idx}].")) } }
-    }
-
-    expected.propertyKeys?.let {
-        if (given.propertyKeys.size != it.size) { result.add("${path}propertyKeys size ${given.propertyKeys.size} != ${it.size}") }
-        given.propertyKeys.forEachIndexed { idx, entry -> if (diffKeyDefinition(entry, it[idx]) != "") { result.add(diffKeyDefinition(entry, it[idx], "${path}propertyKeys[${idx}].")) } }
-    }
-
-    expected.enums?.let {
-        if (given.enums.size != it.size) { result.add("${path}enums size ${given.enums.size} != ${it.size}") }
-        given.enums.forEachIndexed { idx, entry -> if (diffEnumDefinition(entry, it[idx]) != "") { result.add(diffEnumDefinition(entry, it[idx], "${path}enums[${idx}].")) } }
     }
 
     expected.simpleCustomTypes?.let {
@@ -129,14 +98,39 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
         given.complexCustomTypes.forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}complexCustomTypes[${idx}].")) } }
     }
 
-    expected.data?.let {
-        if (given.data.size != it.size) { result.add("${path}data size ${given.data.size} != ${it.size}") }
-        given.data.forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}data[${idx}].")) } }
+    expected.simpleValueObjects?.let {
+        if (given.simpleValueObjects.size != it.size) { result.add("${path}simpleValueObjects size ${given.simpleValueObjects.size} != ${it.size}") }
+        given.simpleValueObjects.forEachIndexed { idx, entry -> if (diffSimpleStructureDefinition(entry, it[idx]) != "") { result.add(diffSimpleStructureDefinition(entry, it[idx], "${path}simpleValueObjects[${idx}].")) } }
+    }
+
+    expected.complexValueObjects?.let {
+        if (given.complexValueObjects.size != it.size) { result.add("${path}complexValueObjects size ${given.complexValueObjects.size} != ${it.size}") }
+        given.complexValueObjects.forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}complexValueObjects[${idx}].")) } }
+    }
+
+    expected.dataClasses?.let {
+        if (given.dataClasses.size != it.size) { result.add("${path}dataClasses size ${given.dataClasses.size} != ${it.size}") }
+        given.dataClasses.forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}dataClasses[${idx}].")) } }
+    }
+
+    expected.interfaces?.let {
+        if (given.interfaces.size != it.size) { result.add("${path}interfaces size ${given.interfaces.size} != ${it.size}") }
+        given.interfaces.forEachIndexed { idx, entry -> if (diffInterfaceDefinition(entry, it[idx]) != "") { result.add(diffInterfaceDefinition(entry, it[idx], "${path}interfaces[${idx}].")) } }
+    }
+
+    expected.propertyKeys?.let {
+        if (given.propertyKeys.size != it.size) { result.add("${path}propertyKeys size ${given.propertyKeys.size} != ${it.size}") }
+        given.propertyKeys.forEachIndexed { idx, entry -> if (diffKeyDefinition(entry, it[idx]) != "") { result.add(diffKeyDefinition(entry, it[idx], "${path}propertyKeys[${idx}].")) } }
     }
 
     expected.dataKeys?.let {
         if (given.dataKeys.size != it.size) { result.add("${path}dataKeys size ${given.dataKeys.size} != ${it.size}") }
         given.dataKeys.forEachIndexed { idx, entry -> if (diffKeyDefinition(entry, it[idx]) != "") { result.add(diffKeyDefinition(entry, it[idx], "${path}dataKeys[${idx}].")) } }
+    }
+
+    expected.enums?.let {
+        if (given.enums.size != it.size) { result.add("${path}enums size ${given.enums.size} != ${it.size}") }
+        given.enums.forEachIndexed { idx, entry -> if (diffEnumDefinition(entry, it[idx]) != "") { result.add(diffEnumDefinition(entry, it[idx], "${path}enums[${idx}].")) } }
     }
 
     expected.implSubmodule?.let {

@@ -21,16 +21,15 @@ data class ImplSubmoduleDefinition(
 
 data class ModuleDefinition(
     val name: ModuleName,
-    val namedTypes: List<SimpleStructureDefinition>,
-    val valueObjects: List<ComplexStructureDefinition>,
-    val interfaces: List<InterfaceDefinition>,
-    val properties: List<ComplexStructureDefinition>,
-    val propertyKeys: List<KeyDefinition>,
-    val enums: List<EnumDefinition>,
     val simpleCustomTypes: List<SimpleStructureDefinition>,
     val complexCustomTypes: List<ComplexStructureDefinition>,
-    val data: List<ComplexStructureDefinition>,
+    val simpleValueObjects: List<SimpleStructureDefinition>,
+    val complexValueObjects: List<ComplexStructureDefinition>,
+    val dataClasses: List<ComplexStructureDefinition>,
+    val interfaces: List<InterfaceDefinition>,
+    val propertyKeys: List<KeyDefinition>,
     val dataKeys: List<KeyDefinition>,
+    val enums: List<EnumDefinition>,
     val implSubmodule: ImplSubmoduleDefinition,
 )
 

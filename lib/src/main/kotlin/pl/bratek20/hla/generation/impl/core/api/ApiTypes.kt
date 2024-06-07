@@ -70,7 +70,7 @@ abstract class SimpleStructureApiType(
     }
 }
 
-class NamedApiType(
+class SimpleValueObjectApiType(
     def: SimpleStructureDefinition,
     boxedType: BaseApiType
 ) : SimpleStructureApiType(def, boxedType) {
@@ -118,7 +118,7 @@ open class ComplexStructureApiType<T: ApiTypeField>(
 }
 
 
-class ComplexVOApiType(
+class ToRemoveComplexVOApiType(
     name: String,
     fields: List<ApiTypeField>
 ) : ComplexStructureApiType<ApiTypeField>(name, fields)
@@ -183,12 +183,12 @@ open class SerializableApiType(
     }
 }
 
-class PropertyApiType(
+class ComplexValueObjectApiType(
     name: String,
     fields: List<SerializableTypeApiField>
 ) : SerializableApiType(name, fields)
 
-class DataApiType(
+class DataClassApiType(
     name: String,
     fields: List<SerializableTypeApiField>
 ) : SerializableApiType(name, fields) {
@@ -276,25 +276,23 @@ class ApiTypeFactory(
             return createBaseApiType(BaseType.VOID)
         }
 
-        val simpleVO = modules.findSimpleVO(type)
-        val complexVO = modules.findComplexVO(type)
+        val simpleVO = modules.findSimpleValueObject(type)
+        val complexVO = modules.findComplexValueObject(type)
         val isOptional = type.wrappers.contains(TypeWrapper.OPTIONAL)
         val isList = type.wrappers.contains(TypeWrapper.LIST)
         val isBaseType = isBaseType(type.name)
         val enum = modules.findEnum(type)
-        val propertyVO = modules.findPropertyVO(type)
         val simpleCustomType = modules.findSimpleCustomType(type)
         val complexCustomType = modules.findComplexCustomType(type)
-        val dataVO = modules.findDataVO(type)
+        val dataVO = modules.findDataClass(type)
 
         val apiType = when {
             isOptional -> OptionalApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.OPTIONAL)))
             isList -> ListApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
-            simpleVO != null -> NamedApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.typeName)))
+            simpleVO != null -> SimpleValueObjectApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.typeName)))
             simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
-            complexVO != null -> ComplexVOApiType(type.name, createFields(complexVO.fields))
-            propertyVO != null -> PropertyApiType(type.name, createSerializableTypeFields(propertyVO.fields))
-            dataVO != null -> DataApiType(type.name, createSerializableTypeFields(dataVO.fields))
+            complexVO != null -> ComplexValueObjectApiType(type.name, createSerializableTypeFields(complexVO.fields))
+            dataVO != null -> DataClassApiType(type.name, createSerializableTypeFields(dataVO.fields))
             complexCustomType != null -> ComplexCustomApiType(type.name, createComplexCustomTypeFields(type.name, complexCustomType.fields))
             isBaseType -> BaseApiType(ofBaseType(type.name))
             enum != null -> EnumApiType(enum)
@@ -318,12 +316,6 @@ class ApiTypeFactory(
         val result = BaseApiType(type)
         result.languageTypes = languageTypes
         return result
-    }
-
-    private fun createFields(fields: List<FieldDefinition>): List<ApiTypeField> {
-        return fields.map {
-            ApiTypeField(it, this)
-        }
     }
 
     private fun createSerializableTypeFields(fields: List<FieldDefinition>): List<SerializableTypeApiField> {

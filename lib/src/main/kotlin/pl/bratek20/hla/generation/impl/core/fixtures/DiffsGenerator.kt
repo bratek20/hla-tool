@@ -9,8 +9,8 @@ class DiffsGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val simpleAssertTypes = module.namedTypes + module.simpleCustomTypes
-        val complexAssertTypes = module.complexCustomTypes + module.properties + module.valueObjects
+        val simpleAssertTypes = modules.allSimpleStructureDefinitions(module)
+        val complexAssertTypes = modules.allComplexStructureDefinitions(module)
         if (simpleAssertTypes.isEmpty() && complexAssertTypes.isEmpty()) {
             return null
         }

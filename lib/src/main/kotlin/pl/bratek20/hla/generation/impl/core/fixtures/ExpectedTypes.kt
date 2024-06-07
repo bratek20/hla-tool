@@ -4,7 +4,6 @@ import pl.bratek20.hla.definitions.api.BaseType
 import pl.bratek20.hla.generation.impl.core.api.*
 import pl.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import pl.bratek20.hla.generation.impl.core.language.LanguageTypes
-import kotlin.math.exp
 
 abstract class ExpectedType<T: ApiType>(
     val api: T
@@ -45,9 +44,9 @@ open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
 }
 
 class NamedExpectedType(
-    api: NamedApiType,
+    api: SimpleValueObjectApiType,
     boxedType: BaseExpectedType,
-) : SimpleStructureExpectedType<NamedApiType>(api, boxedType)
+) : SimpleStructureExpectedType<SimpleValueObjectApiType>(api, boxedType)
 
 class SimpleCustomExpectedType(
     api: SimpleCustomApiType,
@@ -247,8 +246,8 @@ class ExpectedTypeFactory(
     fun create(type: ApiType): ExpectedType<*> {
         val result =  when (type) {
             is BaseApiType -> BaseExpectedType(type)
-            is NamedApiType -> NamedExpectedType(type, create(type.boxedType) as BaseExpectedType)
-            is ComplexVOApiType -> ComplexVOExpectedType(type, createFields(type.fields))
+            is SimpleValueObjectApiType -> NamedExpectedType(type, create(type.boxedType) as BaseExpectedType)
+            is ToRemoveComplexVOApiType -> ComplexVOExpectedType(type, createFields(type.fields))
             is OptionalApiType -> OptionalExpectedType(type, create(type.wrappedType))
             is ListApiType -> ListExpectedType(type, create(type.wrappedType))
             is EnumApiType -> EnumExpectedType(type)

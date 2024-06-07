@@ -45,32 +45,30 @@ fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): I
 
 data class ModuleDefinitionDef(
     var name: String = "someValue",
-    var namedTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
-    var valueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
-    var interfaces: List<(InterfaceDefinitionDef.() -> Unit)> = emptyList(),
-    var properties: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
-    var propertyKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
-    var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
     var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
     var complexCustomTypes: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
-    var data: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var simpleValueObjects: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var complexValueObjects: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var dataClasses: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var interfaces: List<(InterfaceDefinitionDef.() -> Unit)> = emptyList(),
+    var propertyKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
     var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
+    var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
     var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit) = {},
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
     return ModuleDefinition(
         name = ModuleName(def.name),
-        namedTypes = def.namedTypes.map { it -> simpleStructureDefinition(it) },
-        valueObjects = def.valueObjects.map { it -> complexStructureDefinition(it) },
-        interfaces = def.interfaces.map { it -> interfaceDefinition(it) },
-        properties = def.properties.map { it -> complexStructureDefinition(it) },
-        propertyKeys = def.propertyKeys.map { it -> keyDefinition(it) },
-        enums = def.enums.map { it -> enumDefinition(it) },
         simpleCustomTypes = def.simpleCustomTypes.map { it -> simpleStructureDefinition(it) },
         complexCustomTypes = def.complexCustomTypes.map { it -> complexStructureDefinition(it) },
-        data = def.data.map { it -> complexStructureDefinition(it) },
+        simpleValueObjects = def.simpleValueObjects.map { it -> simpleStructureDefinition(it) },
+        complexValueObjects = def.complexValueObjects.map { it -> complexStructureDefinition(it) },
+        dataClasses = def.dataClasses.map { it -> complexStructureDefinition(it) },
+        interfaces = def.interfaces.map { it -> interfaceDefinition(it) },
+        propertyKeys = def.propertyKeys.map { it -> keyDefinition(it) },
         dataKeys = def.dataKeys.map { it -> keyDefinition(it) },
+        enums = def.enums.map { it -> enumDefinition(it) },
         implSubmodule = implSubmoduleDefinition(def.implSubmodule),
     )
 }

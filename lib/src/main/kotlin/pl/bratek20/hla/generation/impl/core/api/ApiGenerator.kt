@@ -7,48 +7,32 @@ import pl.bratek20.hla.generation.impl.core.FileGenerator
 import pl.bratek20.hla.generation.impl.core.GeneratorMode
 import pl.bratek20.hla.utils.camelToScreamingSnakeCase
 
-class NamedTypesGenerator: FileGenerator() {
-    override fun name(): String {
-        return "NamedTypes"
-    }
-
-    override fun generateFileContent(): FileContent? {
-        val namedTypes = module.namedTypes.map { apiTypeFactory.create<NamedApiType>(it) }
-
-        if (namedTypes.isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("namedTypes.vm")
-            .put("namedTypes", namedTypes)
-            .build()
-    }
-}
-
 class ValueObjectsGenerator: FileGenerator() {
     override fun name(): String {
         return "ValueObjects"
     }
 
     override fun generateFileContent(): FileContent? {
-        val valueObjects = module.valueObjects.map { apiTypeFactory.create<ComplexVOApiType>(it) }
+        val simpleValueObjects = module.simpleValueObjects.map { apiTypeFactory.create<SimpleValueObjectApiType>(it) }
+        val complexValueObjects = module.complexValueObjects.map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
 
-        if (valueObjects.isEmpty()) {
+        if (complexValueObjects.isEmpty()) {
             return null
         }
 
         return contentBuilder("valueObjects.vm")
-            .put("valueObjects", valueObjects)
+            .put("simpleValueObjects", simpleValueObjects)
+            .put("complexValueObjects", complexValueObjects)
             .build()
     }
 }
 
-class PropertiesOrDataGenerator(private val data: Boolean): FileGenerator() {
+class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator() {
     override fun name(): String {
-        return if (data) "Data" else "Properties"
+        return if (data) "DataKeys" else "PropertyKeys"
     }
 
-    data class SerializableTypeKey(
+    data class StorageTypeKey(
         val constantName: String,
         val outerKeyType: String,
         val keyName: String,
@@ -56,25 +40,21 @@ class PropertiesOrDataGenerator(private val data: Boolean): FileGenerator() {
     )
 
     override fun generateFileContent(): FileContent?{
-        if (!data && module.properties.isEmpty()) {
+        if (!data && module.propertyKeys.isEmpty()) {
             return null
         }
-        if (data && module.data.isEmpty()) {
+        if (data && module.dataKeys.isEmpty()) {
             return null
         }
 
-        val serializables = if (data) module.data else module.properties
         val keys = if (data) module.dataKeys else module.propertyKeys
         return contentBuilder("serializables.vm")
-            .put("serializables", serializables.map {
-                apiTypeFactory.create<SerializableApiType>(it)
-            })
-            .put("keys", keys.map { toApiPropertyKey(it, data) })
+            .put("keys", keys.map { toApiPropertyOrDataKey(it, data) })
             .build()
     }
 
 
-    private fun toApiPropertyKey(def: KeyDefinition, data: Boolean): SerializableTypeKey {
+    private fun toApiPropertyOrDataKey(def: KeyDefinition, data: Boolean): StorageTypeKey {
         val apiType = apiTypeFactory.create(def.type)
 
         val innerWord = if (data) "Property" else "Property" //TODO change when data keys added in arch
@@ -90,7 +70,7 @@ class PropertiesOrDataGenerator(private val data: Boolean): FileGenerator() {
             keyType = apiType.name()
         }
 
-        return SerializableTypeKey(
+        return StorageTypeKey(
             constantName = camelToScreamingSnakeCase(def.name + "Key"),
             outerKeyType = outerKeyType,
             keyName = def.name,
@@ -194,12 +174,11 @@ class ApiGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            NamedTypesGenerator(),
             EnumsGenerator(),
             CustomTypesGenerator(),
             CustomTypesMapperGenerator(),
-            PropertiesOrDataGenerator(false),
-            PropertiesOrDataGenerator(true),
+            PropertyOrDataKeysGenerator(false),
+            PropertyOrDataKeysGenerator(true),
             ValueObjectsGenerator(),
             ExceptionsGenerator(),
             InterfacesGenerator(),

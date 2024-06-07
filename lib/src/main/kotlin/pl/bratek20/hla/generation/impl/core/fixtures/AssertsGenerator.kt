@@ -8,9 +8,13 @@ class AssertsGenerator: FileGenerator() {
         return "Asserts"
     }
 
-    override fun generateFileContent(): FileContent? {
-        val simpleAssertTypes = module.namedTypes + module.simpleCustomTypes
-        val complexAssertTypes = module.complexCustomTypes + module.properties + module.valueObjects
+    data class Asserts(
+        val simple: List<ExpectedType<*>>,
+        val complex: List<ExpectedType<*>>
+    )
+    fun doSth(): Asserts? {
+        val simpleAssertTypes = modules.allSimpleStructureDefinitions(module)
+        val complexAssertTypes = modules.allComplexStructureDefinitions(module)
         if (simpleAssertTypes.isEmpty() && complexAssertTypes.isEmpty()) {
             return null
         }
@@ -22,6 +26,12 @@ class AssertsGenerator: FileGenerator() {
         val complexAsserts = (complexAssertTypes).map {
             factory.create(apiTypeFactory.create(it))
         }
+
+        return Asserts(simpleAsserts, complexAsserts)
+    }
+
+    override fun generateFileContent(): FileContent? {
+        val (simpleAsserts, complexAsserts) = doSth() ?: return null
 
         return contentBuilder("asserts.vm")
             .put("simpleAsserts", simpleAsserts)

@@ -9,7 +9,7 @@ class BuildersGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val defTypes = module.complexCustomTypes + module.properties + module.valueObjects
+        val defTypes = modules.allComplexStructureDefinitions(module)
         if (defTypes.isEmpty()) {
             return null
         }

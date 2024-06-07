@@ -33,15 +33,14 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
         return ModuleDefinition(
             name = moduleName,
-            namedTypes = namedTypes,
-            valueObjects = complexValueObjects,
+            simpleValueObjects = namedTypes,
+            complexValueObjects = complexValueObjects,
             interfaces = interfaces,
-            properties = properties.vos,
             propertyKeys = properties.keys,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
             complexCustomTypes = customTypes.complex,
-            data = data.vos,
+            dataClasses = data.vos,
             dataKeys = data.keys,
             implSubmodule = implSubmodule
         )

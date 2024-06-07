@@ -54,9 +54,9 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
 }
 
 class SimpleVODefType(
-    api: NamedApiType,
+    api: SimpleValueObjectApiType,
     boxedType: BaseDefType
-) : SimpleStructureDefType<NamedApiType>(api, boxedType) {
+) : SimpleStructureDefType<SimpleValueObjectApiType>(api, boxedType) {
 }
 
 class SimpleCustomDefType(
@@ -197,8 +197,8 @@ class DefTypeFactory(
     fun create(type: ApiType): DefType<*> {
         val result = when (type) {
             is BaseApiType -> BaseDefType(type)
-            is NamedApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
-            is ComplexVOApiType -> ComplexVODefType(type, createFields(type.fields))
+            is SimpleValueObjectApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
+            is ToRemoveComplexVOApiType -> ComplexVODefType(type, createFields(type.fields))
             is OptionalApiType -> OptionalDefType(type, create(type.wrappedType))
             is ListApiType -> ListDefType(type, create(type.wrappedType))
             is EnumApiType -> EnumDefType(type)

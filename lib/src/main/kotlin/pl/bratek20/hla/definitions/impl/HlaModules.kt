@@ -22,20 +22,16 @@ class HlaModules(
         return modules.first { it.name == moduleName }
     }
 
-    fun findSimpleVO(type: TypeDefinition): SimpleStructureDefinition? {
-        return modules.firstNotNullOfOrNull { findSimpleVO(type, it) }
+    fun findSimpleValueObject(type: TypeDefinition): SimpleStructureDefinition? {
+        return modules.firstNotNullOfOrNull { findSimpleValueObject(type, it) }
     }
 
-    fun findComplexVO(type: TypeDefinition): ComplexStructureDefinition? {
-        return modules.firstNotNullOfOrNull { findComplexVO(type, it) }
+    fun findComplexValueObject(type: TypeDefinition): ComplexStructureDefinition? {
+        return modules.firstNotNullOfOrNull { findComplexValueObject(type, it) }
     }
 
-    fun findPropertyVO(type: TypeDefinition): ComplexStructureDefinition? {
-        return modules.firstNotNullOfOrNull { findPropertyVO(type, it) }
-    }
-
-    fun findDataVO(type: TypeDefinition): ComplexStructureDefinition? {
-        return modules.firstNotNullOfOrNull { findDataVO(type, it) }
+    fun findDataClass(type: TypeDefinition): ComplexStructureDefinition? {
+        return modules.firstNotNullOfOrNull { findDataClass(type, it) }
     }
 
     fun findEnum(type: TypeDefinition): EnumDefinition? {
@@ -54,20 +50,16 @@ class HlaModules(
         return module.enums.find { it.name == type.name }
     }
 
-    private fun findSimpleVO(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
-        return module.namedTypes.find { it.name == type.name }
+    private fun findSimpleValueObject(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
+        return module.simpleValueObjects.find { it.name == type.name }
     }
 
-    private fun findComplexVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.valueObjects.find { it.name == type.name }
+    private fun findComplexValueObject(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
+        return module.complexValueObjects.find { it.name == type.name }
     }
 
-    private fun findPropertyVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.properties.find { it.name == type.name }
-    }
-
-    private fun findDataVO(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.data.find { it.name == type.name }
+    private fun findDataClass(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
+        return module.dataClasses.find { it.name == type.name }
     }
 
     private fun findSimpleCustomType(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
@@ -107,11 +99,10 @@ class HlaModules(
 
     private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
         return module.enums.map { it.name } +
-                module.namedTypes.map { it.name } +
-                module.valueObjects.map { it.name } +
                 module.simpleCustomTypes.map { it.name } +
-                module.complexCustomTypes.map { it.name } +
-                module.properties.map { it.name }
+                module.complexValueObjects.map { it.name } +
+                module.simpleCustomTypes.map { it.name } +
+                module.complexCustomTypes.map { it.name }
     }
 
     private fun interfacesTypeNames(module: ModuleDefinition): List<String> {
@@ -125,8 +116,12 @@ class HlaModules(
         }
     }
 
-    private fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return module.valueObjects + module.complexCustomTypes + module.properties
+    fun allSimpleStructureDefinitions(module: ModuleDefinition): List<SimpleStructureDefinition> {
+        return module.simpleValueObjects + module.simpleCustomTypes
+    }
+
+    fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
+        return module.complexValueObjects + module.complexCustomTypes + module.dataClasses
     }
 
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {
