@@ -74,11 +74,11 @@ class SerializableTypeApiField(
         return if(isPublic && publicSupported) "" else "private "
     }
 
-    fun getter(): SerializableTypeGetterOrSetter? {
+    fun getter(): SerializableTypeGetterOrSetter {
         return SerializableTypeGetterOrSetter(getterName(), type, name)
     }
 
-    fun setter(): SerializableTypeGetterOrSetter? {
+    fun setter(): SerializableTypeGetterOrSetter {
         return SerializableTypeGetterOrSetter(setterName(), type, name)
     }
 

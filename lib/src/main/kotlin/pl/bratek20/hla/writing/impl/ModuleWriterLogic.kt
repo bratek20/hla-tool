@@ -134,7 +134,7 @@ class ModuleWriterLogic(
     }
 
     private fun shouldHandleDebug(profile: HlaProfile, moduleName: String): Boolean {
-        return profile.getLanguage() == ModuleLanguage.KOTLIN && moduleName.equals("SomeModule", ignoreCase = true)
+        return profile.getLanguage() == ModuleLanguage.KOTLIN && moduleName.equals("OtherModule", ignoreCase = true)
     }
 
     private fun handleDebug(generateResult: GenerateResult) {
