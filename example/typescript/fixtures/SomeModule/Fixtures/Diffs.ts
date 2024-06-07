@@ -26,12 +26,17 @@ namespace SomeModule {
 
     export interface ExpectedSomeProperty {
         other?: OtherModule.ExpectedOtherProperty,
+        id2?: ExpectedSomeId2,
     }
     export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
         const result: string[] = []
 
         if (expected.other !== undefined) {
             if (OtherModule.diffOtherProperty(given.getOther(), expected.other) != "") { result.push(OtherModule.diffOtherProperty(given.getOther(), expected.other, `${path}other.`)) }
+        }
+
+        if (expected.id2 !== undefined) {
+            if (diffSomeId2(given.getId2().get(), expected.id2) != "") { result.push(diffSomeId2(given.getId2().get(), expected.id2, `${path}id2.`)) }
         }
 
         return result.join("\n")
@@ -67,7 +72,6 @@ namespace SomeModule {
 
     export interface ExpectedSomeClass {
         id?: string,
-        id2?: number,
         amount?: number,
     }
     export function diffSomeClass(given: SomeClass, expected: ExpectedSomeClass, path: string = ""): string {
@@ -75,10 +79,6 @@ namespace SomeModule {
 
         if (expected.id !== undefined) {
             if (diffSomeId(given.id, expected.id) != "") { result.push(diffSomeId(given.id, expected.id, `${path}id.`)) }
-        }
-
-        if (expected.id2 !== undefined) {
-            if (diffSomeId2(given.id2, expected.id2) != "") { result.push(diffSomeId2(given.id2, expected.id2, `${path}id2.`)) }
         }
 
         if (expected.amount !== undefined) {

@@ -7,17 +7,24 @@ import com.some.pkg.typesmodule.api.*
 
 data class SomeProperty(
     private val other: OtherProperty,
+    private val id2: SomeId2?,
 ) {
     fun getOther(): OtherProperty {
         return this.other
     }
 
+    fun getId2(): SomeId2? {
+        return this.id2
+    }
+
     companion object {
         fun create(
             other: OtherProperty,
+            id2: SomeId2?,
         ): SomeProperty {
             return SomeProperty(
                 other = other,
+                id2 = id2,
             )
         }
     }

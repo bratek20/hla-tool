@@ -21,11 +21,13 @@ fun dateRangeWrapper(init: DateRangeWrapperDef.() -> Unit = {}): DateRangeWrappe
 
 data class SomePropertyDef(
     var other: (OtherPropertyDef.() -> Unit) = {},
+    var id2: (SomeId2Def.() -> Unit)? = null,
 )
 fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
     val def = SomePropertyDef().apply(init)
     return SomeProperty.create(
         other = otherProperty(def.other),
+        id2 = def.id2?.let { it -> SomeId2(it) },
     )
 }
 
@@ -47,14 +49,12 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
 
 data class SomeClassDef(
     var id: String = "someValue",
-    var id2: Int = 0,
     var amount: Int = 0,
 )
 fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
     val def = SomeClassDef().apply(init)
     return SomeClass(
         id = SomeId(def.id),
-        id2 = SomeId2(def.id2),
         amount = def.amount,
     )
 }

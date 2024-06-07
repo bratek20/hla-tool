@@ -14,12 +14,15 @@ namespace SomeModule.Builder {
 
     export interface SomePropertyDef {
         other?: OtherModule.Builder.OtherPropertyDef,
+        id2?: SomeId2Def,
     }
     export function someProperty(def?: SomePropertyDef): SomeProperty {
         const other = def?.other ?? {}
+        const id2 = def?.id2 ?? undefined
 
         return SomeProperty.create(
             OtherModule.Builder.otherProperty(other),
+            Optional.of(id2).map(it => new SomeId2(it)),
         )
     }
 
@@ -45,17 +48,14 @@ namespace SomeModule.Builder {
 
     export interface SomeClassDef {
         id?: string,
-        id2?: number,
         amount?: number,
     }
     export function someClass(def?: SomeClassDef): SomeClass {
         const id = def?.id ?? "someValue"
-        const id2 = def?.id2 ?? 0
         const amount = def?.amount ?? 0
 
         return new SomeClass(
             new SomeId(id),
-            new SomeId2(id2),
             amount,
         )
     }

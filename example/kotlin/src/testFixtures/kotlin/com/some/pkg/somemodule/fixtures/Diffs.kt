@@ -36,6 +36,7 @@ fun diffDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRang
 
 data class ExpectedSomeProperty(
     var other: (ExpectedOtherProperty.() -> Unit)? = null,
+    var id2: (ExpectedSomeId2.() -> Unit)? = null,
 )
 fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeProperty().apply(expectedInit)
@@ -43,6 +44,10 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
 
     expected.other?.let {
         if (diffOtherProperty(given.getOther(), it) != "") { result.add(diffOtherProperty(given.getOther(), it, "${path}other.")) }
+    }
+
+    expected.id2?.let {
+        if (diffSomeId2(given.getId2()!!, it) != "") { result.add(diffSomeId2(given.getId2()!!, it, "${path}id2.")) }
     }
 
     return result.joinToString("\n")
@@ -79,7 +84,6 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
 data class ExpectedSomeClass(
     var id: String? = null,
-    var id2: Int? = null,
     var amount: Int? = null,
 )
 fun diffSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit, path: String = ""): String {
@@ -88,10 +92,6 @@ fun diffSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit, 
 
     expected.id?.let {
         if (diffSomeId(given.id, it) != "") { result.add(diffSomeId(given.id, it, "${path}id.")) }
-    }
-
-    expected.id2?.let {
-        if (diffSomeId2(given.id2, it) != "") { result.add(diffSomeId2(given.id2, it, "${path}id2.")) }
     }
 
     expected.amount?.let {

@@ -2,17 +2,24 @@
 
 class SomeProperty {
     private other = new OtherProperty
+    private id2? = new SomeId2
 
     static create(
         other: OtherProperty,
+        id2: Optional<SomeId2>,
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
+        instance.id2 = id2.orElse(undefined)
         return instance
     }
 
     getOther(): OtherProperty {
         return this.other
+    }
+
+    getId2(): Optional<SomeId2> {
+        return Optional.of(this.id2)
     }
 }
 

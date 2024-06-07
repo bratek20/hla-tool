@@ -7,9 +7,14 @@ CustomTypes
     DateRangeWrapper
         range: DateRange
 
+NamedTypes
+    SomeId: string
+    SomeId2: int
+
 Properties
     SomeProperty
         other: OtherProperty
+        id2: SomeId2?
 
     SomeProperty2
         value: string (public)
@@ -23,14 +28,11 @@ Data
         custom: any
         customOpt: any?
 
-NamedTypes
-    SomeId: string
-    SomeId2: int
+
 
 ValueObjects
     SomeClass
         id: SomeId
-        id2: SomeId2
         amount: int
 
     SomeClass2

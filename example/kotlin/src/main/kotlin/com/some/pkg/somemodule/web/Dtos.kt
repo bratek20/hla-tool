@@ -29,13 +29,11 @@ data class DateRangeWrapperDto(
 
 data class SomeClassDto(
     val id: String,
-    val id2: Int,
     val amount: Int,
 ) {
     fun toApi(): SomeClass {
         return SomeClass(
             id = SomeId(id),
-            id2 = SomeId2(id2),
             amount = amount,
         )
     }
@@ -44,7 +42,6 @@ data class SomeClassDto(
         fun fromApi(api: SomeClass): SomeClassDto {
             return SomeClassDto(
                 id = api.id.value,
-                id2 = api.id2.value,
                 amount = api.amount,
             )
         }
