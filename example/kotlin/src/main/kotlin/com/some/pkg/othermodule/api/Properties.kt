@@ -4,10 +4,14 @@ package com.some.pkg.othermodule.api
 
 data class OtherProperty(
     private val id: Int,
-    val name: String,
+    private val name: String,
 ) {
     fun getId(): OtherId {
         return OtherId(this.id)
+    }
+
+    fun getName(): String {
+        return this.name
     }
 
     companion object {

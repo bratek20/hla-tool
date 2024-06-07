@@ -3,10 +3,14 @@
 package com.some.pkg.othermodule.api
 
 data class OtherData(
-    private val id: Int,
+    private var id: Int,
 ) {
     fun getId(): OtherId {
         return OtherId(this.id)
+    }
+
+    fun setId(id: OtherId) {
+        this.id = id.value
     }
 
     companion object {

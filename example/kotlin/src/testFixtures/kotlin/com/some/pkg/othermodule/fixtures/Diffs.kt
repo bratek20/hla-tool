@@ -22,7 +22,7 @@ fun diffOtherProperty(given: OtherProperty, expectedInit: ExpectedOtherProperty.
     }
 
     expected.name?.let {
-        if (given.name != it) { result.add("${path}name ${given.name} != ${it}") }
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
     }
 
     return result.joinToString("\n")

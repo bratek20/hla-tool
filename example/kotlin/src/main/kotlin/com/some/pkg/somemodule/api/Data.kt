@@ -6,12 +6,32 @@ import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 data class SomeData(
-    val other: OtherData,
-    val custom: Any,
-    private val customOpt: Any?,
+    private var other: OtherData,
+    private var custom: Any,
+    private var customOpt: Any?,
 ) {
+    fun getOther(): OtherData {
+        return this.other
+    }
+
+    fun getCustom(): Any {
+        return this.custom
+    }
+
     fun getCustomOpt(): Any? {
         return this.customOpt
+    }
+
+    fun setOther(other: OtherData) {
+        this.other = other
+    }
+
+    fun setCustom(custom: Any) {
+        this.custom = custom
+    }
+
+    fun setCustomOpt(customOpt: Any?) {
+        this.customOpt = customOpt
     }
 
     companion object {
