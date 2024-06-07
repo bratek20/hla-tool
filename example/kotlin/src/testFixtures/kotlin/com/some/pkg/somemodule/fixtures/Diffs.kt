@@ -36,7 +36,7 @@ fun diffDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRang
 
 data class ExpectedSomeProperty(
     var other: (ExpectedOtherProperty.() -> Unit)? = null,
-    var id2: (ExpectedSomeId2.() -> Unit)? = null,
+    var id2: Int? = null,
 )
 fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeProperty().apply(expectedInit)
