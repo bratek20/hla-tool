@@ -9,46 +9,50 @@ profiles:
         fixtures: "src/testFixtures/kotlin/com/some/pkg"
     onlyPatterns: []
 
-#  - name: "kotlinNoWeb"
-#    language: "KOTLIN"
-#    projectPath: "../kotlin"
-#    mainPath: "src/main/kotlin/com/some/pkg"
-#    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
-#    testsPath: "src/test/kotlin/com/some/pkg"
-#    onlyParts: []
-#    generateWeb: false
-#
-#  - name: "typeScript"
-#    language: "TYPE_SCRIPT"
-#    projectPath: "../typescript"
-#    mainPath: "main"
-#    fixturesPath: "fixtures"
-#    testsPath: "test"
-#    onlyParts: []
-#    generateWeb: true
-#
-#  - name: "kotlinOnlyParts"
-#    language: "KOTLIN"
-#    projectPath: "../kotlin"
-#    mainPath: "src/main/kotlin/com/some/pkg"
-#    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
-#    testsPath: "src/test/kotlin/com/some/pkg"
-#    onlyParts:
-#        - "NamedTypes"
-#        - "Properties"
-#        - "Builders"
-#    generateWeb: true
-#
-#  - name: "typeScriptFileModifiers"
-#    language: "TYPE_SCRIPT"
-#    projectPath: "../typescriptFileModifiers/beforeStart"
-#    mainPath: "main"
-#    fixturesPath: "fixtures"
-#    testsPath: "test"
-#    onlyParts: []
-#    generateWeb: true
-#    typeScript:
-#      mainTsconfigPath: ""
-#      testTsconfigPath: "Tests"
-#      launchPath: ""
-#      packagePath: ""
+  - name: "kotlinNoWeb"
+    language: "KOTLIN"
+    paths:
+      project: "../kotlin"
+      src:
+        main: "src/main/kotlin/com/some/pkg"
+        test: "src/test/kotlin/com/some/pkg"
+        fixtures: "src/testFixtures/kotlin/com/some/pkg"
+    onlyPatterns: []
+
+  - name: "typeScript"
+    language: "TYPE_SCRIPT"
+    paths:
+      project: "../typescript"
+      src:
+        main: "main"
+        test: "test"
+        fixtures: "fixtures"
+    onlyPatterns: []
+
+  - name: "kotlinOnlyParts"
+    language: "KOTLIN"
+    paths:
+      project: "../kotlin"
+      src:
+        main: "src/main/kotlin/com/some/pkg"
+        test: "src/test/kotlin/com/some/pkg"
+        fixtures: "src/testFixtures/kotlin/com/some/pkg"
+    onlyPatterns:
+      - "NamedTypes"
+      - "Properties"
+      - "Builders"
+
+  - name: "typeScriptFileModifiers"
+    language: "TYPE_SCRIPT"
+    paths:
+      project: "../typescriptFileModifiers/beforeStart"
+      src:
+        main: "main"
+        test: "test"
+        fixtures: "fixtures"
+    onlyPatterns: []
+    typeScript:
+      mainTsconfigPath: ""
+      testTsconfigPath: "Tests"
+      launchJsonPath: ""
+      packageJsonPath: ""

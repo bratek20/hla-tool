@@ -7,7 +7,5 @@
         "Src/OtherModule/Api/Properties.ts",
         "Src/OtherModule/Api/Data.ts",
         "Src/OtherModule/Api/ValueObjects.ts",
-
-        "Src/OtherModule/Web/Dtos.ts",
     ]
 }
