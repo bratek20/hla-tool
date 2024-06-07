@@ -12,7 +12,7 @@ Properties
         other: OtherProperty
 
     SomeProperty2
-        value: string
+        value: string (public)
         custom: any
         someEnum: SomeEnum
         customOpt: any? = empty

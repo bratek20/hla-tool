@@ -7,6 +7,10 @@ import pl.bratek20.hla.utils.camelToPascalCase
 import pl.bratek20.hla.utils.pascalToCamelCase
 
 class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
+    override fun supportPublicComplexStructureFields(): Boolean {
+        return true
+    }
+
     override fun mapBaseType(type: BaseType): String {
         return when (type) {
             BaseType.STRING -> "string"

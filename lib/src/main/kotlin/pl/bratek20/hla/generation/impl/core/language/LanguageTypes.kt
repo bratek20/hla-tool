@@ -3,6 +3,8 @@ package pl.bratek20.hla.generation.impl.core.language
 import pl.bratek20.hla.definitions.api.BaseType
 
 interface LanguageTypes {
+    fun supportPublicComplexStructureFields(): Boolean
+
     fun mapBaseType(type: BaseType): String
     fun defaultValueForBaseType(type: BaseType): String
 

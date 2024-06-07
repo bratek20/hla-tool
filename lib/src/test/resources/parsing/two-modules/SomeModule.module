@@ -10,7 +10,7 @@ NamedTypes
 ValueObjects
     SomeClass
         id: SomeId
-        amount: int
+        amount: int (public)
 
     SomeClass2
         id: SomeId

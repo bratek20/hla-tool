@@ -71,6 +71,10 @@ class ModuleDefinitionsParserTest {
                                 type = {
                                     name = "int"
                                 }
+                                attributes = listOf {
+                                    name = "public"
+                                    value = "true"
+                                }
                             }
                         )
                     },

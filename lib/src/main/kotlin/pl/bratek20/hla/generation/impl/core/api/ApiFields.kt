@@ -5,7 +5,7 @@ import pl.bratek20.hla.utils.camelToPascalCase
 
 
 open class ApiTypeField(
-    private val def: FieldDefinition,
+    protected val def: FieldDefinition,
     private val factory: ApiTypeFactory
 ) {
     val name = def.name
@@ -64,32 +64,22 @@ class SerializableTypeApiField(
     factory: ApiTypeFactory
 ): ApiTypeField(def, factory) {
     override fun access(variableName: String): String {
-        if (hasHiddenType()) {
-            return "$variableName.${getterName()}()"
-        }
-        return "$variableName.$name"
+        return "$variableName.${getterName()}()"
     }
 
-    private fun hasHiddenType(): Boolean {
-        return type is OptionalApiType || type is SimpleStructureApiType || type is EnumApiType
-    }
-
+    // used by velocity
     fun accessor(): String {
-        return if(hasHiddenType()) "private " else ""
+        val isPublic = def.attributes.firstOrNull { it.name == "public" } != null
+        val publicSupported = type.languageTypes.supportPublicComplexStructureFields()
+        return if(isPublic && publicSupported) "" else "private "
     }
 
     fun getter(): SerializableTypeGetterOrSetter? {
-        if(hasHiddenType()) {
-            return SerializableTypeGetterOrSetter(getterName(), type, name)
-        }
-        return null
+        return SerializableTypeGetterOrSetter(getterName(), type, name)
     }
 
     fun setter(): SerializableTypeGetterOrSetter? {
-        if(hasHiddenType()) {
-            return SerializableTypeGetterOrSetter(setterName(), type, name)
-        }
-        return null
+        return SerializableTypeGetterOrSetter(setterName(), type, name)
     }
 
     private fun getterName(): String {
