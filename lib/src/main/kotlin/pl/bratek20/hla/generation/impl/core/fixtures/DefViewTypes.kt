@@ -137,6 +137,9 @@ class OptionalDefType(
         if (wrappedType is BaseDefType) {
             return pattern.defOptionalBaseType(wrappedType.name())
         }
+        if (wrappedType is SimpleStructureDefType<*>) {
+            return pattern.defOptionalBaseType(wrappedType.api.serializableName())
+        }
         return pattern.defOptionalType(wrappedType.api.name())
     }
 

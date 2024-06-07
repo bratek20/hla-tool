@@ -26,7 +26,7 @@ namespace SomeModule {
 
     export interface ExpectedSomeProperty {
         other?: OtherModule.ExpectedOtherProperty,
-        id2?: ExpectedSomeId2,
+        id2?: number,
     }
     export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
         const result: string[] = []

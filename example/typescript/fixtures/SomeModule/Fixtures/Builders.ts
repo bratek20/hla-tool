@@ -14,7 +14,7 @@ namespace SomeModule.Builder {
 
     export interface SomePropertyDef {
         other?: OtherModule.Builder.OtherPropertyDef,
-        id2?: SomeId2Def,
+        id2?: number,
     }
     export function someProperty(def?: SomePropertyDef): SomeProperty {
         const other = def?.other ?? {}

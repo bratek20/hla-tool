@@ -185,6 +185,9 @@ class OptionalExpectedType(
         if (wrappedType is BaseExpectedType) {
             return wrappedType.name()
         }
+        if (wrappedType is NamedExpectedType) {
+            return wrappedType.api.boxedType.name()
+        }
         return fixture.expectedClassType(wrappedType.api.name())
     }
 
