@@ -99,7 +99,7 @@ class ModuleGeneratorLogic(
                 ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
             },
             onlyUpdate = args.onlyUpdate,
-            onlyParts = args.profile.onlyParts,
+            onlyPatterns = args.profile.getOnlyPatterns(),
         )
 
         val root = GenerationRoot()

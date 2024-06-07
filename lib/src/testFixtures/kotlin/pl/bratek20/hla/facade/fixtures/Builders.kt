@@ -7,45 +7,63 @@ import pl.bratek20.hla.directory.fixtures.*
 
 import pl.bratek20.hla.facade.api.*
 
-data class TypeScriptInfoDef(
+data class TypeScriptConfigDef(
     var mainTsconfigPath: String = "someValue",
     var testTsconfigPath: String = "someValue",
-    var launchPath: String = "someValue",
-    var packagePath: String = "someValue",
+    var launchJsonPath: String = "someValue",
+    var packageJsonPath: String = "someValue",
 )
-fun typeScriptInfo(init: TypeScriptInfoDef.() -> Unit = {}): TypeScriptInfo {
-    val def = TypeScriptInfoDef().apply(init)
-    return TypeScriptInfo.create(
+fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfig {
+    val def = TypeScriptConfigDef().apply(init)
+    return TypeScriptConfig.create(
         mainTsconfigPath = pathCreate(def.mainTsconfigPath),
         testTsconfigPath = pathCreate(def.testTsconfigPath),
-        launchPath = pathCreate(def.launchPath),
-        packagePath = pathCreate(def.packagePath),
+        launchJsonPath = pathCreate(def.launchJsonPath),
+        packageJsonPath = pathCreate(def.packageJsonPath),
+    )
+}
+
+data class HlaSrcPathsDef(
+    var main: String = "someValue",
+    var test: String = "someValue",
+    var fixtures: String = "someValue",
+)
+fun hlaSrcPaths(init: HlaSrcPathsDef.() -> Unit = {}): HlaSrcPaths {
+    val def = HlaSrcPathsDef().apply(init)
+    return HlaSrcPaths.create(
+        main = pathCreate(def.main),
+        test = pathCreate(def.test),
+        fixtures = pathCreate(def.fixtures),
+    )
+}
+
+data class HlaPathsDef(
+    var project: String = "someValue",
+    var src: (HlaSrcPathsDef.() -> Unit) = {},
+)
+fun hlaPaths(init: HlaPathsDef.() -> Unit = {}): HlaPaths {
+    val def = HlaPathsDef().apply(init)
+    return HlaPaths.create(
+        project = pathCreate(def.project),
+        src = hlaSrcPaths(def.src),
     )
 }
 
 data class HlaProfileDef(
     var name: String = "someValue",
     var language: ModuleLanguage = ModuleLanguage.KOTLIN,
-    var projectPath: String = "someValue",
-    var mainPath: String = "someValue",
-    var fixturesPath: String = "someValue",
-    var testsPath: String = "someValue",
-    var onlyParts: List<String> = emptyList(),
-    var generateWeb: Boolean = false,
-    var typeScript: (TypeScriptInfoDef.() -> Unit)? = null,
+    var paths: (HlaPathsDef.() -> Unit) = {},
+    var onlyPatterns: List<String> = emptyList(),
+    var typeScript: (TypeScriptConfigDef.() -> Unit)? = null,
 )
 fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
     val def = HlaProfileDef().apply(init)
     return HlaProfile.create(
         name = ProfileName(def.name),
         language = def.language,
-        projectPath = pathCreate(def.projectPath),
-        mainPath = pathCreate(def.mainPath),
-        fixturesPath = pathCreate(def.fixturesPath),
-        testsPath = pathCreate(def.testsPath),
-        onlyParts = def.onlyParts,
-        generateWeb = def.generateWeb,
-        typeScript = def.typeScript?.let { it -> typeScriptInfo(it) },
+        paths = hlaPaths(def.paths),
+        onlyPatterns = def.onlyPatterns,
+        typeScript = def.typeScript?.let { it -> typeScriptConfig(it) },
     )
 }
 

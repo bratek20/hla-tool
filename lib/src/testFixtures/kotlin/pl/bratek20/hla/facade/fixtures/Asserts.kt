@@ -20,8 +20,18 @@ fun assertProfileName(given: ProfileName, expected: String) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertTypeScriptInfo(given: TypeScriptInfo, expectedInit: ExpectedTypeScriptInfo.() -> Unit) {
-    val diff = diffTypeScriptInfo(given, expectedInit)
+fun assertTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScriptConfig.() -> Unit) {
+    val diff = diffTypeScriptConfig(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertHlaSrcPaths(given: HlaSrcPaths, expectedInit: ExpectedHlaSrcPaths.() -> Unit) {
+    val diff = diffHlaSrcPaths(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertHlaPaths(given: HlaPaths, expectedInit: ExpectedHlaPaths.() -> Unit) {
+    val diff = diffHlaPaths(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

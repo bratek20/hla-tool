@@ -12,7 +12,7 @@ class ModuleGenerationContext(
     val velocity: VelocityFacade,
     val language: LanguageSupport,
     val onlyUpdate: Boolean,
-    val onlyParts: List<String>
+    val onlyPatterns: List<String>
 ) {
     val module: ModuleDefinition
         get() = domain.module
@@ -67,8 +67,8 @@ abstract class ModulePartGenerator {
             return true
         }
 
-        if(c.onlyParts.isNotEmpty()) {
-            if (c.onlyParts.contains(name())) {
+        if(c.onlyPatterns.isNotEmpty()) {
+            if (c.onlyPatterns.contains(name())) {
                 return false
             }
             return children().all { it.shouldSkip() }

@@ -18,14 +18,14 @@ fun diffProfileName(given: ProfileName, expected: String, path: String = ""): St
     return ""
 }
 
-data class ExpectedTypeScriptInfo(
+data class ExpectedTypeScriptConfig(
     var mainTsconfigPath: String? = null,
     var testTsconfigPath: String? = null,
-    var launchPath: String? = null,
-    var packagePath: String? = null,
+    var launchJsonPath: String? = null,
+    var packageJsonPath: String? = null,
 )
-fun diffTypeScriptInfo(given: TypeScriptInfo, expectedInit: ExpectedTypeScriptInfo.() -> Unit, path: String = ""): String {
-    val expected = ExpectedTypeScriptInfo().apply(expectedInit)
+fun diffTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScriptConfig.() -> Unit, path: String = ""): String {
+    val expected = ExpectedTypeScriptConfig().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.mainTsconfigPath?.let {
@@ -36,12 +36,55 @@ fun diffTypeScriptInfo(given: TypeScriptInfo, expectedInit: ExpectedTypeScriptIn
         if (diffPath(given.getTestTsconfigPath(), it) != "") { result.add(diffPath(given.getTestTsconfigPath(), it, "${path}testTsconfigPath.")) }
     }
 
-    expected.launchPath?.let {
-        if (diffPath(given.getLaunchPath(), it) != "") { result.add(diffPath(given.getLaunchPath(), it, "${path}launchPath.")) }
+    expected.launchJsonPath?.let {
+        if (diffPath(given.getLaunchJsonPath(), it) != "") { result.add(diffPath(given.getLaunchJsonPath(), it, "${path}launchJsonPath.")) }
     }
 
-    expected.packagePath?.let {
-        if (diffPath(given.getPackagePath(), it) != "") { result.add(diffPath(given.getPackagePath(), it, "${path}packagePath.")) }
+    expected.packageJsonPath?.let {
+        if (diffPath(given.getPackageJsonPath(), it) != "") { result.add(diffPath(given.getPackageJsonPath(), it, "${path}packageJsonPath.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedHlaSrcPaths(
+    var main: String? = null,
+    var test: String? = null,
+    var fixtures: String? = null,
+)
+fun diffHlaSrcPaths(given: HlaSrcPaths, expectedInit: ExpectedHlaSrcPaths.() -> Unit, path: String = ""): String {
+    val expected = ExpectedHlaSrcPaths().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.main?.let {
+        if (diffPath(given.getMain(), it) != "") { result.add(diffPath(given.getMain(), it, "${path}main.")) }
+    }
+
+    expected.test?.let {
+        if (diffPath(given.getTest(), it) != "") { result.add(diffPath(given.getTest(), it, "${path}test.")) }
+    }
+
+    expected.fixtures?.let {
+        if (diffPath(given.getFixtures(), it) != "") { result.add(diffPath(given.getFixtures(), it, "${path}fixtures.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedHlaPaths(
+    var project: String? = null,
+    var src: (ExpectedHlaSrcPaths.() -> Unit)? = null,
+)
+fun diffHlaPaths(given: HlaPaths, expectedInit: ExpectedHlaPaths.() -> Unit, path: String = ""): String {
+    val expected = ExpectedHlaPaths().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.project?.let {
+        if (diffPath(given.getProject(), it) != "") { result.add(diffPath(given.getProject(), it, "${path}project.")) }
+    }
+
+    expected.src?.let {
+        if (diffHlaSrcPaths(given.getSrc(), it) != "") { result.add(diffHlaSrcPaths(given.getSrc(), it, "${path}src.")) }
     }
 
     return result.joinToString("\n")
@@ -50,13 +93,9 @@ fun diffTypeScriptInfo(given: TypeScriptInfo, expectedInit: ExpectedTypeScriptIn
 data class ExpectedHlaProfile(
     var name: String? = null,
     var language: ModuleLanguage? = null,
-    var projectPath: String? = null,
-    var mainPath: String? = null,
-    var fixturesPath: String? = null,
-    var testsPath: String? = null,
-    var onlyParts: List<String>? = null,
-    var generateWeb: Boolean? = null,
-    var typeScript: (ExpectedTypeScriptInfo.() -> Unit)? = null,
+    var paths: (ExpectedHlaPaths.() -> Unit)? = null,
+    var onlyPatterns: List<String>? = null,
+    var typeScript: (ExpectedTypeScriptConfig.() -> Unit)? = null,
 )
 fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit, path: String = ""): String {
     val expected = ExpectedHlaProfile().apply(expectedInit)
@@ -70,33 +109,17 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
         if (given.getLanguage() != it) { result.add("${path}language ${given.getLanguage()} != ${it}") }
     }
 
-    expected.projectPath?.let {
-        if (diffPath(given.getProjectPath(), it) != "") { result.add(diffPath(given.getProjectPath(), it, "${path}projectPath.")) }
+    expected.paths?.let {
+        if (diffHlaPaths(given.getPaths(), it) != "") { result.add(diffHlaPaths(given.getPaths(), it, "${path}paths.")) }
     }
 
-    expected.mainPath?.let {
-        if (diffPath(given.getMainPath(), it) != "") { result.add(diffPath(given.getMainPath(), it, "${path}mainPath.")) }
-    }
-
-    expected.fixturesPath?.let {
-        if (diffPath(given.getFixturesPath(), it) != "") { result.add(diffPath(given.getFixturesPath(), it, "${path}fixturesPath.")) }
-    }
-
-    expected.testsPath?.let {
-        if (diffPath(given.getTestsPath(), it) != "") { result.add(diffPath(given.getTestsPath(), it, "${path}testsPath.")) }
-    }
-
-    expected.onlyParts?.let {
-        if (given.onlyParts.size != it.size) { result.add("${path}onlyParts size ${given.onlyParts.size} != ${it.size}") }
-        given.onlyParts.forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}onlyParts[${idx}] ${entry} != ${it[idx]}") } }
-    }
-
-    expected.generateWeb?.let {
-        if (given.generateWeb != it) { result.add("${path}generateWeb ${given.generateWeb} != ${it}") }
+    expected.onlyPatterns?.let {
+        if (given.getOnlyPatterns().size != it.size) { result.add("${path}onlyPatterns size ${given.getOnlyPatterns().size} != ${it.size}") }
+        given.getOnlyPatterns().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}onlyPatterns[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     expected.typeScript?.let {
-        if (diffTypeScriptInfo(given.getTypeScript()!!, it) != "") { result.add(diffTypeScriptInfo(given.getTypeScript()!!, it, "${path}typeScript.")) }
+        if (diffTypeScriptConfig(given.getTypeScript()!!, it) != "") { result.add(diffTypeScriptConfig(given.getTypeScript()!!, it, "${path}typeScript.")) }
     }
 
     return result.joinToString("\n")

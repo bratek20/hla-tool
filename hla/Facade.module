@@ -8,22 +8,27 @@ Enums
         TYPE_SCRIPT
 
 Properties
-    TypeScriptInfo
+    TypeScriptConfig
         mainTsconfigPath: Path
         testTsconfigPath: Path
-        launchPath: Path
-        packagePath: Path
+        launchJsonPath: Path
+        packageJsonPath: Path
+
+    HlaSrcPaths
+        main: Path
+        test: Path
+        fixtures: Path
+
+    HlaPaths
+       project: Path
+       src: HlaSrcPaths
 
     "profiles" -> HlaProfile[]
         name: ProfileName
         language: ModuleLanguage
-        projectPath: Path
-        mainPath: Path
-        fixturesPath: Path
-        testsPath: Path
-        onlyParts: string[]
-        generateWeb: bool
-        typeScript: TypeScriptInfo?
+        paths: HlaPaths
+        onlyPatterns: string[]
+        typeScript: TypeScriptConfig?
 
 
 ValueObjects

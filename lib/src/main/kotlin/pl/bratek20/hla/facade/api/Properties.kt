@@ -4,11 +4,11 @@ package pl.bratek20.hla.facade.api
 
 import pl.bratek20.hla.directory.api.*
 
-data class TypeScriptInfo(
+data class TypeScriptConfig(
     private val mainTsconfigPath: String,
     private val testTsconfigPath: String,
-    private val launchPath: String,
-    private val packagePath: String,
+    private val launchJsonPath: String,
+    private val packageJsonPath: String,
 ) {
     fun getMainTsconfigPath(): Path {
         return pathCreate(this.mainTsconfigPath)
@@ -18,26 +18,83 @@ data class TypeScriptInfo(
         return pathCreate(this.testTsconfigPath)
     }
 
-    fun getLaunchPath(): Path {
-        return pathCreate(this.launchPath)
+    fun getLaunchJsonPath(): Path {
+        return pathCreate(this.launchJsonPath)
     }
 
-    fun getPackagePath(): Path {
-        return pathCreate(this.packagePath)
+    fun getPackageJsonPath(): Path {
+        return pathCreate(this.packageJsonPath)
     }
 
     companion object {
         fun create(
             mainTsconfigPath: Path,
             testTsconfigPath: Path,
-            launchPath: Path,
-            packagePath: Path,
-        ): TypeScriptInfo {
-            return TypeScriptInfo(
+            launchJsonPath: Path,
+            packageJsonPath: Path,
+        ): TypeScriptConfig {
+            return TypeScriptConfig(
                 mainTsconfigPath = pathGetValue(mainTsconfigPath),
                 testTsconfigPath = pathGetValue(testTsconfigPath),
-                launchPath = pathGetValue(launchPath),
-                packagePath = pathGetValue(packagePath),
+                launchJsonPath = pathGetValue(launchJsonPath),
+                packageJsonPath = pathGetValue(packageJsonPath),
+            )
+        }
+    }
+}
+
+data class HlaSrcPaths(
+    private val main: String,
+    private val test: String,
+    private val fixtures: String,
+) {
+    fun getMain(): Path {
+        return pathCreate(this.main)
+    }
+
+    fun getTest(): Path {
+        return pathCreate(this.test)
+    }
+
+    fun getFixtures(): Path {
+        return pathCreate(this.fixtures)
+    }
+
+    companion object {
+        fun create(
+            main: Path,
+            test: Path,
+            fixtures: Path,
+        ): HlaSrcPaths {
+            return HlaSrcPaths(
+                main = pathGetValue(main),
+                test = pathGetValue(test),
+                fixtures = pathGetValue(fixtures),
+            )
+        }
+    }
+}
+
+data class HlaPaths(
+    private val project: String,
+    private val src: HlaSrcPaths,
+) {
+    fun getProject(): Path {
+        return pathCreate(this.project)
+    }
+
+    fun getSrc(): HlaSrcPaths {
+        return this.src
+    }
+
+    companion object {
+        fun create(
+            project: Path,
+            src: HlaSrcPaths,
+        ): HlaPaths {
+            return HlaPaths(
+                project = pathGetValue(project),
+                src = src,
             )
         }
     }
@@ -46,13 +103,9 @@ data class TypeScriptInfo(
 data class HlaProfile(
     private val name: String,
     private val language: String,
-    private val projectPath: String,
-    private val mainPath: String,
-    private val fixturesPath: String,
-    private val testsPath: String,
-    val onlyParts: List<String>,
-    val generateWeb: Boolean,
-    private val typeScript: TypeScriptInfo?,
+    private val paths: HlaPaths,
+    private val onlyPatterns: List<String>,
+    private val typeScript: TypeScriptConfig?,
 ) {
     fun getName(): ProfileName {
         return ProfileName(this.name)
@@ -62,23 +115,15 @@ data class HlaProfile(
         return ModuleLanguage.valueOf(this.language)
     }
 
-    fun getProjectPath(): Path {
-        return pathCreate(this.projectPath)
+    fun getPaths(): HlaPaths {
+        return this.paths
     }
 
-    fun getMainPath(): Path {
-        return pathCreate(this.mainPath)
+    fun getOnlyPatterns(): List<String> {
+        return this.onlyPatterns
     }
 
-    fun getFixturesPath(): Path {
-        return pathCreate(this.fixturesPath)
-    }
-
-    fun getTestsPath(): Path {
-        return pathCreate(this.testsPath)
-    }
-
-    fun getTypeScript(): TypeScriptInfo? {
+    fun getTypeScript(): TypeScriptConfig? {
         return this.typeScript
     }
 
@@ -86,23 +131,15 @@ data class HlaProfile(
         fun create(
             name: ProfileName,
             language: ModuleLanguage,
-            projectPath: Path,
-            mainPath: Path,
-            fixturesPath: Path,
-            testsPath: Path,
-            onlyParts: List<String>,
-            generateWeb: Boolean,
-            typeScript: TypeScriptInfo?,
+            paths: HlaPaths,
+            onlyPatterns: List<String>,
+            typeScript: TypeScriptConfig?,
         ): HlaProfile {
             return HlaProfile(
                 name = name.value,
                 language = language.name,
-                projectPath = pathGetValue(projectPath),
-                mainPath = pathGetValue(mainPath),
-                fixturesPath = pathGetValue(fixturesPath),
-                testsPath = pathGetValue(testsPath),
-                onlyParts = onlyParts,
-                generateWeb = generateWeb,
+                paths = paths,
+                onlyPatterns = onlyPatterns,
                 typeScript = typeScript,
             )
         }

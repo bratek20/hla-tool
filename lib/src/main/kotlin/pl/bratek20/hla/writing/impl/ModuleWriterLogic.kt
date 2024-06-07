@@ -4,7 +4,7 @@ import pl.bratek20.hla.directory.api.*
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.HlaProfile
 import pl.bratek20.hla.facade.api.ModuleLanguage
-import pl.bratek20.hla.facade.api.TypeScriptInfo
+import pl.bratek20.hla.facade.api.TypeScriptConfig
 import pl.bratek20.hla.generation.api.GenerateResult
 import pl.bratek20.hla.writing.api.ModuleWriter
 import pl.bratek20.hla.writing.api.WriteArgs
@@ -15,14 +15,15 @@ class ModuleWriterLogic(
 ): ModuleWriter {
 
     override fun write(args: WriteArgs) {
-        val rootPath = args.hlaFolderPath.add(args.profile.getProjectPath())
+        val rootPath = args.hlaFolderPath.add(args.profile.getPaths().getProject())
         val generateResult = args.generateResult
         val profile = args.profile
 
+        val src = profile.getPaths().getSrc()
         val paths = Paths(
-            main = rootPath.add(profile.getMainPath()),
-            fixtures = rootPath.add(profile.getFixturesPath()),
-            tests = rootPath.add(profile.getTestsPath())
+            main = rootPath.add(src.getMain()),
+            fixtures = rootPath.add(src.getFixtures()),
+            test = rootPath.add(src.getTest())
         )
 
         writeDirectories(paths, generateResult)
@@ -39,8 +40,8 @@ class ModuleWriterLogic(
         }
     }
 
-    private fun updateLaunchJson(rootPath: Path, info: TypeScriptInfo, moduleName: String) {
-        val path = rootPath.add(info.getLaunchPath())
+    private fun updateLaunchJson(rootPath: Path, info: TypeScriptConfig, moduleName: String) {
+        val path = rootPath.add(info.getLaunchJsonPath())
         files.read(path.add(FileName("launch.json"))).let {
             val currentLines = it.content.lines.toMutableList()
             val startIndex = currentLines.indexOfFirst { it.contains("\"configurations\"") }
@@ -66,8 +67,8 @@ class ModuleWriterLogic(
         }
     }
 
-    private fun updatePackageJson(rootPath: Path, info: TypeScriptInfo, moduleName: String) {
-        val path = rootPath.add(info.getPackagePath())
+    private fun updatePackageJson(rootPath: Path, info: TypeScriptConfig, moduleName: String) {
+        val path = rootPath.add(info.getPackageJsonPath())
         files.read(path.add(FileName("package.json"))).let {
             val currentLines = it.content.lines.toMutableList()
             val startIndex = currentLines.indexOfFirst { it.contains("\"scripts\"") }
@@ -86,10 +87,10 @@ class ModuleWriterLogic(
     private fun writeDirectories(paths: Paths, generateResult: GenerateResult) {
         directories.write(paths.main, generateResult.main)
         directories.write(paths.fixtures, generateResult.fixtures)
-        generateResult.tests?.let { directories.write(paths.tests, it) }
+        generateResult.tests?.let { directories.write(paths.test, it) }
     }
 
-    private fun updateTsConfigFiles(rootPath: Path, info: TypeScriptInfo, generateResult: GenerateResult) {
+    private fun updateTsConfigFiles(rootPath: Path, info: TypeScriptConfig, generateResult: GenerateResult) {
         val typeScriptPaths = TypeScriptPaths(
             mainTsconfig = rootPath.add(info.getMainTsconfigPath()),
             testTsconfig = rootPath.add(info.getTestTsconfigPath())
@@ -146,7 +147,7 @@ class ModuleWriterLogic(
         generateResult.tests?.let { dirs.write(debugPath, it) }
     }
 
-    data class Paths(val main: Path, val fixtures: Path, val tests: Path)
+    data class Paths(val main: Path, val fixtures: Path, val test: Path)
     data class TypeScriptPaths(val mainTsconfig: Path, val testTsconfig: Path)
     data class ExtractedFile(val submoduleName: String, val fileNames: List<String>)
 
