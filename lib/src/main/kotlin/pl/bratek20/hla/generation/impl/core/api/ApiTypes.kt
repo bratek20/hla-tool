@@ -172,6 +172,15 @@ open class SerializableApiType(
     override fun constructorCall(): String {
         return languageTypes.propertyClassConstructorCall(name())
     }
+
+    // used by velocity
+    //TODO-REF
+    fun kotlinVarOrValHack(): String {
+        if(setters().isEmpty()) {
+            return "val"
+        }
+        return "var"
+    }
 }
 
 class PropertyApiType(
