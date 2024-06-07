@@ -14,7 +14,7 @@ data class SomeProperty(
     }
 
     fun getId2(): SomeId2? {
-        return this.id2?.let { it -> SomeId2(it)}
+        return this.id2?.let { it -> SomeId2(it) }
     }
 
     companion object {
@@ -24,7 +24,7 @@ data class SomeProperty(
         ): SomeProperty {
             return SomeProperty(
                 other = other,
-                id2 = id2,
+                id2 = id2?.let { it -> it.value },
             )
         }
     }

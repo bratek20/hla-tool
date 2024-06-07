@@ -78,8 +78,12 @@ class KotlinTypes: LanguageTypes {
         return variableName
     }
 
+    override fun serializeOptionalForSimpleStructure(variableName: String, className: String): String {
+        return "$variableName?.let { it -> it.value }"
+    }
+
     override fun deserializeOptionalForSimpleStructure(variableName: String, className: String): String {
-        return "$variableName?.let { it -> $className(it)}"
+        return "$variableName?.let { it -> $className(it) }"
     }
 
     override fun emptyOptional(): String {

@@ -230,6 +230,9 @@ class OptionalApiType(
     }
 
     override fun serialize(variableName: String): String {
+        if (wrappedType is SimpleStructureApiType) {
+            return languageTypes.serializeOptionalForSimpleStructure(variableName, wrappedType.name())
+        }
         return languageTypes.serializeOptional(variableName)
     }
 }

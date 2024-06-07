@@ -10,7 +10,7 @@ class SomeProperty {
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
-        instance.id2 = id2.orElse(undefined)
+        instance.id2 = id2.map(it => it.value).orElse(undefined)
         return instance
     }
 
