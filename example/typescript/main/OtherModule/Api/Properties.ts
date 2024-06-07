@@ -2,7 +2,7 @@
 
 class OtherProperty {
     private id = NUMBER
-    name = STRING
+    private name = STRING
 
     static create(
         id: OtherId,
@@ -16,6 +16,10 @@ class OtherProperty {
 
     getId(): OtherId {
         return new OtherId(this.id)
+    }
+
+    getName(): string {
+        return this.name
     }
 }
 

@@ -18,7 +18,7 @@ namespace OtherModule {
         }
 
         if (expected.name !== undefined) {
-            if (given.name != expected.name) { result.push(`${path}name ${given.name} != ${expected.name}`) }
+            if (given.getName() != expected.name) { result.push(`${path}name ${given.getName()} != ${expected.name}`) }
         }
 
         return result.join("\n")
