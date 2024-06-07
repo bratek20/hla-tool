@@ -1,53 +1,54 @@
 profiles:
   - name: "kotlin"
     language: "KOTLIN"
-    projectPath: "../kotlin"
-    mainPath: "src/main/kotlin/com/some/pkg"
-    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
-    testsPath: "src/test/kotlin/com/some/pkg"
-    onlyParts: []
-    generateWeb: true
+    paths:
+      project: "../kotlin"
+      src:
+        main: "src/main/kotlin/com/some/pkg"
+        test: "src/test/kotlin/com/some/pkg"
+        fixtures: "src/testFixtures/kotlin/com/some/pkg"
+    onlyPatterns: []
 
-  - name: "kotlinNoWeb"
-    language: "KOTLIN"
-    projectPath: "../kotlin"
-    mainPath: "src/main/kotlin/com/some/pkg"
-    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
-    testsPath: "src/test/kotlin/com/some/pkg"
-    onlyParts: []
-    generateWeb: false
-
-  - name: "typeScript"
-    language: "TYPE_SCRIPT"
-    projectPath: "../typescript"
-    mainPath: "main"
-    fixturesPath: "fixtures"
-    testsPath: "test"
-    onlyParts: []
-    generateWeb: true
-
-  - name: "kotlinOnlyParts"
-    language: "KOTLIN"
-    projectPath: "../kotlin"
-    mainPath: "src/main/kotlin/com/some/pkg"
-    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
-    testsPath: "src/test/kotlin/com/some/pkg"
-    onlyParts:
-        - "NamedTypes"
-        - "Properties"
-        - "Builders"
-    generateWeb: true
-
-  - name: "typeScriptFileModifiers"
-    language: "TYPE_SCRIPT"
-    projectPath: "../typescriptFileModifiers/beforeStart"
-    mainPath: "main"
-    fixturesPath: "fixtures"
-    testsPath: "test"
-    onlyParts: []
-    generateWeb: true
-    typeScript:
-      mainTsconfigPath: ""
-      testTsconfigPath: "Tests"
-      launchPath: ""
-      packagePath: ""
+#  - name: "kotlinNoWeb"
+#    language: "KOTLIN"
+#    projectPath: "../kotlin"
+#    mainPath: "src/main/kotlin/com/some/pkg"
+#    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+#    testsPath: "src/test/kotlin/com/some/pkg"
+#    onlyParts: []
+#    generateWeb: false
+#
+#  - name: "typeScript"
+#    language: "TYPE_SCRIPT"
+#    projectPath: "../typescript"
+#    mainPath: "main"
+#    fixturesPath: "fixtures"
+#    testsPath: "test"
+#    onlyParts: []
+#    generateWeb: true
+#
+#  - name: "kotlinOnlyParts"
+#    language: "KOTLIN"
+#    projectPath: "../kotlin"
+#    mainPath: "src/main/kotlin/com/some/pkg"
+#    fixturesPath: "src/testFixtures/kotlin/com/some/pkg"
+#    testsPath: "src/test/kotlin/com/some/pkg"
+#    onlyParts:
+#        - "NamedTypes"
+#        - "Properties"
+#        - "Builders"
+#    generateWeb: true
+#
+#  - name: "typeScriptFileModifiers"
+#    language: "TYPE_SCRIPT"
+#    projectPath: "../typescriptFileModifiers/beforeStart"
+#    mainPath: "main"
+#    fixturesPath: "fixtures"
+#    testsPath: "test"
+#    onlyParts: []
+#    generateWeb: true
+#    typeScript:
+#      mainTsconfigPath: ""
+#      testTsconfigPath: "Tests"
+#      launchPath: ""
+#      packagePath: ""

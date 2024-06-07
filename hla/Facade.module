@@ -44,7 +44,13 @@ ValueObjects
 Interfaces
     HlaFacade
         startModule(args: ModuleOperationArgs)
+            throws
+                ProfileNotFoundException
 
         updateModule(args: ModuleOperationArgs)
+            throws
+                ProfileNotFoundException
 
         updateAllModules(args: AllModulesOperationArgs)
+            throws
+                ProfileNotFoundException

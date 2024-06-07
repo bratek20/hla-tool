@@ -5,9 +5,18 @@ package pl.bratek20.hla.facade.api
 import pl.bratek20.hla.directory.api.*
 
 interface HlaFacade {
+    @Throws(
+        ProfileNotFoundException::class,
+    )
     fun startModule(args: ModuleOperationArgs): Unit
 
+    @Throws(
+        ProfileNotFoundException::class,
+    )
     fun updateModule(args: ModuleOperationArgs): Unit
 
+    @Throws(
+        ProfileNotFoundException::class,
+    )
     fun updateAllModules(args: AllModulesOperationArgs): Unit
 }
