@@ -36,7 +36,7 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
     val result: MutableList<String> = mutableListOf()
 
     expected.other?.let {
-        if (diffOtherProperty(given.other, it) != "") { result.add(diffOtherProperty(given.other, it, "${path}other.")) }
+        if (diffOtherProperty(given.getOther(), it) != "") { result.add(diffOtherProperty(given.getOther(), it, "${path}other.")) }
     }
 
     return result.joinToString("\n")
@@ -53,11 +53,11 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
     val result: MutableList<String> = mutableListOf()
 
     expected.value?.let {
-        if (given.value != it) { result.add("${path}value ${given.value} != ${it}") }
+        if (given.getValue() != it) { result.add("${path}value ${given.getValue()} != ${it}") }
     }
 
     expected.custom?.let {
-        if (given.custom != it) { result.add("${path}custom ${given.custom} != ${it}") }
+        if (given.getCustom() != it) { result.add("${path}custom ${given.getCustom()} != ${it}") }
     }
 
     expected.someEnum?.let {

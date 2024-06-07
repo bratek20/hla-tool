@@ -6,8 +6,12 @@ import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 data class SomeProperty(
-    val other: OtherProperty,
+    private val other: OtherProperty,
 ) {
+    fun getOther(): OtherProperty {
+        return this.other
+    }
+
     companion object {
         fun create(
             other: OtherProperty,
@@ -20,11 +24,19 @@ data class SomeProperty(
 }
 
 data class SomeProperty2(
-    val value: String,
-    val custom: Any,
+    private val value: String,
+    private val custom: Any,
     private val someEnum: String,
     private val customOpt: Any?,
 ) {
+    fun getValue(): String {
+        return this.value
+    }
+
+    fun getCustom(): Any {
+        return this.custom
+    }
+
     fun getSomeEnum(): SomeEnum {
         return SomeEnum.valueOf(this.someEnum)
     }

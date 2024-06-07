@@ -26,7 +26,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.other !== undefined) {
-            if (OtherModule.diffOtherProperty(given.other, expected.other) != "") { result.push(OtherModule.diffOtherProperty(given.other, expected.other, `${path}other.`)) }
+            if (OtherModule.diffOtherProperty(given.getOther(), expected.other) != "") { result.push(OtherModule.diffOtherProperty(given.getOther(), expected.other, `${path}other.`)) }
         }
 
         return result.join("\n")
@@ -42,11 +42,11 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.value !== undefined) {
-            if (given.value != expected.value) { result.push(`${path}value ${given.value} != ${expected.value}`) }
+            if (given.getValue() != expected.value) { result.push(`${path}value ${given.getValue()} != ${expected.value}`) }
         }
 
         if (expected.custom !== undefined) {
-            if (given.custom != expected.custom) { result.push(`${path}custom ${given.custom} != ${expected.custom}`) }
+            if (given.getCustom() != expected.custom) { result.push(`${path}custom ${given.getCustom()} != ${expected.custom}`) }
         }
 
         if (expected.someEnum !== undefined) {
