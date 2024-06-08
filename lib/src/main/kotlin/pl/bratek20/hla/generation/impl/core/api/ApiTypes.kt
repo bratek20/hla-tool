@@ -117,12 +117,6 @@ open class ComplexStructureApiType<T: ApiTypeField>(
     }
 }
 
-
-class ToRemoveComplexVOApiType(
-    name: String,
-    fields: List<ApiTypeField>
-) : ComplexStructureApiType<ApiTypeField>(name, fields)
-
 class ComplexCustomApiType(
     name: String,
     fields: List<ApiTypeField>
@@ -171,15 +165,6 @@ open class SerializableApiType(
 
     override fun constructorCall(): String {
         return languageTypes.propertyClassConstructorCall(name())
-    }
-
-    // used by velocity
-    //TODO-REF
-    fun kotlinVarOrValHack(): String {
-        if(setters().isEmpty()) {
-            return "val"
-        }
-        return "var"
     }
 }
 

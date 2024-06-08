@@ -14,7 +14,7 @@ data class ${vo.name()}(
 #foreach($vo in $complexValueObjects)
 data class ${vo.name()}(
     #foreach($field in $vo.fields)
-    ${field.accessor()}${vo.kotlinVarOrValHack()} $field.name: $field.type.serializableName(),
+    ${field.accessor()}val $field.name: $field.type.serializableName(),
     #end
 ) {
     #foreach($getter in $vo.getters())

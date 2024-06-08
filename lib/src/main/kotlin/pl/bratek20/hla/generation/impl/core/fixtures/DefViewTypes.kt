@@ -198,7 +198,6 @@ class DefTypeFactory(
         val result = when (type) {
             is BaseApiType -> BaseDefType(type)
             is SimpleValueObjectApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
-            is ToRemoveComplexVOApiType -> ComplexVODefType(type, createFields(type.fields))
             is OptionalApiType -> OptionalDefType(type, create(type.wrappedType))
             is ListApiType -> ListDefType(type, create(type.wrappedType))
             is EnumApiType -> EnumDefType(type)
