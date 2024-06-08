@@ -1,5 +1,7 @@
 package pl.bratek20.hla.generation.impl.core.impl
 
+import pl.bratek20.hla.definitions.api.ComplexStructureDefinition
+import pl.bratek20.hla.definitions.api.KeyDefinition
 import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.FileGenerator
@@ -18,7 +20,11 @@ class LogicGenerator: FileGenerator() {
         return GeneratorMode.ONLY_START
     }
 
-    override fun generateFileContent(): FileContent {
+    override fun generateFileContent(): FileContent? {
+        if (module.interfaces.isEmpty()) {
+            return null
+        }
+
         val factory = InterfaceViewFactory(apiTypeFactory)
 
         return contentBuilder("logic.vm")
@@ -31,6 +37,14 @@ class ImplDataClassesGenerator: DataClassesGenerator() {
     override fun generateFileContent(): FileContent? {
         val content = super.generateFileContent() ?: return null
         val lines = content.lines.toMutableList()
+        lines.forEachIndexed { index, line ->
+            if (line.contains("class")) {
+                lines[index] = line.replace("class", "export class")
+            }
+            if (line.isNotEmpty()) {
+                lines[index] = "    ${lines[index]}"
+            }
+        }
         lines.add(0, "namespace ${module.name.value}.Impl {")
         lines.add("}")
         return FileContent(lines)
@@ -38,6 +52,10 @@ class ImplDataClassesGenerator: DataClassesGenerator() {
 
     override fun velocityPathOverride(): String? {
         return "api"
+    }
+
+    override fun dataClasses(): List<ComplexStructureDefinition> {
+        return module.implSubmodule.data
     }
 }
 
@@ -51,6 +69,10 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
 
     override fun velocityPathOverride(): String? {
         return "api"
+    }
+
+    override fun dataKeys(): List<KeyDefinition> {
+        return module.implSubmodule.dataKeys
     }
 }
 

@@ -32,8 +32,12 @@ open class DataClassesGenerator: FileGenerator() {
         return "DataClasses"
     }
 
+    protected open fun dataClasses(): List<ComplexStructureDefinition> {
+        return module.dataClasses
+    }
+
     override fun generateFileContent(): FileContent? {
-        val dataClasses = module.dataClasses.map { apiTypeFactory.create<DataClassApiType>(it) }
+        val dataClasses = dataClasses().map { apiTypeFactory.create<DataClassApiType>(it) }
 
         if (dataClasses.isEmpty()) {
             return null
@@ -57,15 +61,19 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
         val keyType: String
     )
 
+    protected open fun dataKeys(): List<KeyDefinition> {
+        return module.dataKeys
+    }
+
     override fun generateFileContent(): FileContent?{
         if (!data && module.propertyKeys.isEmpty()) {
             return null
         }
-        if (data && module.dataKeys.isEmpty()) {
+        if (data && dataKeys().isEmpty()) {
             return null
         }
 
-        val keys = if (data) module.dataKeys else module.propertyKeys
+        val keys = if (data) dataKeys() else module.propertyKeys
         return contentBuilder("keys.vm")
             .put("keys", keys.map { toApiPropertyOrDataKey(it, data) })
             .build()

@@ -59,7 +59,7 @@ class HlaModules(
     }
 
     private fun findDataClass(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.dataClasses.find { it.name == type.name }
+        return (module.dataClasses + module.implSubmodule.data).find { it.name == type.name }
     }
 
     private fun findSimpleCustomType(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
