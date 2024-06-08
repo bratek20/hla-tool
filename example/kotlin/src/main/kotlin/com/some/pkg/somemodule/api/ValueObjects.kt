@@ -214,8 +214,8 @@ data class SomeClass4(
 
 data class SomeClass5(
     private val date: String,
-    private val dateRange: DateRange,
-    private val dateRangeWrapper: DateRangeWrapper,
+    private val dateRange: SerializedDateRange,
+    private val dateRangeWrapper: SerializedDateRangeWrapper,
     private val someProperty: SomeProperty,
     private val otherProperty: OtherProperty,
 ) {
@@ -224,11 +224,11 @@ data class SomeClass5(
     }
 
     fun getDateRange(): DateRange {
-        return this.dateRange
+        return SerializedDateRange.toCustomType(this.dateRange)
     }
 
     fun getDateRangeWrapper(): DateRangeWrapper {
-        return this.dateRangeWrapper
+        return SerializedDateRangeWrapper.toCustomType(this.dateRangeWrapper)
     }
 
     fun getSomeProperty(): SomeProperty {
@@ -249,8 +249,8 @@ data class SomeClass5(
         ): SomeClass5 {
             return SomeClass5(
                 date = dateGetValue(date),
-                dateRange = dateRange,
-                dateRangeWrapper = dateRangeWrapper,
+                dateRange = SerializedDateRange.fromCustomType(dateRange),
+                dateRangeWrapper = SerializedDateRangeWrapper.fromCustomType(dateRangeWrapper),
                 someProperty = someProperty,
                 otherProperty = otherProperty,
             )
