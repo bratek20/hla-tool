@@ -16,18 +16,6 @@ fun otherProperty(init: OtherPropertyDef.() -> Unit = {}): OtherProperty {
     )
 }
 
-data class OtherClassDef(
-    var id: Int = 0,
-    var amount: Int = 0,
-)
-fun otherClass(init: OtherClassDef.() -> Unit = {}): OtherClass {
-    val def = OtherClassDef().apply(init)
-    return OtherClass.create(
-        id = OtherId(def.id),
-        amount = def.amount,
-    )
-}
-
 data class OtherDataDef(
     var id: Int = 0,
 )

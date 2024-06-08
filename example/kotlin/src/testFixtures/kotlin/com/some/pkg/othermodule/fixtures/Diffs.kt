@@ -28,25 +28,6 @@ fun diffOtherProperty(given: OtherProperty, expectedInit: ExpectedOtherProperty.
     return result.joinToString("\n")
 }
 
-data class ExpectedOtherClass(
-    var id: Int? = null,
-    var amount: Int? = null,
-)
-fun diffOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Unit, path: String = ""): String {
-    val expected = ExpectedOtherClass().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.id?.let {
-        if (diffOtherId(given.getId(), it) != "") { result.add(diffOtherId(given.getId(), it, "${path}id.")) }
-    }
-
-    expected.amount?.let {
-        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
-    }
-
-    return result.joinToString("\n")
-}
-
 data class ExpectedOtherData(
     var id: Int? = null,
 )

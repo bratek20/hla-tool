@@ -5,10 +5,6 @@ ValueObjects
         id: OtherId
         name: string
 
-    OtherClass
-        id: OtherId
-        amount: int
-
 
 DataClasses
     OtherData

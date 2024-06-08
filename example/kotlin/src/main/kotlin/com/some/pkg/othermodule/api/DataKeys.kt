@@ -2,8 +2,6 @@
 
 package com.some.pkg.othermodule.api
 
-
-
 val OTHER_DATA_KEY = pl.bratek20.architecture.properties.api.ObjectPropertyKey(
     "otherData",
     OtherData::class
