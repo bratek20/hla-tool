@@ -58,8 +58,13 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
         val constantName: String,
         val outerKeyType: String,
         val keyName: String,
-        val keyType: String
-    )
+        val keyType: String,
+        val data: Boolean
+    ) {
+        fun kotlinPackage(): String {
+            return if (data) "pl.bratek20.architecture.data.api" else "pl.bratek20.architecture.properties.api"
+        }
+    }
 
     protected open fun dataKeys(): List<KeyDefinition> {
         return module.dataKeys
@@ -100,7 +105,8 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
             constantName = camelToScreamingSnakeCase(def.name + "Key"),
             outerKeyType = outerKeyType,
             keyName = def.name,
-            keyType = keyType
+            keyType = keyType,
+            data = data
         )
     }
 }

@@ -3,6 +3,7 @@ package pl.bratek20.hla.generation.impl.core.impl
 import pl.bratek20.hla.definitions.api.ComplexStructureDefinition
 import pl.bratek20.hla.definitions.api.KeyDefinition
 import pl.bratek20.hla.directory.api.FileContent
+import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.FileGenerator
 import pl.bratek20.hla.generation.impl.core.GeneratorMode
@@ -10,6 +11,7 @@ import pl.bratek20.hla.generation.impl.core.api.DataClassApiType
 import pl.bratek20.hla.generation.impl.core.api.DataClassesGenerator
 import pl.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import pl.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
+import pl.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 
 class LogicGenerator: FileGenerator() {
     override fun name(): String {
@@ -37,6 +39,11 @@ class ImplDataClassesGenerator: DataClassesGenerator() {
     override fun generateFileContent(): FileContent? {
         val content = super.generateFileContent() ?: return null
         val lines = content.lines.toMutableList()
+        if (language.name() == ModuleLanguage.KOTLIN) {
+            lines[0] = lines[0].replace("api", "impl")
+            return FileContent(lines)
+        }
+
         lines.forEachIndexed { index, line ->
             if (line.contains("class")) {
                 lines[index] = line.replace("class", "export class")
@@ -63,6 +70,12 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
     override fun generateFileContent(): FileContent? {
         val content = super.generateFileContent() ?: return null
         val lines = content.lines.toMutableList()
+
+        if (language.name() == ModuleLanguage.KOTLIN) {
+            lines[0] = lines[0].replace("api", "impl")
+            return FileContent(lines)
+        }
+
         lines[0] = "namespace ${module.name.value}.Impl {"
         return FileContent(lines)
     }

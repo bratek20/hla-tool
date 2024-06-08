@@ -1,7 +1,7 @@
 package ${packageName}.api
 #foreach($k in $keys)
 
-val $k.constantName = pl.bratek20.architecture.properties.api.${k.outerKeyType}(
+val $k.constantName = ${k.kotlinPackage()}.${k.outerKeyType}(
     "${k.keyName}",
     ${k.keyType}::class
 )#if($foreach.hasNext)
