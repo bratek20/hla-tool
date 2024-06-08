@@ -20,3 +20,8 @@ fun assertOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> U
     val diff = diffOtherClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertOtherData(given: OtherData, expectedInit: ExpectedOtherData.() -> Unit) {
+    val diff = diffOtherData(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

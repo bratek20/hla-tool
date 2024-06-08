@@ -20,20 +20,6 @@ fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
     return ""
 }
 
-data class ExpectedDateRangeWrapper(
-    var range: (ExpectedDateRange.() -> Unit)? = null,
-)
-fun diffDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit, path: String = ""): String {
-    val expected = ExpectedDateRangeWrapper().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.range?.let {
-        if (diffDateRange(dateRangeWrapperGetRange(given), it) != "") { result.add(diffDateRange(dateRangeWrapperGetRange(given), it, "${path}range.")) }
-    }
-
-    return result.joinToString("\n")
-}
-
 data class ExpectedSomeProperty(
     var other: (ExpectedOtherProperty.() -> Unit)? = null,
     var id2: Int? = null,
@@ -91,11 +77,11 @@ fun diffSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit, 
     val result: MutableList<String> = mutableListOf()
 
     expected.id?.let {
-        if (diffSomeId(given.id, it) != "") { result.add(diffSomeId(given.id, it, "${path}id.")) }
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
     }
 
     expected.amount?.let {
-        if (given.amount != it) { result.add("${path}amount ${given.amount} != ${it}") }
+        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
     }
 
     return result.joinToString("\n")
@@ -112,21 +98,21 @@ fun diffSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.id?.let {
-        if (diffSomeId(given.id, it) != "") { result.add(diffSomeId(given.id, it, "${path}id.")) }
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
     }
 
     expected.names?.let {
-        if (given.names.size != it.size) { result.add("${path}names size ${given.names.size} != ${it.size}") }
-        given.names.forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}names[${idx}] ${entry} != ${it[idx]}") } }
+        if (given.getNames().size != it.size) { result.add("${path}names size ${given.getNames().size} != ${it.size}") }
+        given.getNames().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}names[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     expected.ids?.let {
-        if (given.ids.size != it.size) { result.add("${path}ids size ${given.ids.size} != ${it.size}") }
-        given.ids.forEachIndexed { idx, entry -> if (diffSomeId(entry, it[idx]) != "") { result.add(diffSomeId(entry, it[idx], "${path}ids[${idx}].")) } }
+        if (given.getIds().size != it.size) { result.add("${path}ids size ${given.getIds().size} != ${it.size}") }
+        given.getIds().forEachIndexed { idx, entry -> if (diffSomeId(entry, it[idx]) != "") { result.add(diffSomeId(entry, it[idx], "${path}ids[${idx}].")) } }
     }
 
     expected.enabled?.let {
-        if (given.enabled != it) { result.add("${path}enabled ${given.enabled} != ${it}") }
+        if (given.getEnabled() != it) { result.add("${path}enabled ${given.getEnabled()} != ${it}") }
     }
 
     return result.joinToString("\n")
@@ -142,16 +128,16 @@ fun diffSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.class2Object?.let {
-        if (diffSomeClass2(given.class2Object, it) != "") { result.add(diffSomeClass2(given.class2Object, it, "${path}class2Object.")) }
+        if (diffSomeClass2(given.getClass2Object(), it) != "") { result.add(diffSomeClass2(given.getClass2Object(), it, "${path}class2Object.")) }
     }
 
     expected.someEnum?.let {
-        if (given.someEnum != it) { result.add("${path}someEnum ${given.someEnum} != ${it}") }
+        if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
     }
 
     expected.class2List?.let {
-        if (given.class2List.size != it.size) { result.add("${path}class2List size ${given.class2List.size} != ${it.size}") }
-        given.class2List.forEachIndexed { idx, entry -> if (diffSomeClass2(entry, it[idx]) != "") { result.add(diffSomeClass2(entry, it[idx], "${path}class2List[${idx}].")) } }
+        if (given.getClass2List().size != it.size) { result.add("${path}class2List size ${given.getClass2List().size} != ${it.size}") }
+        given.getClass2List().forEachIndexed { idx, entry -> if (diffSomeClass2(entry, it[idx]) != "") { result.add(diffSomeClass2(entry, it[idx], "${path}class2List[${idx}].")) } }
     }
 
     return result.joinToString("\n")
@@ -168,21 +154,21 @@ fun diffSomeClass4(given: SomeClass4, expectedInit: ExpectedSomeClass4.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.otherId?.let {
-        if (diffOtherId(given.otherId, it) != "") { result.add(diffOtherId(given.otherId, it, "${path}otherId.")) }
+        if (diffOtherId(given.getOtherId(), it) != "") { result.add(diffOtherId(given.getOtherId(), it, "${path}otherId.")) }
     }
 
     expected.otherClass?.let {
-        if (diffOtherClass(given.otherClass, it) != "") { result.add(diffOtherClass(given.otherClass, it, "${path}otherClass.")) }
+        if (diffOtherClass(given.getOtherClass(), it) != "") { result.add(diffOtherClass(given.getOtherClass(), it, "${path}otherClass.")) }
     }
 
     expected.otherIdList?.let {
-        if (given.otherIdList.size != it.size) { result.add("${path}otherIdList size ${given.otherIdList.size} != ${it.size}") }
-        given.otherIdList.forEachIndexed { idx, entry -> if (diffOtherId(entry, it[idx]) != "") { result.add(diffOtherId(entry, it[idx], "${path}otherIdList[${idx}].")) } }
+        if (given.getOtherIdList().size != it.size) { result.add("${path}otherIdList size ${given.getOtherIdList().size} != ${it.size}") }
+        given.getOtherIdList().forEachIndexed { idx, entry -> if (diffOtherId(entry, it[idx]) != "") { result.add(diffOtherId(entry, it[idx], "${path}otherIdList[${idx}].")) } }
     }
 
     expected.otherClassList?.let {
-        if (given.otherClassList.size != it.size) { result.add("${path}otherClassList size ${given.otherClassList.size} != ${it.size}") }
-        given.otherClassList.forEachIndexed { idx, entry -> if (diffOtherClass(entry, it[idx]) != "") { result.add(diffOtherClass(entry, it[idx], "${path}otherClassList[${idx}].")) } }
+        if (given.getOtherClassList().size != it.size) { result.add("${path}otherClassList size ${given.getOtherClassList().size} != ${it.size}") }
+        given.getOtherClassList().forEachIndexed { idx, entry -> if (diffOtherClass(entry, it[idx]) != "") { result.add(diffOtherClass(entry, it[idx], "${path}otherClassList[${idx}].")) } }
     }
 
     return result.joinToString("\n")
@@ -200,23 +186,23 @@ fun diffSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.date?.let {
-        if (diffDate(given.date, it) != "") { result.add(diffDate(given.date, it, "${path}date.")) }
+        if (diffDate(given.getDate(), it) != "") { result.add(diffDate(given.getDate(), it, "${path}date.")) }
     }
 
     expected.dateRange?.let {
-        if (diffDateRange(given.dateRange, it) != "") { result.add(diffDateRange(given.dateRange, it, "${path}dateRange.")) }
+        if (diffDateRange(given.getDateRange(), it) != "") { result.add(diffDateRange(given.getDateRange(), it, "${path}dateRange.")) }
     }
 
     expected.dateRangeWrapper?.let {
-        if (diffDateRangeWrapper(given.dateRangeWrapper, it) != "") { result.add(diffDateRangeWrapper(given.dateRangeWrapper, it, "${path}dateRangeWrapper.")) }
+        if (diffDateRangeWrapper(given.getDateRangeWrapper(), it) != "") { result.add(diffDateRangeWrapper(given.getDateRangeWrapper(), it, "${path}dateRangeWrapper.")) }
     }
 
     expected.someProperty?.let {
-        if (diffSomeProperty(given.someProperty, it) != "") { result.add(diffSomeProperty(given.someProperty, it, "${path}someProperty.")) }
+        if (diffSomeProperty(given.getSomeProperty(), it) != "") { result.add(diffSomeProperty(given.getSomeProperty(), it, "${path}someProperty.")) }
     }
 
     expected.otherProperty?.let {
-        if (diffOtherProperty(given.otherProperty, it) != "") { result.add(diffOtherProperty(given.otherProperty, it, "${path}otherProperty.")) }
+        if (diffOtherProperty(given.getOtherProperty(), it) != "") { result.add(diffOtherProperty(given.getOtherProperty(), it, "${path}otherProperty.")) }
     }
 
     return result.joinToString("\n")
@@ -232,16 +218,54 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.someClassOpt?.let {
-        if (diffSomeClass(given.someClassOpt!!, it) != "") { result.add(diffSomeClass(given.someClassOpt!!, it, "${path}someClassOpt.")) }
+        if (diffSomeClass(given.getSomeClassOpt()!!, it) != "") { result.add(diffSomeClass(given.getSomeClassOpt()!!, it, "${path}someClassOpt.")) }
     }
 
     expected.optString?.let {
-        if (given.optString!! != it) { result.add("${path}optString ${given.optString!!} != ${it}") }
+        if (given.getOptString()!! != it) { result.add("${path}optString ${given.getOptString()!!} != ${it}") }
     }
 
     expected.sameClassList?.let {
-        if (given.sameClassList.size != it.size) { result.add("${path}sameClassList size ${given.sameClassList.size} != ${it.size}") }
-        given.sameClassList.forEachIndexed { idx, entry -> if (diffSomeClass6(entry, it[idx]) != "") { result.add(diffSomeClass6(entry, it[idx], "${path}sameClassList[${idx}].")) } }
+        if (given.getSameClassList().size != it.size) { result.add("${path}sameClassList size ${given.getSameClassList().size} != ${it.size}") }
+        given.getSameClassList().forEachIndexed { idx, entry -> if (diffSomeClass6(entry, it[idx]) != "") { result.add(diffSomeClass6(entry, it[idx], "${path}sameClassList[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedDateRangeWrapper(
+    var range: (ExpectedDateRange.() -> Unit)? = null,
+)
+fun diffDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit, path: String = ""): String {
+    val expected = ExpectedDateRangeWrapper().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.range?.let {
+        if (diffDateRange(dateRangeWrapperGetRange(given), it) != "") { result.add(diffDateRange(dateRangeWrapperGetRange(given), it, "${path}range.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeData(
+    var other: (ExpectedOtherData.() -> Unit)? = null,
+    var custom: Any? = null,
+    var customOpt: Any? = null,
+)
+fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeData().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.other?.let {
+        if (diffOtherData(given.getOther(), it) != "") { result.add(diffOtherData(given.getOther(), it, "${path}other.")) }
+    }
+
+    expected.custom?.let {
+        if (given.getCustom() != it) { result.add("${path}custom ${given.getCustom()} != ${it}") }
+    }
+
+    expected.customOpt?.let {
+        if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

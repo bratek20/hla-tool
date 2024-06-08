@@ -22,11 +22,6 @@ fun assertSomeId2(given: SomeId2, expected: Int) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
-    val diff = diffDateRangeWrapper(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
 fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
     val diff = diffSomeProperty(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -64,5 +59,15 @@ fun assertSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> U
 
 fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Unit) {
     val diff = diffSomeClass6(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
+    val diff = diffDateRangeWrapper(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit) {
+    val diff = diffSomeData(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

@@ -9,16 +9,6 @@ import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
 
-data class DateRangeWrapperDef(
-    var range: (DateRangeDef.() -> Unit) = {},
-)
-fun dateRangeWrapper(init: DateRangeWrapperDef.() -> Unit = {}): DateRangeWrapper {
-    val def = DateRangeWrapperDef().apply(init)
-    return dateRangeWrapperCreate(
-        range = dateRange(def.range),
-    )
-}
-
 data class SomePropertyDef(
     var other: (OtherPropertyDef.() -> Unit) = {},
     var id2: Int? = null,
@@ -53,7 +43,7 @@ data class SomeClassDef(
 )
 fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
     val def = SomeClassDef().apply(init)
-    return SomeClass(
+    return SomeClass.create(
         id = SomeId(def.id),
         amount = def.amount,
     )
@@ -67,7 +57,7 @@ data class SomeClass2Def(
 )
 fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
     val def = SomeClass2Def().apply(init)
-    return SomeClass2(
+    return SomeClass2.create(
         id = SomeId(def.id),
         names = def.names,
         ids = def.ids.map { it -> SomeId(it) },
@@ -82,7 +72,7 @@ data class SomeClass3Def(
 )
 fun someClass3(init: SomeClass3Def.() -> Unit = {}): SomeClass3 {
     val def = SomeClass3Def().apply(init)
-    return SomeClass3(
+    return SomeClass3.create(
         class2Object = someClass2(def.class2Object),
         someEnum = def.someEnum,
         class2List = def.class2List.map { it -> someClass2(it) },
@@ -97,7 +87,7 @@ data class SomeClass4Def(
 )
 fun someClass4(init: SomeClass4Def.() -> Unit = {}): SomeClass4 {
     val def = SomeClass4Def().apply(init)
-    return SomeClass4(
+    return SomeClass4.create(
         otherId = OtherId(def.otherId),
         otherClass = otherClass(def.otherClass),
         otherIdList = def.otherIdList.map { it -> OtherId(it) },
@@ -114,7 +104,7 @@ data class SomeClass5Def(
 )
 fun someClass5(init: SomeClass5Def.() -> Unit = {}): SomeClass5 {
     val def = SomeClass5Def().apply(init)
-    return SomeClass5(
+    return SomeClass5.create(
         date = dateCreate(def.date),
         dateRange = dateRange(def.dateRange),
         dateRangeWrapper = dateRangeWrapper(def.dateRangeWrapper),
@@ -130,9 +120,33 @@ data class SomeClass6Def(
 )
 fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
     val def = SomeClass6Def().apply(init)
-    return SomeClass6(
+    return SomeClass6.create(
         someClassOpt = def.someClassOpt?.let { it -> someClass(it) },
         optString = def.optString,
         sameClassList = def.sameClassList.map { it -> someClass6(it) },
+    )
+}
+
+data class DateRangeWrapperDef(
+    var range: (DateRangeDef.() -> Unit) = {},
+)
+fun dateRangeWrapper(init: DateRangeWrapperDef.() -> Unit = {}): DateRangeWrapper {
+    val def = DateRangeWrapperDef().apply(init)
+    return dateRangeWrapperCreate(
+        range = dateRange(def.range),
+    )
+}
+
+data class SomeDataDef(
+    var other: (OtherDataDef.() -> Unit) = {},
+    var custom: Any = Any(),
+    var customOpt: Any? = null,
+)
+fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
+    val def = SomeDataDef().apply(init)
+    return SomeData.create(
+        other = otherData(def.other),
+        custom = def.custom,
+        customOpt = def.customOpt,
     )
 }

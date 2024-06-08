@@ -37,11 +37,25 @@ fun diffOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.id?.let {
-        if (diffOtherId(given.id, it) != "") { result.add(diffOtherId(given.id, it, "${path}id.")) }
+        if (diffOtherId(given.getId(), it) != "") { result.add(diffOtherId(given.getId(), it, "${path}id.")) }
     }
 
     expected.amount?.let {
-        if (given.amount != it) { result.add("${path}amount ${given.amount} != ${it}") }
+        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedOtherData(
+    var id: Int? = null,
+)
+fun diffOtherData(given: OtherData, expectedInit: ExpectedOtherData.() -> Unit, path: String = ""): String {
+    val expected = ExpectedOtherData().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffOtherId(given.getId(), it) != "") { result.add(diffOtherId(given.getId(), it, "${path}id.")) }
     }
 
     return result.joinToString("\n")

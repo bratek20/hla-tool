@@ -22,8 +22,18 @@ data class OtherClassDef(
 )
 fun otherClass(init: OtherClassDef.() -> Unit = {}): OtherClass {
     val def = OtherClassDef().apply(init)
-    return OtherClass(
+    return OtherClass.create(
         id = OtherId(def.id),
         amount = def.amount,
+    )
+}
+
+data class OtherDataDef(
+    var id: Int = 0,
+)
+fun otherData(init: OtherDataDef.() -> Unit = {}): OtherData {
+    val def = OtherDataDef().apply(init)
+    return OtherData.create(
+        id = OtherId(def.id),
     )
 }
