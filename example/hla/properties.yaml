@@ -38,8 +38,7 @@ profiles:
         test: "src/test/kotlin/com/some/pkg"
         fixtures: "src/testFixtures/kotlin/com/some/pkg"
     onlyPatterns:
-      - "NamedTypes"
-      - "Properties"
+      - "ValueObjects"
       - "Builders"
 
   - name: "typeScriptFileModifiers"
