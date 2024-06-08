@@ -43,12 +43,8 @@ class ModuleWriterLogic(
         generateResult.tests?.let { directories.write(paths.test, it) }
     }
 
-
-
-
-
     private fun shouldHandleDebug(profile: HlaProfile, moduleName: String): Boolean {
-        return profile.getLanguage() == ModuleLanguage.KOTLIN && moduleName.equals("OtherModule", ignoreCase = true)
+        return profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && moduleName.equals("OtherModule", ignoreCase = true)
     }
 
     private fun handleDebug(generateResult: GenerateResult) {

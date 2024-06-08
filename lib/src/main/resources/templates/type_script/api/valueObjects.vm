@@ -11,39 +11,32 @@ class ${nt.name()} {
     toString(): string {
         return this.value.toString()
     }
-}#if($foreach.hasNext)
+}
 
-
-#end#end
+#end
 #foreach($p in $complexValueObjects)
 class ${p.name()} {
-    #foreach($field in $p.fields)
-        $field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
-    #end
+#foreach($field in $p.fields)
+    $field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
+#end
 
-static create(
+    static create(
     #foreach($field in $p.fields)
         $field.declaration(),
     #end
-): ${p.name()} {
-const instance = new ${p.name()}()
+    ): ${p.name()} {
+        const instance = new ${p.name()}()
     #foreach($field in $p.fields)
-    instance.$field.name = $field.type.serialize($field.name)
+        instance.$field.name = $field.type.serialize($field.name)
     #end
-return instance
-}
-    #foreach($getter in $p.getters())
-
-        ${getter.name}(): ${getter.type.name()} {
-    return ${getter.type.deserialize("this.${getter.field}")}
+        return instance
     }
-    #end
-    #foreach($setter in $p.setters())
+#foreach($getter in $p.getters())
 
-        ${setter.name}(${setter.field}: ${setter.type.name()}): void {
-    this.${setter.field} = ${setter.type.serialize(${setter.field})}
+    ${getter.name}(): ${getter.type.name()} {
+        return ${getter.type.deserialize("this.${getter.field}")}
     }
-    #end
+#end
 }#if($foreach.hasNext)
 
 

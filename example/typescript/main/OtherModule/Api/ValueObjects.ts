@@ -12,48 +12,50 @@ class OtherId {
     toString(): string {
         return this.value.toString()
     }
-}class OtherProperty {
-        private id = NUMBER
-        private name = STRING
-
-static create(
-        id: OtherId,
-        name: string,
-): OtherProperty {
-const instance = new OtherProperty()
-    instance.id = id.value
-    instance.name = name
-return instance
 }
 
-        getId(): OtherId {
-    return new OtherId(this.id)
+class OtherProperty {
+    private id = NUMBER
+    private name = STRING
+
+    static create(
+        id: OtherId,
+        name: string,
+    ): OtherProperty {
+        const instance = new OtherProperty()
+        instance.id = id.value
+        instance.name = name
+        return instance
     }
 
-        getName(): string {
-    return this.name
+    getId(): OtherId {
+        return new OtherId(this.id)
+    }
+
+    getName(): string {
+        return this.name
     }
 }
 
 class OtherClass {
-        private id = NUMBER
-        private amount = NUMBER
+    private id = NUMBER
+    private amount = NUMBER
 
-static create(
+    static create(
         id: OtherId,
         amount: number,
-): OtherClass {
-const instance = new OtherClass()
-    instance.id = id.value
-    instance.amount = amount
-return instance
-}
-
-        getId(): OtherId {
-    return new OtherId(this.id)
+    ): OtherClass {
+        const instance = new OtherClass()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
     }
 
-        getAmount(): number {
-    return this.amount
+    getId(): OtherId {
+        return new OtherId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
     }
 }
