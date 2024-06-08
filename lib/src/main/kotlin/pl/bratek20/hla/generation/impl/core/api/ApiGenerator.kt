@@ -27,7 +27,7 @@ class ValueObjectsGenerator: FileGenerator() {
     }
 }
 
-class DataClassesGenerator: FileGenerator() {
+open class DataClassesGenerator: FileGenerator() {
     override fun name(): String {
         return "DataClasses"
     }
@@ -45,7 +45,7 @@ class DataClassesGenerator: FileGenerator() {
     }
 }
 
-class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator() {
+open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator() {
     override fun name(): String {
         return if (data) "DataKeys" else "PropertyKeys"
     }

@@ -32,6 +32,10 @@ abstract class ModulePartGenerator {
     lateinit var apiTypeFactory: ApiTypeFactory
     lateinit var velocityPath: String
 
+    open fun velocityPathOverride(): String? {
+        return null
+    }
+
     open fun init(c: ModuleGenerationContext, velocityPath: String) {
         this.c = c
         this.apiTypeFactory = ApiTypeFactory(c.domain.modules, c.language.types())
@@ -48,6 +52,7 @@ abstract class ModulePartGenerator {
         get() = c.language
 
     protected fun contentBuilder(fileName: String): VelocityFileContentBuilder {
+        val velocityPath = velocityPathOverride() ?: this.velocityPath
         val path = "templates/${c.language.name().name.lowercase()}/${velocityPath}/$fileName"
 
         val builder = c.velocity.contentBuilder(path)

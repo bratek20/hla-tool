@@ -4,7 +4,10 @@ import pl.bratek20.hla.directory.api.FileContent
 import pl.bratek20.hla.generation.impl.core.DirectoryGenerator
 import pl.bratek20.hla.generation.impl.core.FileGenerator
 import pl.bratek20.hla.generation.impl.core.GeneratorMode
+import pl.bratek20.hla.generation.impl.core.api.DataClassApiType
+import pl.bratek20.hla.generation.impl.core.api.DataClassesGenerator
 import pl.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
+import pl.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
 
 class LogicGenerator: FileGenerator() {
     override fun name(): String {
@@ -24,6 +27,33 @@ class LogicGenerator: FileGenerator() {
     }
 }
 
+class ImplDataClassesGenerator: DataClassesGenerator() {
+    override fun generateFileContent(): FileContent? {
+        val content = super.generateFileContent() ?: return null
+        val lines = content.lines.toMutableList()
+        lines.add(0, "namespace ${module.name.value}.Impl {")
+        lines.add("}")
+        return FileContent(lines)
+    }
+
+    override fun velocityPathOverride(): String? {
+        return "api"
+    }
+}
+
+class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
+    override fun generateFileContent(): FileContent? {
+        val content = super.generateFileContent() ?: return null
+        val lines = content.lines.toMutableList()
+        lines[0] = "namespace ${module.name.value}.Impl {"
+        return FileContent(lines)
+    }
+
+    override fun velocityPathOverride(): String? {
+        return "api"
+    }
+}
+
 class ImplGenerator: DirectoryGenerator() {
     override fun name(): String {
         return "Impl"
@@ -33,17 +63,17 @@ class ImplGenerator: DirectoryGenerator() {
         return "impl"
     }
 
-    override fun mode(): GeneratorMode {
-        return GeneratorMode.ONLY_START
-    }
-
     override fun shouldGenerateDirectory(): Boolean {
-        return module.interfaces.isNotEmpty()
+        val generateLogic = module.interfaces.isNotEmpty()
+        val generateData = module.implSubmodule.data.isNotEmpty()
+        return generateLogic || generateData
     }
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            LogicGenerator()
+            LogicGenerator(),
+            ImplDataClassesGenerator(),
+            ImplDataKeysGenerator()
         )
     }
 }
