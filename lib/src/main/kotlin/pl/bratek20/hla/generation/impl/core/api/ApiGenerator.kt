@@ -33,7 +33,7 @@ class DataClassesGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val dataClasses = module.dataClasses.map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
+        val dataClasses = module.dataClasses.map { apiTypeFactory.create<DataClassApiType>(it) }
 
         if (dataClasses.isEmpty()) {
             return null
