@@ -30,3 +30,28 @@ data class OtherProperty(
         }
     }
 }
+
+data class OtherClass(
+    private val id: Int,
+    private val amount: Int,
+) {
+    fun getId(): OtherId {
+        return OtherId(this.id)
+    }
+
+    fun getAmount(): Int {
+        return this.amount
+    }
+
+    companion object {
+        fun create(
+            id: OtherId,
+            amount: Int,
+        ): OtherClass {
+            return OtherClass(
+                id = id.value,
+                amount = amount,
+            )
+        }
+    }
+}
