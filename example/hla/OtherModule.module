@@ -1,7 +1,5 @@
-NamedTypes
+ValueObjects
     OtherId: int
-
-Properties
     OtherProperty
         id: OtherId
         name: string

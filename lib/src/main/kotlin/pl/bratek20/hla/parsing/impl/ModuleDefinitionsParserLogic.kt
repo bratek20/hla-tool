@@ -22,8 +22,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     private fun parseModuleFile(file: File): ModuleDefinition {
         val moduleName = ModuleName(file.name.value.split(".module").get(0))
         val elements = parseElements(file.content)
-        val namedTypes = parseSimpleStructureDefinitions("NamedTypes", elements)
-        val complexValueObjects = parseComplexStructureDefinitions("ValueObjects", elements)
+        val valueObjects = parseStructures("ValueObjects", elements)
         val dataClasses = parseComplexStructureDefinitions("DataClasses", elements)
         val interfaces = parseInterfaces(elements)
         val propertyKeys = parseKeys("PropertyKeys", elements)
@@ -34,8 +33,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
 
         return ModuleDefinition(
             name = moduleName,
-            simpleValueObjects = namedTypes,
-            complexValueObjects = complexValueObjects,
+            simpleValueObjects = valueObjects.simple,
+            complexValueObjects = valueObjects.complex,
             interfaces = interfaces,
             propertyKeys = propertyKeys,
             enums = enums,

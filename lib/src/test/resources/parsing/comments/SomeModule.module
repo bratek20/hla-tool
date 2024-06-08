@@ -1,4 +1,4 @@
 // module comment 1
-NamedTypes // module comment 2
+ValueObjects // module comment 2
     //field comment 1
     SomeId: string // field comment 2

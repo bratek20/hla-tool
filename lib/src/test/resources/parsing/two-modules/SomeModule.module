@@ -4,10 +4,8 @@ Enums
         VALUE_A
         VALUE_B
 
-NamedTypes
-    SomeId: string
-
 ValueObjects
+    SomeId: string
     SomeClass
         id: SomeId
         amount: int (public)
