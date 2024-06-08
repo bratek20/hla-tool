@@ -197,11 +197,11 @@ class HlaFacadeTest {
         val expectedMainFilesToSkipUpdate = setOf(
             "api/CustomTypes",
             "api/CustomTypesMapper",
+            "impl/Logic",
         )
 
         val expectedMainDirectoriesToSkipUpdate = setOf(
             "context",
-            "impl"
         )
 
         val expectedTestDirectoriesToSkipUpdate = setOf(

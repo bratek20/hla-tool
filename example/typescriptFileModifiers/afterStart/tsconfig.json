@@ -7,5 +7,8 @@
         "Src/OtherModule/Api/DataClasses.ts",
         "Src/OtherModule/Api/PropertyKeys.ts",
         "Src/OtherModule/Api/DataKeys.ts",
+
+        "Src/OtherModule/Impl/DataClasses.ts",
+        "Src/OtherModule/Impl/DataKeys.ts",
     ]
 }
