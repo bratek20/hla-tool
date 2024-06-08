@@ -1,12 +1,16 @@
-Data
+DataClasses
     SomeData
         value: int
 
-    "someElements" -> SomeElementData[]
+    SomeElementData
         id: SomeId
 
+DataKeys
+    "someElements" -> SomeElementData[]
+
 Impl
-    Data
+    DataClasses
         SomeImplData
             value: bool
+    DataKeys
         "someImplData" -> SomeImplData

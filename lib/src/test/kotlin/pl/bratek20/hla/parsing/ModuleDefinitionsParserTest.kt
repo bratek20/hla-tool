@@ -246,31 +246,28 @@ class ModuleDefinitionsParserTest {
     }
 
     @Test
-    fun `should parse properties`() {
-        val modules = parse("only-properties")
+    fun `should parse property and data keys`() {
+        val modules = parse("only-keys")
 
         assertModules(modules, listOf {
-            dataClasses = listOf(
-                {
-                    name = "SomeProperty"
-                    fields = listOf {
-                        name = "value"
-                        type = {
-                            name = "string"
-                        }
-                    }
-                },
-                {
-                    name = "SomeElement"
-                    fields = listOf {
-                        name = "id"
-                        type = {
-                            name = "SomeId"
-                        }
-                    }
-                },
-            )
             propertyKeys = listOf(
+                {
+                    name = "someElements"
+                    type = {
+                        name = "SomeElement"
+                        wrappers = listOf(
+                            TypeWrapper.LIST
+                        )
+                    }
+                },
+                {
+                    name = "someConfig"
+                    type = {
+                        name = "SomeProperty"
+                    }
+                }
+            )
+            dataKeys = listOf(
                 {
                     name = "someElements"
                     type = {

@@ -1,0 +1,7 @@
+PropertyKeys
+    "someElements" -> SomeElement[]
+    "someConfig" -> SomeProperty
+
+DataKeys
+    "someElements" -> SomeElement[]
+    "someConfig" -> SomeProperty

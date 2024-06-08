@@ -24,11 +24,12 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val elements = parseElements(file.content)
         val namedTypes = parseSimpleStructureDefinitions("NamedTypes", elements)
         val complexValueObjects = parseComplexStructureDefinitions("ValueObjects", elements)
+        val dataClasses = parseComplexStructureDefinitions("DataClasses", elements)
         val interfaces = parseInterfaces(elements)
-        val properties = parsePropertiesOrData("Properties", elements)
+        val propertyKeys = parseKeys("PropertyKeys", elements)
         val enums = parseEnums(elements)
         val customTypes = parseStructures("CustomTypes", elements)
-        val data = parsePropertiesOrData("Data", elements)
+        val dataKeys = parseKeys("DataKeys", elements)
         val implSubmodule = parseImplSubmodule(elements)
 
         return ModuleDefinition(
@@ -36,12 +37,12 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             simpleValueObjects = namedTypes,
             complexValueObjects = complexValueObjects,
             interfaces = interfaces,
-            propertyKeys = properties.keys,
+            propertyKeys = propertyKeys,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
             complexCustomTypes = customTypes.complex,
-            dataClasses = data.vos,
-            dataKeys = data.keys,
+            dataClasses = dataClasses,
+            dataKeys = dataKeys,
             implSubmodule = implSubmodule
         )
     }
@@ -289,34 +290,17 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         } ?: emptyList()
     }
 
-    data class PropertiesOrData(
-        val vos: List<ComplexStructureDefinition>,
-        val keys: List<KeyDefinition>
-    )
-    private fun parsePropertiesOrData(sectionName: String, elements: List<ParsedElement>): PropertiesOrData {
-        val vos: MutableList<ComplexStructureDefinition> = mutableListOf()
+    private fun parseKeys(sectionName: String, elements: List<ParsedElement>): List<KeyDefinition> {
         val keys: MutableList<KeyDefinition> = mutableListOf()
 
         val propertiesSection = elements.find { it is Section && it.name == sectionName } as Section?
         propertiesSection?.elements?.forEach {
-            if(it is Section) {
-                vos.add(parseComplexStructureDefinition(it))
-            } else if(it is ParsedMapping) {
+            if(it is ParsedMapping) {
                 keys.add(KeyDefinition(it.key, parseType(it.value)))
-
-                val voSection = Section(it.indent, parseType(it.value).name)
-                voSection.addElements(it.elements)
-                val vo = parseComplexStructureDefinition(voSection)
-                if (vo.fields.isNotEmpty()) {
-                    vos.add(vo)
-                }
             }
         }
 
-        return PropertiesOrData(
-            vos = vos,
-            keys = keys
-        )
+        return keys
     }
 
     private fun parseComplexStructureDefinitions(section: Section?): List<ComplexStructureDefinition> {
@@ -340,10 +324,11 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     private fun parseImplSubmodule(elements: List<ParsedElement>): ImplSubmoduleDefinition {
         val implSection = elements.find { it is Section && it.name == "Impl" } as Section?
         if (implSection != null) {
-            val data = parsePropertiesOrData("Data", implSection.elements)
+            val dataClasses = parseComplexStructureDefinitions("DataClasses", implSection.elements)
+            val keys = parseKeys("DataKeys", implSection.elements)
             return ImplSubmoduleDefinition(
-                data = data.vos,
-                dataKeys = data.keys
+                data = dataClasses,
+                dataKeys = keys
             )
         }
         return ImplSubmoduleDefinition(

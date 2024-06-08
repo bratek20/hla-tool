@@ -1,8 +1,0 @@
-Properties
-    SomeProperty
-        value: string
-
-    "someElements" -> SomeElement[]
-        id: SomeId
-
-    "someConfig" -> SomeProperty
