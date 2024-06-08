@@ -6,12 +6,11 @@ data class SerializedDateRange(
     private val from: String,
     private val to: String,
 ) {
-    fun getFrom(): Date {
-        return dateCreate(this.from)
-    }
-
-    fun getTo(): Date {
-        return dateCreate(this.to)
+    fun toCustomType(): DateRange {
+        return dateRangeCreate(
+            from = dateCreate(from),
+            to = dateCreate(to),
+        )
     }
 
     companion object {
@@ -19,13 +18,6 @@ data class SerializedDateRange(
             return SerializedDateRange(
                 from = dateGetValue(dateRangeGetFrom(customType)),
                 to = dateGetValue(dateRangeGetTo(customType)),
-            )
-        }
-
-        fun toCustomType(serializedType: SerializedDateRange): DateRange {
-            return dateRangeCreate(
-                from = serializedType.getFrom(),
-                to = serializedType.getTo(),
             )
         }
     }

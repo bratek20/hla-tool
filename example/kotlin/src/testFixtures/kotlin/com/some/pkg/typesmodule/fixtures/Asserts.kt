@@ -11,11 +11,6 @@ fun assertDate(given: Date, expected: String) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertDateRangeProperty(given: DateRangeProperty, expectedInit: ExpectedDateRangeProperty.() -> Unit) {
-    val diff = diffDateRangeProperty(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
 fun assertDateRange(given: DateRange, expectedInit: ExpectedDateRange.() -> Unit) {
     val diff = diffDateRange(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

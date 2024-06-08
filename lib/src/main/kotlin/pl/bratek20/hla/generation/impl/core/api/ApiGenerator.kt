@@ -195,6 +195,24 @@ class CustomTypesMapperGenerator: FileGenerator() {
     }
 }
 
+class SerializedCustomTypesGenerator: FileGenerator() {
+    override fun name(): String {
+        return "SerializedCustomTypes"
+    }
+
+    override fun generateFileContent(): FileContent?{
+        if (module.complexCustomTypes.isEmpty()) {
+            return null
+        }
+
+        val complexCustomTypes = module.complexCustomTypes.map { apiTypeFactory.create<ComplexCustomApiType>(it) }
+
+        return contentBuilder("serializedCustomTypes.vm")
+            .put("complexCustomTypes", complexCustomTypes)
+            .build()
+    }
+}
+
 class ApiGenerator: DirectoryGenerator() {
     override fun name(): String {
         return "Api"
@@ -209,6 +227,7 @@ class ApiGenerator: DirectoryGenerator() {
             EnumsGenerator(),
             CustomTypesGenerator(),
             CustomTypesMapperGenerator(),
+            SerializedCustomTypesGenerator(),
             ValueObjectsGenerator(),
             DataClassesGenerator(),
             PropertyOrDataKeysGenerator(false),

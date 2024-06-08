@@ -224,11 +224,11 @@ data class SomeClass5(
     }
 
     fun getDateRange(): DateRange {
-        return SerializedDateRange.toCustomType(this.dateRange)
+        return this.dateRange.toCustomType()
     }
 
     fun getDateRangeWrapper(): DateRangeWrapper {
-        return SerializedDateRangeWrapper.toCustomType(this.dateRangeWrapper)
+        return this.dateRangeWrapper.toCustomType()
     }
 
     fun getSomeProperty(): SomeProperty {

@@ -151,7 +151,7 @@ class ComplexCustomApiType(
     }
 
     override fun deserialize(variableName: String): String {
-        return "${serializableName()}.toCustomType($variableName)"
+        return "${variableName}.toCustomType()"
     }
 }
 
