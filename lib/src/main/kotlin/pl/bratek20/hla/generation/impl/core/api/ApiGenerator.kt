@@ -75,7 +75,7 @@ class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator() {
     private fun toApiPropertyOrDataKey(def: KeyDefinition, data: Boolean): StorageTypeKey {
         val apiType = apiTypeFactory.create(def.type)
 
-        val innerWord = if (data) "Property" else "Property" //TODO change when data keys added in arch
+        val innerWord = if (data) "Data" else "Property"
 
         val outerKeyType: String
         val keyType: String
