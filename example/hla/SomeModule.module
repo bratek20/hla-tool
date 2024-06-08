@@ -7,11 +7,10 @@ CustomTypes
     DateRangeWrapper
         range: DateRange
 
-NamedTypes
+ValueObjects
     SomeId: string
     SomeId2: int
 
-Properties
     SomeProperty
         other: OtherProperty
         id2: SomeId2?
@@ -22,15 +21,6 @@ Properties
         someEnum: SomeEnum
         customOpt: any? = empty
 
-Data
-    SomeData
-        other: OtherData
-        custom: any
-        customOpt: any?
-
-
-
-ValueObjects
     SomeClass
         id: SomeId
         amount: int
@@ -63,6 +53,12 @@ ValueObjects
         someClassOpt: SomeClass?
         optString: string?
         sameClassList: SomeClass6[] = []
+
+DataClasses
+    SomeData
+        other: OtherData
+        custom: any
+        customOpt: any?
 
 Interfaces
     SomeInterface
