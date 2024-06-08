@@ -4,22 +4,22 @@ package ${packageName}.api
 #foreach($import in $imports)
 import ${import}.api.*
 #end#end
-#foreach($vo in $simpleValueObjects)
 
-data class ${vo.name()}(
-    val value: ${vo.serializableName()}
-)
-#end
-
-#foreach($vo in $complexValueObjects)
+#foreach($vo in $dataClasses)
 data class ${vo.name()}(
     #foreach($field in $vo.fields)
-    ${field.accessor()}${vo.kotlinVarOrValHack()} $field.name: $field.type.serializableName(),
+    ${field.accessor()}var $field.name: $field.type.serializableName(),
     #end
 ) {
     #foreach($getter in $vo.getters())
     fun ${getter.name}(): ${getter.type.name()} {
         return ${getter.type.deserialize("this.${getter.field}")}
+    }
+
+    #end
+    #foreach($setter in $vo.setters())
+    fun ${setter.name}(${setter.field}: ${setter.type.name()}) {
+        this.${setter.field} = ${setter.type.serialize("${setter.field}")}
     }
 
     #end

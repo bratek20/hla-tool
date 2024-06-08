@@ -27,6 +27,24 @@ class ValueObjectsGenerator: FileGenerator() {
     }
 }
 
+class DataClassesGenerator: FileGenerator() {
+    override fun name(): String {
+        return "DataClasses"
+    }
+
+    override fun generateFileContent(): FileContent? {
+        val dataClasses = module.dataClasses.map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
+
+        if (dataClasses.isEmpty()) {
+            return null
+        }
+
+        return contentBuilder("dataClasses.vm")
+            .put("dataClasses", dataClasses)
+            .build()
+    }
+}
+
 class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator() {
     override fun name(): String {
         return if (data) "DataKeys" else "PropertyKeys"
@@ -180,6 +198,7 @@ class ApiGenerator: DirectoryGenerator() {
             PropertyOrDataKeysGenerator(false),
             PropertyOrDataKeysGenerator(true),
             ValueObjectsGenerator(),
+            DataClassesGenerator(),
             ExceptionsGenerator(),
             InterfacesGenerator(),
         )
