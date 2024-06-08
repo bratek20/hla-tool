@@ -195,10 +195,10 @@ class ApiGenerator: DirectoryGenerator() {
             EnumsGenerator(),
             CustomTypesGenerator(),
             CustomTypesMapperGenerator(),
-            PropertyOrDataKeysGenerator(false),
-            PropertyOrDataKeysGenerator(true),
             ValueObjectsGenerator(),
             DataClassesGenerator(),
+            PropertyOrDataKeysGenerator(false),
+            PropertyOrDataKeysGenerator(true),
             ExceptionsGenerator(),
             InterfacesGenerator(),
         )
