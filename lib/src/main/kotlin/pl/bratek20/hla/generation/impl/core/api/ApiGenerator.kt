@@ -48,7 +48,7 @@ class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator() {
         }
 
         val keys = if (data) module.dataKeys else module.propertyKeys
-        return contentBuilder("serializables.vm")
+        return contentBuilder("keys.vm")
             .put("keys", keys.map { toApiPropertyOrDataKey(it, data) })
             .build()
     }
