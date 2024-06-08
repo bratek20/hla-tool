@@ -121,6 +121,10 @@ class ComplexCustomApiType(
     name: String,
     fields: List<ApiTypeField>
 ) : ComplexStructureApiType<ApiTypeField>(name, fields) {
+    override fun serializableName(): String {
+        return "Serialized$name"
+    }
+
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name())
     }
@@ -140,6 +144,14 @@ class ComplexCustomApiType(
 
     override fun accessField(fieldName: String, variableName: String): String {
         return getterName(fieldName) + "($variableName)"
+    }
+
+    override fun serialize(variableName: String): String {
+        return "${serializableName()}.fromCustomType($variableName)"
+    }
+
+    override fun deserialize(variableName: String): String {
+        return "${serializableName()}.toCustomType($variableName)"
     }
 }
 
