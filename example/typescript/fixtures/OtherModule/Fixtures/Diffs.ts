@@ -32,11 +32,24 @@ namespace OtherModule {
         const result: string[] = []
 
         if (expected.id !== undefined) {
-            if (diffOtherId(given.id, expected.id) != "") { result.push(diffOtherId(given.id, expected.id, `${path}id.`)) }
+            if (diffOtherId(given.getId(), expected.id) != "") { result.push(diffOtherId(given.getId(), expected.id, `${path}id.`)) }
         }
 
         if (expected.amount !== undefined) {
-            if (given.amount != expected.amount) { result.push(`${path}amount ${given.amount} != ${expected.amount}`) }
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedOtherData {
+        id?: number,
+    }
+    export function diffOtherData(given: OtherData, expected: ExpectedOtherData, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffOtherId(given.getId(), expected.id) != "") { result.push(diffOtherId(given.getId(), expected.id, `${path}id.`)) }
         }
 
         return result.join("\n")

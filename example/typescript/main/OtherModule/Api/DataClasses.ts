@@ -19,10 +19,3 @@ class OtherData {
         this.id = id.value
     }
 }
-
-namespace OtherModule {
-    export const OTHER_DATA_KEY = new ObjectPropertyKey(
-        "otherData",
-        OtherData
-    )
-}

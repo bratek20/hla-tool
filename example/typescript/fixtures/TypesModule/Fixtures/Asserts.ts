@@ -6,13 +6,13 @@ namespace TypesModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function dateRange(given: DateRange, expected: ExpectedDateRange) {
-        const diff = diffDateRange(given, expected)
+    export function dateRangeProperty(given: DateRangeProperty, expected: ExpectedDateRangeProperty) {
+        const diff = diffDateRangeProperty(given, expected)
         AssertEquals(diff, "", diff)
     }
 
-    export function dateRangeProperty(given: DateRangeProperty, expected: ExpectedDateRangeProperty) {
-        const diff = diffDateRangeProperty(given, expected)
+    export function dateRange(given: DateRange, expected: ExpectedDateRange) {
+        const diff = diffDateRange(given, expected)
         AssertEquals(diff, "", diff)
     }
 }

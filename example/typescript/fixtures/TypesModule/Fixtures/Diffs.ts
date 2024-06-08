@@ -6,24 +6,6 @@ namespace TypesModule {
         return ""
     }
 
-    export interface ExpectedDateRange {
-        from?: string,
-        to?: string,
-    }
-    export function diffDateRange(given: DateRange, expected: ExpectedDateRange, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.from !== undefined) {
-            if (diffDate(TypesModule.CustomTypesMapper.dateRangeGetFrom(given), expected.from) != "") { result.push(diffDate(TypesModule.CustomTypesMapper.dateRangeGetFrom(given), expected.from, `${path}from.`)) }
-        }
-
-        if (expected.to !== undefined) {
-            if (diffDate(TypesModule.CustomTypesMapper.dateRangeGetTo(given), expected.to) != "") { result.push(diffDate(TypesModule.CustomTypesMapper.dateRangeGetTo(given), expected.to, `${path}to.`)) }
-        }
-
-        return result.join("\n")
-    }
-
     export interface ExpectedDateRangeProperty {
         from?: string,
         to?: string,
@@ -37,6 +19,24 @@ namespace TypesModule {
 
         if (expected.to !== undefined) {
             if (diffDate(given.getTo(), expected.to) != "") { result.push(diffDate(given.getTo(), expected.to, `${path}to.`)) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedDateRange {
+        from?: string,
+        to?: string,
+    }
+    export function diffDateRange(given: DateRange, expected: ExpectedDateRange, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.from !== undefined) {
+            if (diffDate(TypesModule.CustomTypesMapper.dateRangeGetFrom(given), expected.from) != "") { result.push(diffDate(TypesModule.CustomTypesMapper.dateRangeGetFrom(given), expected.from, `${path}from.`)) }
+        }
+
+        if (expected.to !== undefined) {
+            if (diffDate(TypesModule.CustomTypesMapper.dateRangeGetTo(given), expected.to) != "") { result.push(diffDate(TypesModule.CustomTypesMapper.dateRangeGetTo(given), expected.to, `${path}to.`)) }
         }
 
         return result.join("\n")

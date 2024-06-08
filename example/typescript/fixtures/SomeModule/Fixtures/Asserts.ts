@@ -11,11 +11,6 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
-        const diff = diffDateRangeWrapper(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
     export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
         const diff = diffSomeProperty(given, expected)
         AssertEquals(diff, "", diff)
@@ -53,6 +48,16 @@ namespace SomeModule.Assert {
 
     export function someClass6(given: SomeClass6, expected: ExpectedSomeClass6) {
         const diff = diffSomeClass6(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
+        const diff = diffDateRangeWrapper(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someData(given: SomeData, expected: ExpectedSomeData) {
+        const diff = diffSomeData(given, expected)
         AssertEquals(diff, "", diff)
     }
 }

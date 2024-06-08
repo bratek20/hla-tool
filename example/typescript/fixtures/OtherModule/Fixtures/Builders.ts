@@ -23,9 +23,20 @@ namespace OtherModule.Builder {
         const id = def?.id ?? 0
         const amount = def?.amount ?? 0
 
-        return new OtherClass(
+        return OtherClass.create(
             new OtherId(id),
             amount,
+        )
+    }
+
+    export interface OtherDataDef {
+        id?: number,
+    }
+    export function otherData(def?: OtherDataDef): OtherData {
+        const id = def?.id ?? 0
+
+        return OtherData.create(
+            new OtherId(id),
         )
     }
 }

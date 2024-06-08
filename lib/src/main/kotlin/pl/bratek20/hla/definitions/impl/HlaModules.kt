@@ -99,10 +99,8 @@ class HlaModules(
 
     private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
         return module.enums.map { it.name } +
-                module.simpleCustomTypes.map { it.name } +
-                module.complexValueObjects.map { it.name } +
-                module.simpleCustomTypes.map { it.name } +
-                module.complexCustomTypes.map { it.name }
+                allSimpleStructureDefinitions(module).map { it.name } +
+                allComplexStructureDefinitions(module).map { it.name }
     }
 
     private fun interfacesTypeNames(module: ModuleDefinition): List<String> {

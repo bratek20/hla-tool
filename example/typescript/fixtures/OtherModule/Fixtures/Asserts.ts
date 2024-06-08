@@ -15,4 +15,9 @@ namespace OtherModule.Assert {
         const diff = diffOtherClass(given, expected)
         AssertEquals(diff, "", diff)
     }
+
+    export function otherData(given: OtherData, expected: ExpectedOtherData) {
+        const diff = diffOtherData(given, expected)
+        AssertEquals(diff, "", diff)
+    }
 }

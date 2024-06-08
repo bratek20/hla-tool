@@ -1,0 +1,10 @@
+namespace $moduleName {
+    #foreach($k in $keys)
+    export const $k.constantName = new ${k.outerKeyType}(
+        "${k.keyName}",
+        ${k.keyType}
+    )
+    #if($foreach.hasNext)
+
+    #end#end
+}
