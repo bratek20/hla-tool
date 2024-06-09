@@ -6,24 +6,6 @@ namespace TypesModule {
         return ""
     }
 
-    export interface ExpectedDateRangeProperty {
-        from?: string,
-        to?: string,
-    }
-    export function diffDateRangeProperty(given: DateRangeProperty, expected: ExpectedDateRangeProperty, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.from !== undefined) {
-            if (diffDate(given.getFrom(), expected.from) != "") { result.push(diffDate(given.getFrom(), expected.from, `${path}from.`)) }
-        }
-
-        if (expected.to !== undefined) {
-            if (diffDate(given.getTo(), expected.to) != "") { result.push(diffDate(given.getTo(), expected.to, `${path}to.`)) }
-        }
-
-        return result.join("\n")
-    }
-
     export interface ExpectedDateRange {
         from?: string,
         to?: string,

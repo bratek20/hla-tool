@@ -217,8 +217,8 @@ class SomeClass4 {
 
 class SomeClass5 {
     private date = STRING
-    private dateRange = new DateRange
-    private dateRangeWrapper = new DateRangeWrapper
+    private dateRange = new SerializedDateRange
+    private dateRangeWrapper = new SerializedDateRangeWrapper
     private someProperty = new SomeProperty
     private otherProperty = new OtherProperty
 
@@ -231,8 +231,8 @@ class SomeClass5 {
     ): SomeClass5 {
         const instance = new SomeClass5()
         instance.date = TypesModule.CustomTypesMapper.dateGetValue(date)
-        instance.dateRange = dateRange
-        instance.dateRangeWrapper = dateRangeWrapper
+        instance.dateRange = SerializedDateRange.fromCustomType(dateRange)
+        instance.dateRangeWrapper = SerializedDateRangeWrapper.fromCustomType(dateRangeWrapper)
         instance.someProperty = someProperty
         instance.otherProperty = otherProperty
         return instance
@@ -243,11 +243,11 @@ class SomeClass5 {
     }
 
     getDateRange(): DateRange {
-        return this.dateRange
+        return this.dateRange.toCustomType()
     }
 
     getDateRangeWrapper(): DateRangeWrapper {
-        return this.dateRangeWrapper
+        return this.dateRangeWrapper.toCustomType()
     }
 
     getSomeProperty(): SomeProperty {

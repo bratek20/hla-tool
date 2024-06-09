@@ -1,0 +1,25 @@
+#foreach($vo in $complexCustomTypes)
+class ${vo.serializableName()} {
+    #foreach($field in $vo.fields)
+    private $field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
+    #end
+
+    toCustomType(): ${vo.name()} {
+        return ${vo.constructorCall()}(
+        #foreach($field in $vo.fields)
+            ${field.type.deserialize("this.${field.name}")},
+        #end
+        )
+    }
+
+    static fromCustomType(customType: ${vo.name()}): ${vo.serializableName()} {
+        const instance = new ${vo.serializableName()}()
+        #foreach($field in $vo.fields)
+        instance.${field.name} = $field.type.serialize(${field.access("customType")})
+        #end
+        return instance
+    }
+}#if($foreach.hasNext)
+
+
+#end#end
