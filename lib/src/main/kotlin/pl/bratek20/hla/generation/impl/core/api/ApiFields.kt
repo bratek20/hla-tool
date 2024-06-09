@@ -8,10 +8,10 @@ open class ApiTypeField(
     protected val def: FieldDefinition,
     private val factory: ApiTypeFactory
 ) {
-    val name = def.name
+    val name = def.getName()
 
     val type: ApiType by lazy {
-        factory.create(def.type)
+        factory.create(def.getType())
     }
 
     open fun access(variableName: String): String {
@@ -19,12 +19,12 @@ open class ApiTypeField(
     }
 
     fun exampleValue(): String? {
-        return def.attributes.firstOrNull { it.name == "example" }?.value
+        return def.getAttributes().firstOrNull { it.getName() == "example" }?.getValue()
     }
 
     fun defaultValue(): String? {
-        if (def.defaultValue != null) {
-            return mapDefaultValue(def.defaultValue)
+        def.getDefaultValue()?.let {
+            return mapDefaultValue(it)
         }
         return null
     }
@@ -69,7 +69,7 @@ class SerializableTypeApiField(
 
     // used by velocity
     fun accessor(): String {
-        val isPublic = def.attributes.firstOrNull { it.name == "public" } != null
+        val isPublic = def.getAttributes().firstOrNull { it.getName() == "public" } != null
         val publicSupported = type.languageTypes.supportPublicComplexStructureFields()
         return if(isPublic && publicSupported) "" else "private "
     }

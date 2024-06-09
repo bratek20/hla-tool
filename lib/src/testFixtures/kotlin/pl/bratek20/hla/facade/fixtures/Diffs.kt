@@ -135,15 +135,15 @@ fun diffModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedMo
     val result: MutableList<String> = mutableListOf()
 
     expected.hlaFolderPath?.let {
-        if (diffPath(given.hlaFolderPath, it) != "") { result.add(diffPath(given.hlaFolderPath, it, "${path}hlaFolderPath.")) }
+        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
     }
 
     expected.profileName?.let {
-        if (diffProfileName(given.profileName, it) != "") { result.add(diffProfileName(given.profileName, it, "${path}profileName.")) }
+        if (diffProfileName(given.getProfileName(), it) != "") { result.add(diffProfileName(given.getProfileName(), it, "${path}profileName.")) }
     }
 
     expected.moduleName?.let {
-        if (diffModuleName(given.moduleName, it) != "") { result.add(diffModuleName(given.moduleName, it, "${path}moduleName.")) }
+        if (diffModuleName(given.getModuleName(), it) != "") { result.add(diffModuleName(given.getModuleName(), it, "${path}moduleName.")) }
     }
 
     return result.joinToString("\n")
@@ -158,11 +158,11 @@ fun diffAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: Ex
     val result: MutableList<String> = mutableListOf()
 
     expected.hlaFolderPath?.let {
-        if (diffPath(given.hlaFolderPath, it) != "") { result.add(diffPath(given.hlaFolderPath, it, "${path}hlaFolderPath.")) }
+        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
     }
 
     expected.profileName?.let {
-        if (diffProfileName(given.profileName, it) != "") { result.add(diffProfileName(given.profileName, it, "${path}profileName.")) }
+        if (diffProfileName(given.getProfileName(), it) != "") { result.add(diffProfileName(given.getProfileName(), it, "${path}profileName.")) }
     }
 
     return result.joinToString("\n")

@@ -18,10 +18,10 @@ fun compareFileContent(filePath: String, content1: FileContent, content2: FileCo
 
 class FilesLogic: Files {
     override fun write(path: Path, file: File) {
-        val nioPath = java.nio.file.Paths.get(path.add(Path(file.name.value)).value)
+        val nioPath = java.nio.file.Paths.get(path.add(Path(file.getName().value)).value)
         val nioFile = nioPath.toFile()
 
-        nioFile.writeText(file.content.toString())
+        nioFile.writeText(file.getContent().toString())
     }
 
     override fun read(path: Path): File {
@@ -33,8 +33,8 @@ class FilesLogic: Files {
         }
 
         return File(
-            name = FileName(file.name),
-            content = FileContent(file.readLines())
+            name = file.name,
+            content = file.readText()
         )
     }
 
@@ -50,7 +50,7 @@ class FilesLogic: Files {
     }
 
     override fun compare(file1: File, file2: File): CompareResult {
-        val differences = compareFileContent(file1.name.value, file1.content, file2.content)
+        val differences = compareFileContent(file1.getName().value, file1.getContent(), file2.getContent())
 
         return CompareResult(
             differences.isEmpty(),

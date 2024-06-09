@@ -20,7 +20,7 @@ ValueObjects
         values: string[]
 
     ImplSubmoduleDefinition
-        data: ComplexStructureDefinition[]
+        dataClasses: ComplexStructureDefinition[]
         dataKeys: KeyDefinition[]
 
     ModuleDefinition

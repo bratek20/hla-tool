@@ -74,7 +74,7 @@ data class ModuleOperationArgsDef(
 )
 fun moduleOperationArgs(init: ModuleOperationArgsDef.() -> Unit = {}): ModuleOperationArgs {
     val def = ModuleOperationArgsDef().apply(init)
-    return ModuleOperationArgs(
+    return ModuleOperationArgs.create(
         hlaFolderPath = pathCreate(def.hlaFolderPath),
         profileName = ProfileName(def.profileName),
         moduleName = ModuleName(def.moduleName),
@@ -87,7 +87,7 @@ data class AllModulesOperationArgsDef(
 )
 fun allModulesOperationArgs(init: AllModulesOperationArgsDef.() -> Unit = {}): AllModulesOperationArgs {
     val def = AllModulesOperationArgsDef().apply(init)
-    return AllModulesOperationArgs(
+    return AllModulesOperationArgs.create(
         hlaFolderPath = pathCreate(def.hlaFolderPath),
         profileName = ProfileName(def.profileName),
     )

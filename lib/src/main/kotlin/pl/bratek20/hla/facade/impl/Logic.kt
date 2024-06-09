@@ -18,25 +18,25 @@ class HlaFacadeLogic(
     private val properties: Properties
 ): HlaFacade {
     override fun startModule(args: ModuleOperationArgs): Unit {
-        generateModule(args, false, args.hlaFolderPath)
+        generateModule(args, false, args.getHlaFolderPath())
     }
 
     override fun updateModule(args: ModuleOperationArgs): Unit {
-        generateModule(args, true, args.hlaFolderPath)
+        generateModule(args, true, args.getHlaFolderPath())
     }
 
     override fun updateAllModules(args: AllModulesOperationArgs) {
-        val (modules, profile) = prepare(args.hlaFolderPath, args.profileName)
+        val (modules, profile) = prepare(args.getHlaFolderPath(), args.getProfileName())
 
         modules.forEach {
-            postPrepareGenerateModule(it.name, modules, profile, true, args.hlaFolderPath)
+            postPrepareGenerateModule(it.getName(), modules, profile, true, args.getHlaFolderPath())
         }
     }
 
     private fun generateModule(args: ModuleOperationArgs, onlyUpdate: Boolean, hlaFolderPath: Path) {
-        val (modules, profile) = prepare(args.hlaFolderPath, args.profileName)
+        val (modules, profile) = prepare(args.getHlaFolderPath(), args.getProfileName())
 
-        postPrepareGenerateModule(args.moduleName, modules, profile, onlyUpdate, hlaFolderPath)
+        postPrepareGenerateModule(args.getModuleName(), modules, profile, onlyUpdate, hlaFolderPath)
     }
 
     private fun postPrepareGenerateModule(
@@ -47,7 +47,7 @@ class HlaFacadeLogic(
         hlaFolderPath: Path
     ) {
         val generateResult = generator.generate(GenerateArgs(
-            moduleName = moduleName,
+            moduleName = moduleName.value,
             modules = modules,
             onlyUpdate = onlyUpdate,
             profile = profile
@@ -55,7 +55,7 @@ class HlaFacadeLogic(
 
         writer.write(
             WriteArgs(
-                hlaFolderPath = hlaFolderPath,
+                hlaFolderPath = hlaFolderPath.value,
                 generateResult = generateResult,
                 profile = profile,
                 onlyUpdate = onlyUpdate

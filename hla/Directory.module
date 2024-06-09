@@ -2,11 +2,10 @@ CustomTypes
     Path: string
     FileContent: string
 
-NamedTypes
+ValueObjects
     FileName: string
     DirectoryName: string
 
-ValueObjects
     File
         name: FileName
         content: FileContent

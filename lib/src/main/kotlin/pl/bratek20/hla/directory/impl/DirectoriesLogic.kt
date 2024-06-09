@@ -16,7 +16,7 @@ class DirectoriesLogic: Directories {
         val directories = allFiles.filter { it.isDirectory }.map { read(Path(it.absolutePath)) }
 
         return Directory(
-            name = DirectoryName(file.name),
+            name = file.name,
             files = files,
             directories = directories
         )
@@ -37,19 +37,19 @@ class DirectoriesLogic: Directories {
         val nioPath = java.nio.file.Paths.get(path.value)
         val file = nioPath.toFile()
 
-        val newDir = java.io.File(file, directory.name.value)
+        val newDir = java.io.File(file, directory.getName().value)
         if (!newDir.exists()) {
             check(newDir.mkdirs()) {
                 "Could not create directory: $newDir"
             }
         }
 
-        directory.files.forEach {
-            val newFile = java.io.File(newDir, it.name.value)
-            newFile.writeText(it.content.lines.joinToString("\n"))
+        directory.getFiles().forEach {
+            val newFile = java.io.File(newDir, it.getName().value)
+            newFile.writeText(it.getContent().lines.joinToString("\n"))
         }
 
-        directory.directories.forEach {
+        directory.getDirectories().forEach {
             write(Path(newDir.absolutePath), it)
         }
     }
@@ -68,15 +68,15 @@ class DirectoriesLogic: Directories {
 
     private fun compareDirectories(path: String, dir1: Directory, dir2: Directory): List<String> {
         val differences = mutableListOf<String>()
-        if (dir1.name != dir2.name) {
-            differences.add("Different directory names: ${fullPath(path, dir1.name)} != ${fullPath(path, dir2.name)}")
+        if (dir1.getName() != dir2.getName()) {
+            differences.add("Different directory names: ${fullPath(path, dir1.getName())} != ${fullPath(path, dir2.getName())}")
         }
 
-        val newPath = fullPath(path, dir1.name)
-        differences.addAll(compareFiles(newPath, dir1.files, dir2.files))
+        val newPath = fullPath(path, dir1.getName())
+        differences.addAll(compareFiles(newPath, dir1.getFiles(), dir2.getFiles()))
 
-        val dir1Map = dir1.directories.associateBy { it.name }
-        val dir2Map = dir2.directories.associateBy { it.name }
+        val dir1Map = dir1.getDirectories().associateBy { it.getName() }
+        val dir2Map = dir2.getDirectories().associateBy { it.getName() }
 
         val allDirs = dir1Map.keys + dir2Map.keys
         for (dir in allDirs) {
@@ -97,8 +97,8 @@ class DirectoriesLogic: Directories {
 
     private fun compareFiles(path: String, files1: List<File>, files2: List<File>): List<String> {
         val differences = mutableListOf<String>()
-        val files1Map = files1.associateBy { it.name }
-        val files2Map = files2.associateBy { it.name }
+        val files1Map = files1.associateBy { it.getName() }
+        val files2Map = files2.associateBy { it.getName() }
 
         val allFiles = files1Map.keys + files2Map.keys
         for (file in allFiles) {
@@ -111,7 +111,7 @@ class DirectoriesLogic: Directories {
             } else if (file2 == null) {
                 differences.add("File $filePath not found in second directory")
             } else {
-                differences.addAll(compareFileContent(filePath, file1.content, file2.content))
+                differences.addAll(compareFileContent(filePath, file1.getContent(), file2.getContent()))
             }
         }
 
@@ -122,8 +122,8 @@ class DirectoriesLogic: Directories {
 
     private fun toApiFile(file: java.io.File): File {
         return File(
-            name = FileName(file.name),
-            content = FileContent(file.readLines())
+            name = file.name,
+            content = file.readText()
         )
     }
 }

@@ -1,13 +1,12 @@
-NamedTypes
-    ModuleName: string
-    ProfileName: string
-
 Enums
     ModuleLanguage
         KOTLIN
         TYPE_SCRIPT
 
-Properties
+ValueObjects
+    ModuleName: string
+    ProfileName: string
+
     TypeScriptConfig
         mainTsconfigPath: Path
         testTsconfigPath: Path
@@ -23,15 +22,13 @@ Properties
        project: Path
        src: HlaSrcPaths
 
-    "profiles" -> HlaProfile[]
+    HlaProfile
         name: ProfileName
         language: ModuleLanguage
         paths: HlaPaths
         onlyPatterns: string[]
         typeScript: TypeScriptConfig?
 
-
-ValueObjects
     ModuleOperationArgs
         hlaFolderPath: Path
         profileName: ProfileName
@@ -40,6 +37,9 @@ ValueObjects
     AllModulesOperationArgs
         hlaFolderPath: Path
         profileName: ProfileName
+
+PropertyKeys
+    "profiles" -> HlaProfile[]
 
 Interfaces
     HlaFacade

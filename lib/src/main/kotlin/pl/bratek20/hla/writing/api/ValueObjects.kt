@@ -7,8 +7,40 @@ import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.generation.api.*
 
 data class WriteArgs(
-    val hlaFolderPath: Path,
-    val generateResult: GenerateResult,
-    val profile: HlaProfile,
-    val onlyUpdate: Boolean,
-)
+    private val hlaFolderPath: String,
+    private val generateResult: GenerateResult,
+    private val profile: HlaProfile,
+    private val onlyUpdate: Boolean,
+) {
+    fun getHlaFolderPath(): Path {
+        return pathCreate(this.hlaFolderPath)
+    }
+
+    fun getGenerateResult(): GenerateResult {
+        return this.generateResult
+    }
+
+    fun getProfile(): HlaProfile {
+        return this.profile
+    }
+
+    fun getOnlyUpdate(): Boolean {
+        return this.onlyUpdate
+    }
+
+    companion object {
+        fun create(
+            hlaFolderPath: Path,
+            generateResult: GenerateResult,
+            profile: HlaProfile,
+            onlyUpdate: Boolean,
+        ): WriteArgs {
+            return WriteArgs(
+                hlaFolderPath = pathGetValue(hlaFolderPath),
+                generateResult = generateResult,
+                profile = profile,
+                onlyUpdate = onlyUpdate,
+            )
+        }
+    }
+}

@@ -36,11 +36,11 @@ fun diffFile(given: File, expectedInit: ExpectedFile.() -> Unit, path: String = 
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
-        if (diffFileName(given.name, it) != "") { result.add(diffFileName(given.name, it, "${path}name.")) }
+        if (diffFileName(given.getName(), it) != "") { result.add(diffFileName(given.getName(), it, "${path}name.")) }
     }
 
     expected.content?.let {
-        if (diffFileContent(given.content, it) != "") { result.add(diffFileContent(given.content, it, "${path}content.")) }
+        if (diffFileContent(given.getContent(), it) != "") { result.add(diffFileContent(given.getContent(), it, "${path}content.")) }
     }
 
     return result.joinToString("\n")
@@ -56,17 +56,17 @@ fun diffDirectory(given: Directory, expectedInit: ExpectedDirectory.() -> Unit, 
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
-        if (diffDirectoryName(given.name, it) != "") { result.add(diffDirectoryName(given.name, it, "${path}name.")) }
+        if (diffDirectoryName(given.getName(), it) != "") { result.add(diffDirectoryName(given.getName(), it, "${path}name.")) }
     }
 
     expected.files?.let {
-        if (given.files.size != it.size) { result.add("${path}files size ${given.files.size} != ${it.size}") }
-        given.files.forEachIndexed { idx, entry -> if (diffFile(entry, it[idx]) != "") { result.add(diffFile(entry, it[idx], "${path}files[${idx}].")) } }
+        if (given.getFiles().size != it.size) { result.add("${path}files size ${given.getFiles().size} != ${it.size}") }
+        given.getFiles().forEachIndexed { idx, entry -> if (diffFile(entry, it[idx]) != "") { result.add(diffFile(entry, it[idx], "${path}files[${idx}].")) } }
     }
 
     expected.directories?.let {
-        if (given.directories.size != it.size) { result.add("${path}directories size ${given.directories.size} != ${it.size}") }
-        given.directories.forEachIndexed { idx, entry -> if (diffDirectory(entry, it[idx]) != "") { result.add(diffDirectory(entry, it[idx], "${path}directories[${idx}].")) } }
+        if (given.getDirectories().size != it.size) { result.add("${path}directories size ${given.getDirectories().size} != ${it.size}") }
+        given.getDirectories().forEachIndexed { idx, entry -> if (diffDirectory(entry, it[idx]) != "") { result.add(diffDirectory(entry, it[idx], "${path}directories[${idx}].")) } }
     }
 
     return result.joinToString("\n")
@@ -81,12 +81,12 @@ fun diffCompareResult(given: CompareResult, expectedInit: ExpectedCompareResult.
     val result: MutableList<String> = mutableListOf()
 
     expected.same?.let {
-        if (given.same != it) { result.add("${path}same ${given.same} != ${it}") }
+        if (given.getSame() != it) { result.add("${path}same ${given.getSame()} != ${it}") }
     }
 
     expected.differences?.let {
-        if (given.differences.size != it.size) { result.add("${path}differences size ${given.differences.size} != ${it.size}") }
-        given.differences.forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}differences[${idx}] ${entry} != ${it[idx]}") } }
+        if (given.getDifferences().size != it.size) { result.add("${path}differences size ${given.getDifferences().size} != ${it.size}") }
+        given.getDifferences().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}differences[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     return result.joinToString("\n")

@@ -19,7 +19,7 @@ data class WriteArgsDef(
 )
 fun writeArgs(init: WriteArgsDef.() -> Unit = {}): WriteArgs {
     val def = WriteArgsDef().apply(init)
-    return WriteArgs(
+    return WriteArgs.create(
         hlaFolderPath = pathCreate(def.hlaFolderPath),
         generateResult = generateResult(def.generateResult),
         profile = hlaProfile(def.profile),

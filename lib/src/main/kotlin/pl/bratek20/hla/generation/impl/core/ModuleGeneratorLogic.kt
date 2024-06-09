@@ -30,7 +30,7 @@ class ModuleGeneratorLogic(
 
     class RootMainGenerator: DirectoryGenerator() {
         override fun name(): String {
-            return module.name.value
+            return module.getName().value
         }
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
@@ -45,7 +45,7 @@ class ModuleGeneratorLogic(
 
     class RootFixturesGenerator: DirectoryGenerator() {
         override fun name(): String {
-            return module.name.value
+            return module.getName().value
         }
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
@@ -57,7 +57,7 @@ class ModuleGeneratorLogic(
 
     class RootTestsGenerator: DirectoryGenerator() {
         override fun name(): String {
-            return module.name.value
+            return module.getName().value
         }
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
@@ -82,13 +82,13 @@ class ModuleGeneratorLogic(
     }
 
     override fun generate(args: GenerateArgs): GenerateResult {
-        val moduleName = args.moduleName
-        val language = args.profile.getLanguage()
-        val modules = args.modules
+        val moduleName = args.getModuleName()
+        val language = args.getProfile().getLanguage()
+        val modules = args.getModules()
 
         val domainContext = DomainContext(
             modules = HlaModules(moduleName, modules),
-            profile = args.profile,
+            profile = args.getProfile(),
         )
 
         val context = ModuleGenerationContext(
@@ -98,8 +98,8 @@ class ModuleGeneratorLogic(
                 ModuleLanguage.KOTLIN -> KotlinSupport(domainContext)
                 ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
             },
-            onlyUpdate = args.onlyUpdate,
-            onlyPatterns = args.profile.getOnlyPatterns(),
+            onlyUpdate = args.getOnlyUpdate(),
+            onlyPatterns = args.getProfile().getOnlyPatterns(),
         )
 
         val root = GenerationRoot()
@@ -109,9 +109,9 @@ class ModuleGeneratorLogic(
         requireNotNull(result)
 
         return GenerateResult(
-            main = result.directories[0],
-            fixtures = result.directories[1],
-            tests = if (result.directories.size > 2) result.directories[2] else null,
+            main = result.getDirectories()[0],
+            fixtures = result.getDirectories()[1],
+            tests = if (result.getDirectories().size > 2) result.getDirectories()[2] else null,
         )
     }
 }

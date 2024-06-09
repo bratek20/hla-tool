@@ -56,7 +56,7 @@ abstract class ModulePartGenerator {
         val path = "templates/${c.language.name().name.lowercase()}/${velocityPath}/$fileName"
 
         val builder = c.velocity.contentBuilder(path)
-            .put("moduleName", module.name.value)
+            .put("moduleName", module.getName().value)
 
         c.language.contentBuilderExtensions().forEach { it.extend(builder) }
 
@@ -103,8 +103,8 @@ abstract class FileGenerator
             content = FileContent(lines)
         }
         return File(
-            name = FileName(name() + "." + language.filesExtension()),
-            content = content
+            name = name() + "." + language.filesExtension(),
+            content = content.toString()
         )
     }
 }
@@ -166,7 +166,7 @@ abstract class DirectoryGenerator
         }
 
         return Directory(
-            name = DirectoryName(language.adjustDirectoryName(name())),
+            name = language.adjustDirectoryName(name()),
             files = files,
             directories = directories
         )

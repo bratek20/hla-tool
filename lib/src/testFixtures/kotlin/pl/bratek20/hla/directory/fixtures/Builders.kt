@@ -10,7 +10,7 @@ data class FileDef(
 )
 fun file(init: FileDef.() -> Unit = {}): File {
     val def = FileDef().apply(init)
-    return File(
+    return File.create(
         name = FileName(def.name),
         content = fileContentCreate(def.content),
     )
@@ -23,7 +23,7 @@ data class DirectoryDef(
 )
 fun directory(init: DirectoryDef.() -> Unit = {}): Directory {
     val def = DirectoryDef().apply(init)
-    return Directory(
+    return Directory.create(
         name = DirectoryName(def.name),
         files = def.files.map { it -> file(it) },
         directories = def.directories.map { it -> directory(it) },
@@ -36,7 +36,7 @@ data class CompareResultDef(
 )
 fun compareResult(init: CompareResultDef.() -> Unit = {}): CompareResult {
     val def = CompareResultDef().apply(init)
-    return CompareResult(
+    return CompareResult.create(
         same = def.same,
         differences = def.differences,
     )

@@ -5,79 +5,417 @@ package pl.bratek20.hla.definitions.api
 import pl.bratek20.hla.facade.api.*
 
 data class KeyDefinition(
-    val name: String,
-    val type: TypeDefinition,
-)
+    private val name: String,
+    private val type: TypeDefinition,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getType(): TypeDefinition {
+        return this.type
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            type: TypeDefinition,
+        ): KeyDefinition {
+            return KeyDefinition(
+                name = name,
+                type = type,
+            )
+        }
+    }
+}
 
 data class EnumDefinition(
-    val name: String,
-    val values: List<String>,
-)
+    private val name: String,
+    private val values: List<String>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getValues(): List<String> {
+        return this.values
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            values: List<String>,
+        ): EnumDefinition {
+            return EnumDefinition(
+                name = name,
+                values = values,
+            )
+        }
+    }
+}
 
 data class ImplSubmoduleDefinition(
-    val data: List<ComplexStructureDefinition>,
-    val dataKeys: List<KeyDefinition>,
-)
+    private val dataClasses: List<ComplexStructureDefinition>,
+    private val dataKeys: List<KeyDefinition>,
+) {
+    fun getDataClasses(): List<ComplexStructureDefinition> {
+        return this.dataClasses
+    }
+
+    fun getDataKeys(): List<KeyDefinition> {
+        return this.dataKeys
+    }
+
+    companion object {
+        fun create(
+            dataClasses: List<ComplexStructureDefinition>,
+            dataKeys: List<KeyDefinition>,
+        ): ImplSubmoduleDefinition {
+            return ImplSubmoduleDefinition(
+                dataClasses = dataClasses,
+                dataKeys = dataKeys,
+            )
+        }
+    }
+}
 
 data class ModuleDefinition(
-    val name: ModuleName,
-    val simpleCustomTypes: List<SimpleStructureDefinition>,
-    val complexCustomTypes: List<ComplexStructureDefinition>,
-    val simpleValueObjects: List<SimpleStructureDefinition>,
-    val complexValueObjects: List<ComplexStructureDefinition>,
-    val dataClasses: List<ComplexStructureDefinition>,
-    val interfaces: List<InterfaceDefinition>,
-    val propertyKeys: List<KeyDefinition>,
-    val dataKeys: List<KeyDefinition>,
-    val enums: List<EnumDefinition>,
-    val implSubmodule: ImplSubmoduleDefinition,
-)
+    private val name: String,
+    private val simpleCustomTypes: List<SimpleStructureDefinition>,
+    private val complexCustomTypes: List<ComplexStructureDefinition>,
+    private val simpleValueObjects: List<SimpleStructureDefinition>,
+    private val complexValueObjects: List<ComplexStructureDefinition>,
+    private val dataClasses: List<ComplexStructureDefinition>,
+    private val interfaces: List<InterfaceDefinition>,
+    private val propertyKeys: List<KeyDefinition>,
+    private val dataKeys: List<KeyDefinition>,
+    private val enums: List<EnumDefinition>,
+    private val implSubmodule: ImplSubmoduleDefinition,
+) {
+    fun getName(): ModuleName {
+        return ModuleName(this.name)
+    }
+
+    fun getSimpleCustomTypes(): List<SimpleStructureDefinition> {
+        return this.simpleCustomTypes
+    }
+
+    fun getComplexCustomTypes(): List<ComplexStructureDefinition> {
+        return this.complexCustomTypes
+    }
+
+    fun getSimpleValueObjects(): List<SimpleStructureDefinition> {
+        return this.simpleValueObjects
+    }
+
+    fun getComplexValueObjects(): List<ComplexStructureDefinition> {
+        return this.complexValueObjects
+    }
+
+    fun getDataClasses(): List<ComplexStructureDefinition> {
+        return this.dataClasses
+    }
+
+    fun getInterfaces(): List<InterfaceDefinition> {
+        return this.interfaces
+    }
+
+    fun getPropertyKeys(): List<KeyDefinition> {
+        return this.propertyKeys
+    }
+
+    fun getDataKeys(): List<KeyDefinition> {
+        return this.dataKeys
+    }
+
+    fun getEnums(): List<EnumDefinition> {
+        return this.enums
+    }
+
+    fun getImplSubmodule(): ImplSubmoduleDefinition {
+        return this.implSubmodule
+    }
+
+    companion object {
+        fun create(
+            name: ModuleName,
+            simpleCustomTypes: List<SimpleStructureDefinition>,
+            complexCustomTypes: List<ComplexStructureDefinition>,
+            simpleValueObjects: List<SimpleStructureDefinition>,
+            complexValueObjects: List<ComplexStructureDefinition>,
+            dataClasses: List<ComplexStructureDefinition>,
+            interfaces: List<InterfaceDefinition>,
+            propertyKeys: List<KeyDefinition>,
+            dataKeys: List<KeyDefinition>,
+            enums: List<EnumDefinition>,
+            implSubmodule: ImplSubmoduleDefinition,
+        ): ModuleDefinition {
+            return ModuleDefinition(
+                name = name.value,
+                simpleCustomTypes = simpleCustomTypes,
+                complexCustomTypes = complexCustomTypes,
+                simpleValueObjects = simpleValueObjects,
+                complexValueObjects = complexValueObjects,
+                dataClasses = dataClasses,
+                interfaces = interfaces,
+                propertyKeys = propertyKeys,
+                dataKeys = dataKeys,
+                enums = enums,
+                implSubmodule = implSubmodule,
+            )
+        }
+    }
+}
 
 data class TypeDefinition(
-    val name: String,
-    val wrappers: List<TypeWrapper>,
-)
+    private val name: String,
+    private val wrappers: List<TypeWrapper>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getWrappers(): List<TypeWrapper> {
+        return this.wrappers
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            wrappers: List<TypeWrapper>,
+        ): TypeDefinition {
+            return TypeDefinition(
+                name = name,
+                wrappers = wrappers,
+            )
+        }
+    }
+}
 
 data class FieldDefinition(
-    val name: String,
-    val type: TypeDefinition,
-    val attributes: List<Attribute>,
-    val defaultValue: String?,
-)
+    private val name: String,
+    private val type: TypeDefinition,
+    private val attributes: List<Attribute>,
+    private val defaultValue: String?,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getType(): TypeDefinition {
+        return this.type
+    }
+
+    fun getAttributes(): List<Attribute> {
+        return this.attributes
+    }
+
+    fun getDefaultValue(): String? {
+        return this.defaultValue
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            type: TypeDefinition,
+            attributes: List<Attribute>,
+            defaultValue: String?,
+        ): FieldDefinition {
+            return FieldDefinition(
+                name = name,
+                type = type,
+                attributes = attributes,
+                defaultValue = defaultValue,
+            )
+        }
+    }
+}
 
 data class Attribute(
-    val name: String,
-    val value: String,
-)
+    private val name: String,
+    private val value: String,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getValue(): String {
+        return this.value
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            value: String,
+        ): Attribute {
+            return Attribute(
+                name = name,
+                value = value,
+            )
+        }
+    }
+}
 
 data class SimpleStructureDefinition(
-    val name: String,
-    val typeName: String,
-    val attributes: List<Attribute>,
-)
+    private val name: String,
+    private val typeName: String,
+    private val attributes: List<Attribute>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getTypeName(): String {
+        return this.typeName
+    }
+
+    fun getAttributes(): List<Attribute> {
+        return this.attributes
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            typeName: String,
+            attributes: List<Attribute>,
+        ): SimpleStructureDefinition {
+            return SimpleStructureDefinition(
+                name = name,
+                typeName = typeName,
+                attributes = attributes,
+            )
+        }
+    }
+}
 
 data class ComplexStructureDefinition(
-    val name: String,
-    val fields: List<FieldDefinition>,
-)
+    private val name: String,
+    private val fields: List<FieldDefinition>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getFields(): List<FieldDefinition> {
+        return this.fields
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            fields: List<FieldDefinition>,
+        ): ComplexStructureDefinition {
+            return ComplexStructureDefinition(
+                name = name,
+                fields = fields,
+            )
+        }
+    }
+}
 
 data class InterfaceDefinition(
-    val name: String,
-    val methods: List<MethodDefinition>,
-)
+    private val name: String,
+    private val methods: List<MethodDefinition>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getMethods(): List<MethodDefinition> {
+        return this.methods
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            methods: List<MethodDefinition>,
+        ): InterfaceDefinition {
+            return InterfaceDefinition(
+                name = name,
+                methods = methods,
+            )
+        }
+    }
+}
 
 data class ArgumentDefinition(
-    val name: String,
-    val type: TypeDefinition,
-)
+    private val name: String,
+    private val type: TypeDefinition,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getType(): TypeDefinition {
+        return this.type
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            type: TypeDefinition,
+        ): ArgumentDefinition {
+            return ArgumentDefinition(
+                name = name,
+                type = type,
+            )
+        }
+    }
+}
 
 data class ExceptionDefinition(
-    val name: String,
-)
+    private val name: String,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    companion object {
+        fun create(
+            name: String,
+        ): ExceptionDefinition {
+            return ExceptionDefinition(
+                name = name,
+            )
+        }
+    }
+}
 
 data class MethodDefinition(
-    val name: String,
-    val returnType: TypeDefinition,
-    val args: List<ArgumentDefinition>,
-    val throws: List<ExceptionDefinition>,
-)
+    private val name: String,
+    private val returnType: TypeDefinition,
+    private val args: List<ArgumentDefinition>,
+    private val throws: List<ExceptionDefinition>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getReturnType(): TypeDefinition {
+        return this.returnType
+    }
+
+    fun getArgs(): List<ArgumentDefinition> {
+        return this.args
+    }
+
+    fun getThrows(): List<ExceptionDefinition> {
+        return this.throws
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            returnType: TypeDefinition,
+            args: List<ArgumentDefinition>,
+            throws: List<ExceptionDefinition>,
+        ): MethodDefinition {
+            return MethodDefinition(
+                name = name,
+                returnType = returnType,
+                args = args,
+                throws = throws,
+            )
+        }
+    }
+}

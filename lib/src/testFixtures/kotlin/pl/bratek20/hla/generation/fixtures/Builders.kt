@@ -19,7 +19,7 @@ data class GenerateArgsDef(
 )
 fun generateArgs(init: GenerateArgsDef.() -> Unit = {}): GenerateArgs {
     val def = GenerateArgsDef().apply(init)
-    return GenerateArgs(
+    return GenerateArgs.create(
         moduleName = ModuleName(def.moduleName),
         modules = def.modules.map { it -> moduleDefinition(it) },
         onlyUpdate = def.onlyUpdate,
@@ -34,7 +34,7 @@ data class GenerateResultDef(
 )
 fun generateResult(init: GenerateResultDef.() -> Unit = {}): GenerateResult {
     val def = GenerateResultDef().apply(init)
-    return GenerateResult(
+    return GenerateResult.create(
         main = directory(def.main),
         fixtures = directory(def.fixtures),
         tests = def.tests?.let { it -> directory(it) },

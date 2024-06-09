@@ -13,7 +13,7 @@ data class KeyDefinitionDef(
 )
 fun keyDefinition(init: KeyDefinitionDef.() -> Unit = {}): KeyDefinition {
     val def = KeyDefinitionDef().apply(init)
-    return KeyDefinition(
+    return KeyDefinition.create(
         name = def.name,
         type = typeDefinition(def.type),
     )
@@ -25,20 +25,20 @@ data class EnumDefinitionDef(
 )
 fun enumDefinition(init: EnumDefinitionDef.() -> Unit = {}): EnumDefinition {
     val def = EnumDefinitionDef().apply(init)
-    return EnumDefinition(
+    return EnumDefinition.create(
         name = def.name,
         values = def.values,
     )
 }
 
 data class ImplSubmoduleDefinitionDef(
-    var data: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
+    var dataClasses: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): ImplSubmoduleDefinition {
     val def = ImplSubmoduleDefinitionDef().apply(init)
-    return ImplSubmoduleDefinition(
-        data = def.data.map { it -> complexStructureDefinition(it) },
+    return ImplSubmoduleDefinition.create(
+        dataClasses = def.dataClasses.map { it -> complexStructureDefinition(it) },
         dataKeys = def.dataKeys.map { it -> keyDefinition(it) },
     )
 }
@@ -58,7 +58,7 @@ data class ModuleDefinitionDef(
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
-    return ModuleDefinition(
+    return ModuleDefinition.create(
         name = ModuleName(def.name),
         simpleCustomTypes = def.simpleCustomTypes.map { it -> simpleStructureDefinition(it) },
         complexCustomTypes = def.complexCustomTypes.map { it -> complexStructureDefinition(it) },
@@ -79,7 +79,7 @@ data class TypeDefinitionDef(
 )
 fun typeDefinition(init: TypeDefinitionDef.() -> Unit = {}): TypeDefinition {
     val def = TypeDefinitionDef().apply(init)
-    return TypeDefinition(
+    return TypeDefinition.create(
         name = def.name,
         wrappers = def.wrappers.map { it -> it },
     )
@@ -93,7 +93,7 @@ data class FieldDefinitionDef(
 )
 fun fieldDefinition(init: FieldDefinitionDef.() -> Unit = {}): FieldDefinition {
     val def = FieldDefinitionDef().apply(init)
-    return FieldDefinition(
+    return FieldDefinition.create(
         name = def.name,
         type = typeDefinition(def.type),
         attributes = def.attributes.map { it -> attribute(it) },
@@ -107,7 +107,7 @@ data class AttributeDef(
 )
 fun attribute(init: AttributeDef.() -> Unit = {}): Attribute {
     val def = AttributeDef().apply(init)
-    return Attribute(
+    return Attribute.create(
         name = def.name,
         value = def.value,
     )
@@ -120,7 +120,7 @@ data class SimpleStructureDefinitionDef(
 )
 fun simpleStructureDefinition(init: SimpleStructureDefinitionDef.() -> Unit = {}): SimpleStructureDefinition {
     val def = SimpleStructureDefinitionDef().apply(init)
-    return SimpleStructureDefinition(
+    return SimpleStructureDefinition.create(
         name = def.name,
         typeName = def.typeName,
         attributes = def.attributes.map { it -> attribute(it) },
@@ -133,7 +133,7 @@ data class ComplexStructureDefinitionDef(
 )
 fun complexStructureDefinition(init: ComplexStructureDefinitionDef.() -> Unit = {}): ComplexStructureDefinition {
     val def = ComplexStructureDefinitionDef().apply(init)
-    return ComplexStructureDefinition(
+    return ComplexStructureDefinition.create(
         name = def.name,
         fields = def.fields.map { it -> fieldDefinition(it) },
     )
@@ -145,7 +145,7 @@ data class InterfaceDefinitionDef(
 )
 fun interfaceDefinition(init: InterfaceDefinitionDef.() -> Unit = {}): InterfaceDefinition {
     val def = InterfaceDefinitionDef().apply(init)
-    return InterfaceDefinition(
+    return InterfaceDefinition.create(
         name = def.name,
         methods = def.methods.map { it -> methodDefinition(it) },
     )
@@ -157,7 +157,7 @@ data class ArgumentDefinitionDef(
 )
 fun argumentDefinition(init: ArgumentDefinitionDef.() -> Unit = {}): ArgumentDefinition {
     val def = ArgumentDefinitionDef().apply(init)
-    return ArgumentDefinition(
+    return ArgumentDefinition.create(
         name = def.name,
         type = typeDefinition(def.type),
     )
@@ -168,7 +168,7 @@ data class ExceptionDefinitionDef(
 )
 fun exceptionDefinition(init: ExceptionDefinitionDef.() -> Unit = {}): ExceptionDefinition {
     val def = ExceptionDefinitionDef().apply(init)
-    return ExceptionDefinition(
+    return ExceptionDefinition.create(
         name = def.name,
     )
 }
@@ -181,7 +181,7 @@ data class MethodDefinitionDef(
 )
 fun methodDefinition(init: MethodDefinitionDef.() -> Unit = {}): MethodDefinition {
     val def = MethodDefinitionDef().apply(init)
-    return MethodDefinition(
+    return MethodDefinition.create(
         name = def.name,
         returnType = typeDefinition(def.returnType),
         args = def.args.map { it -> argumentDefinition(it) },

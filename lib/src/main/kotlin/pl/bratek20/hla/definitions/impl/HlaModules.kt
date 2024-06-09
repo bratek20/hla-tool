@@ -19,7 +19,7 @@ class HlaModules(
         get() = get(currentName)
 
     fun get(moduleName: ModuleName): ModuleDefinition {
-        return modules.first { it.name == moduleName }
+        return modules.first { it.getName() == moduleName }
     }
 
     fun findSimpleValueObject(type: TypeDefinition): SimpleStructureDefinition? {
@@ -47,44 +47,44 @@ class HlaModules(
     }
 
     private fun findEnum(type: TypeDefinition, module: ModuleDefinition): EnumDefinition? {
-        return module.enums.find { it.name == type.name }
+        return module.getEnums().find { it.getName() == type.getName() }
     }
 
     private fun findSimpleValueObject(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
-        return module.simpleValueObjects.find { it.name == type.name }
+        return module.getSimpleValueObjects().find { it.getName() == type.getName() }
     }
 
     private fun findComplexValueObject(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.complexValueObjects.find { it.name == type.name }
+        return module.getComplexValueObjects().find { it.getName() == type.getName() }
     }
 
     private fun findDataClass(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return (module.dataClasses + module.implSubmodule.data).find { it.name == type.name }
+        return (module.getDataClasses() + module.getImplSubmodule().getDataClasses()).find { it.getName() == type.getName() }
     }
 
     private fun findSimpleCustomType(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {
-        return module.simpleCustomTypes.find { it.name == type.name }
+        return module.getSimpleCustomTypes().find { it.getName() == type.getName() }
     }
 
     private fun findComplexCustomType(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.complexCustomTypes.find { it.name == type.name }
+        return module.getComplexCustomTypes().find { it.getName() == type.getName() }
     }
 
     fun getCurrentDependencies(): List<ModuleName> {
         val typeNames = allComplexStructureDefinitions(current)
-            .map { it.fields }
+            .map { it.getFields() }
             .flatten()
-            .map { it.type.name } +
+            .map { it.getType().getName() } +
             interfacesTypeNames(current)
 
         return modules
-            .filter { it.name != currentName }
+            .filter { it.getName() != currentName }
             .filter { module ->
                 typeNames.any { typeName ->
                     hasType(module, typeName)
                 }
             }
-            .map { it.name }
+            .map { it.getName() }
     }
 
     fun getTypeModule(typeName: String): ModuleName {
@@ -98,32 +98,32 @@ class HlaModules(
     }
 
     private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
-        return module.enums.map { it.name } +
-                allSimpleStructureDefinitions(module).map { it.name } +
-                allComplexStructureDefinitions(module).map { it.name }
+        return module.getEnums().map { it.getName() } +
+                allSimpleStructureDefinitions(module).map { it.getName() } +
+                allComplexStructureDefinitions(module).map { it.getName() }
     }
 
     private fun interfacesTypeNames(module: ModuleDefinition): List<String> {
-        return module.interfaces.flatMap {
-            it.methods.flatMap {
-                method -> method.args.map {
-                    arg -> arg.type.name
+        return module.getInterfaces().flatMap {
+            it.getMethods().flatMap {
+                method -> method.getArgs().map {
+                    arg -> arg.getType().getName()
                 } +
-                method.returnType.name
+                method.getReturnType().getName()
             }
         }
     }
 
     fun allSimpleStructureDefinitions(module: ModuleDefinition): List<SimpleStructureDefinition> {
-        return module.simpleValueObjects + module.simpleCustomTypes
+        return module.getSimpleValueObjects() + module.getSimpleCustomTypes()
     }
 
     fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return module.complexValueObjects + module.complexCustomTypes + module.dataClasses
+        return module.getComplexValueObjects() + module.getComplexCustomTypes() + module.getDataClasses()
     }
 
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {
-        return modules.map { it.name to allModuleTypeNames(it) }
+        return modules.map { it.getName() to allModuleTypeNames(it) }
     }
 
     private fun hasType(module: ModuleDefinition, typeName: String): Boolean {

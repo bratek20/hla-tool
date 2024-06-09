@@ -13,8 +13,8 @@ class ValueObjectsGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        val simpleValueObjects = module.simpleValueObjects.map { apiTypeFactory.create<SimpleValueObjectApiType>(it) }
-        val complexValueObjects = module.complexValueObjects.map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
+        val simpleValueObjects = module.getSimpleValueObjects().map { apiTypeFactory.create<SimpleValueObjectApiType>(it) }
+        val complexValueObjects = module.getComplexValueObjects().map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
 
         if (complexValueObjects.isEmpty()) {
             return null
@@ -33,7 +33,7 @@ open class DataClassesGenerator: FileGenerator() {
     }
 
     protected open fun dataClasses(): List<ComplexStructureDefinition> {
-        return module.dataClasses
+        return module.getDataClasses()
     }
 
     override fun generateFileContent(): FileContent? {
@@ -67,18 +67,18 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
     }
 
     protected open fun dataKeys(): List<KeyDefinition> {
-        return module.dataKeys
+        return module.getDataKeys()
     }
 
     override fun generateFileContent(): FileContent?{
-        if (!data && module.propertyKeys.isEmpty()) {
+        if (!data && module.getPropertyKeys().isEmpty()) {
             return null
         }
         if (data && dataKeys().isEmpty()) {
             return null
         }
 
-        val keys = if (data) dataKeys() else module.propertyKeys
+        val keys = if (data) dataKeys() else module.getPropertyKeys()
         return contentBuilder("keys.vm")
             .put("keys", keys.map { toApiPropertyOrDataKey(it, data) })
             .build()
@@ -86,7 +86,7 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
 
 
     private fun toApiPropertyOrDataKey(def: KeyDefinition, data: Boolean): StorageTypeKey {
-        val apiType = apiTypeFactory.create(def.type)
+        val apiType = apiTypeFactory.create(def.getType())
 
         val innerWord = if (data) "Data" else "Property"
 
@@ -102,9 +102,9 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
         }
 
         return StorageTypeKey(
-            constantName = camelToScreamingSnakeCase(def.name + "Key"),
+            constantName = camelToScreamingSnakeCase(def.getName() + "Key"),
             outerKeyType = outerKeyType,
-            keyName = def.name,
+            keyName = def.getName(),
             keyType = keyType,
             data = data
         )
@@ -117,10 +117,10 @@ class ExceptionsGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent?{
-        val exceptions = module.interfaces
-            .flatMap { it.methods }
-            .flatMap { it.throws }
-            .map { it.name }
+        val exceptions = module.getInterfaces()
+            .flatMap { it.getMethods() }
+            .flatMap { it.getThrows() }
+            .map { it.getName() }
             .distinct()
 
         if (exceptions.isEmpty()) {
@@ -139,12 +139,12 @@ class EnumsGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent?{
-        if (module.enums.isEmpty()) {
+        if (module.getEnums().isEmpty()) {
             return null
         }
 
         return contentBuilder("enums.vm")
-            .put("enums", module.enums)
+            .put("enums", module.getEnums())
             .build()
     }
 }
@@ -159,12 +159,12 @@ class CustomTypesGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent?{
-        if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
+        if (module.getSimpleCustomTypes().isEmpty() && module.getComplexCustomTypes().isEmpty()) {
             return null
         }
 
-        val classNames = module.simpleCustomTypes.map { it.name } +
-            module.complexCustomTypes.map { it.name }
+        val classNames = module.getSimpleCustomTypes().map { it.getName() } +
+            module.getComplexCustomTypes().map { it.getName() }
 
         return contentBuilder("customTypes.vm")
             .put("classNames", classNames)
@@ -182,14 +182,14 @@ class CustomTypesMapperGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent?{
-        if (module.simpleCustomTypes.isEmpty() && module.complexCustomTypes.isEmpty()) {
+        if (module.getSimpleCustomTypes().isEmpty() && module.getComplexCustomTypes().isEmpty()) {
             return null
         }
 
         return contentBuilder("customTypesMapper.vm")
             .put("customTypes", ApiCustomTypes(
-                simpleList = module.simpleCustomTypes.map { apiTypeFactory.create(it) },
-                complexList = module.complexCustomTypes.map { apiTypeFactory.create(it) }
+                simpleList = module.getSimpleCustomTypes().map { apiTypeFactory.create(it) },
+                complexList = module.getComplexCustomTypes().map { apiTypeFactory.create(it) }
             ))
             .build()
     }
@@ -201,11 +201,11 @@ class SerializedCustomTypesGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent?{
-        if (module.complexCustomTypes.isEmpty()) {
+        if (module.getComplexCustomTypes().isEmpty()) {
             return null
         }
 
-        val complexCustomTypes = module.complexCustomTypes.map { apiTypeFactory.create<ComplexCustomApiType>(it) }
+        val complexCustomTypes = module.getComplexCustomTypes().map { apiTypeFactory.create<ComplexCustomApiType>(it) }
 
         return contentBuilder("serializedCustomTypes.vm")
             .put("complexCustomTypes", complexCustomTypes)

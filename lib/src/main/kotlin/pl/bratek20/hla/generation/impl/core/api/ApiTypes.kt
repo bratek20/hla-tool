@@ -49,7 +49,7 @@ open class StructureApiType(
 abstract class SimpleStructureApiType(
     val def: SimpleStructureDefinition,
     val boxedType: BaseApiType
-) : StructureApiType(def.name) {
+) : StructureApiType(def.getName()) {
 
     override fun serializableName(): String {
         return boxedType.name()
@@ -66,7 +66,7 @@ abstract class SimpleStructureApiType(
     }
 
     fun exampleValue(): String? {
-        return def.attributes.firstOrNull { it.name == "example" }?.value
+        return def.getAttributes().firstOrNull { it.getName() == "example" }?.getValue()
     }
 }
 
@@ -238,7 +238,7 @@ class EnumApiType(
     private val def: EnumDefinition,
 ) : ApiType() {
     override fun name(): String {
-        return def.name
+        return def.getName()
     }
 
     override fun serializableName(): String {
@@ -246,7 +246,7 @@ class EnumApiType(
     }
 
     fun defaultValue(): String {
-        return name() + "." + def.values.first()
+        return name() + "." + def.getValues().first()
     }
 
     override fun deserialize(variableName: String): String {
@@ -275,23 +275,23 @@ class ApiTypeFactory(
 
         val simpleVO = modules.findSimpleValueObject(type)
         val complexVO = modules.findComplexValueObject(type)
-        val isOptional = type.wrappers.contains(TypeWrapper.OPTIONAL)
-        val isList = type.wrappers.contains(TypeWrapper.LIST)
-        val isBaseType = isBaseType(type.name)
+        val isOptional = type.getWrappers().contains(TypeWrapper.OPTIONAL)
+        val isList = type.getWrappers().contains(TypeWrapper.LIST)
+        val isBaseType = isBaseType(type.getName())
         val enum = modules.findEnum(type)
         val simpleCustomType = modules.findSimpleCustomType(type)
         val complexCustomType = modules.findComplexCustomType(type)
         val dataVO = modules.findDataClass(type)
 
         val apiType = when {
-            isOptional -> OptionalApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.OPTIONAL)))
-            isList -> ListApiType(create(type.copy(wrappers = type.wrappers - TypeWrapper.LIST)))
-            simpleVO != null -> SimpleValueObjectApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.typeName)))
-            simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.typeName)))
-            complexVO != null -> ComplexValueObjectApiType(type.name, createSerializableTypeFields(complexVO.fields))
-            dataVO != null -> DataClassApiType(type.name, createSerializableTypeFields(dataVO.fields))
-            complexCustomType != null -> ComplexCustomApiType(type.name, createComplexCustomTypeFields(type.name, complexCustomType.fields))
-            isBaseType -> BaseApiType(ofBaseType(type.name))
+            isOptional -> OptionalApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.OPTIONAL)))
+            isList -> ListApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.LIST)))
+            simpleVO != null -> SimpleValueObjectApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.getTypeName())))
+            simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.getTypeName())))
+            complexVO != null -> ComplexValueObjectApiType(type.getName(), createSerializableTypeFields(complexVO.getFields()))
+            dataVO != null -> DataClassApiType(type.getName(), createSerializableTypeFields(dataVO.getFields()))
+            complexCustomType != null -> ComplexCustomApiType(type.getName(), createComplexCustomTypeFields(type.getName(), complexCustomType.getFields()))
+            isBaseType -> BaseApiType(ofBaseType(type.getName()))
             enum != null -> EnumApiType(enum)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
@@ -302,11 +302,11 @@ class ApiTypeFactory(
     }
 
     inline fun <reified T: SimpleStructureApiType> create(def: SimpleStructureDefinition): T {
-        return create(TypeDefinition(def.name, emptyList())) as T
+        return create(TypeDefinition(def.getName(), emptyList())) as T
     }
 
     inline fun <reified T: ComplexStructureApiType<*>> create(def: ComplexStructureDefinition): T {
-        return create(TypeDefinition(def.name, emptyList())) as T
+        return create(TypeDefinition(def.getName(), emptyList())) as T
     }
 
     private fun createBaseApiType(type: BaseType): BaseApiType {

@@ -22,20 +22,20 @@ fun diffGenerateArgs(given: GenerateArgs, expectedInit: ExpectedGenerateArgs.() 
     val result: MutableList<String> = mutableListOf()
 
     expected.moduleName?.let {
-        if (diffModuleName(given.moduleName, it) != "") { result.add(diffModuleName(given.moduleName, it, "${path}moduleName.")) }
+        if (diffModuleName(given.getModuleName(), it) != "") { result.add(diffModuleName(given.getModuleName(), it, "${path}moduleName.")) }
     }
 
     expected.modules?.let {
-        if (given.modules.size != it.size) { result.add("${path}modules size ${given.modules.size} != ${it.size}") }
-        given.modules.forEachIndexed { idx, entry -> if (diffModuleDefinition(entry, it[idx]) != "") { result.add(diffModuleDefinition(entry, it[idx], "${path}modules[${idx}].")) } }
+        if (given.getModules().size != it.size) { result.add("${path}modules size ${given.getModules().size} != ${it.size}") }
+        given.getModules().forEachIndexed { idx, entry -> if (diffModuleDefinition(entry, it[idx]) != "") { result.add(diffModuleDefinition(entry, it[idx], "${path}modules[${idx}].")) } }
     }
 
     expected.onlyUpdate?.let {
-        if (given.onlyUpdate != it) { result.add("${path}onlyUpdate ${given.onlyUpdate} != ${it}") }
+        if (given.getOnlyUpdate() != it) { result.add("${path}onlyUpdate ${given.getOnlyUpdate()} != ${it}") }
     }
 
     expected.profile?.let {
-        if (diffHlaProfile(given.profile, it) != "") { result.add(diffHlaProfile(given.profile, it, "${path}profile.")) }
+        if (diffHlaProfile(given.getProfile(), it) != "") { result.add(diffHlaProfile(given.getProfile(), it, "${path}profile.")) }
     }
 
     return result.joinToString("\n")
@@ -51,15 +51,15 @@ fun diffGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResu
     val result: MutableList<String> = mutableListOf()
 
     expected.main?.let {
-        if (diffDirectory(given.main, it) != "") { result.add(diffDirectory(given.main, it, "${path}main.")) }
+        if (diffDirectory(given.getMain(), it) != "") { result.add(diffDirectory(given.getMain(), it, "${path}main.")) }
     }
 
     expected.fixtures?.let {
-        if (diffDirectory(given.fixtures, it) != "") { result.add(diffDirectory(given.fixtures, it, "${path}fixtures.")) }
+        if (diffDirectory(given.getFixtures(), it) != "") { result.add(diffDirectory(given.getFixtures(), it, "${path}fixtures.")) }
     }
 
     expected.tests?.let {
-        if (diffDirectory(given.tests!!, it) != "") { result.add(diffDirectory(given.tests!!, it, "${path}tests.")) }
+        if (diffDirectory(given.getTests()!!, it) != "") { result.add(diffDirectory(given.getTests()!!, it, "${path}tests.")) }
     }
 
     return result.joinToString("\n")

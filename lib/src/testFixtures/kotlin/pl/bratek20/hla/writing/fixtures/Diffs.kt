@@ -22,19 +22,19 @@ fun diffWriteArgs(given: WriteArgs, expectedInit: ExpectedWriteArgs.() -> Unit, 
     val result: MutableList<String> = mutableListOf()
 
     expected.hlaFolderPath?.let {
-        if (diffPath(given.hlaFolderPath, it) != "") { result.add(diffPath(given.hlaFolderPath, it, "${path}hlaFolderPath.")) }
+        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
     }
 
     expected.generateResult?.let {
-        if (diffGenerateResult(given.generateResult, it) != "") { result.add(diffGenerateResult(given.generateResult, it, "${path}generateResult.")) }
+        if (diffGenerateResult(given.getGenerateResult(), it) != "") { result.add(diffGenerateResult(given.getGenerateResult(), it, "${path}generateResult.")) }
     }
 
     expected.profile?.let {
-        if (diffHlaProfile(given.profile, it) != "") { result.add(diffHlaProfile(given.profile, it, "${path}profile.")) }
+        if (diffHlaProfile(given.getProfile(), it) != "") { result.add(diffHlaProfile(given.getProfile(), it, "${path}profile.")) }
     }
 
     expected.onlyUpdate?.let {
-        if (given.onlyUpdate != it) { result.add("${path}onlyUpdate ${given.onlyUpdate} != ${it}") }
+        if (given.getOnlyUpdate() != it) { result.add("${path}onlyUpdate ${given.getOnlyUpdate()} != ${it}") }
     }
 
     return result.joinToString("\n")

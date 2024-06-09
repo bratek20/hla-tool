@@ -7,14 +7,72 @@ import pl.bratek20.hla.directory.api.*
 import pl.bratek20.hla.facade.api.*
 
 data class GenerateArgs(
-    val moduleName: ModuleName,
-    val modules: List<ModuleDefinition>,
-    val onlyUpdate: Boolean,
-    val profile: HlaProfile,
-)
+    private val moduleName: String,
+    private val modules: List<ModuleDefinition>,
+    private val onlyUpdate: Boolean,
+    private val profile: HlaProfile,
+) {
+    fun getModuleName(): ModuleName {
+        return ModuleName(this.moduleName)
+    }
+
+    fun getModules(): List<ModuleDefinition> {
+        return this.modules
+    }
+
+    fun getOnlyUpdate(): Boolean {
+        return this.onlyUpdate
+    }
+
+    fun getProfile(): HlaProfile {
+        return this.profile
+    }
+
+    companion object {
+        fun create(
+            moduleName: ModuleName,
+            modules: List<ModuleDefinition>,
+            onlyUpdate: Boolean,
+            profile: HlaProfile,
+        ): GenerateArgs {
+            return GenerateArgs(
+                moduleName = moduleName.value,
+                modules = modules,
+                onlyUpdate = onlyUpdate,
+                profile = profile,
+            )
+        }
+    }
+}
 
 data class GenerateResult(
-    val main: Directory,
-    val fixtures: Directory,
-    val tests: Directory?,
-)
+    private val main: Directory,
+    private val fixtures: Directory,
+    private val tests: Directory?,
+) {
+    fun getMain(): Directory {
+        return this.main
+    }
+
+    fun getFixtures(): Directory {
+        return this.fixtures
+    }
+
+    fun getTests(): Directory? {
+        return this.tests
+    }
+
+    companion object {
+        fun create(
+            main: Directory,
+            fixtures: Directory,
+            tests: Directory?,
+        ): GenerateResult {
+            return GenerateResult(
+                main = main,
+                fixtures = fixtures,
+                tests = tests,
+            )
+        }
+    }
+}
