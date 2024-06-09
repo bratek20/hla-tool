@@ -39,6 +39,10 @@ class FilesManipulators(
                 "$padding},"
             )
 
+            if (currentLines.any { it.contains("Launch Test App - $moduleName Tests") }) {
+                return
+            }
+
             currentLines.addAll(indexToAdd, newLines)
 
             files.write(path, File(it.name, FileContent(currentLines)))
@@ -55,6 +59,10 @@ class FilesManipulators(
             val newLines = listOf(
                 "$padding\"test $moduleName\": \"npm run build_testapp && npm run run_testapp \\\" $moduleName\\\"\",",
             )
+
+            if (currentLines.any { it.contains("test $moduleName") }) {
+                return
+            }
 
             currentLines.addAll(indexToAdd, newLines)
 
@@ -85,25 +93,37 @@ class FilesManipulators(
             val currentLines = it.content.lines.toMutableList()
 
             val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
-            val indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
+            var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
             val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
-            val newLines = generateNewLines(directory, prefix, padding)
+
+            val newLines = mutableListOf<String>()
+            extractFiles(directory).forEach { item ->
+                newLines.add("")
+                item.fileNames.forEach { fileName ->
+                    newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
+                    val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName") }
+                    if (result) {
+                        indexToAdd--
+                    }
+                }
+            }
 
             currentLines.addAll(indexToAdd, newLines)
+            val indexesToRemove = mutableListOf<Int>()
+            currentLines.forEachIndexed { index, line ->
+                if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true) {
+                    indexesToRemove.add(index)
+                }
+            }
+            indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
+
+            val newFile = File(it.name, FileContent(currentLines))
+            if (newFile == it) {
+                return
+            }
 
             files.write(tsconfigPath, File(it.name, FileContent(currentLines)))
         }
-    }
-
-    private fun generateNewLines(directory: Directory, prefix: String, padding: String): List<String> {
-        val newLines = mutableListOf<String>()
-        extractFiles(directory).forEach { item ->
-            newLines.add("")
-            item.fileNames.forEach { fileName ->
-                newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
-            }
-        }
-        return newLines
     }
 
     data class TypeScriptPaths(val mainTsconfig: Path, val testTsconfig: Path)

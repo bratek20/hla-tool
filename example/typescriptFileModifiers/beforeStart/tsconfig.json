@@ -1,6 +1,7 @@
 {
     "files": [
         "Src/SomeModule/SomeClass.ts",
+        "Src/OtherModule/Impl/DataClasses.ts", //will be moved to proper place after start
         "Src/SomeModule/SomeClass2.ts",
     ]
 }
