@@ -437,4 +437,22 @@ class HlaFacadeTest {
         //then
         filesMock.assertWriteCount(0)
     }
+
+    @Test
+    fun shouldNotModifyTypeScriptFilesOnStartIfAlreadyChangesThere() {
+        //given
+        val (_, facade, filesMock) = setup()
+
+        val args = ModuleOperationArgs(
+            moduleName = ModuleName("OtherModule"),
+            profileName = ProfileName("typeScriptFileModifiersAfterStart"),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.startModule(args)
+
+        //then
+        filesMock.assertWriteCount(0)
+    }
 }

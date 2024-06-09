@@ -55,3 +55,18 @@ profiles:
       testTsconfigPath: "Tests"
       launchJsonPath: ""
       packageJsonPath: ""
+
+  - name: "typeScriptFileModifiersAfterStart"
+    language: "TYPE_SCRIPT"
+    paths:
+      project: "../typescriptFileModifiers/afterStart"
+      src:
+        main: "main"
+        test: "test"
+        fixtures: "fixtures"
+    onlyPatterns: [ ]
+    typeScript:
+      mainTsconfigPath: ""
+      testTsconfigPath: "Tests"
+      launchJsonPath: ""
+      packageJsonPath: ""
