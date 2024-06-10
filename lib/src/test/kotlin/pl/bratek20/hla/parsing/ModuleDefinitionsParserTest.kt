@@ -383,7 +383,7 @@ class ModuleDefinitionsParserTest {
                 }
             }
             implSubmodule = {
-                data = listOf {
+                dataClasses = listOf {
                     name = "SomeImplData"
                     fields = listOf {
                         name = "value"

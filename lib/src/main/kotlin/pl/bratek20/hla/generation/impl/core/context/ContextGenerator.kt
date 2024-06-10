@@ -18,7 +18,7 @@ class ImplContextGenerator: FileGenerator() {
     override fun generateFileContent(): FileContent {
         val factory = InterfaceViewFactory(apiTypeFactory)
         return contentBuilder("impl.vm")
-            .put("interfaces", factory.create(module.interfaces))
+            .put("interfaces", factory.create(module.getInterfaces()))
             .build()
     }
 }
@@ -37,7 +37,7 @@ class ContextGenerator: DirectoryGenerator() {
     }
 
     override fun shouldGenerateDirectory(): Boolean {
-        return module.interfaces.isNotEmpty()
+        return module.getInterfaces().isNotEmpty()
     }
 
     override fun getFileGenerators(): List<FileGenerator> {

@@ -129,7 +129,7 @@ class HlaFacadeTest {
 
         //when
         facade.startModule(
-            ModuleOperationArgs(
+            ModuleOperationArgs.create(
                 moduleName = ModuleName(moduleName),
                 profileName = ProfileName(profileName),
                 hlaFolderPath = hlaFolderPath(),
@@ -161,10 +161,10 @@ class HlaFacadeTest {
         val exampleDirectory = directories.read(Path(examplePath))
 
         val compareResult = directories.compare(writtenDirectory, exampleDirectory)
-        val failMessage = "${compareResult.differences.size} differences found!\n" +
-                compareResult.differences.joinToString("\n")
+        val failMessage = "${compareResult.getDifferences().size} differences found!\n" +
+                compareResult.getDifferences().joinToString("\n")
 
-        assertThat(compareResult.same)
+        assertThat(compareResult.getSame())
             .withFailMessage(failMessage)
             .isTrue()
     }
@@ -174,10 +174,10 @@ class HlaFacadeTest {
         val exampleFile = files.read(Path(examplePath))
 
         val compareResult = files.compare(writtenFile, exampleFile)
-        val failMessage = "${compareResult.differences.size} differences found!\n" +
-                compareResult.differences.joinToString("\n")
+        val failMessage = "${compareResult.getDifferences().size} differences found!\n" +
+                compareResult.getDifferences().joinToString("\n")
 
-        assertThat(compareResult.same)
+        assertThat(compareResult.getSame())
             .withFailMessage(failMessage)
             .isTrue()
     }
@@ -187,7 +187,7 @@ class HlaFacadeTest {
         //given
         val (directoriesMock, facade) = setup()
 
-        val args = ModuleOperationArgs(
+        val args = ModuleOperationArgs.create(
             moduleName = ModuleName("SomeModule"),
             profileName = ProfileName("kotlin"),
             hlaFolderPath = hlaFolderPath(),
@@ -251,16 +251,16 @@ class HlaFacadeTest {
                 "Directory somemodule/$it not found in second directory"
             }
 
-        assertThat(mainCompareResult.differences).containsExactlyInAnyOrderElementsOf(
+        assertThat(mainCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
             expectedMainDifference
         )
 
-        assertThat(fixturesCompareResult.differences).isEmpty()
+        assertThat(fixturesCompareResult.getDifferences()).isEmpty()
 
         val expectedTestsDifference = expectedTestDirectoriesToSkipUpdate.map {
             "Directory somemodule/$it not found in second directory"
         }
-        assertThat(testsCompareResult.differences).containsExactlyInAnyOrderElementsOf(
+        assertThat(testsCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
             expectedTestsDifference
         )
     }
@@ -270,7 +270,7 @@ class HlaFacadeTest {
         //given
         val (directoriesMock, facade) = setup()
 
-        val args = ModuleOperationArgs(
+        val args = ModuleOperationArgs.create(
             moduleName = ModuleName("SomeModule"),
             profileName = ProfileName("kotlinOnlyParts"),
             hlaFolderPath = hlaFolderPath(),
@@ -319,7 +319,7 @@ class HlaFacadeTest {
         //given
         val (directoriesMock, facade) = setup()
 
-        val args = AllModulesOperationArgs(
+        val args = AllModulesOperationArgs.create(
             profileName = ProfileName("kotlin"),
             hlaFolderPath = hlaFolderPath(),
         )
@@ -336,7 +336,7 @@ class HlaFacadeTest {
         //given
         val (directoriesMock, facade) = setup()
 
-        val args = ModuleOperationArgs(
+        val args = ModuleOperationArgs.create(
             moduleName = ModuleName("SomeModule"),
             profileName = ProfileName("kotlinNoWeb"),
             hlaFolderPath = hlaFolderPath(),
@@ -360,7 +360,7 @@ class HlaFacadeTest {
         //given
         val (_, facade, filesMock) = setup()
 
-        val args = ModuleOperationArgs(
+        val args = ModuleOperationArgs.create(
             moduleName = ModuleName("OtherModule"),
             profileName = ProfileName("typeScriptFileModifiers"),
             hlaFolderPath = hlaFolderPath(),
@@ -425,7 +425,7 @@ class HlaFacadeTest {
         //given
         val (_, facade, filesMock) = setup()
 
-        val args = ModuleOperationArgs(
+        val args = ModuleOperationArgs.create(
             moduleName = ModuleName("OtherModule"),
             profileName = ProfileName("typeScriptFileModifiers"),
             hlaFolderPath = hlaFolderPath(),
@@ -443,7 +443,7 @@ class HlaFacadeTest {
         //given
         val (_, facade, filesMock) = setup()
 
-        val args = ModuleOperationArgs(
+        val args = ModuleOperationArgs.create(
             moduleName = ModuleName("OtherModule"),
             profileName = ProfileName("typeScriptFileModifiersAfterStart"),
             hlaFolderPath = hlaFolderPath(),

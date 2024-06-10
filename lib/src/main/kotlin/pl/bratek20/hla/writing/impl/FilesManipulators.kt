@@ -11,7 +11,7 @@ class FilesManipulators(
 ) {
     fun manipulate(profile: HlaProfile, rootPath: Path, generateResult: GenerateResult, onlyUpdate: Boolean) {
         if (profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && profile.getTypeScript() != null && !onlyUpdate) {
-            val moduleName = generateResult.main.name.value
+            val moduleName = generateResult.getMain().getName().value
             updateTsConfigFiles(rootPath, profile.getTypeScript()!!, generateResult)
             updatePackageJson(rootPath, profile.getTypeScript()!!, moduleName)
             updateLaunchJson(rootPath, profile.getTypeScript()!!, moduleName)
@@ -21,7 +21,7 @@ class FilesManipulators(
     private fun updateLaunchJson(rootPath: Path, info: TypeScriptConfig, moduleName: String) {
         val path = rootPath.add(info.getLaunchJsonPath())
         files.read(path.add(FileName("launch.json"))).let {
-            val currentLines = it.content.lines.toMutableList()
+            val currentLines = it.getContent().lines.toMutableList()
             val startIndex = currentLines.indexOfFirst { it.contains("\"configurations\"") }
             val paddingIndex = currentLines.subList(startIndex, currentLines.size).indexOfLast { it.contains("workspaceFolder") } + startIndex + 2
             val padding = currentLines[paddingIndex].takeWhile { it == ' ' }
@@ -45,14 +45,14 @@ class FilesManipulators(
 
             currentLines.addAll(indexToAdd, newLines)
 
-            files.write(path, File(it.name, FileContent(currentLines)))
+            files.write(path, File.create(it.getName(), FileContent(currentLines)))
         }
     }
 
     private fun updatePackageJson(rootPath: Path, info: TypeScriptConfig, moduleName: String) {
         val path = rootPath.add(info.getPackageJsonPath())
         files.read(path.add(FileName("package.json"))).let {
-            val currentLines = it.content.lines.toMutableList()
+            val currentLines = it.getContent().lines.toMutableList()
             val startIndex = currentLines.indexOfFirst { it.contains("\"scripts\"") }
             val indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfLast { it.contains("test ") } + startIndex + 1
             val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
@@ -66,7 +66,7 @@ class FilesManipulators(
 
             currentLines.addAll(indexToAdd, newLines)
 
-            files.write(path, File(it.name, FileContent(currentLines)))
+            files.write(path, File.create(it.getName(), FileContent(currentLines)))
         }
     }
 
@@ -76,21 +76,22 @@ class FilesManipulators(
             testTsconfig = rootPath.add(info.getTestTsconfigPath())
         )
 
-        updateTsConfigFile(typeScriptPaths.mainTsconfig, generateResult.main, "Src/${generateResult.main.name.value}/")
+        updateTsConfigFile(typeScriptPaths.mainTsconfig, generateResult.getMain(), "Src/${generateResult.getMain().getName().value}/")
 
-        var fixturesAndTestDir = generateResult.fixtures.copy()
-        if (generateResult.tests != null) {
-            fixturesAndTestDir = Directory(
-                name = generateResult.fixtures.name,
-                directories = generateResult.fixtures.directories + generateResult.tests.directories
+        var fixturesAndTestDir = generateResult.getFixtures().copy()
+        if (generateResult.getTests() != null) {
+            fixturesAndTestDir = Directory.create(
+                name = generateResult.getFixtures().getName(),
+                files = emptyList(),
+                directories = generateResult.getFixtures().getDirectories() + generateResult.getTests()!!.getDirectories()
             )
         }
-        updateTsConfigFile(typeScriptPaths.testTsconfig, fixturesAndTestDir, "${generateResult.main.name.value}/")
+        updateTsConfigFile(typeScriptPaths.testTsconfig, fixturesAndTestDir, "${generateResult.getMain().getName().value}/")
     }
 
     private fun updateTsConfigFile(tsconfigPath: Path, directory: Directory, prefix: String) {
         files.read(tsconfigPath.add(FileName("tsconfig.json"))).let {
-            val currentLines = it.content.lines.toMutableList()
+            val currentLines = it.getContent().lines.toMutableList()
 
             val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
             var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
@@ -117,12 +118,12 @@ class FilesManipulators(
             }
             indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
 
-            val newFile = File(it.name, FileContent(currentLines))
+            val newFile = File.create(it.getName(), FileContent(currentLines))
             if (newFile == it) {
                 return
             }
 
-            files.write(tsconfigPath, File(it.name, FileContent(currentLines)))
+            files.write(tsconfigPath, File.create(it.getName(), FileContent(currentLines)))
         }
     }
 
@@ -130,8 +131,8 @@ class FilesManipulators(
     data class ExtractedFile(val submoduleName: String, val fileNames: List<String>)
 
     private fun extractFiles(dir: Directory): List<ExtractedFile> {
-        return dir.directories.map { subDir ->
-            ExtractedFile(subDir.name.value, subDir.files.map { it.name.value })
+        return dir.getDirectories().map { subDir ->
+            ExtractedFile(subDir.getName().value, subDir.getFiles().map { it.getName().value })
         }
     }
 }

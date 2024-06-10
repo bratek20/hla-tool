@@ -23,14 +23,14 @@ class LogicGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        if (module.interfaces.isEmpty()) {
+        if (module.getInterfaces().isEmpty()) {
             return null
         }
 
         val factory = InterfaceViewFactory(apiTypeFactory)
 
         return contentBuilder("logic.vm")
-            .put("interfaces", factory.create(module.interfaces))
+            .put("interfaces", factory.create(module.getInterfaces()))
             .build()
     }
 }
@@ -52,7 +52,7 @@ class ImplDataClassesGenerator: DataClassesGenerator() {
                 lines[index] = "    ${lines[index]}"
             }
         }
-        lines.add(0, "namespace ${module.name.value}.Impl {")
+        lines.add(0, "namespace ${module.getName().value}.Impl {")
         lines.add("}")
         return FileContent(lines)
     }
@@ -62,7 +62,7 @@ class ImplDataClassesGenerator: DataClassesGenerator() {
     }
 
     override fun dataClasses(): List<ComplexStructureDefinition> {
-        return module.implSubmodule.data
+        return module.getImplSubmodule().getDataClasses()
     }
 }
 
@@ -76,7 +76,7 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
             return FileContent(lines)
         }
 
-        lines[0] = "namespace ${module.name.value}.Impl {"
+        lines[0] = "namespace ${module.getName().value}.Impl {"
         return FileContent(lines)
     }
 
@@ -85,7 +85,7 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
     }
 
     override fun dataKeys(): List<KeyDefinition> {
-        return module.implSubmodule.dataKeys
+        return module.getImplSubmodule().getDataKeys()
     }
 }
 
@@ -99,8 +99,8 @@ class ImplGenerator: DirectoryGenerator() {
     }
 
     override fun shouldGenerateDirectory(): Boolean {
-        val generateLogic = module.interfaces.isNotEmpty()
-        val generateData = module.implSubmodule.data.isNotEmpty()
+        val generateLogic = module.getInterfaces().isNotEmpty()
+        val generateData = module.getImplSubmodule().getDataClasses().isNotEmpty()
         return generateLogic || generateData
     }
 

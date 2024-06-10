@@ -34,7 +34,7 @@ public class Main {
     }
 
     private static ModuleOperationArgs parseModuleOperationArgs(String[] args) {
-        return new ModuleOperationArgs(
+        return ModuleOperationArgs.Companion.create(
             new Path(args[1]),
             new ProfileName(args[2]),
             new ModuleName(args[3])
@@ -42,7 +42,7 @@ public class Main {
     }
 
     private static AllModulesOperationArgs parseAllModulesOperationArgs(String[] args) {
-        return new AllModulesOperationArgs(
+        return AllModulesOperationArgs.Companion.create(
             new Path(args[1]),
             new ProfileName(args[2])
         );

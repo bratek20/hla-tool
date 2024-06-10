@@ -44,7 +44,7 @@ class FilesMock: Files {
     fun assertWriteAndGetFile(writeNumber: Int, expectedPath: String, expectedName: String): File {
         val (path, file) = fileWrites[writeNumber - 1]
         assertThat(path).isEqualTo(Path(expectedPath))
-        assertThat(file.name.value).isEqualTo(expectedName)
+        assertThat(file.getName().value).isEqualTo(expectedName)
         return file
     }
 

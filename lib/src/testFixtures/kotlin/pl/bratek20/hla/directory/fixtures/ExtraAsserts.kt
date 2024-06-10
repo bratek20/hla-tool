@@ -11,6 +11,6 @@ fun assertDirectoryExt(given: Directory, expectedOv: ExpectedDirectoryExt.() -> 
     val expected = ExpectedDirectoryExt().apply(expectedOv)
 
     if (expected.hasNoDirectories != null) {
-        assertThat(given.directories.find { it.name.value == expected.hasNoDirectories }).isNull()
+        assertThat(given.getDirectories().find { it.getName().value == expected.hasNoDirectories }).isNull()
     }
 }

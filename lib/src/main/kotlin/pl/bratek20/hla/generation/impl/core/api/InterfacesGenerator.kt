@@ -45,13 +45,13 @@ class InterfaceViewFactory(
 
     fun create(definition: InterfaceDefinition): InterfaceView {
         return InterfaceView(
-            name = definition.name,
-            methods = definition.methods.map { method ->
+            name = definition.getName(),
+            methods = definition.getMethods().map { method ->
                 MethodView(
-                    name = method.name,
-                    returnType = toViewType(method.returnType),
-                    args = method.args.map { ArgumentView(it.name, toViewType(it.type)) },
-                    throws = method.throws.map { it.name }
+                    name = method.getName(),
+                    returnType = toViewType(method.getReturnType()),
+                    args = method.getArgs().map { ArgumentView(it.getName(), toViewType(it.getType())) },
+                    throws = method.getThrows().map { it.getName() }
                 )
             }
         )
@@ -68,14 +68,14 @@ class InterfacesGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent?{
-        if (module.interfaces.isEmpty()) {
+        if (module.getInterfaces().isEmpty()) {
             return null
         }
 
         val factory = InterfaceViewFactory(apiTypeFactory)
 
         return contentBuilder("interfaces.vm")
-            .put("interfaces", factory.create(module.interfaces))
+            .put("interfaces", factory.create(module.getInterfaces()))
             .build()
     }
 

@@ -14,14 +14,14 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val directories = DirectoriesLogic()
 
         val modulesDir = directories.read(path)
-        return modulesDir.files
-            .filter { it.name.value.endsWith(".module") }
+        return modulesDir.getFiles()
+            .filter { it.getName().value.endsWith(".module") }
             .map { parseModuleFile(it) }
     }
 
     private fun parseModuleFile(file: File): ModuleDefinition {
-        val moduleName = ModuleName(file.name.value.split(".module").get(0))
-        val elements = parseElements(file.content)
+        val moduleName = ModuleName(file.getName().value.split(".module").get(0))
+        val elements = parseElements(file.getContent())
         val valueObjects = parseStructures("ValueObjects", elements)
         val dataClasses = parseComplexStructureDefinitions("DataClasses", elements)
         val interfaces = parseInterfaces(elements)
@@ -31,7 +31,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val dataKeys = parseKeys("DataKeys", elements)
         val implSubmodule = parseImplSubmodule(elements)
 
-        return ModuleDefinition(
+        return ModuleDefinition.create(
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
             complexValueObjects = valueObjects.complex,
@@ -326,12 +326,12 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             val dataClasses = parseComplexStructureDefinitions("DataClasses", implSection.elements)
             val keys = parseKeys("DataKeys", implSection.elements)
             return ImplSubmoduleDefinition(
-                data = dataClasses,
+                dataClasses = dataClasses,
                 dataKeys = keys
             )
         }
         return ImplSubmoduleDefinition(
-            data = emptyList(),
+            dataClasses = emptyList(),
             dataKeys = emptyList()
         )
     }

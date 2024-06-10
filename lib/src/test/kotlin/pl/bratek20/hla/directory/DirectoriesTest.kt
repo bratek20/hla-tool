@@ -95,7 +95,7 @@ class DirectoriesTest: TempDirTest() {
         //TODO api.readFile
         val result = directories.read(Path("src/test/resources/directory/subdir"))
         //TODO proper setup for this assertion
-        assertThat(result.files[0].content.lines.size).isEqualTo(4)
+        assertThat(result.getFiles()[0].getContent().lines.size).isEqualTo(4)
     }
 
     @Test

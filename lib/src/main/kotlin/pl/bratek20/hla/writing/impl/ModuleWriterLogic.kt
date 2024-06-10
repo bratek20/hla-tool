@@ -15,9 +15,9 @@ class ModuleWriterLogic(
 ): ModuleWriter {
 
     override fun write(args: WriteArgs) {
-        val rootPath = args.getHlaFolderPath().add(args.profile.getPaths().getProject())
-        val generateResult = args.generateResult
-        val profile = args.profile
+        val rootPath = args.getHlaFolderPath().add(args.getProfile().getPaths().getProject())
+        val generateResult = args.getGenerateResult()
+        val profile = args.getProfile()
 
         val src = profile.getPaths().getSrc()
         val paths = Paths(
@@ -28,9 +28,9 @@ class ModuleWriterLogic(
 
         writeDirectories(paths, generateResult)
 
-        filesManipulators.manipulate(profile, rootPath, generateResult, args.onlyUpdate)
+        filesManipulators.manipulate(profile, rootPath, generateResult, args.getOnlyUpdate())
 
-        if (shouldHandleDebug(profile, generateResult.main.name.value)) {
+        if (shouldHandleDebug(profile, generateResult.getMain().getName().value)) {
             handleDebug(generateResult)
         }
     }
@@ -38,9 +38,9 @@ class ModuleWriterLogic(
 
 
     private fun writeDirectories(paths: Paths, generateResult: GenerateResult) {
-        directories.write(paths.main, generateResult.main)
-        directories.write(paths.fixtures, generateResult.fixtures)
-        generateResult.tests?.let { directories.write(paths.test, it) }
+        directories.write(paths.main, generateResult.getMain())
+        directories.write(paths.fixtures, generateResult.getFixtures())
+        generateResult.getTests()?.let { directories.write(paths.test, it) }
     }
 
     private fun shouldHandleDebug(profile: HlaProfile, moduleName: String): Boolean {
@@ -51,9 +51,9 @@ class ModuleWriterLogic(
         val debugPath = Path("../tmp")
         val dirs = DirectoriesLogic()
         dirs.delete(debugPath)
-        dirs.write(debugPath, generateResult.main)
-        dirs.write(debugPath, generateResult.fixtures)
-        generateResult.tests?.let { dirs.write(debugPath, it) }
+        dirs.write(debugPath, generateResult.getMain())
+        dirs.write(debugPath, generateResult.getFixtures())
+        generateResult.getTests()?.let { dirs.write(debugPath, it) }
     }
 
     private data class Paths(val main: Path, val fixtures: Path, val test: Path)

@@ -4,7 +4,7 @@ import pl.bratek20.hla.definitions.impl.HlaModules
 
 fun handleReferencing(modules: HlaModules, typeName: String, base: String, submodule: String?): String {
     val module = modules.getTypeModule(typeName);
-    return if (module == modules.current.name) {
+    return if (module == modules.current.getName()) {
         base
     } else {
         if (submodule == null) {

@@ -23,7 +23,7 @@ class PackageNameAndImportsExtension(
 
 
         builder
-            .put("packageName", "$rootPackage.${c.module.name.value.lowercase()}")
+            .put("packageName", "$rootPackage.${c.module.getName().value.lowercase()}")
             .put("imports", imports)
     }
 }
