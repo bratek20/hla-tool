@@ -16,6 +16,7 @@ data class SomeId2(
 data class SomeProperty(
     private val other: OtherProperty,
     private val id2: Int?,
+    private val range: SerializedDateRange?,
 ) {
     fun getOther(): OtherProperty {
         return this.other
@@ -25,14 +26,20 @@ data class SomeProperty(
         return this.id2?.let { it -> SomeId2(it) }
     }
 
+    fun getRange(): DateRange? {
+        return this.range?.let { it -> it.toCustomType() }
+    }
+
     companion object {
         fun create(
             other: OtherProperty,
             id2: SomeId2?,
+            range: DateRange?,
         ): SomeProperty {
             return SomeProperty(
                 other = other,
                 id2 = id2?.let { it -> it.value },
+                range = range?.let { it -> SerializedDateRange.fromCustomType(it) },
             )
         }
     }

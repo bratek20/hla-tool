@@ -14,6 +14,7 @@ namespace SomeModule {
     export interface ExpectedSomeProperty {
         other?: OtherModule.ExpectedOtherProperty,
         id2?: number,
+        range?: TypesModule.ExpectedDateRange,
     }
     export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
         const result: string[] = []
@@ -24,6 +25,10 @@ namespace SomeModule {
 
         if (expected.id2 !== undefined) {
             if (diffSomeId2(given.getId2().get(), expected.id2) != "") { result.push(diffSomeId2(given.getId2().get(), expected.id2, `${path}id2.`)) }
+        }
+
+        if (expected.range !== undefined) {
+            if (TypesModule.diffDateRange(given.getRange().get(), expected.range) != "") { result.push(TypesModule.diffDateRange(given.getRange().get(), expected.range, `${path}range.`)) }
         }
 
         return result.join("\n")

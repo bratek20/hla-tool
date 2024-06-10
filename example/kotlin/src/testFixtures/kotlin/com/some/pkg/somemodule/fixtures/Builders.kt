@@ -12,12 +12,14 @@ import com.some.pkg.somemodule.api.*
 data class SomePropertyDef(
     var other: (OtherPropertyDef.() -> Unit) = {},
     var id2: Int? = null,
+    var range: (DateRangeDef.() -> Unit)? = null,
 )
 fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
     val def = SomePropertyDef().apply(init)
     return SomeProperty.create(
         other = otherProperty(def.other),
         id2 = def.id2?.let { it -> SomeId2(it) },
+        range = def.range?.let { it -> dateRange(it) },
     )
 }
 

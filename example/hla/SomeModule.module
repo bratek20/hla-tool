@@ -14,6 +14,7 @@ ValueObjects
     SomeProperty
         other: OtherProperty
         id2: SomeId2?
+        range: DateRange?
 
     SomeProperty2
         value: string (public)

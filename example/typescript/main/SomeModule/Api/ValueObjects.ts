@@ -31,14 +31,17 @@ class SomeId2 {
 class SomeProperty {
     private other = new OtherProperty
     private id2? = NUMBER
+    private range? = new SerializedDateRange
 
     static create(
         other: OtherProperty,
         id2: Optional<SomeId2>,
+        range: Optional<DateRange>,
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
         instance.id2 = id2.map(it => it.value).orElse(undefined)
+        instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
         return instance
     }
 
@@ -48,6 +51,10 @@ class SomeProperty {
 
     getId2(): Optional<SomeId2> {
         return Optional.of(this.id2).map(it => new SomeId2(it))
+    }
+
+    getRange(): Optional<DateRange> {
+        return Optional.of(this.range).map(it => it.toCustomType())
     }
 }
 

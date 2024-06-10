@@ -86,6 +86,14 @@ class KotlinTypes: LanguageTypes {
         return "$variableName?.let { it -> $className(it) }"
     }
 
+    override fun serializeOptionalForComplexCustomType(variableName: String, className: String): String {
+        return "$variableName?.let { it -> $className.fromCustomType(it) }"
+    }
+
+    override fun deserializeOptionalForComplexCustomType(variableName: String): String {
+        return "$variableName?.let { it -> it.toCustomType() }"
+    }
+
     override fun emptyOptional(): String {
         return "null"
     }

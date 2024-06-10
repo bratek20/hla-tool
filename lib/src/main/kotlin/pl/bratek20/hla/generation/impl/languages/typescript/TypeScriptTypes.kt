@@ -88,6 +88,14 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
         return "Optional.of($variableName).map(it => new $className(it))"
     }
 
+    override fun serializeOptionalForComplexCustomType(variableName: String, className: String): String {
+        return "$variableName.map(it => $className.fromCustomType(it)).orElse(undefined)"
+    }
+
+    override fun deserializeOptionalForComplexCustomType(variableName: String): String {
+        return "Optional.of($variableName).map(it => it.toCustomType())"
+    }
+
     override fun emptyOptional(): String {
         return "Optional.empty()"
     }
