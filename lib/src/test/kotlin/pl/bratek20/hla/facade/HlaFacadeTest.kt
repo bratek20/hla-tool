@@ -90,6 +90,16 @@ class HlaFacadeTest {
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("TypesModule")
                 ),
+                Arguments.of(
+                    "SimpleModule",
+                    KOTLIN_PROFILE,
+                    kotlinTestPaths("simplemodule")
+                ),
+                Arguments.of(
+                    "SimpleModule",
+                    TYPE_SCRIPT_PROFILE,
+                    typescriptTestPaths("SimpleModule")
+                ),
             )
         }
     }
@@ -328,7 +338,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(9)
+        directoriesMock.assertWriteCount(12)
     }
 
     @Test

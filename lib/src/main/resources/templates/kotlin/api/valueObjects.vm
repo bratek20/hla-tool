@@ -4,13 +4,14 @@ package ${packageName}.api
 #foreach($import in $imports)
 import ${import}.api.*
 #end#end
-#foreach($vo in $simpleValueObjects)
 
+#foreach($vo in $simpleValueObjects)
 data class ${vo.name()}(
     val value: ${vo.serializableName()}
-)
-#end
+)#if($foreach.hasNext || $complexValueObjects.size() > 0)
 
+
+#end#end
 #foreach($vo in $complexValueObjects)
 data class ${vo.name()}(
     #foreach($field in $vo.fields)

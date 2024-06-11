@@ -16,7 +16,7 @@ class ValueObjectsGenerator: FileGenerator() {
         val simpleValueObjects = module.getSimpleValueObjects().map { apiTypeFactory.create<SimpleValueObjectApiType>(it) }
         val complexValueObjects = module.getComplexValueObjects().map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
 
-        if (complexValueObjects.isEmpty()) {
+        if (simpleValueObjects.isEmpty() && complexValueObjects.isEmpty()) {
             return null
         }
 

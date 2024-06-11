@@ -11,10 +11,10 @@ class ${nt.name()} {
     toString(): string {
         return this.value.toString()
     }
-}
+}#if($foreach.hasNext || $complexValueObjects.size() > 0)
 
-#end
-#foreach($p in $complexValueObjects)
+
+#end#end#foreach($p in $complexValueObjects)
 class ${p.name()} {
 #foreach($field in $p.fields)
     $field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
