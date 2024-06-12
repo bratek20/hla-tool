@@ -1,11 +1,11 @@
 {
     "include": [
-        "SomeModule/SomeClassTest.ts",
+        "test/SomeModule/SomeClassTest.ts",
 
-        "OtherModule/Fixtures/Builders.ts",
-        "OtherModule/Fixtures/Diffs.ts",
-        "OtherModule/Fixtures/Asserts.ts",
+        "fixtures/OtherModule/Fixtures/Builders.ts",
+        "fixtures/OtherModule/Fixtures/Diffs.ts",
+        "fixtures/OtherModule/Fixtures/Asserts.ts",
 
-        "OtherModule/Tests/ApiTest.ts",
+        "test/OtherModule/Tests/ApiTest.ts",
     ]
 }

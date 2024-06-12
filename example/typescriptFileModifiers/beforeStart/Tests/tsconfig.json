@@ -1,6 +1,6 @@
 {
     "include": [
-        "SomeModule/SomeClassTest.ts",
-        "OtherModule/Tests/ApiTest.ts", //will be moved to proper place after start
+        "test/SomeModule/SomeClassTest.ts",
+        "test/OtherModule/Tests/ApiTest.ts", //will be moved to proper place after start
     ]
 }

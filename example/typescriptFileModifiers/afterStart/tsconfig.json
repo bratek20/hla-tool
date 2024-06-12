@@ -1,14 +1,14 @@
 {
     "files": [
-        "Src/SomeModule/SomeClass.ts",
-        "Src/SomeModule/SomeClass2.ts",
+        "main/SomeModule/SomeClass.ts",
+        "main/SomeModule/SomeClass2.ts",
 
-        "Src/OtherModule/Api/ValueObjects.ts",
-        "Src/OtherModule/Api/DataClasses.ts",
-        "Src/OtherModule/Api/PropertyKeys.ts",
-        "Src/OtherModule/Api/DataKeys.ts",
+        "main/OtherModule/Api/ValueObjects.ts",
+        "main/OtherModule/Api/DataClasses.ts",
+        "main/OtherModule/Api/PropertyKeys.ts",
+        "main/OtherModule/Api/DataKeys.ts",
 
-        "Src/OtherModule/Impl/DataClasses.ts",
-        "Src/OtherModule/Impl/DataKeys.ts",
+        "main/OtherModule/Impl/DataClasses.ts",
+        "main/OtherModule/Impl/DataKeys.ts",
     ]
 }
