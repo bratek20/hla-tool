@@ -47,11 +47,11 @@ class HlaFacadeTest {
         fun typescriptTestPaths(moduleName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/typescript/main/$moduleName",
-                exampleFixturesPath = "../example/typescript/fixtures/$moduleName",
-                exampleTestsPath = "../example/typescript/test/$moduleName",
+                exampleFixturesPath = "../example/typescript/Tests/fixtures/$moduleName",
+                exampleTestsPath = "../example/typescript/Tests/test/$moduleName",
                 expectedMainPath = "../example/hla/../typescript/main",
-                expectedFixturesPath = "../example/hla/../typescript/fixtures",
-                expectedTestsPath = "../example/hla/../typescript/test",
+                expectedFixturesPath = "../example/hla/../typescript/Tests/fixtures",
+                expectedTestsPath = "../example/hla/../typescript/Tests/test",
             )
         }
 

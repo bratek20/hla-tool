@@ -25,8 +25,8 @@ profiles:
       project: "../typescript"
       src:
         main: "main"
-        test: "test"
-        fixtures: "fixtures"
+        test: "Tests/test"
+        fixtures: "Tests/fixtures"
     onlyPatterns: []
 
   - name: "kotlinOnlyParts"
@@ -47,8 +47,8 @@ profiles:
       project: "../typescriptFileModifiers/beforeStart"
       src:
         main: "main"
-        test: "test"
-        fixtures: "fixtures"
+        test: "Tests/test"
+        fixtures: "Tests/fixtures"
     onlyPatterns: []
     typeScript:
       mainTsconfigPath: ""
@@ -62,8 +62,8 @@ profiles:
       project: "../typescriptFileModifiers/afterStart"
       src:
         main: "main"
-        test: "test"
-        fixtures: "fixtures"
+        test: "Tests/test"
+        fixtures: "Tests/fixtures"
     onlyPatterns: [ ]
     typeScript:
       mainTsconfigPath: ""
