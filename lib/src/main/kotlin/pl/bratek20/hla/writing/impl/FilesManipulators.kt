@@ -12,7 +12,7 @@ class FilesManipulators(
     fun manipulate(profile: HlaProfile, rootPath: Path, generateResult: GenerateResult, onlyUpdate: Boolean) {
         if (profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && profile.getTypeScript() != null && !onlyUpdate) {
             val moduleName = generateResult.getMain().getName().value
-            updateTsConfigFiles(rootPath, profile.getTypeScript()!!, generateResult)
+            updateTsConfigFiles(rootPath, profile.getTypeScript()!!, generateResult, profile)
             updatePackageJson(rootPath, profile.getTypeScript()!!, moduleName)
             updateLaunchJson(rootPath, profile.getTypeScript()!!, moduleName)
         }
@@ -70,13 +70,14 @@ class FilesManipulators(
         }
     }
 
-    private fun updateTsConfigFiles(rootPath: Path, info: TypeScriptConfig, generateResult: GenerateResult) {
+    private fun updateTsConfigFiles(rootPath: Path, info: TypeScriptConfig, generateResult: GenerateResult, profile: HlaProfile) {
         val typeScriptPaths = TypeScriptPaths(
             mainTsconfig = rootPath.add(info.getMainTsconfigPath()),
             testTsconfig = rootPath.add(info.getTestTsconfigPath())
         )
 
-        updateTsConfigFile(typeScriptPaths.mainTsconfig, generateResult.getMain(), "Src/${generateResult.getMain().getName().value}/")
+        val moduleName = generateResult.getMain().getName().value
+        updateTsConfigFile(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getMain())}${moduleName}/")
 
         var fixturesAndTestDir = generateResult.getFixtures().copy()
         if (generateResult.getTests() != null) {
@@ -86,7 +87,16 @@ class FilesManipulators(
                 directories = generateResult.getFixtures().getDirectories() + generateResult.getTests()!!.getDirectories()
             )
         }
-        updateTsConfigFile(typeScriptPaths.testTsconfig, fixturesAndTestDir, "${generateResult.getMain().getName().value}/")
+        updateTsConfigFile(typeScriptPaths.testTsconfig, fixturesAndTestDir, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getTest())}${moduleName}/")
+    }
+
+    private fun calculateFilePrefix(tsconfigPath: Path, codePath: Path): String {
+        val result = codePath.subtract(tsconfigPath).value
+        return if (result.isEmpty()) {
+            ""
+        } else {
+            "$result/"
+        }
     }
 
     private fun updateTsConfigFile(tsconfigPath: Path, directory: Directory, prefix: String) {
