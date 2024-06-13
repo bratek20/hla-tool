@@ -34,6 +34,13 @@ class Path(
     override fun toString(): String {
         return value
     }
+
+    fun subtract(path1: Path): Path {
+        if (!value.startsWith(path1.value)) {
+            throw IllegalArgumentException("Path $value is not subtractable from ${path1.value}")
+        }
+        return Path(value.removePrefix(path1.value).removePrefix("/"))
+    }
 }
 
 data class FileContent(
