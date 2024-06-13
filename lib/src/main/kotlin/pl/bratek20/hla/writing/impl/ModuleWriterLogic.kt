@@ -4,14 +4,13 @@ import pl.bratek20.hla.directory.api.*
 import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.facade.api.HlaProfile
 import pl.bratek20.hla.facade.api.ModuleLanguage
-import pl.bratek20.hla.facade.api.TypeScriptConfig
 import pl.bratek20.hla.generation.api.GenerateResult
 import pl.bratek20.hla.writing.api.ModuleWriter
 import pl.bratek20.hla.writing.api.WriteArgs
 
 class ModuleWriterLogic(
     private val directories: Directories,
-    private val filesManipulators: FilesManipulators
+    private val filesModifiers: FilesModifiers
 ): ModuleWriter {
 
     override fun write(args: WriteArgs) {
@@ -28,7 +27,7 @@ class ModuleWriterLogic(
 
         writeDirectories(paths, generateResult)
 
-        filesManipulators.manipulate(profile, rootPath, generateResult, args.getOnlyUpdate())
+        filesModifiers.modify(profile, rootPath, generateResult, args.getOnlyUpdate())
 
         if (shouldHandleDebug(profile, generateResult.getMain().getName().value)) {
             handleDebug(generateResult)

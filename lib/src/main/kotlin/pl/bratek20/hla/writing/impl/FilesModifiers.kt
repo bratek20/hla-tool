@@ -6,10 +6,10 @@ import pl.bratek20.hla.facade.api.ModuleLanguage
 import pl.bratek20.hla.facade.api.TypeScriptConfig
 import pl.bratek20.hla.generation.api.GenerateResult
 
-class FilesManipulators(
+class FilesModifiers(
     private val files: Files,
 ) {
-    fun manipulate(profile: HlaProfile, rootPath: Path, generateResult: GenerateResult, onlyUpdate: Boolean) {
+    fun modify(profile: HlaProfile, rootPath: Path, generateResult: GenerateResult, onlyUpdate: Boolean) {
         if (profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && profile.getTypeScript() != null && !onlyUpdate) {
             val moduleName = generateResult.getMain().getName().value
             updateTsConfigFiles(rootPath, profile.getTypeScript()!!, generateResult, profile)
@@ -77,17 +77,13 @@ class FilesManipulators(
         )
 
         val moduleName = generateResult.getMain().getName().value
-        updateTsConfigFile(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getMain())}${moduleName}/")
+        updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getMain())}${moduleName}/")
 
-        var fixturesAndTestDir = generateResult.getFixtures().copy()
-        if (generateResult.getTests() != null) {
-            fixturesAndTestDir = Directory.create(
-                name = generateResult.getFixtures().getName(),
-                files = emptyList(),
-                directories = generateResult.getFixtures().getDirectories() + generateResult.getTests()!!.getDirectories()
-            )
+        var testFile = updateTsConfigFileAndReturn(typeScriptPaths.testTsconfig, generateResult.getFixtures(), "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getFixtures())}${moduleName}/")
+        generateResult.getTests()?.let {
+            testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getTest())}${moduleName}/")
         }
-        updateTsConfigFile(typeScriptPaths.testTsconfig, fixturesAndTestDir, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getTest())}${moduleName}/")
+        testFile?.let { files.write(typeScriptPaths.testTsconfig, it) }
     }
 
     private fun calculateFilePrefix(tsconfigPath: Path, codePath: Path): String {
@@ -99,42 +95,49 @@ class FilesManipulators(
         }
     }
 
-    private fun updateTsConfigFile(tsconfigPath: Path, directory: Directory, prefix: String) {
-        files.read(tsconfigPath.add(FileName("tsconfig.json"))).let {
-            val currentLines = it.getContent().lines.toMutableList()
+    private fun updateTsConfigFileAndWrite(tsconfigPath: Path, directory: Directory, prefix: String) {
+        val x = updateTsConfigFileAndReturn(tsconfigPath, directory, prefix)
+        x?.let { files.write(tsconfigPath, it) }
+    }
 
-            val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
-            var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
-            val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
+    private fun updateTsConfigFileAndReturn(tsconfigPath: Path, directory: Directory, prefix: String): File? {
+        return updateTsConfigFile(files.read(tsconfigPath.add(FileName("tsconfig.json"))), directory, prefix)
+    }
 
-            val newLines = mutableListOf<String>()
-            extractFiles(directory).forEach { item ->
-                newLines.add("")
-                item.fileNames.forEach { fileName ->
-                    newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
-                    val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName") }
-                    if (result) {
-                        indexToAdd--
-                    }
+    private fun updateTsConfigFile(file: File, directory: Directory, prefix: String): File? {
+        val currentLines = file.getContent().lines.toMutableList()
+
+        val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
+        var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
+        val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
+
+        val newLines = mutableListOf<String>()
+        extractFiles(directory).forEach { item ->
+            newLines.add("")
+            item.fileNames.forEach { fileName ->
+                newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
+                val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName") }
+                if (result) {
+                    indexToAdd--
                 }
             }
-
-            currentLines.addAll(indexToAdd, newLines)
-            val indexesToRemove = mutableListOf<Int>()
-            currentLines.forEachIndexed { index, line ->
-                if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true) {
-                    indexesToRemove.add(index)
-                }
-            }
-            indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
-
-            val newFile = File.create(it.getName(), FileContent(currentLines))
-            if (newFile == it) {
-                return
-            }
-
-            files.write(tsconfigPath, File.create(it.getName(), FileContent(currentLines)))
         }
+
+        currentLines.addAll(indexToAdd, newLines)
+        val indexesToRemove = mutableListOf<Int>()
+        currentLines.forEachIndexed { index, line ->
+            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true) {
+                indexesToRemove.add(index)
+            }
+        }
+        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
+
+        val newFile = File.create(file.getName(), FileContent(currentLines))
+        if (newFile == file) {
+            return null
+        }
+
+        return File.create(file.getName(), FileContent(currentLines))
     }
 
     data class TypeScriptPaths(val mainTsconfig: Path, val testTsconfig: Path)
