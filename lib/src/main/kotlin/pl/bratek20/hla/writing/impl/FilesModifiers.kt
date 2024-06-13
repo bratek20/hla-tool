@@ -70,6 +70,7 @@ class FilesModifiers(
         }
     }
 
+    //TODO-REF a lot of duplication, similar methods etc
     private fun updateTsConfigFiles(rootPath: Path, info: TypeScriptConfig, generateResult: GenerateResult, profile: HlaProfile) {
         val typeScriptPaths = TypeScriptPaths(
             mainTsconfig = rootPath.add(info.getMainTsconfigPath()),
@@ -79,11 +80,14 @@ class FilesModifiers(
         val moduleName = generateResult.getMain().getName().value
         updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getMain())}${moduleName}/")
 
-        var testFile = updateTsConfigFileAndReturn(typeScriptPaths.testTsconfig, generateResult.getFixtures(), "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getFixtures())}${moduleName}/")
+        val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(FileName("tsconfig.json")))
+        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures(), "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getFixtures())}${moduleName}/")
         generateResult.getTests()?.let {
             testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getTest())}${moduleName}/")
         }
-        testFile?.let { files.write(typeScriptPaths.testTsconfig, it) }
+        if (testFile != initialTestFile) {
+            files.write(typeScriptPaths.testTsconfig, testFile!!)
+        }
     }
 
     private fun calculateFilePrefix(tsconfigPath: Path, codePath: Path): String {
