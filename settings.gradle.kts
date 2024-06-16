@@ -2,6 +2,8 @@ rootProject.name = "hla"
 
 includeBuild("example")
 
+val catalogVersion = "1.0.5"
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -24,7 +26,7 @@ pluginManagement {
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            from("com.github.bratek20:version-catalog:1.0.1")
+            from("com.github.bratek20:version-catalog:$catalogVersion")
         }
     }
 

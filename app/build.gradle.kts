@@ -7,6 +7,7 @@ dependencies {
     implementation(project(":lib"))
 
     implementation(libs.bratek20.architecture)
+    implementation(libs.logback.classic) // to silence messages on application start
 }
 
 application {
