@@ -20,6 +20,8 @@ import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.directory.impl.FilesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
+import pl.bratek20.utils.logs.LoggerMock
+import pl.bratek20.utils.logs.LoggerMocks
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -108,12 +110,15 @@ class HlaFacadeTest {
         val directoriesMock: DirectoriesMock,
         val facade: HlaFacade,
         val filesMock: FilesMock,
+        val loggerMock: LoggerMock
     )
 
     private fun setup(): SetupResult {
         val context = stableContextBuilder()
             .withModules(
                 DirectoriesMocks(),
+
+                LoggerMocks(),
 
                 FacadeImpl(),
             )
@@ -122,9 +127,11 @@ class HlaFacadeTest {
         val directoriesMock = context.get(DirectoriesMock::class.java)
         val filesMock = context.get(FilesMock::class.java)
 
+        val loggerMock = context.get(LoggerMock::class.java)
+
         val facade = context.get(HlaFacade::class.java)
 
-        return SetupResult(directoriesMock, facade, filesMock)
+        return SetupResult(directoriesMock, facade, filesMock, loggerMock)
     }
 
     @ParameterizedTest(name = "{0} ({1})")
@@ -272,6 +279,26 @@ class HlaFacadeTest {
         }
         assertThat(testsCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
             expectedTestsDifference
+        )
+    }
+
+    @Test
+    fun `should log what is happening`() {
+        //given
+        val (_, facade, _, loggerMock) = setup()
+
+        val args = ModuleOperationArgs.create(
+            moduleName = ModuleName("SomeModule"),
+            profileName = ProfileName("kotlin"),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.startModule(args)
+
+        //then
+        loggerMock.assertInfos(
+            "Hello"
         )
     }
 

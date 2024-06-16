@@ -10,14 +10,17 @@ import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.parsing.impl.ModuleDefinitionsParserLogic
 import pl.bratek20.hla.writing.api.ModuleWriter
 import pl.bratek20.hla.writing.api.WriteArgs
+import pl.bratek20.utils.logs.api.Logger
 
 class HlaFacadeLogic(
     private val generator: ModuleGenerator,
     private val writer: ModuleWriter,
     private val propertiesSource: YamlPropertiesSource,
-    private val properties: Properties
+    private val properties: Properties,
+    private val logger: Logger
 ): HlaFacade {
     override fun startModule(args: ModuleOperationArgs): Unit {
+        logger.info("Hello")
         generateModule(args, false, args.getHlaFolderPath())
     }
 

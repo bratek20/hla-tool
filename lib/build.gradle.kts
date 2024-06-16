@@ -10,11 +10,12 @@ dependencies {
     testImplementation(testFixtures(libs.bratek20.architecture))
 
     implementation(libs.bratek20.utils)
+    testImplementation(testFixtures(libs.bratek20.utils))
 
-    //TODO add to convention
+    //TODO migrate fully to kotest
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")
 
-    // Kotest
+    // Kotest, TODO add to convention
     testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
     testImplementation("io.kotest:kotest-assertions-core:5.9.1")
 }
