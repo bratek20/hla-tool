@@ -310,6 +310,20 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Starting module SomeModule with profile kotlin",
+                "api/Enums.kt generated",
+                "api/CustomTypes.kt generated",
+                "api/CustomTypesMapper.kt generated",
+                "api/SerializedCustomTypes.kt generated",
+                "api/ValueObjects.kt generated",
+                "api/DataClasses.kt generated",
+                "api/Exceptions.kt generated",
+                "api/Interfaces.kt generated",
+                "impl/Logic.kt generated",
+                "context/Impl.kt generated",
+                "fixtures/Builders.kt generated",
+                "fixtures/Diffs.kt generated",
+                "fixtures/Asserts.kt generated",
+                "tests/ApiTest.kt generated",
             )
         }
 
@@ -321,6 +335,15 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Updating module SomeModule with profile kotlin",
+                "api/Enums.kt updated",
+                "api/SerializedCustomTypes.kt updated",
+                "api/ValueObjects.kt updated",
+                "api/DataClasses.kt updated",
+                "api/Exceptions.kt updated",
+                "api/Interfaces.kt updated",
+                "fixtures/Builders.kt updated",
+                "fixtures/Diffs.kt updated",
+                "fixtures/Asserts.kt updated",
             )
         }
     }
