@@ -5,14 +5,14 @@ import pl.bratek20.hla.directory.api.Path;
 import pl.bratek20.hla.directory.context.DirectoryImpl;
 import pl.bratek20.hla.facade.api.*;
 import pl.bratek20.hla.facade.context.FacadeImpl;
-import pl.bratek20.utils.logs.context.LoggerImpl;
+import pl.bratek20.utils.logs.context.LogsImpl;
 import pl.bratek20.utils.logs.context.Slf4jLoggerIntegrationImpl;
 
 public class Main {
     public static void main(String[] args) {
         var context = new SpringContextBuilder()
             .withModules(
-                new LoggerImpl(),
+                new LogsImpl(),
                 new Slf4jLoggerIntegrationImpl(),
 
                 new DirectoryImpl(),

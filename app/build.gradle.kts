@@ -8,7 +8,8 @@ dependencies {
 
     implementation(libs.bratek20.architecture)
     implementation(libs.bratek20.utils)
-    implementation(libs.logback.classic) // to silence messages on application start
+
+    implementation(libs.logback.classic) // to silence no provider message
 }
 
 application {

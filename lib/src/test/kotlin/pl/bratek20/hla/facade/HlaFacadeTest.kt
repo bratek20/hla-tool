@@ -1,6 +1,8 @@
 package pl.bratek20.hla.facade
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.ParameterizedTest
@@ -21,7 +23,7 @@ import pl.bratek20.hla.directory.impl.FilesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
 import pl.bratek20.utils.logs.LoggerMock
-import pl.bratek20.utils.logs.LoggerMocks
+import pl.bratek20.utils.logs.LogsMocks
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -118,7 +120,7 @@ class HlaFacadeTest {
             .withModules(
                 DirectoriesMocks(),
 
-                LoggerMocks(),
+                LogsMocks(),
 
                 FacadeImpl(),
             )
@@ -282,25 +284,47 @@ class HlaFacadeTest {
         )
     }
 
-    @Test
-    fun `should log what is happening`() {
-        //given
-        val (_, facade, _, loggerMock) = setup()
+    @Nested
+    inner class LogsScope {
+        private lateinit var facade: HlaFacade
+        private lateinit var loggerMock: LoggerMock
 
-        val args = ModuleOperationArgs.create(
+        private val args = ModuleOperationArgs.create(
             moduleName = ModuleName("SomeModule"),
             profileName = ProfileName("kotlin"),
             hlaFolderPath = hlaFolderPath(),
         )
 
-        //when
-        facade.startModule(args)
+        @BeforeEach
+        fun beforeEach() {
+            val result = setup()
+            facade = result.facade
+            loggerMock = result.loggerMock
+        }
 
-        //then
-        loggerMock.assertInfos(
-            "Hello"
-        )
+        @Test
+        fun `should log what is happening on start`() {
+            //when
+            facade.startModule(args)
+
+            //then
+            loggerMock.assertInfos(
+                "Starting module SomeModule with profile kotlin",
+            )
+        }
+
+        @Test
+        fun `should log what is happening on update`() {
+            //when
+            facade.updateModule(args)
+
+            //then
+            loggerMock.assertInfos(
+                "Updating module SomeModule with profile kotlin",
+            )
+        }
     }
+
 
     @Test
     fun `should start module using onlyParts`() {
