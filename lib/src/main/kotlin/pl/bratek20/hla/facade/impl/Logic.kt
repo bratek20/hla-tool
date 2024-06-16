@@ -20,11 +20,12 @@ class HlaFacadeLogic(
     private val logger: Logger
 ): HlaFacade {
     override fun startModule(args: ModuleOperationArgs): Unit {
-        logger.info("Hello")
+        logger.info("Starting module ${args.getModuleName().value} with profile ${args.getProfileName().value}")
         generateModule(args, false, args.getHlaFolderPath())
     }
 
     override fun updateModule(args: ModuleOperationArgs): Unit {
+        logger.info("Updating module ${args.getModuleName().value} with profile ${args.getProfileName().value}")
         generateModule(args, true, args.getHlaFolderPath())
     }
 
