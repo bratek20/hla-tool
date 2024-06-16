@@ -5,6 +5,7 @@ plugins {
 dependencies {
     // TODO use version catalog
     implementation("org.apache.velocity:velocity-engine-core:2.3")
+    testImplementation(libs.logback.classic) // to silence no provider message
 
     implementation(libs.bratek20.architecture)
     testImplementation(testFixtures(libs.bratek20.architecture))
