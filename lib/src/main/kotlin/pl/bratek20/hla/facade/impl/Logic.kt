@@ -3,6 +3,7 @@ package pl.bratek20.hla.facade.impl
 import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
 import pl.bratek20.hla.definitions.api.ModuleDefinition
+import pl.bratek20.hla.directory.api.Directory
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.generation.api.GenerateArgs
@@ -57,6 +58,11 @@ class HlaFacadeLogic(
             profile = profile
         ))
 
+        val suffix = if (onlyUpdate) "updated" else "generated"
+        logFile(generateResult.getMain(), suffix)
+        logFile(generateResult.getFixtures(), suffix)
+        logFile(generateResult.getTests(), suffix)
+
         writer.write(
             WriteArgs(
                 hlaFolderPath = hlaFolderPath.value,
@@ -65,6 +71,14 @@ class HlaFacadeLogic(
                 onlyUpdate = onlyUpdate
             )
         )
+    }
+
+    private fun logFile(directory: Directory?, suffix: String) {
+        directory?.getDirectories()?.forEach { dir ->
+            dir.getFiles().forEach {
+                logger.info("${dir.getName().value}/${it.getName().value} $suffix")
+            }
+        }
     }
 
     private fun prepare(hlaFolderPath: Path, profileName: ProfileName): Pair<List<ModuleDefinition>, HlaProfile>{
