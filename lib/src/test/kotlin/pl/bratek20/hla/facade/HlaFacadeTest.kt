@@ -1,5 +1,7 @@
 package pl.bratek20.hla.facade
 
+import com.github.bratek20.logs.LoggerMock
+import com.github.bratek20.logs.LogsMocks
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -22,8 +24,6 @@ import pl.bratek20.hla.directory.impl.DirectoriesLogic
 import pl.bratek20.hla.directory.impl.FilesLogic
 import pl.bratek20.hla.facade.api.*
 import pl.bratek20.hla.facade.context.FacadeImpl
-import pl.bratek20.utils.logs.LoggerMock
-import pl.bratek20.utils.logs.LogsMocks
 import java.util.stream.Stream
 
 class HlaFacadeTest {

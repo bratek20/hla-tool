@@ -1,5 +1,6 @@
 package pl.bratek20.hla.facade.impl
 
+import com.github.bratek20.logs.api.Logger
 import pl.bratek20.architecture.properties.api.Properties
 import pl.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
 import pl.bratek20.hla.definitions.api.ModuleDefinition
@@ -11,7 +12,6 @@ import pl.bratek20.hla.generation.api.ModuleGenerator
 import pl.bratek20.hla.parsing.impl.ModuleDefinitionsParserLogic
 import pl.bratek20.hla.writing.api.ModuleWriter
 import pl.bratek20.hla.writing.api.WriteArgs
-import pl.bratek20.utils.logs.api.Logger
 
 class HlaFacadeLogic(
     private val generator: ModuleGenerator,
@@ -76,7 +76,7 @@ class HlaFacadeLogic(
     private fun logFile(directory: Directory?, suffix: String) {
         directory?.getDirectories()?.forEach { dir ->
             dir.getFiles().forEach {
-                logger.info("${dir.getName().value}/${it.getName().value} $suffix")
+                logger.info("${dir.getName().value}/${it.getName().value} $suffix", this)
             }
         }
     }

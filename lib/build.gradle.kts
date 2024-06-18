@@ -5,13 +5,12 @@ plugins {
 dependencies {
     // TODO use version catalog
     implementation("org.apache.velocity:velocity-engine-core:2.3")
-    testImplementation(libs.logback.classic) // to silence no provider message
 
     implementation(libs.bratek20.architecture)
     testImplementation(testFixtures(libs.bratek20.architecture))
 
-    implementation(libs.bratek20.utils)
-    testImplementation(testFixtures(libs.bratek20.utils))
+    implementation("com.github.bratek20.logs:logs-logback:1.0.5")
+    testImplementation(testFixtures("com.github.bratek20.logs:logs-logback:1.0.5"))
 
     //TODO migrate fully to kotest
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")

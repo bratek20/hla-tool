@@ -7,9 +7,7 @@ dependencies {
     implementation(project(":lib"))
 
     implementation(libs.bratek20.architecture)
-    implementation(libs.bratek20.utils)
-
-    implementation(libs.logback.classic) // to silence no provider message
+    implementation("com.github.bratek20.logs:logs-logback:1.0.5")
 }
 
 application {
