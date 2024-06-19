@@ -1,0 +1,13 @@
+<configuration>
+    <!-- Define a console appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%level] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Define the root logger with a default log level and the console appender -->
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
