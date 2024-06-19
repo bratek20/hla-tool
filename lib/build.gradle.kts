@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.bratek20.library.conventions)
+    alias(libs.plugins.bratek20.internal.kotlin.library.conventions)
 }
 
 val velocityVersion = "2.3"
