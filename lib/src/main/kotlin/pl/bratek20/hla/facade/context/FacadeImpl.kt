@@ -1,9 +1,9 @@
 package pl.bratek20.hla.facade.context
 
-import pl.bratek20.architecture.context.api.ContextBuilder
-import pl.bratek20.architecture.context.api.ContextModule
-import pl.bratek20.architecture.properties.context.PropertiesImpl
-import pl.bratek20.architecture.properties.sources.yaml.YamlPropertiesSourceImpl
+import com.github.bratek20.architecture.context.api.ContextBuilder
+import com.github.bratek20.architecture.context.api.ContextModule
+import com.github.bratek20.architecture.properties.context.PropertiesImpl
+import com.github.bratek20.architecture.properties.sources.yaml.YamlPropertiesSourceImpl
 import pl.bratek20.hla.facade.api.HlaFacade
 import pl.bratek20.hla.facade.impl.HlaFacadeLogic
 import pl.bratek20.hla.generation.context.GenerationImpl

@@ -2,7 +2,7 @@ package pl.bratek20.hla.parsing
 
 import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
-import pl.bratek20.architecture.context.someContextBuilder
+import com.github.bratek20.architecture.context.someContextBuilder
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.definitions.api.ModuleDefinition
 import pl.bratek20.hla.definitions.api.TypeWrapper

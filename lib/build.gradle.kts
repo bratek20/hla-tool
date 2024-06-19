@@ -2,15 +2,16 @@ plugins {
     alias(libs.plugins.bratek20.library.conventions)
 }
 
+val velocityVersion = "2.3"
+
 dependencies {
-    // TODO use version catalog
-    implementation("org.apache.velocity:velocity-engine-core:2.3")
+    implementation("org.apache.velocity:velocity-engine-core:$velocityVersion")
 
     implementation(libs.bratek20.architecture)
     testImplementation(testFixtures(libs.bratek20.architecture))
 
-    implementation("com.github.bratek20.logs:logs-logback:1.0.5")
-    testImplementation(testFixtures("com.github.bratek20.logs:logs-logback:1.0.5"))
+    implementation(libs.bratek20.logs.logback)
+    testImplementation(testFixtures(libs.bratek20.logs.logback))
 
     //TODO migrate fully to kotest
     testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")

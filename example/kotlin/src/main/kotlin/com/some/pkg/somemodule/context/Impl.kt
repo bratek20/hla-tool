@@ -1,7 +1,7 @@
 package com.some.pkg.somemodule.context
 
-import pl.bratek20.architecture.context.api.ContextBuilder
-import pl.bratek20.architecture.context.api.ContextModule
+import com.github.bratek20.architecture.context.api.ContextBuilder
+import com.github.bratek20.architecture.context.api.ContextModule
 
 import com.some.pkg.somemodule.api.*
 import com.some.pkg.somemodule.impl.*

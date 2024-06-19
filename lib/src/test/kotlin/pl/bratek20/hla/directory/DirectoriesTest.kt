@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import pl.bratek20.architecture.context.someContextBuilder
+import com.github.bratek20.architecture.context.someContextBuilder
 import pl.bratek20.hla.directory.api.Directories
 import pl.bratek20.hla.directory.api.Path
 import pl.bratek20.hla.directory.context.DirectoryImpl

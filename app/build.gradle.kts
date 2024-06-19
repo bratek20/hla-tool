@@ -7,7 +7,7 @@ dependencies {
     implementation(project(":lib"))
 
     implementation(libs.bratek20.architecture)
-    implementation("com.github.bratek20.logs:logs-logback:1.0.5")
+    implementation(libs.bratek20.logs.logback)
 }
 
 application {

@@ -1,8 +1,8 @@
 package pl.bratek20.hla.directory
 
 import org.junit.jupiter.api.Test
-import pl.bratek20.architecture.context.someContextBuilder
-import pl.bratek20.architecture.exceptions.assertApiExceptionThrown
+import com.github.bratek20.architecture.context.someContextBuilder
+import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import pl.bratek20.hla.directory.api.FileNotFoundException
 import pl.bratek20.hla.directory.api.Files
 import pl.bratek20.hla.directory.api.Path

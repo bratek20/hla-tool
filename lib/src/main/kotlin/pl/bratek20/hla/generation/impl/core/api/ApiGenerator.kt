@@ -62,7 +62,7 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
         val data: Boolean
     ) {
         fun kotlinPackage(): String {
-            return if (data) "pl.bratek20.architecture.data.api" else "pl.bratek20.architecture.properties.api"
+            return if (data) "com.github.bratek20.architecture.data.api" else "com.github.bratek20.architecture.properties.api"
         }
     }
 

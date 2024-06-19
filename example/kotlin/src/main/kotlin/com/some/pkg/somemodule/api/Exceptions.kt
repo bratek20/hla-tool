@@ -2,7 +2,7 @@
 
 package com.some.pkg.somemodule.api
 
-import pl.bratek20.architecture.exceptions.ApiException
+import com.github.bratek20.architecture.exceptions.ApiException
 
 class SomeException(message: String = "") : ApiException(message)
 

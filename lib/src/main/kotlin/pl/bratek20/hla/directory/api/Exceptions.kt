@@ -2,7 +2,7 @@
 
 package pl.bratek20.hla.directory.api
 
-import pl.bratek20.architecture.exceptions.ApiException
+import com.github.bratek20.architecture.exceptions.ApiException
 
 class FileNotFoundException(message: String = "") : ApiException(message)
 

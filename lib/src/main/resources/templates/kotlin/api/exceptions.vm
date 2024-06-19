@@ -1,6 +1,6 @@
 package ${packageName}.api
 
-import pl.bratek20.architecture.exceptions.ApiException
+import com.github.bratek20.architecture.exceptions.ApiException
 
 #foreach($exception in $exceptions)
 class $exception(message: String = "") : ApiException(message)#if($foreach.hasNext)

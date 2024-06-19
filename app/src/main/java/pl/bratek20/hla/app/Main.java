@@ -1,7 +1,7 @@
 package pl.bratek20.hla.app;
 
-import com.github.bratek20.logs.context.Slf4jLogs;
-import pl.bratek20.architecture.context.spring.SpringContextBuilder;
+import com.github.bratek20.architecture.context.spring.SpringContextBuilder;
+import com.github.bratek20.logs.context.Slf4jLogsImpl;
 import pl.bratek20.hla.directory.api.Path;
 import pl.bratek20.hla.directory.context.DirectoryImpl;
 import pl.bratek20.hla.facade.api.*;
@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) {
         var context = new SpringContextBuilder()
             .withModules(
-                new Slf4jLogs(),
+                new Slf4jLogsImpl(),
 
                 new DirectoryImpl(),
                 new FacadeImpl()
