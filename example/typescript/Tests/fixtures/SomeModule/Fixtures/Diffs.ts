@@ -15,6 +15,8 @@ namespace SomeModule {
         other?: OtherModule.ExpectedOtherProperty,
         id2?: number,
         range?: TypesModule.ExpectedDateRange,
+        doubleExample?: number,
+        longExample?: number,
     }
     export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
         const result: string[] = []
@@ -29,6 +31,14 @@ namespace SomeModule {
 
         if (expected.range !== undefined) {
             if (TypesModule.diffDateRange(given.getRange().get(), expected.range) != "") { result.push(TypesModule.diffDateRange(given.getRange().get(), expected.range, `${path}range.`)) }
+        }
+
+        if (expected.doubleExample !== undefined) {
+            if (given.getDoubleExample() != expected.doubleExample) { result.push(`${path}doubleExample ${given.getDoubleExample()} != ${expected.doubleExample}`) }
+        }
+
+        if (expected.longExample !== undefined) {
+            if (given.getLongExample() != expected.longExample) { result.push(`${path}longExample ${given.getLongExample()} != ${expected.longExample}`) }
         }
 
         return result.join("\n")

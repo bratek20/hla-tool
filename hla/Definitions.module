@@ -5,6 +5,8 @@ Enums
         BOOL
         VOID
         ANY
+        DOUBLE
+        LONG
 
     TypeWrapper
         LIST

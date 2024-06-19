@@ -32,16 +32,22 @@ class SomeProperty {
     private other = new OtherProperty
     private id2? = NUMBER
     private range? = new SerializedDateRange
+    private doubleExample = NUMBER
+    private longExample = NUMBER
 
     static create(
         other: OtherProperty,
         id2: Optional<SomeId2>,
         range: Optional<DateRange>,
+        doubleExample: number,
+        longExample: number,
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
         instance.id2 = id2.map(it => it.value).orElse(undefined)
         instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
+        instance.doubleExample = doubleExample
+        instance.longExample = longExample
         return instance
     }
 
@@ -55,6 +61,14 @@ class SomeProperty {
 
     getRange(): Optional<DateRange> {
         return Optional.of(this.range).map(it => it.toCustomType())
+    }
+
+    getDoubleExample(): number {
+        return this.doubleExample
+    }
+
+    getLongExample(): number {
+        return this.longExample
     }
 }
 

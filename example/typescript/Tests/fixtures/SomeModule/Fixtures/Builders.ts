@@ -5,16 +5,22 @@ namespace SomeModule.Builder {
         other?: OtherModule.Builder.OtherPropertyDef,
         id2?: number,
         range?: TypesModule.Builder.DateRangeDef,
+        doubleExample?: number,
+        longExample?: number,
     }
     export function someProperty(def?: SomePropertyDef): SomeProperty {
         const other = def?.other ?? {}
         const id2 = def?.id2 ?? undefined
         const range = def?.range ?? undefined
+        const doubleExample = def?.doubleExample ?? 0
+        const longExample = def?.longExample ?? 0
 
         return SomeProperty.create(
             OtherModule.Builder.otherProperty(other),
             Optional.of(id2).map(it => new SomeId2(it)),
             Optional.of(range).map(it => TypesModule.Builder.dateRange(it)),
+            doubleExample,
+            longExample,
         )
     }
 

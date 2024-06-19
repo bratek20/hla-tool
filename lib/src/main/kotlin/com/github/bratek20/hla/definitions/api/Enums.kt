@@ -8,6 +8,8 @@ enum class BaseType {
     BOOL,
     VOID,
     ANY,
+    DOUBLE,
+    LONG,
 }
 
 enum class TypeWrapper {

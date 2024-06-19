@@ -17,6 +17,8 @@ class KotlinTypes: LanguageTypes {
             BaseType.BOOL -> "Boolean"
             BaseType.VOID -> "Unit"
             BaseType.ANY -> "Any"
+            BaseType.DOUBLE -> "Double"
+            BaseType.LONG -> "Long"
         }
     }
 
@@ -27,6 +29,8 @@ class KotlinTypes: LanguageTypes {
             BaseType.BOOL -> "false"
             BaseType.VOID -> throw IllegalArgumentException("Void type has no default value")
             BaseType.ANY -> "Any()"
+            BaseType.DOUBLE -> "0.0"
+            BaseType.LONG -> "0L"
         }
     }
 

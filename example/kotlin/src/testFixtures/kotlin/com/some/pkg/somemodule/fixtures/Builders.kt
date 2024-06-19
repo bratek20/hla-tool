@@ -13,6 +13,8 @@ data class SomePropertyDef(
     var other: (OtherPropertyDef.() -> Unit) = {},
     var id2: Int? = null,
     var range: (DateRangeDef.() -> Unit)? = null,
+    var doubleExample: Double = 0.0,
+    var longExample: Long = 0L,
 )
 fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
     val def = SomePropertyDef().apply(init)
@@ -20,6 +22,8 @@ fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
         other = otherProperty(def.other),
         id2 = def.id2?.let { it -> SomeId2(it) },
         range = def.range?.let { it -> dateRange(it) },
+        doubleExample = def.doubleExample,
+        longExample = def.longExample,
     )
 }
 
