@@ -11,12 +11,12 @@ dependencies {
 }
 
 application {
-    mainClass.set("pl.bratek20.hla.app.Main")
+    mainClass.set("com.github.bratek20.hla.app.Main")
 }
 
 tasks.shadowJar {
     archiveClassifier.set("")
     manifest {
-        attributes("Main-Class" to "pl.bratek20.hla.app.Main")
+        attributes("Main-Class" to "com.github.bratek20.hla.app.Main")
     }
 }
