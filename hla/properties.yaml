@@ -4,7 +4,7 @@ profiles:
     paths:
       project: "../lib"
       src:
-        main: "src/main/kotlin/pl/bratek20/hla"
-        test: "src/test/kotlin/pl/bratek20/hla"
-        fixtures: "src/testFixtures/kotlin/pl/bratek20/hla"
+        main: "src/main/kotlin/com/github/bratek20/hla"
+        test: "src/test/kotlin/com/github/bratek20/hla"
+        fixtures: "src/testFixtures/kotlin/com/github/bratek20/hla"
     onlyPatterns: []
