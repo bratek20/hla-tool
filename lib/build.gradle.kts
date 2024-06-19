@@ -12,14 +12,4 @@ dependencies {
 
     implementation(libs.bratek20.logs.logback)
     testImplementation(testFixtures(libs.bratek20.logs.logback))
-
-    //TODO migrate fully to kotest
-    testImplementation("org.junit.jupiter:junit-jupiter-params:${libs.versions.junit.get()}")
-
-    // Kotest, TODO add to convention
-    testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
-    testImplementation("io.kotest:kotest-assertions-core:5.9.1")
 }
-
-group = "pl.bratek20.hla"
-version = "1.0.0-SNAPSHOT"
