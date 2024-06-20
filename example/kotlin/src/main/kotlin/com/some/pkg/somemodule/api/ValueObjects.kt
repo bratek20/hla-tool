@@ -19,7 +19,7 @@ data class SomeProperty(
     private val range: SerializedDateRange?,
     private val doubleExample: Double,
     private val longExample: Long,
-    private val goodName: String,
+    private val gN: String,
 ) {
     fun getOther(): OtherProperty {
         return this.other
@@ -42,7 +42,7 @@ data class SomeProperty(
     }
 
     fun getGoodName(): String {
-        return this.goodName
+        return this.gN
     }
 
     companion object {
@@ -60,7 +60,7 @@ data class SomeProperty(
                 range = range?.let { it -> SerializedDateRange.fromCustomType(it) },
                 doubleExample = doubleExample,
                 longExample = longExample,
-                goodName = goodName,
+                gN = goodName,
             )
         }
     }

@@ -34,7 +34,7 @@ class SomeProperty {
     private range? = new SerializedDateRange
     private doubleExample = NUMBER
     private longExample = NUMBER
-    private goodName = STRING
+    private gN = STRING
 
     static create(
         other: OtherProperty,
@@ -50,7 +50,7 @@ class SomeProperty {
         instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
         instance.doubleExample = doubleExample
         instance.longExample = longExample
-        instance.goodName = goodName
+        instance.gN = goodName
         return instance
     }
 
@@ -75,7 +75,7 @@ class SomeProperty {
     }
 
     getGoodName(): string {
-        return this.goodName
+        return this.gN
     }
 }
 
