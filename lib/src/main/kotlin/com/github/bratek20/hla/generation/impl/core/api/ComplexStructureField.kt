@@ -5,8 +5,14 @@ import com.github.bratek20.hla.utils.camelToPascalCase
 
 open class ComplexStructureField(
     protected val def: FieldDefinition,
-    private val factory: ApiTypeFactory
+    private val factory: ApiTypeFactory,
 ) {
+    private lateinit var complexStructure: ComplexStructureApiType<*>
+
+    fun init(complexStructure: ComplexStructureApiType<*>) {
+        this.complexStructure = complexStructure
+    }
+
     val name = def.getName()
 
     val type: ApiType by lazy {
@@ -14,14 +20,14 @@ open class ComplexStructureField(
     }
 
     fun access(variableName: String): String {
-        if (type is ComplexCustomApiType) {
+        if (complexStructure is ComplexCustomApiType) {
             return accessComplexCustomType(variableName)
         }
         return "$variableName.${getterName()}()"
     }
 
     private fun accessComplexCustomType(variableName: String): String {
-        return type.languageTypes.customTypeGetterCall(type.name(), name) + "($variableName)"
+        return type.languageTypes.customTypeGetterCall(complexStructure.name, name) + "($variableName)"
     }
 
     fun exampleValue(): String? {

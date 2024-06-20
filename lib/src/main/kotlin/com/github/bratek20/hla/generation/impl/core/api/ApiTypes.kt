@@ -313,6 +313,10 @@ class ApiTypeFactory(
 
         apiType.languageTypes = languageTypes
 
+        if (apiType is ComplexStructureApiType<*>) {
+            apiType.fields.forEach { it.init(apiType) }
+        }
+
         return apiType
     }
 
