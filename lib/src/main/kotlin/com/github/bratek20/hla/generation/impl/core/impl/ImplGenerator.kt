@@ -106,9 +106,9 @@ class ImplGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            LogicGenerator(),
             ImplDataClassesGenerator(),
-            ImplDataKeysGenerator()
+            ImplDataKeysGenerator(),
+            LogicGenerator(),
         )
     }
 }
