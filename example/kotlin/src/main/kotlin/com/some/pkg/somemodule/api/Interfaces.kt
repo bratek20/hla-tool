@@ -7,6 +7,7 @@ import com.some.pkg.typesmodule.api.*
 
 interface SomeEmptyInterface {
 }
+
 interface SomeInterface {
     @Throws(
         SomeException::class,
@@ -21,6 +22,7 @@ interface SomeInterface {
 
     fun optMethod(optId: SomeId?): SomeClass?
 }
+
 interface SomeInterface2 {
     fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 

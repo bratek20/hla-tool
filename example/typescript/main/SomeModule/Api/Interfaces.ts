@@ -2,6 +2,7 @@
 
 interface SomeEmptyInterface {
 }
+
 interface SomeInterface {
     /**
      * @throws { SomeException }
@@ -16,6 +17,7 @@ interface SomeInterface {
 
     optMethod(optId: Optional<SomeId>): Optional<SomeClass>
 }
+
 interface SomeInterface2 {
     referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 
