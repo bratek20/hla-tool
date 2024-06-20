@@ -23,11 +23,6 @@ abstract class ApiType {
     open fun serialize(variableName: String): String {
         return variableName
     }
-
-    //TODO move up
-    open fun constructorCall(): String {
-        return languageTypes.classConstructorCall(name())
-    }
 }
 
 class BaseApiType(
@@ -51,6 +46,10 @@ open class StructureApiType(
 ) : ApiType() {
     override fun name(): String {
         return name
+    }
+    
+    open fun constructorCall(): String {
+        return languageTypes.classConstructorCall(name())
     }
 }
 
