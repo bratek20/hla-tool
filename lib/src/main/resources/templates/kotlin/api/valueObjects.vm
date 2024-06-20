@@ -32,7 +32,7 @@ data class ${vo.name()}(
         ): ${vo.name()} {
             return ${vo.name()}(
             #foreach($field in $vo.fields)
-                ${field.name} = ${field.type.serialize(${field.name})},
+                ${field.createConstructorPass()},
             #end
             )
         }

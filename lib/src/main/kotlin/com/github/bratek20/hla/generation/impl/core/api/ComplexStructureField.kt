@@ -50,11 +50,16 @@ open class ComplexStructureField(
 
     // used by velocity
     fun createDeclaration(): String {
-        val base = "${privateName()}: ${type.name()}"
+        val base = "${name}: ${type.name()}"
         defaultValue()?.let {
             return "$base = $it"
         }
         return base
+    }
+
+    // used by velocity
+    fun createConstructorPass(): String {
+        return "${privateName()} = ${type.serialize(name)}"
     }
 
     fun privateName(): String {
@@ -75,7 +80,7 @@ open class ComplexStructureField(
     }
 
     fun getter(): ComplexStructureGetterOrSetter {
-        return ComplexStructureGetterOrSetter(getterName(), type, name)
+        return ComplexStructureGetterOrSetter(getterName(), type, privateName())
     }
 
     fun setter(): ComplexStructureGetterOrSetter {
