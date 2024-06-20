@@ -108,7 +108,8 @@ class HlaModules(
     private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
         return module.getEnums().map { it.getName() } +
                 allSimpleStructureDefinitions(module).map { it.getName() } +
-                allComplexStructureDefinitions(module).map { it.getName() }
+                allComplexStructureDefinitions(module).map { it.getName() } +
+                module.getInterfaces().map { it.getName() }
     }
 
     private fun interfacesTypeNames(module: ModuleDefinition): List<String> {

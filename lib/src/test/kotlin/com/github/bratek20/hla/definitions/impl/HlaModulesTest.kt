@@ -53,10 +53,14 @@ class HlaModulesTest {
                 simpleValueObjects =  listOf {
                     name = "BClass"
                 }
+                interfaces = listOf {
+                    name = "BInterface"
+                }
             },
             moduleDefinition {
                 name = "C"
                 interfaces = listOf {
+                    name = "CInterface"
                     methods = listOf {
                         args = listOf {
                             type = {
@@ -68,14 +72,32 @@ class HlaModulesTest {
                         }
                     }
                 }
+            },
+            moduleDefinition {
+                name = "D"
+                interfaces = listOf {
+                    methods = listOf {
+                        args = listOf {
+                            type = {
+                                name = "CInterface"
+                            }
+                        }
+                        returnType = {
+                            name = "BInterface"
+                        }
+                    }
+                }
             }
         )
 
         // when
-        val hlaModules = HlaModules(ModuleName("C"), modules)
+        val hlaModulesForC = HlaModules(ModuleName("C"), modules)
+        val hlaModulesForD = HlaModules(ModuleName("D"), modules)
 
         // then
-        assertThat(hlaModules.getCurrentDependencies())
+        assertThat(hlaModulesForC.getCurrentDependencies())
             .containsExactly(ModuleName("A"), ModuleName("B"))
+        assertThat(hlaModulesForD.getCurrentDependencies())
+            .containsExactly(ModuleName("B"), ModuleName("C"))
     }
 }
