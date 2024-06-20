@@ -21,6 +21,10 @@ PropertyKeys
 DataKeys
     "otherData" -> OtherData
 
+Interfaces
+    OtherInterface
+        otherMethod()
+
 Impl
     DataClasses
         OtherImplData

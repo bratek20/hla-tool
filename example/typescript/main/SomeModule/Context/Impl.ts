@@ -10,4 +10,11 @@ namespace SomeModule.Api {
     export function optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {
         return new Impl.SomeInterfaceLogic(c).optMethod(optId)
     }
+    export function referenceInterface(empty: SomeEmptyInterface, c: HandlerContext): SomeEmptyInterface {
+        return new Impl.SomeInterface2Logic(c).referenceInterface(empty)
+    }
+
+    export function referenceOtherInterface(other: OtherInterface, c: HandlerContext): OtherInterface {
+        return new Impl.SomeInterface2Logic(c).referenceOtherInterface(other)
+    }
 }

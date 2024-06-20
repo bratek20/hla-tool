@@ -31,6 +31,9 @@ public class Main {
             case "updateAll":
                 facade.updateAllModules(parseAllModulesOperationArgs(args));
                 break;
+            case "startAll":
+                facade.startAllModules(parseAllModulesOperationArgs(args));
+                break;
             default:
                 throw new IllegalArgumentException("Unknown operation: " + operationName);
         }

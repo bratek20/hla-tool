@@ -38,6 +38,14 @@ class BaseApiType(
     }
 }
 
+class InterfaceApiType(
+    val name: String
+) : ApiType() {
+    override fun name(): String {
+        return name
+    }
+}
+
 open class StructureApiType(
     val name: String
 ) : ApiType() {
@@ -288,6 +296,7 @@ class ApiTypeFactory(
         val simpleCustomType = modules.findSimpleCustomType(type)
         val complexCustomType = modules.findComplexCustomType(type)
         val dataVO = modules.findDataClass(type)
+        val interf = modules.findInterface(type)
 
         val apiType = when {
             isOptional -> OptionalApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.OPTIONAL)))
@@ -299,6 +308,7 @@ class ApiTypeFactory(
             complexCustomType != null -> ComplexCustomApiType(type.getName(), createComplexCustomTypeFields(type.getName(), complexCustomType.getFields()))
             isBaseType -> BaseApiType(ofBaseType(type.getName()))
             enum != null -> EnumApiType(enum)
+            interf != null -> InterfaceApiType(type.getName())
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

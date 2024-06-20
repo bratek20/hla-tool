@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="UpdateAll HLA" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.github.bratek20.hla.app.Main" />
+    <module name="hla.app.main" />
+    <option name="PROGRAM_PARAMETERS" value="updateAll hla hla " />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

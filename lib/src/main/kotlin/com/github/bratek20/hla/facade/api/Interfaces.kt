@@ -18,5 +18,10 @@ interface HlaFacade {
     @Throws(
         ProfileNotFoundException::class,
     )
+    fun startAllModules(args: AllModulesOperationArgs): Unit
+
+    @Throws(
+        ProfileNotFoundException::class,
+    )
     fun updateAllModules(args: AllModulesOperationArgs): Unit
 }

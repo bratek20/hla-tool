@@ -46,6 +46,10 @@ class HlaModules(
         return modules.firstNotNullOfOrNull { findComplexCustomType(type, it) }
     }
 
+    fun findInterface(type: TypeDefinition): InterfaceDefinition? {
+        return modules.firstNotNullOfOrNull { findInterface(type, it) }
+    }
+
     private fun findEnum(type: TypeDefinition, module: ModuleDefinition): EnumDefinition? {
         return module.getEnums().find { it.getName() == type.getName() }
     }
@@ -68,6 +72,10 @@ class HlaModules(
 
     private fun findComplexCustomType(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
         return module.getComplexCustomTypes().find { it.getName() == type.getName() }
+    }
+
+    private fun findInterface(type: TypeDefinition, module: ModuleDefinition): InterfaceDefinition? {
+        return module.getInterfaces().find { it.getName() == type.getName() }
     }
 
     fun getCurrentDependencies(): List<ModuleName> {

@@ -64,6 +64,8 @@ DataClasses
         customOpt: any?
 
 Interfaces
+    SomeEmptyInterface
+
     SomeInterface
         someCommand(id: SomeId, amount: int)
             throws
@@ -73,3 +75,7 @@ Interfaces
             throws
                 SomeException
         optMethod(optId: SomeId?): SomeClass?
+
+    SomeInterface2
+        referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
+        referenceOtherInterface(other: OtherInterface): OtherInterface

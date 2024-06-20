@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="UpdateAll Example Kotlin" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.github.bratek20.hla.app.Main" />
+    <module name="hla.app.main" />
+    <option name="PROGRAM_PARAMETERS" value="updateAll example/hla kotlin" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

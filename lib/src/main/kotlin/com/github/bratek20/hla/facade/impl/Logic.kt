@@ -30,6 +30,14 @@ class HlaFacadeLogic(
         generateModule(args, true, args.getHlaFolderPath())
     }
 
+    override fun startAllModules(args: AllModulesOperationArgs) {
+        val (modules, profile) = prepare(args.getHlaFolderPath(), args.getProfileName())
+
+        modules.forEach {
+            postPrepareGenerateModule(it.getName(), modules, profile, false, args.getHlaFolderPath())
+        }
+    }
+
     override fun updateAllModules(args: AllModulesOperationArgs) {
         val (modules, profile) = prepare(args.getHlaFolderPath(), args.getProfileName())
 

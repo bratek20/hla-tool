@@ -5,6 +5,8 @@ package com.some.pkg.somemodule.api
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
+interface SomeEmptyInterface {
+}
 interface SomeInterface {
     @Throws(
         SomeException::class,
@@ -18,4 +20,9 @@ interface SomeInterface {
     fun someQuery(id: SomeId): SomeClass
 
     fun optMethod(optId: SomeId?): SomeClass?
+}
+interface SomeInterface2 {
+    fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
+
+    fun referenceOtherInterface(other: OtherInterface): OtherInterface
 }

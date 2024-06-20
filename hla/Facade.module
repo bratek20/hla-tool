@@ -51,6 +51,11 @@ Interfaces
             throws
                 ProfileNotFoundException
 
+        startAllModules(args: AllModulesOperationArgs)
+            throws
+                ProfileNotFoundException
+
         updateAllModules(args: AllModulesOperationArgs)
             throws
                 ProfileNotFoundException
+
