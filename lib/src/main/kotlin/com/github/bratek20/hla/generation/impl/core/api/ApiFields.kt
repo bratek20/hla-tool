@@ -69,9 +69,10 @@ class SerializableTypeApiField(
 
     // used by velocity
     fun accessor(): String {
-        val isPublic = def.getAttributes().firstOrNull { it.getName() == "public" } != null
-        val publicSupported = type.languageTypes.supportPublicComplexStructureFields()
-        return if(isPublic && publicSupported) "" else "private "
+        val isPublic = def.getAttributes().any { it.getName() == "public" }
+        val prefix = type.languageTypes.publicComplexStructureFieldPrefix()
+        val finalPrefix = if (prefix.isNotEmpty()) "$prefix " else ""
+        return if(isPublic) finalPrefix else "private "
     }
 
     fun getter(): SerializableTypeGetterOrSetter {

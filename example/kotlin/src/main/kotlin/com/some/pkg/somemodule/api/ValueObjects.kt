@@ -60,7 +60,7 @@ data class SomeProperty(
 }
 
 data class SomeProperty2(
-    private val value: String,
+    @JvmField val value: String,
     private val custom: Any,
     private val someEnum: String,
     private val customOpt: Any?,

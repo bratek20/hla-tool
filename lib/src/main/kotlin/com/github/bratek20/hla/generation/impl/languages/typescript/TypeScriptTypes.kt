@@ -7,8 +7,8 @@ import com.github.bratek20.hla.utils.camelToPascalCase
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
 class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
-    override fun supportPublicComplexStructureFields(): Boolean {
-        return true
+    override fun publicComplexStructureFieldPrefix(): String {
+        return ""
     }
 
     override fun mapBaseType(type: BaseType): String {

@@ -6,8 +6,8 @@ import com.github.bratek20.hla.utils.camelToPascalCase
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
 class KotlinTypes: LanguageTypes {
-    override fun supportPublicComplexStructureFields(): Boolean {
-        return false
+    override fun publicComplexStructureFieldPrefix(): String {
+        return "@JvmField"
     }
 
     override fun mapBaseType(type: BaseType): String {
