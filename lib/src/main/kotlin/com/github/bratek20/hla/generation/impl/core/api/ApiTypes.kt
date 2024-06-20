@@ -47,7 +47,7 @@ open class StructureApiType(
     override fun name(): String {
         return name
     }
-    
+
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
     }

@@ -26,6 +26,7 @@ data class ExpectedSomeProperty(
     var range: (ExpectedDateRange.() -> Unit)? = null,
     var doubleExample: Double? = null,
     var longExample: Long? = null,
+    var goodName: String? = null,
 )
 fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeProperty().apply(expectedInit)
@@ -49,6 +50,10 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
 
     expected.longExample?.let {
         if (given.getLongExample() != it) { result.add("${path}longExample ${given.getLongExample()} != ${it}") }
+    }
+
+    expected.goodName?.let {
+        if (given.getGoodName() != it) { result.add("${path}goodName ${given.getGoodName()} != ${it}") }
     }
 
     return result.joinToString("\n")

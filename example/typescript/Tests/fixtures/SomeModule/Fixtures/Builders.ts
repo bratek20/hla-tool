@@ -7,6 +7,7 @@ namespace SomeModule.Builder {
         range?: TypesModule.Builder.DateRangeDef,
         doubleExample?: number,
         longExample?: number,
+        goodName?: string,
     }
     export function someProperty(def?: SomePropertyDef): SomeProperty {
         const other = def?.other ?? {}
@@ -14,6 +15,7 @@ namespace SomeModule.Builder {
         const range = def?.range ?? undefined
         const doubleExample = def?.doubleExample ?? 0
         const longExample = def?.longExample ?? 0
+        const goodName = def?.goodName ?? "someValue"
 
         return SomeProperty.create(
             OtherModule.Builder.otherProperty(other),
@@ -21,6 +23,7 @@ namespace SomeModule.Builder {
             Optional.of(range).map(it => TypesModule.Builder.dateRange(it)),
             doubleExample,
             longExample,
+            goodName,
         )
     }
 

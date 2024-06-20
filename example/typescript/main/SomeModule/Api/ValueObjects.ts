@@ -34,6 +34,7 @@ class SomeProperty {
     private range? = new SerializedDateRange
     private doubleExample = NUMBER
     private longExample = NUMBER
+    private goodName = STRING
 
     static create(
         other: OtherProperty,
@@ -41,6 +42,7 @@ class SomeProperty {
         range: Optional<DateRange>,
         doubleExample: number,
         longExample: number,
+        goodName: string,
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
@@ -48,6 +50,7 @@ class SomeProperty {
         instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
         instance.doubleExample = doubleExample
         instance.longExample = longExample
+        instance.goodName = goodName
         return instance
     }
 
@@ -69,6 +72,10 @@ class SomeProperty {
 
     getLongExample(): number {
         return this.longExample
+    }
+
+    getGoodName(): string {
+        return this.goodName
     }
 }
 

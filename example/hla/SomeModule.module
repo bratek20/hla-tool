@@ -17,6 +17,7 @@ ValueObjects
         range: DateRange?
         doubleExample: double
         longExample: long
+        goodName: string (from: gD)
 
     SomeProperty2
         value: string (public)
