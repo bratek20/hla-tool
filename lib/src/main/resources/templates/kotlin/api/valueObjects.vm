@@ -15,7 +15,7 @@ data class ${vo.name()}(
 #foreach($vo in $complexValueObjects)
 data class ${vo.name()}(
     #foreach($field in $vo.fields)
-    ${field.accessor()}val $field.name: $field.type.serializableName(),
+    ${field.classDeclaration()},
     #end
 ) {
     #foreach($getter in $vo.getters())
@@ -27,7 +27,7 @@ data class ${vo.name()}(
     companion object {
         fun create(
         #foreach($field in $vo.fields)
-            $field.declaration(),
+            $field.createDeclaration(),
         #end
         ): ${vo.name()} {
             return ${vo.name()}(

@@ -66,7 +66,7 @@ class SimpleCustomDefType(
 }
 
 open class DefField(
-    val api: ApiTypeField,
+    val api: ComplexStructureField,
     private val factory: DefTypeFactory
 ) {
     val name = api.name
@@ -212,7 +212,7 @@ class DefTypeFactory(
         return result
     }
 
-    private fun createFields(fields: List<ApiTypeField>): List<DefField> {
+    private fun createFields(fields: List<ComplexStructureField>): List<DefField> {
         return fields.map { DefField(it, this) }
     }
 }

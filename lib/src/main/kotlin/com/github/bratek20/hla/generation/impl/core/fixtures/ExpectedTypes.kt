@@ -60,7 +60,7 @@ interface ExpectedTypeField{
 }
 
 open class DefaultExpectedTypeField(
-    protected val api: ApiTypeField,
+    protected val api: ComplexStructureField,
     private val factory: ExpectedTypeFactory
 ): ExpectedTypeField {
     protected val type by lazy {
@@ -82,7 +82,7 @@ open class DefaultExpectedTypeField(
 }
 
 class OptionalEmptyExpectedTypeField(
-    private val mainField: ApiTypeField,
+    private val mainField: ComplexStructureField,
     private val languageTypes: LanguageTypes
 ): ExpectedTypeField {
     override fun typeName(): String {
@@ -101,7 +101,7 @@ class OptionalEmptyExpectedTypeField(
 }
 
 class ListExpectedTypeField(
-    api: ApiTypeField,
+    api: ComplexStructureField,
     factory: ExpectedTypeFactory,
 ): DefaultExpectedTypeField(api, factory) {
     override fun diff(givenVariable: String, expectedVariable: String): String {
@@ -262,7 +262,7 @@ class ExpectedTypeFactory(
         return result
     }
 
-    private fun createFields(fields: List<ApiTypeField>): List<ExpectedTypeField> {
+    private fun createFields(fields: List<ComplexStructureField>): List<ExpectedTypeField> {
         return fields.map {
             if (it.type is OptionalApiType) {
                 listOf(

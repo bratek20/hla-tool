@@ -6,7 +6,7 @@ class ${p.name()} {
 
     static create(
         #foreach($field in $p.fields)
-        $field.declaration(),
+        $field.createDeclaration(),
         #end
     ): ${p.name()} {
         const instance = new ${p.name()}()

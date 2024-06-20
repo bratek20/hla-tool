@@ -114,7 +114,7 @@ class SimpleCustomApiType(
 }
 
 
-open class ComplexStructureApiType<T: ApiTypeField>(
+open class ComplexStructureApiType<T: ComplexStructureField>(
     name: String,
     val fields: List<T>
 ) : StructureApiType(name) {
@@ -126,8 +126,8 @@ open class ComplexStructureApiType<T: ApiTypeField>(
 
 class ComplexCustomApiType(
     name: String,
-    fields: List<ApiTypeField>
-) : ComplexStructureApiType<ApiTypeField>(name, fields) {
+    fields: List<ComplexStructureField>
+) : ComplexStructureApiType<ComplexStructureField>(name, fields) {
     override fun serializableName(): String {
         return "Serialized$name"
     }
@@ -162,7 +162,7 @@ class ComplexCustomApiType(
     }
 }
 
-data class SerializableTypeGetterOrSetter(
+data class ComplexStructureGetterOrSetter(
     val name: String,
     val type: ApiType,
     val field: String
@@ -170,15 +170,15 @@ data class SerializableTypeGetterOrSetter(
 
 open class SerializableApiType(
     name: String,
-    fields: List<SerializableTypeApiField>
-) : ComplexStructureApiType<SerializableTypeApiField>(name, fields) {
+    fields: List<ComplexStructureField>
+) : ComplexStructureApiType<ComplexStructureField>(name, fields) {
     // used by velocity
-    fun getters(): List<SerializableTypeGetterOrSetter> {
+    fun getters(): List<ComplexStructureGetterOrSetter> {
         return fields.mapNotNull { it.getter() }
     }
 
     // used by velocity
-    open fun setters(): List<SerializableTypeGetterOrSetter> {
+    open fun setters(): List<ComplexStructureGetterOrSetter> {
         return emptyList()
     }
 
@@ -189,15 +189,15 @@ open class SerializableApiType(
 
 class ComplexValueObjectApiType(
     name: String,
-    fields: List<SerializableTypeApiField>
+    fields: List<ComplexStructureField>
 ) : SerializableApiType(name, fields)
 
 class DataClassApiType(
     name: String,
-    fields: List<SerializableTypeApiField>
+    fields: List<ComplexStructureField>
 ) : SerializableApiType(name, fields) {
 
-    override fun setters(): List<SerializableTypeGetterOrSetter> {
+    override fun setters(): List<ComplexStructureGetterOrSetter> {
         return fields.mapNotNull { it.setter() }
     }
 }
@@ -302,9 +302,9 @@ class ApiTypeFactory(
             isList -> ListApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.LIST)))
             simpleVO != null -> SimpleValueObjectApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.getTypeName())))
             simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.getTypeName())))
-            complexVO != null -> ComplexValueObjectApiType(type.getName(), createSerializableTypeFields(complexVO.getFields()))
-            dataVO != null -> DataClassApiType(type.getName(), createSerializableTypeFields(dataVO.getFields()))
-            complexCustomType != null -> ComplexCustomApiType(type.getName(), createComplexCustomTypeFields(type.getName(), complexCustomType.getFields()))
+            complexVO != null -> ComplexValueObjectApiType(type.getName(), createComplexStructureFields(complexVO.getFields()))
+            dataVO != null -> DataClassApiType(type.getName(), createComplexStructureFields(dataVO.getFields()))
+            complexCustomType != null -> ComplexCustomApiType(type.getName(), createComplexStructureFields(complexCustomType.getFields()))
             isBaseType -> BaseApiType(ofBaseType(type.getName()))
             enum != null -> EnumApiType(enum)
             interf != null -> InterfaceApiType(type.getName())
@@ -330,15 +330,9 @@ class ApiTypeFactory(
         return result
     }
 
-    private fun createSerializableTypeFields(fields: List<FieldDefinition>): List<SerializableTypeApiField> {
+    private fun createComplexStructureFields(fields: List<FieldDefinition>): List<ComplexStructureField> {
         return fields.map {
-            SerializableTypeApiField(it, this)
-        }
-    }
-
-    private fun createComplexCustomTypeFields(className: String, fields: List<FieldDefinition>): List<ComplexCustomTypeApiField> {
-        return fields.map {
-            ComplexCustomTypeApiField(className, it, this)
+            ComplexStructureField(it, this)
         }
     }
 }
