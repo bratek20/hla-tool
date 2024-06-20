@@ -26,7 +26,7 @@ data class ${vo.name()}(
     companion object {
         fun create(
         #foreach($field in $vo.fields)
-            $field.name: $field.type.name(),
+            $field.declaration(),
         #end
         ): ${vo.name()} {
             return ${vo.name()}(
