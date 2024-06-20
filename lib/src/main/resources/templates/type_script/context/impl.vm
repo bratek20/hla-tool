@@ -1,6 +1,8 @@
 namespace ${moduleName}.Api {
 #foreach($interface in $interfaces)
+    #set($interfaceIndex = $foreach.index)
     #foreach($method in $interface.methods)
+
     export function ${method.name}(${method.argsDeclaration()}#if(${method.hasArgs()}), #{end}c: HandlerContext): ${method.returnType} {
         #set($return = "")
         #if($method.returnType != "void")
@@ -8,9 +10,6 @@ namespace ${moduleName}.Api {
         #end
         ${return}new Impl.${interface.name}Logic(c).${method.name}(${method.argsPass()})
     }
-    #if($foreach.hasNext)
-
-    #end
     #end
 #end
 }

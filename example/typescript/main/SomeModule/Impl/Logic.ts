@@ -4,6 +4,7 @@ namespace SomeModule.Impl {
             private readonly c: HandlerContext,
         ) {}
     }
+
     export class SomeInterfaceLogic implements SomeInterface {
         constructor(
             private readonly c: HandlerContext,
@@ -24,6 +25,7 @@ namespace SomeModule.Impl {
             return undefined
         }
     }
+
     export class SomeInterface2Logic implements SomeInterface2 {
         constructor(
             private readonly c: HandlerContext,

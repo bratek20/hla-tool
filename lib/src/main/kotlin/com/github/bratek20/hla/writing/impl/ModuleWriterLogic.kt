@@ -34,25 +34,10 @@ class ModuleWriterLogic(
         }
     }
 
-
-
     private fun writeDirectories(paths: Paths, generateResult: GenerateResult) {
         directories.write(paths.main, generateResult.getMain())
         directories.write(paths.fixtures, generateResult.getFixtures())
         generateResult.getTests()?.let { directories.write(paths.test, it) }
-    }
-
-    private fun shouldHandleDebug(profile: HlaProfile, moduleName: String): Boolean {
-        return profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && moduleName.equals("SomeModule", ignoreCase = true)
-    }
-
-    private fun handleDebug(generateResult: GenerateResult) {
-        val debugPath = Path("../tmp")
-        val dirs = DirectoriesLogic()
-        dirs.delete(debugPath)
-        dirs.write(debugPath, generateResult.getMain())
-        dirs.write(debugPath, generateResult.getFixtures())
-        generateResult.getTests()?.let { dirs.write(debugPath, it) }
     }
 
     private data class Paths(val main: Path, val fixtures: Path, val test: Path)

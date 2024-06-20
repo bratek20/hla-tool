@@ -1,4 +1,5 @@
 namespace SomeModule.Api {
+
     export function someCommand(id: SomeId, amount: number, c: HandlerContext): void {
         new Impl.SomeInterfaceLogic(c).someCommand(id, amount)
     }
@@ -10,6 +11,7 @@ namespace SomeModule.Api {
     export function optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {
         return new Impl.SomeInterfaceLogic(c).optMethod(optId)
     }
+
     export function referenceInterface(empty: SomeEmptyInterface, c: HandlerContext): SomeEmptyInterface {
         return new Impl.SomeInterface2Logic(c).referenceInterface(empty)
     }
