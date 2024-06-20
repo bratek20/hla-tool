@@ -86,7 +86,7 @@ data class SomeProperty2(
             value: String,
             custom: Any,
             someEnum: SomeEnum,
-            customOpt: Any?,
+            customOpt: Any? = null,
         ): SomeProperty2 {
             return SomeProperty2(
                 value = value,
@@ -150,7 +150,7 @@ data class SomeClass2(
             id: SomeId,
             names: List<String>,
             ids: List<SomeId>,
-            enabled: Boolean,
+            enabled: Boolean = true,
         ): SomeClass2 {
             return SomeClass2(
                 id = id.value,
@@ -183,7 +183,7 @@ data class SomeClass3(
         fun create(
             class2Object: SomeClass2,
             someEnum: SomeEnum,
-            class2List: List<SomeClass2>,
+            class2List: List<SomeClass2> = emptyList(),
         ): SomeClass3 {
             return SomeClass3(
                 class2Object = class2Object,
@@ -300,7 +300,7 @@ data class SomeClass6(
         fun create(
             someClassOpt: SomeClass?,
             optString: String?,
-            sameClassList: List<SomeClass6>,
+            sameClassList: List<SomeClass6> = emptyList(),
         ): SomeClass6 {
             return SomeClass6(
                 someClassOpt = someClassOpt,
