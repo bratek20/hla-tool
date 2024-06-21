@@ -149,7 +149,7 @@ class FilesModifiers(
                 indexesToRemove.add(index)
             }
         }
-        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
+        indexesToRemove.reversed().forEach { currentLines.removeAt(it) } 
 
         val newFile = File.create(file.getName(), FileContent(currentLines))
         if (newFile == file) {
