@@ -17,6 +17,7 @@ interface Files {
 
     fun compare(file1: File, file2: File): CompareResult
 }
+
 interface Directories {
     fun write(path: Path, dir: Directory): Unit
 

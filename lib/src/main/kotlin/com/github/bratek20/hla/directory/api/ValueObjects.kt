@@ -55,8 +55,8 @@ data class Directory(
     companion object {
         fun create(
             name: DirectoryName,
-            files: List<File>,
-            directories: List<Directory>,
+            files: List<File> = emptyList(),
+            directories: List<Directory> = emptyList(),
         ): Directory {
             return Directory(
                 name = name.value,
