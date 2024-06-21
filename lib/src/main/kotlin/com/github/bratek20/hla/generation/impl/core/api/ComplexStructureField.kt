@@ -1,6 +1,8 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.FieldDefinition
+import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.hla.utils.camelToPascalCase
 
 open class ComplexStructureField(
@@ -51,7 +53,13 @@ open class ComplexStructureField(
 
     // used by velocity
     fun classDeclaration(): String {
-        return "${accessor()}val ${privateName()}: ${type.serializableName()}"
+        if (type.languageTypes is TypeScriptTypes) {
+            val oc = ObjectCreationMapper()
+            return "${accessor()}${privateName()}${oc.adjustAssignment(type.serializableName())} = ${oc.map(type.serializableName())}"
+        }
+        //$field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
+        val valOrVar = if (complexStructure is DataClassApiType) "var" else "val"
+        return "${accessor()}${valOrVar} ${privateName()}: ${type.serializableName()}"
     }
 
     // used by velocity
@@ -65,6 +73,10 @@ open class ComplexStructureField(
 
     // used by velocity
     fun createConstructorPass(): String {
+        //instance.$field.name = $field.type.serialize($field.name)
+        if (type.languageTypes is TypeScriptTypes) {
+            return "instance.${privateName()} = ${type.serialize(name)}"
+        }
         return "${privateName()} = ${type.serialize(name)}"
     }
 

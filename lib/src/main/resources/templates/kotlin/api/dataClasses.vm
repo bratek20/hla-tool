@@ -8,7 +8,7 @@ import ${import}.api.*
 #foreach($vo in $dataClasses)
 data class ${vo.name()}(
     #foreach($field in $vo.fields)
-    ${field.accessor()}var $field.name: $field.type.serializableName(),
+    ${field.classDeclaration()},
     #end
 ) {
     #foreach($getter in $vo.getters())
@@ -31,7 +31,7 @@ data class ${vo.name()}(
         ): ${vo.name()} {
             return ${vo.name()}(
             #foreach($field in $vo.fields)
-                ${field.name} = ${field.type.serialize(${field.name})},
+                ${field.createConstructorPass()},
             #end
             )
         }

@@ -1,7 +1,7 @@
 #foreach($p in $dataClasses)
 class ${p.name()} {
     #foreach($field in $p.fields)
-    $field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
+    ${field.classDeclaration()}
     #end
 
     static create(
@@ -11,7 +11,7 @@ class ${p.name()} {
     ): ${p.name()} {
         const instance = new ${p.name()}()
         #foreach($field in $p.fields)
-        instance.$field.name = $field.type.serialize($field.name)
+        $field.createConstructorPass()
         #end
         return instance
     }
