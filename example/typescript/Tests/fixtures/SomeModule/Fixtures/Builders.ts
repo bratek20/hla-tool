@@ -8,6 +8,7 @@ namespace SomeModule.Builder {
         doubleExample?: number,
         longExample?: number,
         goodName?: string,
+        customData?: any,
     }
     export function someProperty(def?: SomePropertyDef): SomeProperty {
         const other = def?.other ?? {}
@@ -16,6 +17,7 @@ namespace SomeModule.Builder {
         const doubleExample = def?.doubleExample ?? 0
         const longExample = def?.longExample ?? 0
         const goodName = def?.goodName ?? "someValue"
+        const customData = def?.customData ?? {}
 
         return SomeProperty.create(
             OtherModule.Builder.otherProperty(other),
@@ -24,6 +26,7 @@ namespace SomeModule.Builder {
             doubleExample,
             longExample,
             goodName,
+            customData,
         )
     }
 

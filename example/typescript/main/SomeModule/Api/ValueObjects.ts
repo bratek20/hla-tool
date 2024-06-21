@@ -35,6 +35,7 @@ class SomeProperty {
     private doubleExample = NUMBER
     private longExample = NUMBER
     private gN = STRING
+    private customData = ANY
 
     static create(
         other: OtherProperty,
@@ -43,6 +44,7 @@ class SomeProperty {
         doubleExample: number,
         longExample: number,
         goodName: string,
+        customData: any,
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
@@ -51,6 +53,7 @@ class SomeProperty {
         instance.doubleExample = doubleExample
         instance.longExample = longExample
         instance.gN = goodName
+        instance.customData = customData
         return instance
     }
 
@@ -76,6 +79,10 @@ class SomeProperty {
 
     getGoodName(): string {
         return this.gN
+    }
+
+    getCustomData(): any {
+        return this.customData
     }
 }
 
