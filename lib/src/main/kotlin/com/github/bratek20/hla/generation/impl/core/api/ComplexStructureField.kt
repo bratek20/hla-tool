@@ -102,7 +102,7 @@ open class ComplexStructureField(
     }
 
     fun setter(): ComplexStructureGetterOrSetter {
-        return ComplexStructureGetterOrSetter(setterName(), type, name)
+        return ComplexStructureGetterOrSetter(setterName(), type, privateName())
     }
 
     fun getterName(): String {

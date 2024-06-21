@@ -48,7 +48,7 @@ class SomeData {
         this.customOpt = customOpt.orElse(undefined)
     }
 
-    setGoodDataName(goodDataName: string): void {
-        this.goodDataName = goodDataName
+    setGoodDataName(gDN: string): void {
+        this.gDN = gDN
     }
 }
