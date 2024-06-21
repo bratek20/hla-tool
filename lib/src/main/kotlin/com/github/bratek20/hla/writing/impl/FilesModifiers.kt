@@ -112,7 +112,7 @@ class FilesModifiers(
         val currentLines = file.getContent().lines.toMutableList()
 
         val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
-        var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
+        var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]")} + startIndex
         val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
 
         val newLines = mutableListOf<String>()
@@ -126,13 +126,15 @@ class FilesModifiers(
             }
             item.fileNames.forEach { fileName ->
                 newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
-                val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName") }
+                val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName")}
                 if (result) {
                     indexToAdd--
                 }
             }
         }
-       newLines.add(moduleEndComment)
+
+        newLines.add(moduleEndComment)
+
 
         currentLines.addAll(indexToAdd, newLines)
         val indexesToRemove = mutableListOf<Int>()
@@ -140,7 +142,9 @@ class FilesModifiers(
         val lastModuleEndCommentIndex = currentLines.indexOfLast { it.contains(moduleEndComment) }
         currentLines.forEachIndexed { index, line ->
             if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true ||
-                    line == moduleStartComment && index != firstModuleStartCommentIndex || line == moduleEndComment && index != lastModuleEndCommentIndex
+                    line == moduleStartComment && index != firstModuleStartCommentIndex || line == moduleEndComment && index != lastModuleEndCommentIndex ||
+                    line.isBlank() && currentLines.getOrNull(index - 1)?.contains(moduleStartComment) == true ||
+                    line.isBlank() && currentLines.getOrNull(index - 1)?.contains(moduleEndComment) == true && currentLines.getOrNull(index - 2)?.isBlank() == true
                 ) {
                 indexesToRemove.add(index)
             }
