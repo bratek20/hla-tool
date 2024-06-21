@@ -116,8 +116,14 @@ class FilesModifiers(
         val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
 
         val newLines = mutableListOf<String>()
-        extractFiles(directory).forEach { item ->
+        val directoryName = directory.getName().value
+        val moduleStartComment = "$padding//$directoryName start"
+        val moduleEndComment = "$padding//$directoryName end"
+        extractFiles(directory).forEachIndexed { index, item ->
             newLines.add("")
+            if(index == 0) {
+               newLines.add(moduleStartComment)
+            }
             item.fileNames.forEach { fileName ->
                 newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
                 val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName") }
@@ -126,11 +132,16 @@ class FilesModifiers(
                 }
             }
         }
+       newLines.add(moduleEndComment)
 
         currentLines.addAll(indexToAdd, newLines)
         val indexesToRemove = mutableListOf<Int>()
+        val firstModuleStartCommentIndex = currentLines.indexOfFirst { it.contains(moduleStartComment) }
+        val lastModuleEndCommentIndex = currentLines.indexOfLast { it.contains(moduleEndComment) }
         currentLines.forEachIndexed { index, line ->
-            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true) {
+            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true ||
+                    line == moduleStartComment && index != firstModuleStartCommentIndex || line == moduleEndComment && index != lastModuleEndCommentIndex
+                ) {
                 indexesToRemove.add(index)
             }
         }
