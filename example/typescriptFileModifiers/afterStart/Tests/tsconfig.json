@@ -2,12 +2,12 @@
     "include": [
         "test/SomeModule/SomeClassTest.ts",
 
-        // OtherModule start
+        //OtherModule start
         "fixtures/OtherModule/Fixtures/Builders.ts",
         "fixtures/OtherModule/Fixtures/Diffs.ts",
         "fixtures/OtherModule/Fixtures/Asserts.ts",
 
         "test/OtherModule/Tests/ApiTest.ts",
-        // OtherModule end
+        //OtherModule end
     ]
 }

@@ -3,7 +3,7 @@
         "main/SomeModule/SomeClass.ts",
         "main/SomeModule/SomeClass2.ts",
 
-        // OtherModule start
+        //OtherModule start
         "main/OtherModule/Api/ValueObjects.ts",
         "main/OtherModule/Api/DataClasses.ts",
         "main/OtherModule/Api/PropertyKeys.ts",
@@ -15,6 +15,6 @@
         "main/OtherModule/Impl/Logic.ts",
 
         "main/OtherModule/Context/Impl.ts",
-        // OtherModule end
+        //OtherModule end
     ]
 }
