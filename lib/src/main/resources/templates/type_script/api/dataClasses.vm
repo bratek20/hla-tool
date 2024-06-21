@@ -23,8 +23,8 @@ class ${p.name()} {
     #end
     #foreach($setter in $p.setters())
 
-    ${setter.name}(${setter.field}: ${setter.type.name()}): void {
-        this.${setter.field} = ${setter.type.serialize(${setter.field})}
+    ${setter.name}(${setter.publicField}: ${setter.type.name()}): void {
+        this.${setter.privateField} = ${setter.type.serialize(${setter.publicField})}
     }
     #end
 }#if($foreach.hasNext)

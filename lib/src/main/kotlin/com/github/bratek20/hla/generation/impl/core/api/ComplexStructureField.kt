@@ -97,12 +97,18 @@ open class ComplexStructureField(
         return value
     }
 
-    fun getter(): ComplexStructureGetterOrSetter {
-        return ComplexStructureGetterOrSetter(getterName(), type, privateName())
+    fun getter(): ComplexStructureGetter {
+        return ComplexStructureGetter(getterName(), type, privateName())
     }
 
-    fun setter(): ComplexStructureGetterOrSetter {
-        return ComplexStructureGetterOrSetter(setterName(), type, privateName())
+    //TODO-REF introduce setterBody and setterDeclaration? to simplify velocity
+    fun setter(): ComplexStructureSetter {
+        return ComplexStructureSetter(
+            name = setterName(),
+            type = type,
+            publicField = name,
+            privateField = privateName()
+        )
     }
 
     fun getterName(): String {

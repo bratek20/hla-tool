@@ -18,8 +18,8 @@ data class ${vo.name()}(
 
     #end
     #foreach($setter in $vo.setters())
-    fun ${setter.name}(${setter.field}: ${setter.type.name()}) {
-        this.${setter.field} = ${setter.type.serialize("${setter.field}")}
+    fun ${setter.name}(${setter.publicField}: ${setter.type.name()}) {
+        this.${setter.privateField} = ${setter.type.serialize("${setter.publicField}")}
     }
 
     #end

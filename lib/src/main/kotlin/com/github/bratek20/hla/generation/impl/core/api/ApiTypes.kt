@@ -162,10 +162,17 @@ class ComplexCustomApiType(
     }
 }
 
-data class ComplexStructureGetterOrSetter(
+data class ComplexStructureGetter(
     val name: String,
     val type: ApiType,
     val field: String
+)
+
+data class ComplexStructureSetter(
+    val name: String,
+    val type: ApiType,
+    val publicField: String,
+    val privateField: String
 )
 
 open class SerializableApiType(
@@ -173,12 +180,12 @@ open class SerializableApiType(
     fields: List<ComplexStructureField>
 ) : ComplexStructureApiType<ComplexStructureField>(name, fields) {
     // used by velocity
-    fun getters(): List<ComplexStructureGetterOrSetter> {
+    fun getters(): List<ComplexStructureGetter> {
         return fields.mapNotNull { it.getter() }
     }
 
     // used by velocity
-    open fun setters(): List<ComplexStructureGetterOrSetter> {
+    open fun setters(): List<ComplexStructureSetter> {
         return emptyList()
     }
 
@@ -197,7 +204,7 @@ class DataClassApiType(
     fields: List<ComplexStructureField>
 ) : SerializableApiType(name, fields) {
 
-    override fun setters(): List<ComplexStructureGetterOrSetter> {
+    override fun setters(): List<ComplexStructureSetter> {
         return fields.mapNotNull { it.setter() }
     }
 }

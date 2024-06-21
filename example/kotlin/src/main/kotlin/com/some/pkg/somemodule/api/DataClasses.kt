@@ -39,8 +39,8 @@ data class SomeData(
         this.customOpt = customOpt
     }
 
-    fun setGoodDataName(gDN: String) {
-        this.gDN = gDN
+    fun setGoodDataName(goodDataName: String) {
+        this.gDN = goodDataName
     }
 
     companion object {
