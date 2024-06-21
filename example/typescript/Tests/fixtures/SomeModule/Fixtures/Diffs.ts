@@ -253,6 +253,7 @@ namespace SomeModule {
         other?: OtherModule.ExpectedOtherData,
         custom?: any,
         customOpt?: any,
+        goodDataName?: string,
     }
     export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: string = ""): string {
         const result: string[] = []
@@ -267,6 +268,10 @@ namespace SomeModule {
 
         if (expected.customOpt !== undefined) {
             if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
+        }
+
+        if (expected.goodDataName !== undefined) {
+            if (given.getGoodDataName() != expected.goodDataName) { result.push(`${path}goodDataName ${given.getGoodDataName()} != ${expected.goodDataName}`) }
         }
 
         return result.join("\n")

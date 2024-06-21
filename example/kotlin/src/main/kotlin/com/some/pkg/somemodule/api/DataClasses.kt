@@ -9,6 +9,7 @@ data class SomeData(
     private var other: OtherData,
     private var custom: Any,
     private var customOpt: Any?,
+    private var gDN: String,
 ) {
     fun getOther(): OtherData {
         return this.other
@@ -20,6 +21,10 @@ data class SomeData(
 
     fun getCustomOpt(): Any? {
         return this.customOpt
+    }
+
+    fun getGoodDataName(): String {
+        return this.gDN
     }
 
     fun setOther(other: OtherData) {
@@ -34,16 +39,22 @@ data class SomeData(
         this.customOpt = customOpt
     }
 
+    fun setGoodDataName(goodDataName: String) {
+        this.goodDataName = goodDataName
+    }
+
     companion object {
         fun create(
             other: OtherData,
             custom: Any,
             customOpt: Any?,
+            goodDataName: String,
         ): SomeData {
             return SomeData(
                 other = other,
                 custom = custom,
                 customOpt = customOpt,
+                gDN = goodDataName,
             )
         }
     }

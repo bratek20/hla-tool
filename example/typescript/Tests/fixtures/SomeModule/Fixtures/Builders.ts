@@ -173,16 +173,19 @@ namespace SomeModule.Builder {
         other?: OtherModule.Builder.OtherDataDef,
         custom?: any,
         customOpt?: any,
+        goodDataName?: string,
     }
     export function someData(def?: SomeDataDef): SomeData {
         const other = def?.other ?? {}
         const custom = def?.custom ?? {}
         const customOpt = def?.customOpt ?? undefined
+        const goodDataName = def?.goodDataName ?? "someValue"
 
         return SomeData.create(
             OtherModule.Builder.otherData(other),
             custom,
             Optional.of(customOpt),
+            goodDataName,
         )
     }
 }

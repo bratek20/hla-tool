@@ -4,16 +4,19 @@ class SomeData {
     private other = new OtherData
     private custom = ANY
     private customOpt? = ANY
+    private gDN = STRING
 
     static create(
         other: OtherData,
         custom: any,
         customOpt: Optional<any>,
+        goodDataName: string,
     ): SomeData {
         const instance = new SomeData()
         instance.other = other
         instance.custom = custom
         instance.customOpt = customOpt.orElse(undefined)
+        instance.gDN = goodDataName
         return instance
     }
 
@@ -29,6 +32,10 @@ class SomeData {
         return Optional.of(this.customOpt)
     }
 
+    getGoodDataName(): string {
+        return this.gDN
+    }
+
     setOther(other: OtherData): void {
         this.other = other
     }
@@ -39,5 +46,9 @@ class SomeData {
 
     setCustomOpt(customOpt: Optional<any>): void {
         this.customOpt = customOpt.orElse(undefined)
+    }
+
+    setGoodDataName(goodDataName: string): void {
+        this.goodDataName = goodDataName
     }
 }
