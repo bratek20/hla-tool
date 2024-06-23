@@ -27,4 +27,6 @@ interface SomeInterface2 {
     fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 
     fun referenceOtherInterface(other: OtherInterface): OtherInterface
+
+    fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType
 }

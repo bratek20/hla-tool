@@ -3,6 +3,7 @@ package com.github.bratek20.hla.parsing
 import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 import com.github.bratek20.architecture.context.someContextBuilder
+import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
@@ -184,13 +185,13 @@ class ModuleDefinitionsParserTest {
                 )
                 interfaces = listOf {
                     name = "SomeInterface"
-                    methods = listOf (
+                    methods = listOf(
                         {
                             name = "someCommand"
                             returnType = {
                                 name = "void"
                             }
-                            args = listOf (
+                            args = listOf(
                                 {
                                     name = "id"
                                     type = {
@@ -204,7 +205,7 @@ class ModuleDefinitionsParserTest {
                                     }
                                 }
                             )
-                            throws = listOf (
+                            throws = listOf(
                                 {
                                     name = "SomeException"
                                 },
@@ -302,7 +303,7 @@ class ModuleDefinitionsParserTest {
             }
             complexCustomTypes = listOf {
                 name = "ComplexType"
-                fields = listOf (
+                fields = listOf(
                     {
                         name = "field1"
                         type = {
@@ -343,7 +344,7 @@ class ModuleDefinitionsParserTest {
 
     @Test
     fun `should not crash for bug`() {
-        assertThatCode{
+        assertThatCode {
             parse("bug")
         }.doesNotThrowAnyException()
     }
@@ -401,5 +402,19 @@ class ModuleDefinitionsParserTest {
                 }
             }
         })
+    }
+
+    @Test
+    fun `should parse external types`() {
+        val modules = parse("external-types")
+
+    }
+
+    @Test
+    fun `should throw exception if root level section is unknown`() {
+        assertApiExceptionThrown(
+            { parse("unknown-section") },
+            { message = "Unknown section: 'SomeUnknownSection'" }
+        )
     }
 }
