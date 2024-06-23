@@ -1,15 +1,14 @@
 package com.github.bratek20.hla.parsing.impl
 
-import com.github.bratek20.architecture.exceptions.ApiException
+import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.directory.api.File
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.directory.impl.DirectoriesLogic
-import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
-import java.util.ArrayDeque
+import java.util.*
 
 class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     override fun parse(path: Path): List<ModuleDefinition> {
@@ -46,7 +45,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             complexCustomTypes = customTypes.complex,
             dataClasses = dataClasses,
             dataKeys = dataKeys,
-            implSubmodule = implSubmodule
+            implSubmodule = implSubmodule,
+            externalTypes = emptyList()
         )
     }
 

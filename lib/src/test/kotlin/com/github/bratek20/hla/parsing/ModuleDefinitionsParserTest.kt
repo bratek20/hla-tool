@@ -409,6 +409,17 @@ class ModuleDefinitionsParserTest {
     fun `should parse external types`() {
         val modules = parse("external-types")
 
+        assertModules(modules, listOf {
+            externalTypes = listOf(
+                "LegacyType",
+            )
+            kotlinConfig = {
+                externalTypePackages = listOf {
+                    name = "LegacyType"
+                    packageName = "com.example.legacy"
+                }
+            }
+        })
     }
 
     @Test

@@ -79,6 +79,49 @@ data class ImplSubmoduleDefinition(
     }
 }
 
+data class ExternalTypePackageMapping(
+    private val name: String,
+    private val packageName: String,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getPackageName(): String {
+        return this.packageName
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            packageName: String,
+        ): ExternalTypePackageMapping {
+            return ExternalTypePackageMapping(
+                name = name,
+                packageName = packageName,
+            )
+        }
+    }
+}
+
+data class KotlinConfig(
+    private val externalTypePackages: List<ExternalTypePackageMapping>,
+) {
+    fun getExternalTypePackages(): List<ExternalTypePackageMapping> {
+        return this.externalTypePackages
+    }
+
+    companion object {
+        fun create(
+            externalTypePackages: List<ExternalTypePackageMapping>,
+        ): KotlinConfig {
+            return KotlinConfig(
+                externalTypePackages = externalTypePackages,
+            )
+        }
+    }
+}
+
 data class ModuleDefinition(
     private val name: String,
     private val simpleCustomTypes: List<SimpleStructureDefinition>,
@@ -91,6 +134,8 @@ data class ModuleDefinition(
     private val dataKeys: List<KeyDefinition>,
     private val enums: List<EnumDefinition>,
     private val implSubmodule: ImplSubmoduleDefinition,
+    private val externalTypes: List<String>,
+    private val kotlinConfig: KotlinConfig?,
 ) {
     fun getName(): ModuleName {
         return ModuleName(this.name)
@@ -136,6 +181,14 @@ data class ModuleDefinition(
         return this.implSubmodule
     }
 
+    fun getExternalTypes(): List<String> {
+        return this.externalTypes
+    }
+
+    fun getKotlinConfig(): KotlinConfig? {
+        return this.kotlinConfig
+    }
+
     companion object {
         fun create(
             name: ModuleName,
@@ -149,6 +202,8 @@ data class ModuleDefinition(
             dataKeys: List<KeyDefinition>,
             enums: List<EnumDefinition>,
             implSubmodule: ImplSubmoduleDefinition,
+            externalTypes: List<String>,
+            kotlinConfig: KotlinConfig? = null,
         ): ModuleDefinition {
             return ModuleDefinition(
                 name = name.value,
@@ -162,6 +217,8 @@ data class ModuleDefinition(
                 dataKeys = dataKeys,
                 enums = enums,
                 implSubmodule = implSubmodule,
+                externalTypes = externalTypes,
+                kotlinConfig = kotlinConfig,
             )
         }
     }

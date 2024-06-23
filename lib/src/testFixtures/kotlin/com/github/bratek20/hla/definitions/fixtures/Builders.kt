@@ -43,6 +43,28 @@ fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): I
     )
 }
 
+data class ExternalTypePackageMappingDef(
+    var name: String = "someValue",
+    var packageName: String = "someValue",
+)
+fun externalTypePackageMapping(init: ExternalTypePackageMappingDef.() -> Unit = {}): ExternalTypePackageMapping {
+    val def = ExternalTypePackageMappingDef().apply(init)
+    return ExternalTypePackageMapping.create(
+        name = def.name,
+        packageName = def.packageName,
+    )
+}
+
+data class KotlinConfigDef(
+    var externalTypePackages: List<(ExternalTypePackageMappingDef.() -> Unit)> = emptyList(),
+)
+fun kotlinConfig(init: KotlinConfigDef.() -> Unit = {}): KotlinConfig {
+    val def = KotlinConfigDef().apply(init)
+    return KotlinConfig.create(
+        externalTypePackages = def.externalTypePackages.map { it -> externalTypePackageMapping(it) },
+    )
+}
+
 data class ModuleDefinitionDef(
     var name: String = "someValue",
     var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
@@ -55,6 +77,8 @@ data class ModuleDefinitionDef(
     var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
     var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
     var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit) = {},
+    var externalTypes: List<String> = emptyList(),
+    var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
@@ -70,6 +94,8 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         dataKeys = def.dataKeys.map { it -> keyDefinition(it) },
         enums = def.enums.map { it -> enumDefinition(it) },
         implSubmodule = implSubmoduleDefinition(def.implSubmodule),
+        externalTypes = def.externalTypes,
+        kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
     )
 }
 

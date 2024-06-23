@@ -26,6 +26,13 @@ ValueObjects
         dataClasses: ComplexStructureDefinition[]
         dataKeys: KeyDefinition[]
 
+    ExternalTypePackageMapping
+        name: string
+        packageName: string
+
+    KotlinConfig
+        externalTypePackages: ExternalTypePackageMapping[]
+
     ModuleDefinition
         name: ModuleName
         simpleCustomTypes: SimpleStructureDefinition[]
@@ -38,6 +45,8 @@ ValueObjects
         dataKeys: KeyDefinition[]
         enums: EnumDefinition[]
         implSubmodule: ImplSubmoduleDefinition
+        externalTypes: string[]
+        kotlinConfig: KotlinConfig? = empty
 
     TypeDefinition
         name: string

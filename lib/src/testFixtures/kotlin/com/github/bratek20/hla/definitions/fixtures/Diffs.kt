@@ -67,6 +67,40 @@ fun diffImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: Ex
     return result.joinToString("\n")
 }
 
+data class ExpectedExternalTypePackageMapping(
+    var name: String? = null,
+    var packageName: String? = null,
+)
+fun diffExternalTypePackageMapping(given: ExternalTypePackageMapping, expectedInit: ExpectedExternalTypePackageMapping.() -> Unit, path: String = ""): String {
+    val expected = ExpectedExternalTypePackageMapping().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.packageName?.let {
+        if (given.getPackageName() != it) { result.add("${path}packageName ${given.getPackageName()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedKotlinConfig(
+    var externalTypePackages: List<(ExpectedExternalTypePackageMapping.() -> Unit)>? = null,
+)
+fun diffKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.() -> Unit, path: String = ""): String {
+    val expected = ExpectedKotlinConfig().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.externalTypePackages?.let {
+        if (given.getExternalTypePackages().size != it.size) { result.add("${path}externalTypePackages size ${given.getExternalTypePackages().size} != ${it.size}") }
+        given.getExternalTypePackages().forEachIndexed { idx, entry -> if (diffExternalTypePackageMapping(entry, it[idx]) != "") { result.add(diffExternalTypePackageMapping(entry, it[idx], "${path}externalTypePackages[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedModuleDefinition(
     var name: String? = null,
     var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
@@ -79,6 +113,8 @@ data class ExpectedModuleDefinition(
     var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
     var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
     var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
+    var externalTypes: List<String>? = null,
+    var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
 )
 fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedModuleDefinition().apply(expectedInit)
@@ -135,6 +171,15 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
     expected.implSubmodule?.let {
         if (diffImplSubmoduleDefinition(given.getImplSubmodule(), it) != "") { result.add(diffImplSubmoduleDefinition(given.getImplSubmodule(), it, "${path}implSubmodule.")) }
+    }
+
+    expected.externalTypes?.let {
+        if (given.getExternalTypes().size != it.size) { result.add("${path}externalTypes size ${given.getExternalTypes().size} != ${it.size}") }
+        given.getExternalTypes().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}externalTypes[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    expected.kotlinConfig?.let {
+        if (diffKotlinConfig(given.getKotlinConfig()!!, it) != "") { result.add(diffKotlinConfig(given.getKotlinConfig()!!, it, "${path}kotlinConfig.")) }
     }
 
     return result.joinToString("\n")
