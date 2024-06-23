@@ -19,4 +19,8 @@ namespace SomeModule.Api {
     export function referenceOtherInterface(other: OtherInterface, c: HandlerContext): OtherInterface {
         return new Impl.SomeInterface2Logic(c).referenceOtherInterface(other)
     }
+
+    export function referenceLegacyType(legacyType: LegacyType, c: HandlerContext): LegacyType {
+        return new Impl.SomeInterface2Logic(c).referenceLegacyType(legacyType)
+    }
 }
