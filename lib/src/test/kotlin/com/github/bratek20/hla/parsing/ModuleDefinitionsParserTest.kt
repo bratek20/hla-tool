@@ -414,7 +414,7 @@ class ModuleDefinitionsParserTest {
     fun `should throw exception if root level section is unknown`() {
         assertApiExceptionThrown(
             { parse("unknown-section") },
-            { message = "Unknown section: 'SomeUnknownSection'" }
+            { message = "Module SomeModule has unknown root sections: [SomeUnknownSection, SomeUnknownSection2]" }
         )
     }
 }

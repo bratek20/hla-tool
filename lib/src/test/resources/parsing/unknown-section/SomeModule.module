@@ -2,3 +2,5 @@ ValueObjects
     SomeId: string
 
 SomeUnknownSection
+
+SomeUnknownSection2

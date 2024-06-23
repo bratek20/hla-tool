@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.parsing.impl
 
+import com.github.bratek20.architecture.exceptions.ApiException
 import com.github.bratek20.hla.directory.api.File
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.directory.api.Path
@@ -22,6 +23,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     private fun parseModuleFile(file: File): ModuleDefinition {
         val moduleName = ModuleName(file.getName().value.split(".module").get(0))
         val elements = parseElements(file.getContent())
+        checkRootSections(moduleName, elements)
+
         val valueObjects = parseStructures("ValueObjects", elements)
         val dataClasses = parseComplexStructureDefinitions("DataClasses", elements)
         val interfaces = parseInterfaces(elements)
@@ -44,6 +47,24 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             dataKeys = dataKeys,
             implSubmodule = implSubmodule
         )
+    }
+
+    private fun checkRootSections(module: ModuleName, elements: List<ParsedElement>) {
+        val rootSections = elements.filterIsInstance<Section>()
+        val knownRootSections = setOf(
+            "ValueObjects",
+            "DataClasses",
+            "Interfaces",
+            "PropertyKeys",
+            "Enums",
+            "CustomTypes",
+            "DataKeys",
+            "Impl"
+        )
+        val unknownRootSections = rootSections.map { it.name }.filter { it !in knownRootSections }
+        if (unknownRootSections.isNotEmpty()) {
+            throw ApiException("Module ${module.value} has unknown root sections: $unknownRootSections")
+        }
     }
 
     open class ParsedElement(
