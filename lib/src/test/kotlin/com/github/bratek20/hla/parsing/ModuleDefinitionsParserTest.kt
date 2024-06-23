@@ -9,6 +9,7 @@ import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.definitions.fixtures.assertModules
 import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
+import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import com.github.bratek20.hla.parsing.impl.ParsingContextModule
 
 class ModuleDefinitionsParserTest {
@@ -414,7 +415,10 @@ class ModuleDefinitionsParserTest {
     fun `should throw exception if root level section is unknown`() {
         assertApiExceptionThrown(
             { parse("unknown-section") },
-            { message = "Module SomeModule has unknown root sections: [SomeUnknownSection, SomeUnknownSection2]" }
+            {
+                type = UnknownRootSectionException::class
+                message = "Module SomeModule has unknown root sections: [SomeUnknownSection, SomeUnknownSection2]"
+            }
         )
     }
 }

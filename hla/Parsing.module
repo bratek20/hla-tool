@@ -1,3 +1,5 @@
 Interfaces
     ModuleDefinitionsParser
         parse(path: Path): ModuleDefinition[]
+            throws
+                UnknownRootSectionException

@@ -8,6 +8,7 @@ import com.github.bratek20.hla.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
+import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import java.util.ArrayDeque
 
 class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
@@ -63,7 +64,7 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         )
         val unknownRootSections = rootSections.map { it.name }.filter { it !in knownRootSections }
         if (unknownRootSections.isNotEmpty()) {
-            throw ApiException("Module ${module.value} has unknown root sections: $unknownRootSections")
+            throw UnknownRootSectionException("Module ${module.value} has unknown root sections: $unknownRootSections")
         }
     }
 
