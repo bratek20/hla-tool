@@ -30,4 +30,8 @@ class SomeInterface2Logic: SomeInterface2 {
     override fun referenceOtherInterface(other: OtherInterface): OtherInterface {
         TODO("Not yet implemented")
     }
+
+    override fun referenceLegacyType(legacyType: LegacyType): LegacyType {
+        TODO("Not yet implemented")
+    }
 }

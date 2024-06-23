@@ -138,4 +138,12 @@ class HlaModules(
     private fun hasType(module: ModuleDefinition, typeName: String): Boolean {
         return allModuleTypeNames(module).contains(typeName)
     }
+
+    fun findExternalType(type: TypeDefinition): Any? {
+        return modules.firstNotNullOfOrNull { findExternalType(type, it) }
+    }
+
+    private fun findExternalType(type: TypeDefinition, module: ModuleDefinition): Any? {
+        return module.getExternalTypes().find { it == type.getName() }
+    }
 }
