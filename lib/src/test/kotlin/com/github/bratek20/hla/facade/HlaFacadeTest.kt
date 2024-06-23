@@ -412,8 +412,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        //TODO-REF: some modules like Legacy should not write useless files
-        directoriesMock.assertWriteCount(15)
+        directoriesMock.assertWriteCount(12)
     }
 
     @Test

@@ -31,7 +31,7 @@ class SomeInterface2Logic: SomeInterface2 {
         TODO("Not yet implemented")
     }
 
-    override fun referenceLegacyType(legacyType: LegacyType): LegacyType {
+    override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
         TODO("Not yet implemented")
     }
 }

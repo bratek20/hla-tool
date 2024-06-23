@@ -1,6 +1,0 @@
-ExternalTypes
-    LegacyType
-
-Kotlin
-    ExternalTypePackages
-        LegacyType -> com.some.pkg.legacy

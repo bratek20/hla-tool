@@ -66,6 +66,9 @@ DataClasses
         customOpt: any?
         goodDataName: string (from: gDN)
 
+ExternalTypes
+    LegacyType
+
 Interfaces
     SomeEmptyInterface
 
@@ -83,3 +86,7 @@ Interfaces
         referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
         referenceOtherInterface(other: OtherInterface): OtherInterface
         referenceLegacyType(legacyType: LegacyType): LegacyType
+
+Kotlin
+    ExternalTypePackages
+        LegacyType -> com.some.pkg.legacy

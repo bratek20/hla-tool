@@ -5,6 +5,7 @@ import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.definitions.impl.HlaModules
 import com.github.bratek20.hla.definitions.impl.isBaseType
 import com.github.bratek20.hla.definitions.impl.ofBaseType
+import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -42,9 +43,17 @@ class InterfaceApiType(
 }
 
 class ExternalApiType(
-    val name: String
+    val name: String,
+    private val typeModule: ModuleDefinition
 ) : ApiType() {
     override fun name(): String {
+        if (languageTypes is KotlinTypes) {
+            typeModule.getKotlinConfig()?.let { config ->
+                config.getExternalTypePackages().find { it.getName() == name }?.let {
+                    return it.getPackageName() + "." + name
+                }
+            }
+        }
         return name
     }
 }
@@ -311,7 +320,7 @@ class ApiTypeFactory(
         val complexCustomType = modules.findComplexCustomType(type)
         val dataVO = modules.findDataClass(type)
         val interf = modules.findInterface(type)
-        val externalType = modules.findExternalType(type)
+        val externalTypeName = modules.findExternalType(type)
 
         val apiType = when {
             isOptional -> OptionalApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.OPTIONAL)))
@@ -324,7 +333,7 @@ class ApiTypeFactory(
             isBaseType -> BaseApiType(ofBaseType(type.getName()))
             enum != null -> EnumApiType(enum)
             interf != null -> InterfaceApiType(type.getName())
-            externalType != null -> ExternalApiType(type.getName())
+            externalTypeName != null -> ExternalApiType(externalTypeName, modules.getTypeModule(externalTypeName))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

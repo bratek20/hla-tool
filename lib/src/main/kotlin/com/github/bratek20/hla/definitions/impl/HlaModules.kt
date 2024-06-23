@@ -95,7 +95,7 @@ class HlaModules(
             .map { it.getName() }
     }
 
-    fun getTypeModule(typeName: String): ModuleName {
+    fun getTypeModuleName(typeName: String): ModuleName {
         allTypeNames().forEach { (moduleName, typeNames) ->
             if (typeNames.contains(typeName)) {
                 return moduleName
@@ -105,11 +105,16 @@ class HlaModules(
         throw IllegalStateException("Type $typeName not found in any module")
     }
 
+    fun getTypeModule(typeName: String): ModuleDefinition {
+        return get(getTypeModuleName(typeName))
+    }
+
     private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
         return module.getEnums().map { it.getName() } +
                 allSimpleStructureDefinitions(module).map { it.getName() } +
                 allComplexStructureDefinitions(module).map { it.getName() } +
-                module.getInterfaces().map { it.getName() }
+                module.getInterfaces().map { it.getName() } +
+                module.getExternalTypes()
     }
 
     private fun interfacesTypeNames(module: ModuleDefinition): List<String> {
@@ -139,11 +144,11 @@ class HlaModules(
         return allModuleTypeNames(module).contains(typeName)
     }
 
-    fun findExternalType(type: TypeDefinition): Any? {
+    fun findExternalType(type: TypeDefinition): String? {
         return modules.firstNotNullOfOrNull { findExternalType(type, it) }
     }
 
-    private fun findExternalType(type: TypeDefinition, module: ModuleDefinition): Any? {
+    private fun findExternalType(type: TypeDefinition, module: ModuleDefinition): String? {
         return module.getExternalTypes().find { it == type.getName() }
     }
 }
