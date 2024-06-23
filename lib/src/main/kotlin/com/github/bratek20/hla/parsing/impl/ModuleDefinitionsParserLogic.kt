@@ -33,6 +33,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val customTypes = parseStructures("CustomTypes", elements)
         val dataKeys = parseKeys("DataKeys", elements)
         val implSubmodule = parseImplSubmodule(elements)
+        val externalTypes = parseExternalTypes(elements)
+        val kotlinConfig = parseKotlinConfig(elements)
 
         return ModuleDefinition.create(
             name = moduleName,
@@ -46,8 +48,34 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             dataClasses = dataClasses,
             dataKeys = dataKeys,
             implSubmodule = implSubmodule,
-            externalTypes = emptyList()
+            externalTypes = externalTypes,
+            kotlinConfig = kotlinConfig,
         )
+    }
+
+    private fun parseExternalTypes(elements: List<ParsedElement>): List<String> {
+        val externalTypeSection = elements.find { it is Section && it.name == "ExternalTypes" } as Section?
+        if (externalTypeSection == null) {
+            return emptyList()
+        }
+
+        return externalTypeSection.elements.filterIsInstance<Section>().map {
+            it.name
+        }
+    }
+
+    private fun parseKotlinConfig(elements: List<ParsedElement>): KotlinConfig? {
+        val kotlinSection = elements.find { it is Section && it.name == "Kotlin" } as Section?
+        if (kotlinSection != null) {
+            val externalTypePackagesSection = kotlinSection.elements.find { it is Section && it.name == "ExternalTypePackages" } as Section?
+            val mappings = externalTypePackagesSection?.elements?.filterIsInstance<ParsedMapping>()?.map {
+                ExternalTypePackageMapping(it.key, it.value)
+            }
+            return KotlinConfig(
+                externalTypePackages = mappings ?: emptyList()
+            )
+        }
+        return null
     }
 
     private fun checkRootSections(module: ModuleName, elements: List<ParsedElement>) {
@@ -60,7 +88,9 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             "Enums",
             "CustomTypes",
             "DataKeys",
-            "Impl"
+            "Impl",
+            "ExternalTypes",
+            "Kotlin"
         )
         val unknownRootSections = rootSections.map { it.name }.filter { it !in knownRootSections }
         if (unknownRootSections.isNotEmpty()) {

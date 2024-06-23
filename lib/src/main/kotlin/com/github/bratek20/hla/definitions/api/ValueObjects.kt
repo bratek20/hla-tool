@@ -203,7 +203,7 @@ data class ModuleDefinition(
             enums: List<EnumDefinition>,
             implSubmodule: ImplSubmoduleDefinition,
             externalTypes: List<String>,
-            kotlinConfig: KotlinConfig? = null,
+            kotlinConfig: KotlinConfig?,
         ): ModuleDefinition {
             return ModuleDefinition(
                 name = name.value,

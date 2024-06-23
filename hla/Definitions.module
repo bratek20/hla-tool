@@ -46,7 +46,7 @@ ValueObjects
         enums: EnumDefinition[]
         implSubmodule: ImplSubmoduleDefinition
         externalTypes: string[]
-        kotlinConfig: KotlinConfig? = empty
+        kotlinConfig: KotlinConfig?
 
     TypeDefinition
         name: string

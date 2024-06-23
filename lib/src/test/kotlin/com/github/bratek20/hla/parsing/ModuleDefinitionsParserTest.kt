@@ -416,7 +416,7 @@ class ModuleDefinitionsParserTest {
             kotlinConfig = {
                 externalTypePackages = listOf {
                     name = "LegacyType"
-                    packageName = "com.example.legacy"
+                    packageName = "com.some.pkg.legacy"
                 }
             }
         })
