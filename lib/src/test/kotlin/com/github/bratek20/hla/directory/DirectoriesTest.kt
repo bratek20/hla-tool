@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import com.github.bratek20.architecture.context.someContextBuilder
+import com.github.bratek20.hla.definitions.fixtures.assertModules
 import com.github.bratek20.hla.directory.api.Directories
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.directory.context.DirectoryImpl
@@ -87,6 +88,25 @@ class DirectoriesTest: TempDirTest() {
                         "}"
                 }
             }
+        }
+    }
+
+    @Test
+    fun shouldReadDirectoryFilesInCorrectOrder() {
+        val result = directories.read(Path("src/test/resources/multiple-modules-order"))
+        assertDirectory(result) {
+            name = "multiple-modules-order"
+            files = listOf(
+                {
+                    name = "ModuleA.module"
+                },
+                {
+                    name = "ModuleB.module"
+                },
+                {
+                    name = "ModuleC.module"
+                }
+            )
         }
     }
 
