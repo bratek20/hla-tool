@@ -2,6 +2,8 @@ rootProject.name = "example"
 
 include("kotlin")
 
+val catalogVersion = "1.0.18"
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -27,12 +29,13 @@ pluginManagement {
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            from("com.github.bratek20:version-catalog:1.0.16")
+            from("com.github.bratek20:version-catalog:$catalogVersion")
         }
     }
 
     repositories {
         mavenLocal()
+        mavenCentral()
 
         val githubActor: String? = if (extra.has("githubActor")) extra["githubActor"] as String else System.getenv("GITHUB_ACTOR")
         val githubToken: String? = if (extra.has("githubToken")) extra["githubToken"] as String else System.getenv("GITHUB_TOKEN")
