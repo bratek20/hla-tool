@@ -24,7 +24,7 @@ class ModuleDefinitionsParserTest {
     }
 
     @Test
-    fun `should parse two modules in correct order`() {
+    fun `should parse two modules`() {
         val modules = parse("two-modules")
 
         assertModules(modules, listOf(
@@ -243,6 +243,23 @@ class ModuleDefinitionsParserTest {
                         "VALUE_B"
                     )
                 }
+            }
+        ))
+    }
+
+    @Test
+    fun `should parse multiple modules in correct order`() {
+        val modules = parse("multiple-modules-order")
+
+        assertModules(modules, listOf(
+            {
+                name = "ModuleA"
+            },
+            {
+                name = "ModuleB"
+            },
+            {
+                name = "ModuleC"
             }
         ))
     }
