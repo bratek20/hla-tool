@@ -11,7 +11,7 @@ class DirectoriesLogic: Directories {
             "File does not exist or not dir for path: $nioPath"
         }
 
-        val allFiles = file.listFiles()
+        val allFiles = file.listFiles()?.sorted()
         val files = allFiles!!.filter { it.isFile }.map { toApiFile(it) }
         val directories = allFiles.filter { it.isDirectory }.map { read(Path(it.absolutePath)) }
 

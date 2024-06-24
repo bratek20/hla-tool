@@ -24,7 +24,7 @@ class ModuleDefinitionsParserTest {
     }
 
     @Test
-    fun `should parse two modules`() {
+    fun `should parse two modules in correct order`() {
         val modules = parse("two-modules")
 
         assertModules(modules, listOf(
