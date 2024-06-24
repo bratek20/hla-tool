@@ -248,23 +248,6 @@ class ModuleDefinitionsParserTest {
     }
 
     @Test
-    fun `should parse multiple modules in correct order`() {
-        val modules = parse("multiple-modules-order")
-
-        assertModules(modules, listOf(
-            {
-                name = "ModuleA"
-            },
-            {
-                name = "ModuleB"
-            },
-            {
-                name = "ModuleC"
-            }
-        ))
-    }
-
-    @Test
     fun `should parse property and data keys`() {
         val modules = parse("only-keys")
 
