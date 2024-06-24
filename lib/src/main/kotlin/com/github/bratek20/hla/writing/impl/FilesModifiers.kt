@@ -112,29 +112,34 @@ class FilesModifiers(
         val currentLines = file.getContent().lines.toMutableList()
 
         val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
-        var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]") } + startIndex
+        var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]")} + startIndex
         val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
 
         val newLines = mutableListOf<String>()
-        extractFiles(directory).forEach { item ->
+        val directoryName = directory.getName().value
+        val moduleStartComment = "$padding//$directoryName start"
+        val moduleEndComment = "$padding//$directoryName end"
+        extractFiles(directory).forEachIndexed { index, item ->
             newLines.add("")
+            if(index == 0) {
+               newLines.add(moduleStartComment)
+            }
             item.fileNames.forEach { fileName ->
                 newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
-                val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName") }
+                val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName")}
                 if (result) {
                     indexToAdd--
                 }
             }
         }
 
+        newLines.add(moduleEndComment)
+
+
         currentLines.addAll(indexToAdd, newLines)
-        val indexesToRemove = mutableListOf<Int>()
-        currentLines.forEachIndexed { index, line ->
-            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true) {
-                indexesToRemove.add(index)
-            }
-        }
-        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
+
+        cleanStartEndComments(currentLines, moduleStartComment, moduleEndComment)
+        cleanWhiteLines(currentLines, directoryName)
 
         val newFile = File.create(file.getName(), FileContent(currentLines))
         if (newFile == file) {
@@ -142,6 +147,34 @@ class FilesModifiers(
         }
 
         return File.create(file.getName(), FileContent(currentLines))
+    }
+
+    private fun cleanWhiteLines(currentLines: MutableList<String>, directoryName: String) {
+        val indexesToRemove = mutableListOf<Int>()
+        currentLines.forEachIndexed { index, line ->
+            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true ||
+                line.isBlank() && currentLines.getOrNull(index - 1)?.contains("//$directoryName start") == true
+            ) {
+                indexesToRemove.add(index)
+            }
+        }
+        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
+    }
+
+    private fun cleanStartEndComments(
+        currentLines: MutableList<String>,
+        moduleStartComment: String,
+        moduleEndComment: String
+    ) {
+        val indexesToRemove = mutableListOf<Int>()
+        val firstModuleStartCommentIndex = currentLines.indexOfFirst { it.contains(moduleStartComment) }
+        val lastModuleEndCommentIndex = currentLines.indexOfLast { it.contains(moduleEndComment) }
+        currentLines.forEachIndexed { index, line ->
+            if (line == moduleStartComment && index != firstModuleStartCommentIndex || line == moduleEndComment && index != lastModuleEndCommentIndex) {
+                indexesToRemove.add(index)
+            }
+        }
+        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
     }
 
     data class TypeScriptPaths(val mainTsconfig: Path, val testTsconfig: Path)
