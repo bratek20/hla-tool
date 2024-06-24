@@ -6,5 +6,8 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.directory.api.*
 
 interface ModuleDefinitionsParser {
+    @Throws(
+        UnknownRootSectionException::class,
+    )
     fun parse(path: Path): List<ModuleDefinition>
 }

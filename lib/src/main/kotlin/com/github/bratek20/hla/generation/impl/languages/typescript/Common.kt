@@ -3,7 +3,7 @@ package com.github.bratek20.hla.generation.impl.languages.typescript
 import com.github.bratek20.hla.definitions.impl.HlaModules
 
 fun handleReferencing(modules: HlaModules, typeName: String, base: String, submodule: String?): String {
-    val module = modules.getTypeModule(typeName);
+    val module = modules.getTypeModuleName(typeName);
     return if (module == modules.current.getName()) {
         base
     } else {
@@ -15,6 +15,6 @@ fun handleReferencing(modules: HlaModules, typeName: String, base: String, submo
 }
 
 fun addModuleNamePrefix(modules: HlaModules, typeName: String, base: String): String {
-    val module = modules.getTypeModule(typeName);
+    val module = modules.getTypeModuleName(typeName);
     return "${module.value}.$base"
 }

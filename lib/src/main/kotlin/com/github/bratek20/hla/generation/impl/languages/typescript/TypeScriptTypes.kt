@@ -20,6 +20,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
             BaseType.ANY -> "any"
             BaseType.DOUBLE -> "number"
             BaseType.LONG -> "number"
+            BaseType.DICTIONARY -> "any"
         }
     }
 
@@ -32,6 +33,7 @@ class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
             BaseType.ANY -> "{}"
             BaseType.DOUBLE -> "0"
             BaseType.LONG -> "0"
+            BaseType.DICTIONARY -> "{}"
         }
     }
 

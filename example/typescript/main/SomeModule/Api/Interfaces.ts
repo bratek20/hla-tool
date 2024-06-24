@@ -22,4 +22,6 @@ interface SomeInterface2 {
     referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 
     referenceOtherInterface(other: OtherInterface): OtherInterface
+
+    referenceLegacyType(legacyType: LegacyType): LegacyType
 }

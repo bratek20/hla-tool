@@ -24,6 +24,16 @@ fun assertImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: 
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertExternalTypePackageMapping(given: ExternalTypePackageMapping, expectedInit: ExpectedExternalTypePackageMapping.() -> Unit) {
+    val diff = diffExternalTypePackageMapping(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.() -> Unit) {
+    val diff = diffKotlinConfig(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit) {
     val diff = diffModuleDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

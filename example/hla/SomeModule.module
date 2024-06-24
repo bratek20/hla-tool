@@ -18,6 +18,7 @@ ValueObjects
         doubleExample: double
         longExample: long
         goodName: string (from: gN)
+        customData: dictionary
 
     SomeProperty2
         value: string (public)
@@ -65,6 +66,9 @@ DataClasses
         customOpt: any?
         goodDataName: string (from: gDN)
 
+ExternalTypes
+    LegacyType
+
 Interfaces
     SomeEmptyInterface
 
@@ -81,3 +85,8 @@ Interfaces
     SomeInterface2
         referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
         referenceOtherInterface(other: OtherInterface): OtherInterface
+        referenceLegacyType(legacyType: LegacyType): LegacyType
+
+Kotlin
+    ExternalTypePackages
+        LegacyType -> com.some.pkg.legacy

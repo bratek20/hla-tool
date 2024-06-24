@@ -27,6 +27,7 @@ data class ExpectedSomeProperty(
     var doubleExample: Double? = null,
     var longExample: Long? = null,
     var goodName: String? = null,
+    var customData: com.github.bratek20.architecture.serialization.api.Dictionary? = null,
 )
 fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeProperty().apply(expectedInit)
@@ -54,6 +55,10 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
 
     expected.goodName?.let {
         if (given.getGoodName() != it) { result.add("${path}goodName ${given.getGoodName()} != ${it}") }
+    }
+
+    expected.customData?.let {
+        if (given.getCustomData() != it) { result.add("${path}customData ${given.getCustomData()} != ${it}") }
     }
 
     return result.joinToString("\n")

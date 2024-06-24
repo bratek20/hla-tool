@@ -18,6 +18,7 @@ namespace SomeModule {
         doubleExample?: number,
         longExample?: number,
         goodName?: string,
+        customData?: any,
     }
     export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
         const result: string[] = []
@@ -44,6 +45,10 @@ namespace SomeModule {
 
         if (expected.goodName !== undefined) {
             if (given.getGoodName() != expected.goodName) { result.push(`${path}goodName ${given.getGoodName()} != ${expected.goodName}`) }
+        }
+
+        if (expected.customData !== undefined) {
+            if (given.getCustomData() != expected.customData) { result.push(`${path}customData ${given.getCustomData()} != ${expected.customData}`) }
         }
 
         return result.join("\n")

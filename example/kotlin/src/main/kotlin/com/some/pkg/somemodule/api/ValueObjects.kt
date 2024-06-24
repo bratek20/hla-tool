@@ -20,6 +20,7 @@ data class SomeProperty(
     private val doubleExample: Double,
     private val longExample: Long,
     private val gN: String,
+    private val customData: com.github.bratek20.architecture.serialization.api.Dictionary,
 ) {
     fun getOther(): OtherProperty {
         return this.other
@@ -45,6 +46,10 @@ data class SomeProperty(
         return this.gN
     }
 
+    fun getCustomData(): com.github.bratek20.architecture.serialization.api.Dictionary {
+        return this.customData
+    }
+
     companion object {
         fun create(
             other: OtherProperty,
@@ -53,6 +58,7 @@ data class SomeProperty(
             doubleExample: Double,
             longExample: Long,
             goodName: String,
+            customData: com.github.bratek20.architecture.serialization.api.Dictionary,
         ): SomeProperty {
             return SomeProperty(
                 other = other,
@@ -61,6 +67,7 @@ data class SomeProperty(
                 doubleExample = doubleExample,
                 longExample = longExample,
                 gN = goodName,
+                customData = customData,
             )
         }
     }

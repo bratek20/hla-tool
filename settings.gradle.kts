@@ -2,7 +2,7 @@ rootProject.name = "hla"
 
 includeBuild("example")
 
-val catalogVersion = "1.0.11"
+val catalogVersion = "1.0.16"
 
 pluginManagement {
     repositories {
@@ -10,13 +10,16 @@ pluginManagement {
 
         mavenLocal()
 
-        if (System.getenv("GITHUB_ACTOR") != null) {
+        val githubActor: String? = if (extra.has("githubActor")) extra["githubActor"] as String else System.getenv("GITHUB_ACTOR")
+        val githubToken: String? = if (extra.has("githubToken")) extra["githubToken"] as String else System.getenv("GITHUB_TOKEN")
+
+        if (githubActor != null && githubToken != null) {
             maven {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/bratek20/starter")
                 credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
+                    username = githubActor
+                    password = githubToken
                 }
             }
         }
@@ -34,13 +37,16 @@ dependencyResolutionManagement {
         mavenLocal()
         mavenCentral()
 
-        if (System.getenv("GITHUB_ACTOR") != null) {
+        val githubActor: String? = if (extra.has("githubActor")) extra["githubActor"] as String else System.getenv("GITHUB_ACTOR")
+        val githubToken: String? = if (extra.has("githubToken")) extra["githubToken"] as String else System.getenv("GITHUB_TOKEN")
+
+        if (githubActor != null && githubToken != null) {
             maven {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/bratek20/starter")
                 credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
+                    username = githubActor
+                    password = githubToken
                 }
             }
         }

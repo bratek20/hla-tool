@@ -40,5 +40,10 @@ namespace SomeModule.Impl {
             // TODO
             return undefined
         }
+
+        referenceLegacyType(legacyType: LegacyType): LegacyType {
+            // TODO
+            return undefined
+        }
     }
 }

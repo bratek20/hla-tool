@@ -1,13 +1,14 @@
 package com.github.bratek20.hla.parsing.impl
 
+import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.directory.api.File
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.directory.impl.DirectoriesLogic
-import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
-import java.util.ArrayDeque
+import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
+import java.util.*
 
 class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     override fun parse(path: Path): List<ModuleDefinition> {
@@ -22,6 +23,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     private fun parseModuleFile(file: File): ModuleDefinition {
         val moduleName = ModuleName(file.getName().value.split(".module").get(0))
         val elements = parseElements(file.getContent())
+        checkRootSections(moduleName, elements)
+
         val valueObjects = parseStructures("ValueObjects", elements)
         val dataClasses = parseComplexStructureDefinitions("DataClasses", elements)
         val interfaces = parseInterfaces(elements)
@@ -30,6 +33,8 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
         val customTypes = parseStructures("CustomTypes", elements)
         val dataKeys = parseKeys("DataKeys", elements)
         val implSubmodule = parseImplSubmodule(elements)
+        val externalTypes = parseExternalTypes(elements)
+        val kotlinConfig = parseKotlinConfig(elements)
 
         return ModuleDefinition.create(
             name = moduleName,
@@ -42,8 +47,55 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             complexCustomTypes = customTypes.complex,
             dataClasses = dataClasses,
             dataKeys = dataKeys,
-            implSubmodule = implSubmodule
+            implSubmodule = implSubmodule,
+            externalTypes = externalTypes,
+            kotlinConfig = kotlinConfig,
         )
+    }
+
+    private fun parseExternalTypes(elements: List<ParsedElement>): List<String> {
+        val externalTypeSection = elements.find { it is Section && it.name == "ExternalTypes" } as Section?
+        if (externalTypeSection == null) {
+            return emptyList()
+        }
+
+        return externalTypeSection.elements.filterIsInstance<Section>().map {
+            it.name
+        }
+    }
+
+    private fun parseKotlinConfig(elements: List<ParsedElement>): KotlinConfig? {
+        val kotlinSection = elements.find { it is Section && it.name == "Kotlin" } as Section?
+        if (kotlinSection != null) {
+            val externalTypePackagesSection = kotlinSection.elements.find { it is Section && it.name == "ExternalTypePackages" } as Section?
+            val mappings = externalTypePackagesSection?.elements?.filterIsInstance<ParsedMapping>()?.map {
+                ExternalTypePackageMapping(it.key, it.value)
+            }
+            return KotlinConfig(
+                externalTypePackages = mappings ?: emptyList()
+            )
+        }
+        return null
+    }
+
+    private fun checkRootSections(module: ModuleName, elements: List<ParsedElement>) {
+        val rootSections = elements.filterIsInstance<Section>()
+        val knownRootSections = setOf(
+            "ValueObjects",
+            "DataClasses",
+            "Interfaces",
+            "PropertyKeys",
+            "Enums",
+            "CustomTypes",
+            "DataKeys",
+            "Impl",
+            "ExternalTypes",
+            "Kotlin"
+        )
+        val unknownRootSections = rootSections.map { it.name }.filter { it !in knownRootSections }
+        if (unknownRootSections.isNotEmpty()) {
+            throw UnknownRootSectionException("Module ${module.value} has unknown root sections: $unknownRootSections")
+        }
     }
 
     open class ParsedElement(
