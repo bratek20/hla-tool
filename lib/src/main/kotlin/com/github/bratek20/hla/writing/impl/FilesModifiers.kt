@@ -137,19 +137,9 @@ class FilesModifiers(
 
 
         currentLines.addAll(indexToAdd, newLines)
-        val indexesToRemove = mutableListOf<Int>()
-        val firstModuleStartCommentIndex = currentLines.indexOfFirst { it.contains(moduleStartComment) }
-        val lastModuleEndCommentIndex = currentLines.indexOfLast { it.contains(moduleEndComment) }
-        currentLines.forEachIndexed { index, line ->
-            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true ||
-                    line == moduleStartComment && index != firstModuleStartCommentIndex || line == moduleEndComment && index != lastModuleEndCommentIndex ||
-                    line.isBlank() && currentLines.getOrNull(index - 1)?.contains(moduleStartComment) == true ||
-                    line.isBlank() && currentLines.getOrNull(index - 1)?.contains(moduleEndComment) == true && currentLines.getOrNull(index - 2)?.isBlank() == true
-                ) {
-                indexesToRemove.add(index)
-            }
-        }
-        indexesToRemove.reversed().forEach { currentLines.removeAt(it) } 
+
+        cleanStartEndComments(currentLines, moduleStartComment, moduleEndComment)
+        cleanWhiteLines(currentLines, directoryName)
 
         val newFile = File.create(file.getName(), FileContent(currentLines))
         if (newFile == file) {
@@ -157,6 +147,34 @@ class FilesModifiers(
         }
 
         return File.create(file.getName(), FileContent(currentLines))
+    }
+
+    private fun cleanWhiteLines(currentLines: MutableList<String>, directoryName: String) {
+        val indexesToRemove = mutableListOf<Int>()
+        currentLines.forEachIndexed { index, line ->
+            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true ||
+                line.isBlank() && currentLines.getOrNull(index - 1)?.contains("//$directoryName start") == true
+            ) {
+                indexesToRemove.add(index)
+            }
+        }
+        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
+    }
+
+    private fun cleanStartEndComments(
+        currentLines: MutableList<String>,
+        moduleStartComment: String,
+        moduleEndComment: String
+    ) {
+        val indexesToRemove = mutableListOf<Int>()
+        val firstModuleStartCommentIndex = currentLines.indexOfFirst { it.contains(moduleStartComment) }
+        val lastModuleEndCommentIndex = currentLines.indexOfLast { it.contains(moduleEndComment) }
+        currentLines.forEachIndexed { index, line ->
+            if (line == moduleStartComment && index != firstModuleStartCommentIndex || line == moduleEndComment && index != lastModuleEndCommentIndex) {
+                indexesToRemove.add(index)
+            }
+        }
+        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
     }
 
     data class TypeScriptPaths(val mainTsconfig: Path, val testTsconfig: Path)
