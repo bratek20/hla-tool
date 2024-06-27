@@ -27,13 +27,16 @@ import com.github.bratek20.hla.facade.context.FacadeImpl
 import java.util.stream.Stream
 
 class HlaFacadeTest {
+
+
     data class TestPaths(
         val exampleMainPath: String,
         val exampleFixturesPath: String,
         val exampleTestsPath: String,
         val expectedMainPath: String,
         val expectedFixturesPath: String,
-        val expectedTestsPath: String
+        val expectedTestsPath: String,
+        val hlaFolderPath: String = "../example/hla"
     )
 
     class MyArgumentsProvider : ArgumentsProvider {
@@ -45,6 +48,18 @@ class HlaFacadeTest {
                 expectedMainPath = "../example/hla/../kotlin/src/main/kotlin/com/some/pkg",
                 expectedFixturesPath = "../example/hla/../kotlin/src/testFixtures/kotlin/com/some/pkg",
                 expectedTestsPath = "../example/hla/../kotlin/src/test/kotlin/com/some/pkg",
+            )
+        }
+
+        fun kotlin2TestPaths(packageName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/kotlin2/src/main/kotlin/com/other/pkg/$packageName",
+                exampleFixturesPath = "../example/kotlin2/src/testFixtures/kotlin/com/other/pkg/$packageName",
+                exampleTestsPath = "../example/kotlin2/src/test/kotlin/com/other/pkg/$packageName",
+                expectedMainPath = "../example/hla2/../kotlin2/src/main/kotlin/com/other/pkg",
+                expectedFixturesPath = "../example/hla2/../kotlin2/src/testFixtures/kotlin/com/other/pkg",
+                expectedTestsPath = "../example/hla2/../kotlin2/src/test/kotlin/com/other/pkg",
+                hlaFolderPath = "../example/hla2"
             )
         }
 
@@ -61,6 +76,7 @@ class HlaFacadeTest {
 
         private val KOTLIN_PROFILE = "kotlin"
         private val TYPE_SCRIPT_PROFILE = "typeScript"
+        private val KOTLIN2_PROFILE = "kotlin2"
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
@@ -103,6 +119,11 @@ class HlaFacadeTest {
                     "SimpleModule",
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("SimpleModule")
+                ),
+                Arguments.of(
+                    "ImportingModule",
+                    KOTLIN2_PROFILE,
+                    kotlin2TestPaths("importingmodule")
                 ),
             )
         }
@@ -151,7 +172,7 @@ class HlaFacadeTest {
             ModuleOperationArgs.create(
                 moduleName = ModuleName(moduleName),
                 profileName = ProfileName(profileName),
-                hlaFolderPath = hlaFolderPath(),
+                hlaFolderPath = Path(paths.hlaFolderPath),
             )
         )
 
