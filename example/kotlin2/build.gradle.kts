@@ -6,4 +6,7 @@ dependencies {
     implementation(libs.assertj.core)
 
     implementation(libs.bratek20.architecture)
+
+    implementation(project(":kotlin"))
+    testFixturesImplementation(testFixtures(project(":kotlin")))
 }

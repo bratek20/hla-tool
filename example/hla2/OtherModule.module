@@ -1,0 +1,33 @@
+ValueObjects
+    OtherId: int
+
+    OtherProperty
+        id: OtherId
+        name: string
+
+    OtherClass
+        id: OtherId
+        amount: int
+
+
+DataClasses
+    OtherData
+        id: OtherId
+
+PropertyKeys
+    "otherProperty" -> OtherProperty
+    "otherProperties" -> OtherProperty[]
+
+DataKeys
+    "otherData" -> OtherData
+
+Interfaces
+    OtherInterface
+        otherMethod()
+
+Impl
+    DataClasses
+        OtherImplData
+            name: string
+    DataKeys
+        "otherImplData" -> OtherImplData[]
