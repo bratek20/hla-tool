@@ -1,0 +1,19 @@
+profiles:
+  - name: "kotlin2"
+    language: "KOTLIN"
+    paths:
+      project: "../kotlin2"
+      src:
+        main: "src/main/kotlin/com/other/pkg"
+        test: "src/test/kotlin/com/other/pkg"
+        fixtures: "src/testFixtures/kotlin/com/other/pkg"
+    onlyPatterns: []
+  - name: "typeScript2"
+    language: "TYPE_SCRIPT"
+    paths:
+      project: "../typescript2"
+      src:
+        main: "main"
+        test: "Tests/test"
+        fixtures: "Tests/fixtures"
+    onlyPatterns: []

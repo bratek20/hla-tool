@@ -1,6 +1,7 @@
 rootProject.name = "example"
 
 include("kotlin")
+include("kotlin2")
 
 val catalogVersion = "1.0.18"
 
