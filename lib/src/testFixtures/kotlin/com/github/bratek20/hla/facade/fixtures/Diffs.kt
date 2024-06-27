@@ -90,12 +90,32 @@ fun diffHlaPaths(given: HlaPaths, expectedInit: ExpectedHlaPaths.() -> Unit, pat
     return result.joinToString("\n")
 }
 
+data class ExpectedHlaProfileImport(
+    var hlaFolderPath: String? = null,
+    var profileName: String? = null,
+)
+fun diffHlaProfileImport(given: HlaProfileImport, expectedInit: ExpectedHlaProfileImport.() -> Unit, path: String = ""): String {
+    val expected = ExpectedHlaProfileImport().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.hlaFolderPath?.let {
+        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
+    }
+
+    expected.profileName?.let {
+        if (diffProfileName(given.getProfileName(), it) != "") { result.add(diffProfileName(given.getProfileName(), it, "${path}profileName.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedHlaProfile(
     var name: String? = null,
     var language: ModuleLanguage? = null,
     var paths: (ExpectedHlaPaths.() -> Unit)? = null,
     var onlyPatterns: List<String>? = null,
     var typeScript: (ExpectedTypeScriptConfig.() -> Unit)? = null,
+    var imports: List<(ExpectedHlaProfileImport.() -> Unit)>? = null,
 )
 fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit, path: String = ""): String {
     val expected = ExpectedHlaProfile().apply(expectedInit)
@@ -120,6 +140,11 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
 
     expected.typeScript?.let {
         if (diffTypeScriptConfig(given.getTypeScript()!!, it) != "") { result.add(diffTypeScriptConfig(given.getTypeScript()!!, it, "${path}typeScript.")) }
+    }
+
+    expected.imports?.let {
+        if (given.getImports().size != it.size) { result.add("${path}imports size ${given.getImports().size} != ${it.size}") }
+        given.getImports().forEachIndexed { idx, entry -> if (diffHlaProfileImport(entry, it[idx]) != "") { result.add(diffHlaProfileImport(entry, it[idx], "${path}imports[${idx}].")) } }
     }
 
     return result.joinToString("\n")

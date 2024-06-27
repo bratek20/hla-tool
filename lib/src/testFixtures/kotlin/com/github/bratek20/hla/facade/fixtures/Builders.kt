@@ -49,12 +49,25 @@ fun hlaPaths(init: HlaPathsDef.() -> Unit = {}): HlaPaths {
     )
 }
 
+data class HlaProfileImportDef(
+    var hlaFolderPath: String = "someValue",
+    var profileName: String = "someValue",
+)
+fun hlaProfileImport(init: HlaProfileImportDef.() -> Unit = {}): HlaProfileImport {
+    val def = HlaProfileImportDef().apply(init)
+    return HlaProfileImport.create(
+        hlaFolderPath = pathCreate(def.hlaFolderPath),
+        profileName = ProfileName(def.profileName),
+    )
+}
+
 data class HlaProfileDef(
     var name: String = "someValue",
     var language: ModuleLanguage = ModuleLanguage.KOTLIN,
     var paths: (HlaPathsDef.() -> Unit) = {},
     var onlyPatterns: List<String> = emptyList(),
     var typeScript: (TypeScriptConfigDef.() -> Unit)? = null,
+    var imports: List<(HlaProfileImportDef.() -> Unit)> = emptyList(),
 )
 fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
     val def = HlaProfileDef().apply(init)
@@ -64,6 +77,7 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
         paths = hlaPaths(def.paths),
         onlyPatterns = def.onlyPatterns,
         typeScript = def.typeScript?.let { it -> typeScriptConfig(it) },
+        imports = def.imports.map { it -> hlaProfileImport(it) },
     )
 }
 

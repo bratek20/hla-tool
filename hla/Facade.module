@@ -22,12 +22,17 @@ ValueObjects
        project: Path
        src: HlaSrcPaths
 
+    HlaProfileImport
+        hlaFolderPath: Path
+        profileName: ProfileName
+
     HlaProfile
         name: ProfileName
         language: ModuleLanguage
         paths: HlaPaths
         onlyPatterns: string[]
         typeScript: TypeScriptConfig?
+        imports: HlaProfileImport[] = []
 
     ModuleOperationArgs
         hlaFolderPath: Path

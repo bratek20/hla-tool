@@ -179,7 +179,7 @@ data class SomeClass2(
 data class SomeClass3(
     private val class2Object: SomeClass2,
     private val someEnum: String,
-    private val class2List: List<SomeClass2>,
+    private val class2List: List<SomeClass2> = emptyList(),
 ) {
     fun getClass2Object(): SomeClass2 {
         return this.class2Object

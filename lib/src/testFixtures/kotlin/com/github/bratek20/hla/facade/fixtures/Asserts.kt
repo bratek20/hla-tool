@@ -35,6 +35,11 @@ fun assertHlaPaths(given: HlaPaths, expectedInit: ExpectedHlaPaths.() -> Unit) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertHlaProfileImport(given: HlaProfileImport, expectedInit: ExpectedHlaProfileImport.() -> Unit) {
+    val diff = diffHlaProfileImport(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit) {
     val diff = diffHlaProfile(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

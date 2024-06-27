@@ -108,12 +108,38 @@ data class HlaPaths(
     }
 }
 
+data class HlaProfileImport(
+    private val hlaFolderPath: String,
+    private val profileName: String,
+) {
+    fun getHlaFolderPath(): Path {
+        return pathCreate(this.hlaFolderPath)
+    }
+
+    fun getProfileName(): ProfileName {
+        return ProfileName(this.profileName)
+    }
+
+    companion object {
+        fun create(
+            hlaFolderPath: Path,
+            profileName: ProfileName,
+        ): HlaProfileImport {
+            return HlaProfileImport(
+                hlaFolderPath = pathGetValue(hlaFolderPath),
+                profileName = profileName.value,
+            )
+        }
+    }
+}
+
 data class HlaProfile(
     private val name: String,
     private val language: String,
     private val paths: HlaPaths,
     private val onlyPatterns: List<String>,
     private val typeScript: TypeScriptConfig?,
+    private val imports: List<HlaProfileImport> = emptyList(),
 ) {
     fun getName(): ProfileName {
         return ProfileName(this.name)
@@ -135,6 +161,10 @@ data class HlaProfile(
         return this.typeScript
     }
 
+    fun getImports(): List<HlaProfileImport> {
+        return this.imports
+    }
+
     companion object {
         fun create(
             name: ProfileName,
@@ -142,6 +172,7 @@ data class HlaProfile(
             paths: HlaPaths,
             onlyPatterns: List<String>,
             typeScript: TypeScriptConfig?,
+            imports: List<HlaProfileImport> = emptyList(),
         ): HlaProfile {
             return HlaProfile(
                 name = name.value,
@@ -149,6 +180,7 @@ data class HlaProfile(
                 paths = paths,
                 onlyPatterns = onlyPatterns,
                 typeScript = typeScript,
+                imports = imports,
             )
         }
     }
