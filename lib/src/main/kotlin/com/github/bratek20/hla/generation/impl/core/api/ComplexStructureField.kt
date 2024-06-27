@@ -57,9 +57,12 @@ open class ComplexStructureField(
             val oc = ObjectCreationMapper()
             return "${accessor()}${privateName()}${oc.adjustAssignment(type.serializableName())} = ${oc.map(type.serializableName())}"
         }
-        //$field.accessor()$field.name$oc.adjustAssignment($field.type.serializableName()) = $oc.map($field.type.serializableName())
         val valOrVar = if (complexStructure is DataClassApiType) "var" else "val"
-        return "${accessor()}${valOrVar} ${privateName()}: ${type.serializableName()}"
+        val base = "${accessor()}${valOrVar} ${privateName()}: ${type.serializableName()}"
+        defaultValue()?.let {
+            return "$base = $it"
+        }
+        return base
     }
 
     // used by velocity

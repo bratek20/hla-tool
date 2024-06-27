@@ -77,7 +77,7 @@ data class SomeProperty2(
     @JvmField val value: String,
     private val custom: Any,
     private val someEnum: String,
-    private val customOpt: Any?,
+    private val customOpt: Any? = null,
 ) {
     fun getValue(): String {
         return this.value
@@ -141,7 +141,7 @@ data class SomeClass2(
     private val id: String,
     private val names: List<String>,
     private val ids: List<SomeId>,
-    private val enabled: Boolean,
+    private val enabled: Boolean = true,
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
@@ -296,7 +296,7 @@ data class SomeClass5(
 data class SomeClass6(
     private val someClassOpt: SomeClass?,
     private val optString: String?,
-    private val sameClassList: List<SomeClass6>,
+    private val sameClassList: List<SomeClass6> = emptyList(),
 ) {
     fun getSomeClassOpt(): SomeClass? {
         return this.someClassOpt
