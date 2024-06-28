@@ -1,2 +1,9 @@
 profiles:
   - name: "group1"
+    language: "KOTLIN"
+    paths:
+      project: ""
+      src:
+        main: ""
+        test: ""
+        fixtures: ""
