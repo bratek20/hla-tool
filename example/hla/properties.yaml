@@ -7,7 +7,6 @@ profiles:
         main: "src/main/kotlin/com/some/pkg"
         test: "src/test/kotlin/com/some/pkg"
         fixtures: "src/testFixtures/kotlin/com/some/pkg"
-    onlyPatterns: []
 
   - name: "kotlinNoWeb"
     language: "KOTLIN"
@@ -17,7 +16,6 @@ profiles:
         main: "src/main/kotlin/com/some/pkg"
         test: "src/test/kotlin/com/some/pkg"
         fixtures: "src/testFixtures/kotlin/com/some/pkg"
-    onlyPatterns: []
 
   - name: "typeScript"
     language: "TYPE_SCRIPT"
@@ -27,7 +25,6 @@ profiles:
         main: "main"
         test: "Tests/test"
         fixtures: "Tests/fixtures"
-    onlyPatterns: []
 
   - name: "kotlinOnlyParts"
     language: "KOTLIN"
@@ -49,7 +46,6 @@ profiles:
         main: "main"
         test: "Tests/test"
         fixtures: "Tests/fixtures"
-    onlyPatterns: []
     typeScript:
       mainTsconfigPath: ""
       testTsconfigPath: "Tests"
@@ -64,7 +60,6 @@ profiles:
         main: "main"
         test: "Tests/test"
         fixtures: "Tests/fixtures"
-    onlyPatterns: [ ]
     typeScript:
       mainTsconfigPath: ""
       testTsconfigPath: "Tests"

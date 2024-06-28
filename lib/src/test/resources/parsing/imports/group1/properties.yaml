@@ -1,10 +1,2 @@
 profiles:
-  - name: "hla"
-    language: "KOTLIN"
-    paths:
-      project: "../lib"
-      src:
-        main: "src/main/kotlin/com/github/bratek20/hla"
-        test: "src/test/kotlin/com/github/bratek20/hla"
-        fixtures: "src/testFixtures/kotlin/com/github/bratek20/hla"
-    onlyPatterns: []
+  - name: "group1"

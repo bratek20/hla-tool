@@ -1,3 +1,11 @@
+ValueObjects
+    PartialHlaProfile
+        name: ProfileName
+        imports: HlaProfileImport[] = []
+
+PropertyKeys
+    "profiles" -> PartialHlaProfile[]
+
 Interfaces
     ModuleDefinitionsParser
         parse(path: Path): ModuleDefinition[]
