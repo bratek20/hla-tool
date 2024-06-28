@@ -2,11 +2,11 @@ package com.github.bratek20.hla.generation.impl.languages.typescript
 
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.definitions.api.BaseType
-import com.github.bratek20.hla.definitions.impl.HlaModules
+import com.github.bratek20.hla.queries.ModuleGroupQueries
 import com.github.bratek20.hla.utils.camelToPascalCase
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
-class TypeScriptTypes(private val modules: HlaModules): LanguageTypes {
+class TypeScriptTypes(private val modules: ModuleGroupQueries): LanguageTypes {
     override fun publicComplexStructureFieldPrefix(): String {
         return ""
     }

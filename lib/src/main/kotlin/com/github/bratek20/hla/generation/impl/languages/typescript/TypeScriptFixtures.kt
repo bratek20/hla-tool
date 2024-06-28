@@ -1,12 +1,12 @@
 package com.github.bratek20.hla.generation.impl.languages.typescript
 
-import com.github.bratek20.hla.definitions.impl.HlaModules
+import com.github.bratek20.hla.queries.ModuleGroupQueries
 import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
-class TypeScriptAssertsPattern(private val modules: HlaModules) : LanguageAssertsPattern {
+class TypeScriptAssertsPattern(private val modules: ModuleGroupQueries) : LanguageAssertsPattern {
     override fun assertFunName(name: String): String {
         return pascalToCamelCase(name)
     }
@@ -26,7 +26,7 @@ class TypeScriptAssertsPattern(private val modules: HlaModules) : LanguageAssert
     }
 }
 
-class TypeScriptBuildersPattern(private val modules: HlaModules) : LanguageBuildersPattern {
+class TypeScriptBuildersPattern(private val modules: ModuleGroupQueries) : LanguageBuildersPattern {
     override fun defClassType(name: String): String {
         val base = "${name}Def"
         return handleReferencing(modules, name, base, "Builder")
@@ -54,7 +54,7 @@ class TypeScriptBuildersPattern(private val modules: HlaModules) : LanguageBuild
     }
 }
 
-class TypeScriptDtoPattern(private val modules: HlaModules) : LanguageDtoPattern {
+class TypeScriptDtoPattern(private val modules: ModuleGroupQueries) : LanguageDtoPattern {
     override fun dtoClassType(name: String): String {
         val base = "${name}Dto"
         return handleReferencing(modules, name, base, "Web")

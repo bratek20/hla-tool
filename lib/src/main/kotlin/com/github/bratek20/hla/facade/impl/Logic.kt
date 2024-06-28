@@ -55,11 +55,10 @@ class HlaFacadeLogic(
         onlyUpdate: Boolean,
         hlaFolderPath: Path
     ) {
-        val generateResult = generator.generate(GenerateArgs(
-            moduleName = moduleName.value,
-            modules = group.getModules(),
+        val generateResult = generator.generate(GenerateArgs.create(
+            moduleToGenerate = moduleName,
+            group = group,
             onlyUpdate = onlyUpdate,
-            profile = group.getProfile()
         ))
 
         val suffix = if (onlyUpdate) "updated" else "generated"
@@ -68,8 +67,8 @@ class HlaFacadeLogic(
         logFile(generateResult.getTests(), suffix)
 
         writer.write(
-            WriteArgs(
-                hlaFolderPath = hlaFolderPath.value,
+            WriteArgs.create(
+                hlaFolderPath = hlaFolderPath,
                 generateResult = generateResult,
                 profile = group.getProfile(),
                 onlyUpdate = onlyUpdate

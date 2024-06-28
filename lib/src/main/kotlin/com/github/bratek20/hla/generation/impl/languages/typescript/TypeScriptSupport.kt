@@ -4,7 +4,6 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext
 import com.github.bratek20.hla.generation.impl.core.language.*
-import com.github.bratek20.hla.utils.camelToPascalCase
 
 class TypeScriptSupport(private val c: DomainContext)
     : LanguageSupport
@@ -14,7 +13,7 @@ class TypeScriptSupport(private val c: DomainContext)
     }
 
     override fun types(): LanguageTypes {
-        return TypeScriptTypes(c.modules)
+        return TypeScriptTypes(c.queries)
     }
 
     override fun filesExtension(): String {
@@ -26,15 +25,15 @@ class TypeScriptSupport(private val c: DomainContext)
     }
 
     override fun assertsFixture(): LanguageAssertsPattern {
-        return TypeScriptAssertsPattern(c.modules)
+        return TypeScriptAssertsPattern(c.queries)
     }
 
     override fun buildersFixture(): LanguageBuildersPattern {
-        return TypeScriptBuildersPattern(c.modules)
+        return TypeScriptBuildersPattern(c.queries)
     }
 
     override fun dtoPattern(): LanguageDtoPattern {
-        return TypeScriptDtoPattern(c.modules)
+        return TypeScriptDtoPattern(c.queries)
     }
 
     override fun contentBuilderExtensions(): List<ContentBuilderExtension> {

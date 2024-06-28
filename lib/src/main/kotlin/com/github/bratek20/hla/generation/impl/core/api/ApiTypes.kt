@@ -2,9 +2,9 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
-import com.github.bratek20.hla.definitions.impl.HlaModules
-import com.github.bratek20.hla.definitions.impl.isBaseType
-import com.github.bratek20.hla.definitions.impl.ofBaseType
+import com.github.bratek20.hla.queries.ModuleGroupQueries
+import com.github.bratek20.hla.queries.isBaseType
+import com.github.bratek20.hla.queries.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
@@ -301,7 +301,7 @@ data class ApiCustomTypes(
 )
 
 class ApiTypeFactory(
-    private val modules: HlaModules,
+    private val modules: ModuleGroupQueries,
     private val languageTypes: LanguageTypes
 ) {
 

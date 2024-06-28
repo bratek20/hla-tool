@@ -25,15 +25,17 @@ class ModuleGeneratorTest {
     fun shouldThrowReadableExceptionWhenTypeIsUnknown() {
         //given
         val args = generateArgs {
-            moduleName = "test"
-            modules = listOf {
-                name = "test"
-                complexValueObjects = listOf {
-                    name = "SomeType"
-                    fields = listOf {
-                        name = "test"
-                        type = {
-                            name = "UnknownType"
+            moduleToGenerate = "test"
+            group = {
+                modules = listOf {
+                    name = "test"
+                    complexValueObjects = listOf {
+                        name = "SomeType"
+                        fields = listOf {
+                            name = "test"
+                            type = {
+                                name = "UnknownType"
+                            }
                         }
                     }
                 }

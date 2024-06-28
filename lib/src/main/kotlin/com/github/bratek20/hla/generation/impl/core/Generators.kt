@@ -38,7 +38,7 @@ abstract class ModulePartGenerator {
 
     open fun init(c: ModuleGenerationContext, velocityPath: String) {
         this.c = c
-        this.apiTypeFactory = ApiTypeFactory(c.domain.modules, c.language.types())
+        this.apiTypeFactory = ApiTypeFactory(c.domain.queries, c.language.types())
         this.velocityPath = velocityPath
     }
 
@@ -46,7 +46,7 @@ abstract class ModulePartGenerator {
         get() = c.module
 
     protected val modules
-        get() = c.domain.modules
+        get() = c.domain.queries
 
     protected val language
         get() = c.language

@@ -1,9 +1,8 @@
 ValueObjects
     GenerateArgs
-        moduleName: ModuleName
-        modules: ModuleDefinition[]
+        group: ModuleGroup
+        moduleToGenerate: ModuleName
         onlyUpdate: bool
-        profile: HlaProfile
 
     GenerateResult
         main: Directory

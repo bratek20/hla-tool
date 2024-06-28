@@ -2,28 +2,26 @@
 
 package com.github.bratek20.hla.generation.fixtures
 
-import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.definitions.fixtures.*
 import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.directory.fixtures.*
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.fixtures.*
+import com.github.bratek20.hla.parsing.api.*
+import com.github.bratek20.hla.parsing.fixtures.*
 
 import com.github.bratek20.hla.generation.api.*
 
 data class GenerateArgsDef(
-    var moduleName: String = "someValue",
-    var modules: List<(ModuleDefinitionDef.() -> Unit)> = emptyList(),
+    var group: (ModuleGroupDef.() -> Unit) = {},
+    var moduleToGenerate: String = "someValue",
     var onlyUpdate: Boolean = false,
-    var profile: (HlaProfileDef.() -> Unit) = {},
 )
 fun generateArgs(init: GenerateArgsDef.() -> Unit = {}): GenerateArgs {
     val def = GenerateArgsDef().apply(init)
     return GenerateArgs.create(
-        moduleName = ModuleName(def.moduleName),
-        modules = def.modules.map { it -> moduleDefinition(it) },
+        group = moduleGroup(def.group),
+        moduleToGenerate = ModuleName(def.moduleToGenerate),
         onlyUpdate = def.onlyUpdate,
-        profile = hlaProfile(def.profile),
     )
 }
 

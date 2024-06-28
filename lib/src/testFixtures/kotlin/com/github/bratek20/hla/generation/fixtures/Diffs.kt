@@ -2,40 +2,34 @@
 
 package com.github.bratek20.hla.generation.fixtures
 
-import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.definitions.fixtures.*
 import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.directory.fixtures.*
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.fixtures.*
+import com.github.bratek20.hla.parsing.api.*
+import com.github.bratek20.hla.parsing.fixtures.*
 
 import com.github.bratek20.hla.generation.api.*
 
 data class ExpectedGenerateArgs(
-    var moduleName: String? = null,
-    var modules: List<(ExpectedModuleDefinition.() -> Unit)>? = null,
+    var group: (ExpectedModuleGroup.() -> Unit)? = null,
+    var moduleToGenerate: String? = null,
     var onlyUpdate: Boolean? = null,
-    var profile: (ExpectedHlaProfile.() -> Unit)? = null,
 )
 fun diffGenerateArgs(given: GenerateArgs, expectedInit: ExpectedGenerateArgs.() -> Unit, path: String = ""): String {
     val expected = ExpectedGenerateArgs().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.moduleName?.let {
-        if (diffModuleName(given.getModuleName(), it) != "") { result.add(diffModuleName(given.getModuleName(), it, "${path}moduleName.")) }
+    expected.group?.let {
+        if (diffModuleGroup(given.getGroup(), it) != "") { result.add(diffModuleGroup(given.getGroup(), it, "${path}group.")) }
     }
 
-    expected.modules?.let {
-        if (given.getModules().size != it.size) { result.add("${path}modules size ${given.getModules().size} != ${it.size}") }
-        given.getModules().forEachIndexed { idx, entry -> if (diffModuleDefinition(entry, it[idx]) != "") { result.add(diffModuleDefinition(entry, it[idx], "${path}modules[${idx}].")) } }
+    expected.moduleToGenerate?.let {
+        if (diffModuleName(given.getModuleToGenerate(), it) != "") { result.add(diffModuleName(given.getModuleToGenerate(), it, "${path}moduleToGenerate.")) }
     }
 
     expected.onlyUpdate?.let {
         if (given.getOnlyUpdate() != it) { result.add("${path}onlyUpdate ${given.getOnlyUpdate()} != ${it}") }
-    }
-
-    expected.profile?.let {
-        if (diffHlaProfile(given.getProfile(), it) != "") { result.add(diffHlaProfile(given.getProfile(), it, "${path}profile.")) }
     }
 
     return result.joinToString("\n")

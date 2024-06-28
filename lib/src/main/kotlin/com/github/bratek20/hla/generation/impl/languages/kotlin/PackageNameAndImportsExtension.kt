@@ -18,7 +18,7 @@ class PackageNameAndImportsExtension(
     override fun extend(builder: VelocityFileContentBuilder) {
         val rootPackage = srcPathToRootPackage(c.profile.getPaths().getSrc().getMain());
 
-        val imports = c.modules.getCurrentDependencies()
+        val imports = c.queries.getCurrentDependencies()
             .map { "$rootPackage.${it.value.lowercase()}" }
 
 

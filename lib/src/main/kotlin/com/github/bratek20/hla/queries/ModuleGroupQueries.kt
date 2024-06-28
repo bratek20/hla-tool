@@ -1,7 +1,8 @@
-package com.github.bratek20.hla.definitions.impl
+package com.github.bratek20.hla.queries
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.parsing.api.ModuleGroup
 
 fun ofBaseType(value: String): BaseType {
     return BaseType.valueOf(value.uppercase())
@@ -11,12 +12,15 @@ fun isBaseType(value: String): Boolean {
     return BaseType.entries.any { it.name == value.uppercase() }
 }
 
-class HlaModules(
-    private val currentName: ModuleName,
-    private val modules: List<ModuleDefinition>
+class ModuleGroupQueries(
+    private val currentModuleName: ModuleName,
+    private val group: ModuleGroup
 ) {
-    val current: ModuleDefinition
-        get() = get(currentName)
+    val currentModule: ModuleDefinition
+        get() = get(currentModuleName)
+
+    private val modules: List<ModuleDefinition>
+        get() = group.getModules()
 
     fun get(moduleName: ModuleName): ModuleDefinition {
         return modules.first { it.getName() == moduleName }
@@ -79,14 +83,14 @@ class HlaModules(
     }
 
     fun getCurrentDependencies(): List<ModuleName> {
-        val typeNames = allComplexStructureDefinitions(current)
+        val typeNames = allComplexStructureDefinitions(currentModule)
             .map { it.getFields() }
             .flatten()
             .map { it.getType().getName() } +
-            interfacesTypeNames(current)
+            interfacesTypeNames(currentModule)
 
         return modules
-            .filter { it.getName() != currentName }
+            .filter { it.getName() != currentModuleName }
             .filter { module ->
                 typeNames.any { typeName ->
                     hasType(module, typeName)

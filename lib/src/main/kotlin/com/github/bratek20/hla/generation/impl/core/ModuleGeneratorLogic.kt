@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
-import com.github.bratek20.hla.definitions.impl.HlaModules
+import com.github.bratek20.hla.queries.ModuleGroupQueries
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.GenerateArgs
 import com.github.bratek20.hla.generation.api.GenerateResult
@@ -17,11 +17,11 @@ import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSu
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 
 data class DomainContext(
-    val modules: HlaModules,
+    val queries: ModuleGroupQueries,
     val profile: HlaProfile,
 ) {
     val module: ModuleDefinition
-        get() = modules.current
+        get() = queries.currentModule
 }
 
 class ModuleGeneratorLogic(
@@ -82,13 +82,13 @@ class ModuleGeneratorLogic(
     }
 
     override fun generate(args: GenerateArgs): GenerateResult {
-        val moduleName = args.getModuleName()
-        val language = args.getProfile().getLanguage()
-        val modules = args.getModules()
+        val moduleName = args.getModuleToGenerate()
+        val profile = args.getGroup().getProfile()
+        val language = profile.getLanguage()
 
         val domainContext = DomainContext(
-            modules = HlaModules(moduleName, modules),
-            profile = args.getProfile(),
+            queries = ModuleGroupQueries(moduleName, args.getGroup()),
+            profile = profile,
         )
 
         val context = ModuleGenerationContext(
@@ -99,7 +99,7 @@ class ModuleGeneratorLogic(
                 ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
             },
             onlyUpdate = args.getOnlyUpdate(),
-            onlyPatterns = args.getProfile().getOnlyPatterns(),
+            onlyPatterns = profile.getOnlyPatterns(),
         )
 
         val root = GenerationRoot()

@@ -2,44 +2,37 @@
 
 package com.github.bratek20.hla.generation.api
 
-import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.parsing.api.*
 
 data class GenerateArgs(
-    private val moduleName: String,
-    private val modules: List<ModuleDefinition>,
+    private val group: ModuleGroup,
+    private val moduleToGenerate: String,
     private val onlyUpdate: Boolean,
-    private val profile: HlaProfile,
 ) {
-    fun getModuleName(): ModuleName {
-        return ModuleName(this.moduleName)
+    fun getGroup(): ModuleGroup {
+        return this.group
     }
 
-    fun getModules(): List<ModuleDefinition> {
-        return this.modules
+    fun getModuleToGenerate(): ModuleName {
+        return ModuleName(this.moduleToGenerate)
     }
 
     fun getOnlyUpdate(): Boolean {
         return this.onlyUpdate
     }
 
-    fun getProfile(): HlaProfile {
-        return this.profile
-    }
-
     companion object {
         fun create(
-            moduleName: ModuleName,
-            modules: List<ModuleDefinition>,
+            group: ModuleGroup,
+            moduleToGenerate: ModuleName,
             onlyUpdate: Boolean,
-            profile: HlaProfile,
         ): GenerateArgs {
             return GenerateArgs(
-                moduleName = moduleName.value,
-                modules = modules,
+                group = group,
+                moduleToGenerate = moduleToGenerate.value,
                 onlyUpdate = onlyUpdate,
-                profile = profile,
             )
         }
     }
