@@ -18,30 +18,36 @@ import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import java.util.*
 
 class ModuleGroupsParserLogic: ModuleGroupsParser {
-    override fun parse(hlaFolder: Path, profile: ProfileName): List<ModuleGroup> {
-        val directories = DirectoriesLogic()
+    private val directories = DirectoriesLogic()
+
+    override fun parse(hlaFolderPath: Path, profileName: ProfileName): List<ModuleGroup> {
+        val firstGroup = parseModuleGroup(hlaFolderPath, profileName)
+        val result = mutableListOf<ModuleGroup>()
+        result.add(firstGroup)
+
+        val imports = firstGroup.getProfile().getImports()
+        if (imports.isNotEmpty()) {
+            val import = imports.first()
+            val secondGroup = parseModuleGroup(hlaFolderPath.add(import.getHlaFolderPath()), import.getProfileName())
+            result.add(secondGroup)
+        }
+
+        return result
+    }
+
+    private fun parseModuleGroup(hlaFolder: Path, profile: ProfileName): ModuleGroup {
         val properties = PropertiesLogic(emptySet())
         properties.addSource(YamlPropertiesSource(hlaFolder.add(FileName("properties.yaml")).value))
-        val current = properties.get(PROFILES_KEY).first { it.getName() == profile }
-        val imports = current.getImports()
 
         val modulesDir = directories.read(hlaFolder)
-        val moduleFilesToParse = modulesDir.getFiles()
+        val modules = modulesDir.getFiles()
             .filter { it.getName().value.endsWith(".module") }
-            .toMutableList()
+            .map { parseModuleFile(it) }
 
-        if (imports.isNotEmpty()) {
-            val importedModules = imports.map { directories.read(hlaFolder.add(it.getHlaFolderPath())) }
-                .flatMap { it.getFiles().filter { it.getName().value.endsWith(".module") } }
-            moduleFilesToParse.addAll(importedModules)
-        }
-        val modules =  moduleFilesToParse.map { parseModuleFile(it) }
-        return listOf(
-            ModuleGroup.create(
-                name = GroupName(""),
-                modules = modules,
-                profile = current
-            )
+        return ModuleGroup.create(
+            name = GroupName(modulesDir.getName().value),
+            modules = modules,
+            profile = properties.get(PROFILES_KEY).find { it.getName() == profile } ?: throw IllegalArgumentException("Profile $profile not found")
         )
     }
 
