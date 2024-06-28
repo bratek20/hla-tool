@@ -2,7 +2,7 @@ rootProject.name = "example"
 
 include("kotlin")
 
-val catalogVersion = "1.0.18"
+val catalogVersion = "1.0.22"
 
 pluginManagement {
     repositories {

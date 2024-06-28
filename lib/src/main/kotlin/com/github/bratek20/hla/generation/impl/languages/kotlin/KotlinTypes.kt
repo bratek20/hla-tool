@@ -19,7 +19,7 @@ class KotlinTypes: LanguageTypes {
             BaseType.ANY -> "Any"
             BaseType.DOUBLE -> "Double"
             BaseType.LONG -> "Long"
-            BaseType.DICTIONARY -> "com.github.bratek20.architecture.serialization.api.Dictionary"
+            BaseType.STRUCT -> "com.github.bratek20.architecture.serialization.api.Struct"
         }
     }
 
@@ -32,7 +32,7 @@ class KotlinTypes: LanguageTypes {
             BaseType.ANY -> "Any()"
             BaseType.DOUBLE -> "0.0"
             BaseType.LONG -> "0L"
-            BaseType.DICTIONARY -> "com.github.bratek20.architecture.serialization.api.Dictionary()"
+            BaseType.STRUCT -> "com.github.bratek20.architecture.serialization.api.Struct()"
         }
     }
 
