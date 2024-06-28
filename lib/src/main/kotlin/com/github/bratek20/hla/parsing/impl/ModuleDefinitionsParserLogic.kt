@@ -1,24 +1,39 @@
 package com.github.bratek20.hla.parsing.impl
 
+import com.github.bratek20.architecture.properties.impl.PropertiesLogic
+import com.github.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.directory.api.File
 import com.github.bratek20.hla.directory.api.FileContent
+import com.github.bratek20.hla.directory.api.FileName
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
+import com.github.bratek20.hla.parsing.api.PROFILES_KEY
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import java.util.*
 
 class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
     override fun parse(hlaFolder: Path, profile: ProfileName): List<ModuleDefinition> {
         val directories = DirectoriesLogic()
+        val properties = PropertiesLogic(emptySet())
+        properties.addSource(YamlPropertiesSource(hlaFolder.add(FileName("properties.yaml")).value))
+        val current = properties.get(PROFILES_KEY).first { it.getName() == profile }
+        val imports = current.getImports()
 
         val modulesDir = directories.read(hlaFolder)
-        return modulesDir.getFiles()
+        val moduleFilesToParse = modulesDir.getFiles()
             .filter { it.getName().value.endsWith(".module") }
-            .map { parseModuleFile(it) }
+            .toMutableList()
+
+        if (imports.isNotEmpty()) {
+            val importedModules = imports.map { directories.read(hlaFolder.add(it.getHlaFolderPath())) }
+                .flatMap { it.getFiles().filter { it.getName().value.endsWith(".module") } }
+            moduleFilesToParse.addAll(importedModules)
+        }
+        return moduleFilesToParse.map { parseModuleFile(it) }
     }
 
     private fun parseModuleFile(file: File): ModuleDefinition {

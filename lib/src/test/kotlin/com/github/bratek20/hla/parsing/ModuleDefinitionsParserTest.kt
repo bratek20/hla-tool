@@ -19,9 +19,9 @@ class ModuleDefinitionsParserTest {
         .build()
         .get(ModuleDefinitionsParser::class.java)
 
-    private fun parse(pathSuffix: String): List<ModuleDefinition> {
+    private fun parse(pathSuffix: String, profileName: String = "test"): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
-        return parser.parse(Path(fullPath), ProfileName("test"))
+        return parser.parse(Path(fullPath), ProfileName(profileName))
     }
 
     @Test
@@ -436,7 +436,7 @@ class ModuleDefinitionsParserTest {
 
     @Test
     fun `should parse other module groups modules imported by given`() {
-        val modules = parse("imports/group2")
+        val modules = parse("imports/group2", "group2")
 
         assertModules(modules, listOf(
             {
