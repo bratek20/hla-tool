@@ -455,15 +455,6 @@ class ModuleGroupParserTest {
             }
             dependencies = listOf(
                 {
-                    name = "group1"
-                    modules = listOf {
-                        name = "Group1Module"
-                    }
-                    profile = {
-                        name = "group1Profile"
-                    }
-                },
-                {
                     name = "group2"
                     modules = listOf {
                         name = "Group2Module"
@@ -480,7 +471,16 @@ class ModuleGroupParserTest {
                             name = "group1Profile"
                         }
                     }
-                }
+                },
+                {
+                    name = "group1"
+                    modules = listOf {
+                        name = "Group1Module"
+                    }
+                    profile = {
+                        name = "group1Profile"
+                    }
+                },
             )
         }
     }

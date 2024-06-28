@@ -21,33 +21,28 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     private val directories = DirectoriesLogic()
 
     override fun parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup {
-        val firstGroup = parseModuleGroup(hlaFolderPath, profileName)
-        val result = mutableListOf<ModuleGroup>()
-        result.add(firstGroup)
-
-        val imports = firstGroup.getProfile().getImports()
-        if (imports.isNotEmpty()) {
-            val import = imports.first()
-            val secondGroup = parseModuleGroup(hlaFolderPath.add(import.getHlaFolderPath()), import.getProfileName())
-            result.add(secondGroup)
-        }
-
-        return result.first()
+        return parseModuleGroup(hlaFolderPath, profileName)
     }
 
-    private fun parseModuleGroup(hlaFolder: Path, profile: ProfileName): ModuleGroup {
+    private fun parseModuleGroup(hlaFolder: Path, profileName: ProfileName): ModuleGroup {
         val properties = PropertiesLogic(emptySet())
         properties.addSource(YamlPropertiesSource(hlaFolder.add(FileName("properties.yaml")).value))
+        val profile = properties.get(PROFILES_KEY).find { it.getName() == profileName } ?: throw IllegalArgumentException("Profile $profileName not found")
 
         val modulesDir = directories.read(hlaFolder)
         val modules = modulesDir.getFiles()
             .filter { it.getName().value.endsWith(".module") }
             .map { parseModuleFile(it) }
 
+        val dependencies = profile.getImports().map {
+            parseModuleGroup(hlaFolder.add(it.getHlaFolderPath()), it.getProfileName())
+        }
+
         return ModuleGroup.create(
             name = GroupName(modulesDir.getName().value),
             modules = modules,
-            profile = properties.get(PROFILES_KEY).find { it.getName() == profile } ?: throw IllegalArgumentException("Profile $profile not found")
+            profile = profile,
+            dependencies = dependencies
         )
     }
 
