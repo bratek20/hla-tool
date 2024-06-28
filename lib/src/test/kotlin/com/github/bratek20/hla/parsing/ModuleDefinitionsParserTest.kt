@@ -432,4 +432,18 @@ class ModuleDefinitionsParserTest {
             }
         )
     }
+
+    @Test
+    fun `should parse other module groups modules imported by given`() {
+        val modules = parse("imports/group2")
+
+        assertModules(modules, listOf(
+            {
+                name = "Group2Module"
+            },
+            {
+                name = "Group1Module"
+            }
+        ))
+    }
 }

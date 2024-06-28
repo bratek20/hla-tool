@@ -30,8 +30,8 @@ ValueObjects
         name: ProfileName
         language: ModuleLanguage
         paths: HlaPaths
-        onlyPatterns: string[]
         typeScript: TypeScriptConfig?
+        onlyPatterns: string[] = []
         imports: HlaProfileImport[] = []
 
     ModuleOperationArgs
