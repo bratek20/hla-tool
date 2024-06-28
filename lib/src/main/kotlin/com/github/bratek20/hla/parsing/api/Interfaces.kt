@@ -6,9 +6,9 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.facade.api.*
 
-interface ModuleGroupsParser {
+interface ModuleGroupParser {
     @Throws(
         UnknownRootSectionException::class,
     )
-    fun parse(hlaFolderPath: Path, profileName: ProfileName): List<ModuleGroup>
+    fun parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup
 }

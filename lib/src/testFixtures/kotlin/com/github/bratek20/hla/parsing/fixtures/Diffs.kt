@@ -20,6 +20,7 @@ data class ExpectedModuleGroup(
     var name: String? = null,
     var modules: List<(ExpectedModuleDefinition.() -> Unit)>? = null,
     var profile: (ExpectedHlaProfile.() -> Unit)? = null,
+    var dependencies: List<(ExpectedModuleGroup.() -> Unit)>? = null,
 )
 fun diffModuleGroup(given: ModuleGroup, expectedInit: ExpectedModuleGroup.() -> Unit, path: String = ""): String {
     val expected = ExpectedModuleGroup().apply(expectedInit)
@@ -36,6 +37,11 @@ fun diffModuleGroup(given: ModuleGroup, expectedInit: ExpectedModuleGroup.() -> 
 
     expected.profile?.let {
         if (diffHlaProfile(given.getProfile(), it) != "") { result.add(diffHlaProfile(given.getProfile(), it, "${path}profile.")) }
+    }
+
+    expected.dependencies?.let {
+        if (given.getDependencies().size != it.size) { result.add("${path}dependencies size ${given.getDependencies().size} != ${it.size}") }
+        given.getDependencies().forEachIndexed { idx, entry -> if (diffModuleGroup(entry, it[idx]) != "") { result.add(diffModuleGroup(entry, it[idx], "${path}dependencies[${idx}].")) } }
     }
 
     return result.joinToString("\n")

@@ -12,10 +12,3 @@ fun assertModules(given: List<ModuleDefinition>, expected: List<ExpectedModuleDe
         assertModuleDefinition(given[idx], expectedModule)
     }
 }
-
-fun assertModuleGroups(given: List<ModuleGroup>, expected: List<ExpectedModuleGroup.() -> Unit>) {
-    assertThat(given).hasSameSizeAs(expected)
-    expected.forEachIndexed { idx, expectedModuleGroup ->
-        assertModuleGroup(given[idx], expectedModuleGroup)
-    }
-}

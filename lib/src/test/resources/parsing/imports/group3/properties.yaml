@@ -1,0 +1,14 @@
+profiles:
+  - name: "group3Profile"
+    language: "KOTLIN"
+    paths:
+      project: ""
+      src:
+        main: ""
+        test: ""
+        fixtures: ""
+    imports:
+      - hlaFolderPath: "../group2"
+        profileName: "group2Profile"
+      - hlaFolderPath: "../group1"
+        profileName: "group1Profile"

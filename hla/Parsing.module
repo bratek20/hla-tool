@@ -5,9 +5,10 @@ ValueObjects
         name: GroupName
         modules: ModuleDefinition[]
         profile: HlaProfile
+        dependencies: ModuleGroup[] = []
 
 Interfaces
-    ModuleGroupsParser
-        parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup[]
+    ModuleGroupParser
+        parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup
             throws
                 UnknownRootSectionException

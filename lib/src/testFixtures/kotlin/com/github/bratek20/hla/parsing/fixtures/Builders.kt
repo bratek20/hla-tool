@@ -15,6 +15,7 @@ data class ModuleGroupDef(
     var name: String = "someValue",
     var modules: List<(ModuleDefinitionDef.() -> Unit)> = emptyList(),
     var profile: (HlaProfileDef.() -> Unit) = {},
+    var dependencies: List<(ModuleGroupDef.() -> Unit)> = emptyList(),
 )
 fun moduleGroup(init: ModuleGroupDef.() -> Unit = {}): ModuleGroup {
     val def = ModuleGroupDef().apply(init)
@@ -22,5 +23,6 @@ fun moduleGroup(init: ModuleGroupDef.() -> Unit = {}): ModuleGroup {
         name = GroupName(def.name),
         modules = def.modules.map { it -> moduleDefinition(it) },
         profile = hlaProfile(def.profile),
+        dependencies = def.dependencies.map { it -> moduleGroup(it) },
     )
 }

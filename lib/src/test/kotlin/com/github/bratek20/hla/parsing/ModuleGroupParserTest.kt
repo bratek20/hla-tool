@@ -1,33 +1,32 @@
 package com.github.bratek20.hla.parsing
 
-import org.assertj.core.api.Assertions.assertThatCode
-import org.junit.jupiter.api.Test
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
-import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
-import com.github.bratek20.hla.definitions.fixtures.assertModuleGroups
 import com.github.bratek20.hla.definitions.fixtures.assertModules
+import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
-import com.github.bratek20.hla.parsing.api.ModuleGroupsParser
+import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
+import com.github.bratek20.hla.parsing.fixtures.assertModuleGroup
 import com.github.bratek20.hla.parsing.impl.ParsingContextModule
+import org.assertj.core.api.Assertions.assertThatCode
+import org.junit.jupiter.api.Test
 
-class ModuleGroupsParserTest {
+class ModuleGroupParserTest {
     private val parser = someContextBuilder()
         .withModule(ParsingContextModule())
         .build()
-        .get(ModuleGroupsParser::class.java)
+        .get(ModuleGroupParser::class.java)
 
     private fun parseSingleGroup(pathSuffix: String): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
-        return parser.parse(Path(fullPath), ProfileName("test")) // all properties.yaml are copy-pasted
-            .flatMap { it.getModules() }
+        return parser.parse(Path(fullPath), ProfileName("test")).getModules() // all properties.yaml are copy-pasted
     }
 
-    private fun parse(pathSuffix: String, profileName: String): List<ModuleGroup> {
+    private fun parse(pathSuffix: String, profileName: String): ModuleGroup {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
         return parser.parse(Path(fullPath), ProfileName(profileName))
     }
@@ -444,27 +443,45 @@ class ModuleGroupsParserTest {
 
     @Test
     fun `should parse other module groups modules imported by given`() {
-        val groups = parse("imports/group2", "group2Profile")
+        val groups = parse("imports/group3", "group3Profile")
 
-        assertModuleGroups(groups, listOf(
-            {
-                name = "group2"
-                modules = listOf {
-                    name = "Group2Module"
-                }
-                profile = {
-                    name = "group2Profile"
-                }
-            },
-            {
-                name = "group1"
-                modules = listOf {
-                    name = "Group1Module"
-                }
-                profile = {
-                    name = "group1Profile"
-                }
+        assertModuleGroup(groups) {
+            name = "group3"
+            modules = listOf {
+                name = "Group3Module"
             }
-        ))
+            profile = {
+                name = "group3Profile"
+            }
+            dependencies = listOf(
+                {
+                    name = "group1"
+                    modules = listOf {
+                        name = "Group1Module"
+                    }
+                    profile = {
+                        name = "group1Profile"
+                    }
+                },
+                {
+                    name = "group2"
+                    modules = listOf {
+                        name = "Group2Module"
+                    }
+                    profile = {
+                        name = "group2Profile"
+                    }
+                    dependencies = listOf {
+                        name = "group1"
+                        modules = listOf {
+                            name = "Group1Module"
+                        }
+                        profile = {
+                            name = "group1Profile"
+                        }
+                    }
+                }
+            )
+        }
     }
 }

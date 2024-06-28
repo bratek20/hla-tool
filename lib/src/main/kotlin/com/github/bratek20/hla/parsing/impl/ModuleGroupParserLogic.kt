@@ -12,15 +12,15 @@ import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.facade.api.PROFILES_KEY
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.GroupName
-import com.github.bratek20.hla.parsing.api.ModuleGroupsParser
+import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import java.util.*
 
-class ModuleGroupsParserLogic: ModuleGroupsParser {
+class ModuleGroupParserLogic: ModuleGroupParser {
     private val directories = DirectoriesLogic()
 
-    override fun parse(hlaFolderPath: Path, profileName: ProfileName): List<ModuleGroup> {
+    override fun parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup {
         val firstGroup = parseModuleGroup(hlaFolderPath, profileName)
         val result = mutableListOf<ModuleGroup>()
         result.add(firstGroup)
@@ -32,7 +32,7 @@ class ModuleGroupsParserLogic: ModuleGroupsParser {
             result.add(secondGroup)
         }
 
-        return result
+        return result.first()
     }
 
     private fun parseModuleGroup(hlaFolder: Path, profile: ProfileName): ModuleGroup {

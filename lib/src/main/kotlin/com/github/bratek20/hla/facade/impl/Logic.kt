@@ -9,7 +9,7 @@ import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.GenerateArgs
 import com.github.bratek20.hla.generation.api.ModuleGenerator
-import com.github.bratek20.hla.parsing.impl.ModuleGroupsParserLogic
+import com.github.bratek20.hla.parsing.impl.ModuleGroupParserLogic
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
 
@@ -90,7 +90,7 @@ class HlaFacadeLogic(
     }
 
     private fun prepare(hlaFolderPath: Path, profileName: ProfileName): Pair<List<ModuleDefinition>, HlaProfile>{
-        val parser = ModuleGroupsParserLogic()
+        val parser = ModuleGroupParserLogic()
 
         propertiesSource.propertiesPath = hlaFolderPath.value + "/properties.yaml"
 
@@ -98,8 +98,7 @@ class HlaFacadeLogic(
             .firstOrNull { it.getName() == profileName }
             ?: throw ProfileNotFoundException("Profile with name $profileName not found")
 
-        val modules = parser.parse(hlaFolderPath, profileName)
-            .flatMap { it.getModules() }
+        val modules = parser.parse(hlaFolderPath, profileName).getModules()
         return Pair(modules, profile)
     }
 }

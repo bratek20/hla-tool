@@ -14,6 +14,7 @@ data class ModuleGroup(
     private val name: String,
     private val modules: List<ModuleDefinition>,
     private val profile: HlaProfile,
+    private val dependencies: List<ModuleGroup> = emptyList(),
 ) {
     fun getName(): GroupName {
         return GroupName(this.name)
@@ -27,16 +28,22 @@ data class ModuleGroup(
         return this.profile
     }
 
+    fun getDependencies(): List<ModuleGroup> {
+        return this.dependencies
+    }
+
     companion object {
         fun create(
             name: GroupName,
             modules: List<ModuleDefinition>,
             profile: HlaProfile,
+            dependencies: List<ModuleGroup> = emptyList(),
         ): ModuleGroup {
             return ModuleGroup(
                 name = name.value,
                 modules = modules,
                 profile = profile,
+                dependencies = dependencies,
             )
         }
     }
