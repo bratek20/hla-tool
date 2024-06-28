@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.queries
+package com.github.bratek20.hla.queries.api
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
@@ -19,8 +19,15 @@ class ModuleGroupQueries(
     val currentModule: ModuleDefinition
         get() = get(currentModuleName)
 
+    private fun getModulesRecursive(group: ModuleGroup): List<ModuleDefinition> {
+        val groupModules = group.getModules()
+        val resolvedModules = group.getDependencies().flatMap {
+            getModulesRecursive(it)
+        }
+        return groupModules + resolvedModules
+    }
     private val modules: List<ModuleDefinition>
-        get() = group.getModules()
+        get() = getModulesRecursive(group)
 
     fun get(moduleName: ModuleName): ModuleDefinition {
         return modules.first { it.getName() == moduleName }
@@ -82,14 +89,14 @@ class ModuleGroupQueries(
         return module.getInterfaces().find { it.getName() == type.getName() }
     }
 
-    fun getCurrentDependencies(): List<ModuleName> {
+    fun getCurrentDependencies(): List<ModuleDependency> {
         val typeNames = allComplexStructureDefinitions(currentModule)
             .map { it.getFields() }
             .flatten()
             .map { it.getType().getName() } +
             interfacesTypeNames(currentModule)
 
-        return modules
+        val resolvedModules = modules
             .filter { it.getName() != currentModuleName }
             .filter { module ->
                 typeNames.any { typeName ->
@@ -97,6 +104,20 @@ class ModuleGroupQueries(
                 }
             }
             .map { it.getName() }
+
+        return resolvedModules.map { ModuleDependency.create(getGroup(it), get(it)) }
+    }
+
+    private fun getGroup(module: ModuleName): ModuleGroup {
+        return resolveAllGroups(group).first { it.getModules().any { it.getName() == module } }
+    }
+
+    private fun resolveAllGroups(group: ModuleGroup): List<ModuleGroup> {
+        val groups = mutableListOf(group)
+        group.getDependencies().forEach {
+            groups.addAll(resolveAllGroups(it))
+        }
+        return groups
     }
 
     fun getTypeModuleName(typeName: String): ModuleName {

@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.languages.typescript
 
-import com.github.bratek20.hla.queries.ModuleGroupQueries
+import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageDtoPattern

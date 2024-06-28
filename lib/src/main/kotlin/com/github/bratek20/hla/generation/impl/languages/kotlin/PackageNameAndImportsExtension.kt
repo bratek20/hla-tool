@@ -1,11 +1,12 @@
 package com.github.bratek20.hla.generation.impl.languages.kotlin
 
-import com.github.bratek20.hla.directory.api.Path
+import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-private fun srcPathToRootPackage(mainPath: Path): String {
+private fun profileToRootPackage(profile: HlaProfile): String {
+    val mainPath = profile.getPaths().getSrc().getMain()
     return mainPath.value
         .replace("src/main/kotlin/", "")
         .replace("src/main/java/", "")
@@ -16,12 +17,14 @@ class PackageNameAndImportsExtension(
     private val c: DomainContext
 ) : ContentBuilderExtension {
     override fun extend(builder: VelocityFileContentBuilder) {
-        val rootPackage = srcPathToRootPackage(c.profile.getPaths().getSrc().getMain());
-
         val imports = c.queries.getCurrentDependencies()
-            .map { "$rootPackage.${it.value.lowercase()}" }
+            .map {
+                val rootPackage = profileToRootPackage(it.getGroup().getProfile())
+                "$rootPackage.${it.getModule().getName().value.lowercase()}"
+            }
 
 
+        val rootPackage = profileToRootPackage(c.profile)
         builder
             .put("packageName", "$rootPackage.${c.module.getName().value.lowercase()}")
             .put("imports", imports)

@@ -2,9 +2,9 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
-import com.github.bratek20.hla.queries.ModuleGroupQueries
-import com.github.bratek20.hla.queries.isBaseType
-import com.github.bratek20.hla.queries.ofBaseType
+import com.github.bratek20.hla.queries.api.ModuleGroupQueries
+import com.github.bratek20.hla.queries.api.isBaseType
+import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.utils.pascalToCamelCase
 

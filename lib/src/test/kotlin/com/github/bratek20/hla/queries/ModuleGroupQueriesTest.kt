@@ -1,10 +1,10 @@
 package com.github.bratek20.hla.queries
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import com.github.bratek20.hla.definitions.fixtures.moduleDefinition
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.parsing.fixtures.moduleGroup
+import com.github.bratek20.hla.queries.api.ModuleGroupQueries
+import com.github.bratek20.hla.queries.fixtures.assertModuleDependencies
+import org.junit.jupiter.api.Test
 
 class ModuleGroupQueriesTest {
     @Test
@@ -37,8 +37,11 @@ class ModuleGroupQueriesTest {
         val hlaModules = ModuleGroupQueries(ModuleName("B"), group)
 
         // then
-        assertThat(hlaModules.getCurrentDependencies())
-            .containsExactly(ModuleName("A"))
+        assertModuleDependencies(hlaModules.getCurrentDependencies(), listOf {
+            module = {
+                name = "A"
+            }
+        })
     }
 
     @Test
@@ -100,9 +103,30 @@ class ModuleGroupQueriesTest {
         val hlaModulesForD = ModuleGroupQueries(ModuleName("D"), group)
 
         // then
-        assertThat(hlaModulesForC.getCurrentDependencies())
-            .containsExactly(ModuleName("A"), ModuleName("B"))
-        assertThat(hlaModulesForD.getCurrentDependencies())
-            .containsExactly(ModuleName("B"), ModuleName("C"))
+        assertModuleDependencies(hlaModulesForC.getCurrentDependencies(), listOf(
+            {
+                module = {
+                    name = "A"
+                }
+            },
+            {
+                module = {
+                    name = "B"
+                }
+            }
+        ))
+
+        assertModuleDependencies(hlaModulesForD.getCurrentDependencies(), listOf(
+            {
+                module = {
+                    name = "B"
+                }
+            },
+            {
+                module = {
+                    name = "C"
+                }
+            }
+        ))
     }
 }

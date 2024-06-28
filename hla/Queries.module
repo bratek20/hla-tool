@@ -1,0 +1,4 @@
+ValueObjects
+    ModuleDependency
+        group: ModuleGroup
+        module: ModuleDefinition

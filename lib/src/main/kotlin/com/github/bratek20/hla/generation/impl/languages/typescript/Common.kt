@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.languages.typescript
 
-import com.github.bratek20.hla.queries.ModuleGroupQueries
+import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 
 fun handleReferencing(modules: ModuleGroupQueries, typeName: String, base: String, submodule: String?): String {
     val module = modules.getTypeModuleName(typeName);
