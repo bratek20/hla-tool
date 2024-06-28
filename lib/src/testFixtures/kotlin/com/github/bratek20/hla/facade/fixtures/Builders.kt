@@ -65,8 +65,8 @@ data class HlaProfileDef(
     var name: String = "someValue",
     var language: ModuleLanguage = ModuleLanguage.KOTLIN,
     var paths: (HlaPathsDef.() -> Unit) = {},
-    var onlyPatterns: List<String> = emptyList(),
     var typeScript: (TypeScriptConfigDef.() -> Unit)? = null,
+    var onlyPatterns: List<String> = emptyList(),
     var imports: List<(HlaProfileImportDef.() -> Unit)> = emptyList(),
 )
 fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
@@ -75,8 +75,8 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
         name = ProfileName(def.name),
         language = def.language,
         paths = hlaPaths(def.paths),
-        onlyPatterns = def.onlyPatterns,
         typeScript = def.typeScript?.let { it -> typeScriptConfig(it) },
+        onlyPatterns = def.onlyPatterns,
         imports = def.imports.map { it -> hlaProfileImport(it) },
     )
 }

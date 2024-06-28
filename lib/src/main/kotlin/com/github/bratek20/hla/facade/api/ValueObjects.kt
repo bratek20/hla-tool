@@ -137,8 +137,8 @@ data class HlaProfile(
     private val name: String,
     private val language: String,
     private val paths: HlaPaths,
-    private val onlyPatterns: List<String>,
     private val typeScript: TypeScriptConfig?,
+    private val onlyPatterns: List<String> = emptyList(),
     private val imports: List<HlaProfileImport> = emptyList(),
 ) {
     fun getName(): ProfileName {
@@ -153,12 +153,12 @@ data class HlaProfile(
         return this.paths
     }
 
-    fun getOnlyPatterns(): List<String> {
-        return this.onlyPatterns
-    }
-
     fun getTypeScript(): TypeScriptConfig? {
         return this.typeScript
+    }
+
+    fun getOnlyPatterns(): List<String> {
+        return this.onlyPatterns
     }
 
     fun getImports(): List<HlaProfileImport> {
@@ -170,16 +170,16 @@ data class HlaProfile(
             name: ProfileName,
             language: ModuleLanguage,
             paths: HlaPaths,
-            onlyPatterns: List<String>,
             typeScript: TypeScriptConfig?,
+            onlyPatterns: List<String> = emptyList(),
             imports: List<HlaProfileImport> = emptyList(),
         ): HlaProfile {
             return HlaProfile(
                 name = name.value,
                 language = language.name,
                 paths = paths,
-                onlyPatterns = onlyPatterns,
                 typeScript = typeScript,
+                onlyPatterns = onlyPatterns,
                 imports = imports,
             )
         }

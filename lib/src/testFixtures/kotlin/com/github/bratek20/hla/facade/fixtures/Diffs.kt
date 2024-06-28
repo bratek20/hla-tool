@@ -113,8 +113,8 @@ data class ExpectedHlaProfile(
     var name: String? = null,
     var language: ModuleLanguage? = null,
     var paths: (ExpectedHlaPaths.() -> Unit)? = null,
-    var onlyPatterns: List<String>? = null,
     var typeScript: (ExpectedTypeScriptConfig.() -> Unit)? = null,
+    var onlyPatterns: List<String>? = null,
     var imports: List<(ExpectedHlaProfileImport.() -> Unit)>? = null,
 )
 fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit, path: String = ""): String {
@@ -133,13 +133,13 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
         if (diffHlaPaths(given.getPaths(), it) != "") { result.add(diffHlaPaths(given.getPaths(), it, "${path}paths.")) }
     }
 
+    expected.typeScript?.let {
+        if (diffTypeScriptConfig(given.getTypeScript()!!, it) != "") { result.add(diffTypeScriptConfig(given.getTypeScript()!!, it, "${path}typeScript.")) }
+    }
+
     expected.onlyPatterns?.let {
         if (given.getOnlyPatterns().size != it.size) { result.add("${path}onlyPatterns size ${given.getOnlyPatterns().size} != ${it.size}") }
         given.getOnlyPatterns().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}onlyPatterns[${idx}] ${entry} != ${it[idx]}") } }
-    }
-
-    expected.typeScript?.let {
-        if (diffTypeScriptConfig(given.getTypeScript()!!, it) != "") { result.add(diffTypeScriptConfig(given.getTypeScript()!!, it, "${path}typeScript.")) }
     }
 
     expected.imports?.let {
