@@ -11,21 +11,31 @@ import com.github.bratek20.hla.facade.fixtures.*
 
 import com.github.bratek20.hla.parsing.api.*
 
-data class ExpectedPartialHlaProfile(
+fun diffGroupName(given: GroupName, expected: String, path: String = ""): String {
+    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}
+
+data class ExpectedModuleGroup(
     var name: String? = null,
-    var imports: List<(ExpectedHlaProfileImport.() -> Unit)>? = null,
+    var modules: List<(ExpectedModuleDefinition.() -> Unit)>? = null,
+    var profile: (ExpectedHlaProfile.() -> Unit)? = null,
 )
-fun diffPartialHlaProfile(given: PartialHlaProfile, expectedInit: ExpectedPartialHlaProfile.() -> Unit, path: String = ""): String {
-    val expected = ExpectedPartialHlaProfile().apply(expectedInit)
+fun diffModuleGroup(given: ModuleGroup, expectedInit: ExpectedModuleGroup.() -> Unit, path: String = ""): String {
+    val expected = ExpectedModuleGroup().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
-        if (diffProfileName(given.getName(), it) != "") { result.add(diffProfileName(given.getName(), it, "${path}name.")) }
+        if (diffGroupName(given.getName(), it) != "") { result.add(diffGroupName(given.getName(), it, "${path}name.")) }
     }
 
-    expected.imports?.let {
-        if (given.getImports().size != it.size) { result.add("${path}imports size ${given.getImports().size} != ${it.size}") }
-        given.getImports().forEachIndexed { idx, entry -> if (diffHlaProfileImport(entry, it[idx]) != "") { result.add(diffHlaProfileImport(entry, it[idx], "${path}imports[${idx}].")) } }
+    expected.modules?.let {
+        if (given.getModules().size != it.size) { result.add("${path}modules size ${given.getModules().size} != ${it.size}") }
+        given.getModules().forEachIndexed { idx, entry -> if (diffModuleDefinition(entry, it[idx]) != "") { result.add(diffModuleDefinition(entry, it[idx], "${path}modules[${idx}].")) } }
+    }
+
+    expected.profile?.let {
+        if (diffHlaProfile(given.getProfile(), it) != "") { result.add(diffHlaProfile(given.getProfile(), it, "${path}profile.")) }
     }
 
     return result.joinToString("\n")

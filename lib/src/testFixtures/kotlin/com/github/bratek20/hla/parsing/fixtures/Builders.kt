@@ -11,14 +11,16 @@ import com.github.bratek20.hla.facade.fixtures.*
 
 import com.github.bratek20.hla.parsing.api.*
 
-data class PartialHlaProfileDef(
+data class ModuleGroupDef(
     var name: String = "someValue",
-    var imports: List<(HlaProfileImportDef.() -> Unit)> = emptyList(),
+    var modules: List<(ModuleDefinitionDef.() -> Unit)> = emptyList(),
+    var profile: (HlaProfileDef.() -> Unit) = {},
 )
-fun partialHlaProfile(init: PartialHlaProfileDef.() -> Unit = {}): PartialHlaProfile {
-    val def = PartialHlaProfileDef().apply(init)
-    return PartialHlaProfile.create(
-        name = ProfileName(def.name),
-        imports = def.imports.map { it -> hlaProfileImport(it) },
+fun moduleGroup(init: ModuleGroupDef.() -> Unit = {}): ModuleGroup {
+    val def = ModuleGroupDef().apply(init)
+    return ModuleGroup.create(
+        name = GroupName(def.name),
+        modules = def.modules.map { it -> moduleDefinition(it) },
+        profile = hlaProfile(def.profile),
     )
 }

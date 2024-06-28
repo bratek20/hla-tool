@@ -13,7 +13,12 @@ import com.github.bratek20.hla.facade.fixtures.*
 
 import com.github.bratek20.hla.parsing.api.*
 
-fun assertPartialHlaProfile(given: PartialHlaProfile, expectedInit: ExpectedPartialHlaProfile.() -> Unit) {
-    val diff = diffPartialHlaProfile(given, expectedInit)
+fun assertGroupName(given: GroupName, expected: String) {
+    val diff = diffGroupName(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertModuleGroup(given: ModuleGroup, expectedInit: ExpectedModuleGroup.() -> Unit) {
+    val diff = diffModuleGroup(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

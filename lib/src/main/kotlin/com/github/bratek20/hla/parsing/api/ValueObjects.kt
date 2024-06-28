@@ -6,26 +6,37 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.facade.api.*
 
-data class PartialHlaProfile(
+data class GroupName(
+    val value: String
+)
+
+data class ModuleGroup(
     private val name: String,
-    private val imports: List<HlaProfileImport> = emptyList(),
+    private val modules: List<ModuleDefinition>,
+    private val profile: HlaProfile,
 ) {
-    fun getName(): ProfileName {
-        return ProfileName(this.name)
+    fun getName(): GroupName {
+        return GroupName(this.name)
     }
 
-    fun getImports(): List<HlaProfileImport> {
-        return this.imports
+    fun getModules(): List<ModuleDefinition> {
+        return this.modules
+    }
+
+    fun getProfile(): HlaProfile {
+        return this.profile
     }
 
     companion object {
         fun create(
-            name: ProfileName,
-            imports: List<HlaProfileImport> = emptyList(),
-        ): PartialHlaProfile {
-            return PartialHlaProfile(
+            name: GroupName,
+            modules: List<ModuleDefinition>,
+            profile: HlaProfile,
+        ): ModuleGroup {
+            return ModuleGroup(
                 name = name.value,
-                imports = imports,
+                modules = modules,
+                profile = profile,
             )
         }
     }

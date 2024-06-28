@@ -9,14 +9,16 @@ import com.github.bratek20.hla.directory.api.FileName
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.facade.api.PROFILES_KEY
 import com.github.bratek20.hla.facade.api.ProfileName
+import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
-import com.github.bratek20.hla.parsing.api.PROFILES_KEY
+import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import java.util.*
 
 class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
-    override fun parse(hlaFolder: Path, profile: ProfileName): List<ModuleDefinition> {
+    override fun parse(hlaFolder: Path, profile: ProfileName): List<ModuleGroup> {
         val directories = DirectoriesLogic()
         val properties = PropertiesLogic(emptySet())
         properties.addSource(YamlPropertiesSource(hlaFolder.add(FileName("properties.yaml")).value))
@@ -33,7 +35,14 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
                 .flatMap { it.getFiles().filter { it.getName().value.endsWith(".module") } }
             moduleFilesToParse.addAll(importedModules)
         }
-        return moduleFilesToParse.map { parseModuleFile(it) }
+        val modules =  moduleFilesToParse.map { parseModuleFile(it) }
+        return listOf(
+            ModuleGroup.create(
+                name = GroupName(""),
+                modules = modules,
+                profile = current
+            )
+        )
     }
 
     private fun parseModuleFile(file: File): ModuleDefinition {

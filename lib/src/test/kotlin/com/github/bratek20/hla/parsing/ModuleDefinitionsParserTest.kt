@@ -22,6 +22,7 @@ class ModuleDefinitionsParserTest {
     private fun parse(pathSuffix: String, profileName: String = "test"): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
         return parser.parse(Path(fullPath), ProfileName(profileName))
+            .flatMap { it.getModules() }
     }
 
     @Test

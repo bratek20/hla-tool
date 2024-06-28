@@ -1,13 +1,13 @@
 ValueObjects
-    PartialHlaProfile
-        name: ProfileName
-        imports: HlaProfileImport[] = []
+    GroupName: string
 
-PropertyKeys
-    "profiles" -> PartialHlaProfile[]
+    ModuleGroup
+        name: GroupName
+        modules: ModuleDefinition[]
+        profile: HlaProfile
 
 Interfaces
     ModuleDefinitionsParser
-        parse(hlaFolder: Path, profile: ProfileName): ModuleDefinition[]
+        parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup[]
             throws
                 UnknownRootSectionException

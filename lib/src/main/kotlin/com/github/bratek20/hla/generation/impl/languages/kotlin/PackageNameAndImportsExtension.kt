@@ -5,7 +5,7 @@ import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-fun srcPathToRootPackage(mainPath: Path): String {
+private fun srcPathToRootPackage(mainPath: Path): String {
     return mainPath.value
         .replace("src/main/kotlin/", "")
         .replace("src/main/java/", "")
