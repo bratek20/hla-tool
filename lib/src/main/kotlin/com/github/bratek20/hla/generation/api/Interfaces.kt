@@ -7,5 +7,8 @@ import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.facade.api.*
 
 interface ModuleGenerator {
+    @Throws(
+        UnknownTypeException::class,
+    )
     fun generate(args: GenerateArgs): GenerateResult
 }

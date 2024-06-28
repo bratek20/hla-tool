@@ -13,3 +13,5 @@ ValueObjects
 Interfaces
     ModuleGenerator
         generate(args: GenerateArgs): GenerateResult
+            throws
+                UnknownTypeException

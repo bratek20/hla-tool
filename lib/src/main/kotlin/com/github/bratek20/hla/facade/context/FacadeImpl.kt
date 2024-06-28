@@ -18,8 +18,6 @@ class FacadeImpl: ContextModule {
                 PropertiesImpl(),
                 YamlPropertiesSourceImpl(),
 
-                VelocityImpl(),
-
                 GenerationImpl(),
                 WritingImpl()
             )
