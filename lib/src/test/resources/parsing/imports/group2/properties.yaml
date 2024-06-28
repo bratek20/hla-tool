@@ -1,5 +1,5 @@
 profiles:
-  - name: "group2"
+  - name: "group2Profile"
     language: "KOTLIN"
     paths:
       project: ""
@@ -9,4 +9,4 @@ profiles:
         fixtures: ""
     imports:
       - hlaFolderPath: "../group1"
-        profileName: "group1"
+        profileName: "group1Profile"

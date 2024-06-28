@@ -7,8 +7,10 @@ import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.definitions.fixtures.assertModuleGroups
 import com.github.bratek20.hla.definitions.fixtures.assertModules
 import com.github.bratek20.hla.facade.api.ProfileName
+import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupsParser
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import com.github.bratek20.hla.parsing.impl.ParsingContextModule
@@ -19,15 +21,20 @@ class ModuleGroupsParserTest {
         .build()
         .get(ModuleGroupsParser::class.java)
 
-    private fun parse(pathSuffix: String, profileName: String = "test"): List<ModuleDefinition> {
+    private fun parseSingleGroup(pathSuffix: String): List<ModuleDefinition> {
+        val fullPath = "src/test/resources/parsing/$pathSuffix"
+        return parser.parse(Path(fullPath), ProfileName("test")) // all properties.yaml are copy-pasted
+            .flatMap { it.getModules() }
+    }
+
+    private fun parse(pathSuffix: String, profileName: String): List<ModuleGroup> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
         return parser.parse(Path(fullPath), ProfileName(profileName))
-            .flatMap { it.getModules() }
     }
 
     @Test
     fun `should parse two modules`() {
-        val modules = parse("two-modules")
+        val modules = parseSingleGroup("two-modules")
 
         assertModules(modules, listOf(
             {
@@ -251,7 +258,7 @@ class ModuleGroupsParserTest {
 
     @Test
     fun `should parse property and data keys`() {
-        val modules = parse("only-keys")
+        val modules = parseSingleGroup("only-keys")
 
         assertModules(modules, listOf {
             propertyKeys = listOf(
@@ -293,7 +300,7 @@ class ModuleGroupsParserTest {
 
     @Test
     fun `should parse custom types`() {
-        val modules = parse("only-custom-types")
+        val modules = parseSingleGroup("only-custom-types")
 
         assertModules(modules, listOf {
             simpleCustomTypes = listOf {
@@ -334,7 +341,7 @@ class ModuleGroupsParserTest {
 
     @Test
     fun `should parse module with comments`() {
-        val modules = parse("comments")
+        val modules = parseSingleGroup("comments")
 
         assertModules(modules, listOf {
             name = "SomeModule"
@@ -348,13 +355,13 @@ class ModuleGroupsParserTest {
     @Test
     fun `should not crash for bug`() {
         assertThatCode {
-            parse("bug")
+            parseSingleGroup("bug")
         }.doesNotThrowAnyException()
     }
 
     @Test
     fun `should parse data`() {
-        val modules = parse("only-data")
+        val modules = parseSingleGroup("only-data")
 
         assertModules(modules, listOf {
             dataClasses = listOf(
@@ -409,7 +416,7 @@ class ModuleGroupsParserTest {
 
     @Test
     fun `should parse external types`() {
-        val modules = parse("external-types")
+        val modules = parseSingleGroup("external-types")
 
         assertModules(modules, listOf {
             externalTypes = listOf(
@@ -427,7 +434,7 @@ class ModuleGroupsParserTest {
     @Test
     fun `should throw exception if root level section is unknown`() {
         assertApiExceptionThrown(
-            { parse("unknown-section") },
+            { parseSingleGroup("unknown-section") },
             {
                 type = UnknownRootSectionException::class
                 message = "Module SomeModule has unknown root sections: [SomeUnknownSection, SomeUnknownSection2]"
@@ -437,14 +444,26 @@ class ModuleGroupsParserTest {
 
     @Test
     fun `should parse other module groups modules imported by given`() {
-        val modules = parse("imports/group2", "group2")
+        val groups = parse("imports/group2", "group2Profile")
 
-        assertModules(modules, listOf(
+        assertModuleGroups(groups, listOf(
             {
-                name = "Group2Module"
+                name = "group2"
+                modules = listOf {
+                    name = "Group2Module"
+                }
+                profile = {
+                    name = "group2Profile"
+                }
             },
             {
-                name = "Group1Module"
+                name = "group1"
+                modules = listOf {
+                    name = "Group1Module"
+                }
+                profile = {
+                    name = "group1Profile"
+                }
             }
         ))
     }

@@ -1,5 +1,5 @@
 profiles:
-  - name: "group1"
+  - name: "group1Profile"
     language: "KOTLIN"
     paths:
       project: ""
