@@ -8,6 +8,6 @@ PropertyKeys
 
 Interfaces
     ModuleDefinitionsParser
-        parse(path: Path): ModuleDefinition[]
+        parse(hlaFolder: Path, profile: ProfileName): ModuleDefinition[]
             throws
                 UnknownRootSectionException

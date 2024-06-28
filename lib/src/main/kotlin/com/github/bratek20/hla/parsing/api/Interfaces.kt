@@ -10,5 +10,5 @@ interface ModuleDefinitionsParser {
     @Throws(
         UnknownRootSectionException::class,
     )
-    fun parse(path: Path): List<ModuleDefinition>
+    fun parse(hlaFolder: Path, profile: ProfileName): List<ModuleDefinition>
 }

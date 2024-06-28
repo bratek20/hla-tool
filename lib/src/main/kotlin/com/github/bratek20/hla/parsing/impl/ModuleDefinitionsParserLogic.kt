@@ -6,15 +6,16 @@ import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import java.util.*
 
 class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
-    override fun parse(path: Path): List<ModuleDefinition> {
+    override fun parse(hlaFolder: Path, profile: ProfileName): List<ModuleDefinition> {
         val directories = DirectoriesLogic()
 
-        val modulesDir = directories.read(path)
+        val modulesDir = directories.read(hlaFolder)
         return modulesDir.getFiles()
             .filter { it.getName().value.endsWith(".module") }
             .map { parseModuleFile(it) }
@@ -387,4 +388,6 @@ class ModuleDefinitionsParserLogic: ModuleDefinitionsParser {
             dataKeys = emptyList()
         )
     }
+
+
 }

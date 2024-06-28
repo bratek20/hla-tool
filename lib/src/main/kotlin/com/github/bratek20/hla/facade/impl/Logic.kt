@@ -98,7 +98,7 @@ class HlaFacadeLogic(
             .firstOrNull { it.getName() == profileName }
             ?: throw ProfileNotFoundException("Profile with name $profileName not found")
 
-        val modules = parser.parse(hlaFolderPath)
+        val modules = parser.parse(hlaFolderPath, profileName)
 
         return Pair(modules, profile)
     }
