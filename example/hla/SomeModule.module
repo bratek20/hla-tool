@@ -18,7 +18,7 @@ ValueObjects
         doubleExample: double
         longExample: long
         goodName: string (from: gN)
-        customData: dictionary
+        customData: struct
 
     SomeProperty2
         value: string (public)

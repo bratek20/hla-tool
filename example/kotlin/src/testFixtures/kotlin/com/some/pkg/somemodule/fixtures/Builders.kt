@@ -16,7 +16,7 @@ data class SomePropertyDef(
     var doubleExample: Double = 0.0,
     var longExample: Long = 0L,
     var goodName: String = "someValue",
-    var customData: com.github.bratek20.architecture.serialization.api.Dictionary = com.github.bratek20.architecture.serialization.api.Dictionary(),
+    var customData: com.github.bratek20.architecture.serialization.api.Struct = com.github.bratek20.architecture.serialization.api.Struct(),
 )
 fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
     val def = SomePropertyDef().apply(init)

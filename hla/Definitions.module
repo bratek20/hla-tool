@@ -7,7 +7,7 @@ Enums
         ANY
         DOUBLE
         LONG
-        DICTIONARY
+        STRUCT
 
     TypeWrapper
         LIST

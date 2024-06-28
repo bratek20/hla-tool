@@ -10,7 +10,7 @@ enum class BaseType {
     ANY,
     DOUBLE,
     LONG,
-    DICTIONARY,
+    STRUCT,
 }
 
 enum class TypeWrapper {

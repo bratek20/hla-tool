@@ -20,7 +20,7 @@ data class SomeProperty(
     private val doubleExample: Double,
     private val longExample: Long,
     private val gN: String,
-    private val customData: com.github.bratek20.architecture.serialization.api.Dictionary,
+    private val customData: com.github.bratek20.architecture.serialization.api.Struct,
 ) {
     fun getOther(): OtherProperty {
         return this.other
@@ -46,7 +46,7 @@ data class SomeProperty(
         return this.gN
     }
 
-    fun getCustomData(): com.github.bratek20.architecture.serialization.api.Dictionary {
+    fun getCustomData(): com.github.bratek20.architecture.serialization.api.Struct {
         return this.customData
     }
 
@@ -58,7 +58,7 @@ data class SomeProperty(
             doubleExample: Double,
             longExample: Long,
             goodName: String,
-            customData: com.github.bratek20.architecture.serialization.api.Dictionary,
+            customData: com.github.bratek20.architecture.serialization.api.Struct,
         ): SomeProperty {
             return SomeProperty(
                 other = other,
