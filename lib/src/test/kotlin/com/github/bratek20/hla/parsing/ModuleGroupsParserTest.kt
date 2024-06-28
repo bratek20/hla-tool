@@ -9,15 +9,15 @@ import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.definitions.fixtures.assertModules
 import com.github.bratek20.hla.facade.api.ProfileName
-import com.github.bratek20.hla.parsing.api.ModuleDefinitionsParser
+import com.github.bratek20.hla.parsing.api.ModuleGroupsParser
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import com.github.bratek20.hla.parsing.impl.ParsingContextModule
 
-class ModuleDefinitionsParserTest {
+class ModuleGroupsParserTest {
     private val parser = someContextBuilder()
         .withModule(ParsingContextModule())
         .build()
-        .get(ModuleDefinitionsParser::class.java)
+        .get(ModuleGroupsParser::class.java)
 
     private fun parse(pathSuffix: String, profileName: String = "test"): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"

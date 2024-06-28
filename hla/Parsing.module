@@ -7,7 +7,7 @@ ValueObjects
         profile: HlaProfile
 
 Interfaces
-    ModuleDefinitionsParser
+    ModuleGroupsParser
         parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup[]
             throws
                 UnknownRootSectionException

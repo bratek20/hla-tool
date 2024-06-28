@@ -9,7 +9,7 @@ import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.GenerateArgs
 import com.github.bratek20.hla.generation.api.ModuleGenerator
-import com.github.bratek20.hla.parsing.impl.ModuleDefinitionsParserLogic
+import com.github.bratek20.hla.parsing.impl.ModuleGroupsParserLogic
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
 
@@ -90,7 +90,7 @@ class HlaFacadeLogic(
     }
 
     private fun prepare(hlaFolderPath: Path, profileName: ProfileName): Pair<List<ModuleDefinition>, HlaProfile>{
-        val parser = ModuleDefinitionsParserLogic()
+        val parser = ModuleGroupsParserLogic()
 
         propertiesSource.propertiesPath = hlaFolderPath.value + "/properties.yaml"
 
