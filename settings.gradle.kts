@@ -2,7 +2,7 @@ rootProject.name = "hla"
 
 includeBuild("example")
 
-val catalogVersion = "1.0.22"
+val catalogVersion = "1.0.23"
 
 pluginManagement {
     repositories {
