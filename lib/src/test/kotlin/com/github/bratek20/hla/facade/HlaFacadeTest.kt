@@ -74,9 +74,23 @@ class HlaFacadeTest {
             )
         }
 
+        fun typescript2TestPaths(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/typescript2/main/$moduleName",
+                exampleFixturesPath = "../example/typescript2/Tests/fixtures/$moduleName",
+                exampleTestsPath = "../example/typescript2/Tests/test/$moduleName",
+                expectedMainPath = "../example/hla2/../typescript2/main",
+                expectedFixturesPath = "../example/hla2/../typescript2/Tests/fixtures",
+                expectedTestsPath = "../example/hla2/../typescript2/Tests/test",
+                hlaFolderPath = "../example/hla2"
+            )
+        }
+
         private val KOTLIN_PROFILE = "kotlin"
         private val TYPE_SCRIPT_PROFILE = "typeScript"
-        private val KOTLIN2_PROFILE = "kotlin2"
+
+        private val KOTLIN_2_PROFILE = "kotlin2"
+        private val TYPE_SCRIPT_2_PROFILE = "typeScript2"
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
@@ -122,8 +136,13 @@ class HlaFacadeTest {
                 ),
                 Arguments.of(
                     "ImportingModule",
-                    KOTLIN2_PROFILE,
+                    KOTLIN_2_PROFILE,
                     kotlin2TestPaths("importingmodule")
+                ),
+                Arguments.of(
+                    "ImportingModule",
+                    TYPE_SCRIPT_2_PROFILE,
+                    typescript2TestPaths("ImportingModule")
                 ),
             )
         }
