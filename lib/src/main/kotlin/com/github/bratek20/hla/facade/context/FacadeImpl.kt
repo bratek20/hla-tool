@@ -7,7 +7,7 @@ import com.github.bratek20.architecture.properties.sources.yaml.YamlPropertiesSo
 import com.github.bratek20.hla.facade.api.HlaFacade
 import com.github.bratek20.hla.facade.impl.HlaFacadeLogic
 import com.github.bratek20.hla.generation.context.GenerationImpl
-import com.github.bratek20.hla.velocity.context.VelocityImpl
+import com.github.bratek20.hla.parsing.context.ParsingImpl
 import com.github.bratek20.hla.writing.context.WritingImpl
 
 class FacadeImpl: ContextModule {
@@ -15,9 +15,7 @@ class FacadeImpl: ContextModule {
         builder
             .setImpl(HlaFacade::class.java, HlaFacadeLogic::class.java)
             .withModules(
-                PropertiesImpl(),
-                YamlPropertiesSourceImpl(),
-
+                ParsingImpl(),
                 GenerationImpl(),
                 WritingImpl()
             )
