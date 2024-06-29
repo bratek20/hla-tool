@@ -90,3 +90,8 @@ Interfaces
 Kotlin
     ExternalTypePackages
         LegacyType -> com.some.pkg.legacy
+
+Web
+    expose
+        SomeInterface
+    serverUrl = "http://localhost:8080"
