@@ -53,7 +53,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
 
         val valueObjects = parseStructures("ValueObjects", elements)
         val dataClasses = parseComplexStructureDefinitions("DataClasses", elements)
-        val interfaces = parseInterfaces(elements)
+        val interfacesOutput = parseInterfaces(elements)
         val propertyKeys = parseKeys("PropertyKeys", elements)
         val enums = parseEnums(elements)
         val customTypes = parseStructures("CustomTypes", elements)
@@ -65,8 +65,8 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         return ModuleDefinition.create(
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
-            complexValueObjects = valueObjects.complex,
-            interfaces = interfaces,
+            complexValueObjects = valueObjects.complex + interfacesOutput.complexValueObjects,
+            interfaces = interfacesOutput.interfaces,
             propertyKeys = propertyKeys,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
@@ -355,9 +355,20 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         } ?: emptyList()
     }
 
-    private fun parseInterfaces(elements: List<ParsedElement>): List<InterfaceDefinition> {
+    data class ParseInterfaceOutput(
+        val interfaces: List<InterfaceDefinition>,
+        val complexValueObjects: List<ComplexStructureDefinition>
+    )
+    private fun parseInterfaces(elements: List<ParsedElement>): ParseInterfaceOutput {
         val interfacesSection = elements.find { it is Section && it.name == "Interfaces" } as Section?
-        return interfacesSection?.elements?.filterIsInstance<Section>()?.map {
+
+        val valueObjects = mutableListOf<ComplexStructureDefinition>()
+
+        val interfaces = interfacesSection?.elements?.filterIsInstance<Section>()?.map {
+            it.elements.filterIsInstance<Section>().forEach {
+                valueObjects.add(parseComplexStructureDefinition(it))
+            }
+
             InterfaceDefinition(
                 name = it.name,
                 methods = it.elements.filterIsInstance<ParsedMethod>().map {
@@ -365,6 +376,11 @@ class ModuleGroupParserLogic: ModuleGroupParser {
                 }
             )
         } ?: emptyList()
+
+        return ParseInterfaceOutput(
+            interfaces = interfaces,
+            complexValueObjects = valueObjects
+        )
     }
 
     private fun parseKeys(sectionName: String, elements: List<ParsedElement>): List<KeyDefinition> {
