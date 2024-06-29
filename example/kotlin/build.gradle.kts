@@ -6,4 +6,5 @@ dependencies {
     implementation(libs.assertj.core)
 
     implementation(libs.bratek20.architecture)
+    implementation(libs.bratek20.infrastructure)
 }
