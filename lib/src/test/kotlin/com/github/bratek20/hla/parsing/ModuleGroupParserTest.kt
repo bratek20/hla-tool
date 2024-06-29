@@ -11,14 +11,14 @@ import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
+import com.github.bratek20.hla.parsing.context.ParsingImpl
 import com.github.bratek20.hla.parsing.fixtures.assertModuleGroup
-import com.github.bratek20.hla.parsing.impl.ParsingContextModule
 import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.Test
 
 class ModuleGroupParserTest {
     private val parser = someContextBuilder()
-        .withModule(ParsingContextModule())
+        .withModule(ParsingImpl())
         .build()
         .get(ModuleGroupParser::class.java)
 
@@ -279,7 +279,7 @@ class ModuleGroupParserTest {
     }
 
     @Test
-    fun `should parse properties (keys and vos), data (keys and vos for api and impl), property keys and data keys`() {
+    fun `should parse properties (keys and vos), data (keys and complex vos for api and impl), property keys and data keys`() {
         val module = parseSingleModule("data-and-properties")
 
         assertModuleDefinition(module) {
@@ -297,6 +297,30 @@ class ModuleGroupParserTest {
                         wrappers = listOf(
                             TypeWrapper.LIST
                         )
+                    }
+                },
+            )
+            simpleValueObjects = listOf {
+                name = "SomeName"
+                typeName = "string"
+            }
+            complexValueObjects = listOf(
+                {
+                    name = "SomeConfig"
+                    fields = listOf {
+                        name = "enabled"
+                        type = {
+                            name = "bool"
+                        }
+                    }
+                },
+                {
+                    name = "SomeProperty"
+                    fields = listOf {
+                        name = "name"
+                        type = {
+                            name = "SomeName"
+                        }
                     }
                 },
             )
@@ -333,26 +357,6 @@ class ModuleGroupParserTest {
                         name = "id"
                         type = {
                             name = "SomeId"
-                        }
-                    }
-                },
-            )
-            complexValueObjects = listOf(
-                {
-                    name = "SomeConfig"
-                    fields = listOf {
-                        name = "enabled"
-                        type = {
-                            name = "bool"
-                        }
-                    }
-                },
-                {
-                    name = "SomeProperty"
-                    fields = listOf {
-                        name = "name"
-                        type = {
-                            name = "string"
                         }
                     }
                 },

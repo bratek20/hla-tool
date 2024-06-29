@@ -23,8 +23,10 @@ PropertyKeys
 
 //concise
 Properties
+    SomeName: string
+
     SomeProperty
-        name: string
+        name: SomeName
 
     "someProperties" -> SomeProperty[]
 

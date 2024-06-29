@@ -66,10 +66,11 @@ class ModuleGroupParserLogic: ModuleGroupParser {
 
         return ModuleDefinition.create(
             name = moduleName,
-            simpleValueObjects = valueObjects.simple,
+            simpleValueObjects = valueObjects.simple
+                    + properties.valueObjects.simple,
             complexValueObjects = valueObjects.complex
                     + interfacesOutput.complexValueObjects
-                    + properties.valueObjects,
+                    + properties.valueObjects.complex,
             interfaces = interfacesOutput.interfaces,
             propertyKeys = propertyKeys
                     + properties.keys,
@@ -87,12 +88,12 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     }
 
     data class ParsedProperties(
-        val valueObjects: List<ComplexStructureDefinition>,
+        val valueObjects: Structures,
         val keys: List<KeyDefinition>,
     )
     private fun parseProperties(elements: List<ParsedElement>): ParsedProperties {
         return ParsedProperties(
-            valueObjects = parseComplexStructureDefinitions("Properties", elements),
+            valueObjects = parseStructures("Properties", elements),
             keys = parseKeys("Properties", elements)
         )
     }
