@@ -3,11 +3,10 @@ Enums
         KOTLIN
         TYPE_SCRIPT
 
-ValueObjects
+Properties
     ModuleName: string
     ProfileName: string
 
-Properties
     TypeScriptConfig
         mainTsconfigPath: Path
         testTsconfigPath: Path
