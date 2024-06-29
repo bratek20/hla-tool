@@ -285,30 +285,38 @@ class ModuleGroupParserTest {
         assertModuleDefinition(module) {
             propertyKeys = listOf(
                 {
-                    name = "someElements"
+                    name = "someConfig"
                     type = {
-                        name = "SomeElement"
+                        name = "SomeProperty"
+                    }
+                },
+                {
+                    name = "someProperties"
+                    type = {
+                        name = "SomeProperty"
                         wrappers = listOf(
                             TypeWrapper.LIST
                         )
                     }
                 },
-                {
-                    name = "someConfig"
-                    type = {
-                        name = "SomeProperty"
-                    }
-                }
             )
-            dataKeys = listOf {
-                name = "someElements"
-                type = {
-                    name = "SomeElementData"
-                    wrappers = listOf(
-                        TypeWrapper.LIST
-                    )
-                }
-            }
+            dataKeys = listOf(
+                {
+                    name = "someData"
+                    type = {
+                        name = "SomeData"
+                    }
+                },
+                {
+                    name = "someElementsData"
+                    type = {
+                        name = "SomeElementData"
+                        wrappers = listOf(
+                            TypeWrapper.LIST
+                        )
+                    }
+                },
+            )
             dataClasses = listOf(
                 {
                     name = "SomeData"
@@ -329,23 +337,64 @@ class ModuleGroupParserTest {
                     }
                 },
             )
-            implSubmodule = {
-                dataClasses = listOf {
-                    name = "SomeImplData"
+            complexValueObjects = listOf(
+                {
+                    name = "SomeConfig"
                     fields = listOf {
-                        name = "value"
+                        name = "enabled"
                         type = {
                             name = "bool"
                         }
                     }
-                }
-                dataKeys = listOf {
-                    name = "someImplData"
-                    type = {
-                        name = "SomeImplData"
-                        wrappers = emptyList()
+                },
+                {
+                    name = "SomeProperty"
+                    fields = listOf {
+                        name = "name"
+                        type = {
+                            name = "string"
+                        }
                     }
-                }
+                },
+            )
+            implSubmodule = {
+                dataKeys = listOf(
+                    {
+                        name = "someImplData"
+                        type = {
+                            name = "SomeImplData"
+                        }
+                    },
+                    {
+                        name = "someElementsImplData"
+                        type = {
+                            name = "SomeElementImplData"
+                            wrappers = listOf(
+                                TypeWrapper.LIST
+                            )
+                        }
+                    },
+                )
+                dataClasses = listOf(
+                    {
+                        name = "SomeImplData"
+                        fields = listOf {
+                            name = "value"
+                            type = {
+                                name = "int"
+                            }
+                        }
+                    },
+                    {
+                        name = "SomeElementImplData"
+                        fields = listOf {
+                            name = "id"
+                            type = {
+                                name = "SomeId"
+                            }
+                        }
+                    },
+                )
             }
         }
     }

@@ -1,20 +1,45 @@
+//detailed
 DataClasses
     SomeData
         value: int
 
+DataKeys
+    "someData" -> SomeData
+
+//concise
+Data
     SomeElementData
         id: SomeId
 
-DataKeys
-    "someElements" -> SomeElementData[]
+    "someElementsData" -> SomeElementData[]
+
+//detailed
+ValueObjects
+    SomeConfig
+        enabled: bool
 
 PropertyKeys
-    "someElements" -> SomeElement[]
-    "someConfig" -> SomeProperty
+    "someConfig" -> SomeConfig
+
+//concise
+Properties
+    SomeProperty
+        name: string
+
+    "someProperties" -> SomeProperty[]
 
 Impl
+    //detailed
     DataClasses
         SomeImplData
-            value: bool
+            value: int
+
     DataKeys
         "someImplData" -> SomeImplData
+
+    //concise
+    Data
+        SomeElementImplData
+            id: SomeId
+
+        "someElementsImplData" -> SomeElementImplData[]
