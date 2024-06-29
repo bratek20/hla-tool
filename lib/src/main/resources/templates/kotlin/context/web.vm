@@ -1,0 +1,34 @@
+package ${packageName}.context
+
+import com.github.bratek20.architecture.context.api.ContextBuilder
+import com.github.bratek20.architecture.context.api.ContextModule
+import com.github.bratek20.infrastructure.httpserver.api.WebServerModule
+
+import ${packageName}.api.*
+import ${packageName}.web.*
+
+class ${moduleName}WebClient(
+    private val serverUrl: String = ${serverUrl}
+): ContextModule {
+    override fun apply(builder: ContextBuilder) {
+        builder
+            .setImplObject(${moduleName}WebServerUrl::class.java, ${moduleName}WebServerUrl(serverUrl))
+        #foreach($name in $interfaceNames)
+            .setImpl($name::class.java, ${name}WebClient::class.java)
+        #end
+    }
+}
+
+class ${moduleName}WebServer: WebServerModule {
+    override fun getImpl(): ContextModule {
+        return ${moduleName}Impl()
+    }
+
+    override fun getControllers(): List<Class<*>> {
+        return listOf(
+        #foreach($name in $interfaceNames)
+            ${name}Controller::class.java
+        #end
+        )
+    }
+}

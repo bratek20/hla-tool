@@ -29,12 +29,12 @@ class WebContextGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        if (c.module.getWebSubmodule() == null) {
-            return null
+        return c.module.getWebSubmodule()?.let { web ->
+            contentBuilder("web.vm")
+                .put("serverUrl", web.getServerUrl())
+                .put("interfaceNames", web.getExpose())
+                .build()
         }
-
-        return contentBuilder("web.vm")
-            .build()
     }
 }
 
