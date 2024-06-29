@@ -1,0 +1,7 @@
+Interfaces
+    SomeInterface
+        SomeMethodInput
+            amount: int
+        SomeMethodOutput
+            name: string
+        someMethod(input: SomeMethodInput): SomeMethodOutput

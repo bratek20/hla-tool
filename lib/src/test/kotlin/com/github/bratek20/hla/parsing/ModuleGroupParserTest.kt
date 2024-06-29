@@ -4,6 +4,7 @@ import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.definitions.fixtures.assertModuleDefinition
 import com.github.bratek20.hla.definitions.fixtures.assertModules
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.facade.api.ProfileName
@@ -24,6 +25,10 @@ class ModuleGroupParserTest {
     private fun parseSingleGroup(pathSuffix: String): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
         return parser.parse(Path(fullPath), ProfileName("test")).getModules() // all properties.yaml are copy-pasted
+    }
+
+    private fun parseSingleModule(pathSuffix: String): ModuleDefinition {
+        return parseSingleGroup(pathSuffix)[0]
     }
 
     private fun parse(pathSuffix: String, profileName: String): ModuleGroup {
@@ -241,6 +246,24 @@ class ModuleGroupParserTest {
                                 name = "SomeClass"
                             }
                             args = emptyList()
+                        },
+                        {
+                            name = "someOptionalQuery"
+                            args = listOf {
+                                name = "id"
+                                type = {
+                                    name = "SomeId"
+                                    wrappers = listOf(
+                                        TypeWrapper.OPTIONAL
+                                    )
+                                }
+                            }
+                            returnType = {
+                                name = "SomeClass"
+                                wrappers = listOf(
+                                    TypeWrapper.OPTIONAL
+                                )
+                            }
                         }
                     )
                 }
@@ -482,6 +505,49 @@ class ModuleGroupParserTest {
                     }
                 },
             )
+        }
+    }
+
+    @Test
+    fun `should parse value object from interfaces section`() {
+        val module = parseSingleModule("interfaces-vos")
+
+        assertModuleDefinition(module) {
+            complexValueObjects = listOf(
+                {
+                    name = "SomeMethodInput"
+                    fields = listOf {
+                        name = "amount"
+                        type = {
+                            name = "int"
+                        }
+                    }
+                },
+                {
+                    name = "SomeMethodOutput"
+                    fields = listOf {
+                        name = "name"
+                        type = {
+                            name = "string"
+                        }
+                    }
+                }
+            )
+            interfaces = listOf {
+                name = "SomeInterface"
+                methods = listOf {
+                    name = "someMethod"
+                    args = listOf {
+                        name = "input"
+                        type = {
+                            name = "SomeMethodInput"
+                        }
+                    }
+                    returnType = {
+                        name = "SomeMethodOutput"
+                    }
+                }
+            }
         }
     }
 }
