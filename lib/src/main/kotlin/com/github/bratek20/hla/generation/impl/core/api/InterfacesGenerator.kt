@@ -15,6 +15,11 @@ data class MethodView(
     private val args: List<ArgumentView>,
     val throws: List<String>,
 ) {
+    fun declaration(): String {
+        val returnSuffix = if (returnType != null) ": $returnType" else ""
+        return "${name}(${argsDeclaration()})$returnSuffix"
+    }
+
     // used by velocity
     fun argsDeclaration(): String {
         return args.joinToString(", ") { "${it.name}: ${it.type}" }

@@ -1,9 +1,14 @@
 package com.github.bratek20.hla.generation.impl.core.web
 
+import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
+import com.github.bratek20.hla.generation.impl.core.api.MethodView
+import com.github.bratek20.hla.utils.camelToPascalCase
+import com.github.bratek20.hla.utils.pascalToCamelCase
 
 class WebCommonGenerator: FileGenerator() {
     override fun name(): String {
@@ -21,9 +26,47 @@ class WebClientGenerator: FileGenerator() {
         return "WebClient"
     }
 
-    override fun generateFileContent(): FileContent? {
+    data class MethodView(
+        val declaration: String,
+        val body: String
+    )
+    data class InterfaceView(
+        val name: String,
+        val methods: List<MethodView>
+    )
+
+    override fun generateFileContent(): FileContent {
+        val web = c.module.getWebSubmodule()!!
+        val exposedInterfaces = web.getExpose()
+            .map { name -> c.module.getInterfaces().first { it.getName() == name } }
+
         return contentBuilder("webClient.vm")
+            .put("interface", exposedInterfaces.map { interf ->
+                val factory = InterfaceViewFactory(apiTypeFactory)
+                val api = factory.create(interf)
+                InterfaceView(
+                    interf.getName(),
+                    api.methods.map { method ->
+                        MethodView(
+                            getDeclaration(method),
+                            getBody(interf.getName(), method)
+                        )
+                    }
+                )
+            }[0])
             .build()
+    }
+
+    private fun getDeclaration(method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+        return method.declaration()
+    }
+
+    private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+        val returnPart = if (method.returnType != "Unit") "return " else ""
+        val getBodyPart = if (method.returnType != "Unit") ".getBody(${interfaceName}${camelToPascalCase(method.name)}Response::class.java).value" else ""
+        val postUrl = "\"/${pascalToCamelCase(interfaceName)}/${method.name}\""
+        val postBody = "${interfaceName}${camelToPascalCase(method.name)}Request(${method.argsPass()})"
+        return "${returnPart}factory.create(url.value).post($postUrl, $postBody)$getBodyPart"
     }
 }
 

@@ -1,0 +1,18 @@
+package ${packageName}.web
+
+import com.github.bratek20.infrastructure.httpclient.api.HttpClientFactory
+
+import ${packageName}.api.*
+
+class ${interface.name}WebClient(
+    private val factory: HttpClientFactory,
+    private val url: ${moduleName}WebServerUrl,
+): SomeInterface {
+#foreach($method in $interface.methods)
+    override fun ${method.declaration} {
+        ${method.body}
+    }
+#if($foreach.hasNext)
+
+#end#end
+}
