@@ -60,12 +60,12 @@ fun diffDirectory(given: Directory, expectedInit: ExpectedDirectory.() -> Unit, 
     }
 
     expected.files?.let {
-        if (given.getFiles().size != it.size) { result.add("${path}files size ${given.getFiles().size} != ${it.size}") }
+        if (given.getFiles().size != it.size) { result.add("${path}files size ${given.getFiles().size} != ${it.size}"); return@let }
         given.getFiles().forEachIndexed { idx, entry -> if (diffFile(entry, it[idx]) != "") { result.add(diffFile(entry, it[idx], "${path}files[${idx}].")) } }
     }
 
     expected.directories?.let {
-        if (given.getDirectories().size != it.size) { result.add("${path}directories size ${given.getDirectories().size} != ${it.size}") }
+        if (given.getDirectories().size != it.size) { result.add("${path}directories size ${given.getDirectories().size} != ${it.size}"); return@let }
         given.getDirectories().forEachIndexed { idx, entry -> if (diffDirectory(entry, it[idx]) != "") { result.add(diffDirectory(entry, it[idx], "${path}directories[${idx}].")) } }
     }
 
@@ -85,7 +85,7 @@ fun diffCompareResult(given: CompareResult, expectedInit: ExpectedCompareResult.
     }
 
     expected.differences?.let {
-        if (given.getDifferences().size != it.size) { result.add("${path}differences size ${given.getDifferences().size} != ${it.size}") }
+        if (given.getDifferences().size != it.size) { result.add("${path}differences size ${given.getDifferences().size} != ${it.size}"); return@let }
         given.getDifferences().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}differences[${idx}] ${entry} != ${it[idx]}") } }
     }
 

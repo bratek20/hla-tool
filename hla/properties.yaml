@@ -7,4 +7,3 @@ profiles:
         main: "src/main/kotlin/com/github/bratek20/hla"
         test: "src/test/kotlin/com/github/bratek20/hla"
         fixtures: "src/testFixtures/kotlin/com/github/bratek20/hla"
-    onlyPatterns: []

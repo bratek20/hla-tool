@@ -37,8 +37,8 @@ data class File(
 
 data class Directory(
     private val name: String,
-    private val files: List<File>,
-    private val directories: List<Directory>,
+    private val files: List<File> = emptyList(),
+    private val directories: List<Directory> = emptyList(),
 ) {
     fun getName(): DirectoryName {
         return DirectoryName(this.name)

@@ -39,7 +39,7 @@ fun diffEnumDefinition(given: EnumDefinition, expectedInit: ExpectedEnumDefiniti
     }
 
     expected.values?.let {
-        if (given.getValues().size != it.size) { result.add("${path}values size ${given.getValues().size} != ${it.size}") }
+        if (given.getValues().size != it.size) { result.add("${path}values size ${given.getValues().size} != ${it.size}"); return@let }
         given.getValues().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}values[${idx}] ${entry} != ${it[idx]}") } }
     }
 
@@ -55,12 +55,12 @@ fun diffImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: Ex
     val result: MutableList<String> = mutableListOf()
 
     expected.dataClasses?.let {
-        if (given.getDataClasses().size != it.size) { result.add("${path}dataClasses size ${given.getDataClasses().size} != ${it.size}") }
+        if (given.getDataClasses().size != it.size) { result.add("${path}dataClasses size ${given.getDataClasses().size} != ${it.size}"); return@let }
         given.getDataClasses().forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}dataClasses[${idx}].")) } }
     }
 
     expected.dataKeys?.let {
-        if (given.getDataKeys().size != it.size) { result.add("${path}dataKeys size ${given.getDataKeys().size} != ${it.size}") }
+        if (given.getDataKeys().size != it.size) { result.add("${path}dataKeys size ${given.getDataKeys().size} != ${it.size}"); return@let }
         given.getDataKeys().forEachIndexed { idx, entry -> if (diffKeyDefinition(entry, it[idx]) != "") { result.add(diffKeyDefinition(entry, it[idx], "${path}dataKeys[${idx}].")) } }
     }
 
@@ -94,7 +94,7 @@ fun diffKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.() 
     val result: MutableList<String> = mutableListOf()
 
     expected.externalTypePackages?.let {
-        if (given.getExternalTypePackages().size != it.size) { result.add("${path}externalTypePackages size ${given.getExternalTypePackages().size} != ${it.size}") }
+        if (given.getExternalTypePackages().size != it.size) { result.add("${path}externalTypePackages size ${given.getExternalTypePackages().size} != ${it.size}"); return@let }
         given.getExternalTypePackages().forEachIndexed { idx, entry -> if (diffExternalTypePackageMapping(entry, it[idx]) != "") { result.add(diffExternalTypePackageMapping(entry, it[idx], "${path}externalTypePackages[${idx}].")) } }
     }
 
@@ -125,47 +125,47 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
     }
 
     expected.simpleCustomTypes?.let {
-        if (given.getSimpleCustomTypes().size != it.size) { result.add("${path}simpleCustomTypes size ${given.getSimpleCustomTypes().size} != ${it.size}") }
+        if (given.getSimpleCustomTypes().size != it.size) { result.add("${path}simpleCustomTypes size ${given.getSimpleCustomTypes().size} != ${it.size}"); return@let }
         given.getSimpleCustomTypes().forEachIndexed { idx, entry -> if (diffSimpleStructureDefinition(entry, it[idx]) != "") { result.add(diffSimpleStructureDefinition(entry, it[idx], "${path}simpleCustomTypes[${idx}].")) } }
     }
 
     expected.complexCustomTypes?.let {
-        if (given.getComplexCustomTypes().size != it.size) { result.add("${path}complexCustomTypes size ${given.getComplexCustomTypes().size} != ${it.size}") }
+        if (given.getComplexCustomTypes().size != it.size) { result.add("${path}complexCustomTypes size ${given.getComplexCustomTypes().size} != ${it.size}"); return@let }
         given.getComplexCustomTypes().forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}complexCustomTypes[${idx}].")) } }
     }
 
     expected.simpleValueObjects?.let {
-        if (given.getSimpleValueObjects().size != it.size) { result.add("${path}simpleValueObjects size ${given.getSimpleValueObjects().size} != ${it.size}") }
+        if (given.getSimpleValueObjects().size != it.size) { result.add("${path}simpleValueObjects size ${given.getSimpleValueObjects().size} != ${it.size}"); return@let }
         given.getSimpleValueObjects().forEachIndexed { idx, entry -> if (diffSimpleStructureDefinition(entry, it[idx]) != "") { result.add(diffSimpleStructureDefinition(entry, it[idx], "${path}simpleValueObjects[${idx}].")) } }
     }
 
     expected.complexValueObjects?.let {
-        if (given.getComplexValueObjects().size != it.size) { result.add("${path}complexValueObjects size ${given.getComplexValueObjects().size} != ${it.size}") }
+        if (given.getComplexValueObjects().size != it.size) { result.add("${path}complexValueObjects size ${given.getComplexValueObjects().size} != ${it.size}"); return@let }
         given.getComplexValueObjects().forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}complexValueObjects[${idx}].")) } }
     }
 
     expected.dataClasses?.let {
-        if (given.getDataClasses().size != it.size) { result.add("${path}dataClasses size ${given.getDataClasses().size} != ${it.size}") }
+        if (given.getDataClasses().size != it.size) { result.add("${path}dataClasses size ${given.getDataClasses().size} != ${it.size}"); return@let }
         given.getDataClasses().forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}dataClasses[${idx}].")) } }
     }
 
     expected.interfaces?.let {
-        if (given.getInterfaces().size != it.size) { result.add("${path}interfaces size ${given.getInterfaces().size} != ${it.size}") }
+        if (given.getInterfaces().size != it.size) { result.add("${path}interfaces size ${given.getInterfaces().size} != ${it.size}"); return@let }
         given.getInterfaces().forEachIndexed { idx, entry -> if (diffInterfaceDefinition(entry, it[idx]) != "") { result.add(diffInterfaceDefinition(entry, it[idx], "${path}interfaces[${idx}].")) } }
     }
 
     expected.propertyKeys?.let {
-        if (given.getPropertyKeys().size != it.size) { result.add("${path}propertyKeys size ${given.getPropertyKeys().size} != ${it.size}") }
+        if (given.getPropertyKeys().size != it.size) { result.add("${path}propertyKeys size ${given.getPropertyKeys().size} != ${it.size}"); return@let }
         given.getPropertyKeys().forEachIndexed { idx, entry -> if (diffKeyDefinition(entry, it[idx]) != "") { result.add(diffKeyDefinition(entry, it[idx], "${path}propertyKeys[${idx}].")) } }
     }
 
     expected.dataKeys?.let {
-        if (given.getDataKeys().size != it.size) { result.add("${path}dataKeys size ${given.getDataKeys().size} != ${it.size}") }
+        if (given.getDataKeys().size != it.size) { result.add("${path}dataKeys size ${given.getDataKeys().size} != ${it.size}"); return@let }
         given.getDataKeys().forEachIndexed { idx, entry -> if (diffKeyDefinition(entry, it[idx]) != "") { result.add(diffKeyDefinition(entry, it[idx], "${path}dataKeys[${idx}].")) } }
     }
 
     expected.enums?.let {
-        if (given.getEnums().size != it.size) { result.add("${path}enums size ${given.getEnums().size} != ${it.size}") }
+        if (given.getEnums().size != it.size) { result.add("${path}enums size ${given.getEnums().size} != ${it.size}"); return@let }
         given.getEnums().forEachIndexed { idx, entry -> if (diffEnumDefinition(entry, it[idx]) != "") { result.add(diffEnumDefinition(entry, it[idx], "${path}enums[${idx}].")) } }
     }
 
@@ -174,7 +174,7 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
     }
 
     expected.externalTypes?.let {
-        if (given.getExternalTypes().size != it.size) { result.add("${path}externalTypes size ${given.getExternalTypes().size} != ${it.size}") }
+        if (given.getExternalTypes().size != it.size) { result.add("${path}externalTypes size ${given.getExternalTypes().size} != ${it.size}"); return@let }
         given.getExternalTypes().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}externalTypes[${idx}] ${entry} != ${it[idx]}") } }
     }
 
@@ -198,7 +198,7 @@ fun diffTypeDefinition(given: TypeDefinition, expectedInit: ExpectedTypeDefiniti
     }
 
     expected.wrappers?.let {
-        if (given.getWrappers().size != it.size) { result.add("${path}wrappers size ${given.getWrappers().size} != ${it.size}") }
+        if (given.getWrappers().size != it.size) { result.add("${path}wrappers size ${given.getWrappers().size} != ${it.size}"); return@let }
         given.getWrappers().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}wrappers[${idx}] ${entry} != ${it[idx]}") } }
     }
 
@@ -224,7 +224,7 @@ fun diffFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDefin
     }
 
     expected.attributes?.let {
-        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}") }
+        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
         given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
     }
 
@@ -272,7 +272,7 @@ fun diffSimpleStructureDefinition(given: SimpleStructureDefinition, expectedInit
     }
 
     expected.attributes?.let {
-        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}") }
+        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
         given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
     }
 
@@ -292,7 +292,7 @@ fun diffComplexStructureDefinition(given: ComplexStructureDefinition, expectedIn
     }
 
     expected.fields?.let {
-        if (given.getFields().size != it.size) { result.add("${path}fields size ${given.getFields().size} != ${it.size}") }
+        if (given.getFields().size != it.size) { result.add("${path}fields size ${given.getFields().size} != ${it.size}"); return@let }
         given.getFields().forEachIndexed { idx, entry -> if (diffFieldDefinition(entry, it[idx]) != "") { result.add(diffFieldDefinition(entry, it[idx], "${path}fields[${idx}].")) } }
     }
 
@@ -371,12 +371,12 @@ fun diffMethodDefinition(given: MethodDefinition, expectedInit: ExpectedMethodDe
     }
 
     expected.args?.let {
-        if (given.getArgs().size != it.size) { result.add("${path}args size ${given.getArgs().size} != ${it.size}") }
+        if (given.getArgs().size != it.size) { result.add("${path}args size ${given.getArgs().size} != ${it.size}"); return@let }
         given.getArgs().forEachIndexed { idx, entry -> if (diffArgumentDefinition(entry, it[idx]) != "") { result.add(diffArgumentDefinition(entry, it[idx], "${path}args[${idx}].")) } }
     }
 
     expected.throws?.let {
-        if (given.getThrows().size != it.size) { result.add("${path}throws size ${given.getThrows().size} != ${it.size}") }
+        if (given.getThrows().size != it.size) { result.add("${path}throws size ${given.getThrows().size} != ${it.size}"); return@let }
         given.getThrows().forEachIndexed { idx, entry -> if (diffExceptionDefinition(entry, it[idx]) != "") { result.add(diffExceptionDefinition(entry, it[idx], "${path}throws[${idx}].")) } }
     }
 

@@ -34,20 +34,15 @@ ValueObjects
         onlyPatterns: string[] = []
         imports: HlaProfileImport[] = []
 
-    ModuleOperationArgs
-        hlaFolderPath: Path
-        profileName: ProfileName
-        moduleName: ModuleName
-
-    AllModulesOperationArgs
-        hlaFolderPath: Path
-        profileName: ProfileName
-
 PropertyKeys
     "profiles" -> HlaProfile[]
 
 Interfaces
     HlaFacade
+        ModuleOperationArgs
+            hlaFolderPath: Path
+            profileName: ProfileName
+            moduleName: ModuleName
         startModule(args: ModuleOperationArgs)
             throws
                 ProfileNotFoundException
@@ -56,6 +51,9 @@ Interfaces
             throws
                 ProfileNotFoundException
 
+        AllModulesOperationArgs
+            hlaFolderPath: Path
+            profileName: ProfileName
         startAllModules(args: AllModulesOperationArgs)
             throws
                 ProfileNotFoundException

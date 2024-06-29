@@ -138,12 +138,12 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
     }
 
     expected.onlyPatterns?.let {
-        if (given.getOnlyPatterns().size != it.size) { result.add("${path}onlyPatterns size ${given.getOnlyPatterns().size} != ${it.size}") }
+        if (given.getOnlyPatterns().size != it.size) { result.add("${path}onlyPatterns size ${given.getOnlyPatterns().size} != ${it.size}"); return@let }
         given.getOnlyPatterns().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}onlyPatterns[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     expected.imports?.let {
-        if (given.getImports().size != it.size) { result.add("${path}imports size ${given.getImports().size} != ${it.size}") }
+        if (given.getImports().size != it.size) { result.add("${path}imports size ${given.getImports().size} != ${it.size}"); return@let }
         given.getImports().forEachIndexed { idx, entry -> if (diffHlaProfileImport(entry, it[idx]) != "") { result.add(diffHlaProfileImport(entry, it[idx], "${path}imports[${idx}].")) } }
     }
 

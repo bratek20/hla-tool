@@ -31,7 +31,7 @@ fun diffModuleGroup(given: ModuleGroup, expectedInit: ExpectedModuleGroup.() -> 
     }
 
     expected.modules?.let {
-        if (given.getModules().size != it.size) { result.add("${path}modules size ${given.getModules().size} != ${it.size}") }
+        if (given.getModules().size != it.size) { result.add("${path}modules size ${given.getModules().size} != ${it.size}"); return@let }
         given.getModules().forEachIndexed { idx, entry -> if (diffModuleDefinition(entry, it[idx]) != "") { result.add(diffModuleDefinition(entry, it[idx], "${path}modules[${idx}].")) } }
     }
 
@@ -40,7 +40,7 @@ fun diffModuleGroup(given: ModuleGroup, expectedInit: ExpectedModuleGroup.() -> 
     }
 
     expected.dependencies?.let {
-        if (given.getDependencies().size != it.size) { result.add("${path}dependencies size ${given.getDependencies().size} != ${it.size}") }
+        if (given.getDependencies().size != it.size) { result.add("${path}dependencies size ${given.getDependencies().size} != ${it.size}"); return@let }
         given.getDependencies().forEachIndexed { idx, entry -> if (diffModuleGroup(entry, it[idx]) != "") { result.add(diffModuleGroup(entry, it[idx], "${path}dependencies[${idx}].")) } }
     }
 

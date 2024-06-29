@@ -1,16 +1,13 @@
-ValueObjects
-    GenerateArgs
-        group: ModuleGroup
-        moduleToGenerate: ModuleName
-        onlyUpdate: bool
-
-    GenerateResult
-        main: Directory
-        fixtures: Directory
-        tests: Directory?
-
 Interfaces
     ModuleGenerator
+        GenerateArgs
+            group: ModuleGroup
+            moduleToGenerate: ModuleName
+            onlyUpdate: bool
+        GenerateResult
+            main: Directory
+            fixtures: Directory
+            tests: Directory?
         generate(args: GenerateArgs): GenerateResult
             throws
                 UnknownTypeException
