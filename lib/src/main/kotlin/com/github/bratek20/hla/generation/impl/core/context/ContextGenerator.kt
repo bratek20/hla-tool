@@ -23,6 +23,21 @@ class ImplContextGenerator: FileGenerator() {
     }
 }
 
+class WebContextGenerator: FileGenerator() {
+    override fun name(): String {
+        return "Web"
+    }
+
+    override fun generateFileContent(): FileContent? {
+        if (c.module.getWebSubmodule() == null) {
+            return null
+        }
+
+        return contentBuilder("web.vm")
+            .build()
+    }
+}
+
 class ContextGenerator: DirectoryGenerator() {
     override fun name(): String {
         return "Context"
@@ -42,7 +57,8 @@ class ContextGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            ImplContextGenerator()
+            ImplContextGenerator(),
+            WebContextGenerator()
         )
     }
 }
