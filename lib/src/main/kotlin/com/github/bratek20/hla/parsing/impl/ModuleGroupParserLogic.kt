@@ -449,9 +449,10 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         if (implSection != null) {
             val dataClasses = parseComplexStructureDefinitions("DataClasses", implSection.elements)
             val keys = parseKeys("DataKeys", implSection.elements)
+            val data = parseData(implSection.elements)
             return ImplSubmoduleDefinition(
-                dataClasses = dataClasses,
-                dataKeys = keys
+                dataClasses = dataClasses + data.classes,
+                dataKeys = keys + data.keys
             )
         }
         return ImplSubmoduleDefinition(
