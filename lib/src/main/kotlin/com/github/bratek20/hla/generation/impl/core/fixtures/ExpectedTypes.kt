@@ -4,6 +4,7 @@ import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
+import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 
 abstract class ExpectedType<T: ApiType>(
     val api: T
@@ -213,7 +214,10 @@ class ListExpectedType(
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         val sizeElement = "$path size \${${languageTypes.listSize(givenVariable)}} != \${${languageTypes.listSize(expectedVariable)}}"
-        val sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
+        var sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
+        if (languageTypes is KotlinTypes) {
+           sizeBody += "; return@let"
+        }
         val sizePart = "if (${languageTypes.listSize(givenVariable)} != ${languageTypes.listSize(expectedVariable)}) { $sizeBody }"
 
         val element = wrappedType.diff("entry", "$expectedVariable[idx]", "$path[\${idx}]")
