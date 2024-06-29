@@ -24,6 +24,11 @@ fun assertImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: 
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: ExpectedWebSubmoduleDefinition.() -> Unit) {
+    val diff = diffWebSubmoduleDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertExternalTypePackageMapping(given: ExternalTypePackageMapping, expectedInit: ExpectedExternalTypePackageMapping.() -> Unit) {
     val diff = diffExternalTypePackageMapping(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

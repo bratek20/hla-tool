@@ -84,6 +84,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
             implSubmodule = implSubmodule,
             externalTypes = externalTypes,
             kotlinConfig = kotlinConfig,
+            webSubmodule = null
         )
     }
 
@@ -445,9 +446,9 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         } ?: emptyList()
     }
 
-    private fun parseImplSubmodule(elements: List<ParsedElement>): ImplSubmoduleDefinition {
+    private fun parseImplSubmodule(elements: List<ParsedElement>): ImplSubmoduleDefinition? {
         val implSection = elements.find { it is Section && it.name == "Impl" } as Section?
-        if (implSection != null) {
+        return implSection?.let {
             val dataClasses = parseComplexStructureDefinitions("DataClasses", implSection.elements)
             val keys = parseKeys("DataKeys", implSection.elements)
             val data = parseData(implSection.elements)
@@ -456,10 +457,6 @@ class ModuleGroupParserLogic: ModuleGroupParser {
                 dataKeys = keys + data.keys
             )
         }
-        return ImplSubmoduleDefinition(
-            dataClasses = emptyList(),
-            dataKeys = emptyList()
-        )
     }
 
 

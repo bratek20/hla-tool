@@ -1,0 +1,12 @@
+Interfaces
+    SomeInterface
+        someMethod()
+
+    SomeInterface2
+        someMethod()
+
+Web
+    expose
+        SomeInterface
+        SomeInterface2
+    serverUrl = "http://localhost:8080"

@@ -79,6 +79,31 @@ data class ImplSubmoduleDefinition(
     }
 }
 
+data class WebSubmoduleDefinition(
+    private val expose: List<String>,
+    private val serverUrl: String,
+) {
+    fun getExpose(): List<String> {
+        return this.expose
+    }
+
+    fun getServerUrl(): String {
+        return this.serverUrl
+    }
+
+    companion object {
+        fun create(
+            expose: List<String>,
+            serverUrl: String,
+        ): WebSubmoduleDefinition {
+            return WebSubmoduleDefinition(
+                expose = expose,
+                serverUrl = serverUrl,
+            )
+        }
+    }
+}
+
 data class ExternalTypePackageMapping(
     private val name: String,
     private val packageName: String,
@@ -133,8 +158,9 @@ data class ModuleDefinition(
     private val propertyKeys: List<KeyDefinition>,
     private val dataKeys: List<KeyDefinition>,
     private val enums: List<EnumDefinition>,
-    private val implSubmodule: ImplSubmoduleDefinition,
     private val externalTypes: List<String>,
+    private val implSubmodule: ImplSubmoduleDefinition?,
+    private val webSubmodule: WebSubmoduleDefinition?,
     private val kotlinConfig: KotlinConfig?,
 ) {
     fun getName(): ModuleName {
@@ -177,12 +203,16 @@ data class ModuleDefinition(
         return this.enums
     }
 
-    fun getImplSubmodule(): ImplSubmoduleDefinition {
+    fun getExternalTypes(): List<String> {
+        return this.externalTypes
+    }
+
+    fun getImplSubmodule(): ImplSubmoduleDefinition? {
         return this.implSubmodule
     }
 
-    fun getExternalTypes(): List<String> {
-        return this.externalTypes
+    fun getWebSubmodule(): WebSubmoduleDefinition? {
+        return this.webSubmodule
     }
 
     fun getKotlinConfig(): KotlinConfig? {
@@ -201,8 +231,9 @@ data class ModuleDefinition(
             propertyKeys: List<KeyDefinition>,
             dataKeys: List<KeyDefinition>,
             enums: List<EnumDefinition>,
-            implSubmodule: ImplSubmoduleDefinition,
             externalTypes: List<String>,
+            implSubmodule: ImplSubmoduleDefinition?,
+            webSubmodule: WebSubmoduleDefinition?,
             kotlinConfig: KotlinConfig?,
         ): ModuleDefinition {
             return ModuleDefinition(
@@ -216,8 +247,9 @@ data class ModuleDefinition(
                 propertyKeys = propertyKeys,
                 dataKeys = dataKeys,
                 enums = enums,
-                implSubmodule = implSubmodule,
                 externalTypes = externalTypes,
+                implSubmodule = implSubmodule,
+                webSubmodule = webSubmodule,
                 kotlinConfig = kotlinConfig,
             )
         }

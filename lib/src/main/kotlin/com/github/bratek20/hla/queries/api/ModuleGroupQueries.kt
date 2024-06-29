@@ -74,7 +74,7 @@ class ModuleGroupQueries(
     }
 
     private fun findDataClass(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return (module.getDataClasses() + module.getImplSubmodule().getDataClasses()).find { it.getName() == type.getName() }
+        return (module.getDataClasses() + (module.getImplSubmodule()?.getDataClasses() ?: emptyList())).find { it.getName() == type.getName() }
     }
 
     private fun findSimpleCustomType(type: TypeDefinition, module: ModuleDefinition): SimpleStructureDefinition? {

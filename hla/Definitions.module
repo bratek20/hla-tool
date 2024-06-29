@@ -26,6 +26,10 @@ ValueObjects
         dataClasses: ComplexStructureDefinition[]
         dataKeys: KeyDefinition[]
 
+    WebSubmoduleDefinition
+        expose: string[]
+        serverUrl: string
+
     ExternalTypePackageMapping
         name: string
         packageName: string
@@ -44,8 +48,9 @@ ValueObjects
         propertyKeys: KeyDefinition[]
         dataKeys: KeyDefinition[]
         enums: EnumDefinition[]
-        implSubmodule: ImplSubmoduleDefinition
         externalTypes: string[]
+        implSubmodule: ImplSubmoduleDefinition?
+        webSubmodule: WebSubmoduleDefinition?
         kotlinConfig: KotlinConfig?
 
     TypeDefinition

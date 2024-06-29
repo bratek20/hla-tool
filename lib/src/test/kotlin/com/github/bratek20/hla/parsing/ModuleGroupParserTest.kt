@@ -578,4 +578,19 @@ class ModuleGroupParserTest {
             }
         }
     }
+
+    @Test
+    fun `should parse web submodule`() {
+        val module = parseSingleModule("web-submodule")
+
+        assertModuleDefinition(module) {
+            webSubmodule = {
+                expose = listOf(
+                    "SomeInterface",
+                    "SomeInterface2"
+                )
+                serverUrl = "http://localhost:8080"
+            }
+        }
+    }
 }

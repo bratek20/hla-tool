@@ -62,7 +62,7 @@ class ImplDataClassesGenerator: DataClassesGenerator() {
     }
 
     override fun dataClasses(): List<ComplexStructureDefinition> {
-        return module.getImplSubmodule().getDataClasses()
+        return module.getImplSubmodule()?.getDataClasses() ?: emptyList()
     }
 }
 
@@ -85,7 +85,7 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
     }
 
     override fun dataKeys(): List<KeyDefinition> {
-        return module.getImplSubmodule().getDataKeys()
+        return module.getImplSubmodule()?.getDataKeys() ?: emptyList()
     }
 }
 
@@ -100,7 +100,7 @@ class ImplGenerator: DirectoryGenerator() {
 
     override fun shouldGenerateDirectory(): Boolean {
         val generateLogic = module.getInterfaces().isNotEmpty()
-        val generateData = module.getImplSubmodule().getDataClasses().isNotEmpty()
+        val generateData = module.getImplSubmodule() != null
         return generateLogic || generateData
     }
 

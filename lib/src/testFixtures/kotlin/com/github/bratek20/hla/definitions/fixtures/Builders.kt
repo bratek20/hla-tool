@@ -43,6 +43,18 @@ fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): I
     )
 }
 
+data class WebSubmoduleDefinitionDef(
+    var expose: List<String> = emptyList(),
+    var serverUrl: String = "someValue",
+)
+fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): WebSubmoduleDefinition {
+    val def = WebSubmoduleDefinitionDef().apply(init)
+    return WebSubmoduleDefinition.create(
+        expose = def.expose,
+        serverUrl = def.serverUrl,
+    )
+}
+
 data class ExternalTypePackageMappingDef(
     var name: String = "someValue",
     var packageName: String = "someValue",
@@ -76,8 +88,9 @@ data class ModuleDefinitionDef(
     var propertyKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
     var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
     var enums: List<(EnumDefinitionDef.() -> Unit)> = emptyList(),
-    var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit) = {},
     var externalTypes: List<String> = emptyList(),
+    var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit)? = null,
+    var webSubmodule: (WebSubmoduleDefinitionDef.() -> Unit)? = null,
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
@@ -93,8 +106,9 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         propertyKeys = def.propertyKeys.map { it -> keyDefinition(it) },
         dataKeys = def.dataKeys.map { it -> keyDefinition(it) },
         enums = def.enums.map { it -> enumDefinition(it) },
-        implSubmodule = implSubmoduleDefinition(def.implSubmodule),
         externalTypes = def.externalTypes,
+        implSubmodule = def.implSubmodule?.let { it -> implSubmoduleDefinition(it) },
+        webSubmodule = def.webSubmodule?.let { it -> webSubmoduleDefinition(it) },
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
     )
 }

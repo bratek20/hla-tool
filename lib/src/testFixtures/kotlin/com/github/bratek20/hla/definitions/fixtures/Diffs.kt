@@ -67,6 +67,26 @@ fun diffImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: Ex
     return result.joinToString("\n")
 }
 
+data class ExpectedWebSubmoduleDefinition(
+    var expose: List<String>? = null,
+    var serverUrl: String? = null,
+)
+fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: ExpectedWebSubmoduleDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWebSubmoduleDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.expose?.let {
+        if (given.getExpose().size != it.size) { result.add("${path}expose size ${given.getExpose().size} != ${it.size}"); return@let }
+        given.getExpose().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}expose[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    expected.serverUrl?.let {
+        if (given.getServerUrl() != it) { result.add("${path}serverUrl ${given.getServerUrl()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedExternalTypePackageMapping(
     var name: String? = null,
     var packageName: String? = null,
@@ -112,8 +132,9 @@ data class ExpectedModuleDefinition(
     var propertyKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
     var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
     var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
-    var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
     var externalTypes: List<String>? = null,
+    var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
+    var webSubmodule: (ExpectedWebSubmoduleDefinition.() -> Unit)? = null,
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
 )
 fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit, path: String = ""): String {
@@ -169,13 +190,17 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
         given.getEnums().forEachIndexed { idx, entry -> if (diffEnumDefinition(entry, it[idx]) != "") { result.add(diffEnumDefinition(entry, it[idx], "${path}enums[${idx}].")) } }
     }
 
-    expected.implSubmodule?.let {
-        if (diffImplSubmoduleDefinition(given.getImplSubmodule(), it) != "") { result.add(diffImplSubmoduleDefinition(given.getImplSubmodule(), it, "${path}implSubmodule.")) }
-    }
-
     expected.externalTypes?.let {
         if (given.getExternalTypes().size != it.size) { result.add("${path}externalTypes size ${given.getExternalTypes().size} != ${it.size}"); return@let }
         given.getExternalTypes().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}externalTypes[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    expected.implSubmodule?.let {
+        if (diffImplSubmoduleDefinition(given.getImplSubmodule()!!, it) != "") { result.add(diffImplSubmoduleDefinition(given.getImplSubmodule()!!, it, "${path}implSubmodule.")) }
+    }
+
+    expected.webSubmodule?.let {
+        if (diffWebSubmoduleDefinition(given.getWebSubmodule()!!, it) != "") { result.add(diffWebSubmoduleDefinition(given.getWebSubmodule()!!, it, "${path}webSubmodule.")) }
     }
 
     expected.kotlinConfig?.let {
