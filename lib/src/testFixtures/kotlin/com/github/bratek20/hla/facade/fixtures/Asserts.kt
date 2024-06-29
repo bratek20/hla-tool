@@ -20,6 +20,16 @@ fun assertProfileName(given: ProfileName, expected: String) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedModuleOperationArgs.() -> Unit) {
+    val diff = diffModuleOperationArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: ExpectedAllModulesOperationArgs.() -> Unit) {
+    val diff = diffAllModulesOperationArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScriptConfig.() -> Unit) {
     val diff = diffTypeScriptConfig(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -42,15 +52,5 @@ fun assertHlaProfileImport(given: HlaProfileImport, expectedInit: ExpectedHlaPro
 
 fun assertHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit) {
     val diff = diffHlaProfile(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
-fun assertModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedModuleOperationArgs.() -> Unit) {
-    val diff = diffModuleOperationArgs(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
-fun assertAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: ExpectedAllModulesOperationArgs.() -> Unit) {
-    val diff = diffAllModulesOperationArgs(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

@@ -18,6 +18,49 @@ fun diffProfileName(given: ProfileName, expected: String, path: String = ""): St
     return ""
 }
 
+data class ExpectedModuleOperationArgs(
+    var hlaFolderPath: String? = null,
+    var profileName: String? = null,
+    var moduleName: String? = null,
+)
+fun diffModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedModuleOperationArgs.() -> Unit, path: String = ""): String {
+    val expected = ExpectedModuleOperationArgs().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.hlaFolderPath?.let {
+        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
+    }
+
+    expected.profileName?.let {
+        if (diffProfileName(given.getProfileName(), it) != "") { result.add(diffProfileName(given.getProfileName(), it, "${path}profileName.")) }
+    }
+
+    expected.moduleName?.let {
+        if (diffModuleName(given.getModuleName(), it) != "") { result.add(diffModuleName(given.getModuleName(), it, "${path}moduleName.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedAllModulesOperationArgs(
+    var hlaFolderPath: String? = null,
+    var profileName: String? = null,
+)
+fun diffAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: ExpectedAllModulesOperationArgs.() -> Unit, path: String = ""): String {
+    val expected = ExpectedAllModulesOperationArgs().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.hlaFolderPath?.let {
+        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
+    }
+
+    expected.profileName?.let {
+        if (diffProfileName(given.getProfileName(), it) != "") { result.add(diffProfileName(given.getProfileName(), it, "${path}profileName.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedTypeScriptConfig(
     var mainTsconfigPath: String? = null,
     var testTsconfigPath: String? = null,
@@ -145,49 +188,6 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
     expected.imports?.let {
         if (given.getImports().size != it.size) { result.add("${path}imports size ${given.getImports().size} != ${it.size}"); return@let }
         given.getImports().forEachIndexed { idx, entry -> if (diffHlaProfileImport(entry, it[idx]) != "") { result.add(diffHlaProfileImport(entry, it[idx], "${path}imports[${idx}].")) } }
-    }
-
-    return result.joinToString("\n")
-}
-
-data class ExpectedModuleOperationArgs(
-    var hlaFolderPath: String? = null,
-    var profileName: String? = null,
-    var moduleName: String? = null,
-)
-fun diffModuleOperationArgs(given: ModuleOperationArgs, expectedInit: ExpectedModuleOperationArgs.() -> Unit, path: String = ""): String {
-    val expected = ExpectedModuleOperationArgs().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.hlaFolderPath?.let {
-        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
-    }
-
-    expected.profileName?.let {
-        if (diffProfileName(given.getProfileName(), it) != "") { result.add(diffProfileName(given.getProfileName(), it, "${path}profileName.")) }
-    }
-
-    expected.moduleName?.let {
-        if (diffModuleName(given.getModuleName(), it) != "") { result.add(diffModuleName(given.getModuleName(), it, "${path}moduleName.")) }
-    }
-
-    return result.joinToString("\n")
-}
-
-data class ExpectedAllModulesOperationArgs(
-    var hlaFolderPath: String? = null,
-    var profileName: String? = null,
-)
-fun diffAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: ExpectedAllModulesOperationArgs.() -> Unit, path: String = ""): String {
-    val expected = ExpectedAllModulesOperationArgs().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.hlaFolderPath?.let {
-        if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
-    }
-
-    expected.profileName?.let {
-        if (diffProfileName(given.getProfileName(), it) != "") { result.add(diffProfileName(given.getProfileName(), it, "${path}profileName.")) }
     }
 
     return result.joinToString("\n")

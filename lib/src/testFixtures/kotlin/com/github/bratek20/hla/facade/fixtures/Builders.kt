@@ -7,6 +7,32 @@ import com.github.bratek20.hla.directory.fixtures.*
 
 import com.github.bratek20.hla.facade.api.*
 
+data class ModuleOperationArgsDef(
+    var hlaFolderPath: String = "someValue",
+    var profileName: String = "someValue",
+    var moduleName: String = "someValue",
+)
+fun moduleOperationArgs(init: ModuleOperationArgsDef.() -> Unit = {}): ModuleOperationArgs {
+    val def = ModuleOperationArgsDef().apply(init)
+    return ModuleOperationArgs.create(
+        hlaFolderPath = pathCreate(def.hlaFolderPath),
+        profileName = ProfileName(def.profileName),
+        moduleName = ModuleName(def.moduleName),
+    )
+}
+
+data class AllModulesOperationArgsDef(
+    var hlaFolderPath: String = "someValue",
+    var profileName: String = "someValue",
+)
+fun allModulesOperationArgs(init: AllModulesOperationArgsDef.() -> Unit = {}): AllModulesOperationArgs {
+    val def = AllModulesOperationArgsDef().apply(init)
+    return AllModulesOperationArgs.create(
+        hlaFolderPath = pathCreate(def.hlaFolderPath),
+        profileName = ProfileName(def.profileName),
+    )
+}
+
 data class TypeScriptConfigDef(
     var mainTsconfigPath: String = "someValue",
     var testTsconfigPath: String = "someValue",
@@ -78,31 +104,5 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
         typeScript = def.typeScript?.let { it -> typeScriptConfig(it) },
         onlyPatterns = def.onlyPatterns,
         imports = def.imports.map { it -> hlaProfileImport(it) },
-    )
-}
-
-data class ModuleOperationArgsDef(
-    var hlaFolderPath: String = "someValue",
-    var profileName: String = "someValue",
-    var moduleName: String = "someValue",
-)
-fun moduleOperationArgs(init: ModuleOperationArgsDef.() -> Unit = {}): ModuleOperationArgs {
-    val def = ModuleOperationArgsDef().apply(init)
-    return ModuleOperationArgs.create(
-        hlaFolderPath = pathCreate(def.hlaFolderPath),
-        profileName = ProfileName(def.profileName),
-        moduleName = ModuleName(def.moduleName),
-    )
-}
-
-data class AllModulesOperationArgsDef(
-    var hlaFolderPath: String = "someValue",
-    var profileName: String = "someValue",
-)
-fun allModulesOperationArgs(init: AllModulesOperationArgsDef.() -> Unit = {}): AllModulesOperationArgs {
-    val def = AllModulesOperationArgsDef().apply(init)
-    return AllModulesOperationArgs.create(
-        hlaFolderPath = pathCreate(def.hlaFolderPath),
-        profileName = ProfileName(def.profileName),
     )
 }

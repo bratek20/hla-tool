@@ -7,6 +7,7 @@ ValueObjects
     ModuleName: string
     ProfileName: string
 
+Properties
     TypeScriptConfig
         mainTsconfigPath: Path
         testTsconfigPath: Path
@@ -34,7 +35,6 @@ ValueObjects
         onlyPatterns: string[] = []
         imports: HlaProfileImport[] = []
 
-PropertyKeys
     "profiles" -> HlaProfile[]
 
 Interfaces

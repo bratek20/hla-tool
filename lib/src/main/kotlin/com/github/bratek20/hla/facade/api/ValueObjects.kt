@@ -12,6 +12,63 @@ data class ProfileName(
     val value: String
 )
 
+data class ModuleOperationArgs(
+    private val hlaFolderPath: String,
+    private val profileName: String,
+    private val moduleName: String,
+) {
+    fun getHlaFolderPath(): Path {
+        return pathCreate(this.hlaFolderPath)
+    }
+
+    fun getProfileName(): ProfileName {
+        return ProfileName(this.profileName)
+    }
+
+    fun getModuleName(): ModuleName {
+        return ModuleName(this.moduleName)
+    }
+
+    companion object {
+        fun create(
+            hlaFolderPath: Path,
+            profileName: ProfileName,
+            moduleName: ModuleName,
+        ): ModuleOperationArgs {
+            return ModuleOperationArgs(
+                hlaFolderPath = pathGetValue(hlaFolderPath),
+                profileName = profileName.value,
+                moduleName = moduleName.value,
+            )
+        }
+    }
+}
+
+data class AllModulesOperationArgs(
+    private val hlaFolderPath: String,
+    private val profileName: String,
+) {
+    fun getHlaFolderPath(): Path {
+        return pathCreate(this.hlaFolderPath)
+    }
+
+    fun getProfileName(): ProfileName {
+        return ProfileName(this.profileName)
+    }
+
+    companion object {
+        fun create(
+            hlaFolderPath: Path,
+            profileName: ProfileName,
+        ): AllModulesOperationArgs {
+            return AllModulesOperationArgs(
+                hlaFolderPath = pathGetValue(hlaFolderPath),
+                profileName = profileName.value,
+            )
+        }
+    }
+}
+
 data class TypeScriptConfig(
     private val mainTsconfigPath: String,
     private val testTsconfigPath: String,
@@ -181,63 +238,6 @@ data class HlaProfile(
                 typeScript = typeScript,
                 onlyPatterns = onlyPatterns,
                 imports = imports,
-            )
-        }
-    }
-}
-
-data class ModuleOperationArgs(
-    private val hlaFolderPath: String,
-    private val profileName: String,
-    private val moduleName: String,
-) {
-    fun getHlaFolderPath(): Path {
-        return pathCreate(this.hlaFolderPath)
-    }
-
-    fun getProfileName(): ProfileName {
-        return ProfileName(this.profileName)
-    }
-
-    fun getModuleName(): ModuleName {
-        return ModuleName(this.moduleName)
-    }
-
-    companion object {
-        fun create(
-            hlaFolderPath: Path,
-            profileName: ProfileName,
-            moduleName: ModuleName,
-        ): ModuleOperationArgs {
-            return ModuleOperationArgs(
-                hlaFolderPath = pathGetValue(hlaFolderPath),
-                profileName = profileName.value,
-                moduleName = moduleName.value,
-            )
-        }
-    }
-}
-
-data class AllModulesOperationArgs(
-    private val hlaFolderPath: String,
-    private val profileName: String,
-) {
-    fun getHlaFolderPath(): Path {
-        return pathCreate(this.hlaFolderPath)
-    }
-
-    fun getProfileName(): ProfileName {
-        return ProfileName(this.profileName)
-    }
-
-    companion object {
-        fun create(
-            hlaFolderPath: Path,
-            profileName: ProfileName,
-        ): AllModulesOperationArgs {
-            return AllModulesOperationArgs(
-                hlaFolderPath = pathGetValue(hlaFolderPath),
-                profileName = profileName.value,
             )
         }
     }
