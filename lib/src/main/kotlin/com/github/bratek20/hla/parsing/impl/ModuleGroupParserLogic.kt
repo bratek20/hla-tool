@@ -61,21 +61,50 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         val implSubmodule = parseImplSubmodule(elements)
         val externalTypes = parseExternalTypes(elements)
         val kotlinConfig = parseKotlinConfig(elements)
+        val properties = parseProperties(elements)
+        val data = parseData(elements)
 
         return ModuleDefinition.create(
             name = moduleName,
             simpleValueObjects = valueObjects.simple,
-            complexValueObjects = valueObjects.complex + interfacesOutput.complexValueObjects,
+            complexValueObjects = valueObjects.complex
+                    + interfacesOutput.complexValueObjects
+                    + properties.valueObjects,
             interfaces = interfacesOutput.interfaces,
-            propertyKeys = propertyKeys,
+            propertyKeys = propertyKeys
+                    + properties.keys,
             enums = enums,
             simpleCustomTypes = customTypes.simple,
             complexCustomTypes = customTypes.complex,
-            dataClasses = dataClasses,
-            dataKeys = dataKeys,
+            dataClasses = dataClasses
+                    + data.classes,
+            dataKeys = dataKeys
+                    + data.keys,
             implSubmodule = implSubmodule,
             externalTypes = externalTypes,
             kotlinConfig = kotlinConfig,
+        )
+    }
+
+    data class ParsedProperties(
+        val valueObjects: List<ComplexStructureDefinition>,
+        val keys: List<KeyDefinition>,
+    )
+    private fun parseProperties(elements: List<ParsedElement>): ParsedProperties {
+        return ParsedProperties(
+            valueObjects = parseComplexStructureDefinitions("Properties", elements),
+            keys = parseKeys("Properties", elements)
+        )
+    }
+
+    data class ParsedData(
+        val classes: List<ComplexStructureDefinition>,
+        val keys: List<KeyDefinition>,
+    )
+    private fun parseData(elements: List<ParsedElement>): ParsedData {
+        return ParsedData(
+            classes = parseComplexStructureDefinitions("Data", elements),
+            keys = parseKeys("Data", elements)
         )
     }
 
@@ -116,7 +145,9 @@ class ModuleGroupParserLogic: ModuleGroupParser {
             "DataKeys",
             "Impl",
             "ExternalTypes",
-            "Kotlin"
+            "Kotlin",
+            "Data",
+            "Properties"
         )
         val unknownRootSections = rootSections.map { it.name }.filter { it !in knownRootSections }
         if (unknownRootSections.isNotEmpty()) {
@@ -384,15 +415,14 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     }
 
     private fun parseKeys(sectionName: String, elements: List<ParsedElement>): List<KeyDefinition> {
-        val keys: MutableList<KeyDefinition> = mutableListOf()
+        val section = elements.find { it is Section && it.name == sectionName } as Section?
 
-        val propertiesSection = elements.find { it is Section && it.name == sectionName } as Section?
-        propertiesSection?.elements?.forEach {
+        val keys: MutableList<KeyDefinition> = mutableListOf()
+        section?.elements?.forEach {
             if(it is ParsedMapping) {
                 keys.add(KeyDefinition(it.key, parseType(it.value)))
             }
         }
-
         return keys
     }
 

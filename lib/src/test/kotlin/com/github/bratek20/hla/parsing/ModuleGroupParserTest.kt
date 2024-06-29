@@ -287,7 +287,7 @@ class ModuleGroupParserTest {
                 {
                     name = "someConfig"
                     type = {
-                        name = "SomeProperty"
+                        name = "SomeConfig"
                     }
                 },
                 {
