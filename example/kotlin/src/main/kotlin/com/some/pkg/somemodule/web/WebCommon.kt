@@ -1,7 +1,6 @@
 package com.some.pkg.somemodule.web
 
-import com.some.pkg.somemodule.api.SomeClass
-import com.some.pkg.somemodule.api.SomeId
+import com.some.pkg.somemodule.api.*
 
 data class SomeModuleWebServerUrl(
     val value: String
