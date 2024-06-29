@@ -312,7 +312,7 @@ fun diffInterfaceDefinition(given: InterfaceDefinition, expectedInit: ExpectedIn
     }
 
     expected.methods?.let {
-        if (given.getMethods().size != it.size) { result.add("${path}methods size ${given.getMethods().size} != ${it.size}") }
+        if (given.getMethods().size != it.size) { result.add("${path}methods size ${given.getMethods().size} != ${it.size}"); return@let }
         given.getMethods().forEachIndexed { idx, entry -> if (diffMethodDefinition(entry, it[idx]) != "") { result.add(diffMethodDefinition(entry, it[idx], "${path}methods[${idx}].")) } }
     }
 

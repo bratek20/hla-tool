@@ -37,4 +37,4 @@ Interfaces
                 SomeException2
         someQuery(id: SomeId): SomeClass
         noArgQuery(): SomeClass
-        //someOptionalQuery(id: SomeId?): SomeClass?
+        someOptionalQuery(id: SomeId?): SomeClass?
