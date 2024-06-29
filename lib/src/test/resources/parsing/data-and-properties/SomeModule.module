@@ -8,6 +8,10 @@ DataClasses
 DataKeys
     "someElements" -> SomeElementData[]
 
+PropertyKeys
+    "someElements" -> SomeElement[]
+    "someConfig" -> SomeProperty
+
 Impl
     DataClasses
         SomeImplData

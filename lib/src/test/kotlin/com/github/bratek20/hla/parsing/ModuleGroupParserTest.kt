@@ -279,10 +279,10 @@ class ModuleGroupParserTest {
     }
 
     @Test
-    fun `should parse property and data keys`() {
-        val modules = parseSingleGroup("only-keys")
+    fun `should parse properties (keys and vos), data (keys and vos for api and impl), property keys and data keys`() {
+        val module = parseSingleModule("data-and-properties")
 
-        assertModules(modules, listOf {
+        assertModuleDefinition(module) {
             propertyKeys = listOf(
                 {
                     name = "someElements"
@@ -300,24 +300,54 @@ class ModuleGroupParserTest {
                     }
                 }
             )
-            dataKeys = listOf(
+            dataKeys = listOf {
+                name = "someElements"
+                type = {
+                    name = "SomeElementData"
+                    wrappers = listOf(
+                        TypeWrapper.LIST
+                    )
+                }
+            }
+            dataClasses = listOf(
                 {
-                    name = "someElements"
-                    type = {
-                        name = "SomeElement"
-                        wrappers = listOf(
-                            TypeWrapper.LIST
-                        )
+                    name = "SomeData"
+                    fields = listOf {
+                        name = "value"
+                        type = {
+                            name = "int"
+                        }
                     }
                 },
                 {
-                    name = "someConfig"
-                    type = {
-                        name = "SomeProperty"
+                    name = "SomeElementData"
+                    fields = listOf {
+                        name = "id"
+                        type = {
+                            name = "SomeId"
+                        }
+                    }
+                },
+            )
+            implSubmodule = {
+                dataClasses = listOf {
+                    name = "SomeImplData"
+                    fields = listOf {
+                        name = "value"
+                        type = {
+                            name = "bool"
+                        }
                     }
                 }
-            )
-        })
+                dataKeys = listOf {
+                    name = "someImplData"
+                    type = {
+                        name = "SomeImplData"
+                        wrappers = emptyList()
+                    }
+                }
+            }
+        }
     }
 
     @Test
@@ -379,61 +409,6 @@ class ModuleGroupParserTest {
         assertThatCode {
             parseSingleGroup("bug")
         }.doesNotThrowAnyException()
-    }
-
-    @Test
-    fun `should parse data`() {
-        val modules = parseSingleGroup("only-data")
-
-        assertModules(modules, listOf {
-            dataClasses = listOf(
-                {
-                    name = "SomeData"
-                    fields = listOf {
-                        name = "value"
-                        type = {
-                            name = "int"
-                        }
-                    }
-                },
-                {
-                    name = "SomeElementData"
-                    fields = listOf {
-                        name = "id"
-                        type = {
-                            name = "SomeId"
-                        }
-                    }
-                },
-            )
-            dataKeys = listOf {
-                name = "someElements"
-                type = {
-                    name = "SomeElementData"
-                    wrappers = listOf(
-                        TypeWrapper.LIST
-                    )
-                }
-            }
-            implSubmodule = {
-                dataClasses = listOf {
-                    name = "SomeImplData"
-                    fields = listOf {
-                        name = "value"
-                        type = {
-                            name = "bool"
-                        }
-                    }
-                }
-                dataKeys = listOf {
-                    name = "someImplData"
-                    type = {
-                        name = "SomeImplData"
-                        wrappers = emptyList()
-                    }
-                }
-            }
-        })
     }
 
     @Test
