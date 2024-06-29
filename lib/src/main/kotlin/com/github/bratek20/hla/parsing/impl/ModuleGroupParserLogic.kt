@@ -18,6 +18,22 @@ import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import java.util.*
 
 class ModuleGroupParserLogic: ModuleGroupParser {
+    private val knownRootSections = setOf(
+        "ValueObjects",
+        "DataClasses",
+        "Interfaces",
+        "PropertyKeys",
+        "Enums",
+        "CustomTypes",
+        "DataKeys",
+        "Impl",
+        "ExternalTypes",
+        "Kotlin",
+        "Data",
+        "Properties",
+        "Web"
+    )
+
     private val directories = DirectoriesLogic()
 
     override fun parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup {
@@ -58,9 +74,6 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         val enums = parseEnums(elements)
         val customTypes = parseStructures("CustomTypes", elements)
         val dataKeys = parseKeys("DataKeys", elements)
-        val implSubmodule = parseImplSubmodule(elements)
-        val externalTypes = parseExternalTypes(elements)
-        val kotlinConfig = parseKotlinConfig(elements)
         val properties = parseProperties(elements)
         val data = parseData(elements)
 
@@ -81,11 +94,28 @@ class ModuleGroupParserLogic: ModuleGroupParser {
                     + data.classes,
             dataKeys = dataKeys
                     + data.keys,
-            implSubmodule = implSubmodule,
-            externalTypes = externalTypes,
-            kotlinConfig = kotlinConfig,
-            webSubmodule = null
+            implSubmodule = parseImplSubmodule(elements),
+            externalTypes = parseExternalTypes(elements),
+            kotlinConfig = parseKotlinConfig(elements),
+            webSubmodule = parseWebSubmodule(elements)
         )
+    }
+
+    private fun parseWebSubmodule(elements: List<ParsedElement>): WebSubmoduleDefinition? {
+        return findSection(elements, "Web")?.let { web ->
+            return WebSubmoduleDefinition(
+                expose = findSection(web.elements, "expose")!!.elements.filterIsInstance<Section>().map {
+                    it.name
+                },
+                serverUrl = web.elements.filterIsInstance<EqualsAssignment>().first {
+                    it.name == "serverUrl"
+                }.value,
+            )
+        }
+    }
+
+    private fun findSection(elements: List<ParsedElement>, sectionName: String): Section? {
+        return elements.find { it is Section && it.name == sectionName } as Section?
     }
 
     data class ParsedProperties(
@@ -111,14 +141,10 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     }
 
     private fun parseExternalTypes(elements: List<ParsedElement>): List<String> {
-        val externalTypeSection = elements.find { it is Section && it.name == "ExternalTypes" } as Section?
-        if (externalTypeSection == null) {
-            return emptyList()
-        }
-
-        return externalTypeSection.elements.filterIsInstance<Section>().map {
-            it.name
-        }
+        return findSection(elements, "ExternalTypes")
+            ?.elements?.filterIsInstance<Section>()?.map {
+                it.name
+            } ?: emptyList()
     }
 
     private fun parseKotlinConfig(elements: List<ParsedElement>): KotlinConfig? {
@@ -137,20 +163,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
 
     private fun checkRootSections(module: ModuleName, elements: List<ParsedElement>) {
         val rootSections = elements.filterIsInstance<Section>()
-        val knownRootSections = setOf(
-            "ValueObjects",
-            "DataClasses",
-            "Interfaces",
-            "PropertyKeys",
-            "Enums",
-            "CustomTypes",
-            "DataKeys",
-            "Impl",
-            "ExternalTypes",
-            "Kotlin",
-            "Data",
-            "Properties"
-        )
+
         val unknownRootSections = rootSections.map { it.name }.filter { it !in knownRootSections }
         if (unknownRootSections.isNotEmpty()) {
             throw UnknownRootSectionException("Module ${module.value} has unknown root sections: $unknownRootSections")
@@ -185,12 +198,18 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     ) : ParsedNode(indent) {
     }
 
-    class Assignment(
+    class ColonAssignment(
         indent: Int,
         val name: String,
         val value: String,
         val defaultValue: String? = null,
         val attributes: List<Attribute>
+    ) : ParsedLeaf(indent)
+
+    class EqualsAssignment(
+        indent: Int,
+        val name: String,
+        val value: String,
     ) : ParsedLeaf(indent)
 
     class ParsedArg(
@@ -211,7 +230,14 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     ) : ParsedNode(indent)
 
     private fun removeComments(line: String): String {
-        return line.substringBefore("//")
+        // search for first // that is not preceded by :
+        val regex = Regex("""(?<!:)//""")
+        val matchResult = regex.find(line)
+        return if (matchResult != null) {
+            line.substring(0, matchResult.range.first)
+        } else {
+            line
+        }
     }
 
     private fun parseElements(content: FileContent): List<ParsedElement> {
@@ -224,15 +250,14 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         val nodesStack: ArrayDeque<ParsedNode> = ArrayDeque()
 
         for (element in initialElements) {
+            while((nodesStack.lastOrNull()?.indent ?: -1) >= element.indent) {
+                nodesStack.removeLast()
+            }
             if(element is ParsedNode) {
-                while((nodesStack.lastOrNull()?.indent ?: -1) >= element.indent) {
-                    nodesStack.removeLast()
-                }
-
                 if (nodesStack.isEmpty()) {
                     result.add(element)
                 } else {
-                    nodesStack.last().addElement(element)
+                    nodesStack.last.addElement(element)
                 }
 
                 nodesStack.add(element)
@@ -247,6 +272,8 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     private fun parseElement(line: String): ParsedElement {
         val indent = line.takeWhile { it == ' ' }.length
         val noIndentLine = line.trim()
+        val firstEqualsSignIndex = noIndentLine.indexOf("=").takeIf { it != -1 } ?: Int.MAX_VALUE
+        val firstColonSignIndex = noIndentLine.indexOf(":").takeIf { it != -1 } ?: Int.MAX_VALUE
 
         if (noIndentLine.contains(Regex("[a-zA-Z]\\("))) {
             val methodName = noIndentLine.substringBefore("(")
@@ -262,6 +289,11 @@ class ModuleGroupParserLogic: ModuleGroupParser {
                 if(it) returnTypeStr.substringAfter(":").trim() else null
             }
             return ParsedMethod(indent, methodName, args, returnType)
+        }
+        else if(firstEqualsSignIndex < firstColonSignIndex)  {
+            noIndentLine.split("=").let {
+                return EqualsAssignment(indent, it[0].trim(), it[1].trim())
+            }
         }
         else if(noIndentLine.contains(":"))  {
             val name = noIndentLine.substringBefore(":").trim()
@@ -286,7 +318,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
                 defaultValue = rest.substringAfter("=").trim()
                 rest = rest.substringBefore("=").trim()
             }
-            return Assignment(
+            return ColonAssignment(
                 indent = indent,
                 name = name,
                 value = rest.trim(),
@@ -319,7 +351,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
 
     private fun parseSimpleStructureDefinitions(sectionName: String, elements: List<ParsedElement>): List<SimpleStructureDefinition> {
         val voSection = elements.find { it is Section && it.name == sectionName } as Section?
-        return voSection?.elements?.filterIsInstance<Assignment>()?.map {
+        return voSection?.elements?.filterIsInstance<ColonAssignment>()?.map {
             SimpleStructureDefinition(
                 name = it.name,
                 typeName = it.value,
@@ -354,7 +386,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     private fun parseComplexStructureDefinition(section: Section): ComplexStructureDefinition {
         return ComplexStructureDefinition(
             name = section.name,
-            fields = section.elements.filterIsInstance<Assignment>().map {
+            fields = section.elements.filterIsInstance<ColonAssignment>().map {
                 FieldDefinition(
                     name = it.name,
                     type = parseType(it.value),

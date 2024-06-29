@@ -589,7 +589,7 @@ class ModuleGroupParserTest {
                     "SomeInterface",
                     "SomeInterface2"
                 )
-                serverUrl = "http://localhost:8080"
+                serverUrl = "\"http://localhost:8080\""
             }
         }
     }
