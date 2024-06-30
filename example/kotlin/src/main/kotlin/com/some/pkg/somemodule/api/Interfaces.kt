@@ -9,6 +9,8 @@ interface SomeEmptyInterface {
 }
 
 interface SomeInterface {
+    fun someEmptyMethod(): Unit
+
     @Throws(
         SomeException::class,
         Some2Exception::class,
@@ -24,9 +26,13 @@ interface SomeInterface {
 }
 
 interface SomeInterface2 {
+    fun referenceOtherClass(other: OtherClass): OtherClass
+
+    fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType
+}
+
+interface SomeInterface3 {
     fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 
     fun referenceOtherInterface(other: OtherInterface): OtherInterface
-
-    fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType
 }

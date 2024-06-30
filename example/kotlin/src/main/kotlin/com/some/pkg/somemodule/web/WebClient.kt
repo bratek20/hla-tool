@@ -13,6 +13,10 @@ class SomeInterfaceWebClient(
     private val factory: HttpClientFactory,
     private val url: SomeModuleWebServerUrl,
 ): SomeInterface {
+    override fun someEmptyMethod(): Unit {
+        factory.create(url.value).post("/someInterface/someEmptyMethod", SomeInterfaceSomeEmptyMethodRequest())
+    }
+
     override fun someCommand(id: SomeId, amount: Int): Unit {
         factory.create(url.value).post("/someInterface/someCommand", SomeInterfaceSomeCommandRequest(id, amount))
     }
@@ -30,12 +34,8 @@ class SomeInterface2WebClient(
     private val factory: HttpClientFactory,
     private val url: SomeModuleWebServerUrl,
 ): SomeInterface2 {
-    override fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
-        return factory.create(url.value).post("/someInterface2/referenceInterface", SomeInterface2ReferenceInterfaceRequest(empty)).getBody(SomeInterface2ReferenceInterfaceResponse::class.java).value
-    }
-
-    override fun referenceOtherInterface(other: OtherInterface): OtherInterface {
-        return factory.create(url.value).post("/someInterface2/referenceOtherInterface", SomeInterface2ReferenceOtherInterfaceRequest(other)).getBody(SomeInterface2ReferenceOtherInterfaceResponse::class.java).value
+    override fun referenceOtherClass(other: OtherClass): OtherClass {
+        return factory.create(url.value).post("/someInterface2/referenceOtherClass", SomeInterface2ReferenceOtherClassRequest(other)).getBody(SomeInterface2ReferenceOtherClassResponse::class.java).value
     }
 
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {

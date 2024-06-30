@@ -4,6 +4,8 @@ interface SomeEmptyInterface {
 }
 
 interface SomeInterface {
+    someEmptyMethod(): void
+
     /**
      * @throws { SomeException }
      * @throws { Some2Exception }
@@ -19,9 +21,13 @@ interface SomeInterface {
 }
 
 interface SomeInterface2 {
+    referenceOtherClass(other: OtherClass): OtherClass
+
+    referenceLegacyType(legacyType: LegacyType): LegacyType
+}
+
+interface SomeInterface3 {
     referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 
     referenceOtherInterface(other: OtherInterface): OtherInterface
-
-    referenceLegacyType(legacyType: LegacyType): LegacyType
 }

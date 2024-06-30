@@ -13,6 +13,11 @@ import com.some.pkg.somemodule.api.*
 class SomeInterfaceController(
     private val api: SomeInterface,
 ) {
+    @RequestMapping("/someEmptyMethod")
+    fun someEmptyMethod(@RequestBody request: SomeInterfaceSomeEmptyMethodRequest): Unit {
+        api.someEmptyMethod()
+    }
+
     @RequestMapping("/someCommand")
     fun someCommand(@RequestBody request: SomeInterfaceSomeCommandRequest): Unit {
         api.someCommand(request.id, request.amount)
@@ -34,14 +39,9 @@ class SomeInterfaceController(
 class SomeInterface2Controller(
     private val api: SomeInterface2,
 ) {
-    @RequestMapping("/referenceInterface")
-    fun referenceInterface(@RequestBody request: SomeInterface2ReferenceInterfaceRequest): SomeInterface2ReferenceInterfaceResponse {
-        return SomeInterface2ReferenceInterfaceResponse(api.referenceInterface(request.empty))
-    }
-
-    @RequestMapping("/referenceOtherInterface")
-    fun referenceOtherInterface(@RequestBody request: SomeInterface2ReferenceOtherInterfaceRequest): SomeInterface2ReferenceOtherInterfaceResponse {
-        return SomeInterface2ReferenceOtherInterfaceResponse(api.referenceOtherInterface(request.other))
+    @RequestMapping("/referenceOtherClass")
+    fun referenceOtherClass(@RequestBody request: SomeInterface2ReferenceOtherClassRequest): SomeInterface2ReferenceOtherClassResponse {
+        return SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.other))
     }
 
     @RequestMapping("/referenceLegacyType")

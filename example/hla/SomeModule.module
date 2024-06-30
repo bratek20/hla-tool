@@ -73,6 +73,7 @@ Interfaces
     SomeEmptyInterface
 
     SomeInterface
+        someEmptyMethod()
         someCommand(id: SomeId, amount: int)
             throws
                 SomeException
@@ -83,9 +84,12 @@ Interfaces
         optMethod(optId: SomeId?): SomeClass?
 
     SomeInterface2
+        referenceOtherClass(other: OtherClass): OtherClass
+        referenceLegacyType(legacyType: LegacyType): LegacyType
+
+    SomeInterface3
         referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
         referenceOtherInterface(other: OtherInterface): OtherInterface
-        referenceLegacyType(legacyType: LegacyType): LegacyType
 
 Kotlin
     ExternalTypePackages

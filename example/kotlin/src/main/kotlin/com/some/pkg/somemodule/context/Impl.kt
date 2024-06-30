@@ -12,5 +12,6 @@ class SomeModuleImpl: ContextModule {
             .setImpl(SomeEmptyInterface::class.java, SomeEmptyInterfaceLogic::class.java)
             .setImpl(SomeInterface::class.java, SomeInterfaceLogic::class.java)
             .setImpl(SomeInterface2::class.java, SomeInterface2Logic::class.java)
+            .setImpl(SomeInterface3::class.java, SomeInterface3Logic::class.java)
     }
 }

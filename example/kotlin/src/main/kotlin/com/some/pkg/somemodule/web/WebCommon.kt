@@ -6,15 +6,14 @@ import com.some.pkg.somemodule.api.*
 
 class SomeModuleWebServerUrl(val value: String)
 
+class SomeInterfaceSomeEmptyMethodRequest()
 class SomeInterfaceSomeCommandRequest(val id: SomeId, val amount: Int)
 class SomeInterfaceSomeQueryRequest(val id: SomeId)
 class SomeInterfaceOptMethodRequest(val optId: SomeId?)
-class SomeInterface2ReferenceInterfaceRequest(val empty: SomeEmptyInterface)
-class SomeInterface2ReferenceOtherInterfaceRequest(val other: OtherInterface)
+class SomeInterface2ReferenceOtherClassRequest(val other: OtherClass)
 class SomeInterface2ReferenceLegacyTypeRequest(val legacyType: com.some.pkg.legacy.LegacyType)
 
 class SomeInterfaceSomeQueryResponse(val value: SomeClass)
 class SomeInterfaceOptMethodResponse(val value: SomeClass?)
-class SomeInterface2ReferenceInterfaceResponse(val value: SomeEmptyInterface)
-class SomeInterface2ReferenceOtherInterfaceResponse(val value: OtherInterface)
+class SomeInterface2ReferenceOtherClassResponse(val value: OtherClass)
 class SomeInterface2ReferenceLegacyTypeResponse(val value: com.some.pkg.legacy.LegacyType)
