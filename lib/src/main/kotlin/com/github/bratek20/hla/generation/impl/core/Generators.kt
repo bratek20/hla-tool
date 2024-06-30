@@ -118,6 +118,14 @@ abstract class DirectoryGenerator
     private lateinit var fileGenerators: List<FileGenerator>
     private lateinit var directoryGenerators: List<DirectoryGenerator>
 
+    //TODO-REF current abstraction seems off
+    // directory should not have mode, it simply is generated if has some file or directory
+    // so maybe it belongs only in FileGenerator
+    // but then ModulePartGenerator logic should be in DirectoryGenerator I guess
+    final override fun mode(): GeneratorMode {
+        return GeneratorMode.START_AND_UPDATE
+    }
+
     override fun init(c: ModuleGenerationContext, velocityPath: String) {
         super.init(c, velocityPath)
 

@@ -25,10 +25,6 @@ class TestsGenerator: DirectoryGenerator() {
         return "Tests"
     }
 
-    override fun mode(): GeneratorMode {
-        return GeneratorMode.ONLY_START
-    }
-
     override fun velocityDirPath(): String {
         return "tests"
     }
