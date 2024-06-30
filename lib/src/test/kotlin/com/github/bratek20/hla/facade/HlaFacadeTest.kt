@@ -359,7 +359,11 @@ class HlaFacadeTest {
                 "api/Exceptions.kt generated",
                 "api/Interfaces.kt generated",
                 "impl/Logic.kt generated",
+                "web/WebCommon.kt generated",
+                "web/WebClient.kt generated",
+                "web/WebServer.kt generated",
                 "context/Impl.kt generated",
+                "context/Web.kt generated",
                 "fixtures/Builders.kt generated",
                 "fixtures/Diffs.kt generated",
                 "fixtures/Asserts.kt generated",
@@ -381,6 +385,10 @@ class HlaFacadeTest {
                 "api/DataClasses.kt updated",
                 "api/Exceptions.kt updated",
                 "api/Interfaces.kt updated",
+                "web/WebCommon.kt updated",
+                "web/WebClient.kt updated",
+                "web/WebServer.kt updated",
+                "context/Web.kt updated",
                 "fixtures/Builders.kt updated",
                 "fixtures/Diffs.kt updated",
                 "fixtures/Asserts.kt updated",
@@ -453,30 +461,6 @@ class HlaFacadeTest {
 
         //then
         directoriesMock.assertWriteCount(12)
-    }
-
-    @Test
-    fun shouldUpdateRespectingGenerateWebProperty() {
-        //given
-        val (directoriesMock, facade) = setup()
-
-        val args = ModuleOperationArgs.create(
-            moduleName = ModuleName("SomeModule"),
-            profileName = ProfileName("kotlinNoWeb"),
-            hlaFolderPath = hlaFolderPath(),
-        )
-
-        //when
-        facade.updateModule(args)
-
-        //then
-        directoriesMock.assertWriteCount(3)
-
-        val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
-        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(1, paths.expectedMainPath)
-        assertDirectoryExt(mainDirectory) {
-            hasNoDirectories = "web"
-        }
     }
 
     @Test

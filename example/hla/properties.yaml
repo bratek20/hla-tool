@@ -8,15 +8,6 @@ profiles:
         test: "src/test/kotlin/com/some/pkg"
         fixtures: "src/testFixtures/kotlin/com/some/pkg"
 
-  - name: "kotlinNoWeb"
-    language: "KOTLIN"
-    paths:
-      project: "../kotlin"
-      src:
-        main: "src/main/kotlin/com/some/pkg"
-        test: "src/test/kotlin/com/some/pkg"
-        fixtures: "src/testFixtures/kotlin/com/some/pkg"
-
   - name: "typeScript"
     language: "TYPE_SCRIPT"
     paths:

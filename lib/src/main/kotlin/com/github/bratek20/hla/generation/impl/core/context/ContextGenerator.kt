@@ -43,10 +43,6 @@ class ContextGenerator: DirectoryGenerator() {
         return "Context"
     }
 
-    override fun mode(): GeneratorMode {
-        return GeneratorMode.ONLY_START
-    }
-
     override fun velocityDirPath(): String {
         return "context"
     }
