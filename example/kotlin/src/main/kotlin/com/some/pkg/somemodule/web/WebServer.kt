@@ -29,3 +29,24 @@ class SomeInterfaceController(
     }
 }
 
+@RestController
+@RequestMapping("/someInterface2")
+class SomeInterface2Controller(
+    private val api: SomeInterface2,
+) {
+    @RequestMapping("/referenceInterface")
+    fun referenceInterface(@RequestBody request: SomeInterface2ReferenceInterfaceRequest): SomeInterface2ReferenceInterfaceResponse {
+        return SomeInterface2ReferenceInterfaceResponse(api.referenceInterface(request.empty))
+    }
+
+    @RequestMapping("/referenceOtherInterface")
+    fun referenceOtherInterface(@RequestBody request: SomeInterface2ReferenceOtherInterfaceRequest): SomeInterface2ReferenceOtherInterfaceResponse {
+        return SomeInterface2ReferenceOtherInterfaceResponse(api.referenceOtherInterface(request.other))
+    }
+
+    @RequestMapping("/referenceLegacyType")
+    fun referenceLegacyType(@RequestBody request: SomeInterface2ReferenceLegacyTypeRequest): SomeInterface2ReferenceLegacyTypeResponse {
+        return SomeInterface2ReferenceLegacyTypeResponse(api.referenceLegacyType(request.legacyType))
+    }
+}
+

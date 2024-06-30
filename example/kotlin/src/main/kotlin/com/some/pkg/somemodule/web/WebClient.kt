@@ -4,6 +4,8 @@ package com.some.pkg.somemodule.web
 
 import com.github.bratek20.infrastructure.httpclient.api.HttpClientFactory
 
+import com.some.pkg.othermodule.api.*
+
 import com.some.pkg.somemodule.api.*
 
 class SomeInterfaceWebClient(
@@ -20,6 +22,23 @@ class SomeInterfaceWebClient(
 
     override fun optMethod(optId: SomeId?): SomeClass? {
         return factory.create(url.value).post("/someInterface/optMethod", SomeInterfaceOptMethodRequest(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).value
+    }
+}
+
+class SomeInterface2WebClient(
+    private val factory: HttpClientFactory,
+    private val url: SomeModuleWebServerUrl,
+): SomeInterface2 {
+    override fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
+        return factory.create(url.value).post("/someInterface2/referenceInterface", SomeInterface2ReferenceInterfaceRequest(empty)).getBody(SomeInterface2ReferenceInterfaceResponse::class.java).value
+    }
+
+    override fun referenceOtherInterface(other: OtherInterface): OtherInterface {
+        return factory.create(url.value).post("/someInterface2/referenceOtherInterface", SomeInterface2ReferenceOtherInterfaceRequest(other)).getBody(SomeInterface2ReferenceOtherInterfaceResponse::class.java).value
+    }
+
+    override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
+        return factory.create(url.value).post("/someInterface2/referenceLegacyType", SomeInterface2ReferenceLegacyTypeRequest(legacyType)).getBody(SomeInterface2ReferenceLegacyTypeResponse::class.java).value
     }
 }
 
