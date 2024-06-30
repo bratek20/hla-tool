@@ -1,0 +1,22 @@
+package com.some.pkg.somemodule.web
+
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+import com.some.pkg.somemodule.api.*
+
+@RestController
+@RequestMapping(${interface.url})
+class SomeInterfaceController(
+    private val api: SomeInterface,
+) {
+#foreach($method in $interface.methods)
+    @RequestMapping(${method.url})
+    fun ${method.declaration} {
+        ${method.body}
+    }
+#if($foreach.hasNext)
+
+#end#end
+}

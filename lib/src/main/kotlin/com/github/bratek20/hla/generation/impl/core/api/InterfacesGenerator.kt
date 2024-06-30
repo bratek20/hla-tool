@@ -32,7 +32,11 @@ data class MethodView(
 
     // used by velocity
     fun argsPass(): String {
-        return args.joinToString(", ") { it.name }
+        return argsPassWithPrefix("")
+    }
+
+    fun argsPassWithPrefix(prefix: String): String {
+        return args.joinToString(", ") { prefix + it.name }
     }
 }
 

@@ -14,7 +14,7 @@ class SomeInterfaceController(
     private val api: SomeInterface,
 ) {
     @RequestMapping("/someCommand")
-    fun someCommand(@RequestBody request: SomeInterfaceSomeCommandRequest) {
+    fun someCommand(@RequestBody request: SomeInterfaceSomeCommandRequest): Unit {
         api.someCommand(request.id, request.amount)
     }
 
