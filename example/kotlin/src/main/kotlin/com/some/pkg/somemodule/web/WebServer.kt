@@ -2,13 +2,12 @@
 
 package com.some.pkg.somemodule.web
 
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 import com.some.pkg.somemodule.api.*
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
 
 @RestController
 @RequestMapping("/someInterface")
@@ -41,12 +40,12 @@ class SomeInterfaceController(
 class SomeInterface2Controller(
     private val api: SomeInterface2,
 ) {
-    @RequestMapping("/referenceOtherClass")
+    @PostMapping("/referenceOtherClass")
     fun referenceOtherClass(@RequestBody request: SomeInterface2ReferenceOtherClassRequest): SomeInterface2ReferenceOtherClassResponse {
         return SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.other))
     }
 
-    @RequestMapping("/referenceLegacyType")
+    @PostMapping("/referenceLegacyType")
     fun referenceLegacyType(@RequestBody request: SomeInterface2ReferenceLegacyTypeRequest): SomeInterface2ReferenceLegacyTypeResponse {
         return SomeInterface2ReferenceLegacyTypeResponse(api.referenceLegacyType(request.legacyType))
     }

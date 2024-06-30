@@ -1,6 +1,11 @@
 package ${packageName}.web
 
 import ${packageName}.api.*
+#if($imports.size() > 0)
+
+#foreach($import in $imports)
+import ${import}.api.*
+#end#end
 
 class ${moduleName}WebServerUrl(val value: String)
 

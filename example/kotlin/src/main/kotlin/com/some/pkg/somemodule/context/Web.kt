@@ -28,7 +28,7 @@ class SomeModuleWebServer: WebServerModule {
     override fun getControllers(): List<Class<*>> {
         return listOf(
             SomeInterfaceController::class.java,
-            SomeInterface2Controller::class.java
+            SomeInterface2Controller::class.java,
         )
     }
 }

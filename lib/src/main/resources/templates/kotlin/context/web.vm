@@ -27,7 +27,7 @@ class ${moduleName}WebServer: WebServerModule {
     override fun getControllers(): List<Class<*>> {
         return listOf(
         #foreach($name in $interfaceNames)
-            ${name}Controller::class.java
+            ${name}Controller::class.java,
         #end
         )
     }

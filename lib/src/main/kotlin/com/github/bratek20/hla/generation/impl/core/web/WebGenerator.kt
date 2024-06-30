@@ -36,7 +36,8 @@ class WebCommonGenerator: FileGenerator() {
         val exposedInterfaces = exposedInterfaces(c)
 
         val requests = exposedInterfaces.flatMap { interf ->
-            interf.methods.map { method ->
+            interf.methods.mapNotNull { method ->
+                if (!method.hasArgs()) return@mapNotNull null
                 "class ${requestName(interf.name, method)}(${method.argsDeclarationWithPrefix("val ")})"
             }
         }
@@ -97,7 +98,11 @@ class WebClientGenerator: FileGenerator() {
                 ""
 
         val postUrl = "\"/${pascalToCamelCase(interfaceName)}/${method.name}\""
-        val postBody = "${requestName(interfaceName, method)}(${method.argsPass()})"
+        val postBody = if(method.hasArgs())
+                "${requestName(interfaceName, method)}(${method.argsPass()})"
+            else
+                "null"
+
         return "${returnPart}factory.create(url.value).post($postUrl, $postBody)$getBodyPart"
     }
 }
@@ -138,7 +143,11 @@ class WebServerGenerator: FileGenerator() {
 
     private fun getDeclaration(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
         val returnType = if (method.returnType != "Unit") responseName(interfaceName, method) else "Unit"
-        return "${method.name}(@RequestBody request: ${requestName(interfaceName, method)}): $returnType"
+        val body = if(method.hasArgs())
+            "@RequestBody request: ${requestName(interfaceName, method)}"
+        else
+            ""
+        return "${method.name}($body): $returnType"
     }
 
     private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
