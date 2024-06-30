@@ -7,28 +7,30 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 import com.some.pkg.somemodule.api.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
 
 @RestController
 @RequestMapping("/someInterface")
 class SomeInterfaceController(
     private val api: SomeInterface,
 ) {
-    @RequestMapping("/someEmptyMethod")
-    fun someEmptyMethod(@RequestBody request: SomeInterfaceSomeEmptyMethodRequest): Unit {
+    @PostMapping("/someEmptyMethod")
+    fun someEmptyMethod(): Unit {
         api.someEmptyMethod()
     }
 
-    @RequestMapping("/someCommand")
+    @PostMapping("/someCommand")
     fun someCommand(@RequestBody request: SomeInterfaceSomeCommandRequest): Unit {
         api.someCommand(request.id, request.amount)
     }
 
-    @RequestMapping("/someQuery")
+    @PostMapping("/someQuery")
     fun someQuery(@RequestBody request: SomeInterfaceSomeQueryRequest): SomeInterfaceSomeQueryResponse {
         return SomeInterfaceSomeQueryResponse(api.someQuery(request.id))
     }
 
-    @RequestMapping("/optMethod")
+    @PostMapping("/optMethod")
     fun optMethod(@RequestBody request: SomeInterfaceOptMethodRequest): SomeInterfaceOptMethodResponse {
         return SomeInterfaceOptMethodResponse(api.optMethod(request.optId))
     }

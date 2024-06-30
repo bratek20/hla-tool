@@ -4,9 +4,11 @@ package com.some.pkg.somemodule.web
 
 import com.some.pkg.somemodule.api.*
 
+import com.some.pkg.othermodule.api.*
+import com.some.pkg.typesmodule.api.*
+
 class SomeModuleWebServerUrl(val value: String)
 
-class SomeInterfaceSomeEmptyMethodRequest()
 class SomeInterfaceSomeCommandRequest(val id: SomeId, val amount: Int)
 class SomeInterfaceSomeQueryRequest(val id: SomeId)
 class SomeInterfaceOptMethodRequest(val optId: SomeId?)

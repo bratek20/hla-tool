@@ -14,7 +14,7 @@ class SomeInterfaceWebClient(
     private val url: SomeModuleWebServerUrl,
 ): SomeInterface {
     override fun someEmptyMethod(): Unit {
-        factory.create(url.value).post("/someInterface/someEmptyMethod", SomeInterfaceSomeEmptyMethodRequest())
+        factory.create(url.value).post("/someInterface/someEmptyMethod", null)
     }
 
     override fun someCommand(id: SomeId, amount: Int): Unit {
