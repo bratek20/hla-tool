@@ -256,23 +256,21 @@ class HlaFacadeTest {
         val expectedMainFilesToSkipUpdate = setOf(
             "api/CustomTypes",
             "api/CustomTypesMapper",
-            "impl/Logic",
+            "context/Impl",
         )
 
         val expectedMainDirectoriesToSkipUpdate = setOf(
-            "context",
+            "impl",
         )
 
-        val expectedTestDirectoriesToSkipUpdate = setOf(
-            "tests"
-        )
+        //tests directory is not updated
 
         //when
         facade.updateModule(args)
 
         //then
         val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
-        directoriesMock.assertWriteCount(6)
+        directoriesMock.assertWriteCount(5)
 
         val mainDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
             1,
@@ -282,10 +280,10 @@ class HlaFacadeTest {
             2,
             paths.expectedFixturesPath
         )
-        val testsDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
-            3,
-            paths.expectedTestsPath
-        )
+//        val testsDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
+//            3,
+//            paths.expectedTestsPath
+//        )
 
         val mainDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
             4,
@@ -295,14 +293,9 @@ class HlaFacadeTest {
             5,
             paths.expectedFixturesPath
         )
-        val testsDirectoryUpdate = directoriesMock.assertWriteAndGetDirectory(
-            6,
-            paths.expectedTestsPath
-        )
 
         val mainCompareResult = DirectoriesLogic().compare(mainDirectoryStart, mainDirectoryUpdate)
         val fixturesCompareResult = DirectoriesLogic().compare(fixturesDirectoryStart, fixturesDirectoryUpdate)
-        val testsCompareResult = DirectoriesLogic().compare(testsDirectoryStart, testsDirectoryUpdate)
 
         val expectedMainDifference = expectedMainFilesToSkipUpdate.map {
                 "File somemodule/$it.kt not found in second directory"
@@ -315,13 +308,6 @@ class HlaFacadeTest {
         )
 
         assertThat(fixturesCompareResult.getDifferences()).isEmpty()
-
-        val expectedTestsDifference = expectedTestDirectoriesToSkipUpdate.map {
-            "Directory somemodule/$it not found in second directory"
-        }
-        assertThat(testsCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
-            expectedTestsDifference
-        )
     }
 
     @Nested
@@ -460,7 +446,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(12)
+        directoriesMock.assertWriteCount(8)
     }
 
     @Test

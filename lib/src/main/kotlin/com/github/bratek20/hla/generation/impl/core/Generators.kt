@@ -168,6 +168,10 @@ abstract class DirectoryGenerator
             dirGenerator.generateDirectory()?.let { directories.add(it) }
         }
 
+        if (files.isEmpty() && directories.isEmpty()) {
+            return null
+        }
+
         return Directory(
             name = language.adjustDirectoryName(name()),
             files = files,
