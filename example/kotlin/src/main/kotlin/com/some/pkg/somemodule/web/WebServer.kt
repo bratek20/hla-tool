@@ -28,3 +28,4 @@ class SomeInterfaceController(
         return SomeInterfaceOptMethodResponse(api.optMethod(request.optId))
     }
 }
+

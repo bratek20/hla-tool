@@ -4,6 +4,7 @@ import com.github.bratek20.infrastructure.httpclient.api.HttpClientFactory
 
 import ${packageName}.api.*
 
+#foreach($interface in $interfaces)
 class ${interface.name}WebClient(
     private val factory: HttpClientFactory,
     private val url: ${moduleName}WebServerUrl,
@@ -16,3 +17,5 @@ class ${interface.name}WebClient(
 
 #end#end
 }
+
+#end

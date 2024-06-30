@@ -22,3 +22,4 @@ class SomeInterfaceWebClient(
         return factory.create(url.value).post("/someInterface/optMethod", SomeInterfaceOptMethodRequest(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).value
     }
 }
+

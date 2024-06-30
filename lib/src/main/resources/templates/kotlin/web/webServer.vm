@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController
 
 import ${packageName}.api.*
 
+#foreach($interface in $interfaces)
 @RestController
 @RequestMapping(${interface.url})
 class ${interface.name}Controller(
@@ -20,3 +21,5 @@ class ${interface.name}Controller(
 
 #end#end
 }
+
+#end

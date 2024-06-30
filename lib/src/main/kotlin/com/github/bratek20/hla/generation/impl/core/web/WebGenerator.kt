@@ -71,7 +71,7 @@ class WebClientGenerator: FileGenerator() {
 
     override fun generateFileContent(): FileContent {
         return contentBuilder("webClient.vm")
-            .put("interface", exposedInterfaces(c).map { interf ->
+            .put("interfaces", exposedInterfaces(c).map { interf ->
                 InterfaceView(
                     interf.name,
                     interf.methods.map { method ->
@@ -81,7 +81,7 @@ class WebClientGenerator: FileGenerator() {
                         )
                     }
                 )
-            }[0])
+            })
             .build()
     }
 
@@ -120,7 +120,7 @@ class WebServerGenerator: FileGenerator() {
 
     override fun generateFileContent(): FileContent {
         return contentBuilder("webServer.vm")
-            .put("interface", exposedInterfaces(c).map { interf ->
+            .put("interfaces", exposedInterfaces(c).map { interf ->
                 InterfaceView(
                     name = interf.name,
                     methods = interf.methods.map { method ->
@@ -132,7 +132,7 @@ class WebServerGenerator: FileGenerator() {
                     },
                     url = "\"/${pascalToCamelCase(interf.name)}\""
                 )
-            }[0])
+            })
             .build()
     }
 
