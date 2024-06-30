@@ -3,12 +3,17 @@ package ${packageName}.web
 import com.github.bratek20.infrastructure.httpclient.api.HttpClientFactory
 
 import ${packageName}.api.*
+#if($imports.size() > 0)
+
+#foreach($import in $imports)
+import ${import}.api.*
+#end#end
 
 #foreach($interface in $interfaces)
 class ${interface.name}WebClient(
     private val factory: HttpClientFactory,
     private val url: ${moduleName}WebServerUrl,
-): SomeInterface {
+): ${interface.name} {
 #foreach($method in $interface.methods)
     override fun ${method.declaration} {
         ${method.body}
