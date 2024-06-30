@@ -16,6 +16,9 @@ class ModuleGenerationContext(
 ) {
     val module: ModuleDefinition
         get() = domain.module
+
+    val apiTypeFactory: ApiTypeFactory
+        get() = ApiTypeFactory(domain.queries, language.types())
 }
 
 interface ContentBuilderExtension{

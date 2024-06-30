@@ -22,7 +22,11 @@ data class MethodView(
 
     // used by velocity
     fun argsDeclaration(): String {
-        return args.joinToString(", ") { "${it.name}: ${it.type}" }
+        return argsDeclarationWithPrefix("")
+    }
+
+    fun argsDeclarationWithPrefix(prefix: String): String {
+        return args.joinToString(", ") { "$prefix${it.name}: ${it.type}" }
     }
 
     // used by velocity

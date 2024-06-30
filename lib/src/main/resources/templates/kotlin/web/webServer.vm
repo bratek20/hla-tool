@@ -1,15 +1,15 @@
-package com.some.pkg.somemodule.web
+package ${packageName}.web
 
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-import com.some.pkg.somemodule.api.*
+import ${packageName}.api.*
 
 @RestController
 @RequestMapping(${interface.url})
-class SomeInterfaceController(
-    private val api: SomeInterface,
+class ${interface.name}Controller(
+    private val api: ${interface.name},
 ) {
 #foreach($method in $interface.methods)
     @RequestMapping(${method.url})

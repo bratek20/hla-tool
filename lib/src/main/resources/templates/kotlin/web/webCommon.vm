@@ -1,0 +1,13 @@
+package ${packageName}.web
+
+import ${packageName}.api.*
+
+class ${moduleName}WebServerUrl(val value: String)
+
+#foreach($request in $requests)
+$request
+#end
+
+#foreach($respone in $responses)
+$respone
+#end

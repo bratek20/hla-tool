@@ -1,32 +1,58 @@
 package com.github.bratek20.hla.generation.impl.core.web
 
-import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
-import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.MethodView
 import com.github.bratek20.hla.utils.camelToPascalCase
 import com.github.bratek20.hla.utils.pascalToCamelCase
+
+private fun requestName(interfaceName: String, method: MethodView): String {
+    return "${interfaceName}${camelToPascalCase(method.name)}Request"
+}
+
+private fun responseName(interfaceName: String, method: MethodView): String {
+    return "${interfaceName}${camelToPascalCase(method.name)}Response"
+}
+
+private fun exposedInterfaces(c: ModuleGenerationContext): List<InterfaceView> {
+    val factory = InterfaceViewFactory(c.apiTypeFactory)
+
+    val web = c.module.getWebSubmodule()!!
+    return web.getExpose()
+        .map { name -> c.module.getInterfaces().first { it.getName() == name } }
+        .map { factory.create(it) }
+}
 
 class WebCommonGenerator: FileGenerator() {
     override fun name(): String {
         return "WebCommon"
     }
 
-    override fun generateFileContent(): FileContent? {
+    override fun generateFileContent(): FileContent {
+        val exposedInterfaces = exposedInterfaces(c)
+
+        val requests = exposedInterfaces.flatMap { interf ->
+            interf.methods.map { method ->
+                "class ${requestName(interf.name, method)}(${method.argsDeclarationWithPrefix("val ")})"
+            }
+        }
+
+        val responses = exposedInterfaces.flatMap { interf ->
+            interf.methods.mapNotNull { method ->
+                if (method.returnType == "Unit") return@mapNotNull null
+                "class ${responseName(interf.name, method)}(val value: ${method.returnType})"
+            }
+        }
+
         return contentBuilder("webCommon.vm")
+            .put("requests", requests)
+            .put("responses", responses)
             .build()
     }
-}
-
-fun requestName(interfaceName: String, method: MethodView): String {
-    return "${interfaceName}${camelToPascalCase(method.name)}Request"
-}
-
-fun responseName(interfaceName: String, method: MethodView): String {
-    return "${interfaceName}${camelToPascalCase(method.name)}Response"
 }
 
 class WebClientGenerator: FileGenerator() {
@@ -44,20 +70,14 @@ class WebClientGenerator: FileGenerator() {
     )
 
     override fun generateFileContent(): FileContent {
-        val web = c.module.getWebSubmodule()!!
-        val exposedInterfaces = web.getExpose()
-            .map { name -> c.module.getInterfaces().first { it.getName() == name } }
-
         return contentBuilder("webClient.vm")
-            .put("interface", exposedInterfaces.map { interf ->
-                val factory = InterfaceViewFactory(apiTypeFactory)
-                val api = factory.create(interf)
+            .put("interface", exposedInterfaces(c).map { interf ->
                 InterfaceView(
-                    interf.getName(),
-                    api.methods.map { method ->
+                    interf.name,
+                    interf.methods.map { method ->
                         MethodView(
                             getDeclaration(method),
-                            getBody(interf.getName(), method)
+                            getBody(interf.name, method)
                         )
                     }
                 )
@@ -99,24 +119,18 @@ class WebServerGenerator: FileGenerator() {
     )
 
     override fun generateFileContent(): FileContent {
-        val web = c.module.getWebSubmodule()!!
-        val exposedInterfaces = web.getExpose()
-            .map { name -> c.module.getInterfaces().first { it.getName() == name } }
-
         return contentBuilder("webServer.vm")
-            .put("interface", exposedInterfaces.map { interf ->
-                val factory = InterfaceViewFactory(apiTypeFactory)
-                val api = factory.create(interf)
+            .put("interface", exposedInterfaces(c).map { interf ->
                 InterfaceView(
-                    name = interf.getName(),
-                    methods = api.methods.map { method ->
+                    name = interf.name,
+                    methods = interf.methods.map { method ->
                         MethodView(
-                            getDeclaration(interf.getName(), method),
-                            getBody(interf.getName(), method),
+                            getDeclaration(interf.name, method),
+                            getBody(interf.name, method),
                             url = "\"/${method.name}\""
                         )
                     },
-                    url = "\"/${pascalToCamelCase(interf.getName())}\""
+                    url = "\"/${pascalToCamelCase(interf.name)}\""
                 )
             }[0])
             .build()
