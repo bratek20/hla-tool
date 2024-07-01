@@ -8,5 +8,8 @@ dependencies {
     implementation(libs.bratek20.architecture)
 
     implementation(project(":kotlin"))
-    testFixturesImplementation(testFixtures(project(":kotlin")))
+    testImplementation(testFixtures(project(":kotlin")))
+
+    testImplementation(testFixtures(libs.bratek20.architecture))
+    testImplementation(testFixtures(libs.bratek20.infrastructure))
 }
