@@ -2,6 +2,10 @@
 
 package com.some.pkg.somemodule.web
 
+import com.github.bratek20.architecture.serialization.api.Serializer
+import com.github.bratek20.architecture.serialization.api.Struct
+import com.github.bratek20.architecture.serialization.context.SerializationFactory
+
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,6 +18,8 @@ import com.some.pkg.somemodule.api.*
 class SomeInterfaceController(
     private val api: SomeInterface,
 ) {
+    private val serializer: Serializer = SerializationFactory.createSerializer()
+
     @PostMapping("/someEmptyMethod")
     fun someEmptyMethod(): Unit {
         api.someEmptyMethod()
@@ -25,8 +31,9 @@ class SomeInterfaceController(
     }
 
     @PostMapping("/someQuery")
-    fun someQuery(@RequestBody request: SomeInterfaceSomeQueryRequest): SomeInterfaceSomeQueryResponse {
-        return SomeInterfaceSomeQueryResponse(api.someQuery(request.id))
+    fun someQuery(@RequestBody rawRequest: Struct): Struct {
+        val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeQueryRequest::class.java)
+        return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.id)))
     }
 
     @PostMapping("/optMethod")
@@ -40,6 +47,8 @@ class SomeInterfaceController(
 class SomeInterface2Controller(
     private val api: SomeInterface2,
 ) {
+    private val serializer: Serializer = SerializationFactory.createSerializer()
+
     @PostMapping("/referenceOtherClass")
     fun referenceOtherClass(@RequestBody request: SomeInterface2ReferenceOtherClassRequest): SomeInterface2ReferenceOtherClassResponse {
         return SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.other))

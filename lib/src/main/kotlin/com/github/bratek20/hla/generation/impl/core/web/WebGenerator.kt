@@ -130,7 +130,7 @@ class WebServerGenerator: FileGenerator() {
                     name = interf.name,
                     methods = interf.methods.map { method ->
                         MethodView(
-                            getDeclaration(interf.name, method),
+                            getDeclaration(method),
                             getBody(interf.name, method),
                             url = "\"/${method.name}\""
                         )
@@ -141,10 +141,10 @@ class WebServerGenerator: FileGenerator() {
             .build()
     }
 
-    private fun getDeclaration(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
-        val returnType = if (method.returnType != "Unit") responseName(interfaceName, method) else "Unit"
+    private fun getDeclaration(method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+        val returnType = if (method.returnType != "Unit") "Struct" else "Unit"
         val body = if(method.hasArgs())
-            "@RequestBody request: ${requestName(interfaceName, method)}"
+            "@RequestBody rawRequest: Struct"
         else
             ""
         return "${method.name}($body): $returnType"
@@ -153,6 +153,11 @@ class WebServerGenerator: FileGenerator() {
     private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
         val prefix = if (method.returnType != "Unit") "return ${responseName(interfaceName, method)}(" else ""
         val suffix = if (method.returnType != "Unit") ")" else ""
+        if (method.name == "someQuery") {
+            val indent = "        "
+            return "val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeQueryRequest::class.java)\n" +
+                    "${indent}return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.id)))"
+        }
         return "${prefix}api.${method.name}(${method.argsPassWithPrefix("request.")})${suffix}"
     }
 }

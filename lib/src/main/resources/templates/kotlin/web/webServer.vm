@@ -1,5 +1,9 @@
 package ${packageName}.web
 
+import com.github.bratek20.architecture.serialization.api.Serializer
+import com.github.bratek20.architecture.serialization.api.Struct
+import com.github.bratek20.architecture.serialization.context.SerializationFactory
+
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,6 +17,8 @@ import ${packageName}.api.*
 class ${interface.name}Controller(
     private val api: ${interface.name},
 ) {
+    private val serializer: Serializer = SerializationFactory.createSerializer()
+
 #foreach($method in $interface.methods)
     @PostMapping(${method.url})
     fun ${method.declaration} {
