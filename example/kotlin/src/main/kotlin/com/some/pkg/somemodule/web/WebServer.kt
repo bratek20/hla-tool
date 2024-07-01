@@ -26,7 +26,7 @@ class SomeInterfaceController(
     }
 
     @PostMapping("/someCommand")
-    fun someCommand(@RequestBody request: SomeInterfaceSomeCommandRequest): Unit {
+    fun someCommand(@RequestBody rawRequest: Struct): Unit {
         api.someCommand(request.id, request.amount)
     }
 
@@ -37,7 +37,7 @@ class SomeInterfaceController(
     }
 
     @PostMapping("/optMethod")
-    fun optMethod(@RequestBody request: SomeInterfaceOptMethodRequest): SomeInterfaceOptMethodResponse {
+    fun optMethod(@RequestBody rawRequest: Struct): Struct {
         return SomeInterfaceOptMethodResponse(api.optMethod(request.optId))
     }
 }
@@ -50,12 +50,12 @@ class SomeInterface2Controller(
     private val serializer: Serializer = SerializationFactory.createSerializer()
 
     @PostMapping("/referenceOtherClass")
-    fun referenceOtherClass(@RequestBody request: SomeInterface2ReferenceOtherClassRequest): SomeInterface2ReferenceOtherClassResponse {
+    fun referenceOtherClass(@RequestBody rawRequest: Struct): Struct {
         return SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.other))
     }
 
     @PostMapping("/referenceLegacyType")
-    fun referenceLegacyType(@RequestBody request: SomeInterface2ReferenceLegacyTypeRequest): SomeInterface2ReferenceLegacyTypeResponse {
+    fun referenceLegacyType(@RequestBody rawRequest: Struct): Struct {
         return SomeInterface2ReferenceLegacyTypeResponse(api.referenceLegacyType(request.legacyType))
     }
 }
