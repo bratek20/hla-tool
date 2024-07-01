@@ -151,14 +151,18 @@ class WebServerGenerator: FileGenerator() {
     }
 
     private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
-        val prefix = if (method.returnType != "Unit") "return ${responseName(interfaceName, method)}(" else ""
+        val firstLine = if (method.hasArgs()) "val request = serializer.fromStruct(rawRequest, ${requestName(interfaceName, method)}::class.java)" else "// no request needed"
+
+        val prefix = if (method.returnType != "Unit") "return serializer.asStruct(${responseName(interfaceName, method)}(" else ""
+        val apiCall = "api.${method.name}(${method.argsPassWithPrefix("request.")})"
         val suffix = if (method.returnType != "Unit") ")" else ""
-        if (method.name == "someQuery") {
-            val indent = "        "
-            return "val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeQueryRequest::class.java)\n" +
-                    "${indent}return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.id)))"
-        }
-        return "${prefix}api.${method.name}(${method.argsPassWithPrefix("request.")})${suffix}"
+        val secondLine = "${prefix}${apiCall}${suffix}"
+
+        val secondLineIndent = "        "
+
+        return "$firstLine\n" +
+                "$secondLineIndent$secondLine"
+
     }
 }
 

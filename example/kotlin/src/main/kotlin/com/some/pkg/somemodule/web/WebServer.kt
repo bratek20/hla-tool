@@ -22,23 +22,26 @@ class SomeInterfaceController(
 
     @PostMapping("/someEmptyMethod")
     fun someEmptyMethod(): Unit {
+        // no request needed
         api.someEmptyMethod()
     }
 
     @PostMapping("/someCommand")
     fun someCommand(@RequestBody rawRequest: Struct): Unit {
+        val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeCommandRequest::class.java)
         api.someCommand(request.id, request.amount)
     }
 
     @PostMapping("/someQuery")
     fun someQuery(@RequestBody rawRequest: Struct): Struct {
         val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeQueryRequest::class.java)
-        return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.id)))
+        return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.id))
     }
 
     @PostMapping("/optMethod")
     fun optMethod(@RequestBody rawRequest: Struct): Struct {
-        return SomeInterfaceOptMethodResponse(api.optMethod(request.optId))
+        val request = serializer.fromStruct(rawRequest, SomeInterfaceOptMethodRequest::class.java)
+        return serializer.asStruct(SomeInterfaceOptMethodResponse(api.optMethod(request.optId))
     }
 }
 
@@ -51,12 +54,14 @@ class SomeInterface2Controller(
 
     @PostMapping("/referenceOtherClass")
     fun referenceOtherClass(@RequestBody rawRequest: Struct): Struct {
-        return SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.other))
+        val request = serializer.fromStruct(rawRequest, SomeInterface2ReferenceOtherClassRequest::class.java)
+        return serializer.asStruct(SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.other))
     }
 
     @PostMapping("/referenceLegacyType")
     fun referenceLegacyType(@RequestBody rawRequest: Struct): Struct {
-        return SomeInterface2ReferenceLegacyTypeResponse(api.referenceLegacyType(request.legacyType))
+        val request = serializer.fromStruct(rawRequest, SomeInterface2ReferenceLegacyTypeRequest::class.java)
+        return serializer.asStruct(SomeInterface2ReferenceLegacyTypeResponse(api.referenceLegacyType(request.legacyType))
     }
 }
 
