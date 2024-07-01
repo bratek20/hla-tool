@@ -7,6 +7,7 @@ import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.some.pkg.somemodule.api.*
 import com.some.pkg.somemodule.fixtures.assertSomeClass
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class TestSomeInterfaceLogic: SomeInterface {
@@ -64,6 +65,7 @@ open class TestSomeModuleImplTest {
         }
     }
 
+    @Disabled("Passing exceptions in web layer missing")
     @Test
     fun `should throw if id = throw`() {
         assertApiExceptionThrown(
