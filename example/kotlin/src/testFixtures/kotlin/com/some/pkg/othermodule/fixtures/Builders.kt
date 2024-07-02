@@ -4,6 +4,10 @@ package com.some.pkg.othermodule.fixtures
 
 import com.some.pkg.othermodule.api.*
 
+fun otherId(value: Int = 0): OtherId {
+    return OtherId(value)
+}
+
 data class OtherPropertyDef(
     var id: Int = 0,
     var name: String = "someValue",
