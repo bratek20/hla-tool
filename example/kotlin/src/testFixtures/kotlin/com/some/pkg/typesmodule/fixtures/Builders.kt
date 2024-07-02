@@ -4,6 +4,10 @@ package com.some.pkg.typesmodule.fixtures
 
 import com.some.pkg.typesmodule.api.*
 
+fun date(value: String = "01/01/1970 00:00"): Date {
+    return Date(value)
+}
+
 data class DateRangeDef(
     var from: String = "01/01/1970 00:00",
     var to: String = "01/01/2030 00:00",

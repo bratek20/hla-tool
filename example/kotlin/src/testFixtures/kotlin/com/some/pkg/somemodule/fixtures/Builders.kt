@@ -9,6 +9,14 @@ import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
 
+fun someId(value: String = "someValue"): SomeId {
+    return SomeId(value)
+}
+
+fun someId2(value: Int = 0): SomeId2 {
+    return SomeId2(value)
+}
+
 data class SomePropertyDef(
     var other: (OtherPropertyDef.() -> Unit) = {},
     var id2: Int? = null,
