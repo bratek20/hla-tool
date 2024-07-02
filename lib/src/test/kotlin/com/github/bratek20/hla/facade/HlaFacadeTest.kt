@@ -353,7 +353,7 @@ class HlaFacadeTest {
                 "fixtures/Builders.kt generated",
                 "fixtures/Diffs.kt generated",
                 "fixtures/Asserts.kt generated",
-                "tests/ApiTest.kt generated",
+                "tests/ImplTest.kt generated",
             )
         }
 

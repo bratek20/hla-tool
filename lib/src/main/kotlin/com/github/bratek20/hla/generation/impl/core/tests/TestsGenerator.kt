@@ -5,9 +5,9 @@ import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 
-class ApiTestGenerator: FileGenerator() {
+class ImplTestGenerator: FileGenerator() {
     override fun name(): String {
-        return "ApiTest"
+        return "ImplTest"
     }
 
     override fun mode(): GeneratorMode {
@@ -15,7 +15,7 @@ class ApiTestGenerator: FileGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
-        return contentBuilder("apiTest.vm")
+        return contentBuilder("implTest.vm")
             .build()
     }
 }
@@ -31,7 +31,7 @@ class TestsGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            ApiTestGenerator(),
+            ImplTestGenerator(),
         )
     }
 }

@@ -1,9 +1,9 @@
-package com.other.pkg.importingmodule.tests
+package com.some.pkg.somemodule.tests
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ImportingModuleApiTest {
+class SomeModuleImplTest {
     @Test
     fun `TODO`() {
         assertThat(true).withFailMessage("TODO").isEqualTo(false)

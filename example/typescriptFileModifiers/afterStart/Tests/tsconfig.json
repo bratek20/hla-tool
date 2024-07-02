@@ -7,7 +7,7 @@
         "fixtures/OtherModule/Fixtures/Diffs.ts",
         "fixtures/OtherModule/Fixtures/Asserts.ts",
 
-        "test/OtherModule/Tests/ApiTest.ts",
+        "test/OtherModule/Tests/ImplTest.ts",
         //OtherModule end
     ]
 }
