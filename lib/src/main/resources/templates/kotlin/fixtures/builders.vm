@@ -8,6 +8,12 @@ import ${import}.fixtures.*
 #end
 
 import ${packageName}.api.*
+#foreach($b in $simpleBuilders)
+
+fun ${b.declaration()} {
+    ${b.body()}
+}
+#end
 #foreach($b in $builders)
 
 data class ${b.defName()}(

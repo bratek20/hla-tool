@@ -36,10 +36,18 @@ class BaseDefType(
     }
 }
 
+abstract class StructureDefType<T: StructureApiType>(
+    api: T,
+) : DefType<T>(api) {
+    fun funName(): String {
+        return pascalToCamelCase(api.name())
+    }
+}
+
 abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseDefType
-) : DefType<T>(api) {
+) : StructureDefType<T>(api) {
     override fun build(variableName: String): String {
         return api.deserialize(variableName)
     }
@@ -97,11 +105,7 @@ open class DefField(
 open class ComplexStructureDefType(
     api: ComplexStructureApiType<*>,
     val fields: List<DefField>
-) : DefType<ComplexStructureApiType<*>>(api) {
-    fun funName(): String {
-        return pascalToCamelCase(api.name())
-    }
-
+) : StructureDefType<ComplexStructureApiType<*>>(api) {
     fun defName(): String {
         return api.name() + "Def"
     }

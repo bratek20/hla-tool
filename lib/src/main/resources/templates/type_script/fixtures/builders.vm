@@ -1,4 +1,10 @@
 namespace ${moduleName}.Builder {
+#foreach($b in $simpleBuilders)
+    export function ${b.declaration()} {
+        ${b.body()}
+    }
+
+#end
 #foreach($b in $builders)
     export interface ${b.defName()} {
         #foreach($field in $b.fields)

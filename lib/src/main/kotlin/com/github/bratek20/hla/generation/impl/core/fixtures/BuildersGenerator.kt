@@ -8,19 +8,38 @@ class BuildersGenerator: FileGenerator() {
         return "Builders"
     }
 
+    data class SimpleBuilder(
+        val def: SimpleStructureDefType<*>
+    ) {
+        // used by velocity
+        fun declaration(): String {
+            return "${def.funName()}(value: ${def.name()} = ${def.defaultValue()}): ${def.api.name()}"
+        }
+
+        // used by velocity
+        fun body(): String {
+            val call = def.api.languageTypes.classConstructorCall(def.api.name())
+            return "return ${call}(value)"
+        }
+    }
+
     override fun generateFileContent(): FileContent? {
-        val defTypes = modules.allComplexStructureDefinitions(module)
-        if (defTypes.isEmpty()) {
+        val defTypes = modules.allStructureDefinitions(module)
+        if (defTypes.areAllEmpty()) {
             return null
         }
 
         val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
 
-        val builders = (defTypes).map {
+        val simpleBuilders = (defTypes.simple).map {
+            SimpleBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as SimpleStructureDefType<*>)
+        }
+        val builders = (defTypes.complex).map {
             defTypeFactory.create(apiTypeFactory.create(it))
         }
 
         return contentBuilder("builders.vm")
+            .put("simpleBuilders", simpleBuilders)
             .put("builders", builders)
             .build()
     }

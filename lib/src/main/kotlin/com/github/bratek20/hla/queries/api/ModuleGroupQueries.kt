@@ -153,6 +153,21 @@ class ModuleGroupQueries(
         }
     }
 
+    data class Structures(
+        val simple: List<SimpleStructureDefinition>,
+        val complex: List<ComplexStructureDefinition>
+    ) {
+        fun areAllEmpty(): Boolean {
+            return simple.isEmpty() && complex.isEmpty()
+        }
+    }
+    fun allStructureDefinitions(module: ModuleDefinition): Structures {
+        return Structures(
+            simple = allSimpleStructureDefinitions(module),
+            complex = allComplexStructureDefinitions(module)
+        )
+    }
+
     fun allSimpleStructureDefinitions(module: ModuleDefinition): List<SimpleStructureDefinition> {
         return module.getSimpleValueObjects() + module.getSimpleCustomTypes()
     }
