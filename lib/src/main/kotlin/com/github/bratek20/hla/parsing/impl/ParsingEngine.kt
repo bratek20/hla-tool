@@ -36,8 +36,9 @@ class ColonAssignment(
     indent: Int,
     val name: String,
     val value: String,
+    val value2: String? = null,
     val defaultValue: String? = null,
-    val attributes: List<Attribute>
+    val attributes: List<Attribute> = emptyList()
 ) : ParsedLeaf(indent)
 
 class EqualsAssignment(
@@ -153,10 +154,23 @@ class ParsingEngine {
                 defaultValue = rest.substringAfter("=").trim()
                 rest = rest.substringBefore("=").trim()
             }
+
+            val value: String
+            val value2: String?
+            if (rest.contains(":")) {
+                val split = rest.split(":")
+                value = split[0].trim()
+                value2 = split[1].trim()
+            } else {
+                value = rest.trim()
+                value2 = null
+            }
+
             return ColonAssignment(
                 indent = indent,
                 name = name,
-                value = rest.trim(),
+                value = value,
+                value2 = value2,
                 attributes = attributes,
                 defaultValue = defaultValue
             )

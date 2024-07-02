@@ -84,6 +84,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
                     + properties.valueObjects.simple,
             complexValueObjects = valueObjects.complex
                     + interfacesOutput.complexValueObjects
+                        .map { it.definition }
                     + properties.valueObjects.complex,
             interfaces = interfacesOutput.interfaces,
             propertyKeys = propertyKeys
@@ -91,8 +92,8 @@ class ModuleGroupParserLogic: ModuleGroupParser {
             enums = enums,
             simpleCustomTypes = customTypes.simple,
             complexCustomTypes = customTypes.complex,
-            dataClasses = dataClasses
-                    + data.classes,
+            dataClasses = dataClasses.map { it.definition }
+                    + data.classes.map { it.definition },
             dataKeys = dataKeys
                     + data.keys,
             implSubmodule = parseImplSubmodule(elements),
@@ -131,7 +132,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
     }
 
     data class ParsedData(
-        val classes: List<ComplexStructureDefinition>,
+        val classes: List<ParseComplexStructureResult>,
         val keys: List<KeyDefinition>,
     )
     private fun parseData(elements: List<ParsedElement>): ParsedData {
@@ -180,8 +181,8 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         val complex = parseComplexStructureDefinitions(sectionName, elements)
 
         return Structures(
-            simple = simple,
-            complex = complex
+            simple = simple + complex.flatMap { it.inlineSimpleVOs },
+            complex = complex.map { it.definition }
         )
     }
 
@@ -196,7 +197,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         } ?: emptyList()
     }
 
-    private fun parseComplexStructureDefinitions(sectionName: String, elements: List<ParsedElement>): List<ComplexStructureDefinition> {
+    private fun parseComplexStructureDefinitions(sectionName: String, elements: List<ParsedElement>): List<ParseComplexStructureResult> {
         val voSection = elements.find { it is Section && it.name == sectionName } as Section?
         return parseComplexStructureDefinitions(voSection)
     }
@@ -219,10 +220,19 @@ class ModuleGroupParserLogic: ModuleGroupParser {
             wrappers = emptyList()
         )
     }
-    private fun parseComplexStructureDefinition(section: Section): ComplexStructureDefinition {
-        return ComplexStructureDefinition(
+
+    data class ParseComplexStructureResult(
+        val definition: ComplexStructureDefinition,
+        val inlineSimpleVOs: List<SimpleStructureDefinition>
+    )
+    private fun parseComplexStructureDefinition(section: Section): ParseComplexStructureResult {
+        val inlineSimpleVOs = mutableListOf<SimpleStructureDefinition>()
+        val def = ComplexStructureDefinition(
             name = section.name,
             fields = section.elements.filterIsInstance<ColonAssignment>().map {
+                if (it.value2 != null) {
+                    inlineSimpleVOs.add(SimpleStructureDefinition(it.value, it.value2, emptyList()))
+                }
                 FieldDefinition(
                     name = it.name,
                     type = parseType(it.value),
@@ -230,6 +240,11 @@ class ModuleGroupParserLogic: ModuleGroupParser {
                     defaultValue = it.defaultValue
                 )
             }
+        )
+
+        return ParseComplexStructureResult(
+            definition = def,
+            inlineSimpleVOs = inlineSimpleVOs
         )
     }
 
@@ -258,12 +273,12 @@ class ModuleGroupParserLogic: ModuleGroupParser {
 
     data class ParseInterfaceOutput(
         val interfaces: List<InterfaceDefinition>,
-        val complexValueObjects: List<ComplexStructureDefinition>
+        val complexValueObjects: List<ParseComplexStructureResult>
     )
     private fun parseInterfaces(elements: List<ParsedElement>): ParseInterfaceOutput {
         val interfacesSection = elements.find { it is Section && it.name == "Interfaces" } as Section?
 
-        val valueObjects = mutableListOf<ComplexStructureDefinition>()
+        val valueObjects = mutableListOf<ParseComplexStructureResult>()
 
         val interfaces = interfacesSection?.elements?.filterIsInstance<Section>()?.map {
             it.elements.filterIsInstance<Section>().forEach {
@@ -296,7 +311,7 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         return keys
     }
 
-    private fun parseComplexStructureDefinitions(section: Section?): List<ComplexStructureDefinition> {
+    private fun parseComplexStructureDefinitions(section: Section?): List<ParseComplexStructureResult> {
         return section?.elements?.filterIsInstance<Section>()?.map {
             parseComplexStructureDefinition(it)
         } ?: emptyList()
@@ -318,10 +333,11 @@ class ModuleGroupParserLogic: ModuleGroupParser {
         val implSection = elements.find { it is Section && it.name == "Impl" } as Section?
         return implSection?.let {
             val dataClasses = parseComplexStructureDefinitions("DataClasses", implSection.elements)
+                .map { it.definition }
             val keys = parseKeys("DataKeys", implSection.elements)
             val data = parseData(implSection.elements)
             return ImplSubmoduleDefinition(
-                dataClasses = dataClasses + data.classes,
+                dataClasses = dataClasses + data.classes.map { it.definition },
                 dataKeys = keys + data.keys
             )
         }
