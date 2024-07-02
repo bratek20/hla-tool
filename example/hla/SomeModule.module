@@ -9,11 +9,10 @@ CustomTypes
 
 ValueObjects
     SomeId: string
-    SomeId2: int
 
     SomeProperty
         other: OtherProperty
-        id2: SomeId2?
+        id2: SomeId2?: int
         range: DateRange?
         doubleExample: double
         longExample: long

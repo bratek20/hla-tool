@@ -593,4 +593,42 @@ class ModuleGroupParserTest {
             }
         }
     }
+
+    @Test
+    fun `should parse inlined simple vos`() {
+        val module = parseSingleModule("inlined-vos")
+
+        assertModuleDefinition(module) {
+            simpleValueObjects = listOf(
+                {
+                    name = "SomeId"
+                    typeName = "string"
+                },
+                {
+                    name = "SomeId2"
+                    typeName = "string"
+                }
+            )
+            complexValueObjects = listOf {
+                name = "SomeClass"
+                fields = listOf(
+                    {
+                        name = "id"
+                        type = {
+                            name = "SomeId"
+                        }
+                    },
+                    {
+                        name = "id2"
+                        type = {
+                            name = "SomeId2"
+                            wrappers = listOf(
+                                TypeWrapper.OPTIONAL
+                            )
+                        }
+                    }
+                )
+            }
+        }
+    }
 }
