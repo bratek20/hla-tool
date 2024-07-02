@@ -64,7 +64,7 @@ open class TestSomeModuleImplTest {
             id = "id"
         }
     }
-    
+
     @Test
     fun `should throw if id = throw`() {
         assertApiExceptionThrown(
