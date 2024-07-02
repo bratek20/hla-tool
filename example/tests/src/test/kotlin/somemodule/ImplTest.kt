@@ -64,8 +64,7 @@ open class TestSomeModuleImplTest {
             id = "id"
         }
     }
-
-    @Disabled("Passing exceptions in web layer missing")
+    
     @Test
     fun `should throw if id = throw`() {
         assertApiExceptionThrown(
