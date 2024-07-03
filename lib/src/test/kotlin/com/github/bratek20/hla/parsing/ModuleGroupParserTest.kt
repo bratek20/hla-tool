@@ -661,7 +661,7 @@ class ModuleGroupParserTest {
                         }
                     },
                     {
-                        name = "id2"
+                        name = "optId2"
                         type = {
                             name = "SomeId2"
                             wrappers = listOf(

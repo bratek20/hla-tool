@@ -236,7 +236,7 @@ class ModuleGroupParserLogic(
             name = section.name,
             fields = section.elements.filterIsInstance<ColonAssignment>().map {
                 if (it.value2 != null) {
-                    inlineSimpleVOs.add(SimpleStructureDefinition(it.value, it.value2, emptyList()))
+                    inlineSimpleVOs.add(SimpleStructureDefinition(parseType(it.value).getName(), it.value2, emptyList()))
                 }
                 FieldDefinition(
                     name = it.name,

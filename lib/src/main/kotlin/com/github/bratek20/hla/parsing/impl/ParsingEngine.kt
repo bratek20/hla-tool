@@ -67,6 +67,7 @@ class ParsedMapping(
 class ParsingEngine {
     fun parseElements(content: FileContent): List<ParsedElement> {
         val initialElements = content.lines
+            .map { replaceTabsWithSpaces(it) }
             .map { removeComments(it) }
             .filter { it.isNotBlank() }
             .map { parseElement(it) }
@@ -103,6 +104,10 @@ class ParsingEngine {
         } else {
             line
         }
+    }
+
+    private fun replaceTabsWithSpaces(line: String): String {
+        return line.replace("\t", "    ")
     }
     
     private fun parseElement(line: String): ParsedElement {
