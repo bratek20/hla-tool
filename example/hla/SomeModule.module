@@ -10,6 +10,7 @@ CustomTypes
 ValueObjects
     SomeId: string
     SomeId2: int
+    SomeIntWrapper: int
 
     SomeProperty
         other: OtherProperty

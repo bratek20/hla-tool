@@ -28,6 +28,20 @@ class SomeId2 {
     }
 }
 
+class SomeIntWrapper {
+    constructor(
+        public readonly value: number
+    ) {}
+
+    equals(other: SomeIntWrapper): boolean {
+        return this.value === other.value
+    }
+
+    toString(): string {
+        return this.value.toString()
+    }
+}
+
 class SomeProperty {
     private other = new OtherProperty
     private id2? = NUMBER

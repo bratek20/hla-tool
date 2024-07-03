@@ -13,6 +13,10 @@ data class SomeId2(
     val value: Int
 )
 
+data class SomeIntWrapper(
+    val value: Int
+)
+
 data class SomeProperty(
     private val other: OtherProperty,
     private val id2: Int?,

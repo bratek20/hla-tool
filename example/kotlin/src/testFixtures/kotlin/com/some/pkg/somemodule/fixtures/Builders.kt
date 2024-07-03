@@ -17,6 +17,10 @@ fun someId2(value: Int = 0): SomeId2 {
     return SomeId2(value)
 }
 
+fun someIntWrapper(value: Int = 0): SomeIntWrapper {
+    return SomeIntWrapper(value)
+}
+
 data class SomePropertyDef(
     var other: (OtherPropertyDef.() -> Unit) = {},
     var id2: Int? = null,

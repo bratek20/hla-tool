@@ -22,6 +22,12 @@ fun assertSomeId2(given: SomeId2, expected: Int) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+
+fun assertSomeIntWrapper(given: SomeIntWrapper, expected: Int) {
+    val diff = diffSomeIntWrapper(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
     val diff = diffSomeProperty(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

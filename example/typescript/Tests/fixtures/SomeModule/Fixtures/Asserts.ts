@@ -11,6 +11,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someIntWrapper(given: SomeIntWrapper, expected: number) {
+        const diff = diffSomeIntWrapper(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
         const diff = diffSomeProperty(given, expected)
         AssertEquals(diff, "", diff)
