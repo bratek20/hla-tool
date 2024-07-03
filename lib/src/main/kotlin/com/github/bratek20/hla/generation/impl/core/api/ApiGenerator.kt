@@ -7,12 +7,12 @@ import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.utils.camelToScreamingSnakeCase
 
-class MacrosGenerator: FileGenerator() {
+class MacrosBuilder: FileGenerator() {
     override fun name(): String {
         return "Macros"
     }
 
-    //TODO-REF: workaround to not build file content but loading macros
+    //TODO-REF: workaround to not generate file content but loading macros
     override fun generateFileContent(): FileContent? {
         contentBuilder("macros.vm")
             .build()
@@ -251,7 +251,7 @@ class ApiGenerator: DirectoryGenerator() {
     }
 }
 
-class MacroGenerator: DirectoryGenerator() {
+class MacrosGenerator: DirectoryGenerator() {
     override fun name(): String {
         return "Macros"
     }
@@ -262,7 +262,7 @@ class MacroGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            MacrosGenerator()
+            MacrosBuilder()
         )
     }
 }
