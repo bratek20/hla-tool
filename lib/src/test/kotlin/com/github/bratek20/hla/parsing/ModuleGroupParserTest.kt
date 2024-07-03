@@ -13,14 +13,28 @@ import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import com.github.bratek20.hla.parsing.context.ParsingImpl
 import com.github.bratek20.hla.parsing.fixtures.assertModuleGroup
+import com.github.bratek20.logs.LoggerMock
+import com.github.bratek20.logs.LogsMocks
 import org.assertj.core.api.Assertions.assertThatCode
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class ModuleGroupParserTest {
-    private val parser = someContextBuilder()
-        .withModule(ParsingImpl())
-        .build()
-        .get(ModuleGroupParser::class.java)
+    private lateinit var parser: ModuleGroupParser
+    private lateinit var loggerMock: LoggerMock
+
+    @BeforeEach
+    fun setUp() {
+        val c = someContextBuilder()
+            .withModules(
+                ParsingImpl(),
+                LogsMocks()
+            )
+            .build()
+
+        parser = c.get(ModuleGroupParser::class.java)
+        loggerMock = c.get(LoggerMock::class.java)
+    }
 
     private fun parseSingleGroup(pathSuffix: String): List<ModuleDefinition> {
         val fullPath = "src/test/resources/parsing/$pathSuffix"
@@ -37,7 +51,7 @@ class ModuleGroupParserTest {
     }
 
     @Test
-    fun `should parse two modules`() {
+    fun `should parse two modules and log about it`() {
         val modules = parseSingleGroup("two-modules")
 
         assertModules(modules, listOf(
@@ -276,6 +290,11 @@ class ModuleGroupParserTest {
                 }
             }
         ))
+
+        loggerMock.assertInfos(
+            "Parsing module OtherModule",
+            "Parsing module SomeModule"
+        )
     }
 
     @Test
@@ -457,11 +476,34 @@ class ModuleGroupParserTest {
         })
     }
 
+
+    //useful to start crash investigation, feel free to modify crash/SomeModule.module
     @Test
-    fun `should not crash for bug`() {
-        assertThatCode {
-            parseSingleGroup("bug")
-        }.doesNotThrowAnyException()
+    fun `should not crash for provided module`() {
+        assertModuleDefinition(parseSingleModule("crash")) {
+            complexValueObjects = listOf {
+                name = "OfferItemsTD"
+            }
+        }
+
+        loggerMock.assertErrors()
+    }
+
+    @Test
+    fun `should handle tab as 4 spaces to avoid errors`() {
+        assertModuleDefinition(parseSingleModule("tab-bug")) {
+            complexValueObjects = listOf {
+                name = "ClassWithTabbedField"
+                fields = listOf {
+                    name = "tabbedField"
+                    type = {
+                        name = "string"
+                    }
+                }
+            }
+        }
+
+        loggerMock.assertErrors()
     }
 
     @Test

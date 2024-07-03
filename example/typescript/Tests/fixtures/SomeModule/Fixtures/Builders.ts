@@ -9,6 +9,10 @@ namespace SomeModule.Builder {
         return new SomeId2(value)
     }
 
+    export function someIntWrapper(value: number = 0): SomeIntWrapper {
+        return new SomeIntWrapper(value)
+    }
+
     export interface SomePropertyDef {
         other?: OtherModule.Builder.OtherPropertyDef,
         id2?: number,

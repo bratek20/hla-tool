@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.api.SimpleCustomApiType
 
 class BuildersGenerator: FileGenerator() {
     override fun name(): String {
@@ -18,8 +19,7 @@ class BuildersGenerator: FileGenerator() {
 
         // used by velocity
         fun body(): String {
-            val call = def.api.languageTypes.classConstructorCall(def.api.name())
-            return "return ${call}(value)"
+            return "return ${def.api.constructorCall()}(value)"
         }
     }
 

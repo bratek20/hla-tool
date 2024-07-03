@@ -7,11 +7,27 @@ import com.some.pkg.typesmodule.api.*
 
 data class SomeId(
     val value: String
-)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 data class SomeId2(
     val value: Int
-)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
+
+data class SomeIntWrapper(
+    val value: Int
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 data class SomeProperty(
     private val other: OtherProperty,

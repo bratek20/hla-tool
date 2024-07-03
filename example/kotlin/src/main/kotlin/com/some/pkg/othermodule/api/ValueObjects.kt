@@ -4,7 +4,11 @@ package com.some.pkg.othermodule.api
 
 data class OtherId(
     val value: Int
-)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 data class OtherProperty(
     private val id: Int,

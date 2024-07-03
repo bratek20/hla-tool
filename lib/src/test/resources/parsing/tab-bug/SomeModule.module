@@ -1,0 +1,3 @@
+ValueObjects
+    ClassWithTabbedField
+	    tabbedField: string // note tab and then 4 spaces
