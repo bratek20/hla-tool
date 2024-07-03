@@ -1,0 +1,8 @@
+#macro(generateKotlinImports )
+package ${packageName}.api
+#if($imports.size() > 0)
+
+#foreach($import in $imports)
+import ${import}.api.*
+#end#end
+#end

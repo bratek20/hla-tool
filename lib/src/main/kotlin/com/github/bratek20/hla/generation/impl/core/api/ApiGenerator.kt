@@ -7,6 +7,18 @@ import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.utils.camelToScreamingSnakeCase
 
+class MacrosGenerator: FileGenerator() {
+    override fun name(): String {
+        return "Macros"
+    }
+
+    override fun generateFileContent(): FileContent? {
+        contentBuilder("macros.vm")
+            .build()
+        return null
+    }
+}
+
 class ValueObjectsGenerator: FileGenerator() {
     override fun name(): String {
         return "ValueObjects"
@@ -224,6 +236,7 @@ class ApiGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
+            MacrosGenerator(),
             EnumsGenerator(),
             CustomTypesGenerator(),
             CustomTypesMapperGenerator(),
