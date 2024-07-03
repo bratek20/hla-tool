@@ -12,6 +12,7 @@ class MacrosGenerator: FileGenerator() {
         return "Macros"
     }
 
+    //TODO-REF: workaround to not build file content but loading macros
     override fun generateFileContent(): FileContent? {
         contentBuilder("macros.vm")
             .build()
@@ -236,7 +237,6 @@ class ApiGenerator: DirectoryGenerator() {
 
     override fun getFileGenerators(): List<FileGenerator> {
         return listOf(
-            MacrosGenerator(),
             EnumsGenerator(),
             CustomTypesGenerator(),
             CustomTypesMapperGenerator(),
@@ -247,6 +247,22 @@ class ApiGenerator: DirectoryGenerator() {
             PropertyOrDataKeysGenerator(true),
             ExceptionsGenerator(),
             InterfacesGenerator(),
+        )
+    }
+}
+
+class MacroGenerator: DirectoryGenerator() {
+    override fun name(): String {
+        return "Macros"
+    }
+
+    override fun velocityDirPath(): String {
+        return "macros"
+    }
+
+    override fun getFileGenerators(): List<FileGenerator> {
+        return listOf(
+            MacrosGenerator()
         )
     }
 }

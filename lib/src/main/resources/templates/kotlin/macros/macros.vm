@@ -1,4 +1,4 @@
-#macro(generateKotlinImports )
+#macro(generateKotlinApiImports )
 package ${packageName}.api
 #if($imports.size() > 0)
 

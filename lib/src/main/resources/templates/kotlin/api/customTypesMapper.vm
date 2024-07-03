@@ -1,9 +1,4 @@
-package ${packageName}.api
-#if($imports.size() > 0)
-
-#foreach($import in $imports)
-import ${import}.api.*
-#end#end
+#generateKotlinApiImports()
 #foreach($vo in $customTypes.simpleList)
 
 fun ${vo.createName()}(value: ${vo.boxedType.name()}): ${vo.name()} {
