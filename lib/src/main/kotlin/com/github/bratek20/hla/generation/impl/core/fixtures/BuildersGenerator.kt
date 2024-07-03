@@ -19,11 +19,7 @@ class BuildersGenerator: FileGenerator() {
 
         // used by velocity
         fun body(): String {
-            val call = def.api.languageTypes.classConstructorCall(def.api.name())
-            if (def.api is SimpleCustomApiType) {
-                return "return ${def.api.constructorCall()}(value)"
-            }
-            return "return $call(value)"
+            return "return ${def.api.constructorCall()}(value)"
         }
     }
 
