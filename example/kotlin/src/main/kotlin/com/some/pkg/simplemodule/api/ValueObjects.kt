@@ -4,4 +4,8 @@ package com.some.pkg.simplemodule.api
 
 data class SimpleId(
     val value: String
-)
+) {
+    override fun toString(): String {
+        return value
+    }
+}
