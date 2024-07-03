@@ -6,12 +6,12 @@ namespace SomeModule {
         return ""
     }
 
-    export function diffSomeId2(given: SomeId2, expected: number, path: string = ""): string {
+    export function diffSomeIntWrapper(given: SomeIntWrapper, expected: number, path: string = ""): string {
         if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
         return ""
     }
 
-    export function diffSomeIntWrapper(given: SomeIntWrapper, expected: number, path: string = ""): string {
+    export function diffSomeId2(given: SomeId2, expected: number, path: string = ""): string {
         if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
         return ""
     }

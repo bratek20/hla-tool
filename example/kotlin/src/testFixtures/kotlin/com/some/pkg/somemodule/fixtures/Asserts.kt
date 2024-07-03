@@ -17,14 +17,14 @@ fun assertSomeId(given: SomeId, expected: String) {
 }
 
 
-fun assertSomeId2(given: SomeId2, expected: Int) {
-    val diff = diffSomeId2(given, expected)
+fun assertSomeIntWrapper(given: SomeIntWrapper, expected: Int) {
+    val diff = diffSomeIntWrapper(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
 
-fun assertSomeIntWrapper(given: SomeIntWrapper, expected: Int) {
-    val diff = diffSomeIntWrapper(given, expected)
+fun assertSomeId2(given: SomeId2, expected: Int) {
+    val diff = diffSomeId2(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

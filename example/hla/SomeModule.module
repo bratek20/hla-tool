@@ -9,12 +9,12 @@ CustomTypes
 
 ValueObjects
     SomeId: string
-    SomeId2: int
     SomeIntWrapper: int
+    SomeId2: int
 
     SomeProperty
         other: OtherProperty
-        id2: SomeId2?: int
+        id2: SomeId2?
         range: DateRange?
         doubleExample: double
         longExample: long

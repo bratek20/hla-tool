@@ -14,12 +14,12 @@ class SomeId {
     }
 }
 
-class SomeId2 {
+class SomeIntWrapper {
     constructor(
         public readonly value: number
     ) {}
 
-    equals(other: SomeId2): boolean {
+    equals(other: SomeIntWrapper): boolean {
         return this.value === other.value
     }
 
@@ -28,12 +28,12 @@ class SomeId2 {
     }
 }
 
-class SomeIntWrapper {
+class SomeId2 {
     constructor(
         public readonly value: number
     ) {}
 
-    equals(other: SomeIntWrapper): boolean {
+    equals(other: SomeId2): boolean {
         return this.value === other.value
     }
 

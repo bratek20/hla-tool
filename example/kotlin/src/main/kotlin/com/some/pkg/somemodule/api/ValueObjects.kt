@@ -13,7 +13,7 @@ data class SomeId(
     }
 }
 
-data class SomeId2(
+data class SomeIntWrapper(
     val value: Int
 ) {
     override fun toString(): String {
@@ -21,7 +21,7 @@ data class SomeId2(
     }
 }
 
-data class SomeIntWrapper(
+data class SomeId2(
     val value: Int
 ) {
     override fun toString(): String {

@@ -5,12 +5,12 @@ namespace SomeModule.Builder {
         return new SomeId(value)
     }
 
-    export function someId2(value: number = 0): SomeId2 {
-        return new SomeId2(value)
-    }
-
     export function someIntWrapper(value: number = 0): SomeIntWrapper {
         return new SomeIntWrapper(value)
+    }
+
+    export function someId2(value: number = 0): SomeId2 {
+        return new SomeId2(value)
     }
 
     export interface SomePropertyDef {
