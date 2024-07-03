@@ -11,6 +11,20 @@ class ${nt.name()} {
     toString(): string {
         return this.value.toString()
     }
+    #if(${nt.boxedType.name()} == "number")
+
+    plus(other: ${nt.name()}): ${nt.name()} {
+        return new ${nt.name()}(this.value + other.value);
+    }
+
+    minus(other: ${nt.name()}): ${nt.name()} {
+        return new ${nt.name()}(this.value - other.value);
+    }
+
+    times(other: ${nt.name()}): ${nt.name()} {
+        return new ${nt.name()}(this.value * other.value);
+    }
+    #end
 }#if($foreach.hasNext || $complexValueObjects.size() > 0)
 
 
