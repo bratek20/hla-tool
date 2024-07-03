@@ -8,7 +8,11 @@ import ${import}.api.*
 #foreach($vo in $simpleValueObjects)
 data class ${vo.name()}(
     val value: ${vo.serializableName()}
-)#if($foreach.hasNext || $complexValueObjects.size() > 0)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}#if($foreach.hasNext || $complexValueObjects.size() > 0)
 
 
 #end#end

@@ -6,6 +6,6 @@ data class SimpleId(
     val value: String
 ) {
     override fun toString(): String {
-        return value
+        return value.toString()
     }
 }
