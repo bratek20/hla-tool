@@ -1,0 +1,26 @@
+ValueObjects
+    OfferItemsTD
+        id: string
+	    rT: string
+	    rID: string
+	    rA: string
+        c: string
+        iPUrl: string
+        iPPUrl: string
+        pBPUrl: string
+        iV: any
+        iP: any
+        iDis: any
+        priority: int
+        t: string
+        sV: int
+        sP: int
+        sDis: int
+        colorConfigId: string
+        ifFirstHighlighted: bool
+        stickerPosition: string
+        stickerScale: int
+        bannerTranslationKey: string
+        hangarPreviewUrl: string
+        foregroundUrl: string
+        backgroundUrl: string

@@ -69,7 +69,7 @@ class ModuleGroupParserLogic(
         val moduleName = ModuleName(file.getName().value.split(".module").get(0))
         log.info("Parsing module ${moduleName.value}")
 
-        val elements = parseElements(file.getContent())
+        val elements = parseElements(file)
         checkRootSections(moduleName, elements)
 
         val valueObjects = parseStructures("ValueObjects", elements)
@@ -245,7 +245,9 @@ class ModuleGroupParserLogic(
         }
     }
 
-    private fun parseElements(content: FileContent): List<ParsedElement> {
+    private fun parseElements(file: File): List<ParsedElement> {
+        val content = file.getContent()
+
         val initialElements = content.lines
             .map { removeComments(it) }
             .filter { it.isNotBlank() }
@@ -267,7 +269,11 @@ class ModuleGroupParserLogic(
 
                 nodesStack.add(element)
             } else {
-                nodesStack.last.addElement(element)
+                if (nodesStack.isEmpty()) {
+                    log.error("Element $element is not a node and there is no parent node. File: ${file.getName().value}")
+                } else {
+                    nodesStack.last.addElement(element)
+                }
             }
         }
 

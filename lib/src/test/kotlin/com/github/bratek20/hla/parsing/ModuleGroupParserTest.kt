@@ -476,11 +476,17 @@ class ModuleGroupParserTest {
         })
     }
 
+
+    //useful to start crash investigation, feel free to modify crash/SomeModule
     @Test
-    fun `should not crash for bug`() {
-        assertThatCode {
-            parseSingleGroup("bug")
-        }.doesNotThrowAnyException()
+    fun `should not crash for provided module`() {
+        assertModuleDefinition(parseSingleModule("crash")) {
+            complexValueObjects = listOf {
+                name = "OfferItemsTD"
+            }
+        }
+
+        loggerMock.assertErrors()
     }
 
     @Test
