@@ -245,10 +245,15 @@ class ModuleGroupParserLogic(
         }
     }
 
+    private fun replaceTabsWithSpaces(line: String): String {
+        return line.replace("\t", "    ")
+    }
+
     private fun parseElements(file: File): List<ParsedElement> {
         val content = file.getContent()
 
         val initialElements = content.lines
+            .map { replaceTabsWithSpaces(it) }
             .map { removeComments(it) }
             .filter { it.isNotBlank() }
             .map { parseElement(it) }

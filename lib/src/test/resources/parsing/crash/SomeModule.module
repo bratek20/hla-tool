@@ -1,7 +1,7 @@
 ValueObjects
     OfferItemsTD
         id: string
-	    rT: string
+        rT: string
 	    rID: string
 	    rA: string
         c: string

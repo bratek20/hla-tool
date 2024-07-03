@@ -477,12 +477,29 @@ class ModuleGroupParserTest {
     }
 
 
-    //useful to start crash investigation, feel free to modify crash/SomeModule
+    //useful to start crash investigation, feel free to modify crash/SomeModule.module
     @Test
     fun `should not crash for provided module`() {
         assertModuleDefinition(parseSingleModule("crash")) {
             complexValueObjects = listOf {
                 name = "OfferItemsTD"
+            }
+        }
+
+        loggerMock.assertErrors()
+    }
+
+    @Test
+    fun `should handle tab as 4 spaces to avoid errors`() {
+        assertModuleDefinition(parseSingleModule("tab-bug")) {
+            complexValueObjects = listOf {
+                name = "ClassWithTabbedField"
+                fields = listOf {
+                    name = "tabbedField"
+                    type = {
+                        name = "string"
+                    }
+                }
             }
         }
 
