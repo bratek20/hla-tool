@@ -12,6 +12,20 @@ data class ${vo.name()}(
     override fun toString(): String {
         return value.toString()
     }
+    #if($vo.serializableName() == "Int")
+
+    operator fun plus(other: ${vo.name()}): ${vo.name()} {
+        return ${vo.name()}(this.value + other.value)
+    }
+
+    operator fun minus(other: ${vo.name()}): ${vo.name()} {
+        return ${vo.name()}(this.value - other.value)
+    }
+
+    operator fun times(other: ${vo.name()}): ${vo.name()} {
+        return ${vo.name()}(this.value * other.value)
+    }
+    #end
 }#if($foreach.hasNext || $complexValueObjects.size() > 0)
 
 

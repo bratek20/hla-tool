@@ -19,11 +19,27 @@ data class SomeId2(
     override fun toString(): String {
         return value.toString()
     }
+
+    operator fun plus(other: SomeId2): SomeId2 {
+        return SomeId2(this.value + other.value)
+    }
+
+    operator fun minus(other: SomeId2): SomeId2 {
+        return SomeId2(this.value - other.value)
+    }
+
+    operator fun times(other: SomeId2): SomeId2 {
+        return SomeId2(this.value * other.value)
+    }
 }
 
 data class SomeIntWrapper(
     val value: Int
 ) {
+    override fun toString(): String {
+        return value.toString()
+    }
+
     operator fun plus(other: SomeIntWrapper): SomeIntWrapper {
         return SomeIntWrapper(this.value + other.value)
     }
@@ -34,10 +50,6 @@ data class SomeIntWrapper(
 
     operator fun times(other: SomeIntWrapper): SomeIntWrapper {
         return SomeIntWrapper(this.value * other.value)
-    }
-
-    override fun toString(): String {
-        return value.toString()
     }
 }
 
