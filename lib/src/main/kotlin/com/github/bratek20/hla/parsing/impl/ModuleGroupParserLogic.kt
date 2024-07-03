@@ -15,9 +15,12 @@ import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
+import com.github.bratek20.logs.api.Logger
 import java.util.*
 
-class ModuleGroupParserLogic: ModuleGroupParser {
+class ModuleGroupParserLogic(
+    private val log: Logger
+): ModuleGroupParser {
     private val knownRootSections = setOf(
         "ValueObjects",
         "DataClasses",
@@ -64,6 +67,8 @@ class ModuleGroupParserLogic: ModuleGroupParser {
 
     private fun parseModuleFile(file: File): ModuleDefinition {
         val moduleName = ModuleName(file.getName().value.split(".module").get(0))
+        log.info("Parsing module ${moduleName.value}")
+
         val elements = parseElements(file.getContent())
         checkRootSections(moduleName, elements)
 
