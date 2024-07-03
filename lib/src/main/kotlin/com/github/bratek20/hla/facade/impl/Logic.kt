@@ -62,9 +62,9 @@ class HlaFacadeLogic(
         ))
 
         val suffix = if (onlyUpdate) "updated" else "generated"
-        logFile(generateResult.getMain(), suffix)
-        logFile(generateResult.getFixtures(), suffix)
-        logFile(generateResult.getTests(), suffix)
+        logFile(generateResult.getMain(), suffix, moduleName)
+        logFile(generateResult.getFixtures(), suffix, moduleName)
+        logFile(generateResult.getTests(), suffix, moduleName)
 
         writer.write(
             WriteArgs.create(
@@ -76,10 +76,10 @@ class HlaFacadeLogic(
         )
     }
 
-    private fun logFile(directory: Directory?, suffix: String) {
+    private fun logFile(directory: Directory?, suffix: String, moduleName: ModuleName) {
         directory?.getDirectories()?.forEach { dir ->
             dir.getFiles().forEach {
-                logger.info("${dir.getName().value}/${it.getName().value} $suffix", this)
+                logger.info("${moduleName.value}/${dir.getName().value}/${it.getName().value} $suffix", this)
             }
         }
     }
