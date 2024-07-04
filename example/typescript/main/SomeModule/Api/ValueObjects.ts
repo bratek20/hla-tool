@@ -361,3 +361,26 @@ class SomeClass6 {
         return this.sameClassList
     }
 }
+
+class SomeQueryInput {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): SomeQueryInput {
+        const instance = new SomeQueryInput()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}

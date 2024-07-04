@@ -68,6 +68,11 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
+    val diff = diffSomeQueryInput(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

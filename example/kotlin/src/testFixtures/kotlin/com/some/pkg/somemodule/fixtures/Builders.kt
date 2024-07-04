@@ -149,6 +149,18 @@ fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
     )
 }
 
+data class SomeQueryInputDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun someQueryInput(init: SomeQueryInputDef.() -> Unit = {}): SomeQueryInput {
+    val def = SomeQueryInputDef().apply(init)
+    return SomeQueryInput.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )

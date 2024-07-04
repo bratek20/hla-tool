@@ -78,7 +78,10 @@ Interfaces
             throws
                 SomeException
                 Some2Exception
-        someQuery(id: SomeId): SomeClass
+        SomeQueryInput
+            id: SomeId
+            amount: int
+        someQuery(query: SomeQueryInput): SomeClass
             throws
                 SomeException
         optMethod(optId: SomeId?): SomeClass?

@@ -35,7 +35,7 @@ class SomeInterfaceController(
     @PostMapping("/someQuery")
     fun someQuery(@RequestBody rawRequest: Struct): Struct {
         val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeQueryRequest::class.java)
-        return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.id)))
+        return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.query)))
     }
 
     @PostMapping("/optMethod")

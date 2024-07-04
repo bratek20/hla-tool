@@ -173,6 +173,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeQueryInputDef {
+        id?: string,
+        amount?: number,
+    }
+    export function someQueryInput(def?: SomeQueryInputDef): SomeQueryInput {
+        const id = def?.id ?? "someValue"
+        const amount = def?.amount ?? 0
+
+        return SomeQueryInput.create(
+            new SomeId(id),
+            amount,
+        )
+    }
+
     export interface DateRangeWrapperDef {
         range?: TypesModule.Builder.DateRangeDef,
     }

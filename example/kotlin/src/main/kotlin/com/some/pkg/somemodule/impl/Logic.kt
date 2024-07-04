@@ -17,7 +17,7 @@ class SomeInterfaceLogic: SomeInterface {
         TODO("Not yet implemented")
     }
 
-    override fun someQuery(id: SomeId): SomeClass {
+    override fun someQuery(query: SomeQueryInput): SomeClass {
         TODO("Not yet implemented")
     }
 

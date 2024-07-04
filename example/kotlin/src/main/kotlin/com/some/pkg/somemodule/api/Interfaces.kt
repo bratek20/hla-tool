@@ -20,7 +20,7 @@ interface SomeInterface {
     @Throws(
         SomeException::class,
     )
-    fun someQuery(id: SomeId): SomeClass
+    fun someQuery(query: SomeQueryInput): SomeClass
 
     fun optMethod(optId: SomeId?): SomeClass?
 }
