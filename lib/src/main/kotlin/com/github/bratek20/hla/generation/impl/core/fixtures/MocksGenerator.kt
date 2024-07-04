@@ -110,6 +110,18 @@ class MocksGenerator: FileGenerator() {
                                 line("assertThat(referenceLegacyTypeCalls.size).withFailMessage(\"Expected referenceLegacyType to be called \$times times, but was called \$referenceLegacyTypeCalls times\").isEqualTo(times)")
                             }
                         ))
+                        emptyLine()
+                        add(Function(
+                            name = "assertReferenceLegacyTypeCalledForArgs",
+                            args = listOf(
+                                Pair("args", "com.some.pkg.legacy.LegacyType"),
+                                Pair("times", "Int = 1")
+                            ),
+                            body = block {
+                                line("val calls = referenceLegacyTypeCalls.filter { it == args }")
+                                line("assertThat(calls.size).withFailMessage(\"Expected referenceLegacyType to be called \$times times, but was called \$referenceLegacyTypeCalls times\").isEqualTo(times)")
+                            }
+                        ))
                     }
                 ))
                 .build()
