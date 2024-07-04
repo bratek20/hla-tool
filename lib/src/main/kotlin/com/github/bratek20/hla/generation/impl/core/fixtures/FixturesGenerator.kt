@@ -16,7 +16,8 @@ class FixturesGenerator: DirectoryGenerator() {
         return listOf(
             BuildersGenerator(),
             DiffsGenerator(),
-            AssertsGenerator()
+            AssertsGenerator(),
+            MocksGenerator(),
         )
     }
 }
