@@ -434,6 +434,11 @@ class HlaFacadeTest {
                 }
             }
         }
+        val valueObjectsFile  = mainDirectory.getDirectories().find { it.getName().value == "api" }!!.getFiles().find { file -> file.getName().value == "ValueObjects.kt" }
+        val buildersFile  = fixturesDirectory.getDirectories().find { it.getName().value == "fixtures" }!!.getFiles().find { file -> file.getName().value == "Builders.kt" }
+
+        assertWrittenFileWithExample(valueObjectsFile!!, paths.exampleMainPath + "/api/ValueObjects.kt")
+        assertWrittenFileWithExample(buildersFile!!, paths.exampleFixturesPath + "/fixtures/Builders.kt")
     }
 
     private fun hlaFolderPath(): Path {

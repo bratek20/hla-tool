@@ -36,7 +36,6 @@ class ModuleGeneratorLogic(
 
         override fun getDirectoryGenerators(): List<DirectoryGenerator> {
             return listOf(
-                MacrosGenerator(),
                 ApiGenerator(),
                 ImplGenerator(),
                 WebGenerator(),
@@ -106,7 +105,7 @@ class ModuleGeneratorLogic(
 
         val root = GenerationRoot()
         root.init(context, "")
-
+        root.generateMacros()
         val result = root.generateDirectory()
         requireNotNull(result)
 
