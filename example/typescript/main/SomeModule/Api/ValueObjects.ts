@@ -27,16 +27,16 @@ class SomeIntWrapper {
         return this.value.toString()
     }
 
-    plus(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value + other.value);
+    plus(other: SomeIntWrapper): SomeIntWrapper {
+        return new SomeIntWrapper(this.value + other.value);
     }
 
-    minus(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value - other.value);
+    minus(other: SomeIntWrapper): SomeIntWrapper {
+        return new SomeIntWrapper(this.value - other.value);
     }
 
-    times(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value * other.value);
+    times(other: SomeIntWrapper): SomeIntWrapper {
+        return new SomeIntWrapper(this.value * other.value);
     }
 }
 
@@ -53,16 +53,16 @@ class SomeId2 {
         return this.value.toString()
     }
 
-    plus(other: SomeIntWrapper): SomeIntWrapper {
-        return new SomeIntWrapper(this.value + other.value);
+    plus(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value + other.value);
     }
 
-    minus(other: SomeIntWrapper): SomeIntWrapper {
-        return new SomeIntWrapper(this.value - other.value);
+    minus(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value - other.value);
     }
 
-    times(other: SomeIntWrapper): SomeIntWrapper {
-        return new SomeIntWrapper(this.value * other.value);
+    times(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value * other.value);
     }
 }
 
