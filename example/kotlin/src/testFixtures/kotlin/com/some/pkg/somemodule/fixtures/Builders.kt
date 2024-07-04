@@ -13,12 +13,12 @@ fun someId(value: String = "someValue"): SomeId {
     return SomeId(value)
 }
 
-fun someId2(value: Int = 0): SomeId2 {
-    return SomeId2(value)
-}
-
 fun someIntWrapper(value: Int = 0): SomeIntWrapper {
     return SomeIntWrapper(value)
+}
+
+fun someId2(value: Int = 0): SomeId2 {
+    return SomeId2(value)
 }
 
 data class SomePropertyDef(

@@ -1,0 +1,4 @@
+ValueObjects
+    SomeClass
+        id: SomeId: string
+        optId2: SomeId2?: string

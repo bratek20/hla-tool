@@ -1,8 +1,6 @@
 ValueObjects
-    OtherId: int
-
     OtherProperty
-        id: OtherId
+        id: OtherId: int
         name: string
 
     OtherClass

@@ -336,6 +336,10 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Starting module SomeModule with profile kotlin",
+                "Parsing module OtherModule",
+                "Parsing module SimpleModule",
+                "Parsing module SomeModule",
+                "Parsing module TypesModule",
                 "SomeModule/api/Enums.kt generated",
                 "SomeModule/api/CustomTypes.kt generated",
                 "SomeModule/api/CustomTypesMapper.kt generated",
@@ -365,6 +369,10 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Updating module SomeModule with profile kotlin",
+                "Parsing module OtherModule",
+                "Parsing module SimpleModule",
+                "Parsing module SomeModule",
+                "Parsing module TypesModule",
                 "SomeModule/api/Enums.kt updated",
                 "SomeModule/api/SerializedCustomTypes.kt updated",
                 "SomeModule/api/ValueObjects.kt updated",

@@ -6,13 +6,13 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function someId2(given: SomeId2, expected: number) {
-        const diff = diffSomeId2(given, expected)
+    export function someIntWrapper(given: SomeIntWrapper, expected: number) {
+        const diff = diffSomeIntWrapper(given, expected)
         AssertEquals(diff, "", diff)
     }
 
-    export function someIntWrapper(given: SomeIntWrapper, expected: number) {
-        const diff = diffSomeIntWrapper(given, expected)
+    export function someId2(given: SomeId2, expected: number) {
+        const diff = diffSomeId2(given, expected)
         AssertEquals(diff, "", diff)
     }
 
