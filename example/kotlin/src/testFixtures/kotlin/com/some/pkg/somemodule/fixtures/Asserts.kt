@@ -28,16 +28,6 @@ fun assertSomeId2(given: SomeId2, expected: Int) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
-    val diff = diffSomeProperty(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
-fun assertSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit) {
-    val diff = diffSomeProperty2(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
 fun assertSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit) {
     val diff = diffSomeClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -70,6 +60,16 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
 
 fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
     val diff = diffSomeQueryInput(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
+    val diff = diffSomeProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit) {
+    val diff = diffSomeProperty2(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

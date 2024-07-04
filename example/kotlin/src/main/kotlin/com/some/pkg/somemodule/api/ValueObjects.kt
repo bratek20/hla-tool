@@ -53,105 +53,6 @@ data class SomeId2(
     }
 }
 
-data class SomeProperty(
-    private val other: OtherProperty,
-    private val id2: Int?,
-    private val range: SerializedDateRange?,
-    private val doubleExample: Double,
-    private val longExample: Long,
-    private val gN: String,
-    private val customData: com.github.bratek20.architecture.serialization.api.Struct,
-) {
-    fun getOther(): OtherProperty {
-        return this.other
-    }
-
-    fun getId2(): SomeId2? {
-        return this.id2?.let { it -> SomeId2(it) }
-    }
-
-    fun getRange(): DateRange? {
-        return this.range?.let { it -> it.toCustomType() }
-    }
-
-    fun getDoubleExample(): Double {
-        return this.doubleExample
-    }
-
-    fun getLongExample(): Long {
-        return this.longExample
-    }
-
-    fun getGoodName(): String {
-        return this.gN
-    }
-
-    fun getCustomData(): com.github.bratek20.architecture.serialization.api.Struct {
-        return this.customData
-    }
-
-    companion object {
-        fun create(
-            other: OtherProperty,
-            id2: SomeId2?,
-            range: DateRange?,
-            doubleExample: Double,
-            longExample: Long,
-            goodName: String,
-            customData: com.github.bratek20.architecture.serialization.api.Struct,
-        ): SomeProperty {
-            return SomeProperty(
-                other = other,
-                id2 = id2?.let { it -> it.value },
-                range = range?.let { it -> SerializedDateRange.fromCustomType(it) },
-                doubleExample = doubleExample,
-                longExample = longExample,
-                gN = goodName,
-                customData = customData,
-            )
-        }
-    }
-}
-
-data class SomeProperty2(
-    @JvmField val value: String,
-    private val custom: Any,
-    private val someEnum: String,
-    private val customOpt: Any? = null,
-) {
-    fun getValue(): String {
-        return this.value
-    }
-
-    fun getCustom(): Any {
-        return this.custom
-    }
-
-    fun getSomeEnum(): SomeEnum {
-        return SomeEnum.valueOf(this.someEnum)
-    }
-
-    fun getCustomOpt(): Any? {
-        return this.customOpt
-    }
-
-    companion object {
-        fun create(
-            value: String,
-            custom: Any,
-            someEnum: SomeEnum,
-            customOpt: Any? = null,
-        ): SomeProperty2 {
-            return SomeProperty2(
-                value = value,
-                custom = custom,
-                someEnum = someEnum.name,
-                customOpt = customOpt,
-            )
-        }
-    }
-}
-
 data class SomeClass(
     private val id: String,
     private val amount: Int,
@@ -385,6 +286,105 @@ data class SomeQueryInput(
             return SomeQueryInput(
                 id = id.value,
                 amount = amount,
+            )
+        }
+    }
+}
+
+data class SomeProperty(
+    private val other: OtherProperty,
+    private val id2: Int?,
+    private val range: SerializedDateRange?,
+    private val doubleExample: Double,
+    private val longExample: Long,
+    private val gN: String,
+    private val customData: com.github.bratek20.architecture.serialization.api.Struct,
+) {
+    fun getOther(): OtherProperty {
+        return this.other
+    }
+
+    fun getId2(): SomeId2? {
+        return this.id2?.let { it -> SomeId2(it) }
+    }
+
+    fun getRange(): DateRange? {
+        return this.range?.let { it -> it.toCustomType() }
+    }
+
+    fun getDoubleExample(): Double {
+        return this.doubleExample
+    }
+
+    fun getLongExample(): Long {
+        return this.longExample
+    }
+
+    fun getGoodName(): String {
+        return this.gN
+    }
+
+    fun getCustomData(): com.github.bratek20.architecture.serialization.api.Struct {
+        return this.customData
+    }
+
+    companion object {
+        fun create(
+            other: OtherProperty,
+            id2: SomeId2?,
+            range: DateRange?,
+            doubleExample: Double,
+            longExample: Long,
+            goodName: String,
+            customData: com.github.bratek20.architecture.serialization.api.Struct,
+        ): SomeProperty {
+            return SomeProperty(
+                other = other,
+                id2 = id2?.let { it -> it.value },
+                range = range?.let { it -> SerializedDateRange.fromCustomType(it) },
+                doubleExample = doubleExample,
+                longExample = longExample,
+                gN = goodName,
+                customData = customData,
+            )
+        }
+    }
+}
+
+data class SomeProperty2(
+    @JvmField val value: String,
+    private val custom: Any,
+    private val someEnum: String,
+    private val customOpt: Any? = null,
+) {
+    fun getValue(): String {
+        return this.value
+    }
+
+    fun getCustom(): Any {
+        return this.custom
+    }
+
+    fun getSomeEnum(): SomeEnum {
+        return SomeEnum.valueOf(this.someEnum)
+    }
+
+    fun getCustomOpt(): Any? {
+        return this.customOpt
+    }
+
+    companion object {
+        fun create(
+            value: String,
+            custom: Any,
+            someEnum: SomeEnum,
+            customOpt: Any? = null,
+        ): SomeProperty2 {
+            return SomeProperty2(
+                value = value,
+                custom = custom,
+                someEnum = someEnum.name,
+                customOpt = customOpt,
             )
         }
     }
