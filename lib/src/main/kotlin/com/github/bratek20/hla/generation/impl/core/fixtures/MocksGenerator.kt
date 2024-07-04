@@ -1,8 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.hla.codebuilder.ClassDeclaration
-import com.github.bratek20.hla.codebuilder.CodeBuilder
-import com.github.bratek20.hla.codebuilder.ListFieldDeclaration
+import com.github.bratek20.hla.codebuilder.*
+import com.github.bratek20.hla.codebuilder.Function
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 
@@ -22,11 +21,14 @@ class MocksGenerator: FileGenerator() {
                 .line(ListFieldDeclaration("referenceOtherClassCalls", "OtherClass"))
                 .line(ListFieldDeclaration("referenceOtherClassResponses", "Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>"))
                 .emptyLine()
-                .line("fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {")
-                .tab()
-                .line("referenceOtherClassResponses.add(Pair(args, response))")
-                .untab()
-                .line("}")
+                .add(Function(
+                    name = "setReferenceOtherClassResponse",
+                    args = listOf(
+                        Pair("args", "ExpectedOtherClass.() -> Unit"),
+                        Pair("response", "OtherClassDef.() -> Unit")
+                    ),
+                    body = OneLineBlock("referenceOtherClassResponses.add(Pair(args, response))")
+                ))
                 .build()
         }
     }

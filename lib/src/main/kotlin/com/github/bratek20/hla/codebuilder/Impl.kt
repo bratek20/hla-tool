@@ -5,6 +5,18 @@ interface CodeLineBuilder {
     fun build(): String
 }
 
+interface CodeBlockBuilder {
+    fun apply(b: CodeBuilder)
+}
+
+class OneLineBlock(
+    private val block: String
+): CodeBlockBuilder {
+    override fun apply(b: CodeBuilder) {
+        b.line(block)
+    }
+}
+
 class ListFieldDeclaration(
     private val fieldName: String,
     private val fieldElementType: String
@@ -21,13 +33,29 @@ class ClassDeclaration(
     override fun build(): String {
         return "class $className: $implementedInterfaceName {"
     }
-
 }
+
+class Function(
+    private val name: String,
+    private val returnType: String? = null,
+    private val args: List<Pair<String, String>>,
+    private val body: CodeBlockBuilder
+): CodeBlockBuilder {
+    override fun apply(b: CodeBuilder) {
+        val returnTypePart = if (returnType != null) ": $returnType" else ""
+        b.line("fun $name(${args.joinToString { "${it.first}: ${it.second}" }})$returnTypePart {")
+        b.tab()
+        body.apply(b)
+        b.untab()
+        b.line("}")
+    }
+}
+
 class CodeBuilder(
     indent: Int = 0
 ) {
     private var currentIndent = indent
-    private val lines = mutableListOf<String>()
+    val lines = mutableListOf<String>()
 
     fun line(value: String): CodeBuilder {
         val indent = " ".repeat(currentIndent)
@@ -37,6 +65,11 @@ class CodeBuilder(
 
     fun line(value: CodeLineBuilder): CodeBuilder {
         return line(value.build())
+    }
+
+    fun add(block: CodeBlockBuilder): CodeBuilder {
+        block.apply(this)
+        return this
     }
 
     fun tab(): CodeBuilder {
