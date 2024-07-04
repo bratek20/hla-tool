@@ -13,7 +13,7 @@ import ${import}.fixtures.*
 
 import ${packageName}.api.*
 
-class SomeInterface2Mock: SomeInterface2 {
+class ${interfaceName}Mock: ${interfaceName} {
     // referenceOtherClass
     private var referenceOtherClassCalls = mutableListOf<OtherClass>()
     private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()

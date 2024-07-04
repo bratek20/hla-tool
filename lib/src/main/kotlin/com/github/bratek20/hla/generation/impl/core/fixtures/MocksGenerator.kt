@@ -13,6 +13,7 @@ class MocksGenerator: FileGenerator() {
             return null
         }
         return contentBuilder("mocks.vm")
+            .put("interfaceName", "SomeInterface2")
             .build()
     }
 }
