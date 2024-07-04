@@ -1,4 +1,4 @@
-#generateKotlinApiImports()
+#generateKotlinApiPackageAndImports()
 
 #foreach($vo in $complexCustomTypes)
 data class ${vo.serializableName()}(

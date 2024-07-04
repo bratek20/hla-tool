@@ -1,6 +1,0 @@
-#generateKotlinApiImports()
-#foreach($nt in $namedTypes)
-
-data class ${nt.name()}(
-    val value: ${nt.serializableName()}
-)#end

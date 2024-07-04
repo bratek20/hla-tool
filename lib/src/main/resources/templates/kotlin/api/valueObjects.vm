@@ -1,4 +1,4 @@
-#generateKotlinApiImports()
+#generateKotlinApiPackageAndImports()
 
 #foreach($vo in $simpleValueObjects)
 data class ${vo.name()}(

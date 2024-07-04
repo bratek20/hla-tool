@@ -1,4 +1,4 @@
-#generateKotlinApiImports()
+#generateKotlinApiPackageAndImports()
 
 #foreach($interface in $interfaces)
 interface $interface.name {
