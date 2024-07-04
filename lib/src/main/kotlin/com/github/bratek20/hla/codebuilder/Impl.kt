@@ -44,6 +44,11 @@ class CodeBuilder(
         return this
     }
 
+    fun emptyLine(): CodeBuilder {
+        lines.add("")
+        return this
+    }
+
     fun untab(): CodeBuilder {
         currentIndent -= 4
         return this

@@ -15,10 +15,6 @@ import ${packageName}.api.*
 
 ${view.block()}
 
-    fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {
-        referenceOtherClassResponses.add(Pair(args, response))
-    }
-
     override fun referenceOtherClass(other: OtherClass): OtherClass {
         referenceOtherClassCalls.add(other)
         return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == "" }?.second ?: {})

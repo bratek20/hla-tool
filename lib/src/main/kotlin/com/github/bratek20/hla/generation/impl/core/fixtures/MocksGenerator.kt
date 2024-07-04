@@ -21,6 +21,12 @@ class MocksGenerator: FileGenerator() {
                 .line("// referenceOtherClass")
                 .line(ListFieldDeclaration("referenceOtherClassCalls", "OtherClass"))
                 .line(ListFieldDeclaration("referenceOtherClassResponses", "Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>"))
+                .emptyLine()
+                .line("fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {")
+                .tab()
+                .line("referenceOtherClassResponses.add(Pair(args, response))")
+                .untab()
+                .line("}")
                 .build()
         }
     }
