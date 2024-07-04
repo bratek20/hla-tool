@@ -8,14 +8,43 @@ class MocksGenerator: FileGenerator() {
         return "Mocks"
     }
 
-    class View {
-        fun block(): String {
-            val indent = "    "
-            val result = "// referenceOtherClass\n" +
-            indent + "private var referenceOtherClassCalls = mutableListOf<OtherClass>()\n" +
-            indent + "private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()"
+    class CodeBuilder(
+        indent: Int = 0
+    ) {
+        private var currentIndent = indent
+        private val lines = mutableListOf<String>()
 
-            return result
+        fun line(value: String): CodeBuilder {
+            val indent = " ".repeat(currentIndent)
+            lines.add(indent + value)
+            return this
+        }
+
+        fun tab(): CodeBuilder {
+            currentIndent += 4
+            return this
+        }
+
+        fun untab(): CodeBuilder {
+            currentIndent -= 4
+            return this
+        }
+
+        fun build(): String {
+            return lines.joinToString("\n")
+        }
+    }
+    class View(
+        val interfaceName: String
+    ) {
+        fun block(): String {
+            return CodeBuilder()
+                .line("class ${interfaceName}Mock: ${interfaceName} {")
+                .tab()
+                .line("// referenceOtherClass")
+                .line("private var referenceOtherClassCalls = mutableListOf<OtherClass>()")
+                .line("private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()")
+                .build()
         }
     }
     override fun generateFileContent(): FileContent? {
@@ -23,8 +52,7 @@ class MocksGenerator: FileGenerator() {
             return null
         }
         return contentBuilder("mocks.vm")
-            .put("interfaceName", "SomeInterface2")
-            .put("view", View())
+            .put("view", View("SomeInterface2"))
             .build()
     }
 }

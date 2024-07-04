@@ -13,8 +13,7 @@ import ${import}.fixtures.*
 
 import ${packageName}.api.*
 
-class ${interfaceName}Mock: ${interfaceName} {
-    ${view.block()}
+${view.block()}
 
     fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {
         referenceOtherClassResponses.add(Pair(args, response))
