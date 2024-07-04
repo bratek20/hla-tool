@@ -38,7 +38,7 @@ class SomeInterface2Mock: SomeInterface2 {
     }
 
     // referenceLegacyType
-    private var referenceLegacyTypeCalls = mutableListOf<com.some.pkg.legacy.LegacyType>()
+    private val referenceLegacyTypeCalls = mutableListOf<com.some.pkg.legacy.LegacyType>()
     private val referenceLegacyTypeResponses = mutableListOf<Pair<com.some.pkg.legacy.LegacyType, com.some.pkg.legacy.LegacyType>>()
 
     fun setReferenceLegacyTypeResponse(args: com.some.pkg.legacy.LegacyType, response: com.some.pkg.legacy.LegacyType) {
