@@ -15,15 +15,6 @@ import ${packageName}.api.*
 
 ${view.block()}
 
-    fun assertReferenceOtherClassCalled(times: Int = 1) {
-        assertThat(referenceOtherClassCalls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
-    }
-
-    fun assertReferenceOtherClassCalledForArgs(args: ExpectedOtherClass.() -> Unit, times: Int = 1) {
-        val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == "" }
-        assertThat(calls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
-    }
-
     // referenceLegacyType
     private var referenceLegacyTypeCalls = mutableListOf<com.some.pkg.legacy.LegacyType>()
     private val referenceLegacyTypeResponses = mutableListOf<Pair<com.some.pkg.legacy.LegacyType, com.some.pkg.legacy.LegacyType>>()

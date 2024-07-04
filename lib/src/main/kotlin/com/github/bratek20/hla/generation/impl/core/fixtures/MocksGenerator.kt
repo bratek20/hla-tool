@@ -14,10 +14,6 @@ class MocksGenerator: FileGenerator() {
         val interfaceName: String
     ) {
         fun block(): String {
-//            override fun referenceOtherClass(other: OtherClass): OtherClass {
-//                referenceOtherClassCalls.add(other)
-//                return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == "" }?.second ?: {})
-//            }
             return CodeBuilder()
                 .line(ClassDeclaration("${interfaceName}Mock", interfaceName))
                 .tab()
@@ -42,6 +38,26 @@ class MocksGenerator: FileGenerator() {
                     body = block {
                         line("referenceOtherClassCalls.add(other)")
                         line("return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == \"\" }?.second ?: {})")
+                    }
+                ))
+                .emptyLine()
+                .add(Function(
+                    name = "assertReferenceOtherClassCalled",
+                    args = listOf(Pair("times", "Int = 1")),
+                    body = block {
+                        line("assertThat(referenceOtherClassCalls.size).withFailMessage(\"Expected referenceOtherClass to be called \$times times, but was called \$referenceOtherClassCalls times\").isEqualTo(times)")
+                    }
+                ))
+                .emptyLine()
+                .add(Function(
+                    name = "assertReferenceOtherClassCalledForArgs",
+                    args = listOf(
+                        Pair("args", "ExpectedOtherClass.() -> Unit"),
+                        Pair("times", "Int = 1")
+                    ),
+                    body = block {
+                        line("val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == \"\" }")
+                        line("assertThat(calls.size).withFailMessage(\"Expected referenceOtherClass to be called \$times times, but was called \$referenceOtherClassCalls times\").isEqualTo(times)")
                     }
                 ))
                 .build()

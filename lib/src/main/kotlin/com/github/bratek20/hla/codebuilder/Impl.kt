@@ -53,7 +53,7 @@ class Function(
     override fun apply(b: CodeBuilder) {
         val overridePart = if (override) "override " else ""
         val returnTypePart = if (returnType != null) ": $returnType" else ""
-        
+
         b.line("${overridePart}fun $name(${args.joinToString { "${it.first}: ${it.second}" }})$returnTypePart {")
         b.tab()
         body.apply(b)
