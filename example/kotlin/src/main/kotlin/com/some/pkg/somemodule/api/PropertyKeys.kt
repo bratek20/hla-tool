@@ -2,7 +2,7 @@
 
 package com.some.pkg.somemodule.api
 
-val SOME_KEY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+val SOME_KEY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeKey",
     SomeProperty::class
 )

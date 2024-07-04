@@ -2,7 +2,7 @@
 
 package com.some.pkg.somemodule.api
 
-val SOME_KEY_KEY = com.github.bratek20.architecture.data.api.ObjectDataKey(
+val SOME_KEY_DATA_KEY = com.github.bratek20.architecture.data.api.ObjectDataKey(
     "SomeKey",
     SomeData::class
 )

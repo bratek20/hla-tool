@@ -115,7 +115,7 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
         }
 
         return StorageTypeKey(
-            constantName = camelToScreamingSnakeCase(def.getName() + "Key"),
+            constantName = camelToScreamingSnakeCase(def.getName() + "${innerWord}Key"),
             outerKeyType = outerKeyType,
             keyName = def.getName(),
             keyType = keyType,
