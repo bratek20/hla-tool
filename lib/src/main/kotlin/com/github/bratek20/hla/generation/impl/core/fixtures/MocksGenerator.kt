@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.hla.codebuilder.*
+import com.github.bratek20.hla.codebuilder.Class
 import com.github.bratek20.hla.codebuilder.Function
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -112,21 +113,22 @@ class MocksGenerator: FileGenerator() {
 
         fun contextModule(): String {
             return CodeBuilder()
-                .line(ClassDeclaration("${moduleName}Mocks", "ContextModule"))
-                .tab()
-                .add(Function(
-                    override = true,
-                    name = "apply",
-                    args = listOf(Pair("builder", "ContextBuilder")),
+                .add(Class(
+                    declaration = ClassDeclaration("${moduleName}Mocks", "ContextModule"),
                     body = block {
-                        line("builder")
-                        .tab()
-                        .line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
-                        .untab()
+                        add(Function(
+                            override = true,
+                            name = "apply",
+                            args = listOf(Pair("builder", "ContextBuilder")),
+                            body = block {
+                                line("builder")
+                                .tab()
+                                .line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
+                                .untab()
+                            }
+                        ))
                     }
                 ))
-                .untab()
-                .line("}")
                 .build()
         }
     }

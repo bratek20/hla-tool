@@ -43,6 +43,19 @@ class ClassDeclaration(
     }
 }
 
+class Class(
+    private val declaration: ClassDeclaration,
+    private val body: CodeBlockBuilder
+): CodeBlockBuilder {
+    override fun apply(b: CodeBuilder) {
+        b.line(declaration)
+        b.tab()
+        body.apply(b)
+        b.untab()
+        b.line("}")
+    }
+}
+
 class Function(
     private val override: Boolean = false,
     private val name: String,
