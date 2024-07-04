@@ -34,21 +34,13 @@ class ListFieldDeclaration(
     }
 }
 
-class ClassDeclaration(
-    private val className: String,
-    private val implementedInterfaceName: String
-): CodeLineBuilder {
-    override fun build(): String {
-        return "class $className: $implementedInterfaceName {"
-    }
-}
-
 class Class(
-    private val declaration: ClassDeclaration,
+    private val className: String,
+    private val implementedInterfaceName: String,
     private val body: CodeBlockBuilder
 ): CodeBlockBuilder {
     override fun apply(b: CodeBuilder) {
-        b.line(declaration)
+        b.line("class $className: $implementedInterfaceName {")
         b.tab()
         body.apply(b)
         b.untab()
