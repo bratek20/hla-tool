@@ -14,9 +14,7 @@ import ${import}.fixtures.*
 import ${packageName}.api.*
 
 class ${interfaceName}Mock: ${interfaceName} {
-    // referenceOtherClass
-    private var referenceOtherClassCalls = mutableListOf<OtherClass>()
-    private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()
+    ${view.block()}
 
     fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {
         referenceOtherClassResponses.add(Pair(args, response))
