@@ -17,6 +17,14 @@ class OneLineBlock(
     }
 }
 
+fun block(block: CodeBuilder.() -> Unit): CodeBlockBuilder {
+    return object : CodeBlockBuilder {
+        override fun apply(b: CodeBuilder) {
+            b.block()
+        }
+    }
+}
+
 class ListFieldDeclaration(
     private val fieldName: String,
     private val fieldElementType: String
@@ -36,14 +44,17 @@ class ClassDeclaration(
 }
 
 class Function(
+    private val override: Boolean = false,
     private val name: String,
     private val returnType: String? = null,
     private val args: List<Pair<String, String>>,
     private val body: CodeBlockBuilder
 ): CodeBlockBuilder {
     override fun apply(b: CodeBuilder) {
+        val overridePart = if (override) "override " else ""
         val returnTypePart = if (returnType != null) ": $returnType" else ""
-        b.line("fun $name(${args.joinToString { "${it.first}: ${it.second}" }})$returnTypePart {")
+        
+        b.line("${overridePart}fun $name(${args.joinToString { "${it.first}: ${it.second}" }})$returnTypePart {")
         b.tab()
         body.apply(b)
         b.untab()
