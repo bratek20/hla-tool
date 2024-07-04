@@ -434,6 +434,8 @@ class HlaFacadeTest {
                 }
             }
         }
+
+        assertWrittenFileWithExample(mainDirectory.getFiles().find { it.getName().value == "ValueObjects.kt" }!!, paths.exampleMainPath + "/api/ValueObjects.kt")
     }
 
     private fun hlaFolderPath(): Path {
