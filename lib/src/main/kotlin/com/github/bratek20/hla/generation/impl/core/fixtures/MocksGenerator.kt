@@ -8,6 +8,28 @@ class MocksGenerator: FileGenerator() {
         return "Mocks"
     }
 
+    interface CodeLineBuilder {
+        fun build(): String
+    }
+
+    class ListFieldDeclaration(
+        private val fieldName: String,
+        private val fieldElementType: String
+    ): CodeLineBuilder {
+        override fun build(): String {
+            return "private val $fieldName = mutableListOf<$fieldElementType>()"
+        }
+    }
+
+    class ClassDeclaration(
+        private val className: String,
+        private val implementedInterfaceName: String
+    ): CodeLineBuilder {
+        override fun build(): String {
+            return "class $className: $implementedInterfaceName {"
+        }
+
+    }
     class CodeBuilder(
         indent: Int = 0
     ) {
@@ -18,6 +40,10 @@ class MocksGenerator: FileGenerator() {
             val indent = " ".repeat(currentIndent)
             lines.add(indent + value)
             return this
+        }
+
+        fun line(value: CodeLineBuilder): CodeBuilder {
+            return line(value.build())
         }
 
         fun tab(): CodeBuilder {
@@ -39,11 +65,11 @@ class MocksGenerator: FileGenerator() {
     ) {
         fun block(): String {
             return CodeBuilder()
-                .line("class ${interfaceName}Mock: ${interfaceName} {")
+                .line(ClassDeclaration("${interfaceName}Mock", interfaceName))
                 .tab()
                 .line("// referenceOtherClass")
-                .line("private var referenceOtherClassCalls = mutableListOf<OtherClass>()")
-                .line("private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()")
+                .line(ListFieldDeclaration("referenceOtherClassCalls", "OtherClass"))
+                .line(ListFieldDeclaration("referenceOtherClassResponses", "Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>"))
                 .build()
         }
     }

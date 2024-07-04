@@ -16,7 +16,7 @@ import com.some.pkg.somemodule.api.*
 
 class SomeInterface2Mock: SomeInterface2 {
     // referenceOtherClass
-    private var referenceOtherClassCalls = mutableListOf<OtherClass>()
+    private val referenceOtherClassCalls = mutableListOf<OtherClass>()
     private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()
 
     fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {
