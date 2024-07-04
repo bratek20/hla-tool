@@ -14,32 +14,6 @@ class SomeId {
     }
 }
 
-class SomeId2 {
-    constructor(
-        public readonly value: number
-    ) {}
-
-    equals(other: SomeId2): boolean {
-        return this.value === other.value
-    }
-
-    toString(): string {
-        return this.value.toString()
-    }
-
-    plus(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value + other.value);
-    }
-
-    minus(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value - other.value);
-    }
-
-    times(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value * other.value);
-    }
-}
-
 class SomeIntWrapper {
     constructor(
         public readonly value: number
@@ -63,6 +37,32 @@ class SomeIntWrapper {
 
     times(other: SomeIntWrapper): SomeIntWrapper {
         return new SomeIntWrapper(this.value * other.value);
+    }
+}
+
+class SomeId2 {
+    constructor(
+        public readonly value: number
+    ) {}
+
+    equals(other: SomeId2): boolean {
+        return this.value === other.value
+    }
+
+    toString(): string {
+        return this.value.toString()
+    }
+
+    plus(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value + other.value);
+    }
+
+    minus(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value - other.value);
+    }
+
+    times(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value * other.value);
     }
 }
 
