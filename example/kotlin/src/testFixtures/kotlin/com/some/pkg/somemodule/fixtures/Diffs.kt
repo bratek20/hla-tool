@@ -26,79 +26,6 @@ fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
     return ""
 }
 
-data class ExpectedSomeProperty(
-    var other: (ExpectedOtherProperty.() -> Unit)? = null,
-    var id2: Int? = null,
-    var range: (ExpectedDateRange.() -> Unit)? = null,
-    var doubleExample: Double? = null,
-    var longExample: Long? = null,
-    var goodName: String? = null,
-    var customData: com.github.bratek20.architecture.serialization.api.Struct? = null,
-)
-fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit, path: String = ""): String {
-    val expected = ExpectedSomeProperty().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.other?.let {
-        if (diffOtherProperty(given.getOther(), it) != "") { result.add(diffOtherProperty(given.getOther(), it, "${path}other.")) }
-    }
-
-    expected.id2?.let {
-        if (diffSomeId2(given.getId2()!!, it) != "") { result.add(diffSomeId2(given.getId2()!!, it, "${path}id2.")) }
-    }
-
-    expected.range?.let {
-        if (diffDateRange(given.getRange()!!, it) != "") { result.add(diffDateRange(given.getRange()!!, it, "${path}range.")) }
-    }
-
-    expected.doubleExample?.let {
-        if (given.getDoubleExample() != it) { result.add("${path}doubleExample ${given.getDoubleExample()} != ${it}") }
-    }
-
-    expected.longExample?.let {
-        if (given.getLongExample() != it) { result.add("${path}longExample ${given.getLongExample()} != ${it}") }
-    }
-
-    expected.goodName?.let {
-        if (given.getGoodName() != it) { result.add("${path}goodName ${given.getGoodName()} != ${it}") }
-    }
-
-    expected.customData?.let {
-        if (given.getCustomData() != it) { result.add("${path}customData ${given.getCustomData()} != ${it}") }
-    }
-
-    return result.joinToString("\n")
-}
-
-data class ExpectedSomeProperty2(
-    var value: String? = null,
-    var custom: Any? = null,
-    var someEnum: SomeEnum? = null,
-    var customOpt: Any? = null,
-)
-fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit, path: String = ""): String {
-    val expected = ExpectedSomeProperty2().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.value?.let {
-        if (given.getValue() != it) { result.add("${path}value ${given.getValue()} != ${it}") }
-    }
-
-    expected.custom?.let {
-        if (given.getCustom() != it) { result.add("${path}custom ${given.getCustom()} != ${it}") }
-    }
-
-    expected.someEnum?.let {
-        if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
-    }
-
-    expected.customOpt?.let {
-        if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
-    }
-
-    return result.joinToString("\n")
-}
-
 data class ExpectedSomeClass(
     var id: String? = null,
     var amount: Int? = null,
@@ -278,6 +205,79 @@ fun diffSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInp
 
     expected.amount?.let {
         if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeProperty(
+    var other: (ExpectedOtherProperty.() -> Unit)? = null,
+    var id2: Int? = null,
+    var range: (ExpectedDateRange.() -> Unit)? = null,
+    var doubleExample: Double? = null,
+    var longExample: Long? = null,
+    var goodName: String? = null,
+    var customData: com.github.bratek20.architecture.serialization.api.Struct? = null,
+)
+fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.other?.let {
+        if (diffOtherProperty(given.getOther(), it) != "") { result.add(diffOtherProperty(given.getOther(), it, "${path}other.")) }
+    }
+
+    expected.id2?.let {
+        if (diffSomeId2(given.getId2()!!, it) != "") { result.add(diffSomeId2(given.getId2()!!, it, "${path}id2.")) }
+    }
+
+    expected.range?.let {
+        if (diffDateRange(given.getRange()!!, it) != "") { result.add(diffDateRange(given.getRange()!!, it, "${path}range.")) }
+    }
+
+    expected.doubleExample?.let {
+        if (given.getDoubleExample() != it) { result.add("${path}doubleExample ${given.getDoubleExample()} != ${it}") }
+    }
+
+    expected.longExample?.let {
+        if (given.getLongExample() != it) { result.add("${path}longExample ${given.getLongExample()} != ${it}") }
+    }
+
+    expected.goodName?.let {
+        if (given.getGoodName() != it) { result.add("${path}goodName ${given.getGoodName()} != ${it}") }
+    }
+
+    expected.customData?.let {
+        if (given.getCustomData() != it) { result.add("${path}customData ${given.getCustomData()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeProperty2(
+    var value: String? = null,
+    var custom: Any? = null,
+    var someEnum: SomeEnum? = null,
+    var customOpt: Any? = null,
+)
+fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeProperty2().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.value?.let {
+        if (given.getValue() != it) { result.add("${path}value ${given.getValue()} != ${it}") }
+    }
+
+    expected.custom?.let {
+        if (given.getCustom() != it) { result.add("${path}custom ${given.getCustom()} != ${it}") }
+    }
+
+    expected.someEnum?.let {
+        if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
+    }
+
+    expected.customOpt?.let {
+        if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

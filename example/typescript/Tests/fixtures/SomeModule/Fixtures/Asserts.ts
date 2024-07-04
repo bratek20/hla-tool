@@ -16,16 +16,6 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
-        const diff = diffSomeProperty(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
-    export function someProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2) {
-        const diff = diffSomeProperty2(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
     export function someClass(given: SomeClass, expected: ExpectedSomeClass) {
         const diff = diffSomeClass(given, expected)
         AssertEquals(diff, "", diff)
@@ -58,6 +48,16 @@ namespace SomeModule.Assert {
 
     export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
         const diff = diffSomeQueryInput(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
+        const diff = diffSomeProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2) {
+        const diff = diffSomeProperty2(given, expected)
         AssertEquals(diff, "", diff)
     }
 
