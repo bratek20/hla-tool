@@ -8,6 +8,18 @@ data class OtherId(
     override fun toString(): String {
         return value.toString()
     }
+
+    operator fun plus(other: OtherId): OtherId {
+        return OtherId(this.value + other.value)
+    }
+
+    operator fun minus(other: OtherId): OtherId {
+        return OtherId(this.value - other.value)
+    }
+
+    operator fun times(other: OtherId): OtherId {
+        return OtherId(this.value * other.value)
+    }
 }
 
 data class OtherProperty(
