@@ -1,0 +1,3 @@
+Interfaces
+    SomeInterface
+        someMethod2(someArg: int)
