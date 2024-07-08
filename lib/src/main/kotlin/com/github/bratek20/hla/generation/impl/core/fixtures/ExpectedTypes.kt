@@ -95,9 +95,9 @@ class OptionalEmptyExpectedTypeField(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
-        val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${($givenVariable.${mainField.name} == null) != $expectedVariable} != \${$expectedVariable}")
+        val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${${mainField.access(givenVariable)} == null} != \${$expectedVariable}")
         val body = languageTypes.addListElement("result", element)
-        return "if (($givenVariable.${mainField.name} == null) != $expectedVariable) { $body }"
+        return "if ((${mainField.access(givenVariable)} == null) != $expectedVariable) { $body }"
     }
 }
 
@@ -268,19 +268,21 @@ class ExpectedTypeFactory(
 
     private fun createFields(fields: List<ComplexStructureField>): List<ExpectedTypeField> {
         return fields.map {
-            if (it.type is OptionalApiType) {
-                listOf(
-                    OptionalEmptyExpectedTypeField(it, languageTypes),
-                    DefaultExpectedTypeField(it, this)
-                )
-            }
-            if (it.type is ListApiType) {
-                listOf(
-                    ListExpectedTypeField(it, this)
-                )
-            }
-            else {
-                listOf(DefaultExpectedTypeField(it, this))
+            when (it.type) {
+                is OptionalApiType -> {
+                    listOf(
+                        OptionalEmptyExpectedTypeField(it, languageTypes),
+                        DefaultExpectedTypeField(it, this)
+                    )
+                }
+                is ListApiType -> {
+                    listOf(
+                        ListExpectedTypeField(it, this)
+                    )
+                }
+                else -> {
+                    listOf(DefaultExpectedTypeField(it, this))
+                }
             }
         }.flatten()
     }

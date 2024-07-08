@@ -167,7 +167,9 @@ fun diffSomeClass5(given: SomeClass5, expectedInit: ExpectedSomeClass5.() -> Uni
 }
 
 data class ExpectedSomeClass6(
+    var someClassOptEmpty: Boolean? = null,
     var someClassOpt: (ExpectedSomeClass.() -> Unit)? = null,
+    var optStringEmpty: Boolean? = null,
     var optString: String? = null,
     var sameClassList: List<(ExpectedSomeClass6.() -> Unit)>? = null,
 )
@@ -175,8 +177,16 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     val expected = ExpectedSomeClass6().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
+    expected.someClassOptEmpty?.let {
+        if ((given.getSomeClassOpt() == null) != it) { result.add("${path}someClassOpt empty ${given.getSomeClassOpt() == null} != ${it}") }
+    }
+
     expected.someClassOpt?.let {
         if (diffSomeClass(given.getSomeClassOpt()!!, it) != "") { result.add(diffSomeClass(given.getSomeClassOpt()!!, it, "${path}someClassOpt.")) }
+    }
+
+    expected.optStringEmpty?.let {
+        if ((given.getOptString() == null) != it) { result.add("${path}optString empty ${given.getOptString() == null} != ${it}") }
     }
 
     expected.optString?.let {
@@ -212,7 +222,9 @@ fun diffSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInp
 
 data class ExpectedSomeProperty(
     var other: (ExpectedOtherProperty.() -> Unit)? = null,
+    var id2Empty: Boolean? = null,
     var id2: Int? = null,
+    var rangeEmpty: Boolean? = null,
     var range: (ExpectedDateRange.() -> Unit)? = null,
     var doubleExample: Double? = null,
     var longExample: Long? = null,
@@ -227,8 +239,16 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
         if (diffOtherProperty(given.getOther(), it) != "") { result.add(diffOtherProperty(given.getOther(), it, "${path}other.")) }
     }
 
+    expected.id2Empty?.let {
+        if ((given.getId2() == null) != it) { result.add("${path}id2 empty ${given.getId2() == null} != ${it}") }
+    }
+
     expected.id2?.let {
         if (diffSomeId2(given.getId2()!!, it) != "") { result.add(diffSomeId2(given.getId2()!!, it, "${path}id2.")) }
+    }
+
+    expected.rangeEmpty?.let {
+        if ((given.getRange() == null) != it) { result.add("${path}range empty ${given.getRange() == null} != ${it}") }
     }
 
     expected.range?.let {
@@ -258,6 +278,7 @@ data class ExpectedSomeProperty2(
     var value: String? = null,
     var custom: Any? = null,
     var someEnum: SomeEnum? = null,
+    var customOptEmpty: Boolean? = null,
     var customOpt: Any? = null,
 )
 fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit, path: String = ""): String {
@@ -274,6 +295,10 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
     expected.someEnum?.let {
         if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
+    }
+
+    expected.customOptEmpty?.let {
+        if ((given.getCustomOpt() == null) != it) { result.add("${path}customOpt empty ${given.getCustomOpt() == null} != ${it}") }
     }
 
     expected.customOpt?.let {
@@ -300,6 +325,7 @@ fun diffDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRang
 data class ExpectedSomeData(
     var other: (ExpectedOtherData.() -> Unit)? = null,
     var custom: Any? = null,
+    var customOptEmpty: Boolean? = null,
     var customOpt: Any? = null,
     var goodDataName: String? = null,
 )
@@ -313,6 +339,10 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
 
     expected.custom?.let {
         if (given.getCustom() != it) { result.add("${path}custom ${given.getCustom()} != ${it}") }
+    }
+
+    expected.customOptEmpty?.let {
+        if ((given.getCustomOpt() == null) != it) { result.add("${path}customOpt empty ${given.getCustomOpt() == null} != ${it}") }
     }
 
     expected.customOpt?.let {

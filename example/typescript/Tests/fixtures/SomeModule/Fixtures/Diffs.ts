@@ -152,15 +152,25 @@ namespace SomeModule {
     }
 
     export interface ExpectedSomeClass6 {
+        someClassOptEmpty?: boolean,
         someClassOpt?: ExpectedSomeClass,
+        optStringEmpty?: boolean,
         optString?: string,
         sameClassList?: ExpectedSomeClass6[],
     }
     export function diffSomeClass6(given: SomeClass6, expected: ExpectedSomeClass6, path: string = ""): string {
         const result: string[] = []
 
+        if (expected.someClassOptEmpty !== undefined) {
+            if ((given.getSomeClassOpt() == null) != expected.someClassOptEmpty) { result.push(`${path}someClassOpt empty ${given.getSomeClassOpt() == null} != ${expected.someClassOptEmpty}`) }
+        }
+
         if (expected.someClassOpt !== undefined) {
             if (diffSomeClass(given.getSomeClassOpt().get(), expected.someClassOpt) != "") { result.push(diffSomeClass(given.getSomeClassOpt().get(), expected.someClassOpt, `${path}someClassOpt.`)) }
+        }
+
+        if (expected.optStringEmpty !== undefined) {
+            if ((given.getOptString() == null) != expected.optStringEmpty) { result.push(`${path}optString empty ${given.getOptString() == null} != ${expected.optStringEmpty}`) }
         }
 
         if (expected.optString !== undefined) {
@@ -195,7 +205,9 @@ namespace SomeModule {
 
     export interface ExpectedSomeProperty {
         other?: OtherModule.ExpectedOtherProperty,
+        id2Empty?: boolean,
         id2?: number,
+        rangeEmpty?: boolean,
         range?: TypesModule.ExpectedDateRange,
         doubleExample?: number,
         longExample?: number,
@@ -209,8 +221,16 @@ namespace SomeModule {
             if (OtherModule.diffOtherProperty(given.getOther(), expected.other) != "") { result.push(OtherModule.diffOtherProperty(given.getOther(), expected.other, `${path}other.`)) }
         }
 
+        if (expected.id2Empty !== undefined) {
+            if ((given.getId2() == null) != expected.id2Empty) { result.push(`${path}id2 empty ${given.getId2() == null} != ${expected.id2Empty}`) }
+        }
+
         if (expected.id2 !== undefined) {
             if (diffSomeId2(given.getId2().get(), expected.id2) != "") { result.push(diffSomeId2(given.getId2().get(), expected.id2, `${path}id2.`)) }
+        }
+
+        if (expected.rangeEmpty !== undefined) {
+            if ((given.getRange() == null) != expected.rangeEmpty) { result.push(`${path}range empty ${given.getRange() == null} != ${expected.rangeEmpty}`) }
         }
 
         if (expected.range !== undefined) {
@@ -240,6 +260,7 @@ namespace SomeModule {
         value?: string,
         custom?: any,
         someEnum?: SomeEnum,
+        customOptEmpty?: boolean,
         customOpt?: any,
     }
     export function diffSomeProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2, path: string = ""): string {
@@ -255,6 +276,10 @@ namespace SomeModule {
 
         if (expected.someEnum !== undefined) {
             if (given.getSomeEnum() != expected.someEnum) { result.push(`${path}someEnum ${given.getSomeEnum()} != ${expected.someEnum}`) }
+        }
+
+        if (expected.customOptEmpty !== undefined) {
+            if ((given.getCustomOpt() == null) != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt() == null} != ${expected.customOptEmpty}`) }
         }
 
         if (expected.customOpt !== undefined) {
@@ -280,6 +305,7 @@ namespace SomeModule {
     export interface ExpectedSomeData {
         other?: OtherModule.ExpectedOtherData,
         custom?: any,
+        customOptEmpty?: boolean,
         customOpt?: any,
         goodDataName?: string,
     }
@@ -292,6 +318,10 @@ namespace SomeModule {
 
         if (expected.custom !== undefined) {
             if (given.getCustom() != expected.custom) { result.push(`${path}custom ${given.getCustom()} != ${expected.custom}`) }
+        }
+
+        if (expected.customOptEmpty !== undefined) {
+            if ((given.getCustomOpt() == null) != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt() == null} != ${expected.customOptEmpty}`) }
         }
 
         if (expected.customOpt !== undefined) {

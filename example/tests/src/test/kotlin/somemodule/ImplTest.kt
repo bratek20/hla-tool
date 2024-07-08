@@ -6,6 +6,7 @@ import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.some.pkg.somemodule.api.*
 import com.some.pkg.somemodule.fixtures.assertSomeClass
+import com.some.pkg.somemodule.fixtures.someQueryInput
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -19,12 +20,12 @@ class TestSomeInterfaceLogic: SomeInterface {
         TODO("Not yet implemented")
     }
 
-    override fun someQuery(id: SomeId): SomeClass {
-        if (id.value == "throw") {
+    override fun someQuery(query: SomeQueryInput): SomeClass {
+        if (query.getId().value == "throw") {
             throw SomeException("Some message")
         }
         return SomeClass.create(
-            id = id,
+            id = query.getId(),
             amount = 0,
         )
     }
@@ -58,7 +59,11 @@ open class TestSomeModuleImplTest {
 
     @Test
     fun `should copy id for someQuery`() {
-        val result = someInterface.someQuery(SomeId("id"))
+        val result = someInterface.someQuery(
+            someQueryInput {
+                id = "id"
+            }
+        )
 
         assertSomeClass(result) {
             id = "id"
@@ -68,7 +73,13 @@ open class TestSomeModuleImplTest {
     @Test
     fun `should throw if id = throw`() {
         assertApiExceptionThrown(
-            { someInterface.someQuery(SomeId("throw")) },
+            {
+                someInterface.someQuery(
+                    someQueryInput {
+                        id = "throw"
+                    }
+                )
+            },
             {
                 type = SomeException::class
                 message = "Some message"
