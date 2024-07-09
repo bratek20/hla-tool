@@ -44,6 +44,10 @@ ValueObjects
         optString: string?
         sameClassList: SomeClass6[] = []
 
+    RecordClass
+        id: SomeId
+        amount: int
+
 Properties
     SomeProperty
         other: OtherProperty
@@ -102,7 +106,8 @@ Interfaces
 Kotlin
     ExternalTypePackages
         LegacyType -> com.some.pkg.legacy
-
+    Records
+        RecordClass
 Web
     expose
         SomeInterface

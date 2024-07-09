@@ -124,6 +124,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface RecordClassDef {
+        id?: string,
+        amount?: number,
+    }
+    export function recordClass(def?: RecordClassDef): RecordClass {
+        const id = def?.id ?? "someValue"
+        const amount = def?.amount ?? 0
+
+        return RecordClass.create(
+            new SomeId(id),
+            amount,
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,

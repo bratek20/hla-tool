@@ -185,6 +185,24 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedRecordClass {
+        id?: string,
+        amount?: number,
+    }
+    export function diffRecordClass(given: RecordClass, expected: ExpectedRecordClass, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeQueryInput {
         id?: string,
         amount?: number,

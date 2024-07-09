@@ -111,6 +111,18 @@ fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
     )
 }
 
+data class RecordClassDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun recordClass(init: RecordClassDef.() -> Unit = {}): RecordClass {
+    val def = RecordClassDef().apply(init)
+    return RecordClass.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,

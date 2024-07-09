@@ -267,6 +267,29 @@ class SomeClass6 {
     }
 }
 
+class RecordClass {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): RecordClass {
+        const instance = new RecordClass()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

@@ -266,6 +266,31 @@ data class SomeClass6(
     }
 }
 
+data class RecordClass(
+    private val id: String,
+    private val amount: Int,
+) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
+    fun getAmount(): Int {
+        return this.amount
+    }
+
+    companion object {
+        fun create(
+            id: SomeId,
+            amount: Int,
+        ): RecordClass {
+            return RecordClass(
+                id = id.value,
+                amount = amount,
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,
