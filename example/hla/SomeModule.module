@@ -107,4 +107,3 @@ Web
     expose
         SomeInterface
         SomeInterface2
-    serverUrl = "http://localhost:8080"

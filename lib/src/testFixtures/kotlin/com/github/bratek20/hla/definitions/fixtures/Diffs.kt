@@ -69,6 +69,7 @@ fun diffImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: Ex
 
 data class ExpectedWebSubmoduleDefinition(
     var expose: List<String>? = null,
+    var serverUrlEmpty: Boolean? = null,
     var serverUrl: String? = null,
 )
 fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: ExpectedWebSubmoduleDefinition.() -> Unit, path: String = ""): String {
@@ -80,8 +81,12 @@ fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Expe
         given.getExpose().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}expose[${idx}] ${entry} != ${it[idx]}") } }
     }
 
+    expected.serverUrlEmpty?.let {
+        if ((given.getServerUrl() == null) != it) { result.add("${path}serverUrl empty ${given.getServerUrl() == null} != ${it}") }
+    }
+
     expected.serverUrl?.let {
-        if (given.getServerUrl() != it) { result.add("${path}serverUrl ${given.getServerUrl()} != ${it}") }
+        if (given.getServerUrl()!! != it) { result.add("${path}serverUrl ${given.getServerUrl()!!} != ${it}") }
     }
 
     return result.joinToString("\n")
@@ -133,8 +138,11 @@ data class ExpectedModuleDefinition(
     var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
     var enums: List<(ExpectedEnumDefinition.() -> Unit)>? = null,
     var externalTypes: List<String>? = null,
+    var implSubmoduleEmpty: Boolean? = null,
     var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
+    var webSubmoduleEmpty: Boolean? = null,
     var webSubmodule: (ExpectedWebSubmoduleDefinition.() -> Unit)? = null,
+    var kotlinConfigEmpty: Boolean? = null,
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
 )
 fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit, path: String = ""): String {
@@ -195,12 +203,24 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
         given.getExternalTypes().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}externalTypes[${idx}] ${entry} != ${it[idx]}") } }
     }
 
+    expected.implSubmoduleEmpty?.let {
+        if ((given.getImplSubmodule() == null) != it) { result.add("${path}implSubmodule empty ${given.getImplSubmodule() == null} != ${it}") }
+    }
+
     expected.implSubmodule?.let {
         if (diffImplSubmoduleDefinition(given.getImplSubmodule()!!, it) != "") { result.add(diffImplSubmoduleDefinition(given.getImplSubmodule()!!, it, "${path}implSubmodule.")) }
     }
 
+    expected.webSubmoduleEmpty?.let {
+        if ((given.getWebSubmodule() == null) != it) { result.add("${path}webSubmodule empty ${given.getWebSubmodule() == null} != ${it}") }
+    }
+
     expected.webSubmodule?.let {
         if (diffWebSubmoduleDefinition(given.getWebSubmodule()!!, it) != "") { result.add(diffWebSubmoduleDefinition(given.getWebSubmodule()!!, it, "${path}webSubmodule.")) }
+    }
+
+    expected.kotlinConfigEmpty?.let {
+        if ((given.getKotlinConfig() == null) != it) { result.add("${path}kotlinConfig empty ${given.getKotlinConfig() == null} != ${it}") }
     }
 
     expected.kotlinConfig?.let {
@@ -234,6 +254,7 @@ data class ExpectedFieldDefinition(
     var name: String? = null,
     var type: (ExpectedTypeDefinition.() -> Unit)? = null,
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
+    var defaultValueEmpty: Boolean? = null,
     var defaultValue: String? = null,
 )
 fun diffFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDefinition.() -> Unit, path: String = ""): String {
@@ -251,6 +272,10 @@ fun diffFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDefin
     expected.attributes?.let {
         if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
         given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
+    }
+
+    expected.defaultValueEmpty?.let {
+        if ((given.getDefaultValue() == null) != it) { result.add("${path}defaultValue empty ${given.getDefaultValue() == null} != ${it}") }
     }
 
     expected.defaultValue?.let {

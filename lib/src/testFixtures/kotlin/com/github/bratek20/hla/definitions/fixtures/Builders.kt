@@ -45,7 +45,7 @@ fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): I
 
 data class WebSubmoduleDefinitionDef(
     var expose: List<String> = emptyList(),
-    var serverUrl: String = "someValue",
+    var serverUrl: String? = null,
 )
 fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): WebSubmoduleDefinition {
     val def = WebSubmoduleDefinitionDef().apply(init)

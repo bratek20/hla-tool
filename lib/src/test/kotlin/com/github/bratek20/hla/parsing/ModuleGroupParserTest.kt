@@ -678,17 +678,29 @@ class ModuleGroupParserTest {
 
     @Test
     fun `should parse web submodule`() {
-        val module = parseSingleModule("web-submodule")
+        val modules = parseSingleGroup("web-submodule")
 
-        assertModuleDefinition(module) {
-            webSubmodule = {
-                expose = listOf(
-                    "SomeInterface",
-                    "SomeInterface2"
-                )
-                serverUrl = "\"http://localhost:8080\""
-            }
-        }
+        assertModules(modules, listOf (
+            {
+                name = "OtherModule"
+                webSubmodule = {
+                    expose = listOf(
+                        "OtherInterface"
+                    )
+                    serverUrlEmpty = true
+                }
+            },
+            {
+                name = "SomeModule"
+                webSubmodule = {
+                    expose = listOf(
+                        "SomeInterface",
+                        "SomeInterface2"
+                    )
+                    serverUrl = "\"http://myhost:8080\""
+                }
+            },
+        ))
     }
 
     @Test

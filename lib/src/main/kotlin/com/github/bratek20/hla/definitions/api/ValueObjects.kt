@@ -81,20 +81,20 @@ data class ImplSubmoduleDefinition(
 
 data class WebSubmoduleDefinition(
     private val expose: List<String>,
-    private val serverUrl: String,
+    private val serverUrl: String?,
 ) {
     fun getExpose(): List<String> {
         return this.expose
     }
 
-    fun getServerUrl(): String {
+    fun getServerUrl(): String? {
         return this.serverUrl
     }
 
     companion object {
         fun create(
             expose: List<String>,
-            serverUrl: String,
+            serverUrl: String?,
         ): WebSubmoduleDefinition {
             return WebSubmoduleDefinition(
                 expose = expose,

@@ -114,9 +114,9 @@ class ModuleGroupParserLogic(
                 expose = findSection(web.elements, "expose")!!.elements.filterIsInstance<Section>().map {
                     it.name
                 },
-                serverUrl = web.elements.filterIsInstance<EqualsAssignment>().first {
+                serverUrl = web.elements.filterIsInstance<EqualsAssignment>().firstOrNull {
                     it.name == "serverUrl"
-                }.value,
+                }?.value,
             )
         }
     }
