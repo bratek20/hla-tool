@@ -2,9 +2,7 @@
 
 package com.some.pkg.somemodule.fixtures
 
-import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
-import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
@@ -210,11 +208,11 @@ fun diffRecordClass(given: RecordClass, expectedInit: ExpectedRecordClass.() -> 
     val result: MutableList<String> = mutableListOf()
 
     expected.id?.let {
-        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+        if (diffSomeId(given.id(), it) != "") { result.add(diffSomeId(given.id(), it, "${path}id.")) }
     }
 
     expected.amount?.let {
-        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+        if (given.amount() != it) { result.add("${path}amount ${given.amount()} != ${it}") }
     }
 
     return result.joinToString("\n")
