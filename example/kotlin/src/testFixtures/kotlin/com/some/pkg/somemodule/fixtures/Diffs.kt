@@ -2,7 +2,9 @@
 
 package com.some.pkg.somemodule.fixtures
 
+import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
