@@ -270,11 +270,11 @@ data class RecordClass(
     private val id: String,
     private val amount: Int,
 ) {
-    fun getId(): SomeId {
+    fun id(): SomeId {
         return SomeId(this.id)
     }
 
-    fun getAmount(): Int {
+    fun amount(): Int {
         return this.amount
     }
 

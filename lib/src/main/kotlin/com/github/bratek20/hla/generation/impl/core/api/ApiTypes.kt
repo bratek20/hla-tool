@@ -10,6 +10,12 @@ import com.github.bratek20.hla.utils.pascalToCamelCase
 
 abstract class ApiType {
     lateinit var languageTypes: LanguageTypes
+    var typeModule: ModuleDefinition? = null
+
+    fun init(languageTypes: LanguageTypes, typeModule: ModuleDefinition?) {
+        this.languageTypes = languageTypes
+        this.typeModule = typeModule
+    }
 
     abstract fun name(): String
 
@@ -47,12 +53,11 @@ class InterfaceApiType(
 }
 
 class ExternalApiType(
-    val name: String,
-    private val typeModule: ModuleDefinition
+    val name: String
 ) : ApiType() {
     override fun name(): String {
         if (languageTypes is KotlinTypes) {
-            typeModule.getKotlinConfig()?.let { config ->
+            typeModule!!.getKotlinConfig()?.let { config ->
                 config.getExternalTypePackages().find { it.getName() == name }?.let {
                     return it.getPackageName() + "." + name
                 }
@@ -331,17 +336,17 @@ class ApiTypeFactory(
             isList -> ListApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.LIST)))
             simpleVO != null -> SimpleValueObjectApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.getTypeName())))
             simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.getTypeName())))
-            complexVO != null -> ComplexValueObjectApiType(type.getName(), createComplexStructureFields(complexVO.getFields()))
-            dataVO != null -> DataClassApiType(type.getName(), createComplexStructureFields(dataVO.getFields()))
-            complexCustomType != null -> ComplexCustomApiType(type.getName(), createComplexStructureFields(complexCustomType.getFields()))
+            complexVO != null -> ComplexValueObjectApiType(type.getName(), createComplexStructureFields(complexVO))
+            dataVO != null -> DataClassApiType(type.getName(), createComplexStructureFields(dataVO))
+            complexCustomType != null -> ComplexCustomApiType(type.getName(), createComplexStructureFields(complexCustomType))
             isBaseType -> BaseApiType(ofBaseType(type.getName()))
             enum != null -> EnumApiType(enum)
             interf != null -> InterfaceApiType(type.getName())
-            externalTypeName != null -> ExternalApiType(externalTypeName, modules.getTypeModule(externalTypeName))
+            externalTypeName != null -> ExternalApiType(externalTypeName)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
-        apiType.languageTypes = languageTypes
+        apiType.init(languageTypes, modules.findTypeModule(type.getName()))
 
         if (apiType is ComplexStructureApiType<*>) {
             apiType.fields.forEach { it.init(apiType) }
@@ -360,12 +365,12 @@ class ApiTypeFactory(
 
     private fun createBaseApiType(type: BaseType): BaseApiType {
         val result = BaseApiType(type)
-        result.languageTypes = languageTypes
+        result.init(languageTypes, null)
         return result
     }
 
-    private fun createComplexStructureFields(fields: List<FieldDefinition>): List<ComplexStructureField> {
-        return fields.map {
+    private fun createComplexStructureFields(def: ComplexStructureDefinition): List<ComplexStructureField> {
+        return def.getFields().map {
             ComplexStructureField(it, this)
         }
     }

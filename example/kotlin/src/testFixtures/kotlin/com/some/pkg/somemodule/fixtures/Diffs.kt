@@ -210,11 +210,11 @@ fun diffRecordClass(given: RecordClass, expectedInit: ExpectedRecordClass.() -> 
     val result: MutableList<String> = mutableListOf()
 
     expected.id?.let {
-        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+        if (diffSomeId(given.id(), it) != "") { result.add(diffSomeId(given.id(), it, "${path}id.")) }
     }
 
     expected.amount?.let {
-        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+        if (given.amount() != it) { result.add("${path}amount ${given.amount()} != ${it}") }
     }
 
     return result.joinToString("\n")

@@ -1,13 +1,15 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.FieldDefinition
+import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.hla.utils.camelToPascalCase
 
 open class ComplexStructureField(
     protected val def: FieldDefinition,
-    private val factory: ApiTypeFactory,
+    private val factory: ApiTypeFactory
 ) {
     private lateinit var complexStructure: ComplexStructureApiType<*>
 
@@ -115,6 +117,12 @@ open class ComplexStructureField(
     }
 
     fun getterName(): String {
+        if(type.languageTypes is KotlinTypes) {
+            val records = complexStructure.typeModule?.getKotlinConfig()?.getRecords() ?: emptyList()
+            if (records.contains(complexStructure.name())) {
+                return name
+            }
+        }
         return "get${camelToPascalCase(name)}"
     }
 
