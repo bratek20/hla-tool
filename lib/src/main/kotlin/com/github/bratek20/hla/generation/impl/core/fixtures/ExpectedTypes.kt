@@ -23,6 +23,10 @@ abstract class ExpectedType<T: ApiType>(
     open fun notEquals(givenVariable: String, expectedVariable: String): String {
         return "$givenVariable != $expectedVariable"
     }
+
+    override fun toString(): String {
+        return "$javaClass(${name()})"
+    }
 }
 
 class BaseExpectedType(

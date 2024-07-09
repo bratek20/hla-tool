@@ -24,6 +24,10 @@ abstract class ApiType {
     open fun serialize(variableName: String): String {
         return variableName
     }
+
+    override fun toString(): String {
+        return "$javaClass(name=${name()})"
+    }
 }
 
 class BaseApiType(
