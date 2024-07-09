@@ -69,11 +69,13 @@ fun externalTypePackageMapping(init: ExternalTypePackageMappingDef.() -> Unit = 
 
 data class KotlinConfigDef(
     var externalTypePackages: List<(ExternalTypePackageMappingDef.() -> Unit)> = emptyList(),
+    var records: List<String> = emptyList(),
 )
 fun kotlinConfig(init: KotlinConfigDef.() -> Unit = {}): KotlinConfig {
     val def = KotlinConfigDef().apply(init)
     return KotlinConfig.create(
         externalTypePackages = def.externalTypePackages.map { it -> externalTypePackageMapping(it) },
+        records = def.records,
     )
 }
 

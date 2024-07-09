@@ -562,20 +562,31 @@ class ModuleGroupParserTest {
     }
 
     @Test
-    fun `should parse external types`() {
-        val modules = parseSingleGroup("external-types")
+    fun `should parse kotlin config`() {
+        val modules = parseSingleGroup("kotlin-config")
 
-        assertModules(modules, listOf {
-            externalTypes = listOf(
-                "LegacyType",
-            )
-            kotlinConfig = {
-                externalTypePackages = listOf {
-                    name = "LegacyType"
-                    packageName = "com.some.pkg.legacy"
+        assertModules(modules, listOf(
+            {
+                name = "Legacy"
+                externalTypes = listOf(
+                    "LegacyType",
+                )
+                kotlinConfig = {
+                    externalTypePackages = listOf {
+                        name = "LegacyType"
+                        packageName = "com.some.pkg.legacy"
+                    }
+                }
+            },
+            {
+                name = "Records"
+                kotlinConfig = {
+                    records = listOf(
+                        "SomeClass"
+                    )
                 }
             }
-        })
+        ))
     }
 
     @Test

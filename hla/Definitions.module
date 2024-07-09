@@ -36,6 +36,7 @@ ValueObjects
 
     KotlinConfig
         externalTypePackages: ExternalTypePackageMapping[]
+        records: string[]
 
     ModuleDefinition
         name: ModuleName

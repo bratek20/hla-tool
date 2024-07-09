@@ -131,17 +131,24 @@ data class ExternalTypePackageMapping(
 
 data class KotlinConfig(
     private val externalTypePackages: List<ExternalTypePackageMapping>,
+    private val records: List<String>,
 ) {
     fun getExternalTypePackages(): List<ExternalTypePackageMapping> {
         return this.externalTypePackages
     }
 
+    fun getRecords(): List<String> {
+        return this.records
+    }
+
     companion object {
         fun create(
             externalTypePackages: List<ExternalTypePackageMapping>,
+            records: List<String>,
         ): KotlinConfig {
             return KotlinConfig(
                 externalTypePackages = externalTypePackages,
+                records = records,
             )
         }
     }

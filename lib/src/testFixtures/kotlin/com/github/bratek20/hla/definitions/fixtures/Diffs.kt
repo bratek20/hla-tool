@@ -113,6 +113,7 @@ fun diffExternalTypePackageMapping(given: ExternalTypePackageMapping, expectedIn
 
 data class ExpectedKotlinConfig(
     var externalTypePackages: List<(ExpectedExternalTypePackageMapping.() -> Unit)>? = null,
+    var records: List<String>? = null,
 )
 fun diffKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.() -> Unit, path: String = ""): String {
     val expected = ExpectedKotlinConfig().apply(expectedInit)
@@ -121,6 +122,11 @@ fun diffKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.() 
     expected.externalTypePackages?.let {
         if (given.getExternalTypePackages().size != it.size) { result.add("${path}externalTypePackages size ${given.getExternalTypePackages().size} != ${it.size}"); return@let }
         given.getExternalTypePackages().forEachIndexed { idx, entry -> if (diffExternalTypePackageMapping(entry, it[idx]) != "") { result.add(diffExternalTypePackageMapping(entry, it[idx], "${path}externalTypePackages[${idx}].")) } }
+    }
+
+    expected.records?.let {
+        if (given.getRecords().size != it.size) { result.add("${path}records size ${given.getRecords().size} != ${it.size}"); return@let }
+        given.getRecords().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}records[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     return result.joinToString("\n")
