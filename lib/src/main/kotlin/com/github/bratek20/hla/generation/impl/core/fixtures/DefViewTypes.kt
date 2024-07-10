@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
 abstract class DefType<T: ApiType>(
@@ -88,6 +89,9 @@ open class DefField(
     }
 
     open fun build(): String {
+        if (api.type.languageTypes is TypeScriptTypes) {
+            return type.build("final_$name")
+        }
         return type.build(name)
     }
 
