@@ -59,3 +59,36 @@ data class SomeData(
         }
     }
 }
+
+data class SomeData2(
+    private var optEnum: String?,
+    private var optCustomType: String?,
+) {
+    fun getOptEnum(): SomeEnum? {
+        return this.optEnum
+    }
+
+    fun getOptCustomType(): Date? {
+        return this.optCustomType?.let { it -> Date(it) }
+    }
+
+    fun setOptEnum(optEnum: SomeEnum?) {
+        this.optEnum = optEnum
+    }
+
+    fun setOptCustomType(optCustomType: Date?) {
+        this.optCustomType = optCustomType?.let { it -> it.value }
+    }
+
+    companion object {
+        fun create(
+            optEnum: SomeEnum?,
+            optCustomType: Date?,
+        ): SomeData2 {
+            return SomeData2(
+                optEnum = optEnum,
+                optCustomType = optCustomType?.let { it -> it.value },
+            )
+        }
+    }
+}

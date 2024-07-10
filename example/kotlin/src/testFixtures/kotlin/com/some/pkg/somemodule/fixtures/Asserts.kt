@@ -87,3 +87,8 @@ fun assertSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit) {
     val diff = diffSomeData(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit) {
+    val diff = diffSomeData2(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

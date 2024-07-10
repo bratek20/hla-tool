@@ -374,3 +374,32 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
 
     return result.joinToString("\n")
 }
+
+data class ExpectedSomeData2(
+    var optEnumEmpty: Boolean? = null,
+    var optEnum: (ExpectedSomeEnum.() -> Unit)? = null,
+    var optCustomTypeEmpty: Boolean? = null,
+    var optCustomType: (ExpectedDate.() -> Unit)? = null,
+)
+fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeData2().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optEnumEmpty?.let {
+        if ((given.getOptEnum() == null) != it) { result.add("${path}optEnum empty ${given.getOptEnum() == null} != ${it}") }
+    }
+
+    expected.optEnum?.let {
+        if (given.getOptEnum()!! != it) { result.add("${path}optEnum ${given.getOptEnum()!!} != ${it}") }
+    }
+
+    expected.optCustomTypeEmpty?.let {
+        if ((given.getOptCustomType() == null) != it) { result.add("${path}optCustomType empty ${given.getOptCustomType() == null} != ${it}") }
+    }
+
+    expected.optCustomType?.let {
+        if (diffDate(given.getOptCustomType()!!, it) != "") { result.add(diffDate(given.getOptCustomType()!!, it, "${path}optCustomType.")) }
+    }
+
+    return result.joinToString("\n")
+}

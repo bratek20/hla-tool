@@ -73,6 +73,10 @@ Data
         customOpt: any?
         goodDataName: string (from: gDN)
 
+    SomeData2
+        optEnum: SomeEnum?
+        optCustomType: Date?
+
     "SomeKey" -> SomeData
 
 ExternalTypes

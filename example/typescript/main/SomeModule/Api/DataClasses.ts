@@ -52,3 +52,34 @@ class SomeData {
         this.gDN = goodDataName
     }
 }
+
+class SomeData2 {
+    private optEnum? = STRING
+    private optCustomType? = STRING
+
+    static create(
+        optEnum: Optional<SomeEnum>,
+        optCustomType: Optional<Date>,
+    ): SomeData2 {
+        const instance = new SomeData2()
+        instance.optEnum = optEnum.orElse(undefined)
+        instance.optCustomType = optCustomType.map(it => it.value).orElse(undefined)
+        return instance
+    }
+
+    getOptEnum(): Optional<SomeEnum> {
+        return Optional.of(this.optEnum)
+    }
+
+    getOptCustomType(): Optional<Date> {
+        return Optional.of(this.optCustomType).map(it => new Date(it))
+    }
+
+    setOptEnum(optEnum: Optional<SomeEnum>): void {
+        this.optEnum = optEnum.orElse(undefined)
+    }
+
+    setOptCustomType(optCustomType: Optional<Date>): void {
+        this.optCustomType = optCustomType.map(it => it.value).orElse(undefined)
+    }
+}
