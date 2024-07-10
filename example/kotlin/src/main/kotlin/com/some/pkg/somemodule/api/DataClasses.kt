@@ -65,19 +65,19 @@ data class SomeData2(
     private var optCustomType: String?,
 ) {
     fun getOptEnum(): SomeEnum? {
-        return this.optEnum
+        return this.optEnum?.let { it -> SomeEnum.valueOf(it) }
     }
 
     fun getOptCustomType(): Date? {
-        return this.optCustomType?.let { it -> Date(it) }
+        return this.optCustomType?.let { it -> dateCreate(it) }
     }
 
     fun setOptEnum(optEnum: SomeEnum?) {
-        this.optEnum = optEnum
+        this.optEnum = optEnum?.name
     }
 
     fun setOptCustomType(optCustomType: Date?) {
-        this.optCustomType = optCustomType?.let { it -> it.value }
+        this.optCustomType = optCustomType?.let { it -> dateGetValue(it) }
     }
 
     companion object {
@@ -86,8 +86,8 @@ data class SomeData2(
             optCustomType: Date?,
         ): SomeData2 {
             return SomeData2(
-                optEnum = optEnum,
-                optCustomType = optCustomType?.let { it -> it.value },
+                optEnum = optEnum?.name,
+                optCustomType = optCustomType?.let { it -> dateGetValue(it) },
             )
         }
     }

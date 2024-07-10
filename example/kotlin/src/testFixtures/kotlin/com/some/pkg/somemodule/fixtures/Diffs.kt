@@ -377,9 +377,9 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
 
 data class ExpectedSomeData2(
     var optEnumEmpty: Boolean? = null,
-    var optEnum: (ExpectedSomeEnum.() -> Unit)? = null,
+    var optEnum: SomeEnum? = null,
     var optCustomTypeEmpty: Boolean? = null,
-    var optCustomType: (ExpectedDate.() -> Unit)? = null,
+    var optCustomType: String? = null,
 )
 fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeData2().apply(expectedInit)

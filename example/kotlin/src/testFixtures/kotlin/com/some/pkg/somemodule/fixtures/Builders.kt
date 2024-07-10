@@ -200,13 +200,13 @@ fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
 }
 
 data class SomeData2Def(
-    var optEnum: (SomeEnumDef.() -> Unit)? = null,
+    var optEnum: SomeEnum? = null,
     var optCustomType: String? = null,
 )
 fun someData2(init: SomeData2Def.() -> Unit = {}): SomeData2 {
     val def = SomeData2Def().apply(init)
     return SomeData2.create(
-        optEnum = def.optEnum?.let { it -> it },
+        optEnum = def.optEnum,
         optCustomType = def.optCustomType?.let { it -> dateCreate(it) },
     )
 }
