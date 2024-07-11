@@ -189,11 +189,11 @@ class EnumDefType(
     }
 
     override fun defaultValue(): String {
-        return api.defaultValue() + ".name"
+        return api.serialize(api.defaultValue())
     }
 
     override fun build(variableName: String): String {
-        return "${api.name()}.valueOf($variableName)"
+        return api.deserialize(variableName)
     }
 }
 

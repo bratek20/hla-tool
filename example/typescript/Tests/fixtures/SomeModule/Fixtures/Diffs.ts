@@ -16,6 +16,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffSomeEnum(given: SomeEnum, expected: string, path: string = ""): string {
+        if (given != SomeEnum.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        return ""
+    }
+
     export interface ExpectedSomeClass {
         id?: string,
         amount?: number,
@@ -66,7 +71,7 @@ namespace SomeModule {
 
     export interface ExpectedSomeClass3 {
         class2Object?: ExpectedSomeClass2,
-        someEnum?: SomeEnum,
+        someEnum?: string,
         class2List?: ExpectedSomeClass2[],
     }
     export function diffSomeClass3(given: SomeClass3, expected: ExpectedSomeClass3, path: string = ""): string {
@@ -77,7 +82,7 @@ namespace SomeModule {
         }
 
         if (expected.someEnum !== undefined) {
-            if (given.getSomeEnum() != expected.someEnum) { result.push(`${path}someEnum ${given.getSomeEnum()} != ${expected.someEnum}`) }
+            if (diffSomeEnum(given.getSomeEnum(), expected.someEnum) != "") { result.push(diffSomeEnum(given.getSomeEnum(), expected.someEnum, `${path}someEnum.`)) }
         }
 
         if (expected.class2List !== undefined) {
@@ -277,7 +282,7 @@ namespace SomeModule {
     export interface ExpectedSomeProperty2 {
         value?: string,
         custom?: any,
-        someEnum?: SomeEnum,
+        someEnum?: string,
         customOptEmpty?: boolean,
         customOpt?: any,
     }
@@ -293,7 +298,7 @@ namespace SomeModule {
         }
 
         if (expected.someEnum !== undefined) {
-            if (given.getSomeEnum() != expected.someEnum) { result.push(`${path}someEnum ${given.getSomeEnum()} != ${expected.someEnum}`) }
+            if (diffSomeEnum(given.getSomeEnum(), expected.someEnum) != "") { result.push(diffSomeEnum(given.getSomeEnum(), expected.someEnum, `${path}someEnum.`)) }
         }
 
         if (expected.customOptEmpty !== undefined) {
@@ -355,7 +360,7 @@ namespace SomeModule {
 
     export interface ExpectedSomeData2 {
         optEnumEmpty?: boolean,
-        optEnum?: SomeEnum,
+        optEnum?: string,
         optCustomTypeEmpty?: boolean,
         optCustomType?: string,
     }
@@ -367,7 +372,7 @@ namespace SomeModule {
         }
 
         if (expected.optEnum !== undefined) {
-            if (given.getOptEnum().get() != expected.optEnum) { result.push(`${path}optEnum ${given.getOptEnum().get()} != ${expected.optEnum}`) }
+            if (diffSomeEnum(given.getOptEnum().get(), expected.optEnum) != "") { result.push(diffSomeEnum(given.getOptEnum().get(), expected.optEnum, `${path}optEnum.`)) }
         }
 
         if (expected.optCustomTypeEmpty !== undefined) {
