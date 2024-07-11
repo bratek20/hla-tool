@@ -143,12 +143,15 @@ class OptionalDefType(
 ) : DefType<OptionalApiType>(api) {
     override fun name(): String {
         if (wrappedType is BaseDefType) {
-            return pattern.defOptionalBaseType(wrappedType.name())
+            return pattern.defOptionalNonComplexType(wrappedType.name())
         }
         if (wrappedType is SimpleStructureDefType<*>) {
-            return pattern.defOptionalBaseType(wrappedType.api.serializableName())
+            return pattern.defOptionalNonComplexType(wrappedType.api.serializableName())
         }
-        return pattern.defOptionalType(wrappedType.api.name())
+        if (wrappedType is EnumDefType) {
+            return pattern.defOptionalNonComplexType(wrappedType.api.name())
+        }
+        return pattern.defOptionalComplexType(wrappedType.api.name())
     }
 
     override fun defaultValue(): String {
@@ -156,10 +159,11 @@ class OptionalDefType(
     }
 
     override fun build(variableName: String): String {
-        if (wrappedType is BaseDefType) {
+        val mapping = wrappedType.build("it")
+        if (mapping == "it") {
             return pattern.mapOptionalDefBaseElement(variableName)
         }
-        return pattern.mapOptionalDefElement(variableName, "it", wrappedType.build("it"))
+        return pattern.mapOptionalDefElement(variableName, "it", mapping)
     }
 }
 

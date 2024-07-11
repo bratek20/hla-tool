@@ -128,6 +128,10 @@ class SimpleCustomApiType(
         return languageTypes.customTypeConstructorCall(name)
     }
 
+    override fun deserialize(variableName: String): String {
+        return languageTypes.customTypeConstructorCall(name) + "($variableName)"
+    }
+
     // used by velocity
     fun createName(): String {
         return "${pascalToCamelCase(name)}Create"    //TODO duplicated logic
@@ -260,23 +264,20 @@ class OptionalApiType(
     }
 
     override fun deserialize(variableName: String): String {
-        if (wrappedType is SimpleStructureApiType) {
-            return languageTypes.deserializeOptionalForSimpleStructure(variableName, wrappedType.name())
+        val mapping = wrappedType.deserialize("it")
+        val asOptional = languageTypes.deserializeOptional(variableName)
+        if (mapping == "it") {
+            return asOptional
         }
-        if (wrappedType is ComplexCustomApiType) {
-            return languageTypes.deserializeOptionalForComplexCustomType(variableName)
-        }
-        return languageTypes.deserializeOptional(variableName)
+        return languageTypes.mapOptionalElement(asOptional, "it", mapping)
     }
 
     override fun serialize(variableName: String): String {
-        if (wrappedType is SimpleStructureApiType) {
-            return languageTypes.serializeOptionalForSimpleStructure(variableName, wrappedType.name())
+        val mapping = wrappedType.serialize("it")
+        if (mapping == "it") {
+            return languageTypes.serializeOptional(variableName)
         }
-        if (wrappedType is ComplexCustomApiType) {
-            return languageTypes.serializeOptionalForComplexCustomType(variableName, wrappedType.serializableName())
-        }
-        return languageTypes.serializeOptional(variableName)
+        return languageTypes.serializeOptional(languageTypes.mapOptionalElement(variableName, "it", mapping))
     }
 }
 

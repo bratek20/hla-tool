@@ -198,3 +198,15 @@ fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
         goodDataName = def.goodDataName,
     )
 }
+
+data class SomeData2Def(
+    var optEnum: SomeEnum? = null,
+    var optCustomType: String? = null,
+)
+fun someData2(init: SomeData2Def.() -> Unit = {}): SomeData2 {
+    val def = SomeData2Def().apply(init)
+    return SomeData2.create(
+        optEnum = def.optEnum,
+        optCustomType = def.optCustomType?.let { it -> dateCreate(it) },
+    )
+}

@@ -352,4 +352,32 @@ namespace SomeModule {
 
         return result.join("\n")
     }
+
+    export interface ExpectedSomeData2 {
+        optEnumEmpty?: boolean,
+        optEnum?: SomeEnum,
+        optCustomTypeEmpty?: boolean,
+        optCustomType?: string,
+    }
+    export function diffSomeData2(given: SomeData2, expected: ExpectedSomeData2, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optEnumEmpty !== undefined) {
+            if ((given.getOptEnum() == null) != expected.optEnumEmpty) { result.push(`${path}optEnum empty ${given.getOptEnum() == null} != ${expected.optEnumEmpty}`) }
+        }
+
+        if (expected.optEnum !== undefined) {
+            if (given.getOptEnum().get() != expected.optEnum) { result.push(`${path}optEnum ${given.getOptEnum().get()} != ${expected.optEnum}`) }
+        }
+
+        if (expected.optCustomTypeEmpty !== undefined) {
+            if ((given.getOptCustomType() == null) != expected.optCustomTypeEmpty) { result.push(`${path}optCustomType empty ${given.getOptCustomType() == null} != ${expected.optCustomTypeEmpty}`) }
+        }
+
+        if (expected.optCustomType !== undefined) {
+            if (TypesModule.diffDate(given.getOptCustomType().get(), expected.optCustomType) != "") { result.push(TypesModule.diffDate(given.getOptCustomType().get(), expected.optCustomType, `${path}optCustomType.`)) }
+        }
+
+        return result.join("\n")
+    }
 }

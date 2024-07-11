@@ -31,11 +31,11 @@ class KotlinBuildersPattern(
         return "(${name}Def.() -> Unit)"
     }
 
-    override fun defOptionalType(name: String): String {
+    override fun defOptionalComplexType(name: String): String {
         return "(${name}Def.() -> Unit)?"
     }
 
-    override fun defOptionalBaseType(name: String): String {
+    override fun defOptionalNonComplexType(name: String): String {
         return "$name?"
     }
 

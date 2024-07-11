@@ -231,4 +231,18 @@ namespace SomeModule.Builder {
             final_goodDataName,
         )
     }
+
+    export interface SomeData2Def {
+        optEnum?: SomeEnum,
+        optCustomType?: string,
+    }
+    export function someData2(def?: SomeData2Def): SomeData2 {
+        const final_optEnum = def?.optEnum ?? undefined
+        const final_optCustomType = def?.optCustomType ?? undefined
+
+        return SomeData2.create(
+            Optional.of(final_optEnum),
+            Optional.of(final_optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it)),
+        )
+    }
 }
