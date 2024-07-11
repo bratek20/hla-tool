@@ -189,8 +189,11 @@ class OptionalExpectedType(
         if (wrappedType is BaseExpectedType) {
             return wrappedType.name()
         }
-        if (wrappedType is SimpleValueObjectExpectedType) {
+        if (wrappedType is SimpleStructureExpectedType<*>) {
             return wrappedType.api.boxedType.name()
+        }
+        if (wrappedType is EnumExpectedType) {
+            return wrappedType.api.name()
         }
         return fixture.expectedClassType(wrappedType.api.name())
     }
