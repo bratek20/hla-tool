@@ -355,9 +355,9 @@ namespace SomeModule {
 
     export interface ExpectedSomeData2 {
         optEnumEmpty?: boolean,
-        optEnum?: ExpectedSomeEnum,
+        optEnum?: SomeEnum,
         optCustomTypeEmpty?: boolean,
-        optCustomType?: TypesModule.ExpectedDate,
+        optCustomType?: string,
     }
     export function diffSomeData2(given: SomeData2, expected: ExpectedSomeData2, path: string = ""): string {
         const result: string[] = []

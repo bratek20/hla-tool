@@ -233,7 +233,7 @@ namespace SomeModule.Builder {
     }
 
     export interface SomeData2Def {
-        optEnum?: SomeEnumDef,
+        optEnum?: SomeEnum,
         optCustomType?: string,
     }
     export function someData2(def?: SomeData2Def): SomeData2 {
@@ -241,7 +241,7 @@ namespace SomeModule.Builder {
         const final_optCustomType = def?.optCustomType ?? undefined
 
         return SomeData2.create(
-            Optional.of(final_optEnum).map(it => it),
+            Optional.of(final_optEnum),
             Optional.of(final_optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it)),
         )
     }

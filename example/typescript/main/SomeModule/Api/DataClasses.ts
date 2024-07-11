@@ -62,24 +62,24 @@ class SomeData2 {
         optCustomType: Optional<Date>,
     ): SomeData2 {
         const instance = new SomeData2()
-        instance.optEnum = optEnum.orElse(undefined)
-        instance.optCustomType = optCustomType.map(it => it.value).orElse(undefined)
+        instance.optEnum = optEnum.orElse(undefined).map(it => it.getName())
+        instance.optCustomType = optCustomType.orElse(undefined).map(it => TypesModule.CustomTypesMapper.dateGetValue(it))
         return instance
     }
 
     getOptEnum(): Optional<SomeEnum> {
-        return Optional.of(this.optEnum)
+        return Optional.of(this.optEnum).map(it => SomeEnum.fromName(it).get())
     }
 
     getOptCustomType(): Optional<Date> {
-        return Optional.of(this.optCustomType).map(it => new Date(it))
+        return Optional.of(this.optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it))
     }
 
     setOptEnum(optEnum: Optional<SomeEnum>): void {
-        this.optEnum = optEnum.orElse(undefined)
+        this.optEnum = optEnum.orElse(undefined).map(it => it.getName())
     }
 
     setOptCustomType(optCustomType: Optional<Date>): void {
-        this.optCustomType = optCustomType.map(it => it.value).orElse(undefined)
+        this.optCustomType = optCustomType.orElse(undefined).map(it => TypesModule.CustomTypesMapper.dateGetValue(it))
     }
 }

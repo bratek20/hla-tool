@@ -333,8 +333,8 @@ class SomeProperty {
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
-        instance.id2 = id2.map(it => it.value).orElse(undefined)
-        instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
+        instance.id2 = id2.orElse(undefined).map(it => it.value)
+        instance.range = range.orElse(undefined).map(it => SerializedDateRange.fromCustomType(it))
         instance.doubleExample = doubleExample
         instance.longExample = longExample
         instance.gN = goodName
