@@ -193,7 +193,7 @@ class OptionalExpectedType(
             return wrappedType.api.boxedType.name()
         }
         if (wrappedType is EnumExpectedType) {
-            return wrappedType.api.name()
+            return wrappedType.api.serializableName()
         }
         return fixture.expectedClassType(wrappedType.api.name())
     }

@@ -81,7 +81,7 @@ fun diffSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Uni
 
 data class ExpectedSomeClass3(
     var class2Object: (ExpectedSomeClass2.() -> Unit)? = null,
-    var someEnum: SomeEnum? = null,
+    var someEnum: String? = null,
     var class2List: List<(ExpectedSomeClass2.() -> Unit)>? = null,
 )
 fun diffSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Unit, path: String = ""): String {
@@ -93,7 +93,7 @@ fun diffSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Uni
     }
 
     expected.someEnum?.let {
-        if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
+        if (diffSomeEnum(given.getSomeEnum(), it) != "") { result.add(diffSomeEnum(given.getSomeEnum(), it, "${path}someEnum.")) }
     }
 
     expected.class2List?.let {
