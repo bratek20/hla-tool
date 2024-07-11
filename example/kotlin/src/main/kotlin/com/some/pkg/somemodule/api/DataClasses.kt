@@ -73,7 +73,7 @@ data class SomeData2(
     }
 
     fun setOptEnum(optEnum: SomeEnum?) {
-        this.optEnum = optEnum?.name
+        this.optEnum = optEnum?.let { it -> it.name }
     }
 
     fun setOptCustomType(optCustomType: Date?) {
@@ -86,7 +86,7 @@ data class SomeData2(
             optCustomType: Date?,
         ): SomeData2 {
             return SomeData2(
-                optEnum = optEnum?.name,
+                optEnum = optEnum?.let { it -> it.name },
                 optCustomType = optCustomType?.let { it -> dateGetValue(it) },
             )
         }
