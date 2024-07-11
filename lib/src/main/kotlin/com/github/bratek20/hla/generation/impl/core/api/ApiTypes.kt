@@ -274,11 +274,10 @@ class OptionalApiType(
 
     override fun serialize(variableName: String): String {
         val mapping = wrappedType.serialize("it")
-        val asOptional = languageTypes.serializeOptional(variableName)
         if (mapping == "it") {
-            return asOptional
+            return languageTypes.serializeOptional(variableName)
         }
-        return languageTypes.mapOptionalElement(asOptional, "it", mapping)
+        return languageTypes.serializeOptional(languageTypes.mapOptionalElement(variableName, "it", mapping))
     }
 }
 
