@@ -253,6 +253,19 @@ class EnumExpectedType(
         val result = languageTypes.wrapWithString("\${path}value \${${api.serialize(givenVariable)}} != \${$expectedVariable}")
         return "if (${givenVariable} != ${api.deserialize(expectedVariable)}) { return $result }"
     }
+
+    override fun name(): String {
+        return api.serializableName()
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        val finalPath = languageTypes.wrapWithString("$path.")
+        return "${diffFunName()}($givenVariable, $expectedVariable, $finalPath)"
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return "${diffFunName()}($givenVariable, $expectedVariable) != \"\""
+    }
 }
 
 class ExpectedTypeFactory(
