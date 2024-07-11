@@ -49,17 +49,17 @@ namespace SomeModule.Builder {
 
     export interface SomeClass3Def {
         class2Object?: SomeClass2Def,
-        someEnum?: SomeEnum,
+        someEnum?: string,
         class2List?: SomeClass2Def[],
     }
     export function someClass3(def?: SomeClass3Def): SomeClass3 {
         const final_class2Object = def?.class2Object ?? {}
-        const final_someEnum = def?.someEnum ?? SomeEnum.VALUE_A
+        const final_someEnum = def?.someEnum ?? SomeEnum.VALUE_A.getName()
         const final_class2List = def?.class2List ?? []
 
         return SomeClass3.create(
             someClass2(final_class2Object),
-            final_someEnum,
+            SomeEnum.fromName(final_someEnum).get(),
             final_class2List.map(it => someClass2(it)),
         )
     }
@@ -184,19 +184,19 @@ namespace SomeModule.Builder {
     export interface SomeProperty2Def {
         value?: string,
         custom?: any,
-        someEnum?: SomeEnum,
+        someEnum?: string,
         customOpt?: any,
     }
     export function someProperty2(def?: SomeProperty2Def): SomeProperty2 {
         const final_value = def?.value ?? "someValue"
         const final_custom = def?.custom ?? {}
-        const final_someEnum = def?.someEnum ?? SomeEnum.VALUE_A
+        const final_someEnum = def?.someEnum ?? SomeEnum.VALUE_A.getName()
         const final_customOpt = def?.customOpt ?? undefined
 
         return SomeProperty2.create(
             final_value,
             final_custom,
-            final_someEnum,
+            SomeEnum.fromName(final_someEnum).get(),
             Optional.of(final_customOpt),
         )
     }
@@ -233,7 +233,7 @@ namespace SomeModule.Builder {
     }
 
     export interface SomeData2Def {
-        optEnum?: SomeEnum,
+        optEnum?: string,
         optCustomType?: string,
     }
     export function someData2(def?: SomeData2Def): SomeData2 {
@@ -241,7 +241,7 @@ namespace SomeModule.Builder {
         const final_optCustomType = def?.optCustomType ?? undefined
 
         return SomeData2.create(
-            Optional.of(final_optEnum),
+            Optional.of(final_optEnum).map(it => SomeEnum.fromName(it).get()),
             Optional.of(final_optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it)),
         )
     }

@@ -14,15 +14,18 @@ fun diffSomeId(given: SomeId, expected: String, path: String = ""): String {
     return ""
 }
 
-
 fun diffSomeIntWrapper(given: SomeIntWrapper, expected: Int, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
 
-
 fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}
+
+fun diffSomeEnum(given: SomeEnum, expected: String, path: String = ""): String {
+    if (given != SomeEnum.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
     return ""
 }
 
@@ -78,7 +81,7 @@ fun diffSomeClass2(given: SomeClass2, expectedInit: ExpectedSomeClass2.() -> Uni
 
 data class ExpectedSomeClass3(
     var class2Object: (ExpectedSomeClass2.() -> Unit)? = null,
-    var someEnum: SomeEnum? = null,
+    var someEnum: String? = null,
     var class2List: List<(ExpectedSomeClass2.() -> Unit)>? = null,
 )
 fun diffSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Unit, path: String = ""): String {
@@ -90,7 +93,7 @@ fun diffSomeClass3(given: SomeClass3, expectedInit: ExpectedSomeClass3.() -> Uni
     }
 
     expected.someEnum?.let {
-        if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
+        if (diffSomeEnum(given.getSomeEnum(), it) != "") { result.add(diffSomeEnum(given.getSomeEnum(), it, "${path}someEnum.")) }
     }
 
     expected.class2List?.let {
@@ -296,7 +299,7 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
 data class ExpectedSomeProperty2(
     var value: String? = null,
     var custom: Any? = null,
-    var someEnum: SomeEnum? = null,
+    var someEnum: String? = null,
     var customOptEmpty: Boolean? = null,
     var customOpt: Any? = null,
 )
@@ -313,7 +316,7 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
     }
 
     expected.someEnum?.let {
-        if (given.getSomeEnum() != it) { result.add("${path}someEnum ${given.getSomeEnum()} != ${it}") }
+        if (diffSomeEnum(given.getSomeEnum(), it) != "") { result.add(diffSomeEnum(given.getSomeEnum(), it, "${path}someEnum.")) }
     }
 
     expected.customOptEmpty?.let {
@@ -377,7 +380,7 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
 
 data class ExpectedSomeData2(
     var optEnumEmpty: Boolean? = null,
-    var optEnum: SomeEnum? = null,
+    var optEnum: String? = null,
     var optCustomTypeEmpty: Boolean? = null,
     var optCustomType: String? = null,
 )
@@ -390,7 +393,7 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
     }
 
     expected.optEnum?.let {
-        if (given.getOptEnum()!! != it) { result.add("${path}optEnum ${given.getOptEnum()!!} != ${it}") }
+        if (diffSomeEnum(given.getOptEnum()!!, it) != "") { result.add(diffSomeEnum(given.getOptEnum()!!, it, "${path}optEnum.")) }
     }
 
     expected.optCustomTypeEmpty?.let {

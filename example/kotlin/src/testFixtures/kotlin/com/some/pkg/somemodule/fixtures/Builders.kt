@@ -51,14 +51,14 @@ fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
 
 data class SomeClass3Def(
     var class2Object: (SomeClass2Def.() -> Unit) = {},
-    var someEnum: SomeEnum = SomeEnum.VALUE_A,
+    var someEnum: String = SomeEnum.VALUE_A.name,
     var class2List: List<(SomeClass2Def.() -> Unit)> = emptyList(),
 )
 fun someClass3(init: SomeClass3Def.() -> Unit = {}): SomeClass3 {
     val def = SomeClass3Def().apply(init)
     return SomeClass3.create(
         class2Object = someClass2(def.class2Object),
-        someEnum = def.someEnum,
+        someEnum = SomeEnum.valueOf(def.someEnum),
         class2List = def.class2List.map { it -> someClass2(it) },
     )
 }
@@ -160,7 +160,7 @@ fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
 data class SomeProperty2Def(
     var value: String = "someValue",
     var custom: Any = Any(),
-    var someEnum: SomeEnum = SomeEnum.VALUE_A,
+    var someEnum: String = SomeEnum.VALUE_A.name,
     var customOpt: Any? = null,
 )
 fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
@@ -168,7 +168,7 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
     return SomeProperty2.create(
         value = def.value,
         custom = def.custom,
-        someEnum = def.someEnum,
+        someEnum = SomeEnum.valueOf(def.someEnum),
         customOpt = def.customOpt,
     )
 }
@@ -200,13 +200,13 @@ fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
 }
 
 data class SomeData2Def(
-    var optEnum: SomeEnum? = null,
+    var optEnum: String? = null,
     var optCustomType: String? = null,
 )
 fun someData2(init: SomeData2Def.() -> Unit = {}): SomeData2 {
     val def = SomeData2Def().apply(init)
     return SomeData2.create(
-        optEnum = def.optEnum,
+        optEnum = def.optEnum?.let { it -> SomeEnum.valueOf(it) },
         optCustomType = def.optCustomType?.let { it -> dateCreate(it) },
     )
 }

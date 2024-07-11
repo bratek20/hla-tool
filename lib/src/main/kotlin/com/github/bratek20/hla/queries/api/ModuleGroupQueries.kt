@@ -199,4 +199,13 @@ class ModuleGroupQueries(
     private fun findExternalType(type: TypeDefinition, module: ModuleDefinition): String? {
         return module.getExternalTypes().find { it == type.getName() }
     }
+
+    fun allEnumTypeDefinitions(module: ModuleDefinition): List<TypeDefinition> {
+        return module.getEnums().map {
+            TypeDefinition.create(
+                name = it.getName(),
+                wrappers = emptyList()
+            )
+        }
+    }
 }

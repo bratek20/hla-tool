@@ -27,6 +27,16 @@ abstract class ExpectedType<T: ApiType>(
     override fun toString(): String {
         return "$javaClass(${name()})"
     }
+
+    // used by velocity
+    fun diffFunName(): String {
+        return fixture.diffFunName(api.name())
+    }
+
+    // used by velocity
+    fun funName(): String {
+        return fixture.assertFunName(api.name())
+    }
 }
 
 class BaseExpectedType(
@@ -121,16 +131,6 @@ abstract class StructureExpectedType<T: StructureApiType>(
         return api.name()
     }
 
-    // used by velocity
-    fun diffFunName(): String {
-        return fixture.diffFunName(api.name())
-    }
-
-    // used by velocity
-    fun funName(): String {
-        return fixture.assertFunName(api.name())
-    }
-
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         val finalPath = languageTypes.wrapWithString("$path.")
         return "${diffFunName()}($givenVariable, $expectedVariable, $finalPath)"
@@ -193,7 +193,7 @@ class OptionalExpectedType(
             return wrappedType.api.boxedType.name()
         }
         if (wrappedType is EnumExpectedType) {
-            return wrappedType.api.name()
+            return wrappedType.api.serializableName()
         }
         return fixture.expectedClassType(wrappedType.api.name())
     }
@@ -248,7 +248,25 @@ class ListExpectedType(
 
 class EnumExpectedType(
     api: EnumApiType,
-) : ExpectedType<EnumApiType>(api)
+) : ExpectedType<EnumApiType>(api) {
+    fun diffBody(givenVariable: String, expectedVariable: String): String {
+        val result = languageTypes.wrapWithString("\${path}value \${${api.serialize(givenVariable)}} != \${$expectedVariable}")
+        return "if (${givenVariable} != ${api.deserialize(expectedVariable)}) { return $result }"
+    }
+
+    override fun name(): String {
+        return api.serializableName()
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        val finalPath = languageTypes.wrapWithString("$path.")
+        return "${diffFunName()}($givenVariable, $expectedVariable, $finalPath)"
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return "${diffFunName()}($givenVariable, $expectedVariable) != \"\""
+    }
+}
 
 class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
