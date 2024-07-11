@@ -23,10 +23,6 @@ interface LanguageTypes {
     fun unwrapOptional(variableName: String): String
     fun serializeOptional(variableName: String): String
     fun deserializeOptional(variableName: String): String
-    fun serializeOptionalForSimpleStructure(variableName: String, className: String): String
-    fun deserializeOptionalForSimpleStructure(variableName: String, className: String): String
-    fun serializeOptionalForComplexCustomType(variableName: String, className: String): String
-    fun deserializeOptionalForComplexCustomType(variableName: String): String
 
     fun emptyOptional(): String
 

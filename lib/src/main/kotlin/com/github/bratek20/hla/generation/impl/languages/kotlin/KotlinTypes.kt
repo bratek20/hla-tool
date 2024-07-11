@@ -85,22 +85,6 @@ class KotlinTypes: LanguageTypes {
         return variableName
     }
 
-    override fun serializeOptionalForSimpleStructure(variableName: String, className: String): String {
-        return "$variableName?.let { it -> it.value }"
-    }
-
-    override fun deserializeOptionalForSimpleStructure(variableName: String, className: String): String {
-        return "$variableName?.let { it -> $className(it) }"
-    }
-
-    override fun serializeOptionalForComplexCustomType(variableName: String, className: String): String {
-        return "$variableName?.let { it -> $className.fromCustomType(it) }"
-    }
-
-    override fun deserializeOptionalForComplexCustomType(variableName: String): String {
-        return "$variableName?.let { it -> it.toCustomType() }"
-    }
-
     override fun emptyOptional(): String {
         return "null"
     }
