@@ -14,12 +14,10 @@ fun diffSomeId(given: SomeId, expected: String, path: String = ""): String {
     return ""
 }
 
-
 fun diffSomeIntWrapper(given: SomeIntWrapper, expected: Int, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
-
 
 fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }

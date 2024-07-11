@@ -27,6 +27,16 @@ abstract class ExpectedType<T: ApiType>(
     override fun toString(): String {
         return "$javaClass(${name()})"
     }
+
+    // used by velocity
+    fun diffFunName(): String {
+        return fixture.diffFunName(api.name())
+    }
+
+    // used by velocity
+    fun funName(): String {
+        return fixture.assertFunName(api.name())
+    }
 }
 
 class BaseExpectedType(
@@ -119,16 +129,6 @@ abstract class StructureExpectedType<T: StructureApiType>(
 ) : ExpectedType<T>(api) {
     override fun name(): String {
         return api.name()
-    }
-
-    // used by velocity
-    fun diffFunName(): String {
-        return fixture.diffFunName(api.name())
-    }
-
-    // used by velocity
-    fun funName(): String {
-        return fixture.assertFunName(api.name())
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
@@ -248,7 +248,12 @@ class ListExpectedType(
 
 class EnumExpectedType(
     api: EnumApiType,
-) : ExpectedType<EnumApiType>(api)
+) : ExpectedType<EnumApiType>(api) {
+    fun diffBody(givenVariable: String, expectedVariable: String): String {
+        val result = languageTypes.wrapWithString("\${path}value \${${api.serialize(givenVariable)}} != \${$expectedVariable}")
+        return "if (${givenVariable} != ${api.deserialize(expectedVariable)}) { return $result }"
+    }
+}
 
 class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
