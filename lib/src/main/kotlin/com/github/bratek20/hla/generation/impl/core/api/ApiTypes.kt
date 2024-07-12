@@ -53,17 +53,17 @@ class InterfaceApiType(
 }
 
 class ExternalApiType(
-    val name: String
+    val rawName: String
 ) : ApiType() {
     override fun name(): String {
         if (languageTypes is KotlinTypes) {
             typeModule!!.getKotlinConfig()?.let { config ->
-                config.getExternalTypePackages().find { it.getName() == name }?.let {
-                    return it.getPackageName() + "." + name
+                config.getExternalTypePackages().find { it.getName() == rawName }?.let {
+                    return it.getPackageName() + "." + rawName
                 }
             }
         }
-        return name
+        return rawName
     }
 }
 

@@ -42,12 +42,12 @@ class MocksGenerator: FileGenerator() {
                     "${outputTypeName}Def.() -> Unit"
 
             val inputDiffMethodName = if (inputType is ExternalApiType)
-                    "diff${inputType.name}"
+                    "diff${inputType.rawName}"
                 else
                     "diff${inputTypeName}"
 
             val outputBuilderMethodName = if (outputType is ExternalApiType)
-                    pascalToCamelCase(outputType.name)
+                    pascalToCamelCase(outputType.rawName)
                 else
                     pascalToCamelCase(outputTypeName)
 
