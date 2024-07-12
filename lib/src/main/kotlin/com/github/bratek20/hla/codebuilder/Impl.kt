@@ -23,11 +23,15 @@ class EmptyLineBlock: CodeBlockBuilder {
     }
 }
 
-class ManyCodeBlocks(
+class ManyCodeBlocksSeparatedByLine(
     private val blocks: List<CodeBlockBuilder>
 ): CodeBlockBuilder {
     override fun apply(b: CodeBuilder) {
-        blocks.forEach { it.apply(b) }
+        blocks.dropLast(1).forEach {
+            it.apply(b)
+            b.emptyLine()
+        }
+        blocks.last().apply(b)
     }
 }
 

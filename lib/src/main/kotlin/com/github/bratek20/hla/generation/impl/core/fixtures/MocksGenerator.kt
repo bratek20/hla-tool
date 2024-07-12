@@ -119,11 +119,9 @@ class MocksGenerator: FileGenerator() {
                 .add(Class(
                     className = "${interfaceName}Mock",
                     implementedInterfaceName = interfaceName,
-                    body = ManyCodeBlocks(listOf(
-                        mocksForMethod(interf.methods.find { it.name == "referenceOtherClass" }!!),
-                        EmptyLineBlock(),
-                        mocksForMethod(interf.methods.find { it.name == "referenceLegacyType" }!!)
-                    ))
+                    body = ManyCodeBlocksSeparatedByLine(interf.methods.map {
+                        mocksForMethod(it)
+                    })
                 ))
                 .build()
         }
