@@ -13,6 +13,6 @@ import ${import}.fixtures.*
 
 import ${packageName}.api.*
 
-${view.classes()}
+${view.classes(0)}
 
 ${view.contextModule()}

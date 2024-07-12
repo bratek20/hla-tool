@@ -114,8 +114,8 @@ class MocksGenerator: FileGenerator() {
             }
         }
 
-        fun classes(): String {
-            return CodeBuilder()
+        fun classes(indent: Int): String {
+            return CodeBuilder(indent)
                 .add(Class(
                     className = "${interfaceName}Mock",
                     implementedInterfaceName = interfaceName,
@@ -135,7 +135,7 @@ class MocksGenerator: FileGenerator() {
                         add(Function(
                             override = true,
                             name = "apply",
-                            args = listOf(Pair("builder", "ContextBuilder")),
+                            args = listOf("builder" to "ContextBuilder"),
                             body = block {
                                 line("builder")
                                 .tab()
