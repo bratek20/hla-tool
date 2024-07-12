@@ -210,3 +210,7 @@ fun someData2(init: SomeData2Def.() -> Unit = {}): SomeData2 {
         optCustomType = def.optCustomType?.let { it -> dateCreate(it) },
     )
 }
+
+fun legacyType(value: com.some.pkg.legacy.LegacyType?): com.some.pkg.legacy.LegacyType {
+    return value!!
+}

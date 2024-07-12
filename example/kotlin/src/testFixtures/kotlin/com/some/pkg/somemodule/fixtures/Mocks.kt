@@ -47,7 +47,7 @@ class SomeInterface2Mock: SomeInterface2 {
 
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
         referenceLegacyTypeCalls.add(legacyType)
-        return referenceLegacyTypeResponses.find { it.first == legacyType }?.second ?: legacyType
+        return legacyType(referenceLegacyTypeResponses.find { diffLegacyType(legacyType, it.first) == "" }?.second ?: null)
     }
 
     fun assertReferenceLegacyTypeCalled(times: Int = 1) {
@@ -55,7 +55,7 @@ class SomeInterface2Mock: SomeInterface2 {
     }
 
     fun assertReferenceLegacyTypeCalledForArgs(args: com.some.pkg.legacy.LegacyType, times: Int = 1) {
-        val calls = referenceLegacyTypeCalls.filter { it == args }
+        val calls = referenceLegacyTypeCalls.filter { diffLegacyType(it, args) == "" }
         assertThat(calls.size).withFailMessage("Expected referenceLegacyType to be called $times times, but was called $referenceLegacyTypeCalls times").isEqualTo(times)
     }
 }

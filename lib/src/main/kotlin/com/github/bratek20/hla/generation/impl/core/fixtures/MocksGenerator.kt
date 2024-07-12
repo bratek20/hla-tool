@@ -3,10 +3,12 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.hla.codebuilder.*
 import com.github.bratek20.hla.codebuilder.Class
 import com.github.bratek20.hla.codebuilder.Function
-import com.github.bratek20.hla.definitions.api.InterfaceDefinition
-import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
+import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
+import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
+import com.github.bratek20.hla.generation.impl.core.api.MethodView
 import com.github.bratek20.hla.utils.camelToPascalCase
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
@@ -16,28 +18,51 @@ class MocksGenerator: FileGenerator() {
     }
 
     class View(
-        val interf: InterfaceDefinition,
+        val interf: InterfaceView,
         val moduleName: String
     ) {
-        private val interfaceName = interf.getName()
+        private val interfaceName = interf.name
 
-        private fun mocksForMethod(def: MethodDefinition): CodeBlockBuilder {
-            val upperCaseName = camelToPascalCase(def.getName())
-            val inputArgName = def.getArgs().first().getName()
-            val inputType = def.getArgs().first().getType().getName()
-            val outputType = def.getReturnType().getName()
+        private fun mocksForMethod(def: MethodView): CodeBlockBuilder {
+            val upperCaseName = camelToPascalCase(def.name)
+            val inputArgName = def.args.first().name
+            val inputType = def.args.first().apiType
+            val inputTypeName = def.args.first().type
+            val outputType = def.returnApiType
+            val outputTypeName = def.returnType!!
 
-            val expectedInputType = "Expected${inputType}.() -> Unit"
-            val defOutputType = "${outputType}Def.() -> Unit"
+            val expectedInputType = if (inputType is ExternalApiType)
+                    inputTypeName
+                else
+                    "Expected${inputTypeName}.() -> Unit"
 
-            val inputDiffMethodName = "diff${inputType}"
-            val outputBuilderMethodName = pascalToCamelCase(outputType)
+            val defOutputType = if (outputType is ExternalApiType)
+                    outputTypeName
+                else
+                    "${outputTypeName}Def.() -> Unit"
 
-            val responsesListName = "${def.getName()}Responses"
+            val inputDiffMethodName = if (inputType is ExternalApiType)
+                    "diff${inputType.name}"
+                else
+                    "diff${inputTypeName}"
+
+            val outputBuilderMethodName = if (outputType is ExternalApiType)
+                    pascalToCamelCase(outputType.name)
+                else
+                    pascalToCamelCase(outputTypeName)
+
+            val callsListName = "${def.name}Calls"
+            val responsesListName = "${def.name}Responses"
+
+
+            val emptyDef = if (outputType is ExternalApiType)
+                    "null"
+                else
+                    "{}"
 
             return block {
-                line("// ${def.getName()}")
-                line(ListFieldDeclaration("${def.getName()}Calls", inputType))
+                line("// ${def.name}")
+                line(ListFieldDeclaration(callsListName, inputTypeName))
                 line(
                     ListFieldDeclaration(
                         responsesListName,
@@ -58,12 +83,12 @@ class MocksGenerator: FileGenerator() {
                 emptyLine()
                 add(Function(
                     override = true,
-                    name = def.getName(),
-                    returnType = outputType,
-                    args = listOf(Pair(inputArgName, inputType)),
+                    name = def.name,
+                    returnType = outputTypeName,
+                    args = listOf(Pair(inputArgName, inputTypeName)),
                     body = block {
-                        line("${def.getName()}Calls.add(other)")
-                        line("return ${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: {})")
+                        line("${callsListName}.add($inputArgName)")
+                        line("return ${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
                     }
                 ))
                 emptyLine()
@@ -71,7 +96,7 @@ class MocksGenerator: FileGenerator() {
                     name = "assert${upperCaseName}Called",
                     args = listOf(Pair("times", "Int = 1")),
                     body = block {
-                        line("assertThat(${def.getName()}Calls.size).withFailMessage(\"Expected ${def.getName()} to be called \$times times, but was called \$${def.getName()}Calls times\").isEqualTo(times)")
+                        line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                     }
                 ))
                 emptyLine()
@@ -82,8 +107,8 @@ class MocksGenerator: FileGenerator() {
                         Pair("times", "Int = 1")
                     ),
                     body = block {
-                        line("val calls = ${def.getName()}Calls.filter { ${inputDiffMethodName}(it, args) == \"\" }")
-                        line("assertThat(calls.size).withFailMessage(\"Expected ${def.getName()} to be called \$times times, but was called \$${def.getName()}Calls times\").isEqualTo(times)")
+                        line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")
+                        line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                     }
                 ))
             }
@@ -95,60 +120,9 @@ class MocksGenerator: FileGenerator() {
                     className = "${interfaceName}Mock",
                     implementedInterfaceName = interfaceName,
                     body = ManyCodeBlocks(listOf(
-                        mocksForMethod(interf.getMethods().find { it.getName() == "referenceOtherClass" }!!),
+                        mocksForMethod(interf.methods.find { it.name == "referenceOtherClass" }!!),
                         EmptyLineBlock(),
-                        block {
-                            line("// referenceLegacyType")
-                            line(ListFieldDeclaration("referenceLegacyTypeCalls", "com.some.pkg.legacy.LegacyType"))
-                            line(
-                                ListFieldDeclaration(
-                                    "referenceLegacyTypeResponses",
-                                    "Pair<com.some.pkg.legacy.LegacyType, com.some.pkg.legacy.LegacyType>"
-                                )
-                            )
-                            emptyLine()
-                            add(
-                                Function(
-                                    name = "setReferenceLegacyTypeResponse",
-                                    args = listOf(
-                                        Pair("args", "com.some.pkg.legacy.LegacyType"),
-                                        Pair("response", "com.some.pkg.legacy.LegacyType")
-                                    ),
-                                    body = OneLineBlock("referenceLegacyTypeResponses.add(Pair(args, response))")
-                                )
-                            )
-                            emptyLine()
-                            add(Function(
-                                override = true,
-                                name = "referenceLegacyType",
-                                returnType = "com.some.pkg.legacy.LegacyType",
-                                args = listOf(Pair("legacyType", "com.some.pkg.legacy.LegacyType")),
-                                body = block {
-                                    line("referenceLegacyTypeCalls.add(legacyType)")
-                                    line("return referenceLegacyTypeResponses.find { it.first == legacyType }?.second ?: legacyType")
-                                }
-                            ))
-                            emptyLine()
-                            add(Function(
-                                name = "assertReferenceLegacyTypeCalled",
-                                args = listOf(Pair("times", "Int = 1")),
-                                body = block {
-                                    line("assertThat(referenceLegacyTypeCalls.size).withFailMessage(\"Expected referenceLegacyType to be called \$times times, but was called \$referenceLegacyTypeCalls times\").isEqualTo(times)")
-                                }
-                            ))
-                            emptyLine()
-                            add(Function(
-                                name = "assertReferenceLegacyTypeCalledForArgs",
-                                args = listOf(
-                                    Pair("args", "com.some.pkg.legacy.LegacyType"),
-                                    Pair("times", "Int = 1")
-                                ),
-                                body = block {
-                                    line("val calls = referenceLegacyTypeCalls.filter { it == args }")
-                                    line("assertThat(calls.size).withFailMessage(\"Expected referenceLegacyType to be called \$times times, but was called \$referenceLegacyTypeCalls times\").isEqualTo(times)")
-                                }
-                            ))
-                        }
+                        mocksForMethod(interf.methods.find { it.name == "referenceLegacyType" }!!)
                     ))
                 ))
                 .build()
@@ -181,8 +155,9 @@ class MocksGenerator: FileGenerator() {
             return null
         }
         val interf = c.module.getInterfaces().find { it.getName() == "SomeInterface2" }!!
+        val interfView = InterfaceViewFactory(apiTypeFactory).create(interf)
         return contentBuilder("mocks.vm")
-            .put("view", View(interf, "SomeModule"))
+            .put("view", View(interfView, "SomeModule"))
             .build()
     }
 }
