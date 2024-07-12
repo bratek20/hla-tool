@@ -31,7 +31,7 @@ class MocksGenerator: FileGenerator() {
             val defOutputType = "${outputType}Def.() -> Unit"
 
             val inputDiffMethodName = "diff${inputType}"
-            val outputBuilderMethodName = "${pascalToCamelCase(outputType)}Def"
+            val outputBuilderMethodName = pascalToCamelCase(outputType)
 
             val responsesListName = "${def.getName()}Responses"
 
@@ -63,7 +63,7 @@ class MocksGenerator: FileGenerator() {
                     args = listOf(Pair(inputArgName, inputType)),
                     body = block {
                         line("${def.getName()}Calls.add(other)")
-                        line("return otherClass(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: {})")
+                        line("return ${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: {})")
                     }
                 ))
                 emptyLine()
