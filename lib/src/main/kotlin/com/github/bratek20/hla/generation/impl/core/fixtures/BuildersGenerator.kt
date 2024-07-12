@@ -1,8 +1,8 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.hla.codebuilder.CodeBuilder
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
-import com.github.bratek20.hla.generation.impl.core.api.SimpleCustomApiType
 
 class BuildersGenerator: FileGenerator() {
     override fun name(): String {
@@ -25,7 +25,8 @@ class BuildersGenerator: FileGenerator() {
 
     override fun generateFileContent(): FileContent? {
         val defTypes = modules.allStructureDefinitions(module)
-        if (defTypes.areAllEmpty()) {
+        val externalTypes = modules.allExternalTypesDefinitions(module)
+        if (defTypes.areAllEmpty() && externalTypes.isEmpty()) {
             return null
         }
 
@@ -38,9 +39,23 @@ class BuildersGenerator: FileGenerator() {
             defTypeFactory.create(apiTypeFactory.create(it))
         }
 
+        val legacy = CodeBuilder()
+            .line("fun legacyType(value: com.some.pkg.legacy.LegacyType?): com.some.pkg.legacy.LegacyType {")
+            .tab()
+            .line("return value!!")
+            .untab()
+            .line("}")
+            .build()
+
+        val externalTypesBuilders = if (externalTypes.isEmpty())
+                null
+            else
+                legacy
+
         return contentBuilder("builders.vm")
             .put("simpleBuilders", simpleBuilders)
             .put("builders", builders)
+            .put("externalTypesBuilders", externalTypesBuilders)
             .build()
     }
 }
