@@ -3,8 +3,8 @@
 namespace SomeModule {
     class SomeInterface2Mock implements SomeInterface2 {
         // referenceOtherClass
-        private val referenceOtherClassCalls = mutableListOf<OtherClass>()
-        private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()
+        private readonly referenceOtherClassCalls: OtherClass[] = []
+        private readonly referenceOtherClassResponses: Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>[] = []
 
         fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {
             referenceOtherClassResponses.add(Pair(args, response))
@@ -25,8 +25,8 @@ namespace SomeModule {
         }
 
         // referenceLegacyType
-        private val referenceLegacyTypeCalls = mutableListOf<LegacyType>()
-        private val referenceLegacyTypeResponses = mutableListOf<Pair<LegacyType, LegacyType>>()
+        private readonly referenceLegacyTypeCalls: LegacyType[] = []
+        private readonly referenceLegacyTypeResponses: Pair<LegacyType, LegacyType>[] = []
 
         fun setReferenceLegacyTypeResponse(args: LegacyType, response: LegacyType) {
             referenceLegacyTypeResponses.add(Pair(args, response))

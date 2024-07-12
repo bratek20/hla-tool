@@ -1,10 +1,6 @@
 package com.github.bratek20.hla.codebuilder
 
 
-interface CodeLineBuilder {
-    fun build(): String
-}
-
 interface CodeBlockBuilder {
     fun apply(b: CodeBuilder)
 }
@@ -17,7 +13,6 @@ class Kotlin: Language {
     override fun implements(): String {
         return ": "
     }
-
 }
 
 class TypeScript: Language {
@@ -71,9 +66,12 @@ fun block(block: CodeBuilder.() -> Unit): CodeBlockBuilder {
 class ListFieldDeclaration(
     private val fieldName: String,
     private val fieldElementType: String
-): CodeLineBuilder {
-    override fun build(): String {
-        return "private val $fieldName = mutableListOf<$fieldElementType>()"
+): BaseCodeBlockBuilder() {
+    override fun apply(b: CodeBuilder) {
+        if (lang is TypeScript)
+            b.line("private readonly $fieldName: $fieldElementType[] = []")
+        else
+            b.line("private val $fieldName = mutableListOf<$fieldElementType>()")
     }
 }
 
@@ -121,10 +119,6 @@ class CodeBuilder(
         val indent = " ".repeat(currentIndent)
         lines.add(indent + value)
         return this
-    }
-
-    fun line(value: CodeLineBuilder): CodeBuilder {
-        return line(value.build())
     }
 
     fun add(block: CodeBlockBuilder): CodeBuilder {

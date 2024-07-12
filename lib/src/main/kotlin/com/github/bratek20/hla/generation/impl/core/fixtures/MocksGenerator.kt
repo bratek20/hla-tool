@@ -63,13 +63,11 @@ class MocksGenerator: FileGenerator() {
 
             return block {
                 line("// ${def.name}")
-                line(ListFieldDeclaration(callsListName, inputTypeName))
-                line(
-                    ListFieldDeclaration(
-                        responsesListName,
-                        "Pair<${expectedInputType}, ${defOutputType}>"
-                    )
-                )
+                add(ListFieldDeclaration(callsListName, inputTypeName))
+                add(ListFieldDeclaration(
+                    fieldName = responsesListName,
+                    fieldElementType = "Pair<${expectedInputType}, ${defOutputType}>"
+                ))
                 emptyLine()
                 add(
                     Function(
