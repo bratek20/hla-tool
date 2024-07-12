@@ -5,6 +5,7 @@ import com.github.bratek20.hla.codebuilder.Class
 import com.github.bratek20.hla.codebuilder.Function
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
@@ -18,6 +19,7 @@ class MocksGenerator: FileGenerator() {
     }
 
     class View(
+        val c: ModuleGenerationContext,
         val lang: Language,
         val interf: InterfaceView,
         val moduleName: String
@@ -35,12 +37,12 @@ class MocksGenerator: FileGenerator() {
             val expectedInputType = if (inputType is ExternalApiType)
                     inputTypeName
                 else
-                    "Expected${inputTypeName}.() -> Unit"
+                    ExpectedTypeFactory(c).create(inputType).name()
 
             val defOutputType = if (outputType is ExternalApiType)
                     outputTypeName
                 else
-                    "${outputTypeName}Def.() -> Unit"
+                    DefTypeFactory(c.language.buildersFixture()).create(outputType).name()
 
             val inputDiffMethodName = if (inputType is ExternalApiType)
                     "diff${inputType.rawName}"
@@ -154,7 +156,7 @@ class MocksGenerator: FileGenerator() {
         val interf = c.module.getInterfaces().find { it.getName() == "SomeInterface2" }!!
         val interfView = InterfaceViewFactory(apiTypeFactory).create(interf)
         return contentBuilder("mocks.vm")
-            .put("view", View(lang, interfView, "SomeModule"))
+            .put("view", View(c, lang, interfView, "SomeModule"))
             .build()
     }
 }

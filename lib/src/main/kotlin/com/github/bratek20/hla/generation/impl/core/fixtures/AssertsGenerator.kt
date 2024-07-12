@@ -19,7 +19,7 @@ class AssertsGenerator: FileGenerator() {
             return null
         }
 
-        val factory = ExpectedTypeFactory(c.language.types(), c.language.assertsFixture())
+        val factory = ExpectedTypeFactory(c)
         val simpleAsserts = (simpleAssertTypes).map {
             factory.create(apiTypeFactory.create(it))
         }

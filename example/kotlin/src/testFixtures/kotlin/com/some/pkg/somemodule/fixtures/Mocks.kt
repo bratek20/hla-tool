@@ -17,9 +17,9 @@ import com.some.pkg.somemodule.api.*
 class SomeInterface2Mock: SomeInterface2 {
     // referenceOtherClass
     private val referenceOtherClassCalls = mutableListOf<OtherClass>()
-    private val referenceOtherClassResponses = mutableListOf<Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>>()
+    private val referenceOtherClassResponses = mutableListOf<Pair<(ExpectedOtherClass.() -> Unit), (OtherClassDef.() -> Unit)>>()
 
-    fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {
+    fun setReferenceOtherClassResponse(args: (ExpectedOtherClass.() -> Unit), response: (OtherClassDef.() -> Unit)) {
         referenceOtherClassResponses.add(Pair(args, response))
     }
 
@@ -32,7 +32,7 @@ class SomeInterface2Mock: SomeInterface2 {
         assertThat(referenceOtherClassCalls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
     }
 
-    fun assertReferenceOtherClassCalledForArgs(args: ExpectedOtherClass.() -> Unit, times: Int = 1) {
+    fun assertReferenceOtherClassCalledForArgs(args: (ExpectedOtherClass.() -> Unit), times: Int = 1) {
         val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == "" }
         assertThat(calls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
     }

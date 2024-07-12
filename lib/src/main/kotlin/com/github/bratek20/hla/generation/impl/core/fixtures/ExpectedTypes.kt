@@ -1,8 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.hla.definitions.api.BaseType
+import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
+import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 
@@ -274,8 +276,7 @@ class EnumExpectedType(
 }
 
 class ExpectedTypeFactory(
-    private val languageTypes: LanguageTypes,
-    private val languageFixture: LanguageAssertsPattern,
+    private val c: ModuleGenerationContext
 ) {
     fun create(type: ApiType): ExpectedType<*> {
         val result =  when (type) {
@@ -290,8 +291,8 @@ class ExpectedTypeFactory(
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
-        result.languageTypes = languageTypes
-        result.fixture = languageFixture
+        result.languageTypes = type.languageTypes
+        result.fixture = c.language.assertsFixture()
 
         return result
     }
@@ -301,7 +302,7 @@ class ExpectedTypeFactory(
             when (it.type) {
                 is OptionalApiType -> {
                     listOf(
-                        OptionalEmptyExpectedTypeField(it, languageTypes),
+                        OptionalEmptyExpectedTypeField(it, c.language.types()),
                         DefaultExpectedTypeField(it, this)
                     )
                 }

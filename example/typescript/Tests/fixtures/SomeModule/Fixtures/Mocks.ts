@@ -4,9 +4,9 @@ namespace SomeModule {
     class SomeInterface2Mock implements SomeInterface2 {
         // referenceOtherClass
         private readonly referenceOtherClassCalls: OtherClass[] = []
-        private readonly referenceOtherClassResponses: Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>[] = []
+        private readonly referenceOtherClassResponses: Pair<OtherModule.ExpectedOtherClass, OtherModule.Builder.OtherClassDef>[] = []
 
-        fun setReferenceOtherClassResponse(args: ExpectedOtherClass.() -> Unit, response: OtherClassDef.() -> Unit) {
+        fun setReferenceOtherClassResponse(args: OtherModule.ExpectedOtherClass, response: OtherModule.Builder.OtherClassDef) {
             referenceOtherClassResponses.add(Pair(args, response))
         }
 
@@ -19,7 +19,7 @@ namespace SomeModule {
             assertThat(referenceOtherClassCalls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
         }
 
-        fun assertReferenceOtherClassCalledForArgs(args: ExpectedOtherClass.() -> Unit, times: Int = 1) {
+        fun assertReferenceOtherClassCalledForArgs(args: OtherModule.ExpectedOtherClass, times: Int = 1) {
             val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == "" }
             assertThat(calls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
         }
