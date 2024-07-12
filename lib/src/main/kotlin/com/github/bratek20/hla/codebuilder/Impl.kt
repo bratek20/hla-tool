@@ -17,6 +17,20 @@ class OneLineBlock(
     }
 }
 
+class EmptyLineBlock: CodeBlockBuilder {
+    override fun apply(b: CodeBuilder) {
+        b.emptyLine()
+    }
+}
+
+class ManyCodeBlocks(
+    private val blocks: List<CodeBlockBuilder>
+): CodeBlockBuilder {
+    override fun apply(b: CodeBuilder) {
+        blocks.forEach { it.apply(b) }
+    }
+}
+
 fun block(block: CodeBuilder.() -> Unit): CodeBlockBuilder {
     return object : CodeBlockBuilder {
         override fun apply(b: CodeBuilder) {
