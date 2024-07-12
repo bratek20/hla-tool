@@ -3,8 +3,11 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.hla.codebuilder.*
 import com.github.bratek20.hla.codebuilder.Class
 import com.github.bratek20.hla.codebuilder.Function
+import com.github.bratek20.hla.definitions.api.InterfaceDefinition
+import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.utils.camelToPascalCase
 
 class MocksGenerator: FileGenerator() {
     override fun name(): String {
@@ -12,28 +15,31 @@ class MocksGenerator: FileGenerator() {
     }
 
     class View(
-        val interfaceName: String,
+        val interf: InterfaceDefinition,
         val moduleName: String
     ) {
-        private fun mocksForMethod(): CodeBlockBuilder {
+        private val interfaceName = interf.getName()
+
+        private fun mocksForMethod(def: MethodDefinition): CodeBlockBuilder {
+            val upperCaseName = camelToPascalCase(def.getName())
             return block {
-                line("// referenceOtherClass")
-                line(ListFieldDeclaration("referenceOtherClassCalls", "OtherClass"))
+                line("// ${def.getName()}")
+                line(ListFieldDeclaration("${def.getName()}Calls", "OtherClass"))
                 line(
                     ListFieldDeclaration(
-                        "referenceOtherClassResponses",
+                        "${def.getName()}Responses",
                         "Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>"
                     )
                 )
                 emptyLine()
                 add(
                     Function(
-                        name = "setReferenceOtherClassResponse",
+                        name = "set${upperCaseName}Response",
                         args = listOf(
                             Pair("args", "ExpectedOtherClass.() -> Unit"),
                             Pair("response", "OtherClassDef.() -> Unit")
                         ),
-                        body = OneLineBlock("referenceOtherClassResponses.add(Pair(args, response))")
+                        body = OneLineBlock("${def.getName()}Responses.add(Pair(args, response))")
                     )
                 )
                 emptyLine()
@@ -43,28 +49,28 @@ class MocksGenerator: FileGenerator() {
                     returnType = "OtherClass",
                     args = listOf(Pair("other", "OtherClass")),
                     body = block {
-                        line("referenceOtherClassCalls.add(other)")
-                        line("return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == \"\" }?.second ?: {})")
+                        line("${def.getName()}Calls.add(other)")
+                        line("return otherClass(${def.getName()}Responses.find { diffOtherClass(other, it.first) == \"\" }?.second ?: {})")
                     }
                 ))
                 emptyLine()
                 add(Function(
-                    name = "assertReferenceOtherClassCalled",
+                    name = "assert${upperCaseName}Called",
                     args = listOf(Pair("times", "Int = 1")),
                     body = block {
-                        line("assertThat(referenceOtherClassCalls.size).withFailMessage(\"Expected referenceOtherClass to be called \$times times, but was called \$referenceOtherClassCalls times\").isEqualTo(times)")
+                        line("assertThat(${def.getName()}Calls.size).withFailMessage(\"Expected ${def.getName()} to be called \$times times, but was called \$${def.getName()}Calls times\").isEqualTo(times)")
                     }
                 ))
                 emptyLine()
                 add(Function(
-                    name = "assertReferenceOtherClassCalledForArgs",
+                    name = "assert${upperCaseName}CalledForArgs",
                     args = listOf(
                         Pair("args", "ExpectedOtherClass.() -> Unit"),
                         Pair("times", "Int = 1")
                     ),
                     body = block {
-                        line("val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == \"\" }")
-                        line("assertThat(calls.size).withFailMessage(\"Expected referenceOtherClass to be called \$times times, but was called \$referenceOtherClassCalls times\").isEqualTo(times)")
+                        line("val calls = ${def.getName()}Calls.filter { diffOtherClass(it, args) == \"\" }")
+                        line("assertThat(calls.size).withFailMessage(\"Expected ${def.getName()} to be called \$times times, but was called \$${def.getName()}Calls times\").isEqualTo(times)")
                     }
                 ))
             }
@@ -76,7 +82,7 @@ class MocksGenerator: FileGenerator() {
                     className = "${interfaceName}Mock",
                     implementedInterfaceName = interfaceName,
                     body = ManyCodeBlocks(listOf(
-                        mocksForMethod(),
+                        mocksForMethod(interf.getMethods().find { it.getName() == "referenceOtherClass" }!!),
                         EmptyLineBlock(),
                         block {
                             line("// referenceLegacyType")
@@ -161,8 +167,9 @@ class MocksGenerator: FileGenerator() {
         if(c.module.getInterfaces().none { it.getName() == "SomeInterface2" }) {
             return null
         }
+        val interf = c.module.getInterfaces().find { it.getName() == "SomeInterface2" }!!
         return contentBuilder("mocks.vm")
-            .put("view", View("SomeInterface2", "SomeModule"))
+            .put("view", View(interf, "SomeModule"))
             .build()
     }
 }
