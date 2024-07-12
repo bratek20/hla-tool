@@ -109,9 +109,14 @@ class OptionalEmptyExpectedTypeField(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
-        val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${${mainField.access(givenVariable)} == null} != \${$expectedVariable}")
+        var optionalEmptyCheck = languageTypes.checkOptionalEmpty(mainField.access(givenVariable))
+        if (optionalEmptyCheck.contains("=")) {
+            optionalEmptyCheck = "($optionalEmptyCheck)"
+        }
+
+        val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${${optionalEmptyCheck}} != \${$expectedVariable}")
         val body = languageTypes.addListElement("result", element)
-        return "if ((${mainField.access(givenVariable)} == null) != $expectedVariable) { $body }"
+        return "if (${optionalEmptyCheck} != $expectedVariable) { $body }"
     }
 }
 
