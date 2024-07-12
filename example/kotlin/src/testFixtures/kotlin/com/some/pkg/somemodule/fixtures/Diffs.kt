@@ -181,7 +181,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     val result: MutableList<String> = mutableListOf()
 
     expected.someClassOptEmpty?.let {
-        if ((given.getSomeClassOpt() == null) != it) { result.add("${path}someClassOpt empty ${given.getSomeClassOpt() == null} != ${it}") }
+        if ((given.getSomeClassOpt() == null) != it) { result.add("${path}someClassOpt empty ${(given.getSomeClassOpt() == null)} != ${it}") }
     }
 
     expected.someClassOpt?.let {
@@ -189,7 +189,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.optStringEmpty?.let {
-        if ((given.getOptString() == null) != it) { result.add("${path}optString empty ${given.getOptString() == null} != ${it}") }
+        if ((given.getOptString() == null) != it) { result.add("${path}optString empty ${(given.getOptString() == null)} != ${it}") }
     }
 
     expected.optString?.let {
@@ -262,7 +262,7 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
     }
 
     expected.id2Empty?.let {
-        if ((given.getId2() == null) != it) { result.add("${path}id2 empty ${given.getId2() == null} != ${it}") }
+        if ((given.getId2() == null) != it) { result.add("${path}id2 empty ${(given.getId2() == null)} != ${it}") }
     }
 
     expected.id2?.let {
@@ -270,7 +270,7 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
     }
 
     expected.rangeEmpty?.let {
-        if ((given.getRange() == null) != it) { result.add("${path}range empty ${given.getRange() == null} != ${it}") }
+        if ((given.getRange() == null) != it) { result.add("${path}range empty ${(given.getRange() == null)} != ${it}") }
     }
 
     expected.range?.let {
@@ -320,7 +320,7 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
     }
 
     expected.customOptEmpty?.let {
-        if ((given.getCustomOpt() == null) != it) { result.add("${path}customOpt empty ${given.getCustomOpt() == null} != ${it}") }
+        if ((given.getCustomOpt() == null) != it) { result.add("${path}customOpt empty ${(given.getCustomOpt() == null)} != ${it}") }
     }
 
     expected.customOpt?.let {
@@ -364,7 +364,7 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
     }
 
     expected.customOptEmpty?.let {
-        if ((given.getCustomOpt() == null) != it) { result.add("${path}customOpt empty ${given.getCustomOpt() == null} != ${it}") }
+        if ((given.getCustomOpt() == null) != it) { result.add("${path}customOpt empty ${(given.getCustomOpt() == null)} != ${it}") }
     }
 
     expected.customOpt?.let {
@@ -389,7 +389,7 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
     val result: MutableList<String> = mutableListOf()
 
     expected.optEnumEmpty?.let {
-        if ((given.getOptEnum() == null) != it) { result.add("${path}optEnum empty ${given.getOptEnum() == null} != ${it}") }
+        if ((given.getOptEnum() == null) != it) { result.add("${path}optEnum empty ${(given.getOptEnum() == null)} != ${it}") }
     }
 
     expected.optEnum?.let {
@@ -397,7 +397,7 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
     }
 
     expected.optCustomTypeEmpty?.let {
-        if ((given.getOptCustomType() == null) != it) { result.add("${path}optCustomType empty ${given.getOptCustomType() == null} != ${it}") }
+        if ((given.getOptCustomType() == null) != it) { result.add("${path}optCustomType empty ${(given.getOptCustomType() == null)} != ${it}") }
     }
 
     expected.optCustomType?.let {

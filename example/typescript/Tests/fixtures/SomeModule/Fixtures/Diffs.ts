@@ -167,7 +167,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.someClassOptEmpty !== undefined) {
-            if ((given.getSomeClassOpt() == null) != expected.someClassOptEmpty) { result.push(`${path}someClassOpt empty ${given.getSomeClassOpt() == null} != ${expected.someClassOptEmpty}`) }
+            if (given.getSomeClassOpt().isEmpty() != expected.someClassOptEmpty) { result.push(`${path}someClassOpt empty ${given.getSomeClassOpt().isEmpty()} != ${expected.someClassOptEmpty}`) }
         }
 
         if (expected.someClassOpt !== undefined) {
@@ -175,7 +175,7 @@ namespace SomeModule {
         }
 
         if (expected.optStringEmpty !== undefined) {
-            if ((given.getOptString() == null) != expected.optStringEmpty) { result.push(`${path}optString empty ${given.getOptString() == null} != ${expected.optStringEmpty}`) }
+            if (given.getOptString().isEmpty() != expected.optStringEmpty) { result.push(`${path}optString empty ${given.getOptString().isEmpty()} != ${expected.optStringEmpty}`) }
         }
 
         if (expected.optString !== undefined) {
@@ -245,7 +245,7 @@ namespace SomeModule {
         }
 
         if (expected.id2Empty !== undefined) {
-            if ((given.getId2() == null) != expected.id2Empty) { result.push(`${path}id2 empty ${given.getId2() == null} != ${expected.id2Empty}`) }
+            if (given.getId2().isEmpty() != expected.id2Empty) { result.push(`${path}id2 empty ${given.getId2().isEmpty()} != ${expected.id2Empty}`) }
         }
 
         if (expected.id2 !== undefined) {
@@ -253,7 +253,7 @@ namespace SomeModule {
         }
 
         if (expected.rangeEmpty !== undefined) {
-            if ((given.getRange() == null) != expected.rangeEmpty) { result.push(`${path}range empty ${given.getRange() == null} != ${expected.rangeEmpty}`) }
+            if (given.getRange().isEmpty() != expected.rangeEmpty) { result.push(`${path}range empty ${given.getRange().isEmpty()} != ${expected.rangeEmpty}`) }
         }
 
         if (expected.range !== undefined) {
@@ -302,7 +302,7 @@ namespace SomeModule {
         }
 
         if (expected.customOptEmpty !== undefined) {
-            if ((given.getCustomOpt() == null) != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt() == null} != ${expected.customOptEmpty}`) }
+            if (given.getCustomOpt().isEmpty() != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt().isEmpty()} != ${expected.customOptEmpty}`) }
         }
 
         if (expected.customOpt !== undefined) {
@@ -344,7 +344,7 @@ namespace SomeModule {
         }
 
         if (expected.customOptEmpty !== undefined) {
-            if ((given.getCustomOpt() == null) != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt() == null} != ${expected.customOptEmpty}`) }
+            if (given.getCustomOpt().isEmpty() != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt().isEmpty()} != ${expected.customOptEmpty}`) }
         }
 
         if (expected.customOpt !== undefined) {
@@ -368,7 +368,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.optEnumEmpty !== undefined) {
-            if ((given.getOptEnum() == null) != expected.optEnumEmpty) { result.push(`${path}optEnum empty ${given.getOptEnum() == null} != ${expected.optEnumEmpty}`) }
+            if (given.getOptEnum().isEmpty() != expected.optEnumEmpty) { result.push(`${path}optEnum empty ${given.getOptEnum().isEmpty()} != ${expected.optEnumEmpty}`) }
         }
 
         if (expected.optEnum !== undefined) {
@@ -376,7 +376,7 @@ namespace SomeModule {
         }
 
         if (expected.optCustomTypeEmpty !== undefined) {
-            if ((given.getOptCustomType() == null) != expected.optCustomTypeEmpty) { result.push(`${path}optCustomType empty ${given.getOptCustomType() == null} != ${expected.optCustomTypeEmpty}`) }
+            if (given.getOptCustomType().isEmpty() != expected.optCustomTypeEmpty) { result.push(`${path}optCustomType empty ${given.getOptCustomType().isEmpty()} != ${expected.optCustomTypeEmpty}`) }
         }
 
         if (expected.optCustomType !== undefined) {
