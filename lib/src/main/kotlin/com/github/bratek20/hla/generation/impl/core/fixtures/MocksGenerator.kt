@@ -8,6 +8,7 @@ import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.utils.camelToPascalCase
+import com.github.bratek20.hla.utils.pascalToCamelCase
 
 class MocksGenerator: FileGenerator() {
     override fun name(): String {
@@ -22,13 +23,25 @@ class MocksGenerator: FileGenerator() {
 
         private fun mocksForMethod(def: MethodDefinition): CodeBlockBuilder {
             val upperCaseName = camelToPascalCase(def.getName())
+            val inputArgName = def.getArgs().first().getName()
+            val inputType = def.getArgs().first().getType().getName()
+            val outputType = def.getReturnType().getName()
+
+            val expectedInputType = "Expected${inputType}.() -> Unit"
+            val defOutputType = "${outputType}Def.() -> Unit"
+
+            val inputDiffMethodName = "diff${inputType}"
+            val outputBuilderMethodName = "${pascalToCamelCase(outputType)}Def"
+
+            val responsesListName = "${def.getName()}Responses"
+
             return block {
                 line("// ${def.getName()}")
-                line(ListFieldDeclaration("${def.getName()}Calls", "OtherClass"))
+                line(ListFieldDeclaration("${def.getName()}Calls", inputType))
                 line(
                     ListFieldDeclaration(
-                        "${def.getName()}Responses",
-                        "Pair<ExpectedOtherClass.() -> Unit, OtherClassDef.() -> Unit>"
+                        responsesListName,
+                        "Pair<${expectedInputType}, ${defOutputType}>"
                     )
                 )
                 emptyLine()
@@ -36,21 +49,21 @@ class MocksGenerator: FileGenerator() {
                     Function(
                         name = "set${upperCaseName}Response",
                         args = listOf(
-                            Pair("args", "ExpectedOtherClass.() -> Unit"),
-                            Pair("response", "OtherClassDef.() -> Unit")
+                            Pair("args", expectedInputType),
+                            Pair("response", defOutputType)
                         ),
-                        body = OneLineBlock("${def.getName()}Responses.add(Pair(args, response))")
+                        body = OneLineBlock("${responsesListName}.add(Pair(args, response))")
                     )
                 )
                 emptyLine()
                 add(Function(
                     override = true,
-                    name = "referenceOtherClass",
-                    returnType = "OtherClass",
-                    args = listOf(Pair("other", "OtherClass")),
+                    name = def.getName(),
+                    returnType = outputType,
+                    args = listOf(Pair(inputArgName, inputType)),
                     body = block {
                         line("${def.getName()}Calls.add(other)")
-                        line("return otherClass(${def.getName()}Responses.find { diffOtherClass(other, it.first) == \"\" }?.second ?: {})")
+                        line("return otherClass(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: {})")
                     }
                 ))
                 emptyLine()
@@ -65,11 +78,11 @@ class MocksGenerator: FileGenerator() {
                 add(Function(
                     name = "assert${upperCaseName}CalledForArgs",
                     args = listOf(
-                        Pair("args", "ExpectedOtherClass.() -> Unit"),
+                        Pair("args", expectedInputType),
                         Pair("times", "Int = 1")
                     ),
                     body = block {
-                        line("val calls = ${def.getName()}Calls.filter { diffOtherClass(it, args) == \"\" }")
+                        line("val calls = ${def.getName()}Calls.filter { ${inputDiffMethodName}(it, args) == \"\" }")
                         line("assertThat(calls.size).withFailMessage(\"Expected ${def.getName()} to be called \$times times, but was called \$${def.getName()}Calls times\").isEqualTo(times)")
                     }
                 ))
