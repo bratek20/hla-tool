@@ -167,7 +167,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.someClassOptEmpty !== undefined) {
-            if ((given.getSomeClassOpt() == null) != expected.someClassOptEmpty) { result.push(`${path}someClassOpt empty ${given.getSomeClassOpt() == null} != ${expected.someClassOptEmpty}`) }
+            if (given.getSomeClassOpt().isEmpty() != expected.someClassOptEmpty) { result.push(`${path}someClassOpt empty ${given.getSomeClassOpt().isEmpty()} != ${expected.someClassOptEmpty}`) }
         }
 
         if (expected.someClassOpt !== undefined) {
