@@ -35,7 +35,7 @@ class DiffsGenerator: FileGenerator() {
         val externalTypesDiffs = if (externalTypes.isEmpty())
             null
         else
-            CodeBuilder()
+            CodeBuilder(lang)
                 .add(ManyCodeBlocksSeparatedByLine(
                     externalTypes.map { externalTypeDiff(it) }
                 ))

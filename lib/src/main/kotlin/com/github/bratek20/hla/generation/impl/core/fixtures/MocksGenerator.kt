@@ -18,6 +18,7 @@ class MocksGenerator: FileGenerator() {
     }
 
     class View(
+        val lang: Language,
         val interf: InterfaceView,
         val moduleName: String
     ) {
@@ -115,7 +116,7 @@ class MocksGenerator: FileGenerator() {
         }
 
         fun classes(indent: Int): String {
-            return CodeBuilder(indent)
+            return CodeBuilder(lang, indent)
                 .add(Class(
                     className = "${interfaceName}Mock",
                     implementedInterfaceName = interfaceName,
@@ -127,7 +128,7 @@ class MocksGenerator: FileGenerator() {
         }
 
         fun contextModule(): String {
-            return CodeBuilder()
+            return CodeBuilder(lang)
                 .add(Class(
                     className = "${moduleName}Mocks",
                     implementedInterfaceName = "ContextModule",
@@ -155,7 +156,7 @@ class MocksGenerator: FileGenerator() {
         val interf = c.module.getInterfaces().find { it.getName() == "SomeInterface2" }!!
         val interfView = InterfaceViewFactory(apiTypeFactory).create(interf)
         return contentBuilder("mocks.vm")
-            .put("view", View(interfView, "SomeModule"))
+            .put("view", View(lang, interfView, "SomeModule"))
             .build()
     }
 }

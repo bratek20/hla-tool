@@ -56,7 +56,7 @@ class BuildersGenerator: FileGenerator() {
         val externalTypesBuilders = if (externalTypes.isEmpty())
                 null
             else
-                CodeBuilder()
+                CodeBuilder(lang)
                     .add(ManyCodeBlocksSeparatedByLine(
                         externalTypes.map { externalTypeBuilder(it) }
                     ))

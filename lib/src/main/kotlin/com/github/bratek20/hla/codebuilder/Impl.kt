@@ -9,6 +9,31 @@ interface CodeBlockBuilder {
     fun apply(b: CodeBuilder)
 }
 
+interface Language {
+    fun implements(): String
+}
+
+class Kotlin: Language {
+    override fun implements(): String {
+        return ": "
+    }
+
+}
+
+class TypeScript: Language {
+    override fun implements(): String {
+        return " implements "
+    }
+}
+
+abstract class BaseCodeBlockBuilder: CodeBlockBuilder {
+    protected lateinit var lang: Language
+
+    fun init(lang: Language) {
+        this.lang = lang
+    }
+}
+
 class OneLineBlock(
     private val block: String
 ): CodeBlockBuilder {
@@ -56,9 +81,9 @@ class Class(
     private val className: String,
     private val implementedInterfaceName: String,
     private val body: CodeBlockBuilder
-): CodeBlockBuilder {
+): BaseCodeBlockBuilder() {
     override fun apply(b: CodeBuilder) {
-        b.line("class $className: $implementedInterfaceName {")
+        b.line("class $className${lang.implements()}$implementedInterfaceName {")
         b.tab()
         body.apply(b)
         b.untab()
@@ -86,6 +111,7 @@ class Function(
 }
 
 class CodeBuilder(
+    private val lang: Language,
     indent: Int = 0
 ) {
     private var currentIndent = indent
@@ -104,6 +130,11 @@ class CodeBuilder(
     fun add(block: CodeBlockBuilder): CodeBuilder {
         block.apply(this)
         return this
+    }
+
+    fun add(block: BaseCodeBlockBuilder): CodeBuilder {
+        block.init(lang)
+        return add(block as CodeBlockBuilder)
     }
 
     fun tab(): CodeBuilder {

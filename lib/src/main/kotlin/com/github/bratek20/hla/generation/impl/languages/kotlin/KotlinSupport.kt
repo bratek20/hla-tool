@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.languages.kotlin
 
+import com.github.bratek20.hla.codebuilder.Kotlin
+import com.github.bratek20.hla.codebuilder.Language
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext
@@ -38,5 +40,9 @@ class KotlinSupport(private val c: DomainContext)
 
     override fun contentBuilderExtensions(): List<ContentBuilderExtension> {
         return listOf(PackageNameAndImportsExtension(c))
+    }
+
+    override fun base(): Language {
+        return Kotlin()
     }
 }
