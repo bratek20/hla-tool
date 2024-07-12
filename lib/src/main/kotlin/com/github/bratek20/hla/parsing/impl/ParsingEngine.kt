@@ -116,7 +116,7 @@ class ParsingEngine {
         val firstEqualsSignIndex = noIndentLine.indexOf("=").takeIf { it != -1 } ?: Int.MAX_VALUE
         val firstColonSignIndex = noIndentLine.indexOf(":").takeIf { it != -1 } ?: Int.MAX_VALUE
 
-        if (noIndentLine.contains(Regex("[a-zA-Z]\\("))) {
+        if (noIndentLine.contains(Regex("[a-zA-Z0-9]\\("))) {
             val methodName = noIndentLine.substringBefore("(")
             val args = noIndentLine.substringAfter("(").substringBefore(")").split(",")
                 .filter { it.isNotBlank() }

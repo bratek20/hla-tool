@@ -13,7 +13,7 @@ namespace ${moduleName}.Builder {
     }
     export function ${b.funName()}(def?: ${b.defName()}): ${b.api.name()} {
         #foreach($field in $b.fields)
-        const $field.name = def?.$field.name ?? $field.defaultValue()
+        const final_$field.name = def?.$field.name ?? $field.defaultValue()
         #end
 
         return ${b.api.constructorCall()}(

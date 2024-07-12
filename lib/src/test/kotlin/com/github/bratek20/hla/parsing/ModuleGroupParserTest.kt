@@ -50,6 +50,74 @@ class ModuleGroupParserTest {
         return parser.parse(Path(fullPath), ProfileName(profileName))
     }
 
+    //useful to start crash investigation, feel free to modify crash/SomeModule.module
+    @Test
+    fun `should not crash for provided module`() {
+        assertModuleDefinition(parseSingleModule("crash")) {
+            interfaces = listOf {
+                name = "SquadronWarsRepository"
+                methods = listOf(
+                    {
+                        name = "findMatching"
+                        args = listOf(
+                            {
+                                name = "warId"
+                                type = {
+                                    name = "SquadronWarId"
+                                }
+                            },
+                            {
+                                name = "squadronId"
+                                type = {
+                                    name = "SquadronId"
+                                }
+                            }
+                        )
+                        returnType = {
+                            name = "SquadronWarMatchingData"
+                            wrappers = listOf(
+                                TypeWrapper.OPTIONAL
+                            )
+                        }
+                    },
+                    {
+                        name = "findMatchingWithEmptySquadron2"
+                        args = listOf(
+                            {
+                                name = "warId"
+                                type = {
+                                    name = "SquadronWarId"
+                                }
+                            }
+                        )
+                        returnType = {
+                            name = "SquadronWarMatchingData"
+                            wrappers = listOf(
+                                TypeWrapper.OPTIONAL
+                            )
+                        }
+                    },
+                    {
+                        name = "setMatching"
+                        args = listOf(
+                            {
+                                name = "matching"
+                                type = {
+                                    name = "SquadronWarMatchingData"
+                                }
+                            }
+                        )
+                        returnType = {
+                            name = "void"
+                        }
+                    }
+                )
+            }
+        }
+
+        loggerMock.assertErrors()
+    }
+
     @Test
     fun `should parse two modules and log about it`() {
         val modules = parseSingleGroup("two-modules")
@@ -476,19 +544,6 @@ class ModuleGroupParserTest {
         })
     }
 
-
-    //useful to start crash investigation, feel free to modify crash/SomeModule.module
-    @Test
-    fun `should not crash for provided module`() {
-        assertModuleDefinition(parseSingleModule("crash")) {
-            complexValueObjects = listOf {
-                name = "OfferItemsTD"
-            }
-        }
-
-        loggerMock.assertErrors()
-    }
-
     @Test
     fun `should handle tab as 4 spaces to avoid errors`() {
         assertModuleDefinition(parseSingleModule("tab-bug")) {
@@ -507,20 +562,31 @@ class ModuleGroupParserTest {
     }
 
     @Test
-    fun `should parse external types`() {
-        val modules = parseSingleGroup("external-types")
+    fun `should parse kotlin config`() {
+        val modules = parseSingleGroup("kotlin-config")
 
-        assertModules(modules, listOf {
-            externalTypes = listOf(
-                "LegacyType",
-            )
-            kotlinConfig = {
-                externalTypePackages = listOf {
-                    name = "LegacyType"
-                    packageName = "com.some.pkg.legacy"
+        assertModules(modules, listOf(
+            {
+                name = "Legacy"
+                externalTypes = listOf(
+                    "LegacyType",
+                )
+                kotlinConfig = {
+                    externalTypePackages = listOf {
+                        name = "LegacyType"
+                        packageName = "com.some.pkg.legacy"
+                    }
+                }
+            },
+            {
+                name = "Records"
+                kotlinConfig = {
+                    records = listOf(
+                        "SomeClass"
+                    )
                 }
             }
-        })
+        ))
     }
 
     @Test
@@ -623,17 +689,29 @@ class ModuleGroupParserTest {
 
     @Test
     fun `should parse web submodule`() {
-        val module = parseSingleModule("web-submodule")
+        val modules = parseSingleGroup("web-submodule")
 
-        assertModuleDefinition(module) {
-            webSubmodule = {
-                expose = listOf(
-                    "SomeInterface",
-                    "SomeInterface2"
-                )
-                serverUrl = "\"http://localhost:8080\""
-            }
-        }
+        assertModules(modules, listOf (
+            {
+                name = "OtherModule"
+                webSubmodule = {
+                    expose = listOf(
+                        "OtherInterface"
+                    )
+                    serverUrlEmpty = true
+                }
+            },
+            {
+                name = "SomeModule"
+                webSubmodule = {
+                    expose = listOf(
+                        "SomeInterface",
+                        "SomeInterface2"
+                    )
+                    serverUrl = "\"http://myhost:8080\""
+                }
+            },
+        ))
     }
 
     @Test
@@ -670,6 +748,26 @@ class ModuleGroupParserTest {
                         }
                     }
                 )
+            }
+        }
+    }
+
+    @Test
+    fun `should parse interface method with number in the name`() {
+        val module = parseSingleModule("interface-method-with-number")
+
+        assertModuleDefinition(module) {
+            interfaces = listOf {
+                name = "SomeInterface"
+                methods = listOf {
+                    name = "someMethod2"
+                    args = listOf {
+                        name = "someArg"
+                        type = {
+                            name = "int"
+                        }
+                    }
+                }
             }
         }
     }

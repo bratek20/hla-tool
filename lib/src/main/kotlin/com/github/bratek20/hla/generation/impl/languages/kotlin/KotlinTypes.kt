@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.languages.kotlin
 
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.definitions.api.BaseType
+import com.github.bratek20.hla.generation.impl.core.DomainContext
 import com.github.bratek20.hla.utils.camelToPascalCase
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
@@ -82,22 +83,6 @@ class KotlinTypes: LanguageTypes {
 
     override fun deserializeOptional(variableName: String): String {
         return variableName
-    }
-
-    override fun serializeOptionalForSimpleStructure(variableName: String, className: String): String {
-        return "$variableName?.let { it -> it.value }"
-    }
-
-    override fun deserializeOptionalForSimpleStructure(variableName: String, className: String): String {
-        return "$variableName?.let { it -> $className(it) }"
-    }
-
-    override fun serializeOptionalForComplexCustomType(variableName: String, className: String): String {
-        return "$variableName?.let { it -> $className.fromCustomType(it) }"
-    }
-
-    override fun deserializeOptionalForComplexCustomType(variableName: String): String {
-        return "$variableName?.let { it -> it.toCustomType() }"
     }
 
     override fun emptyOptional(): String {

@@ -81,20 +81,20 @@ data class ImplSubmoduleDefinition(
 
 data class WebSubmoduleDefinition(
     private val expose: List<String>,
-    private val serverUrl: String,
+    private val serverUrl: String?,
 ) {
     fun getExpose(): List<String> {
         return this.expose
     }
 
-    fun getServerUrl(): String {
+    fun getServerUrl(): String? {
         return this.serverUrl
     }
 
     companion object {
         fun create(
             expose: List<String>,
-            serverUrl: String,
+            serverUrl: String?,
         ): WebSubmoduleDefinition {
             return WebSubmoduleDefinition(
                 expose = expose,
@@ -131,17 +131,24 @@ data class ExternalTypePackageMapping(
 
 data class KotlinConfig(
     private val externalTypePackages: List<ExternalTypePackageMapping>,
+    private val records: List<String>,
 ) {
     fun getExternalTypePackages(): List<ExternalTypePackageMapping> {
         return this.externalTypePackages
     }
 
+    fun getRecords(): List<String> {
+        return this.records
+    }
+
     companion object {
         fun create(
             externalTypePackages: List<ExternalTypePackageMapping>,
+            records: List<String>,
         ): KotlinConfig {
             return KotlinConfig(
                 externalTypePackages = externalTypePackages,
+                records = records,
             )
         }
     }

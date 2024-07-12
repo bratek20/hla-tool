@@ -10,12 +10,12 @@ namespace OtherModule.Builder {
         name?: string,
     }
     export function otherProperty(def?: OtherPropertyDef): OtherProperty {
-        const id = def?.id ?? 0
-        const name = def?.name ?? "someValue"
+        const final_id = def?.id ?? 0
+        const final_name = def?.name ?? "someValue"
 
         return OtherProperty.create(
-            new OtherId(id),
-            name,
+            new OtherId(final_id),
+            final_name,
         )
     }
 
@@ -24,12 +24,12 @@ namespace OtherModule.Builder {
         amount?: number,
     }
     export function otherClass(def?: OtherClassDef): OtherClass {
-        const id = def?.id ?? 0
-        const amount = def?.amount ?? 0
+        const final_id = def?.id ?? 0
+        const final_amount = def?.amount ?? 0
 
         return OtherClass.create(
-            new OtherId(id),
-            amount,
+            new OtherId(final_id),
+            final_amount,
         )
     }
 
@@ -37,10 +37,10 @@ namespace OtherModule.Builder {
         id?: number,
     }
     export function otherData(def?: OtherDataDef): OtherData {
-        const id = def?.id ?? 0
+        const final_id = def?.id ?? 0
 
         return OtherData.create(
-            new OtherId(id),
+            new OtherId(final_id),
         )
     }
 }

@@ -1,0 +1,7 @@
+ValueObjects
+    SomeClass
+        id: string
+
+Kotlin
+    Records
+        SomeClass

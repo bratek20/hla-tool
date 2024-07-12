@@ -23,6 +23,20 @@ abstract class ExpectedType<T: ApiType>(
     open fun notEquals(givenVariable: String, expectedVariable: String): String {
         return "$givenVariable != $expectedVariable"
     }
+
+    override fun toString(): String {
+        return "$javaClass(${name()})"
+    }
+
+    // used by velocity
+    fun diffFunName(): String {
+        return fixture.diffFunName(api.name())
+    }
+
+    // used by velocity
+    fun funName(): String {
+        return fixture.assertFunName(api.name())
+    }
 }
 
 class BaseExpectedType(
@@ -95,9 +109,9 @@ class OptionalEmptyExpectedTypeField(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
-        val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${($givenVariable.${mainField.name} == null) != $expectedVariable} != \${$expectedVariable}")
+        val element = languageTypes.wrapWithString("\${path}${mainField.name} empty \${${mainField.access(givenVariable)} == null} != \${$expectedVariable}")
         val body = languageTypes.addListElement("result", element)
-        return "if (($givenVariable.${mainField.name} == null) != $expectedVariable) { $body }"
+        return "if ((${mainField.access(givenVariable)} == null) != $expectedVariable) { $body }"
     }
 }
 
@@ -115,16 +129,6 @@ abstract class StructureExpectedType<T: StructureApiType>(
 ) : ExpectedType<T>(api) {
     override fun name(): String {
         return api.name()
-    }
-
-    // used by velocity
-    fun diffFunName(): String {
-        return fixture.diffFunName(api.name())
-    }
-
-    // used by velocity
-    fun funName(): String {
-        return fixture.assertFunName(api.name())
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
@@ -185,8 +189,11 @@ class OptionalExpectedType(
         if (wrappedType is BaseExpectedType) {
             return wrappedType.name()
         }
-        if (wrappedType is SimpleValueObjectExpectedType) {
+        if (wrappedType is SimpleStructureExpectedType<*>) {
             return wrappedType.api.boxedType.name()
+        }
+        if (wrappedType is EnumExpectedType) {
+            return wrappedType.api.serializableName()
         }
         return fixture.expectedClassType(wrappedType.api.name())
     }
@@ -241,7 +248,25 @@ class ListExpectedType(
 
 class EnumExpectedType(
     api: EnumApiType,
-) : ExpectedType<EnumApiType>(api)
+) : ExpectedType<EnumApiType>(api) {
+    fun diffBody(givenVariable: String, expectedVariable: String): String {
+        val result = languageTypes.wrapWithString("\${path}value \${${api.serialize(givenVariable)}} != \${$expectedVariable}")
+        return "if (${givenVariable} != ${api.deserialize(expectedVariable)}) { return $result }"
+    }
+
+    override fun name(): String {
+        return api.serializableName()
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        val finalPath = languageTypes.wrapWithString("$path.")
+        return "${diffFunName()}($givenVariable, $expectedVariable, $finalPath)"
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return "${diffFunName()}($givenVariable, $expectedVariable) != \"\""
+    }
+}
 
 class ExpectedTypeFactory(
     private val languageTypes: LanguageTypes,
@@ -268,19 +293,21 @@ class ExpectedTypeFactory(
 
     private fun createFields(fields: List<ComplexStructureField>): List<ExpectedTypeField> {
         return fields.map {
-            if (it.type is OptionalApiType) {
-                listOf(
-                    OptionalEmptyExpectedTypeField(it, languageTypes),
-                    DefaultExpectedTypeField(it, this)
-                )
-            }
-            if (it.type is ListApiType) {
-                listOf(
-                    ListExpectedTypeField(it, this)
-                )
-            }
-            else {
-                listOf(DefaultExpectedTypeField(it, this))
+            when (it.type) {
+                is OptionalApiType -> {
+                    listOf(
+                        OptionalEmptyExpectedTypeField(it, languageTypes),
+                        DefaultExpectedTypeField(it, this)
+                    )
+                }
+                is ListApiType -> {
+                    listOf(
+                        ListExpectedTypeField(it, this)
+                    )
+                }
+                else -> {
+                    listOf(DefaultExpectedTypeField(it, this))
+                }
             }
         }.flatten()
     }

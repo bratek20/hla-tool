@@ -13,9 +13,7 @@ fun ${a.diffFunName()}(given: ${a.api.name()}, expected: ${a.api.serializableNam
     $a.diffBody("given", "expected")
     return ""
 }
-#if($foreach.hasNext)
-
-#end#end
+#end
 #foreach($a in $complexAsserts)
 
 data class ${a.expectedName()}(

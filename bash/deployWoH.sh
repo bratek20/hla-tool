@@ -7,6 +7,7 @@ paths=(
     "/mnt/d/Rortos/content-service/hla/tool.jar"
     "/mnt/d/Rortos/ac-common/hla/tool.jar"
     "/mnt/d/Rortos/gamelift-play-server/hla/tool.jar"
+    "/mnt/d/Rortos/leaderboard-service/hla/tool.jar"
 )
 
 # Source path of the app.jar file

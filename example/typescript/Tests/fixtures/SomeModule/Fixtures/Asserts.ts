@@ -16,16 +16,6 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
-        const diff = diffSomeProperty(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
-    export function someProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2) {
-        const diff = diffSomeProperty2(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
     export function someClass(given: SomeClass, expected: ExpectedSomeClass) {
         const diff = diffSomeClass(given, expected)
         AssertEquals(diff, "", diff)
@@ -56,6 +46,26 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function recordClass(given: RecordClass, expected: ExpectedRecordClass) {
+        const diff = diffRecordClass(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
+        const diff = diffSomeQueryInput(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
+        const diff = diffSomeProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2) {
+        const diff = diffSomeProperty2(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
         const diff = diffDateRangeWrapper(given, expected)
         AssertEquals(diff, "", diff)
@@ -63,6 +73,11 @@ namespace SomeModule.Assert {
 
     export function someData(given: SomeData, expected: ExpectedSomeData) {
         const diff = diffSomeData(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someData2(given: SomeData2, expected: ExpectedSomeData2) {
+        const diff = diffSomeData2(given, expected)
         AssertEquals(diff, "", diff)
     }
 }

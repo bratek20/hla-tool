@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.hla.utils.pascalToCamelCase
 
 abstract class DefType<T: ApiType>(
@@ -88,6 +89,9 @@ open class DefField(
     }
 
     open fun build(): String {
+        if (api.type.languageTypes is TypeScriptTypes) {
+            return type.build("final_$name")
+        }
         return type.build(name)
     }
 
@@ -138,13 +142,10 @@ class OptionalDefType(
     val wrappedType: DefType<*>
 ) : DefType<OptionalApiType>(api) {
     override fun name(): String {
-        if (wrappedType is BaseDefType) {
-            return pattern.defOptionalBaseType(wrappedType.name())
+        if (wrappedType is ComplexStructureDefType) {
+            return pattern.defOptionalComplexType(wrappedType.api.name())
         }
-        if (wrappedType is SimpleStructureDefType<*>) {
-            return pattern.defOptionalBaseType(wrappedType.api.serializableName())
-        }
-        return pattern.defOptionalType(wrappedType.api.name())
+        return pattern.defOptionalNonComplexType(wrappedType.name())
     }
 
     override fun defaultValue(): String {
@@ -152,10 +153,11 @@ class OptionalDefType(
     }
 
     override fun build(variableName: String): String {
-        if (wrappedType is BaseDefType) {
+        val mapping = wrappedType.build("it")
+        if (mapping == "it") {
             return pattern.mapOptionalDefBaseElement(variableName)
         }
-        return pattern.mapOptionalDefElement(variableName, "it", wrappedType.build("it"))
+        return pattern.mapOptionalDefElement(variableName, "it", mapping)
     }
 }
 
@@ -183,15 +185,15 @@ class EnumDefType(
     api: EnumApiType
 ) : DefType<EnumApiType>(api) {
     override fun name(): String {
-        return api.name()
+        return api.serializableName()
     }
 
     override fun defaultValue(): String {
-        return api.defaultValue()
+        return api.serialize(api.defaultValue())
     }
 
     override fun build(variableName: String): String {
-        return variableName
+        return api.deserialize(variableName)
     }
 }
 

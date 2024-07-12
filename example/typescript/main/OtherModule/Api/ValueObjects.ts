@@ -12,6 +12,18 @@ class OtherId {
     toString(): string {
         return this.value.toString()
     }
+
+    plus(other: OtherId): OtherId {
+        return new OtherId(this.value + other.value);
+    }
+
+    minus(other: OtherId): OtherId {
+        return new OtherId(this.value - other.value);
+    }
+
+    times(other: OtherId): OtherId {
+        return new OtherId(this.value * other.value);
+    }
 }
 
 class OtherProperty {

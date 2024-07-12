@@ -10,7 +10,7 @@ import com.some.pkg.typesmodule.api.*
 class SomeModuleWebServerUrl(val value: String)
 
 class SomeInterfaceSomeCommandRequest(val id: SomeId, val amount: Int)
-class SomeInterfaceSomeQueryRequest(val id: SomeId)
+class SomeInterfaceSomeQueryRequest(val query: SomeQueryInput)
 class SomeInterfaceOptMethodRequest(val optId: SomeId?)
 class SomeInterface2ReferenceOtherClassRequest(val other: OtherClass)
 class SomeInterface2ReferenceLegacyTypeRequest(val legacyType: com.some.pkg.legacy.LegacyType)

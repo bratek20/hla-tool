@@ -15,7 +15,7 @@ interface SomeInterface {
     /**
      * @throws { SomeException }
      */
-    someQuery(id: SomeId): SomeClass
+    someQuery(query: SomeQueryInput): SomeClass
 
     optMethod(optId: Optional<SomeId>): Optional<SomeClass>
 }

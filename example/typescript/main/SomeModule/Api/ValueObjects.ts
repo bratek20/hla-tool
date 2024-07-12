@@ -26,6 +26,18 @@ class SomeIntWrapper {
     toString(): string {
         return this.value.toString()
     }
+
+    plus(other: SomeIntWrapper): SomeIntWrapper {
+        return new SomeIntWrapper(this.value + other.value);
+    }
+
+    minus(other: SomeIntWrapper): SomeIntWrapper {
+        return new SomeIntWrapper(this.value - other.value);
+    }
+
+    times(other: SomeIntWrapper): SomeIntWrapper {
+        return new SomeIntWrapper(this.value * other.value);
+    }
 }
 
 class SomeId2 {
@@ -40,100 +52,17 @@ class SomeId2 {
     toString(): string {
         return this.value.toString()
     }
-}
 
-class SomeProperty {
-    private other = new OtherProperty
-    private id2? = NUMBER
-    private range? = new SerializedDateRange
-    private doubleExample = NUMBER
-    private longExample = NUMBER
-    private gN = STRING
-    private customData = ANY
-
-    static create(
-        other: OtherProperty,
-        id2: Optional<SomeId2>,
-        range: Optional<DateRange>,
-        doubleExample: number,
-        longExample: number,
-        goodName: string,
-        customData: any,
-    ): SomeProperty {
-        const instance = new SomeProperty()
-        instance.other = other
-        instance.id2 = id2.map(it => it.value).orElse(undefined)
-        instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
-        instance.doubleExample = doubleExample
-        instance.longExample = longExample
-        instance.gN = goodName
-        instance.customData = customData
-        return instance
+    plus(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value + other.value);
     }
 
-    getOther(): OtherProperty {
-        return this.other
+    minus(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value - other.value);
     }
 
-    getId2(): Optional<SomeId2> {
-        return Optional.of(this.id2).map(it => new SomeId2(it))
-    }
-
-    getRange(): Optional<DateRange> {
-        return Optional.of(this.range).map(it => it.toCustomType())
-    }
-
-    getDoubleExample(): number {
-        return this.doubleExample
-    }
-
-    getLongExample(): number {
-        return this.longExample
-    }
-
-    getGoodName(): string {
-        return this.gN
-    }
-
-    getCustomData(): any {
-        return this.customData
-    }
-}
-
-class SomeProperty2 {
-    value = STRING
-    private custom = ANY
-    private someEnum = STRING
-    private customOpt? = ANY
-
-    static create(
-        value: string,
-        custom: any,
-        someEnum: SomeEnum,
-        customOpt: Optional<any> = Optional.empty(),
-    ): SomeProperty2 {
-        const instance = new SomeProperty2()
-        instance.value = value
-        instance.custom = custom
-        instance.someEnum = someEnum.getName()
-        instance.customOpt = customOpt.orElse(undefined)
-        return instance
-    }
-
-    getValue(): string {
-        return this.value
-    }
-
-    getCustom(): any {
-        return this.custom
-    }
-
-    getSomeEnum(): SomeEnum {
-        return SomeEnum.fromName(this.someEnum).get()
-    }
-
-    getCustomOpt(): Optional<any> {
-        return Optional.of(this.customOpt)
+    times(other: SomeId2): SomeId2 {
+        return new SomeId2(this.value * other.value);
     }
 }
 
@@ -335,5 +264,146 @@ class SomeClass6 {
 
     getSameClassList(): SomeClass6[] {
         return this.sameClassList
+    }
+}
+
+class RecordClass {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): RecordClass {
+        const instance = new RecordClass()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}
+
+class SomeQueryInput {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): SomeQueryInput {
+        const instance = new SomeQueryInput()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}
+
+class SomeProperty {
+    private other = new OtherProperty
+    private id2? = NUMBER
+    private range? = new SerializedDateRange
+    private doubleExample = NUMBER
+    private longExample = NUMBER
+    private gN = STRING
+    private customData = ANY
+
+    static create(
+        other: OtherProperty,
+        id2: Optional<SomeId2>,
+        range: Optional<DateRange>,
+        doubleExample: number,
+        longExample: number,
+        goodName: string,
+        customData: any,
+    ): SomeProperty {
+        const instance = new SomeProperty()
+        instance.other = other
+        instance.id2 = id2.map(it => it.value).orElse(undefined)
+        instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
+        instance.doubleExample = doubleExample
+        instance.longExample = longExample
+        instance.gN = goodName
+        instance.customData = customData
+        return instance
+    }
+
+    getOther(): OtherProperty {
+        return this.other
+    }
+
+    getId2(): Optional<SomeId2> {
+        return Optional.of(this.id2).map(it => new SomeId2(it))
+    }
+
+    getRange(): Optional<DateRange> {
+        return Optional.of(this.range).map(it => it.toCustomType())
+    }
+
+    getDoubleExample(): number {
+        return this.doubleExample
+    }
+
+    getLongExample(): number {
+        return this.longExample
+    }
+
+    getGoodName(): string {
+        return this.gN
+    }
+
+    getCustomData(): any {
+        return this.customData
+    }
+}
+
+class SomeProperty2 {
+    value = STRING
+    private custom = ANY
+    private someEnum = STRING
+    private customOpt? = ANY
+
+    static create(
+        value: string,
+        custom: any,
+        someEnum: SomeEnum,
+        customOpt: Optional<any> = Optional.empty(),
+    ): SomeProperty2 {
+        const instance = new SomeProperty2()
+        instance.value = value
+        instance.custom = custom
+        instance.someEnum = someEnum.getName()
+        instance.customOpt = customOpt.orElse(undefined)
+        return instance
+    }
+
+    getValue(): string {
+        return this.value
+    }
+
+    getCustom(): any {
+        return this.custom
+    }
+
+    getSomeEnum(): SomeEnum {
+        return SomeEnum.fromName(this.someEnum).get()
+    }
+
+    getCustomOpt(): Optional<any> {
+        return Optional.of(this.customOpt)
     }
 }

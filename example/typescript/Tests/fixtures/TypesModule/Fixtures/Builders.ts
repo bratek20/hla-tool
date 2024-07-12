@@ -10,12 +10,12 @@ namespace TypesModule.Builder {
         to?: string,
     }
     export function dateRange(def?: DateRangeDef): DateRange {
-        const from = def?.from ?? "01/01/1970 00:00"
-        const to = def?.to ?? "01/01/2030 00:00"
+        const final_from = def?.from ?? "01/01/1970 00:00"
+        const final_to = def?.to ?? "01/01/2030 00:00"
 
         return TypesModule.CustomTypesMapper.dateRangeCreate(
-            TypesModule.CustomTypesMapper.dateCreate(from),
-            TypesModule.CustomTypesMapper.dateCreate(to),
+            TypesModule.CustomTypesMapper.dateCreate(final_from),
+            TypesModule.CustomTypesMapper.dateCreate(final_to),
         )
     }
 }

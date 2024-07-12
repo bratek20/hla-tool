@@ -1,9 +1,4 @@
-package ${packageName}.api
-#if($imports.size() > 0)
-
-#foreach($import in $imports)
-import ${import}.api.*
-#end#end
+#generateKotlinApiPackageAndImports()
 
 #foreach($vo in $dataClasses)
 data class ${vo.name()}(

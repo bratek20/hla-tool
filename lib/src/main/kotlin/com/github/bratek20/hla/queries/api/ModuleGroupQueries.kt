@@ -120,18 +120,26 @@ class ModuleGroupQueries(
         return groups
     }
 
-    fun getTypeModuleName(typeName: String): ModuleName {
+    fun findTypeModuleName(typeName: String): ModuleName? {
         allTypeNames().forEach { (moduleName, typeNames) ->
             if (typeNames.contains(typeName)) {
                 return moduleName
             }
         }
+        return null
+    }
 
-        throw IllegalStateException("Type $typeName not found in any module")
+    fun getTypeModuleName(typeName: String): ModuleName {
+        return findTypeModuleName(typeName) ?:
+            throw IllegalStateException("Type $typeName not found in any module")
     }
 
     fun getTypeModule(typeName: String): ModuleDefinition {
         return get(getTypeModuleName(typeName))
+    }
+
+    fun findTypeModule(typeName: String): ModuleDefinition? {
+        return findTypeModuleName(typeName)?.let { get(it) }
     }
 
     private fun allModuleTypeNames(module: ModuleDefinition): List<String> {
@@ -190,5 +198,14 @@ class ModuleGroupQueries(
 
     private fun findExternalType(type: TypeDefinition, module: ModuleDefinition): String? {
         return module.getExternalTypes().find { it == type.getName() }
+    }
+
+    fun allEnumTypeDefinitions(module: ModuleDefinition): List<TypeDefinition> {
+        return module.getEnums().map {
+            TypeDefinition.create(
+                name = it.getName(),
+                wrappers = emptyList()
+            )
+        }
     }
 }

@@ -21,44 +21,6 @@ fun someId2(value: Int = 0): SomeId2 {
     return SomeId2(value)
 }
 
-data class SomePropertyDef(
-    var other: (OtherPropertyDef.() -> Unit) = {},
-    var id2: Int? = null,
-    var range: (DateRangeDef.() -> Unit)? = null,
-    var doubleExample: Double = 0.0,
-    var longExample: Long = 0L,
-    var goodName: String = "someValue",
-    var customData: com.github.bratek20.architecture.serialization.api.Struct = com.github.bratek20.architecture.serialization.api.Struct(),
-)
-fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
-    val def = SomePropertyDef().apply(init)
-    return SomeProperty.create(
-        other = otherProperty(def.other),
-        id2 = def.id2?.let { it -> SomeId2(it) },
-        range = def.range?.let { it -> dateRange(it) },
-        doubleExample = def.doubleExample,
-        longExample = def.longExample,
-        goodName = def.goodName,
-        customData = def.customData,
-    )
-}
-
-data class SomeProperty2Def(
-    var value: String = "someValue",
-    var custom: Any = Any(),
-    var someEnum: SomeEnum = SomeEnum.VALUE_A,
-    var customOpt: Any? = null,
-)
-fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
-    val def = SomeProperty2Def().apply(init)
-    return SomeProperty2.create(
-        value = def.value,
-        custom = def.custom,
-        someEnum = def.someEnum,
-        customOpt = def.customOpt,
-    )
-}
-
 data class SomeClassDef(
     var id: String = "someValue",
     var amount: Int = 0,
@@ -89,14 +51,14 @@ fun someClass2(init: SomeClass2Def.() -> Unit = {}): SomeClass2 {
 
 data class SomeClass3Def(
     var class2Object: (SomeClass2Def.() -> Unit) = {},
-    var someEnum: SomeEnum = SomeEnum.VALUE_A,
+    var someEnum: String = SomeEnum.VALUE_A.name,
     var class2List: List<(SomeClass2Def.() -> Unit)> = emptyList(),
 )
 fun someClass3(init: SomeClass3Def.() -> Unit = {}): SomeClass3 {
     val def = SomeClass3Def().apply(init)
     return SomeClass3.create(
         class2Object = someClass2(def.class2Object),
-        someEnum = def.someEnum,
+        someEnum = SomeEnum.valueOf(def.someEnum),
         class2List = def.class2List.map { it -> someClass2(it) },
     )
 }
@@ -149,6 +111,68 @@ fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
     )
 }
 
+data class RecordClassDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun recordClass(init: RecordClassDef.() -> Unit = {}): RecordClass {
+    val def = RecordClassDef().apply(init)
+    return RecordClass.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}
+
+data class SomeQueryInputDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun someQueryInput(init: SomeQueryInputDef.() -> Unit = {}): SomeQueryInput {
+    val def = SomeQueryInputDef().apply(init)
+    return SomeQueryInput.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}
+
+data class SomePropertyDef(
+    var other: (OtherPropertyDef.() -> Unit) = {},
+    var id2: Int? = null,
+    var range: (DateRangeDef.() -> Unit)? = null,
+    var doubleExample: Double = 0.0,
+    var longExample: Long = 0L,
+    var goodName: String = "someValue",
+    var customData: com.github.bratek20.architecture.serialization.api.Struct = com.github.bratek20.architecture.serialization.api.Struct(),
+)
+fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
+    val def = SomePropertyDef().apply(init)
+    return SomeProperty.create(
+        other = otherProperty(def.other),
+        id2 = def.id2?.let { it -> SomeId2(it) },
+        range = def.range?.let { it -> dateRange(it) },
+        doubleExample = def.doubleExample,
+        longExample = def.longExample,
+        goodName = def.goodName,
+        customData = def.customData,
+    )
+}
+
+data class SomeProperty2Def(
+    var value: String = "someValue",
+    var custom: Any = Any(),
+    var someEnum: String = SomeEnum.VALUE_A.name,
+    var customOpt: Any? = null,
+)
+fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
+    val def = SomeProperty2Def().apply(init)
+    return SomeProperty2.create(
+        value = def.value,
+        custom = def.custom,
+        someEnum = SomeEnum.valueOf(def.someEnum),
+        customOpt = def.customOpt,
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )
@@ -172,5 +196,17 @@ fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
         custom = def.custom,
         customOpt = def.customOpt,
         goodDataName = def.goodDataName,
+    )
+}
+
+data class SomeData2Def(
+    var optEnum: String? = null,
+    var optCustomType: String? = null,
+)
+fun someData2(init: SomeData2Def.() -> Unit = {}): SomeData2 {
+    val def = SomeData2Def().apply(init)
+    return SomeData2.create(
+        optEnum = def.optEnum?.let { it -> SomeEnum.valueOf(it) },
+        optCustomType = def.optCustomType?.let { it -> dateCreate(it) },
     )
 }

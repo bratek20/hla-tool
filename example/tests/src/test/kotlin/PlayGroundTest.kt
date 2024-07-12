@@ -1,24 +1,10 @@
 import com.some.pkg.somemodule.api.SomeIntWrapper
+import com.some.pkg.somemodule.fixtures.assertSomeClass6
 import com.some.pkg.somemodule.fixtures.assertSomeIntWrapper
+import com.some.pkg.somemodule.fixtures.someClass
+import com.some.pkg.somemodule.fixtures.someClass6
 import org.junit.jupiter.api.Test
 
-//data class SomeIntWrapper(val value: Int) {
-//    operator fun plus(other: SomeIntWrapper): SomeIntWrapper {
-//        return SomeIntWrapper(this.value + other.value)
-//    }
-//
-//    operator fun minus(other: SomeIntWrapper): SomeIntWrapper {
-//        return SomeIntWrapper(this.value - other.value)
-//    }
-//
-//    operator fun times(other: SomeIntWrapper): SomeIntWrapper {
-//        return SomeIntWrapper(this.value * other.value)
-//    }
-//
-//    override fun toString(): String {
-//        return value.toString()
-//    }
-//}
 
 class PlayGroundTest {
     @Test
@@ -27,5 +13,18 @@ class PlayGroundTest {
         val v2 = SomeIntWrapper(2)
 
         //assertSomeIntWrapper(v1 + v2, 3)
+    }
+
+    @Test
+    fun shouldSupportEmptyInAsserts() {
+        val someClass6 = someClass6 {
+            someClassOpt = {}
+            optString = null
+        }
+
+        assertSomeClass6(someClass6) {
+            someClassOptEmpty = false
+            optStringEmpty = true
+        }
     }
 }

@@ -45,7 +45,7 @@ fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): I
 
 data class WebSubmoduleDefinitionDef(
     var expose: List<String> = emptyList(),
-    var serverUrl: String = "someValue",
+    var serverUrl: String? = null,
 )
 fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): WebSubmoduleDefinition {
     val def = WebSubmoduleDefinitionDef().apply(init)
@@ -69,11 +69,13 @@ fun externalTypePackageMapping(init: ExternalTypePackageMappingDef.() -> Unit = 
 
 data class KotlinConfigDef(
     var externalTypePackages: List<(ExternalTypePackageMappingDef.() -> Unit)> = emptyList(),
+    var records: List<String> = emptyList(),
 )
 fun kotlinConfig(init: KotlinConfigDef.() -> Unit = {}): KotlinConfig {
     val def = KotlinConfigDef().apply(init)
     return KotlinConfig.create(
         externalTypePackages = def.externalTypePackages.map { it -> externalTypePackageMapping(it) },
+        records = def.records,
     )
 }
 

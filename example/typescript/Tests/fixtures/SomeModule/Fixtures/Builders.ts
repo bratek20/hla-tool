@@ -13,66 +13,17 @@ namespace SomeModule.Builder {
         return new SomeId2(value)
     }
 
-    export interface SomePropertyDef {
-        other?: OtherModule.Builder.OtherPropertyDef,
-        id2?: number,
-        range?: TypesModule.Builder.DateRangeDef,
-        doubleExample?: number,
-        longExample?: number,
-        goodName?: string,
-        customData?: any,
-    }
-    export function someProperty(def?: SomePropertyDef): SomeProperty {
-        const other = def?.other ?? {}
-        const id2 = def?.id2 ?? undefined
-        const range = def?.range ?? undefined
-        const doubleExample = def?.doubleExample ?? 0
-        const longExample = def?.longExample ?? 0
-        const goodName = def?.goodName ?? "someValue"
-        const customData = def?.customData ?? {}
-
-        return SomeProperty.create(
-            OtherModule.Builder.otherProperty(other),
-            Optional.of(id2).map(it => new SomeId2(it)),
-            Optional.of(range).map(it => TypesModule.Builder.dateRange(it)),
-            doubleExample,
-            longExample,
-            goodName,
-            customData,
-        )
-    }
-
-    export interface SomeProperty2Def {
-        value?: string,
-        custom?: any,
-        someEnum?: SomeEnum,
-        customOpt?: any,
-    }
-    export function someProperty2(def?: SomeProperty2Def): SomeProperty2 {
-        const value = def?.value ?? "someValue"
-        const custom = def?.custom ?? {}
-        const someEnum = def?.someEnum ?? SomeEnum.VALUE_A
-        const customOpt = def?.customOpt ?? undefined
-
-        return SomeProperty2.create(
-            value,
-            custom,
-            someEnum,
-            Optional.of(customOpt),
-        )
-    }
-
     export interface SomeClassDef {
         id?: string,
         amount?: number,
     }
     export function someClass(def?: SomeClassDef): SomeClass {
-        const id = def?.id ?? "someValue"
-        const amount = def?.amount ?? 0
+        const final_id = def?.id ?? "someValue"
+        const final_amount = def?.amount ?? 0
 
         return SomeClass.create(
-            new SomeId(id),
-            amount,
+            new SomeId(final_id),
+            final_amount,
         )
     }
 
@@ -83,33 +34,33 @@ namespace SomeModule.Builder {
         enabled?: boolean,
     }
     export function someClass2(def?: SomeClass2Def): SomeClass2 {
-        const id = def?.id ?? "someValue"
-        const names = def?.names ?? []
-        const ids = def?.ids ?? []
-        const enabled = def?.enabled ?? true
+        const final_id = def?.id ?? "someValue"
+        const final_names = def?.names ?? []
+        const final_ids = def?.ids ?? []
+        const final_enabled = def?.enabled ?? true
 
         return SomeClass2.create(
-            new SomeId(id),
-            names,
-            ids.map(it => new SomeId(it)),
-            enabled,
+            new SomeId(final_id),
+            final_names,
+            final_ids.map(it => new SomeId(it)),
+            final_enabled,
         )
     }
 
     export interface SomeClass3Def {
         class2Object?: SomeClass2Def,
-        someEnum?: SomeEnum,
+        someEnum?: string,
         class2List?: SomeClass2Def[],
     }
     export function someClass3(def?: SomeClass3Def): SomeClass3 {
-        const class2Object = def?.class2Object ?? {}
-        const someEnum = def?.someEnum ?? SomeEnum.VALUE_A
-        const class2List = def?.class2List ?? []
+        const final_class2Object = def?.class2Object ?? {}
+        const final_someEnum = def?.someEnum ?? SomeEnum.VALUE_A.getName()
+        const final_class2List = def?.class2List ?? []
 
         return SomeClass3.create(
-            someClass2(class2Object),
-            someEnum,
-            class2List.map(it => someClass2(it)),
+            someClass2(final_class2Object),
+            SomeEnum.fromName(final_someEnum).get(),
+            final_class2List.map(it => someClass2(it)),
         )
     }
 
@@ -120,16 +71,16 @@ namespace SomeModule.Builder {
         otherClassList?: OtherModule.Builder.OtherClassDef[],
     }
     export function someClass4(def?: SomeClass4Def): SomeClass4 {
-        const otherId = def?.otherId ?? 0
-        const otherClass = def?.otherClass ?? {}
-        const otherIdList = def?.otherIdList ?? []
-        const otherClassList = def?.otherClassList ?? []
+        const final_otherId = def?.otherId ?? 0
+        const final_otherClass = def?.otherClass ?? {}
+        const final_otherIdList = def?.otherIdList ?? []
+        const final_otherClassList = def?.otherClassList ?? []
 
         return SomeClass4.create(
-            new OtherId(otherId),
-            OtherModule.Builder.otherClass(otherClass),
-            otherIdList.map(it => new OtherId(it)),
-            otherClassList.map(it => OtherModule.Builder.otherClass(it)),
+            new OtherId(final_otherId),
+            OtherModule.Builder.otherClass(final_otherClass),
+            final_otherIdList.map(it => new OtherId(it)),
+            final_otherClassList.map(it => OtherModule.Builder.otherClass(it)),
         )
     }
 
@@ -141,18 +92,18 @@ namespace SomeModule.Builder {
         otherProperty?: OtherModule.Builder.OtherPropertyDef,
     }
     export function someClass5(def?: SomeClass5Def): SomeClass5 {
-        const date = def?.date ?? "01/01/1970 00:00"
-        const dateRange = def?.dateRange ?? {}
-        const dateRangeWrapper = def?.dateRangeWrapper ?? {}
-        const someProperty = def?.someProperty ?? {}
-        const otherProperty = def?.otherProperty ?? {}
+        const final_date = def?.date ?? "01/01/1970 00:00"
+        const final_dateRange = def?.dateRange ?? {}
+        const final_dateRangeWrapper = def?.dateRangeWrapper ?? {}
+        const final_someProperty = def?.someProperty ?? {}
+        const final_otherProperty = def?.otherProperty ?? {}
 
         return SomeClass5.create(
-            TypesModule.CustomTypesMapper.dateCreate(date),
-            TypesModule.Builder.dateRange(dateRange),
-            dateRangeWrapper(dateRangeWrapper),
-            someProperty(someProperty),
-            OtherModule.Builder.otherProperty(otherProperty),
+            TypesModule.CustomTypesMapper.dateCreate(final_date),
+            TypesModule.Builder.dateRange(final_dateRange),
+            dateRangeWrapper(final_dateRangeWrapper),
+            someProperty(final_someProperty),
+            OtherModule.Builder.otherProperty(final_otherProperty),
         )
     }
 
@@ -162,14 +113,91 @@ namespace SomeModule.Builder {
         sameClassList?: SomeClass6Def[],
     }
     export function someClass6(def?: SomeClass6Def): SomeClass6 {
-        const someClassOpt = def?.someClassOpt ?? undefined
-        const optString = def?.optString ?? undefined
-        const sameClassList = def?.sameClassList ?? []
+        const final_someClassOpt = def?.someClassOpt ?? undefined
+        const final_optString = def?.optString ?? undefined
+        const final_sameClassList = def?.sameClassList ?? []
 
         return SomeClass6.create(
-            Optional.of(someClassOpt).map(it => someClass(it)),
-            Optional.of(optString),
-            sameClassList.map(it => someClass6(it)),
+            Optional.of(final_someClassOpt).map(it => someClass(it)),
+            Optional.of(final_optString),
+            final_sameClassList.map(it => someClass6(it)),
+        )
+    }
+
+    export interface RecordClassDef {
+        id?: string,
+        amount?: number,
+    }
+    export function recordClass(def?: RecordClassDef): RecordClass {
+        const final_id = def?.id ?? "someValue"
+        const final_amount = def?.amount ?? 0
+
+        return RecordClass.create(
+            new SomeId(final_id),
+            final_amount,
+        )
+    }
+
+    export interface SomeQueryInputDef {
+        id?: string,
+        amount?: number,
+    }
+    export function someQueryInput(def?: SomeQueryInputDef): SomeQueryInput {
+        const final_id = def?.id ?? "someValue"
+        const final_amount = def?.amount ?? 0
+
+        return SomeQueryInput.create(
+            new SomeId(final_id),
+            final_amount,
+        )
+    }
+
+    export interface SomePropertyDef {
+        other?: OtherModule.Builder.OtherPropertyDef,
+        id2?: number,
+        range?: TypesModule.Builder.DateRangeDef,
+        doubleExample?: number,
+        longExample?: number,
+        goodName?: string,
+        customData?: any,
+    }
+    export function someProperty(def?: SomePropertyDef): SomeProperty {
+        const final_other = def?.other ?? {}
+        const final_id2 = def?.id2 ?? undefined
+        const final_range = def?.range ?? undefined
+        const final_doubleExample = def?.doubleExample ?? 0
+        const final_longExample = def?.longExample ?? 0
+        const final_goodName = def?.goodName ?? "someValue"
+        const final_customData = def?.customData ?? {}
+
+        return SomeProperty.create(
+            OtherModule.Builder.otherProperty(final_other),
+            Optional.of(final_id2).map(it => new SomeId2(it)),
+            Optional.of(final_range).map(it => TypesModule.Builder.dateRange(it)),
+            final_doubleExample,
+            final_longExample,
+            final_goodName,
+            final_customData,
+        )
+    }
+
+    export interface SomeProperty2Def {
+        value?: string,
+        custom?: any,
+        someEnum?: string,
+        customOpt?: any,
+    }
+    export function someProperty2(def?: SomeProperty2Def): SomeProperty2 {
+        const final_value = def?.value ?? "someValue"
+        const final_custom = def?.custom ?? {}
+        const final_someEnum = def?.someEnum ?? SomeEnum.VALUE_A.getName()
+        const final_customOpt = def?.customOpt ?? undefined
+
+        return SomeProperty2.create(
+            final_value,
+            final_custom,
+            SomeEnum.fromName(final_someEnum).get(),
+            Optional.of(final_customOpt),
         )
     }
 
@@ -177,10 +205,10 @@ namespace SomeModule.Builder {
         range?: TypesModule.Builder.DateRangeDef,
     }
     export function dateRangeWrapper(def?: DateRangeWrapperDef): DateRangeWrapper {
-        const range = def?.range ?? {}
+        const final_range = def?.range ?? {}
 
         return SomeModule.CustomTypesMapper.dateRangeWrapperCreate(
-            TypesModule.Builder.dateRange(range),
+            TypesModule.Builder.dateRange(final_range),
         )
     }
 
@@ -191,16 +219,30 @@ namespace SomeModule.Builder {
         goodDataName?: string,
     }
     export function someData(def?: SomeDataDef): SomeData {
-        const other = def?.other ?? {}
-        const custom = def?.custom ?? {}
-        const customOpt = def?.customOpt ?? undefined
-        const goodDataName = def?.goodDataName ?? "someValue"
+        const final_other = def?.other ?? {}
+        const final_custom = def?.custom ?? {}
+        const final_customOpt = def?.customOpt ?? undefined
+        const final_goodDataName = def?.goodDataName ?? "someValue"
 
         return SomeData.create(
-            OtherModule.Builder.otherData(other),
-            custom,
-            Optional.of(customOpt),
-            goodDataName,
+            OtherModule.Builder.otherData(final_other),
+            final_custom,
+            Optional.of(final_customOpt),
+            final_goodDataName,
+        )
+    }
+
+    export interface SomeData2Def {
+        optEnum?: string,
+        optCustomType?: string,
+    }
+    export function someData2(def?: SomeData2Def): SomeData2 {
+        const final_optEnum = def?.optEnum ?? undefined
+        const final_optCustomType = def?.optCustomType ?? undefined
+
+        return SomeData2.create(
+            Optional.of(final_optEnum).map(it => SomeEnum.fromName(it).get()),
+            Optional.of(final_optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it)),
         )
     }
 }

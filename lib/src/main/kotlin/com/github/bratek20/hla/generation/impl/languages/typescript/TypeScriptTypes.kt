@@ -86,22 +86,6 @@ class TypeScriptTypes(private val modules: ModuleGroupQueries): LanguageTypes {
         return "Optional.of($variableName)"
     }
 
-    override fun serializeOptionalForSimpleStructure(variableName: String, className: String): String {
-        return "$variableName.map(it => it.value).orElse(undefined)"
-    }
-
-    override fun deserializeOptionalForSimpleStructure(variableName: String, className: String): String {
-        return "Optional.of($variableName).map(it => new $className(it))"
-    }
-
-    override fun serializeOptionalForComplexCustomType(variableName: String, className: String): String {
-        return "$variableName.map(it => $className.fromCustomType(it)).orElse(undefined)"
-    }
-
-    override fun deserializeOptionalForComplexCustomType(variableName: String): String {
-        return "Optional.of($variableName).map(it => it.toCustomType())"
-    }
-
     override fun emptyOptional(): String {
         return "Optional.empty()"
     }

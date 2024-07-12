@@ -7,6 +7,7 @@ import com.github.bratek20.hla.generation.api.GenerateArgs
 import com.github.bratek20.hla.generation.api.GenerateResult
 import com.github.bratek20.hla.generation.api.ModuleGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ApiGenerator
+import com.github.bratek20.hla.generation.impl.core.api.MacrosGenerator
 import com.github.bratek20.hla.generation.impl.core.context.ContextGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
@@ -104,7 +105,7 @@ class ModuleGeneratorLogic(
 
         val root = GenerationRoot()
         root.init(context, "")
-
+        root.generateMacros()
         val result = root.generateDirectory()
         requireNotNull(result)
 

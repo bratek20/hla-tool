@@ -20,7 +20,7 @@ namespace SomeModule.Impl {
             return undefined
         }
 
-        someQuery(id: SomeId): SomeClass {
+        someQuery(query: SomeQueryInput): SomeClass {
             // TODO
             return undefined
         }

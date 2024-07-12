@@ -28,16 +28,6 @@ fun assertSomeId2(given: SomeId2, expected: Int) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
-    val diff = diffSomeProperty(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
-fun assertSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit) {
-    val diff = diffSomeProperty2(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
 fun assertSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit) {
     val diff = diffSomeClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -68,6 +58,26 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertRecordClass(given: RecordClass, expectedInit: ExpectedRecordClass.() -> Unit) {
+    val diff = diffRecordClass(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
+    val diff = diffSomeQueryInput(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
+    val diff = diffSomeProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit) {
+    val diff = diffSomeProperty2(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -75,5 +85,10 @@ fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRa
 
 fun assertSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit) {
     val diff = diffSomeData(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit) {
+    val diff = diffSomeData2(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

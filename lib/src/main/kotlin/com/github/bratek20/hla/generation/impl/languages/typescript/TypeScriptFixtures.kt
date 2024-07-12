@@ -32,11 +32,11 @@ class TypeScriptBuildersPattern(private val modules: ModuleGroupQueries) : Langu
         return handleReferencing(modules, name, base, "Builder")
     }
 
-    override fun defOptionalType(name: String): String {
+    override fun defOptionalComplexType(name: String): String {
         return defClassType(name)
     }
 
-    override fun defOptionalBaseType(name: String): String {
+    override fun defOptionalNonComplexType(name: String): String {
         return name
     }
 

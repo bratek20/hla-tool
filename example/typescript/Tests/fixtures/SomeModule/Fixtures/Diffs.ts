@@ -16,75 +16,9 @@ namespace SomeModule {
         return ""
     }
 
-    export interface ExpectedSomeProperty {
-        other?: OtherModule.ExpectedOtherProperty,
-        id2?: number,
-        range?: TypesModule.ExpectedDateRange,
-        doubleExample?: number,
-        longExample?: number,
-        goodName?: string,
-        customData?: any,
-    }
-    export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.other !== undefined) {
-            if (OtherModule.diffOtherProperty(given.getOther(), expected.other) != "") { result.push(OtherModule.diffOtherProperty(given.getOther(), expected.other, `${path}other.`)) }
-        }
-
-        if (expected.id2 !== undefined) {
-            if (diffSomeId2(given.getId2().get(), expected.id2) != "") { result.push(diffSomeId2(given.getId2().get(), expected.id2, `${path}id2.`)) }
-        }
-
-        if (expected.range !== undefined) {
-            if (TypesModule.diffDateRange(given.getRange().get(), expected.range) != "") { result.push(TypesModule.diffDateRange(given.getRange().get(), expected.range, `${path}range.`)) }
-        }
-
-        if (expected.doubleExample !== undefined) {
-            if (given.getDoubleExample() != expected.doubleExample) { result.push(`${path}doubleExample ${given.getDoubleExample()} != ${expected.doubleExample}`) }
-        }
-
-        if (expected.longExample !== undefined) {
-            if (given.getLongExample() != expected.longExample) { result.push(`${path}longExample ${given.getLongExample()} != ${expected.longExample}`) }
-        }
-
-        if (expected.goodName !== undefined) {
-            if (given.getGoodName() != expected.goodName) { result.push(`${path}goodName ${given.getGoodName()} != ${expected.goodName}`) }
-        }
-
-        if (expected.customData !== undefined) {
-            if (given.getCustomData() != expected.customData) { result.push(`${path}customData ${given.getCustomData()} != ${expected.customData}`) }
-        }
-
-        return result.join("\n")
-    }
-
-    export interface ExpectedSomeProperty2 {
-        value?: string,
-        custom?: any,
-        someEnum?: SomeEnum,
-        customOpt?: any,
-    }
-    export function diffSomeProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.value !== undefined) {
-            if (given.getValue() != expected.value) { result.push(`${path}value ${given.getValue()} != ${expected.value}`) }
-        }
-
-        if (expected.custom !== undefined) {
-            if (given.getCustom() != expected.custom) { result.push(`${path}custom ${given.getCustom()} != ${expected.custom}`) }
-        }
-
-        if (expected.someEnum !== undefined) {
-            if (given.getSomeEnum() != expected.someEnum) { result.push(`${path}someEnum ${given.getSomeEnum()} != ${expected.someEnum}`) }
-        }
-
-        if (expected.customOpt !== undefined) {
-            if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
-        }
-
-        return result.join("\n")
+    export function diffSomeEnum(given: SomeEnum, expected: string, path: string = ""): string {
+        if (given != SomeEnum.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        return ""
     }
 
     export interface ExpectedSomeClass {
@@ -137,7 +71,7 @@ namespace SomeModule {
 
     export interface ExpectedSomeClass3 {
         class2Object?: ExpectedSomeClass2,
-        someEnum?: SomeEnum,
+        someEnum?: string,
         class2List?: ExpectedSomeClass2[],
     }
     export function diffSomeClass3(given: SomeClass3, expected: ExpectedSomeClass3, path: string = ""): string {
@@ -148,7 +82,7 @@ namespace SomeModule {
         }
 
         if (expected.someEnum !== undefined) {
-            if (given.getSomeEnum() != expected.someEnum) { result.push(`${path}someEnum ${given.getSomeEnum()} != ${expected.someEnum}`) }
+            if (diffSomeEnum(given.getSomeEnum(), expected.someEnum) != "") { result.push(diffSomeEnum(given.getSomeEnum(), expected.someEnum, `${path}someEnum.`)) }
         }
 
         if (expected.class2List !== undefined) {
@@ -223,15 +157,25 @@ namespace SomeModule {
     }
 
     export interface ExpectedSomeClass6 {
+        someClassOptEmpty?: boolean,
         someClassOpt?: ExpectedSomeClass,
+        optStringEmpty?: boolean,
         optString?: string,
         sameClassList?: ExpectedSomeClass6[],
     }
     export function diffSomeClass6(given: SomeClass6, expected: ExpectedSomeClass6, path: string = ""): string {
         const result: string[] = []
 
+        if (expected.someClassOptEmpty !== undefined) {
+            if ((given.getSomeClassOpt() == null) != expected.someClassOptEmpty) { result.push(`${path}someClassOpt empty ${given.getSomeClassOpt() == null} != ${expected.someClassOptEmpty}`) }
+        }
+
         if (expected.someClassOpt !== undefined) {
             if (diffSomeClass(given.getSomeClassOpt().get(), expected.someClassOpt) != "") { result.push(diffSomeClass(given.getSomeClassOpt().get(), expected.someClassOpt, `${path}someClassOpt.`)) }
+        }
+
+        if (expected.optStringEmpty !== undefined) {
+            if ((given.getOptString() == null) != expected.optStringEmpty) { result.push(`${path}optString empty ${given.getOptString() == null} != ${expected.optStringEmpty}`) }
         }
 
         if (expected.optString !== undefined) {
@@ -241,6 +185,128 @@ namespace SomeModule {
         if (expected.sameClassList !== undefined) {
             if (given.getSameClassList().length != expected.sameClassList.length) { result.push(`${path}sameClassList size ${given.getSameClassList().length} != ${expected.sameClassList.length}`) }
             given.getSameClassList().forEach((entry, idx) => { if (diffSomeClass6(entry, expected.sameClassList[idx]) != "") { result.push(diffSomeClass6(entry, expected.sameClassList[idx], `${path}sameClassList[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedRecordClass {
+        id?: string,
+        amount?: number,
+    }
+    export function diffRecordClass(given: RecordClass, expected: ExpectedRecordClass, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeQueryInput {
+        id?: string,
+        amount?: number,
+    }
+    export function diffSomeQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeProperty {
+        other?: OtherModule.ExpectedOtherProperty,
+        id2Empty?: boolean,
+        id2?: number,
+        rangeEmpty?: boolean,
+        range?: TypesModule.ExpectedDateRange,
+        doubleExample?: number,
+        longExample?: number,
+        goodName?: string,
+        customData?: any,
+    }
+    export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.other !== undefined) {
+            if (OtherModule.diffOtherProperty(given.getOther(), expected.other) != "") { result.push(OtherModule.diffOtherProperty(given.getOther(), expected.other, `${path}other.`)) }
+        }
+
+        if (expected.id2Empty !== undefined) {
+            if ((given.getId2() == null) != expected.id2Empty) { result.push(`${path}id2 empty ${given.getId2() == null} != ${expected.id2Empty}`) }
+        }
+
+        if (expected.id2 !== undefined) {
+            if (diffSomeId2(given.getId2().get(), expected.id2) != "") { result.push(diffSomeId2(given.getId2().get(), expected.id2, `${path}id2.`)) }
+        }
+
+        if (expected.rangeEmpty !== undefined) {
+            if ((given.getRange() == null) != expected.rangeEmpty) { result.push(`${path}range empty ${given.getRange() == null} != ${expected.rangeEmpty}`) }
+        }
+
+        if (expected.range !== undefined) {
+            if (TypesModule.diffDateRange(given.getRange().get(), expected.range) != "") { result.push(TypesModule.diffDateRange(given.getRange().get(), expected.range, `${path}range.`)) }
+        }
+
+        if (expected.doubleExample !== undefined) {
+            if (given.getDoubleExample() != expected.doubleExample) { result.push(`${path}doubleExample ${given.getDoubleExample()} != ${expected.doubleExample}`) }
+        }
+
+        if (expected.longExample !== undefined) {
+            if (given.getLongExample() != expected.longExample) { result.push(`${path}longExample ${given.getLongExample()} != ${expected.longExample}`) }
+        }
+
+        if (expected.goodName !== undefined) {
+            if (given.getGoodName() != expected.goodName) { result.push(`${path}goodName ${given.getGoodName()} != ${expected.goodName}`) }
+        }
+
+        if (expected.customData !== undefined) {
+            if (given.getCustomData() != expected.customData) { result.push(`${path}customData ${given.getCustomData()} != ${expected.customData}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeProperty2 {
+        value?: string,
+        custom?: any,
+        someEnum?: string,
+        customOptEmpty?: boolean,
+        customOpt?: any,
+    }
+    export function diffSomeProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.value !== undefined) {
+            if (given.getValue() != expected.value) { result.push(`${path}value ${given.getValue()} != ${expected.value}`) }
+        }
+
+        if (expected.custom !== undefined) {
+            if (given.getCustom() != expected.custom) { result.push(`${path}custom ${given.getCustom()} != ${expected.custom}`) }
+        }
+
+        if (expected.someEnum !== undefined) {
+            if (diffSomeEnum(given.getSomeEnum(), expected.someEnum) != "") { result.push(diffSomeEnum(given.getSomeEnum(), expected.someEnum, `${path}someEnum.`)) }
+        }
+
+        if (expected.customOptEmpty !== undefined) {
+            if ((given.getCustomOpt() == null) != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt() == null} != ${expected.customOptEmpty}`) }
+        }
+
+        if (expected.customOpt !== undefined) {
+            if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
         }
 
         return result.join("\n")
@@ -262,6 +328,7 @@ namespace SomeModule {
     export interface ExpectedSomeData {
         other?: OtherModule.ExpectedOtherData,
         custom?: any,
+        customOptEmpty?: boolean,
         customOpt?: any,
         goodDataName?: string,
     }
@@ -276,12 +343,44 @@ namespace SomeModule {
             if (given.getCustom() != expected.custom) { result.push(`${path}custom ${given.getCustom()} != ${expected.custom}`) }
         }
 
+        if (expected.customOptEmpty !== undefined) {
+            if ((given.getCustomOpt() == null) != expected.customOptEmpty) { result.push(`${path}customOpt empty ${given.getCustomOpt() == null} != ${expected.customOptEmpty}`) }
+        }
+
         if (expected.customOpt !== undefined) {
             if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
         }
 
         if (expected.goodDataName !== undefined) {
             if (given.getGoodDataName() != expected.goodDataName) { result.push(`${path}goodDataName ${given.getGoodDataName()} != ${expected.goodDataName}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeData2 {
+        optEnumEmpty?: boolean,
+        optEnum?: string,
+        optCustomTypeEmpty?: boolean,
+        optCustomType?: string,
+    }
+    export function diffSomeData2(given: SomeData2, expected: ExpectedSomeData2, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optEnumEmpty !== undefined) {
+            if ((given.getOptEnum() == null) != expected.optEnumEmpty) { result.push(`${path}optEnum empty ${given.getOptEnum() == null} != ${expected.optEnumEmpty}`) }
+        }
+
+        if (expected.optEnum !== undefined) {
+            if (diffSomeEnum(given.getOptEnum().get(), expected.optEnum) != "") { result.push(diffSomeEnum(given.getOptEnum().get(), expected.optEnum, `${path}optEnum.`)) }
+        }
+
+        if (expected.optCustomTypeEmpty !== undefined) {
+            if ((given.getOptCustomType() == null) != expected.optCustomTypeEmpty) { result.push(`${path}optCustomType empty ${given.getOptCustomType() == null} != ${expected.optCustomTypeEmpty}`) }
+        }
+
+        if (expected.optCustomType !== undefined) {
+            if (TypesModule.diffDate(given.getOptCustomType().get(), expected.optCustomType) != "") { result.push(TypesModule.diffDate(given.getOptCustomType().get(), expected.optCustomType, `${path}optCustomType.`)) }
         }
 
         return result.join("\n")

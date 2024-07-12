@@ -28,7 +28,7 @@ ValueObjects
 
     WebSubmoduleDefinition
         expose: string[]
-        serverUrl: string
+        serverUrl: string?
 
     ExternalTypePackageMapping
         name: string
@@ -36,6 +36,7 @@ ValueObjects
 
     KotlinConfig
         externalTypePackages: ExternalTypePackageMapping[]
+        records: string[]
 
     ModuleDefinition
         name: ModuleName

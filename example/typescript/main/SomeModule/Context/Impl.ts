@@ -8,8 +8,8 @@ namespace SomeModule.Api {
         new Impl.SomeInterfaceLogic(c).someCommand(id, amount)
     }
 
-    export function someQuery(id: SomeId, c: HandlerContext): SomeClass {
-        return new Impl.SomeInterfaceLogic(c).someQuery(id)
+    export function someQuery(query: SomeQueryInput, c: HandlerContext): SomeClass {
+        return new Impl.SomeInterfaceLogic(c).someQuery(query)
     }
 
     export function optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {

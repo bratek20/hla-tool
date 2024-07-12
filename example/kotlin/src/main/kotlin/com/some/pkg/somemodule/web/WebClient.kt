@@ -21,8 +21,8 @@ class SomeInterfaceWebClient(
         factory.create(url.value).post("/someInterface/someCommand", SomeInterfaceSomeCommandRequest(id, amount))
     }
 
-    override fun someQuery(id: SomeId): SomeClass {
-        return factory.create(url.value).post("/someInterface/someQuery", SomeInterfaceSomeQueryRequest(id)).getBody(SomeInterfaceSomeQueryResponse::class.java).value
+    override fun someQuery(query: SomeQueryInput): SomeClass {
+        return factory.create(url.value).post("/someInterface/someQuery", SomeInterfaceSomeQueryRequest(query)).getBody(SomeInterfaceSomeQueryResponse::class.java).value
     }
 
     override fun optMethod(optId: SomeId?): SomeClass? {

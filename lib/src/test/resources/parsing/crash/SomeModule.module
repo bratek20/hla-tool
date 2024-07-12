@@ -1,26 +1,10 @@
-ValueObjects
-    OfferItemsTD
-        id: string
-        rT: string
-	    rID: string
-	    rA: string
-        c: string
-        iPUrl: string
-        iPPUrl: string
-        pBPUrl: string
-        iV: any
-        iP: any
-        iDis: any
-        priority: int
-        t: string
-        sV: int
-        sP: int
-        sDis: int
-        colorConfigId: string
-        ifFirstHighlighted: bool
-        stickerPosition: string
-        stickerScale: int
-        bannerTranslationKey: string
-        hangarPreviewUrl: string
-        foregroundUrl: string
-        backgroundUrl: string
+Interfaces
+    //incoming
+    //there should be InMemorySquadronWarsRepository impl in data submodule and InMemorySquadronWarsData context module
+    //also there should be DataTest
+    SquadronWarsRepository
+        findMatching(warId: SquadronWarId, squadronId: SquadronId): SquadronWarMatchingData?
+        //returns entry with empty squadron2
+        //there should be at most one such entry
+        findMatchingWithEmptySquadron2(warId: SquadronWarId): SquadronWarMatchingData?
+        setMatching(matching: SquadronWarMatchingData)

@@ -114,9 +114,9 @@ class ModuleGroupParserLogic(
                 expose = findSection(web.elements, "expose")!!.elements.filterIsInstance<Section>().map {
                     it.name
                 },
-                serverUrl = web.elements.filterIsInstance<EqualsAssignment>().first {
+                serverUrl = web.elements.filterIsInstance<EqualsAssignment>().firstOrNull {
                     it.name == "serverUrl"
-                }.value,
+                }?.value,
             )
         }
     }
@@ -155,14 +155,16 @@ class ModuleGroupParserLogic(
     }
 
     private fun parseKotlinConfig(elements: List<ParsedElement>): KotlinConfig? {
-        val kotlinSection = elements.find { it is Section && it.name == "Kotlin" } as Section?
+        val kotlinSection = findSection(elements, "Kotlin")
         if (kotlinSection != null) {
-            val externalTypePackagesSection = kotlinSection.elements.find { it is Section && it.name == "ExternalTypePackages" } as Section?
+            val externalTypePackagesSection = findSection(kotlinSection.elements, "ExternalTypePackages")
             val mappings = externalTypePackagesSection?.elements?.filterIsInstance<ParsedMapping>()?.map {
                 ExternalTypePackageMapping(it.key, it.value)
             }
             return KotlinConfig(
-                externalTypePackages = mappings ?: emptyList()
+                externalTypePackages = mappings ?: emptyList(),
+                records = findSection(kotlinSection.elements, "Records")?.elements
+                    ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList(),
             )
         }
         return null

@@ -346,6 +346,8 @@ class HlaFacadeTest {
                 "SomeModule/api/SerializedCustomTypes.kt generated",
                 "SomeModule/api/ValueObjects.kt generated",
                 "SomeModule/api/DataClasses.kt generated",
+                "SomeModule/api/PropertyKeys.kt generated",
+                "SomeModule/api/DataKeys.kt generated",
                 "SomeModule/api/Exceptions.kt generated",
                 "SomeModule/api/Interfaces.kt generated",
                 "SomeModule/impl/Logic.kt generated",
@@ -378,6 +380,8 @@ class HlaFacadeTest {
                 "SomeModule/api/SerializedCustomTypes.kt updated",
                 "SomeModule/api/ValueObjects.kt updated",
                 "SomeModule/api/DataClasses.kt updated",
+                "SomeModule/api/PropertyKeys.kt updated",
+                "SomeModule/api/DataKeys.kt updated",
                 "SomeModule/api/Exceptions.kt updated",
                 "SomeModule/api/Interfaces.kt updated",
                 "SomeModule/web/WebCommon.kt updated",
@@ -436,6 +440,11 @@ class HlaFacadeTest {
                 }
             }
         }
+        val valueObjectsFile  = mainDirectory.getDirectories().find { it.getName().value == "api" }!!.getFiles().find { file -> file.getName().value == "ValueObjects.kt" }
+        val buildersFile  = fixturesDirectory.getDirectories().find { it.getName().value == "fixtures" }!!.getFiles().find { file -> file.getName().value == "Builders.kt" }
+
+        assertWrittenFileWithExample(valueObjectsFile!!, paths.exampleMainPath + "/api/ValueObjects.kt")
+        assertWrittenFileWithExample(buildersFile!!, paths.exampleFixturesPath + "/fixtures/Builders.kt")
     }
 
     private fun hlaFolderPath(): Path {

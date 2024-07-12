@@ -5,10 +5,10 @@ namespace ImportingModule.Builder {
         other?: OtherModule.Builder.OtherPropertyDef,
     }
     export function importingProperty(def?: ImportingPropertyDef): ImportingProperty {
-        const other = def?.other ?? {}
+        const final_other = def?.other ?? {}
 
         return ImportingProperty.create(
-            OtherModule.Builder.otherProperty(other),
+            OtherModule.Builder.otherProperty(final_other),
         )
     }
 }
