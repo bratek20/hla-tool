@@ -16,4 +16,6 @@ dependencies {
     implementation(project(":external"))
     testFixturesImplementation(testFixtures(project(":external")))
     testImplementation(testFixtures(project(":external")))
+
+    implementation(project(":code-builder"))
 }

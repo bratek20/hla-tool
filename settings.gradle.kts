@@ -55,3 +55,4 @@ dependencyResolutionManagement {
 include("app")
 include("lib")
 include("external")
+include("code-builder")
