@@ -20,7 +20,7 @@ class MocksGenerator: FileGenerator() {
 
     class View(
         val c: ModuleGenerationContext,
-        val lang: Language,
+        val lang: CodeBuilderLanguage,
         val interf: InterfaceView,
         val moduleName: String
     ) {

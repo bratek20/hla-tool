@@ -5,27 +5,33 @@ interface CodeBlockBuilder {
     fun apply(b: CodeBuilder)
 }
 
-interface Language {
+interface CodeBuilderLanguage {
     fun implements(): String
 }
 
-class Kotlin: Language {
+class Kotlin: CodeBuilderLanguage {
     override fun implements(): String {
         return ": "
     }
 }
 
-class TypeScript: Language {
+class TypeScript: CodeBuilderLanguage {
     override fun implements(): String {
         return " implements "
     }
 }
 
 abstract class BaseCodeBlockBuilder: CodeBlockBuilder {
-    protected lateinit var lang: Language
+    protected lateinit var lang: CodeBuilderLanguage
 
-    fun init(lang: Language) {
+    fun init(lang: CodeBuilderLanguage) {
         this.lang = lang
+    }
+}
+
+class EmptyBlock: CodeBlockBuilder {
+    override fun apply(b: CodeBuilder) {
+        // do nothing
     }
 }
 
@@ -109,7 +115,7 @@ class Function(
 }
 
 class CodeBuilder(
-    private val lang: Language,
+    private val lang: CodeBuilderLanguage,
     indent: Int = 0
 ) {
     private var currentIndent = indent
@@ -122,13 +128,11 @@ class CodeBuilder(
     }
 
     fun add(block: CodeBlockBuilder): CodeBuilder {
+        if (block is BaseCodeBlockBuilder) {
+            block.init(lang)
+        }
         block.apply(this)
         return this
-    }
-
-    fun add(block: BaseCodeBlockBuilder): CodeBuilder {
-        block.init(lang)
-        return add(block as CodeBlockBuilder)
     }
 
     fun tab(): CodeBuilder {

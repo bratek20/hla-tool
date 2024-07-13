@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.languages.typescript
 
-import com.github.bratek20.hla.codebuilder.Language
+import com.github.bratek20.hla.codebuilder.CodeBuilderLanguage
 import com.github.bratek20.hla.codebuilder.TypeScript
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
@@ -42,7 +42,7 @@ class TypeScriptSupport(private val c: DomainContext)
         return listOf(ObjectCreationExtension())
     }
 
-    override fun base(): Language {
+    override fun base(): CodeBuilderLanguage {
         return TypeScript()
     }
 }

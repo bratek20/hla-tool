@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.language
 
-import com.github.bratek20.hla.codebuilder.Language
+import com.github.bratek20.hla.codebuilder.CodeBuilderLanguage
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 
@@ -18,5 +18,5 @@ interface LanguageSupport {
 
     fun contentBuilderExtensions(): List<ContentBuilderExtension> = emptyList()
 
-    fun base(): Language
+    fun base(): CodeBuilderLanguage
 }
