@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.parsing.impl
 
 import com.github.bratek20.hla.definitions.api.Attribute
-import com.github.bratek20.hla.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.FileContent
 import java.util.ArrayDeque
 
 open class ParsedElement(

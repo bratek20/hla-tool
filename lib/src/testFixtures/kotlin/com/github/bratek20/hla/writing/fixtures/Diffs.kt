@@ -10,6 +10,7 @@ import com.github.bratek20.hla.generation.api.*
 import com.github.bratek20.hla.generation.fixtures.*
 
 import com.github.bratek20.hla.writing.api.*
+import com.github.bratek20.utils.directory.fixtures.diffPath
 
 data class ExpectedWriteArgs(
     var hlaFolderPath: String? = null,

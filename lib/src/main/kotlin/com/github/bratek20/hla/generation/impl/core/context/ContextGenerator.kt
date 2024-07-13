@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.context
 
-import com.github.bratek20.hla.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode

@@ -1,7 +1,7 @@
-package com.github.bratek20.hla.directory.fixtures
+package com.github.bratek20.utils.directory.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
-import com.github.bratek20.hla.directory.api.Directory
+import com.github.bratek20.utils.directory.api.Directory
 
 data class ExpectedDirectoryExt(
     var hasNoDirectories: String? = null,

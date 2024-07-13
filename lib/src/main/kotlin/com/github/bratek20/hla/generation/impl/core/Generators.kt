@@ -8,6 +8,9 @@ import com.github.bratek20.hla.generation.impl.core.api.MacrosGenerator
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
+import com.github.bratek20.utils.directory.api.Directory
+import com.github.bratek20.utils.directory.api.File
+import com.github.bratek20.utils.directory.api.FileContent
 
 class ModuleGenerationContext(
     val domain: DomainContext,

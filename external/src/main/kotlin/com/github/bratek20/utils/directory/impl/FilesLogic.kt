@@ -1,6 +1,7 @@
-package com.github.bratek20.hla.directory.impl
+package com.github.bratek20.utils.directory.impl
 
 import com.github.bratek20.hla.directory.api.*
+import com.github.bratek20.utils.directory.api.*
 
 fun compareFileContent(filePath: String, content1: FileContent, content2: FileContent): List<String> {
     if (content1.lines.size != content2.lines.size) {

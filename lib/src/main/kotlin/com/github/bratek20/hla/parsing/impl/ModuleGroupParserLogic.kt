@@ -3,11 +3,11 @@ package com.github.bratek20.hla.parsing.impl
 import com.github.bratek20.architecture.properties.impl.PropertiesLogic
 import com.github.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
 import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.directory.api.File
-import com.github.bratek20.hla.directory.api.FileContent
-import com.github.bratek20.hla.directory.api.FileName
-import com.github.bratek20.hla.directory.api.Path
-import com.github.bratek20.hla.directory.impl.DirectoriesLogic
+import com.github.bratek20.utils.directory.api.File
+import com.github.bratek20.utils.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.FileName
+import com.github.bratek20.utils.directory.api.Path
+import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.facade.api.PROFILES_KEY
 import com.github.bratek20.hla.facade.api.ProfileName

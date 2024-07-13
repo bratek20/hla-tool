@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.directory.api
+package com.github.bratek20.utils.directory.api
 
 fun pathCreate(value: String): Path {
     return Path(value)

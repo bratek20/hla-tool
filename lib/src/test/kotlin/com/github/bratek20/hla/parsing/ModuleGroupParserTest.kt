@@ -6,7 +6,7 @@ import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.definitions.fixtures.assertModuleDefinition
 import com.github.bratek20.hla.definitions.fixtures.assertModules
-import com.github.bratek20.hla.directory.api.Path
+import com.github.bratek20.utils.directory.api.Path
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser

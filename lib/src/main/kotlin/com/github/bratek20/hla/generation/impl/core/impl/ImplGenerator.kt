@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.impl
 
 import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.KeyDefinition
-import com.github.bratek20.hla.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator

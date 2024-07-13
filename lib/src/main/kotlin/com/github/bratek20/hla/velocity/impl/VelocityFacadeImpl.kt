@@ -5,8 +5,8 @@ import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import org.apache.velocity.runtime.RuntimeConstants
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
-import com.github.bratek20.hla.directory.api.FileContent
-import com.github.bratek20.hla.directory.api.fileContentFromString
+import com.github.bratek20.utils.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.fileContentFromString
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
 import java.io.StringWriter

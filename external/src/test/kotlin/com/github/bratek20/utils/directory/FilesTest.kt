@@ -1,14 +1,14 @@
-package com.github.bratek20.hla.directory
+package com.github.bratek20.utils.directory
 
 import org.junit.jupiter.api.Test
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
-import com.github.bratek20.hla.directory.api.FileNotFoundException
-import com.github.bratek20.hla.directory.api.Files
-import com.github.bratek20.hla.directory.api.Path
-import com.github.bratek20.hla.directory.context.DirectoryImpl
-import com.github.bratek20.hla.directory.fixtures.assertFile
-import com.github.bratek20.hla.directory.fixtures.file
+import com.github.bratek20.utils.directory.api.FileNotFoundException
+import com.github.bratek20.utils.directory.api.Files
+import com.github.bratek20.utils.directory.api.Path
+import com.github.bratek20.utils.directory.context.DirectoryImpl
+import com.github.bratek20.utils.directory.fixtures.assertFile
+import com.github.bratek20.utils.directory.fixtures.file
 
 class FilesTest: TempDirTest() {
     private val files = someContextBuilder()

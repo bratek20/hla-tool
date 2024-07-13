@@ -1,8 +1,8 @@
-package com.github.bratek20.hla.directory
+package com.github.bratek20.utils.directory
 
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.io.TempDir
-import com.github.bratek20.hla.directory.api.Path
+import com.github.bratek20.utils.directory.api.Path
 
 open class TempDirTest {
     @TempDir

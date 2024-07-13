@@ -1,14 +1,14 @@
 package com.github.bratek20.hla.generation.impl.core.web
 
-import com.github.bratek20.hla.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.MethodView
-import com.github.bratek20.hla.utils.camelToPascalCase
-import com.github.bratek20.hla.utils.pascalToCamelCase
+import com.github.bratek20.utils.camelToPascalCase
+import com.github.bratek20.utils.pascalToCamelCase
 
 private fun requestName(interfaceName: String, method: MethodView): String {
     return "${interfaceName}${camelToPascalCase(method.name)}Request"

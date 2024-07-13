@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.directory.api
+package com.github.bratek20.utils.directory.api
 
 class Path(
     initValue: String

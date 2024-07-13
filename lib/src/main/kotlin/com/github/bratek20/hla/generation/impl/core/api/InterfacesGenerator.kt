@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
-import com.github.bratek20.hla.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 
 data class ArgumentView(

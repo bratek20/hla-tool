@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.utils
+package com.github.bratek20.utils
 
 fun pascalToCamelCase(name: String): String {
     return name[0].lowercase() + name.substring(1)

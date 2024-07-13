@@ -5,7 +5,7 @@ import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
-import com.github.bratek20.hla.utils.camelToPascalCase
+import com.github.bratek20.utils.camelToPascalCase
 
 open class ComplexStructureField(
     protected val def: FieldDefinition,

@@ -10,6 +10,8 @@ import com.github.bratek20.hla.parsing.api.*
 import com.github.bratek20.hla.parsing.fixtures.*
 
 import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.utils.directory.fixtures.DirectoryDef
+import com.github.bratek20.utils.directory.fixtures.directory
 
 data class GenerateArgsDef(
     var group: (ModuleGroupDef.() -> Unit) = {},

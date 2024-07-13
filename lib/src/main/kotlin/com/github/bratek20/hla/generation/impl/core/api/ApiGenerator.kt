@@ -1,11 +1,11 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.directory.api.FileContent
+import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.utils.camelToScreamingSnakeCase
+import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class MacrosBuilder: FileGenerator() {
     override fun name(): String {

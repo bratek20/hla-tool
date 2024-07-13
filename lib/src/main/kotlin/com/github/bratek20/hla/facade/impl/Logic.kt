@@ -1,8 +1,8 @@
 package com.github.bratek20.hla.facade.impl
 
 import com.github.bratek20.logs.api.Logger
-import com.github.bratek20.hla.directory.api.Directory
-import com.github.bratek20.hla.directory.api.Path
+import com.github.bratek20.utils.directory.api.Directory
+import com.github.bratek20.utils.directory.api.Path
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.GenerateArgs
 import com.github.bratek20.hla.generation.api.ModuleGenerator

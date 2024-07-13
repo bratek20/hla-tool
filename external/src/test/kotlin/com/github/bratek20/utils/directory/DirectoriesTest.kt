@@ -1,12 +1,12 @@
-package com.github.bratek20.hla.directory
+package com.github.bratek20.utils.directory
 
 import com.github.bratek20.architecture.context.someContextBuilder
-import com.github.bratek20.hla.directory.api.Directories
-import com.github.bratek20.hla.directory.api.Path
-import com.github.bratek20.hla.directory.context.DirectoryImpl
-import com.github.bratek20.hla.directory.fixtures.assertCompareResult
-import com.github.bratek20.hla.directory.fixtures.assertDirectory
-import com.github.bratek20.hla.directory.fixtures.directory
+import com.github.bratek20.utils.directory.api.Directories
+import com.github.bratek20.utils.directory.api.Path
+import com.github.bratek20.utils.directory.context.DirectoryImpl
+import com.github.bratek20.utils.directory.fixtures.assertCompareResult
+import com.github.bratek20.utils.directory.fixtures.assertDirectory
+import com.github.bratek20.utils.directory.fixtures.directory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

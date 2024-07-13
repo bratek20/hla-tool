@@ -4,7 +4,7 @@ import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
-import com.github.bratek20.hla.utils.pascalToCamelCase
+import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class DefType<T: ApiType>(
     val api: T

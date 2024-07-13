@@ -6,6 +6,7 @@ import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.directory.fixtures.*
 
 import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.utils.directory.fixtures.diffPath
 
 fun diffModuleName(given: ModuleName, expected: String, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }

@@ -5,6 +5,7 @@ package com.github.bratek20.hla.generation.api
 import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.parsing.api.*
+import com.github.bratek20.utils.directory.api.Directory
 
 data class GenerateArgs(
     private val group: ModuleGroup,

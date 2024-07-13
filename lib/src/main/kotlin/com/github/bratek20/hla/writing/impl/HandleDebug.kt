@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.writing.impl
 
-import com.github.bratek20.hla.directory.api.Path
-import com.github.bratek20.hla.directory.impl.DirectoriesLogic
+import com.github.bratek20.utils.directory.api.Path
+import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.GenerateResult

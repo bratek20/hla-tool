@@ -2,8 +2,8 @@ package com.github.bratek20.hla.app;
 
 import com.github.bratek20.architecture.context.spring.SpringContextBuilder;
 import com.github.bratek20.logs.context.Slf4jLogsImpl;
-import com.github.bratek20.hla.directory.api.Path;
-import com.github.bratek20.hla.directory.context.DirectoryImpl;
+import com.github.bratek20.utils.directory.api.Path;
+import com.github.bratek20.utils.directory.context.DirectoryImpl;
 import com.github.bratek20.hla.facade.api.*;
 import com.github.bratek20.hla.facade.context.FacadeImpl;
 

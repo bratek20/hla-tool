@@ -1,12 +1,14 @@
 package com.github.bratek20.hla.writing.impl
 
 import com.github.bratek20.hla.directory.api.*
-import com.github.bratek20.hla.directory.impl.DirectoriesLogic
+import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.GenerateResult
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
+import com.github.bratek20.utils.directory.api.Directories
+import com.github.bratek20.utils.directory.api.Path
 
 class ModuleWriterLogic(
     private val directories: Directories,

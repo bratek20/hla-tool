@@ -5,6 +5,7 @@ import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.TypeScriptConfig
 import com.github.bratek20.hla.generation.api.GenerateResult
+import com.github.bratek20.utils.directory.api.*
 
 class FilesModifiers(
     private val files: Files,

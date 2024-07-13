@@ -3,8 +3,8 @@ package com.github.bratek20.hla.generation.impl.languages.kotlin
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.DomainContext
-import com.github.bratek20.hla.utils.camelToPascalCase
-import com.github.bratek20.hla.utils.pascalToCamelCase
+import com.github.bratek20.utils.camelToPascalCase
+import com.github.bratek20.utils.pascalToCamelCase
 
 class KotlinTypes: LanguageTypes {
     override fun publicComplexStructureFieldPrefix(): String {

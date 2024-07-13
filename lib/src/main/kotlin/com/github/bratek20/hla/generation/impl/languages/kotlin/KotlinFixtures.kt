@@ -4,7 +4,7 @@ import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPatt
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageDtoPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
-import com.github.bratek20.hla.utils.pascalToCamelCase
+import com.github.bratek20.utils.pascalToCamelCase
 
 class KotlinAssertsPattern: LanguageAssertsPattern {
     override fun assertFunName(name: String): String {
