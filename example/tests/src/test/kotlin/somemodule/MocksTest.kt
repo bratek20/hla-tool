@@ -59,10 +59,5 @@ class MocksTest {
         assertOtherClass(someInterface2.referenceOtherClass(otherClass { id = 2; amount = 3 })) {
             id = 4
         }
-
-        //TODO remove
-        assertOtherClass(someInterface2.referenceOtherClass(otherClass { id = 2; amount = 3 })) {
-            id = 5
-        }
     }
 }
