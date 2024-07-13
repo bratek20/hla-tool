@@ -1,0 +1,18 @@
+package ${packageName}.fixtures
+
+import org.assertj.core.api.Assertions.assertThat
+
+import com.github.bratek20.architecture.context.api.ContextBuilder
+import com.github.bratek20.architecture.context.api.ContextModule
+#if($imports.size() > 0)
+
+#foreach($import in $imports)
+import ${import}.api.*
+import ${import}.fixtures.*
+#end#end
+
+import ${packageName}.api.*
+
+${view.classes(0)}
+
+${view.contextModule()}

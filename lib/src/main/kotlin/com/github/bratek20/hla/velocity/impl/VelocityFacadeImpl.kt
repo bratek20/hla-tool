@@ -16,7 +16,7 @@ class VelocityFileContentBuilderImpl(
 ) : VelocityFileContentBuilder {
     private val context = VelocityContext()
 
-    override fun put(key: String, value: Any): VelocityFileContentBuilder {
+    override fun put(key: String, value: Any?): VelocityFileContentBuilder {
         context.put(key, value)
         return this
     }

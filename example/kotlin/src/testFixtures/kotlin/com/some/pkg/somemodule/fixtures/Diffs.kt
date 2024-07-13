@@ -406,3 +406,7 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
 
     return result.joinToString("\n")
 }
+fun diffLegacyType(given: com.some.pkg.legacy.LegacyType, expected: com.some.pkg.legacy.LegacyType, path: String = ""): String {
+    if (given != expected) { return "${path}value ${given} != ${expected}" }
+    return ""
+}

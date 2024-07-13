@@ -359,6 +359,7 @@ class HlaFacadeTest {
                 "SomeModule/fixtures/Builders.kt generated",
                 "SomeModule/fixtures/Diffs.kt generated",
                 "SomeModule/fixtures/Asserts.kt generated",
+                "SomeModule/fixtures/Mocks.kt generated",
                 "SomeModule/tests/ImplTest.kt generated",
             )
         }
@@ -390,6 +391,7 @@ class HlaFacadeTest {
                 "SomeModule/fixtures/Builders.kt updated",
                 "SomeModule/fixtures/Diffs.kt updated",
                 "SomeModule/fixtures/Asserts.kt updated",
+                "SomeModule/fixtures/Mocks.kt updated",
             )
         }
     }

@@ -208,4 +208,13 @@ class ModuleGroupQueries(
             )
         }
     }
+
+    fun allExternalTypesDefinitions(module: ModuleDefinition): List<TypeDefinition> {
+        return module.getExternalTypes().map {
+            TypeDefinition.create(
+                name = it,
+                wrappers = emptyList()
+            )
+        }
+    }
 }
