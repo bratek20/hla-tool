@@ -1,7 +1,8 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
-import com.github.bratek20.codebuilder.Function
+import com.github.bratek20.codebuilder.clazz.Class
+import com.github.bratek20.codebuilder.clazz.Method
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -78,7 +79,7 @@ class MocksGenerator: FileGenerator() {
                 )
                 emptyLine()
                 add(
-                    Function(
+                    Method(
                         name = "set${upperCaseName}Response",
                         args = listOf(
                             Pair("args", expectedInputType),
@@ -88,7 +89,7 @@ class MocksGenerator: FileGenerator() {
                     )
                 )
                 emptyLine()
-                add(Function(
+                add(Method(
                     override = true,
                     name = def.name,
                     returnType = outputTypeName,
@@ -99,7 +100,7 @@ class MocksGenerator: FileGenerator() {
                     }
                 ))
                 emptyLine()
-                add(Function(
+                add(Method(
                     name = "assert${upperCaseName}Called",
                     args = listOf(Pair("times", "Int = 1")),
                     body = block {
@@ -107,7 +108,7 @@ class MocksGenerator: FileGenerator() {
                     }
                 ))
                 emptyLine()
-                add(Function(
+                add(Method(
                     name = "assert${upperCaseName}CalledForArgs",
                     args = listOf(
                         Pair("args", expectedInputType),
@@ -141,7 +142,7 @@ class MocksGenerator: FileGenerator() {
                     className = "${moduleName}Mocks",
                     implementedInterfaceName = "ContextModule",
                     body = block {
-                        add(Function(
+                        add(Method(
                             override = true,
                             name = "apply",
                             args = listOf("builder" to "ContextBuilder"),

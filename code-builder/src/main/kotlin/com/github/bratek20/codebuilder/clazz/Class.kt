@@ -1,4 +1,8 @@
-package com.github.bratek20.codebuilder
+package com.github.bratek20.codebuilder.clazz
+
+import com.github.bratek20.codebuilder.BaseCodeBlockBuilder
+import com.github.bratek20.codebuilder.CodeBlockBuilder
+import com.github.bratek20.codebuilder.CodeBuilder
 
 class Class(
     private val className: String,

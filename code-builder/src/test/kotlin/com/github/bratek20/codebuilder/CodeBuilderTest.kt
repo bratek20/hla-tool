@@ -1,6 +1,6 @@
 package com.github.bratek20.codebuilder
 
-import com.github.bratek20.codebuilder.testBlockBuilder
+import com.github.bratek20.codebuilder.clazz.Class
 import org.junit.jupiter.api.Test
 
 class CodeBuilderTest {

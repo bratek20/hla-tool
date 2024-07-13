@@ -25,10 +25,10 @@ class ManyCodeBlocksSeparatedByLine(
 ): CodeBlockBuilder {
     override fun apply(b: CodeBuilder) {
         blocks.dropLast(1).forEach {
-            it.apply(b)
+            b.add(it)
             b.emptyLine()
         }
-        blocks.last().apply(b)
+        b.add(blocks.last())
     }
 }
 
