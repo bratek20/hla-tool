@@ -54,3 +54,4 @@ dependencyResolutionManagement {
 }
 include("app")
 include("lib")
+include("external")

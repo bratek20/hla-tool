@@ -16,7 +16,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Run Tests
+      - name: HLA modules test
         uses: bratek20/github-actions/run-tests-action@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Example modules test
+        uses: bratek20/github-actions/run-tests-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          project: example
+
+
