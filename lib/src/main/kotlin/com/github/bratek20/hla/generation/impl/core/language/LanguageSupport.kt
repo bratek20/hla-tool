@@ -18,5 +18,5 @@ interface LanguageSupport {
 
     fun contentBuilderExtensions(): List<ContentBuilderExtension> = emptyList()
 
-    fun base(): _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilderLanguage
+    fun base(): CodeBuilderLanguage
 }

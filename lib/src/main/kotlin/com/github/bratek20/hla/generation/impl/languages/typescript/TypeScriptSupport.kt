@@ -42,7 +42,7 @@ class TypeScriptSupport(private val c: DomainContext)
         return listOf(ObjectCreationExtension())
     }
 
-    override fun base(): _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilderLanguage {
-        return _root_ide_package_.com.github.bratek20.codebuilder.TypeScript()
+    override fun base(): CodeBuilderLanguage {
+        return TypeScript()
     }
 }

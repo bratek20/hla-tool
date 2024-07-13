@@ -2,7 +2,6 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
 import com.github.bratek20.codebuilder.Function
-import com.github.bratek20.hla.codebuilder.*
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -28,13 +27,13 @@ class BuildersGenerator: FileGenerator() {
         }
     }
 
-    private fun externalTypeBuilder(type: TypeDefinition): _root_ide_package_.com.github.bratek20.codebuilder.CodeBlockBuilder {
+    private fun externalTypeBuilder(type: TypeDefinition): CodeBlockBuilder {
         val apiType = apiTypeFactory.create(type) as ExternalApiType
         return Function(
             name = pascalToCamelCase(apiType.rawName),
             args = listOf("value" to apiType.name() + "?"), // TODO soft optional type wrap?
             returnType = apiType.name(),
-            body = _root_ide_package_.com.github.bratek20.codebuilder.OneLineBlock("return value!!") // TODO soft optional unpack?
+            body = OneLineBlock("return value!!") // TODO soft optional unpack?
         )
     }
 
@@ -57,8 +56,8 @@ class BuildersGenerator: FileGenerator() {
         val externalTypesBuilders = if (externalTypes.isEmpty())
                 null
             else
-                _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilder(lang)
-                    .add(_root_ide_package_.com.github.bratek20.codebuilder.ManyCodeBlocksSeparatedByLine(
+                CodeBuilder(lang)
+                    .add(ManyCodeBlocksSeparatedByLine(
                         externalTypes.map { externalTypeBuilder(it) }
                     ))
                     .build()

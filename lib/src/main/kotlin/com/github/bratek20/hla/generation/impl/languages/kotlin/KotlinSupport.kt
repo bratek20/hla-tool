@@ -42,7 +42,7 @@ class KotlinSupport(private val c: DomainContext)
         return listOf(PackageNameAndImportsExtension(c))
     }
 
-    override fun base(): _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilderLanguage {
-        return _root_ide_package_.com.github.bratek20.codebuilder.Kotlin()
+    override fun base(): CodeBuilderLanguage {
+        return Kotlin()
     }
 }
