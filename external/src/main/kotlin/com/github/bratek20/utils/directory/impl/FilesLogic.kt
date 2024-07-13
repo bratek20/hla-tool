@@ -1,6 +1,5 @@
 package com.github.bratek20.utils.directory.impl
 
-import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.utils.directory.api.*
 
 fun compareFileContent(filePath: String, content1: FileContent, content2: FileContent): List<String> {
