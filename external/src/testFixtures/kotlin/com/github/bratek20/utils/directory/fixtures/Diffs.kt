@@ -2,7 +2,6 @@
 
 package com.github.bratek20.utils.directory.fixtures
 
-import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.utils.directory.api.*
 
 fun diffFileName(given: FileName, expected: String, path: String = ""): String {
@@ -10,18 +9,15 @@ fun diffFileName(given: FileName, expected: String, path: String = ""): String {
     return ""
 }
 
-
 fun diffDirectoryName(given: DirectoryName, expected: String, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
 
-
 fun diffPath(given: Path, expected: String, path: String = ""): String {
     if (pathGetValue(given) != expected) { return "${path}value ${pathGetValue(given)} != ${expected}" }
     return ""
 }
-
 
 fun diffFileContent(given: FileContent, expected: String, path: String = ""): String {
     if (fileContentGetValue(given) != expected) { return "${path}value ${fileContentGetValue(given)} != ${expected}" }
@@ -67,9 +63,7 @@ fun diffDirectory(given: Directory, expectedInit: ExpectedDirectory.() -> Unit, 
 
     expected.directories?.let {
         if (given.getDirectories().size != it.size) { result.add("${path}directories size ${given.getDirectories().size} != ${it.size}"); return@let }
-        given.getDirectories().forEachIndexed { idx, entry -> if (diffDirectory(entry, it[idx]) != "") { result.add(
-            diffDirectory(entry, it[idx], "${path}directories[${idx}].")
-        ) } }
+        given.getDirectories().forEachIndexed { idx, entry -> if (diffDirectory(entry, it[idx]) != "") { result.add(diffDirectory(entry, it[idx], "${path}directories[${idx}].")) } }
     }
 
     return result.joinToString("\n")

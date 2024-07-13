@@ -4,7 +4,6 @@ package com.github.bratek20.utils.directory.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
-import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.utils.directory.api.*
 
 fun assertFileName(given: FileName, expected: String) {

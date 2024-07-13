@@ -2,8 +2,23 @@
 
 package com.github.bratek20.utils.directory.fixtures
 
-import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.utils.directory.api.*
+
+fun fileName(value: String = "someValue"): FileName {
+    return FileName(value)
+}
+
+fun directoryName(value: String = "someValue"): DirectoryName {
+    return DirectoryName(value)
+}
+
+fun path(value: String = "someValue"): Path {
+    return pathCreate(value)
+}
+
+fun fileContent(value: String = "someValue"): FileContent {
+    return fileContentCreate(value)
+}
 
 data class FileDef(
     var name: String = "someValue",

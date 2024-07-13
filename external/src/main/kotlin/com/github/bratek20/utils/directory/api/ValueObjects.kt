@@ -4,11 +4,19 @@ package com.github.bratek20.utils.directory.api
 
 data class FileName(
     val value: String
-)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 data class DirectoryName(
     val value: String
-)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 data class File(
     private val name: String,
