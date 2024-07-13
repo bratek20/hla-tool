@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.codebuilder
+package com.github.bratek20.codebuilder
 
 
 interface CodeBlockBuilder {

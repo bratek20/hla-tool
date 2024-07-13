@@ -1,11 +1,6 @@
 package com.github.bratek20.codebuilder
 
-import com.github.bratek20.hla.codebuilder.CodeBlockBuilder
-import com.github.bratek20.hla.codebuilder.CodeBuilder
-import com.github.bratek20.hla.codebuilder.CodeBuilderLanguage
-import com.github.bratek20.hla.codebuilder.Kotlin
 import org.assertj.core.api.Assertions
-import kotlin.math.exp
 
 class TestBlockBuilderArgs(
     var block: CodeBlockBuilder? = null,

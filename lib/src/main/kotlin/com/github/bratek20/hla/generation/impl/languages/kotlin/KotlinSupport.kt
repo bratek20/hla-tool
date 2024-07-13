@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.languages.kotlin
 
-import com.github.bratek20.hla.codebuilder.Kotlin
-import com.github.bratek20.hla.codebuilder.CodeBuilderLanguage
+import com.github.bratek20.codebuilder.Kotlin
+import com.github.bratek20.codebuilder.CodeBuilderLanguage
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext
@@ -42,7 +42,7 @@ class KotlinSupport(private val c: DomainContext)
         return listOf(PackageNameAndImportsExtension(c))
     }
 
-    override fun base(): CodeBuilderLanguage {
-        return Kotlin()
+    override fun base(): _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilderLanguage {
+        return _root_ide_package_.com.github.bratek20.codebuilder.Kotlin()
     }
 }

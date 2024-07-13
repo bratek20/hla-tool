@@ -1,8 +1,8 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.hla.codebuilder.*
-import com.github.bratek20.hla.codebuilder.Class
-import com.github.bratek20.hla.codebuilder.Function
+import com.github.bratek20.codebuilder.Class
+import com.github.bratek20.codebuilder.Function
 import com.github.bratek20.hla.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -20,13 +20,13 @@ class MocksGenerator: FileGenerator() {
 
     class View(
         val c: ModuleGenerationContext,
-        val lang: CodeBuilderLanguage,
+        val lang: _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilderLanguage,
         val interf: InterfaceView,
         val moduleName: String
     ) {
         private val interfaceName = interf.name
 
-        private fun mocksForMethod(def: MethodView): CodeBlockBuilder {
+        private fun mocksForMethod(def: MethodView): _root_ide_package_.com.github.bratek20.codebuilder.CodeBlockBuilder {
             val upperCaseName = camelToPascalCase(def.name)
             val inputArgName = def.args.first().name
             val inputType = def.args.first().apiType
@@ -63,51 +63,58 @@ class MocksGenerator: FileGenerator() {
                 else
                     "{}"
 
-            return block {
+            return _root_ide_package_.com.github.bratek20.codebuilder.block {
                 line("// ${def.name}")
-                add(ListFieldDeclaration(callsListName, inputTypeName))
-                add(ListFieldDeclaration(
-                    fieldName = responsesListName,
-                    fieldElementType = "Pair<${expectedInputType}, ${defOutputType}>"
-                ))
+                add(
+                    _root_ide_package_.com.github.bratek20.codebuilder.ListFieldDeclaration(
+                        callsListName,
+                        inputTypeName
+                    )
+                )
+                add(
+                    _root_ide_package_.com.github.bratek20.codebuilder.ListFieldDeclaration(
+                        fieldName = responsesListName,
+                        fieldElementType = "Pair<${expectedInputType}, ${defOutputType}>"
+                    )
+                )
                 emptyLine()
                 add(
-                    Function(
+                    _root_ide_package_.com.github.bratek20.codebuilder.Function(
                         name = "set${upperCaseName}Response",
                         args = listOf(
                             Pair("args", expectedInputType),
                             Pair("response", defOutputType)
                         ),
-                        body = OneLineBlock("${responsesListName}.add(Pair(args, response))")
+                        body = _root_ide_package_.com.github.bratek20.codebuilder.OneLineBlock("${responsesListName}.add(Pair(args, response))")
                     )
                 )
                 emptyLine()
-                add(Function(
+                add(_root_ide_package_.com.github.bratek20.codebuilder.Function(
                     override = true,
                     name = def.name,
                     returnType = outputTypeName,
                     args = listOf(Pair(inputArgName, inputTypeName)),
-                    body = block {
+                    body = _root_ide_package_.com.github.bratek20.codebuilder.block {
                         line("${callsListName}.add($inputArgName)")
                         line("return ${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
                     }
                 ))
                 emptyLine()
-                add(Function(
+                add(_root_ide_package_.com.github.bratek20.codebuilder.Function(
                     name = "assert${upperCaseName}Called",
                     args = listOf(Pair("times", "Int = 1")),
-                    body = block {
+                    body = _root_ide_package_.com.github.bratek20.codebuilder.block {
                         line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                     }
                 ))
                 emptyLine()
-                add(Function(
+                add(_root_ide_package_.com.github.bratek20.codebuilder.Function(
                     name = "assert${upperCaseName}CalledForArgs",
                     args = listOf(
                         Pair("args", expectedInputType),
                         Pair("times", "Int = 1")
                     ),
-                    body = block {
+                    body = _root_ide_package_.com.github.bratek20.codebuilder.block {
                         line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")
                         line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                     }
@@ -116,32 +123,34 @@ class MocksGenerator: FileGenerator() {
         }
 
         fun classes(indent: Int): String {
-            return CodeBuilder(lang, indent)
-                .add(Class(
-                    className = "${interfaceName}Mock",
-                    implementedInterfaceName = interfaceName,
-                    body = ManyCodeBlocksSeparatedByLine(interf.methods.map {
-                        mocksForMethod(it)
-                    })
-                ))
+            return _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilder(lang, indent)
+                .add(
+                    _root_ide_package_.com.github.bratek20.codebuilder.Class(
+                        className = "${interfaceName}Mock",
+                        implementedInterfaceName = interfaceName,
+                        body = _root_ide_package_.com.github.bratek20.codebuilder.ManyCodeBlocksSeparatedByLine(interf.methods.map {
+                            mocksForMethod(it)
+                        })
+                    )
+                )
                 .build()
         }
 
         fun contextModule(): String {
-            return CodeBuilder(lang)
-                .add(Class(
+            return _root_ide_package_.com.github.bratek20.codebuilder.CodeBuilder(lang)
+                .add(_root_ide_package_.com.github.bratek20.codebuilder.Class(
                     className = "${moduleName}Mocks",
                     implementedInterfaceName = "ContextModule",
-                    body = block {
-                        add(Function(
+                    body = _root_ide_package_.com.github.bratek20.codebuilder.block {
+                        add(_root_ide_package_.com.github.bratek20.codebuilder.Function(
                             override = true,
                             name = "apply",
                             args = listOf("builder" to "ContextBuilder"),
-                            body = block {
+                            body = _root_ide_package_.com.github.bratek20.codebuilder.block {
                                 line("builder")
-                                .tab()
-                                .line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
-                                .untab()
+                                    .tab()
+                                    .line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
+                                    .untab()
                             }
                         ))
                     }
