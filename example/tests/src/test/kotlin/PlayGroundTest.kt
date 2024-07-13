@@ -12,7 +12,7 @@ class PlayGroundTest {
         val v1 = SomeIntWrapper(1)
         val v2 = SomeIntWrapper(2)
 
-        //assertSomeIntWrapper(v1 + v2, 3)
+        assertSomeIntWrapper(v1 + v2, 3)
     }
 
     @Test
