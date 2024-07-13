@@ -2,9 +2,9 @@
 
 package com.github.bratek20.hla.writing.api
 
-import com.github.bratek20.hla.directory.api.*
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.utils.directory.api.*
 
 interface ModuleWriter {
     fun write(args: WriteArgs): Unit

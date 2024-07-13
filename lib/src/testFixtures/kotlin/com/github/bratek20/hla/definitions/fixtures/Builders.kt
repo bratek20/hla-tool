@@ -117,13 +117,13 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
 
 data class TypeDefinitionDef(
     var name: String = "someValue",
-    var wrappers: List<TypeWrapper> = emptyList(),
+    var wrappers: List<String> = emptyList(),
 )
 fun typeDefinition(init: TypeDefinitionDef.() -> Unit = {}): TypeDefinition {
     val def = TypeDefinitionDef().apply(init)
     return TypeDefinition.create(
         name = def.name,
-        wrappers = def.wrappers.map { it -> it },
+        wrappers = def.wrappers.map { it -> TypeWrapper.valueOf(it) },
     )
 }
 

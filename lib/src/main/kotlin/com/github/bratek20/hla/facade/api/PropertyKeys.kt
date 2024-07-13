@@ -2,7 +2,7 @@
 
 package com.github.bratek20.hla.facade.api
 
-val PROFILES_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+val PROFILES_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "profiles",
     HlaProfile::class
 )

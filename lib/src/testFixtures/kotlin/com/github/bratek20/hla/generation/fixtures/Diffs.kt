@@ -2,16 +2,14 @@
 
 package com.github.bratek20.hla.generation.fixtures
 
-import com.github.bratek20.hla.directory.api.*
-import com.github.bratek20.hla.directory.fixtures.*
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.fixtures.*
 import com.github.bratek20.hla.parsing.api.*
 import com.github.bratek20.hla.parsing.fixtures.*
+import com.github.bratek20.utils.directory.api.*
+import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.generation.api.*
-import com.github.bratek20.utils.directory.fixtures.ExpectedDirectory
-import com.github.bratek20.utils.directory.fixtures.diffDirectory
 
 data class ExpectedGenerateArgs(
     var group: (ExpectedModuleGroup.() -> Unit)? = null,
@@ -40,6 +38,7 @@ fun diffGenerateArgs(given: GenerateArgs, expectedInit: ExpectedGenerateArgs.() 
 data class ExpectedGenerateResult(
     var main: (ExpectedDirectory.() -> Unit)? = null,
     var fixtures: (ExpectedDirectory.() -> Unit)? = null,
+    var testsEmpty: Boolean? = null,
     var tests: (ExpectedDirectory.() -> Unit)? = null,
 )
 fun diffGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResult.() -> Unit, path: String = ""): String {
@@ -52,6 +51,10 @@ fun diffGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResu
 
     expected.fixtures?.let {
         if (diffDirectory(given.getFixtures(), it) != "") { result.add(diffDirectory(given.getFixtures(), it, "${path}fixtures.")) }
+    }
+
+    expected.testsEmpty?.let {
+        if ((given.getTests() == null) != it) { result.add("${path}tests empty ${(given.getTests() == null)} != ${it}") }
     }
 
     expected.tests?.let {

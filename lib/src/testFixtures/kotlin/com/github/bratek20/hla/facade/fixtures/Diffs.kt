@@ -2,20 +2,23 @@
 
 package com.github.bratek20.hla.facade.fixtures
 
-import com.github.bratek20.hla.directory.api.*
-import com.github.bratek20.hla.directory.fixtures.*
+import com.github.bratek20.utils.directory.api.*
+import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.utils.directory.fixtures.diffPath
 
 fun diffModuleName(given: ModuleName, expected: String, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
 
-
 fun diffProfileName(given: ProfileName, expected: String, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}
+
+fun diffModuleLanguage(given: ModuleLanguage, expected: String, path: String = ""): String {
+    if (given != ModuleLanguage.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
     return ""
 }
 
@@ -155,8 +158,9 @@ fun diffHlaProfileImport(given: HlaProfileImport, expectedInit: ExpectedHlaProfi
 
 data class ExpectedHlaProfile(
     var name: String? = null,
-    var language: ModuleLanguage? = null,
+    var language: String? = null,
     var paths: (ExpectedHlaPaths.() -> Unit)? = null,
+    var typeScriptEmpty: Boolean? = null,
     var typeScript: (ExpectedTypeScriptConfig.() -> Unit)? = null,
     var onlyPatterns: List<String>? = null,
     var imports: List<(ExpectedHlaProfileImport.() -> Unit)>? = null,
@@ -170,11 +174,15 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
     }
 
     expected.language?.let {
-        if (given.getLanguage() != it) { result.add("${path}language ${given.getLanguage()} != ${it}") }
+        if (diffModuleLanguage(given.getLanguage(), it) != "") { result.add(diffModuleLanguage(given.getLanguage(), it, "${path}language.")) }
     }
 
     expected.paths?.let {
         if (diffHlaPaths(given.getPaths(), it) != "") { result.add(diffHlaPaths(given.getPaths(), it, "${path}paths.")) }
+    }
+
+    expected.typeScriptEmpty?.let {
+        if ((given.getTypeScript() == null) != it) { result.add("${path}typeScript empty ${(given.getTypeScript() == null)} != ${it}") }
     }
 
     expected.typeScript?.let {

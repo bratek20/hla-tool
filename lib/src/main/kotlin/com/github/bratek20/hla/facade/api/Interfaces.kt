@@ -2,7 +2,7 @@
 
 package com.github.bratek20.hla.facade.api
 
-import com.github.bratek20.hla.directory.api.*
+import com.github.bratek20.utils.directory.api.*
 
 interface HlaFacade {
     @Throws(

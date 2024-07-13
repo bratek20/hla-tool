@@ -7,6 +7,16 @@ import com.github.bratek20.hla.facade.fixtures.*
 
 import com.github.bratek20.hla.definitions.api.*
 
+fun diffBaseType(given: BaseType, expected: String, path: String = ""): String {
+    if (given != BaseType.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
+fun diffTypeWrapper(given: TypeWrapper, expected: String, path: String = ""): String {
+    if (given != TypeWrapper.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
 data class ExpectedKeyDefinition(
     var name: String? = null,
     var type: (ExpectedTypeDefinition.() -> Unit)? = null,
@@ -82,7 +92,7 @@ fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Expe
     }
 
     expected.serverUrlEmpty?.let {
-        if ((given.getServerUrl() == null) != it) { result.add("${path}serverUrl empty ${given.getServerUrl() == null} != ${it}") }
+        if ((given.getServerUrl() == null) != it) { result.add("${path}serverUrl empty ${(given.getServerUrl() == null)} != ${it}") }
     }
 
     expected.serverUrl?.let {
@@ -210,7 +220,7 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
     }
 
     expected.implSubmoduleEmpty?.let {
-        if ((given.getImplSubmodule() == null) != it) { result.add("${path}implSubmodule empty ${given.getImplSubmodule() == null} != ${it}") }
+        if ((given.getImplSubmodule() == null) != it) { result.add("${path}implSubmodule empty ${(given.getImplSubmodule() == null)} != ${it}") }
     }
 
     expected.implSubmodule?.let {
@@ -218,7 +228,7 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
     }
 
     expected.webSubmoduleEmpty?.let {
-        if ((given.getWebSubmodule() == null) != it) { result.add("${path}webSubmodule empty ${given.getWebSubmodule() == null} != ${it}") }
+        if ((given.getWebSubmodule() == null) != it) { result.add("${path}webSubmodule empty ${(given.getWebSubmodule() == null)} != ${it}") }
     }
 
     expected.webSubmodule?.let {
@@ -226,7 +236,7 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
     }
 
     expected.kotlinConfigEmpty?.let {
-        if ((given.getKotlinConfig() == null) != it) { result.add("${path}kotlinConfig empty ${given.getKotlinConfig() == null} != ${it}") }
+        if ((given.getKotlinConfig() == null) != it) { result.add("${path}kotlinConfig empty ${(given.getKotlinConfig() == null)} != ${it}") }
     }
 
     expected.kotlinConfig?.let {
@@ -238,7 +248,7 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
 data class ExpectedTypeDefinition(
     var name: String? = null,
-    var wrappers: List<TypeWrapper>? = null,
+    var wrappers: List<String>? = null,
 )
 fun diffTypeDefinition(given: TypeDefinition, expectedInit: ExpectedTypeDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedTypeDefinition().apply(expectedInit)
@@ -250,7 +260,7 @@ fun diffTypeDefinition(given: TypeDefinition, expectedInit: ExpectedTypeDefiniti
 
     expected.wrappers?.let {
         if (given.getWrappers().size != it.size) { result.add("${path}wrappers size ${given.getWrappers().size} != ${it.size}"); return@let }
-        given.getWrappers().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}wrappers[${idx}] ${entry} != ${it[idx]}") } }
+        given.getWrappers().forEachIndexed { idx, entry -> if (diffTypeWrapper(entry, it[idx]) != "") { result.add(diffTypeWrapper(entry, it[idx], "${path}wrappers[${idx}].")) } }
     }
 
     return result.joinToString("\n")
@@ -281,7 +291,7 @@ fun diffFieldDefinition(given: FieldDefinition, expectedInit: ExpectedFieldDefin
     }
 
     expected.defaultValueEmpty?.let {
-        if ((given.getDefaultValue() == null) != it) { result.add("${path}defaultValue empty ${given.getDefaultValue() == null} != ${it}") }
+        if ((given.getDefaultValue() == null) != it) { result.add("${path}defaultValue empty ${(given.getDefaultValue() == null)} != ${it}") }
     }
 
     expected.defaultValue?.let {

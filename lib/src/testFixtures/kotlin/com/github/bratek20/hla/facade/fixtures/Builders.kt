@@ -2,11 +2,18 @@
 
 package com.github.bratek20.hla.facade.fixtures
 
-import com.github.bratek20.hla.directory.api.*
-import com.github.bratek20.hla.directory.fixtures.*
+import com.github.bratek20.utils.directory.api.*
+import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.utils.directory.api.pathCreate
+
+fun moduleName(value: String = "someValue"): ModuleName {
+    return ModuleName(value)
+}
+
+fun profileName(value: String = "someValue"): ProfileName {
+    return ProfileName(value)
+}
 
 data class ModuleOperationArgsDef(
     var hlaFolderPath: String = "someValue",
@@ -90,7 +97,7 @@ fun hlaProfileImport(init: HlaProfileImportDef.() -> Unit = {}): HlaProfileImpor
 
 data class HlaProfileDef(
     var name: String = "someValue",
-    var language: ModuleLanguage = ModuleLanguage.KOTLIN,
+    var language: String = ModuleLanguage.KOTLIN.name,
     var paths: (HlaPathsDef.() -> Unit) = {},
     var typeScript: (TypeScriptConfigDef.() -> Unit)? = null,
     var onlyPatterns: List<String> = emptyList(),
@@ -100,7 +107,7 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
     val def = HlaProfileDef().apply(init)
     return HlaProfile.create(
         name = ProfileName(def.name),
-        language = def.language,
+        language = ModuleLanguage.valueOf(def.language),
         paths = hlaPaths(def.paths),
         typeScript = def.typeScript?.let { it -> typeScriptConfig(it) },
         onlyPatterns = def.onlyPatterns,

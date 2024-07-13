@@ -2,18 +2,23 @@
 
 package com.github.bratek20.hla.facade.api
 
-import com.github.bratek20.hla.directory.api.*
-import com.github.bratek20.utils.directory.api.Path
-import com.github.bratek20.utils.directory.api.pathCreate
-import com.github.bratek20.utils.directory.api.pathGetValue
+import com.github.bratek20.utils.directory.api.*
 
 data class ModuleName(
     val value: String
-)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 data class ProfileName(
     val value: String
-)
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
 
 data class ModuleOperationArgs(
     private val hlaFolderPath: String,
