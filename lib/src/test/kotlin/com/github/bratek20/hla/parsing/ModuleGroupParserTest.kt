@@ -76,7 +76,7 @@ class ModuleGroupParserTest {
                         returnType = {
                             name = "SquadronWarMatchingData"
                             wrappers = listOf(
-                                TypeWrapper.OPTIONAL
+                                "OPTIONAL"
                             )
                         }
                     },
@@ -93,7 +93,7 @@ class ModuleGroupParserTest {
                         returnType = {
                             name = "SquadronWarMatchingData"
                             wrappers = listOf(
-                                TypeWrapper.OPTIONAL
+                                "OPTIONAL"
                             )
                         }
                     },
@@ -189,7 +189,7 @@ class ModuleGroupParserTest {
                                 type = {
                                     name = "string"
                                     wrappers = listOf(
-                                        TypeWrapper.LIST
+                                        "LIST"
                                     )
                                 }
                             },
@@ -198,7 +198,7 @@ class ModuleGroupParserTest {
                                 type = {
                                     name = "SomeId"
                                     wrappers = listOf(
-                                        TypeWrapper.LIST
+                                        "LIST"
                                     )
                                 }
                             },
@@ -225,7 +225,7 @@ class ModuleGroupParserTest {
                                 type = {
                                     name = "SomeClass2"
                                     wrappers = listOf(
-                                        TypeWrapper.LIST
+                                        "LIST"
                                     )
                                 }
                             }
@@ -251,7 +251,7 @@ class ModuleGroupParserTest {
                                 type = {
                                     name = "OtherId"
                                     wrappers = listOf(
-                                        TypeWrapper.LIST
+                                        "LIST"
                                     )
                                 }
                             },
@@ -260,7 +260,7 @@ class ModuleGroupParserTest {
                                 type = {
                                     name = "OtherClass"
                                     wrappers = listOf(
-                                        TypeWrapper.LIST
+                                        "LIST"
                                     )
                                 }
                             }
@@ -273,7 +273,7 @@ class ModuleGroupParserTest {
                             type = {
                                 name = "OtherId"
                                 wrappers = listOf(
-                                    TypeWrapper.OPTIONAL
+                                    "OPTIONAL"
                                 )
                             }
                         }
@@ -336,14 +336,14 @@ class ModuleGroupParserTest {
                                 type = {
                                     name = "SomeId"
                                     wrappers = listOf(
-                                        TypeWrapper.OPTIONAL
+                                        "OPTIONAL"
                                     )
                                 }
                             }
                             returnType = {
                                 name = "SomeClass"
                                 wrappers = listOf(
-                                    TypeWrapper.OPTIONAL
+                                    "OPTIONAL"
                                 )
                             }
                         }
@@ -382,7 +382,7 @@ class ModuleGroupParserTest {
                     type = {
                         name = "SomeProperty"
                         wrappers = listOf(
-                            TypeWrapper.LIST
+                            "LIST"
                         )
                     }
                 },
@@ -423,7 +423,7 @@ class ModuleGroupParserTest {
                     type = {
                         name = "SomeElementData"
                         wrappers = listOf(
-                            TypeWrapper.LIST
+                            "LIST"
                         )
                     }
                 },
@@ -461,7 +461,7 @@ class ModuleGroupParserTest {
                         type = {
                             name = "SomeElementImplData"
                             wrappers = listOf(
-                                TypeWrapper.LIST
+                                "LIST"
                             )
                         }
                     },
@@ -743,7 +743,7 @@ class ModuleGroupParserTest {
                         type = {
                             name = "SomeId2"
                             wrappers = listOf(
-                                TypeWrapper.OPTIONAL
+                                "OPTIONAL"
                             )
                         }
                     }

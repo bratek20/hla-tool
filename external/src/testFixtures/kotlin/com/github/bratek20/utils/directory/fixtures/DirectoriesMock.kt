@@ -1,9 +1,8 @@
 package com.github.bratek20.utils.directory.fixtures
 
-import org.assertj.core.api.Assertions.assertThat
-import com.github.bratek20.hla.directory.api.*
-import com.github.bratek20.utils.directory.impl.FilesLogic
 import com.github.bratek20.utils.directory.api.*
+import com.github.bratek20.utils.directory.impl.FilesLogic
+import org.assertj.core.api.Assertions.assertThat
 
 class DirectoriesMock: Directories {
     private val directoryWrites: MutableList<Pair<Path, Directory>> = mutableListOf()

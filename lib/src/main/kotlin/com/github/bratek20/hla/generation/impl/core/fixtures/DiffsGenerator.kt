@@ -2,12 +2,10 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
 import com.github.bratek20.codebuilder.Function
-import com.github.bratek20.hla.codebuilder.*
 import com.github.bratek20.hla.definitions.api.TypeDefinition
-import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
-import com.github.bratek20.utils.pascalToCamelCase
+import com.github.bratek20.utils.directory.api.FileContent
 
 class DiffsGenerator: FileGenerator() {
     override fun name(): String {

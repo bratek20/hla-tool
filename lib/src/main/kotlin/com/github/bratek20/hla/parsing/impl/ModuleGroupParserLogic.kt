@@ -9,7 +9,7 @@ import com.github.bratek20.utils.directory.api.FileName
 import com.github.bratek20.utils.directory.api.Path
 import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.hla.facade.api.ModuleName
-import com.github.bratek20.hla.facade.api.PROFILES_KEY
+import com.github.bratek20.hla.facade.api.PROFILES_PROPERTY_KEY
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
@@ -47,7 +47,7 @@ class ModuleGroupParserLogic(
     private fun parseModuleGroup(hlaFolder: Path, profileName: ProfileName): ModuleGroup {
         val properties = PropertiesLogic(emptySet())
         properties.addSource(YamlPropertiesSource(hlaFolder.add(FileName("properties.yaml")).value))
-        val profile = properties.get(PROFILES_KEY).find { it.getName() == profileName } ?: throw IllegalArgumentException("Profile $profileName not found")
+        val profile = properties.get(PROFILES_PROPERTY_KEY).find { it.getName() == profileName } ?: throw IllegalArgumentException("Profile $profileName not found")
 
         val modulesDir = directories.read(hlaFolder)
         val modules = modulesDir.getFiles()
