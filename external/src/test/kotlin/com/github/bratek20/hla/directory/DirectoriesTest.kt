@@ -1,16 +1,14 @@
 package com.github.bratek20.hla.directory
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
 import com.github.bratek20.architecture.context.someContextBuilder
-import com.github.bratek20.hla.definitions.fixtures.assertModules
 import com.github.bratek20.hla.directory.api.Directories
 import com.github.bratek20.hla.directory.api.Path
 import com.github.bratek20.hla.directory.context.DirectoryImpl
-import com.github.bratek20.hla.directory.fixtures.*
-import com.github.bratek20.hla.directory.impl.DirectoriesLogic
+import com.github.bratek20.hla.directory.fixtures.assertCompareResult
+import com.github.bratek20.hla.directory.fixtures.assertDirectory
+import com.github.bratek20.hla.directory.fixtures.directory
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
 
 
 class DirectoriesTest: TempDirTest() {
@@ -75,9 +73,9 @@ class DirectoriesTest: TempDirTest() {
 
     @Test
     fun shouldReadDirectory() {
-        val result = directories.read(Path("src/test/resources/directory"))
+        val result = directories.read(Path("src/test/resources/directory/somedir"))
         assertDirectory(result) {
-            name = "directory"
+            name = "somedir"
             directories = listOf {
                 name = "subdir"
                 files = listOf {
@@ -93,7 +91,7 @@ class DirectoriesTest: TempDirTest() {
 
     @Test
     fun shouldReadDirectoryFilesInCorrectOrder() {
-        val result = directories.read(Path("src/test/resources/multiple-modules-order"))
+        val result = directories.read(Path("src/test/resources/directory/multiple-modules-order"))
         assertDirectory(result) {
             name = "multiple-modules-order"
             files = listOf(
@@ -113,7 +111,7 @@ class DirectoriesTest: TempDirTest() {
     @Test
     fun shouldReadCorrectFileLength() {
         //TODO api.readFile
-        val result = directories.read(Path("src/test/resources/directory/subdir"))
+        val result = directories.read(Path("src/test/resources/directory/somedir/subdir"))
         //TODO proper setup for this assertion
         assertThat(result.getFiles()[0].getContent().lines.size).isEqualTo(4)
     }
