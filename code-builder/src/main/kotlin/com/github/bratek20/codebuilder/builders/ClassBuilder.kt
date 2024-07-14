@@ -2,18 +2,37 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
 
+class FieldBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+    lateinit var name: String
+    lateinit var type: TypeBuilderOps
+
+    var value: String? = null
+
+    override fun applyOperations(b: CodeBuilder) {
+        b.linePart("val $name: ")
+        b.add(TypeBuilder(lang).apply(type))
+        value?.let {
+            b.linePart(" = $it")
+        }
+    }
+}
+
 class ClassBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
     var name: String = "SomeClass"
     var implementedInterfaceName: String? = null
 
     private val body: MutableList<CodeBlockBuilder> = mutableListOf()
 
-    fun addMethod(block: MethodBuilder.() -> Unit) {
+    fun method(block: MethodBuilder.() -> Unit) {
         body.add(MethodBuilder(lang).apply(block))
     }
 
-    fun addComment(comment: String) {
-        body.add(OneLineBlock("// $comment"))
+    fun comment(value: String) {
+        body.add(OneLineBlock("// $value"))
+    }
+
+    fun field(block: FieldBuilder.() -> Unit) {
+        body.add(FieldBuilder(lang).apply(block))
     }
 
     override fun applyOperations(b: CodeBuilder) {

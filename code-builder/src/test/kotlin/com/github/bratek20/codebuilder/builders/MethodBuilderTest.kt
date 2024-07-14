@@ -8,7 +8,7 @@ class MethodBuilderTest {
     fun `empty method`() {
         testClassOp {
             op = {
-                addMethod {
+                method {
                     name = "someMethod"
                 }
             }
@@ -33,7 +33,7 @@ class MethodBuilderTest {
     fun `sum method`() {
         testClassOp {
             op = {
-                addMethod {
+                method {
                     name = "sum"
                     addArg {
                         name = "a"
@@ -50,7 +50,9 @@ class MethodBuilderTest {
                     returnType = {
                         base = BaseType.INT
                     }
-                    body = OneLineBlock("return a + b")
+                    body = {
+                        line("return a + b")
+                    }
                 }
             }
             langExpected {
@@ -66,6 +68,52 @@ class MethodBuilderTest {
                 expected = """
                     sum(a: number, b: number): number {
                         return a + b
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `pair arg`() {
+        testClassOp {
+            op = {
+                method {
+                    name = "sumPair"
+                    addArg {
+                        name = "p"
+                        type = {
+                            pair = {
+                                first = {
+                                    base = BaseType.INT
+                                }
+                                second = {
+                                    base = BaseType.INT
+                                }
+                            }
+                        }
+                    }
+                    returnType = {
+                        base = BaseType.INT
+                    }
+                    body = {
+                        line("return p.first + p.second")
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    fun sumPair(p: Pair<Int, Int>): Int {
+                        return p.first + p.second
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    sumPair(p: [number, number]): number {
+                        return p[0] + p[1]
                     }
                 """
             }

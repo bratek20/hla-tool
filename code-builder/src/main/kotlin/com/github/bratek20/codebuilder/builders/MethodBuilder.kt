@@ -2,13 +2,35 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
 
+class PairTypeBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+    lateinit var first: TypeBuilderOps
+    lateinit var second: TypeBuilderOps
+
+    override fun applyOperations(b: CodeBuilder) {
+        b.linePart(lang.pairTypeStart())
+        b.add(TypeBuilder(lang).apply(first))
+        b.linePart(", ")
+        b.add(TypeBuilder(lang).apply(second))
+        b.linePart(lang.pairTypeEnd())
+    }
+}
+typealias PairTypeBuilderOps = PairTypeBuilder.() -> Unit
+
 class TypeBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
     var name: String? = null
     var base: BaseType? = null
+    var pair: PairTypeBuilderOps? = null
 
     override fun applyOperations(b: CodeBuilder) {
-        val finalName = name ?: lang.mapBaseType(base!!)
-        b.linePart(finalName)
+        if (name != null) {
+            b.linePart(name!!)
+        } else if (base != null) {
+            b.linePart(lang.mapBaseType(base!!))
+        } else if (pair != null) {
+            b.add(PairTypeBuilder(lang).apply(pair!!))
+        } else {
+            throw IllegalStateException("TypeBuilder must have one of the fields set")
+        }
     }
 }
 typealias TypeBuilderOps = TypeBuilder.() -> Unit
@@ -24,12 +46,25 @@ class ArgumentBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
 }
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 
+class BodyBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+    private val blocks: MutableList<CodeBlockBuilder> = mutableListOf()
+
+    fun line(value: String) {
+        blocks.add(OneLineBlock(value))
+    }
+
+    override fun applyOperations(b: CodeBuilder) {
+        blocks.forEach { b.add(it) }
+    }
+}
+typealias BodyBuilderOps = BodyBuilder.() -> Unit
+
 class MethodBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
     lateinit var name: String
 
     var override: Boolean = false
     var returnType: TypeBuilderOps? = null
-    var body: CodeBlockBuilder = EmptyBlock()
+    var body: BodyBuilderOps? = null
 
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun addArg(block: ArgumentBuilderOps) {
@@ -54,7 +89,7 @@ class MethodBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
         b.linePart(" {")
 
         b.tab()
-        body.applyOperations(b)
+        body?.let { b.add(BodyBuilder(lang).apply(it)) }
         b.untab()
 
         b.line("}")

@@ -62,8 +62,8 @@ class ClassBuilderTest {
             op = {
                 addClass {
                     name = "SomeClass"
-                    addComment("some comment")
-                    addMethod {
+                    comment("some comment")
+                    method {
                         name = "someMethod"
                     }
                 }

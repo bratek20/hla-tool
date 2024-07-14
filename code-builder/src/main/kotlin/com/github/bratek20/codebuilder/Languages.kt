@@ -11,6 +11,9 @@ interface CodeBuilderLanguage {
     fun functionDeclarationKeyword(): String
 
     fun mapBaseType(type: BaseType): String
+
+    fun pairTypeStart(): String
+    fun pairTypeEnd(): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -37,6 +40,14 @@ class Kotlin: CodeBuilderLanguage {
             BaseType.BOOLEAN -> "Boolean"
         }
     }
+
+    override fun pairTypeStart(): String {
+        return "Pair<"
+    }
+
+    override fun pairTypeEnd(): String {
+        return ">"
+    }
 }
 
 class TypeScript: CodeBuilderLanguage {
@@ -62,5 +73,13 @@ class TypeScript: CodeBuilderLanguage {
             BaseType.STRING -> "string"
             BaseType.BOOLEAN -> "boolean"
         }
+    }
+
+    override fun pairTypeStart(): String {
+        return "["
+    }
+
+    override fun pairTypeEnd(): String {
+        return "]"
     }
 }
