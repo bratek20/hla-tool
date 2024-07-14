@@ -59,7 +59,9 @@ class ClassBuilderOpTester {
 
     fun test() {
         opTester.op = {
-            add(ClassBuilder(this.lang).apply(op))
+            ClassBuilder(this.lang)
+                .apply(op)
+                .applyBodyOperations(this)
         }
         opTester.test()
     }
