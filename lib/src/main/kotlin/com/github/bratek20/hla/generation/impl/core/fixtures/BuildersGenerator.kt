@@ -1,12 +1,11 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
-import com.github.bratek20.codebuilder.clazz.Method
-import com.github.bratek20.codebuilder.clazz.method
+import com.github.bratek20.codebuilder.builders.MethodBuilderOps
 import com.github.bratek20.hla.definitions.api.TypeDefinition
-import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
+import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
 class BuildersGenerator: FileGenerator() {
@@ -28,9 +27,9 @@ class BuildersGenerator: FileGenerator() {
         }
     }
 
-    private fun externalTypeBuilder(type: TypeDefinition): CodeBlockBuilder {
+    private fun externalTypeBuilder(type: TypeDefinition): MethodBuilderOps {
         val apiType = apiTypeFactory.create(type) as ExternalApiType
-        return method {
+        return {
             name = pascalToCamelCase(apiType.rawName)
             args = listOf("value" to apiType.name() + "?") // TODO soft optional type wrap?
             returnType = apiType.name()

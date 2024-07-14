@@ -1,24 +1,71 @@
 package com.github.bratek20.codebuilder
 
+import com.github.bratek20.codebuilder.builders.ClassBuilder
 import org.assertj.core.api.Assertions
 
-class TestBlockBuilderArgs {
-    lateinit var op: CodeBuilder.() -> Unit
+class ExpectedLanguageString {
+    lateinit var lang: CodeBuilderLanguage
     lateinit var expected: String
-    var lang: CodeBuilderLanguage = Kotlin()
 }
-fun testCodeBuilderOp(init: TestBlockBuilderArgs.() -> Unit) {
-    val args = TestBlockBuilderArgs().apply(init)
-    val result = CodeBuilder(args.lang).apply(args.op).build()
+class CodeBuilderOpTester {
+    lateinit var op: CodeBuilder.() -> Unit
+    var lang: CodeBuilderLanguage? = null
+    var expected: String? = null
+    private val expectedLanguageStrings = mutableListOf<ExpectedLanguageString>()
 
-    val expected = args.expected
+    fun langExpected(init: ExpectedLanguageString.() -> Unit) {
+        val expectedLanguageString = ExpectedLanguageString().apply(init)
+        expectedLanguageStrings.add(expectedLanguageString)
+    }
 
-    val finalExpected = if (expected.contains("\n"))
-        alignMultilineStringIndent(expected)
-    else
-        expected
+    fun test() {
+        expected?.let {
+            val language = lang ?: Kotlin()
+            langExpected {
+                this.expected = it
+                this.lang = language
+            }
+        }
 
-    Assertions.assertThat(result).isEqualTo(finalExpected)
+        expectedLanguageStrings.forEach { testForLang(it) }
+    }
+
+    private fun testForLang(langExpected: ExpectedLanguageString) {
+        val result = CodeBuilder(langExpected.lang).apply(op).build()
+
+        val expected = langExpected.expected
+
+        val finalExpected = if (expected.contains("\n"))
+            alignMultilineStringIndent(expected)
+        else
+            expected
+
+        Assertions.assertThat(result)
+            .withFailMessage("Failed for language ${langExpected.lang.name()}\nExpected:\n$finalExpected\nActual:\n$result")
+            .isEqualTo(finalExpected)
+    }
+}
+fun testCodeBuilderOp(init: CodeBuilderOpTester.() -> Unit) {
+    CodeBuilderOpTester().apply(init).test()
+}
+
+class ClassBuilderOpTester {
+    lateinit var op: ClassBuilder.() -> Unit
+    private val opTester = CodeBuilderOpTester()
+
+    fun langExpected(init: ExpectedLanguageString.() -> Unit) {
+        opTester.langExpected(init)
+    }
+
+    fun test() {
+        opTester.op = {
+            add(ClassBuilder(this.lang).apply(op))
+        }
+        opTester.test()
+    }
+}
+fun testClassOp(init: ClassBuilderOpTester.() -> Unit) {
+    ClassBuilderOpTester().apply(init).test()
 }
 
 private fun alignMultilineStringIndent(str: String): String {

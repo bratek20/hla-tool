@@ -4,13 +4,30 @@ import org.junit.jupiter.api.Test
 
 class CodeBuilderTest {
     @Test
-    fun `should create one line block`() {
+    fun `should support lines and tab operations`() {
         testCodeBuilderOp {
             op = {
+                line("{")
+                tab()
+
                 line("val x = 1")
+
+                emptyLine()
+
+                startLinePart("val")
+                addLinePart(" y")
+                addLinePart(" = 2")
+
+                untab()
+                line("}")
             }
-            expected = "val x = 1"
+            expected = """
+                {
+                    val x = 1
+                
+                    val y = 2
+                }
+            """
         }
     }
-
 }
