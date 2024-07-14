@@ -1,5 +1,7 @@
 package com.github.bratek20.codebuilder
 
+import com.github.bratek20.codebuilder.clazz.ClassBuilder
+
 interface CodeBlockBuilder {
     fun apply(b: CodeBuilder)
 }
@@ -24,6 +26,11 @@ class CodeBuilder(
         val indent = " ".repeat(currentIndent)
         lines.add(indent + value)
         return this
+    }
+
+    fun addClass(block: ClassBuilder.() -> Unit): CodeBuilder {
+        val clazz = ClassBuilder().apply(block)
+        return add(clazz)
     }
 
     fun add(block: CodeBlockBuilder): CodeBuilder {

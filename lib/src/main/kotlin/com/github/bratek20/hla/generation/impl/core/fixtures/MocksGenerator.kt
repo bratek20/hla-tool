@@ -1,8 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
-import com.github.bratek20.codebuilder.clazz.Class
+import com.github.bratek20.codebuilder.clazz.ClassBuilder
 import com.github.bratek20.codebuilder.clazz.Method
+import com.github.bratek20.codebuilder.clazz.method
+import com.github.bratek20.codebuilder.types.ListFieldDeclaration
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -79,82 +81,80 @@ class MocksGenerator: FileGenerator() {
                 )
                 emptyLine()
                 add(
-                    Method(
-                        name = "set${upperCaseName}Response",
+                    method {
+                        name = "set${upperCaseName}Response"
                         args = listOf(
                             Pair("args", expectedInputType),
                             Pair("response", defOutputType)
-                        ),
+                        )
                         body = OneLineBlock("${responsesListName}.add(Pair(args, response))")
-                    )
+                    }
                 )
                 emptyLine()
-                add(Method(
-                    override = true,
-                    name = def.name,
-                    returnType = outputTypeName,
-                    args = listOf(Pair(inputArgName, inputTypeName)),
+                add(method {
+                    override = true
+                    name = def.name
+                    returnType = outputTypeName
+                    args = listOf(Pair(inputArgName, inputTypeName))
                     body = block {
                         line("${callsListName}.add($inputArgName)")
                         line("return ${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
                     }
-                ))
+                })
                 emptyLine()
-                add(Method(
-                    name = "assert${upperCaseName}Called",
-                    args = listOf(Pair("times", "Int = 1")),
+                add(method {
+                    name = "assert${upperCaseName}Called"
+                    args = listOf(Pair("times", "Int = 1"))
                     body = block {
                         line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                     }
-                ))
+                })
                 emptyLine()
-                add(Method(
-                    name = "assert${upperCaseName}CalledForArgs",
+                add(method {
+                    name = "assert${upperCaseName}CalledForArgs"
                     args = listOf(
                         Pair("args", expectedInputType),
                         Pair("times", "Int = 1")
-                    ),
+                    )
                     body = block {
                         line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")
                         line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                     }
-                ))
+                })
             }
         }
 
         fun classes(indent: Int): String {
             return CodeBuilder(lang, indent)
-                .add(
-                    Class(
-                        className = "${interfaceName}Mock",
-                        implementedInterfaceName = interfaceName,
-                        body = ManyCodeBlocksSeparatedByLine(interf.methods.map {
-                            mocksForMethod(it)
-                        })
-                    )
-                )
+                .addClass {
+                    name = "${interfaceName}Mock"
+                    implementedInterfaceName = interfaceName
+                    body = ManyCodeBlocksSeparatedByLine(interf.methods.map {
+                        mocksForMethod(it)
+                    })
+                }
                 .build()
         }
 
         fun contextModule(): String {
             return CodeBuilder(lang)
-                .add(Class(
-                    className = "${moduleName}Mocks",
-                    implementedInterfaceName = "ContextModule",
+                .addClass {
+                    name = "${moduleName}Mocks"
+                    implementedInterfaceName = "ContextModule"
                     body = block {
-                        add(Method(
-                            override = true,
-                            name = "apply",
-                            args = listOf("builder" to "ContextBuilder"),
+                        add(method {
+                            override = true
+                            name = "apply"
+                            args = listOf("builder" to "ContextBuilder")
                             body = block {
                                 line("builder")
                                     .tab()
                                     .line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
                                     .untab()
                             }
-                        ))
+                        })
                     }
-                ))
+                }
                 .build()
         }
     }

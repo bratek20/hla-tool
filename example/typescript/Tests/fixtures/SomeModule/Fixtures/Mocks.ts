@@ -4,7 +4,7 @@ namespace SomeModule {
     class SomeInterface2Mock implements SomeInterface2 {
         // referenceOtherClass
         private readonly referenceOtherClassCalls: OtherClass[] = []
-        private readonly referenceOtherClassResponses: Pair<OtherModule.ExpectedOtherClass, OtherModule.Builder.OtherClassDef>[] = []
+        private readonly referenceOtherClassResponses: [OtherModule.ExpectedOtherClass, OtherModule.Builder.OtherClassDef][] = []
 
         setReferenceOtherClassResponse(args: OtherModule.ExpectedOtherClass, response: OtherModule.Builder.OtherClassDef) {
             referenceOtherClassResponses.add(Pair(args, response))

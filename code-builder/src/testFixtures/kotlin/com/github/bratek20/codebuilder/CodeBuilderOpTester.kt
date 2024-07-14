@@ -2,18 +2,16 @@ package com.github.bratek20.codebuilder
 
 import org.assertj.core.api.Assertions
 
-class TestBlockBuilderArgs(
-    var block: CodeBlockBuilder? = null,
-    var lang: CodeBuilderLanguage? = null,
-    var expected: String? = null
-)
-fun testBlockBuilder(init: TestBlockBuilderArgs.() -> Unit) {
+class TestBlockBuilderArgs {
+    lateinit var op: CodeBuilder.() -> Unit
+    lateinit var expected: String
+    var lang: CodeBuilderLanguage = Kotlin()
+}
+fun testCodeBuilderOp(init: TestBlockBuilderArgs.() -> Unit) {
     val args = TestBlockBuilderArgs().apply(init)
-    val result = CodeBuilder(args.lang ?: Kotlin())
-        .add(args.block!!)
-        .build()
+    val result = CodeBuilder(args.lang).apply(args.op).build()
 
-    val expected = args.expected!!
+    val expected = args.expected
 
     val finalExpected = if (expected.contains("\n"))
         alignMultilineStringIndent(expected)
