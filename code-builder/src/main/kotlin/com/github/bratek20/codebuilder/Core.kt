@@ -74,6 +74,11 @@ class CodeBuilder(
         return add(function)
     }
 
+    fun addFunctions(blocks: List<FunctionBuilderOps>): CodeBuilder {
+        blocks.forEach { addFunction(it) }
+        return this
+    }
+
     fun build(): String {
         return lines.joinToString("\n")
     }

@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
-import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
@@ -35,9 +35,9 @@ class DiffsGenerator: FileGenerator() {
             null
         else
             CodeBuilder(lang)
-                .add(ManyCodeBlocksSeparatedByLine(
+                .addFunctions(
                     externalTypes.map { externalTypeDiff(it) }
-                ))
+                )
                 .build()
 
         return contentBuilder("diffs.vm")
@@ -47,9 +47,9 @@ class DiffsGenerator: FileGenerator() {
             .build()
     }
 
-    private fun externalTypeDiff(type: TypeDefinition): CodeBlockBuilder {
+    private fun externalTypeDiff(type: TypeDefinition): FunctionBuilderOps {
         val apiType = apiTypeFactory.create(type) as ExternalApiType
-        return method {
+        return {
             name = "diff" + apiType.rawName
             args = listOf("given" to apiType.name(), "expected" to apiType.name(), "path" to "String = \"\"")
             returnType = "String"

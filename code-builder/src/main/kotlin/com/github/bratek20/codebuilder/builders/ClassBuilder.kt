@@ -5,12 +5,15 @@ import com.github.bratek20.codebuilder.*
 class ClassBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
     var name: String = "SomeClass"
     var implementedInterfaceName: String? = null
-    var body: CodeBlockBuilder = EmptyBlock()
 
-    private val methods: MutableList<MethodBuilder> = mutableListOf()
+    private val body: MutableList<CodeBlockBuilder> = mutableListOf()
 
     fun addMethod(block: MethodBuilder.() -> Unit) {
-        methods.add(MethodBuilder(lang).apply(block))
+        body.add(MethodBuilder(lang).apply(block))
+    }
+
+    fun addComment(comment: String) {
+        body.add(OneLineBlock("// $comment"))
     }
 
     override fun applyOperations(b: CodeBuilder) {
@@ -24,8 +27,7 @@ class ClassBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
     }
 
     fun applyBodyOperations(b: CodeBuilder) {
-        b.add(body)
-        methods.forEach { b.add(it) }
+        body.forEach { b.add(it) }
     }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit

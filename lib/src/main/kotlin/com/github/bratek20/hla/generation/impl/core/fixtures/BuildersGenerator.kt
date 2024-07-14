@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
 import com.github.bratek20.codebuilder.builders.MethodBuilderOps
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -27,7 +28,7 @@ class BuildersGenerator: FileGenerator() {
         }
     }
 
-    private fun externalTypeBuilder(type: TypeDefinition): MethodBuilderOps {
+    private fun externalTypeBuilder(type: TypeDefinition): FunctionBuilderOps {
         val apiType = apiTypeFactory.create(type) as ExternalApiType
         return {
             name = pascalToCamelCase(apiType.rawName)
@@ -57,10 +58,11 @@ class BuildersGenerator: FileGenerator() {
                 null
             else
                 CodeBuilder(lang)
-                    .add(ManyCodeBlocksSeparatedByLine(
+                    .addFunctions(
                         externalTypes.map { externalTypeBuilder(it) }
-                    ))
+                    )
                     .build()
+
 
         return contentBuilder("builders.vm")
             .put("simpleBuilders", simpleBuilders)

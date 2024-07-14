@@ -55,4 +55,29 @@ class ClassBuilderTest {
             }
         }
     }
+
+    @Test
+    fun `class with comment and method`() {
+        testCodeBuilderOp {
+            op = {
+                addClass {
+                    name = "SomeClass"
+                    addComment("some comment")
+                    addMethod {
+                        name = "someMethod"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass {
+                        // some comment
+                        fun someMethod() {
+                        }
+                    }
+                """
+            }
+        }
+    }
 }

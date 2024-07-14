@@ -1,7 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
-import com.github.bratek20.codebuilder.builders.method
 import com.github.bratek20.codebuilder.types.ListFieldDeclaration
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -67,12 +66,14 @@ class MocksGenerator: FileGenerator() {
                 line("// ${def.name}")
                 add(
                     ListFieldDeclaration(
+                        c.language.base(),
                         callsListName,
                         inputTypeName
                     )
                 )
                 add(
                     ListFieldDeclaration(
+                        c.language.base(),
                         fieldName = responsesListName,
                         fieldElementType = "Pair<${expectedInputType}, ${defOutputType}>"
                     )
