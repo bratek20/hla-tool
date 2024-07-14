@@ -14,6 +14,8 @@ interface CodeBuilderLanguage {
 
     fun pairTypeStart(): String
     fun pairTypeEnd(): String
+    fun pairFirst(variableName: String): String
+    fun pairSecond(variableName: String): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -48,6 +50,14 @@ class Kotlin: CodeBuilderLanguage {
     override fun pairTypeEnd(): String {
         return ">"
     }
+
+    override fun pairFirst(variableName: String): String {
+        return "${variableName}.first"
+    }
+
+    override fun pairSecond(variableName: String): String {
+        return "${variableName}.second"
+    }
 }
 
 class TypeScript: CodeBuilderLanguage {
@@ -81,5 +91,13 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun pairTypeEnd(): String {
         return "]"
+    }
+
+    override fun pairFirst(variableName: String): String {
+        return "${variableName}[0]"
+    }
+
+    override fun pairSecond(variableName: String): String {
+        return "${variableName}[1]"
     }
 }

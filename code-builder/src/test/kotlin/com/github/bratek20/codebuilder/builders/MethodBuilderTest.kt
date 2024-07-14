@@ -97,7 +97,10 @@ class MethodBuilderTest {
                         base = BaseType.INT
                     }
                     body = {
-                        line("return p.first + p.second")
+                        linePart("return ")
+                        pairFirst("p")
+                        linePart(" + ")
+                        pairSecond("p")
                     }
                 }
             }

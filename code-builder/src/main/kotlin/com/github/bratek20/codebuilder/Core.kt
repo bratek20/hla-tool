@@ -56,11 +56,13 @@ class CodeBuilder(
 
     fun tab(): CodeBuilder {
         currentIndent += 4
+        linePartStarted = false
         return this
     }
 
     fun untab(): CodeBuilder {
         currentIndent -= 4
+        linePartStarted = false
         return this
     }
 
@@ -83,3 +85,4 @@ class CodeBuilder(
         return lines.joinToString("\n")
     }
 }
+typealias CodeBuilderOps = CodeBuilder.() -> Unit

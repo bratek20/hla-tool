@@ -2,6 +2,14 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
 
+fun pairFirst(variableName: String, lang: CodeBuilderLanguage): String {
+    return lang.pairFirst(variableName)
+}
+
+fun pairSecond(variableName: String, lang: CodeBuilderLanguage): String {
+    return lang.pairSecond(variableName)
+}
+
 class PairTypeBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
     lateinit var first: TypeBuilderOps
     lateinit var second: TypeBuilderOps
@@ -47,14 +55,26 @@ class ArgumentBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 
 class BodyBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
-    private val blocks: MutableList<CodeBlockBuilder> = mutableListOf()
+    private val builderOps = mutableListOf<CodeBuilderOps>()
 
     fun line(value: String) {
-        blocks.add(OneLineBlock(value))
+        builderOps.add { line(value) }
+    }
+
+    fun linePart(value: String) {
+        builderOps.add { linePart(value) }
+    }
+
+    fun pairFirst(variableName: String) {
+        builderOps.add { linePart(pairFirst(variableName, lang)) }
+    }
+
+    fun pairSecond(variableName: String) {
+        builderOps.add { linePart(pairSecond(variableName, lang)) }
     }
 
     override fun applyOperations(b: CodeBuilder) {
-        blocks.forEach { b.add(it) }
+        builderOps.forEach { b.apply(it) }
     }
 }
 typealias BodyBuilderOps = BodyBuilder.() -> Unit
