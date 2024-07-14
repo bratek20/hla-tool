@@ -17,28 +17,35 @@ class CodeBuilder(
     val lang: CodeBuilderLanguage,
     indent: Int = 0
 ) {
+    private val lines = mutableListOf<String>()
+
     private var currentIndent = indent
-    val lines = mutableListOf<String>()
+    private var linePartStarted = false
 
     fun line(value: String): CodeBuilder {
-        val indent = " ".repeat(currentIndent)
-        lines.add(indent + value)
-        return this
-    }
-
-    fun startLinePart(value: String): CodeBuilder {
-        val indent = " ".repeat(currentIndent)
-        lines.add(indent + value)
-        return this
-    }
-
-    fun addLinePart(value: String): CodeBuilder {
-        lines[lines.size - 1] += value
-        return this
+        return addFullLine("${indentString()}$value")
     }
 
     fun emptyLine(): CodeBuilder {
-        lines.add("")
+        return addFullLine("")
+    }
+
+    private fun addFullLine(value: String): CodeBuilder {
+        lines.add(value)
+        linePartStarted = false
+        return this
+    }
+
+    private fun indentString(): String {
+        return " ".repeat(currentIndent)
+    }
+
+    fun linePart(value: String): CodeBuilder {
+        if (!linePartStarted) {
+            linePartStarted = true
+            lines.add(indentString())
+        }
+        lines[lines.size - 1] += value
         return this
     }
 
@@ -51,8 +58,6 @@ class CodeBuilder(
         currentIndent += 4
         return this
     }
-
-
 
     fun untab(): CodeBuilder {
         currentIndent -= 4

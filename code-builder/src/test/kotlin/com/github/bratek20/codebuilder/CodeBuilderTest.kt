@@ -14,9 +14,9 @@ class CodeBuilderTest {
 
                 emptyLine()
 
-                startLinePart("val")
-                addLinePart(" y")
-                addLinePart(" = 2")
+                linePart("val")
+                linePart(" y")
+                linePart(" = 2")
 
                 untab()
                 line("}")
