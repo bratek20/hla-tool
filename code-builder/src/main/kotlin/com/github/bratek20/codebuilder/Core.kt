@@ -5,18 +5,18 @@ import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.FunctionBuilder
 import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
 
+class CodeBuilderContext(
+    val lang: CodeBuilderLanguage
+)
 interface CodeBlockBuilder {
-    fun applyOperations(b: CodeBuilder)
+    fun getOperations(c: CodeBuilderContext): CodeBuilderOps
 }
 
-abstract class LangCodeBlockBuilder(
-    protected val lang: CodeBuilderLanguage
-): CodeBlockBuilder
-
 class CodeBuilder(
-    val lang: CodeBuilderLanguage,
+    lang: CodeBuilderLanguage,
     indent: Int = 0
 ) {
+    val c: CodeBuilderContext = CodeBuilderContext(lang)
     private val lines = mutableListOf<String>()
 
     private var currentIndent = indent
@@ -50,7 +50,7 @@ class CodeBuilder(
     }
 
     fun add(block: CodeBlockBuilder): CodeBuilder {
-        block.applyOperations(this)
+        this.apply(block.getOperations(c))
         return this
     }
 
@@ -67,12 +67,12 @@ class CodeBuilder(
     }
 
     fun addClass(block: ClassBuilderOps): CodeBuilder {
-        val clazz = ClassBuilder(lang).apply(block)
+        val clazz = ClassBuilder().apply(block)
         return add(clazz)
     }
 
     fun addFunction(block: FunctionBuilderOps): CodeBuilder {
-        val function = FunctionBuilder(lang).apply(block)
+        val function = FunctionBuilder().apply(block)
         return add(function)
     }
 

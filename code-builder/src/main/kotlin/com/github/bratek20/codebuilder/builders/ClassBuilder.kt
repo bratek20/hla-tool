@@ -2,47 +2,49 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
 
-class FieldBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+class FieldBuilder: CodeBlockBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilderOps
 
     var value: String? = null
 
-    override fun applyOperations(b: CodeBuilder) {
-        b.linePart("val $name: ")
-        b.add(TypeBuilder(lang).apply(type))
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart("val $name: ")
+        add(type(type))
         value?.let {
-            b.linePart(" = $it")
+            linePart(" = $it")
         }
     }
 }
+typealias FieldBuilderOps = FieldBuilder.() -> Unit
+fun field(block: FieldBuilderOps) = FieldBuilder().apply(block)
 
-class ClassBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+class ClassBuilder: CodeBlockBuilder {
     var name: String = "SomeClass"
     var implementedInterfaceName: String? = null
 
     private val body: MutableList<CodeBlockBuilder> = mutableListOf()
 
-    fun method(block: MethodBuilder.() -> Unit) {
-        body.add(MethodBuilder(lang).apply(block))
+    fun method(block: MethodBuilderOps) {
+        body.add(MethodBuilder().apply(block))
     }
 
     fun comment(value: String) {
         body.add(OneLineBlock("// $value"))
     }
 
-    fun field(block: FieldBuilder.() -> Unit) {
-        body.add(FieldBuilder(lang).apply(block))
+    fun field(block: FieldBuilderOps) {
+        body.add(FieldBuilder().apply(block))
     }
 
-    override fun applyOperations(b: CodeBuilder) {
-        val implementsPart = implementedInterfaceName?.let { lang.implements() + it } ?: ""
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        val implementsPart = implementedInterfaceName?.let { c.lang.implements() + it } ?: ""
 
-        b.line("class $name${implementsPart} {")
-        b.tab()
-        applyBodyOperations(b)
-        b.untab()
-        b.line("}")
+        line("class $name${implementsPart} {")
+        tab()
+        applyBodyOperations(this)
+        untab()
+        line("}")
     }
 
     fun applyBodyOperations(b: CodeBuilder) {

@@ -10,51 +10,55 @@ fun pairSecond(variableName: String, lang: CodeBuilderLanguage): String {
     return lang.pairSecond(variableName)
 }
 
-class PairTypeBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+class PairTypeBuilder: CodeBlockBuilder {
     lateinit var first: TypeBuilderOps
     lateinit var second: TypeBuilderOps
 
-    override fun applyOperations(b: CodeBuilder) {
-        b.linePart(lang.pairTypeStart())
-        b.add(TypeBuilder(lang).apply(first))
-        b.linePart(", ")
-        b.add(TypeBuilder(lang).apply(second))
-        b.linePart(lang.pairTypeEnd())
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart(c.lang.pairTypeStart())
+        add(type(first))
+        linePart(", ")
+        add(type(second))
+        linePart(c.lang.pairTypeEnd())
     }
 }
 typealias PairTypeBuilderOps = PairTypeBuilder.() -> Unit
 
-class TypeBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+class TypeBuilder: CodeBlockBuilder {
     var name: String? = null
     var base: BaseType? = null
     var pair: PairTypeBuilderOps? = null
 
-    override fun applyOperations(b: CodeBuilder) {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         if (name != null) {
-            b.linePart(name!!)
+            linePart(name!!)
         } else if (base != null) {
-            b.linePart(lang.mapBaseType(base!!))
+            linePart(c.lang.mapBaseType(base!!))
         } else if (pair != null) {
-            b.add(PairTypeBuilder(lang).apply(pair!!))
+            add(PairTypeBuilder().apply(pair!!))
         } else {
             throw IllegalStateException("TypeBuilder must have one of the fields set")
         }
     }
 }
 typealias TypeBuilderOps = TypeBuilder.() -> Unit
+fun type(block: TypeBuilderOps) = TypeBuilder().apply(block)
 
-class ArgumentBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+class ArgumentBuilder: CodeBlockBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilderOps
 
-    override fun applyOperations(b: CodeBuilder) {
-        b.linePart("$name: ")
-        b.add(TypeBuilder(lang).apply(type))
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
+        return {
+            linePart("$name: ")
+            add(TypeBuilder().apply(type))
+        }
     }
 }
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
+fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
-class BodyBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+class BodyBuilder: CodeBlockBuilder {
     private val builderOps = mutableListOf<CodeBuilderOps>()
 
     fun line(value: String) {
@@ -66,20 +70,21 @@ class BodyBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
     }
 
     fun pairFirst(variableName: String) {
-        builderOps.add { linePart(pairFirst(variableName, lang)) }
+        builderOps.add { linePart(pairFirst(variableName, this.c.lang)) }
     }
 
     fun pairSecond(variableName: String) {
-        builderOps.add { linePart(pairSecond(variableName, lang)) }
+        builderOps.add { linePart(pairSecond(variableName, this.c.lang)) }
     }
 
-    override fun applyOperations(b: CodeBuilder) {
-        builderOps.forEach { b.apply(it) }
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        builderOps.forEach { this.apply(it) }
     }
 }
 typealias BodyBuilderOps = BodyBuilder.() -> Unit
+fun body(block: BodyBuilderOps) = BodyBuilder().apply(block)
 
-class MethodBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
+class MethodBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var override: Boolean = false
@@ -88,31 +93,31 @@ class MethodBuilder(lang: CodeBuilderLanguage): LangCodeBlockBuilder(lang) {
 
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun addArg(block: ArgumentBuilderOps) {
-        args.add(ArgumentBuilder(lang).apply(block))
+        args.add(argument(block))
     }
 
-    override fun applyOperations(b: CodeBuilder) {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         val overridePart = if (override) "override " else ""
 
-        b.linePart("${overridePart}${lang.methodDeclarationKeyword()}$name(")
+        linePart("${overridePart}${c.lang.methodDeclarationKeyword()}$name(")
         args.forEachIndexed { index, arg ->
-            b.add(arg)
+            add(arg)
             if (index != args.size - 1) {
-                b.linePart(", ")
+                linePart(", ")
             }
         }
-        b.linePart(")")
+        linePart(")")
         returnType?.let {
-            b.linePart(": ")
-            b.add(TypeBuilder(lang).apply(it))
+            linePart(": ")
+            add(type(it))
         }
-        b.linePart(" {")
+        linePart(" {")
 
-        b.tab()
-        body?.let { b.add(BodyBuilder(lang).apply(it)) }
-        b.untab()
+        tab()
+        body?.let { add(body(it)) }
+        untab()
 
-        b.line("}")
+        line("}")
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit

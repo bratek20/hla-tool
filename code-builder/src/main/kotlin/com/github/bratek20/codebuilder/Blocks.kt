@@ -1,7 +1,7 @@
 package com.github.bratek20.codebuilder
 
 class EmptyBlock: CodeBlockBuilder {
-    override fun applyOperations(b: CodeBuilder) {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         // do nothing
     }
 }
@@ -9,33 +9,33 @@ class EmptyBlock: CodeBlockBuilder {
 class OneLineBlock(
     private val block: String
 ): CodeBlockBuilder {
-    override fun applyOperations(b: CodeBuilder) {
-        b.line(block)
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        line(block)
     }
 }
 
 class EmptyLineBlock: CodeBlockBuilder {
-    override fun applyOperations(b: CodeBuilder) {
-        b.emptyLine()
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        emptyLine()
     }
 }
 
 class ManyCodeBlocksSeparatedByLine(
     private val blocks: List<CodeBlockBuilder>
 ): CodeBlockBuilder {
-    override fun applyOperations(b: CodeBuilder) {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         blocks.dropLast(1).forEach {
-            b.add(it)
-            b.emptyLine()
+            add(it)
+            emptyLine()
         }
-        b.add(blocks.last())
+        add(blocks.last())
     }
 }
 
 fun block(block: CodeBuilder.() -> Unit): CodeBlockBuilder {
     return object : CodeBlockBuilder {
-        override fun applyOperations(b: CodeBuilder) {
-            b.block()
+        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+            block()
         }
     }
 }
