@@ -13,6 +13,15 @@ fun pairSecond(variableName: String, lang: CodeBuilderLanguage): String {
 
 interface TypeBuilder: CodeBlockBuilder
 
+class DefaultTypeBuilder: TypeBuilder {
+    lateinit var value: String
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart(value)
+    }
+}
+fun type(value: String) = DefaultTypeBuilder().apply { this.value = value }
+
 class PairTypeBuilder: TypeBuilder {
     lateinit var first: TypeBuilder
     lateinit var second: TypeBuilder
@@ -53,38 +62,12 @@ class ArgumentBuilder: CodeBlockBuilder {
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
-class BodyBuilder: CodeBlockBuilder {
-    private val builderOps = mutableListOf<CodeBuilderOps>()
-
-    fun line(value: String) {
-        builderOps.add { line(value) }
-    }
-
-    fun linePart(value: String) {
-        builderOps.add { linePart(value) }
-    }
-
-    fun pairFirst(variableName: String) {
-        builderOps.add { linePart(pairFirst(variableName, this.c.lang)) }
-    }
-
-    fun pairSecond(variableName: String) {
-        builderOps.add { linePart(pairSecond(variableName, this.c.lang)) }
-    }
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        builderOps.forEach { this.apply(it) }
-    }
-}
-typealias BodyBuilderOps = BodyBuilder.() -> Unit
-fun body(block: BodyBuilderOps) = BodyBuilder().apply(block)
-
 class MethodBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var override: Boolean = false
     var returnType: TypeBuilder? = null
-    var body: BodyBuilderOps? = null
+    var body: CodeBuilderOps? = null
 
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun addArg(block: ArgumentBuilderOps) {
@@ -109,7 +92,7 @@ class MethodBuilder: CodeBlockBuilder {
         linePart(" {")
 
         tab()
-        body?.let { add(body(it)) }
+        body?.let { add(it) }
         untab()
 
         line("}")

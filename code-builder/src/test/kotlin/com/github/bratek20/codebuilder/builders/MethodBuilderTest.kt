@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.types.forPair
 import org.junit.jupiter.api.Test
 
 class MethodBuilderTest {
@@ -67,7 +68,6 @@ class MethodBuilderTest {
             }
         }
     }
-
     @Test
     fun `pair arg`() {
         testClassOp {
@@ -81,9 +81,9 @@ class MethodBuilderTest {
                     returnType = baseType(BaseType.INT)
                     body = {
                         linePart("return ")
-                        pairFirst("p")
+                        add(forPair("p").first())
                         linePart(" + ")
-                        pairSecond("p")
+                        add(forPair("p").second())
                     }
                 }
             }

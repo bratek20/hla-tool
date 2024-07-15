@@ -54,6 +54,11 @@ class CodeBuilder(
         return this
     }
 
+    fun add(ops: CodeBuilderOps): CodeBuilder {
+        ops(this)
+        return this
+    }
+
     fun tab(): CodeBuilder {
         currentIndent += 4
         linePartStarted = false
