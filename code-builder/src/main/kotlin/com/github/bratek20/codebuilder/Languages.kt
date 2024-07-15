@@ -12,10 +12,12 @@ interface CodeBuilderLanguage {
 
     fun mapBaseType(type: BaseType): String
 
-    fun pairTypeStart(): String
-    fun pairTypeEnd(): String
+    fun pairType(firstType: String, secondType: String): String
     fun pairFirst(variableName: String): String
     fun pairSecond(variableName: String): String
+
+    fun listType(elementType: String): String
+    fun listAdd(variableName: String, element: String): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -43,12 +45,8 @@ class Kotlin: CodeBuilderLanguage {
         }
     }
 
-    override fun pairTypeStart(): String {
-        return "Pair<"
-    }
-
-    override fun pairTypeEnd(): String {
-        return ">"
+    override fun pairType(firstType: String, secondType: String): String {
+        return "Pair<$firstType, $secondType>"
     }
 
     override fun pairFirst(variableName: String): String {
@@ -57,6 +55,14 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun pairSecond(variableName: String): String {
         return "${variableName}.second"
+    }
+
+    override fun listType(elementType: String): String {
+        return "List<$elementType>"
+    }
+
+    override fun listAdd(variableName: String, element: String): String {
+        return "$variableName.add($element)"
     }
 }
 
@@ -85,12 +91,8 @@ class TypeScript: CodeBuilderLanguage {
         }
     }
 
-    override fun pairTypeStart(): String {
-        return "["
-    }
-
-    override fun pairTypeEnd(): String {
-        return "]"
+    override fun pairType(firstType: String, secondType: String): String {
+        return "[$firstType, $secondType]"
     }
 
     override fun pairFirst(variableName: String): String {
@@ -99,5 +101,13 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun pairSecond(variableName: String): String {
         return "${variableName}[1]"
+    }
+
+    override fun listType(elementType: String): String {
+        return "$elementType[]"
+    }
+
+    override fun listAdd(variableName: String, element: String): String {
+        return "$variableName.push($element)"
     }
 }

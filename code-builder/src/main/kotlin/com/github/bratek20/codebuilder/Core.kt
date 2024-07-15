@@ -8,8 +8,13 @@ import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
 class CodeBuilderContext(
     val lang: CodeBuilderLanguage
 )
+
 interface CodeBlockBuilder {
     fun getOperations(c: CodeBuilderContext): CodeBuilderOps
+}
+
+interface LinePartBuilder {
+    fun build(c: CodeBuilderContext): String
 }
 
 class CodeBuilder(
@@ -49,6 +54,11 @@ class CodeBuilder(
         return this
     }
 
+    fun endLinePart(): CodeBuilder {
+        linePartStarted = false
+        return this
+    }
+
     fun add(block: CodeBlockBuilder): CodeBuilder {
         this.apply(block.getOperations(c))
         return this
@@ -57,6 +67,10 @@ class CodeBuilder(
     fun add(ops: CodeBuilderOps): CodeBuilder {
         ops(this)
         return this
+    }
+
+    fun add(linePartBuilder: LinePartBuilder): CodeBuilder {
+        return linePart(linePartBuilder.build(c))
     }
 
     fun tab(): CodeBuilder {

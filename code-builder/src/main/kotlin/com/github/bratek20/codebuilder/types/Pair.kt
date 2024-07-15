@@ -1,7 +1,14 @@
 package com.github.bratek20.codebuilder.types
 
+import com.github.bratek20.codebuilder.CodeBuilderContext
 import com.github.bratek20.codebuilder.CodeBuilderOps
 import com.github.bratek20.codebuilder.TypeScript
+
+fun pairType(first: TypeBuilder, second: TypeBuilder) = object: TypeBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        return c.lang.pairType(first.build(c), second.build(c))
+    }
+}
 
 class PairOperations(
     private val variableName: String
@@ -23,6 +30,6 @@ class PairOperations(
     }
 }
 
-fun forPair(variableName: String): PairOperations {
+fun pairOp(variableName: String): PairOperations {
     return PairOperations(variableName)
 }

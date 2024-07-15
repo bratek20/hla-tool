@@ -2,14 +2,23 @@ package com.github.bratek20.codebuilder.types
 
 import com.github.bratek20.codebuilder.*
 
-class ListFieldDeclaration(
-    private val fieldName: String,
-    private val fieldElementType: String
-): CodeBlockBuilder {
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        if (c.lang is TypeScript)
-            line("private readonly $fieldName: $fieldElementType[] = []")
-        else
-            line("private val $fieldName = mutableListOf<$fieldElementType>()")
+fun listType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        return c.lang.listType(elementType.build(c))
     }
+}
+
+class ListOperations(
+    private val variableName: String
+) {
+    fun get(index: Int): CodeBuilderOps = {
+        linePart("$variableName[$index]")
+    }
+
+    fun add(element: String): CodeBuilderOps = {
+        linePart(this.c.lang.listAdd(variableName, element))
+    }
+}
+fun listOp(variableName: String): ListOperations {
+    return ListOperations(variableName)
 }

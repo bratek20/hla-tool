@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.types.TypeBuilder
 
 fun pairFirst(variableName: String, lang: CodeBuilderLanguage): String {
     return lang.pairFirst(variableName)
@@ -11,42 +12,11 @@ fun pairSecond(variableName: String, lang: CodeBuilderLanguage): String {
 }
 
 
-interface TypeBuilder: CodeBlockBuilder
 
-class DefaultTypeBuilder: TypeBuilder {
-    lateinit var value: String
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        linePart(value)
-    }
-}
-fun type(value: String) = DefaultTypeBuilder().apply { this.value = value }
 
-class PairTypeBuilder: TypeBuilder {
-    lateinit var first: TypeBuilder
-    lateinit var second: TypeBuilder
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        linePart(c.lang.pairTypeStart())
-        add(first)
-        linePart(", ")
-        add(second)
-        linePart(c.lang.pairTypeEnd())
-    }
-}
-fun pairType(first: TypeBuilder, second: TypeBuilder) = PairTypeBuilder().apply {
-    this.first = first
-    this.second = second
-}
 
-class BaseTypeBuilder: TypeBuilder {
-    lateinit var value: BaseType
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        linePart(c.lang.mapBaseType(value))
-    }
-}
-fun baseType(value: BaseType) = BaseTypeBuilder().apply { this.value = value }
 
 class ArgumentBuilder: CodeBlockBuilder {
     lateinit var name: String

@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class FieldBuilder: CodeBlockBuilder {
     lateinit var name: String
