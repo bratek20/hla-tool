@@ -4,13 +4,13 @@ import com.github.bratek20.codebuilder.*
 
 class FieldBuilder: CodeBlockBuilder {
     lateinit var name: String
-    lateinit var type: TypeBuilderOps
+    lateinit var type: TypeBuilder
 
     var value: String? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         linePart("val $name: ")
-        add(type(type))
+        add(type)
         value?.let {
             linePart(" = $it")
         }

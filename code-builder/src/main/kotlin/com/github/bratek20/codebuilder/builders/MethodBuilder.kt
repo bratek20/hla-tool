@@ -10,48 +10,43 @@ fun pairSecond(variableName: String, lang: CodeBuilderLanguage): String {
     return lang.pairSecond(variableName)
 }
 
-class PairTypeBuilder: CodeBlockBuilder {
-    lateinit var first: TypeBuilderOps
-    lateinit var second: TypeBuilderOps
+
+interface TypeBuilder: CodeBlockBuilder
+
+class PairTypeBuilder: TypeBuilder {
+    lateinit var first: TypeBuilder
+    lateinit var second: TypeBuilder
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         linePart(c.lang.pairTypeStart())
-        add(type(first))
+        add(first)
         linePart(", ")
-        add(type(second))
+        add(second)
         linePart(c.lang.pairTypeEnd())
     }
 }
-typealias PairTypeBuilderOps = PairTypeBuilder.() -> Unit
+fun pairType(first: TypeBuilder, second: TypeBuilder) = PairTypeBuilder().apply {
+    this.first = first
+    this.second = second
+}
 
-class TypeBuilder: CodeBlockBuilder {
-    var name: String? = null
-    var base: BaseType? = null
-    var pair: PairTypeBuilderOps? = null
+class BaseTypeBuilder: TypeBuilder {
+    lateinit var value: BaseType
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        if (name != null) {
-            linePart(name!!)
-        } else if (base != null) {
-            linePart(c.lang.mapBaseType(base!!))
-        } else if (pair != null) {
-            add(PairTypeBuilder().apply(pair!!))
-        } else {
-            throw IllegalStateException("TypeBuilder must have one of the fields set")
-        }
+        linePart(c.lang.mapBaseType(value))
     }
 }
-typealias TypeBuilderOps = TypeBuilder.() -> Unit
-fun type(block: TypeBuilderOps) = TypeBuilder().apply(block)
+fun baseType(value: BaseType) = BaseTypeBuilder().apply { this.value = value }
 
 class ArgumentBuilder: CodeBlockBuilder {
     lateinit var name: String
-    lateinit var type: TypeBuilderOps
+    lateinit var type: TypeBuilder
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
         return {
             linePart("$name: ")
-            add(TypeBuilder().apply(type))
+            add(type)
         }
     }
 }
@@ -88,7 +83,7 @@ class MethodBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var override: Boolean = false
-    var returnType: TypeBuilderOps? = null
+    var returnType: TypeBuilder? = null
     var body: BodyBuilderOps? = null
 
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
@@ -109,7 +104,7 @@ class MethodBuilder: CodeBlockBuilder {
         linePart(")")
         returnType?.let {
             linePart(": ")
-            add(type(it))
+            add(it)
         }
         linePart(" {")
 

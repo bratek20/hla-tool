@@ -37,19 +37,13 @@ class MethodBuilderTest {
                     name = "sum"
                     addArg {
                         name = "a"
-                        type = {
-                            base = BaseType.INT
-                        }
+                        type = baseType(BaseType.INT)
                     }
                     addArg {
                         name = "b"
-                        type = {
-                            base = BaseType.INT
-                        }
+                        type = baseType(BaseType.INT)
                     }
-                    returnType = {
-                        base = BaseType.INT
-                    }
+                    returnType = baseType(BaseType.INT)
                     body = {
                         line("return a + b")
                     }
@@ -82,20 +76,9 @@ class MethodBuilderTest {
                     name = "sumPair"
                     addArg {
                         name = "p"
-                        type = {
-                            pair = {
-                                first = {
-                                    base = BaseType.INT
-                                }
-                                second = {
-                                    base = BaseType.INT
-                                }
-                            }
-                        }
+                        type = pairType(baseType(BaseType.INT), baseType(BaseType.INT))
                     }
-                    returnType = {
-                        base = BaseType.INT
-                    }
+                    returnType = baseType(BaseType.INT)
                     body = {
                         linePart("return ")
                         pairFirst("p")
