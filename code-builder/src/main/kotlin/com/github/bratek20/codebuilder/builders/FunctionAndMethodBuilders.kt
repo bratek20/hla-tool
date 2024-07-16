@@ -37,22 +37,21 @@ class ArgumentListBuilder: CodeBlockBuilder {
     }
 }
 
-class MethodBuilder: CodeBlockBuilder {
+abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
     lateinit var name: String
 
-    var override: Boolean = false
     var returnType: TypeBuilder? = null
     var body: CodeBuilderOps? = null
 
-    private val args: ArgumentListBuilder = ArgumentListBuilder()
+    protected val args: ArgumentListBuilder = ArgumentListBuilder()
     fun addArg(ops: ArgumentBuilderOps) {
         args.add(ops)
     }
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        val overridePart = if (override) "override " else ""
+    protected abstract fun beforeName(c: CodeBuilderContext): String
 
-        linePart("${overridePart}${c.lang.methodDeclarationKeyword()}$name")
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart("${beforeName(c)}$name")
         add(args)
         returnType?.let {
             linePart(": ")
@@ -67,34 +66,20 @@ class MethodBuilder: CodeBlockBuilder {
         line("}")
     }
 }
+
+class MethodBuilder: MethodOrFunctionBuilder() {
+    var override: Boolean = false
+    override fun beforeName(c: CodeBuilderContext): String {
+        val overridePart = if (override) "override " else ""
+        return "${overridePart}${c.lang.methodDeclarationKeyword()}"
+    }
+}
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
 fun method(block: MethodBuilderOps) = MethodBuilder().apply(block)
 
-class FunctionBuilder: CodeBlockBuilder {
-    lateinit var name: String
-
-    var override: Boolean = false
-    var returnType: TypeBuilder? = null
-    var body: CodeBuilderOps? = null
-
-    private val args: ArgumentListBuilder = ArgumentListBuilder()
-    fun addArg(ops: ArgumentBuilderOps) {
-        args.add(ops)
-    }
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        linePart("${c.lang.functionDeclarationKeyword()}$name")
-        add(args)
-        returnType?.let {
-            linePart(": ")
-            add(it)
-        }
-        linePart(" {")
-
-        tab()
-        body?.let { add(it) }
-        untab()
-        line("}")
+class FunctionBuilder: MethodOrFunctionBuilder() {
+    override fun beforeName(c: CodeBuilderContext): String {
+        return c.lang.functionDeclarationKeyword()
     }
 }
 typealias FunctionBuilderOps = FunctionBuilder.() -> Unit
