@@ -3,6 +3,7 @@ package somemodule
 import com.github.bratek20.architecture.context.api.ContextModule
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.infrastructure.httpclient.context.HttpClientImpl
+import com.github.bratek20.infrastructure.httpclient.fixtures.httpClientConfig
 import com.github.bratek20.infrastructure.httpserver.api.WebServerModule
 import com.github.bratek20.infrastructure.httpserver.fixtures.TestWebApp
 import com.some.pkg.somemodule.api.SomeInterface
@@ -21,7 +22,7 @@ class TestSomeModuleWebServer: WebServerModule {
     }
 }
 
-class SomeModuleWebTest: TestSomeModuleImplTest() {
+class SomeModuleWebTest: SomeModuleImplTest() {
     override fun createSomeInterface(): SomeInterface {
         //server
         val serverPort = TestWebApp(
@@ -35,7 +36,9 @@ class SomeModuleWebTest: TestSomeModuleImplTest() {
             .withModules(
                 HttpClientImpl(),
                 SomeModuleWebClient(
-                    serverUrl = "http://localhost:$serverPort"
+                    httpClientConfig {
+                        baseUrl = "http://localhost:$serverPort"
+                    }
                 )
             )
             .get(SomeInterface::class.java)

@@ -4,17 +4,18 @@ package com.some.pkg.somemodule.context
 
 import com.github.bratek20.architecture.context.api.ContextBuilder
 import com.github.bratek20.architecture.context.api.ContextModule
+import com.github.bratek20.infrastructure.httpclient.api.HttpClientConfig
 import com.github.bratek20.infrastructure.httpserver.api.WebServerModule
 
 import com.some.pkg.somemodule.api.*
 import com.some.pkg.somemodule.web.*
 
 class SomeModuleWebClient(
-    private val serverUrl: String = "http://localhost:8080"
+    private val config: HttpClientConfig
 ): ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
-            .setImplObject(SomeModuleWebServerUrl::class.java, SomeModuleWebServerUrl(serverUrl))
+            .setImplObject(SomeModuleWebClientConfig::class.java, SomeModuleWebClientConfig(config))
             .setImpl(SomeInterface::class.java, SomeInterfaceWebClient::class.java)
             .setImpl(SomeInterface2::class.java, SomeInterface2WebClient::class.java)
     }

@@ -2,12 +2,14 @@
 
 package com.some.pkg.somemodule.web
 
+import com.github.bratek20.infrastructure.httpclient.api.HttpClientConfig
+
 import com.some.pkg.somemodule.api.*
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
-class SomeModuleWebServerUrl(val value: String)
+class SomeModuleWebClientConfig(val value: HttpClientConfig)
 
 class SomeInterfaceSomeCommandRequest(val id: SomeId, val amount: Int)
 class SomeInterfaceSomeQueryRequest(val query: SomeQueryInput)

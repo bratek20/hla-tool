@@ -103,7 +103,7 @@ class WebClientGenerator: FileGenerator() {
             else
                 "null"
 
-        return "${returnPart}factory.create(url.value).post($postUrl, $postBody)$getBodyPart"
+        return "${returnPart}client.post($postUrl, $postBody)$getBodyPart"
     }
 }
 

@@ -11,9 +11,11 @@ import ${import}.api.*
 
 #foreach($interface in $interfaces)
 class ${interface.name}WebClient(
-    private val factory: HttpClientFactory,
-    private val url: ${moduleName}WebServerUrl,
+    factory: HttpClientFactory,
+    config: ${moduleName}WebClientConfig,
 ): ${interface.name} {
+    private val client = factory.create(config.value)
+
 #foreach($method in $interface.methods)
     override fun ${method.declaration} {
         ${method.body}
