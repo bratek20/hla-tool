@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.ops
 
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.LinePartBuilder
 
 fun returnBlock(block: CodeBuilderOps): CodeBuilderOps = {
     linePart("return ")
@@ -8,16 +9,12 @@ fun returnBlock(block: CodeBuilderOps): CodeBuilderOps = {
 }
 
 class AddOpArgs {
-    lateinit var left: CodeBuilderOps
-    lateinit var right: CodeBuilderOps
+    lateinit var left: LinePartBuilder
+    lateinit var right: LinePartBuilder
 }
 fun plus(block: AddOpArgs.()->Unit): CodeBuilderOps = {
     val args = AddOpArgs().apply(block)
     add(args.left)
     linePart(" + ")
     add(args.right)
-}
-
-fun asLinePart(value: String): CodeBuilderOps = {
-    linePart(value)
 }

@@ -1,11 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.core.Kotlin
-import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.plus
-import com.github.bratek20.codebuilder.ops.asLinePart
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.pairOp
@@ -56,8 +52,8 @@ class MethodBuilderTest {
                     body = {
                         add(returnBlock {
                             add(plus {
-                                left = asLinePart("a")
-                                right = asLinePart("b")
+                                left = linePartBlock("a")
+                                right = linePartBlock("b")
                             })
                         })
                     }
