@@ -8,7 +8,6 @@ import com.some.pkg.somemodule.api.*
 import com.some.pkg.somemodule.fixtures.assertSomeClass
 import com.some.pkg.somemodule.fixtures.someQueryInput
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class TestSomeInterfaceLogic: SomeInterface {
@@ -43,7 +42,7 @@ class TestSomeModuleImpl: ContextModule {
     }
 }
 
-open class TestSomeModuleImplTest {
+open class SomeModuleImplTest {
     open fun createSomeInterface(): SomeInterface {
         return someContextBuilder()
             .withModules(TestSomeModuleImpl())
