@@ -7,6 +7,7 @@ import com.github.bratek20.infrastructure.httpclient.api.HttpClientFactory
 import com.some.pkg.somemodule.api.*
 
 import com.some.pkg.othermodule.api.*
+import com.some.pkg.typesmodule.api.*
 
 class SomeInterfaceWebClient(
     factory: HttpClientFactory,
@@ -33,9 +34,9 @@ class SomeInterfaceWebClient(
 
 class SomeInterface2WebClient(
     factory: HttpClientFactory,
-    url: SomeModuleWebClientConfig,
+    config: SomeModuleWebClientConfig,
 ): SomeInterface2 {
-    private val client = factory.create(url.value)
+    private val client = factory.create(config.value)
 
     override fun referenceOtherClass(other: OtherClass): OtherClass {
         return client.post("/someInterface2/referenceOtherClass", SomeInterface2ReferenceOtherClassRequest(other)).getBody(SomeInterface2ReferenceOtherClassResponse::class.java).value
