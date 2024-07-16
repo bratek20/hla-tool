@@ -1,13 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.ClassBuilderOps
+import com.github.bratek20.codebuilder.builders.FieldAccessor
 import com.github.bratek20.codebuilder.builders.classBlock
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
-import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.listType
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
@@ -71,14 +70,16 @@ class MocksGenerator: FileGenerator() {
             return {
                 comment(def.name)
                 field {
+                    accessor = FieldAccessor.PRIVATE
                     name = callsListName
-                    type = listType(type(inputTypeName))
-                    value = "mutableListOf()"
+                    type = mutableListType(type(inputTypeName))
+                    value = emptyMutableList()
                 }
                 field {
+                    accessor = FieldAccessor.PRIVATE
                     name = responsesListName
-                    type = listType(type("Pair<${expectedInputType}, ${defOutputType}>"))
-                    value = "mutableListOf()"
+                    type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
+                    value = emptyMutableList()
                 }
                 emptyLine()
 
@@ -93,7 +94,7 @@ class MocksGenerator: FileGenerator() {
                         type = type(defOutputType)
                     }
                     body = {
-                        line("${responsesListName}.add(Pair(args, response))")
+                        add(listOp(responsesListName).add("Pair(args, response)"))
                     }
                 }
 

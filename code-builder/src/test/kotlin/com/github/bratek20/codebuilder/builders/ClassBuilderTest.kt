@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.linePartBlock
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import com.github.bratek20.codebuilder.types.type
 import org.junit.jupiter.api.Test
@@ -91,8 +92,10 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     field {
+                        accessor = FieldAccessor.PRIVATE
                         name = "a"
                         type = type("A")
+                        value = linePartBlock("null")
                     }
                     emptyLine()
                     field {
@@ -105,9 +108,19 @@ class ClassBuilderTest {
                 lang = Kotlin()
                 expected = """
                     class SomeClass {
-                        val a: A
+                        private val a: A = null
                     
                         val b: B
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass {
+                        private readonly a: A = null
+                    
+                        readonly b: B
                     }
                 """
             }

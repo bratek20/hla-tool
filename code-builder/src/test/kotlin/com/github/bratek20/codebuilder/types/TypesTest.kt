@@ -94,17 +94,27 @@ class TypesTest {
             op = {
                 add(listType(type("SomeType")))
                 endLinePart()
+
+                add(mutableListType(type("SomeType")))
+                endLinePart()
+
+                add(emptyMutableList())
+                endLinePart()
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
                    List<SomeType>
+                   MutableList<SomeType>
+                   mutableListOf()
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
                    SomeType[]
+                   SomeType[]
+                   []
                 """
             }
         }

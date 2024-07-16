@@ -17,7 +17,11 @@ interface CodeBuilderLanguage {
     fun pairSecond(variableName: String): String
 
     fun listType(elementType: String): String
+    fun mutableListType(elementType: String): String
     fun listAdd(variableName: String, element: String): String
+    fun emptyMutableList(): String
+
+    fun immutableFieldDeclaration(): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -61,8 +65,20 @@ class Kotlin: CodeBuilderLanguage {
         return "List<$elementType>"
     }
 
+    override fun mutableListType(elementType: String): String {
+        return "MutableList<$elementType>"
+    }
+
     override fun listAdd(variableName: String, element: String): String {
         return "$variableName.add($element)"
+    }
+
+    override fun emptyMutableList(): String {
+        return "mutableListOf()"
+    }
+
+    override fun immutableFieldDeclaration(): String {
+        return "val "
     }
 }
 
@@ -107,7 +123,19 @@ class TypeScript: CodeBuilderLanguage {
         return "$elementType[]"
     }
 
+    override fun mutableListType(elementType: String): String {
+        return "$elementType[]"
+    }
+
     override fun listAdd(variableName: String, element: String): String {
         return "$variableName.push($element)"
+    }
+
+    override fun emptyMutableList(): String {
+        return "[]"
+    }
+
+    override fun immutableFieldDeclaration(): String {
+        return "readonly "
     }
 }

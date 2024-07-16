@@ -4,17 +4,26 @@ import com.github.bratek20.codebuilder.*
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
+enum class FieldAccessor {
+    PRIVATE, PROTECTED, PUBLIC
+}
+
 class FieldBuilder: CodeBlockBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilder
 
-    var value: String? = null
+    var value: LinePartBuilder? = null
+    var accessor: FieldAccessor? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        linePart("val $name: ")
+        accessor?.let {
+            linePart("${it.name.lowercase()} ")
+        }
+        linePart("${c.lang.immutableFieldDeclaration()}$name: ")
         add(type)
         value?.let {
-            linePart(" = $it")
+            linePart(" = ")
+            add(it)
         }
         endLinePart()
     }
