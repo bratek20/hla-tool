@@ -1,6 +1,5 @@
-package com.github.bratek20.codebuilder
+package com.github.bratek20.codebuilder.core
 
-import com.github.bratek20.codebuilder.builders.ClassBuilder
 import org.assertj.core.api.Assertions
 
 class ExpectedLanguageString {
@@ -47,27 +46,6 @@ class CodeBuilderOpTester {
 }
 fun testCodeBuilderOp(init: CodeBuilderOpTester.() -> Unit) {
     CodeBuilderOpTester().apply(init).test()
-}
-
-class ClassBuilderOpTester {
-    lateinit var op: ClassBuilder.() -> Unit
-    private val opTester = CodeBuilderOpTester()
-
-    fun langExpected(init: ExpectedLanguageString.() -> Unit) {
-        opTester.langExpected(init)
-    }
-
-    fun test() {
-        opTester.op = {
-            ClassBuilder()
-                .apply(op)
-                .applyBodyOperations(this)
-        }
-        opTester.test()
-    }
-}
-fun testClassOp(init: ClassBuilderOpTester.() -> Unit) {
-    ClassBuilderOpTester().apply(init).test()
 }
 
 private fun alignMultilineStringIndent(str: String): String {

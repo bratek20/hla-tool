@@ -1,6 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.core.CodeBlockBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
 import com.github.bratek20.codebuilder.types.ListFieldDeclaration
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator

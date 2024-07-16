@@ -1,8 +1,8 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.Kotlin
-import com.github.bratek20.codebuilder.TypeScript
-import com.github.bratek20.codebuilder.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.Kotlin
+import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
 class FunctionBuilderTest {
@@ -10,7 +10,7 @@ class FunctionBuilderTest {
     fun `empty function`() {
         testCodeBuilderOp {
             op = {
-                addFunction {}
+                add(function { name = "someFunction" })
             }
             langExpected {
                 lang = Kotlin()

@@ -1,5 +1,6 @@
-package com.github.bratek20.codebuilder
+package com.github.bratek20.codebuilder.core
 
+import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
 class CodeBuilderOpTesterTest {

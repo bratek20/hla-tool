@@ -1,6 +1,6 @@
 package com.github.bratek20.codebuilder.ops
 
-import com.github.bratek20.codebuilder.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
 fun returnBlock(block: CodeBuilderOps): CodeBuilderOps = {
     linePart("return ")

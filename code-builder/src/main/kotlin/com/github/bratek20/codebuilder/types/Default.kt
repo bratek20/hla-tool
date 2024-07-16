@@ -1,7 +1,7 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.CodeBuilderContext
-import com.github.bratek20.codebuilder.LinePartBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.LinePartBuilder
 
 interface TypeBuilder: LinePartBuilder
 

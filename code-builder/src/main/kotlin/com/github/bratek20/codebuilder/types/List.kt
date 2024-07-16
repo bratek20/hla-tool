@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
 fun listType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder {
     override fun build(c: CodeBuilderContext): String {

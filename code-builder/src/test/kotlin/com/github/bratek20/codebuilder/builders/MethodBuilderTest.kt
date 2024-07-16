@@ -1,6 +1,9 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.core.BaseType
+import com.github.bratek20.codebuilder.core.Kotlin
+import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import com.github.bratek20.codebuilder.ops.plus
 import com.github.bratek20.codebuilder.ops.asLinePart
 import com.github.bratek20.codebuilder.ops.returnBlock
@@ -12,11 +15,11 @@ import org.junit.jupiter.api.Test
 class MethodBuilderTest {
     @Test
     fun `empty method`() {
-        testClassOp {
+        testCodeBuilderOp {
             op = {
-                method {
+                add(method {
                     name = "someMethod"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -37,9 +40,9 @@ class MethodBuilderTest {
 
     @Test
     fun `sum method`() {
-        testClassOp {
+        testCodeBuilderOp {
             op = {
-                method {
+                add(method {
                     name = "sum"
                     addArg {
                         name = "a"
@@ -58,7 +61,7 @@ class MethodBuilderTest {
                             })
                         })
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -81,9 +84,9 @@ class MethodBuilderTest {
 
     @Test
     fun `pair arg`() {
-        testClassOp {
+        testCodeBuilderOp {
             op = {
-                method {
+                add(method {
                     name = "sumPair"
                     addArg {
                         name = "p"
@@ -98,7 +101,7 @@ class MethodBuilderTest {
                             })
                         })
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()

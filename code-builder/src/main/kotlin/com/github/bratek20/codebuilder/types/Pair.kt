@@ -1,8 +1,8 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.CodeBuilderContext
-import com.github.bratek20.codebuilder.CodeBuilderOps
-import com.github.bratek20.codebuilder.TypeScript
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.TypeScript
 
 fun pairType(first: TypeBuilder, second: TypeBuilder) = object: TypeBuilder {
     override fun build(c: CodeBuilderContext): String {

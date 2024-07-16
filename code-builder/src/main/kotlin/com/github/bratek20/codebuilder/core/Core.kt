@@ -1,9 +1,4 @@
-package com.github.bratek20.codebuilder
-
-import com.github.bratek20.codebuilder.builders.ClassBuilder
-import com.github.bratek20.codebuilder.builders.ClassBuilderOps
-import com.github.bratek20.codebuilder.builders.FunctionBuilder
-import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
+package com.github.bratek20.codebuilder.core
 
 class CodeBuilderContext(
     val lang: CodeBuilderLanguage
@@ -12,9 +7,22 @@ class CodeBuilderContext(
 interface CodeBlockBuilder {
     fun getOperations(c: CodeBuilderContext): CodeBuilderOps
 }
+fun lineBlock(value: String) = object: CodeBlockBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        line(value)
+    }
+}
+fun emptyBlock() = object: CodeBlockBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        // do nothing
+    }
+}
 
 interface LinePartBuilder {
     fun build(c: CodeBuilderContext): String
+}
+fun linePartBlock(value: String) = object: LinePartBuilder {
+    override fun build(c: CodeBuilderContext): String = value
 }
 
 class CodeBuilder(
@@ -73,6 +81,11 @@ class CodeBuilder(
         return linePart(linePartBuilder.build(c))
     }
 
+    fun addMany(builders: List<CodeBlockBuilder>): CodeBuilder {
+        builders.forEach { add(it) }
+        return this
+    }
+
     fun tab(): CodeBuilder {
         currentIndent += 4
         linePartStarted = false
@@ -85,20 +98,6 @@ class CodeBuilder(
         return this
     }
 
-    fun addClass(block: ClassBuilderOps): CodeBuilder {
-        val clazz = ClassBuilder().apply(block)
-        return add(clazz)
-    }
-
-    fun addFunction(block: FunctionBuilderOps): CodeBuilder {
-        val function = FunctionBuilder().apply(block)
-        return add(function)
-    }
-
-    fun addFunctions(blocks: List<FunctionBuilderOps>): CodeBuilder {
-        blocks.forEach { addFunction(it) }
-        return this
-    }
 
     fun build(): String {
         return lines.joinToString("\n")

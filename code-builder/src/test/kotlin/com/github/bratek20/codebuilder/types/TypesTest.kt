@@ -1,9 +1,9 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.BaseType
-import com.github.bratek20.codebuilder.Kotlin
-import com.github.bratek20.codebuilder.TypeScript
-import com.github.bratek20.codebuilder.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.BaseType
+import com.github.bratek20.codebuilder.core.Kotlin
+import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
 class TypesTest {

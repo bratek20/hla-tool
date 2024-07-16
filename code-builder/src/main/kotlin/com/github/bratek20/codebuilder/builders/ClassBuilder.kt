@@ -1,6 +1,10 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.core.CodeBlockBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.lineBlock
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class FieldBuilder: CodeBlockBuilder {
@@ -21,7 +25,8 @@ typealias FieldBuilderOps = FieldBuilder.() -> Unit
 fun field(block: FieldBuilderOps) = FieldBuilder().apply(block)
 
 class ClassBuilder: CodeBlockBuilder {
-    var name: String = "SomeClass"
+    lateinit var name: String
+
     var implementedInterfaceName: String? = null
 
     private val body: MutableList<CodeBlockBuilder> = mutableListOf()
@@ -31,7 +36,7 @@ class ClassBuilder: CodeBlockBuilder {
     }
 
     fun comment(value: String) {
-        body.add(OneLineBlock("// $value"))
+        body.add(lineBlock("// $value"))
     }
 
     fun field(block: FieldBuilderOps) {
@@ -43,13 +48,10 @@ class ClassBuilder: CodeBlockBuilder {
 
         line("class $name${implementsPart} {")
         tab()
-        applyBodyOperations(this)
+        body.forEach { add(it) }
         untab()
         line("}")
     }
-
-    fun applyBodyOperations(b: CodeBuilder) {
-        body.forEach { b.add(it) }
-    }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit
+fun classBlock(block: ClassBuilderOps) = ClassBuilder().apply(block)

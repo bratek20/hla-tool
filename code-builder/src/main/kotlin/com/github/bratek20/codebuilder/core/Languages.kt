@@ -1,4 +1,4 @@
-package com.github.bratek20.codebuilder
+package com.github.bratek20.codebuilder.core
 
 enum class BaseType {
     INT, STRING, BOOLEAN

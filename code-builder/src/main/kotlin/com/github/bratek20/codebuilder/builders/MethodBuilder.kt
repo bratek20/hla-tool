@@ -1,22 +1,9 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.*
+import com.github.bratek20.codebuilder.core.CodeBlockBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.types.TypeBuilder
-
-fun pairFirst(variableName: String, lang: CodeBuilderLanguage): String {
-    return lang.pairFirst(variableName)
-}
-
-fun pairSecond(variableName: String, lang: CodeBuilderLanguage): String {
-    return lang.pairSecond(variableName)
-}
-
-
-
-
-
-
-
 
 class ArgumentBuilder: CodeBlockBuilder {
     lateinit var name: String
@@ -69,3 +56,4 @@ class MethodBuilder: CodeBlockBuilder {
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
+fun method(block: MethodBuilderOps) = MethodBuilder().apply(block)

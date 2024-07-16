@@ -1,8 +1,8 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.Kotlin
-import com.github.bratek20.codebuilder.TypeScript
-import com.github.bratek20.codebuilder.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.Kotlin
+import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
 class ClassBuilderTest {
@@ -11,7 +11,9 @@ class ClassBuilderTest {
     fun `empty class`() {
         testCodeBuilderOp {
             op = {
-                addClass {}
+                add(classBlock {
+                    name = "SomeClass"
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -34,10 +36,10 @@ class ClassBuilderTest {
     fun `class with empty body that implements interface`() {
         testCodeBuilderOp {
             op = {
-                addClass {
+                add(classBlock {
                     name = "SomeClass"
                     implementedInterfaceName = "SomeInterface"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -60,13 +62,13 @@ class ClassBuilderTest {
     fun `class with comment and method`() {
         testCodeBuilderOp {
             op = {
-                addClass {
+                add(classBlock {
                     name = "SomeClass"
                     comment("some comment")
                     method {
                         name = "someMethod"
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()

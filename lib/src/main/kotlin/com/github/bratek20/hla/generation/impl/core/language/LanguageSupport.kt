@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.language
 
-import com.github.bratek20.codebuilder.CodeBuilderLanguage
+import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 

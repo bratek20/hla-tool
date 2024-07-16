@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.*
 import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
+import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
