@@ -12,6 +12,11 @@ fun lineBlock(value: String) = object: CodeBlockBuilder {
         line(value)
     }
 }
+fun emptyLineBlock() = object: CodeBlockBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        emptyLine()
+    }
+}
 
 interface LinePartBuilder {
     fun build(c: CodeBuilderContext): String

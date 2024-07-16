@@ -3,6 +3,7 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.types.type
 import org.junit.jupiter.api.Test
 
 class ClassBuilderTest {
@@ -77,6 +78,36 @@ class ClassBuilderTest {
                         // some comment
                         fun someMethod() {
                         }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `class with fields split by empty line`() {
+        testCodeBuilderOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    field {
+                        name = "a"
+                        type = type("A")
+                    }
+                    emptyLine()
+                    field {
+                        name = "b"
+                        type = type("B")
+                    }
+                })
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass {
+                        val a: A
+                    
+                        val b: B
                     }
                 """
             }

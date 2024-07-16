@@ -117,4 +117,35 @@ class MethodBuilderTest {
             }
         }
     }
+
+    @Test
+    fun defaultArg() {
+        testCodeBuilderOp {
+            op = {
+                add(method {
+                    name = "defaultArg"
+                    addArg {
+                        name = "a"
+                        type = baseType(BaseType.INT)
+                        defaultValue = "5"
+                    }
+                    returnType = baseType(BaseType.INT)
+                })
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    fun defaultArg(a: Int = 5): Int {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    defaultArg(a: number = 5): number {
+                    }
+                """
+            }
+        }
+    }
 }

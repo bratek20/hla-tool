@@ -1,8 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.codebuilder.*
-import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
+import com.github.bratek20.codebuilder.builders.FunctionBuilder
+import com.github.bratek20.codebuilder.builders.function
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
@@ -28,13 +29,18 @@ class BuildersGenerator: FileGenerator() {
         }
     }
 
-    private fun externalTypeBuilder(type: TypeDefinition): FunctionBuilderOps {
+    private fun externalTypeBuilder(type: TypeDefinition): FunctionBuilder {
         val apiType = apiTypeFactory.create(type) as ExternalApiType
-        return {
+        return function {
             name = pascalToCamelCase(apiType.rawName)
-            args = listOf("value" to apiType.name() + "?") // TODO soft optional type wrap?
-            returnType = apiType.name()
-            body = OneLineBlock("return value!!") // TODO soft optional unpack?
+            addArg {
+                name = "value"
+                this.type = type(apiType.name() + "?") //TODO soft optional type wrap?
+            }
+            returnType = type(apiType.name())
+            body = {
+                line("return value!!") // TODO soft optional unpack?
+            }
         }
     }
 
@@ -58,7 +64,7 @@ class BuildersGenerator: FileGenerator() {
                 null
             else
                 CodeBuilder(lang)
-                    .addFunctions(
+                    .addMany(
                         externalTypes.map { externalTypeBuilder(it) }
                     )
                     .build()

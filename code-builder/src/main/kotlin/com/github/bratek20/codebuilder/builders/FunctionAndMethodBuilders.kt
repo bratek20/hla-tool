@@ -9,10 +9,15 @@ class ArgumentBuilder: CodeBlockBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilder
 
+    var defaultValue: String? = null
+
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
         return {
             linePart("$name: ")
             add(type)
+            defaultValue?.let {
+                linePart(" = $it")
+            }
         }
     }
 }

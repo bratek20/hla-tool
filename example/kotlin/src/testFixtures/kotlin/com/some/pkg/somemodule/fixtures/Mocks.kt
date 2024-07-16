@@ -36,7 +36,6 @@ class SomeInterface2Mock: SomeInterface2 {
         val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == "" }
         assertThat(calls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
     }
-
     // referenceLegacyType
     private val referenceLegacyTypeCalls = mutableListOf<com.some.pkg.legacy.LegacyType>()
     private val referenceLegacyTypeResponses = mutableListOf<Pair<com.some.pkg.legacy.LegacyType, com.some.pkg.legacy.LegacyType>>()
