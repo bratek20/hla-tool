@@ -4,10 +4,10 @@ namespace SomeModule {
     class SomeInterface2Mock implements SomeInterface2 {
         // referenceOtherClass
         private readonly referenceOtherClassCalls: OtherClass[] = []
-        private readonly referenceOtherClassResponses: Pair<OtherModule.ExpectedOtherClass, OtherModule.Builder.OtherClassDef>[] = []
+        private readonly referenceOtherClassResponses: [OtherModule.ExpectedOtherClass, OtherModule.Builder.OtherClassDef][] = []
 
         setReferenceOtherClassResponse(args: OtherModule.ExpectedOtherClass, response: OtherModule.Builder.OtherClassDef) {
-            referenceOtherClassResponses.add(Pair(args, response))
+            referenceOtherClassResponses.push(Pair(args, response))
         }
 
         override referenceOtherClass(other: OtherClass): OtherClass {
@@ -15,21 +15,20 @@ namespace SomeModule {
             return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == "" }?.second ?: {})
         }
 
-        assertReferenceOtherClassCalled(times: Int = 1) {
+        assertReferenceOtherClassCalled(times: number = 1) {
             assertThat(referenceOtherClassCalls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
         }
 
-        assertReferenceOtherClassCalledForArgs(args: OtherModule.ExpectedOtherClass, times: Int = 1) {
+        assertReferenceOtherClassCalledForArgs(args: OtherModule.ExpectedOtherClass, times: number = 1) {
             val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == "" }
             assertThat(calls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
         }
-
         // referenceLegacyType
         private readonly referenceLegacyTypeCalls: LegacyType[] = []
-        private readonly referenceLegacyTypeResponses: Pair<LegacyType, LegacyType>[] = []
+        private readonly referenceLegacyTypeResponses: [LegacyType, LegacyType][] = []
 
         setReferenceLegacyTypeResponse(args: LegacyType, response: LegacyType) {
-            referenceLegacyTypeResponses.add(Pair(args, response))
+            referenceLegacyTypeResponses.push(Pair(args, response))
         }
 
         override referenceLegacyType(legacyType: LegacyType): LegacyType {
@@ -37,11 +36,11 @@ namespace SomeModule {
             return legacyType(referenceLegacyTypeResponses.find { diffLegacyType(legacyType, it.first) == "" }?.second ?: null)
         }
 
-        assertReferenceLegacyTypeCalled(times: Int = 1) {
+        assertReferenceLegacyTypeCalled(times: number = 1) {
             assertThat(referenceLegacyTypeCalls.size).withFailMessage("Expected referenceLegacyType to be called $times times, but was called $referenceLegacyTypeCalls times").isEqualTo(times)
         }
 
-        assertReferenceLegacyTypeCalledForArgs(args: LegacyType, times: Int = 1) {
+        assertReferenceLegacyTypeCalledForArgs(args: LegacyType, times: number = 1) {
             val calls = referenceLegacyTypeCalls.filter { diffLegacyType(it, args) == "" }
             assertThat(calls.size).withFailMessage("Expected referenceLegacyType to be called $times times, but was called $referenceLegacyTypeCalls times").isEqualTo(times)
         }

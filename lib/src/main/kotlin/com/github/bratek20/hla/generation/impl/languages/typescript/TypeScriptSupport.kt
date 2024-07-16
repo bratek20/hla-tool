@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.languages.typescript
 
-import com.github.bratek20.codebuilder.CodeBuilderLanguage
-import com.github.bratek20.codebuilder.TypeScript
+import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
+import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext

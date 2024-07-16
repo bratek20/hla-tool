@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.languages.kotlin
 
-import com.github.bratek20.codebuilder.Kotlin
-import com.github.bratek20.codebuilder.CodeBuilderLanguage
+import com.github.bratek20.codebuilder.core.Kotlin
+import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext
