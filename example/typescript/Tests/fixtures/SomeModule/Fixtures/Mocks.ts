@@ -11,7 +11,7 @@ namespace SomeModule {
         }
 
         override referenceOtherClass(other: OtherClass): OtherClass {
-            referenceOtherClassCalls.add(other)
+            referenceOtherClassCalls.push(other)
             return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == "" }?.second ?: {})
         }
 
@@ -28,11 +28,11 @@ namespace SomeModule {
         private readonly referenceLegacyTypeResponses: [LegacyType, LegacyType][] = []
 
         setReferenceLegacyTypeResponse(args: LegacyType, response: LegacyType) {
-            referenceLegacyTypeResponses.push(Pair(args, response))
+            referenceLegacyTypeResponses.push([args, response])
         }
 
         override referenceLegacyType(legacyType: LegacyType): LegacyType {
-            referenceLegacyTypeCalls.add(legacyType)
+            referenceLegacyTypeCalls.push(legacyType)
             return legacyType(referenceLegacyTypeResponses.find { diffLegacyType(legacyType, it.first) == "" }?.second ?: null)
         }
 
