@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
-import com.github.bratek20.codebuilder.core.LinePartBuilder
-import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.*
 
 fun pairType(first: TypeBuilder, second: TypeBuilder) = object: TypeBuilder {
     override fun build(c: CodeBuilderContext): String {
@@ -11,10 +8,8 @@ fun pairType(first: TypeBuilder, second: TypeBuilder) = object: TypeBuilder {
     }
 }
 
-fun newPair(first: String, second: String) = object: LinePartBuilder {
-    override fun build(c: CodeBuilderContext): String {
-        return c.lang.newPair(first, second)
-    }
+fun CodeBuilder.newPair(first: String, second: String): CodeBuilder {
+    return linePart(c.lang.newPair(first, second))
 }
 
 class PairOperations(

@@ -48,7 +48,7 @@ class TypesTest {
                 add(pairType(type("SomeType"), baseType(BaseType.STRING)))
                 endLinePart()
 
-                add(newPair("varA", "varB"))
+                newPair("varA", "varB")
                 endLinePart()
             }
             langExpected {
@@ -131,17 +131,17 @@ class TypesTest {
     fun listOps() {
         testCodeBuilderOp {
             op = {
-                add(listOp("list").get(0))
+                listOp("list").get(0)
                 endLinePart()
 
-                add(listOp("list").add {
+                listOp("list").add {
                     variable("someVar")
-                })
+                }
                 endLinePart()
 
-                add(listOp("list").add {
+                listOp("list").add {
                     string("someString")
-                })
+                }
                 endLinePart()
             }
             langExpected {

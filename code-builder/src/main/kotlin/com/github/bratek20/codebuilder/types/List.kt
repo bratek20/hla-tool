@@ -1,5 +1,6 @@
 package com.github.bratek20.codebuilder.types
 
+import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.core.LinePartBuilder
@@ -23,19 +24,21 @@ fun emptyMutableList(): LinePartBuilder = object : LinePartBuilder {
 }
 
 class ListOperations(
+    private val b: CodeBuilder,
     private val variableName: String
 ) {
-    fun get(index: Int): CodeBuilderOps = {
-        linePart("$variableName[$index]")
+    fun get(index: Int) {
+        b.linePart("$variableName[$index]")
     }
 
-    fun add(element: CodeBuilderOps): CodeBuilderOps = {
-        linePart(this.c.lang.listAddCall(variableName))
-        linePart("(")
-        add(element)
-        linePart(")")
+    fun add(element: CodeBuilderOps) {
+        b.linePart(b.c.lang.listAddCall(variableName))
+        b.linePart("(")
+        b.add(element)
+        b.linePart(")")
     }
 }
-fun listOp(variableName: String): ListOperations {
-    return ListOperations(variableName)
+
+fun CodeBuilder.listOp(variableName: String): ListOperations {
+    return ListOperations(this, variableName)
 }
