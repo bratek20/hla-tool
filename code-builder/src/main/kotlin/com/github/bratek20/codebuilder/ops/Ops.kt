@@ -11,6 +11,17 @@ fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
     return this
 }
 
+class AssignArgs {
+    lateinit var variable: String
+    lateinit var value: CodeBuilderOps
+}
+fun CodeBuilder.assign(block: AssignArgs.()->Unit): CodeBuilder {
+    val args = AssignArgs().apply(block)
+    linePart("${args.variable} = ")
+    add(args.value)
+    return this
+}
+
 class AddOpArgs {
     lateinit var left: CodeBuilderOps
     lateinit var right: CodeBuilderOps

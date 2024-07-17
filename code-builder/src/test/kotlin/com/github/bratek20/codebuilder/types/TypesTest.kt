@@ -13,14 +13,17 @@ class TypesTest {
     fun baseTypes() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 add(baseType(BaseType.INT))
-                endLinePart()
+                lineEnd()
 
+                lineStart()
                 add(baseType(BaseType.STRING))
-                endLinePart()
+                lineEnd()
 
+                lineStart()
                 add(baseType(BaseType.BOOLEAN))
-                endLinePart()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
@@ -46,10 +49,10 @@ class TypesTest {
         testCodeBuilderOp {
             op = {
                 add(pairType(type("SomeType"), baseType(BaseType.STRING)))
-                endLinePart()
+                lineEnd()
 
                 newPair("varA", "varB")
-                endLinePart()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
@@ -73,10 +76,10 @@ class TypesTest {
         testCodeBuilderOp {
             op = {
                 add(pairOp("pair").first())
-                endLinePart()
+                lineEnd()
 
                 add(pairOp("pair").second())
-                endLinePart()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
@@ -100,13 +103,13 @@ class TypesTest {
         testCodeBuilderOp {
             op = {
                 add(listType(type("SomeType")))
-                endLinePart()
+                lineEnd()
 
                 add(mutableListType(type("SomeType")))
-                endLinePart()
+                lineEnd()
 
                 add(emptyMutableList())
-                endLinePart()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
@@ -132,17 +135,17 @@ class TypesTest {
         testCodeBuilderOp {
             op = {
                 listOp("list").get(0)
-                endLinePart()
+                lineEnd()
 
                 listOp("list").add {
                     variable("someVar")
                 }
-                endLinePart()
+                lineEnd()
 
                 listOp("list").add {
                     string("someString")
                 }
-                endLinePart()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()

@@ -56,7 +56,7 @@ abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
     protected abstract fun beforeName(c: CodeBuilderContext): String
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        linePart("${beforeName(c)}$name")
+        lineStart("${beforeName(c)}$name")
         add(args)
         returnType?.let {
             linePart(": ")

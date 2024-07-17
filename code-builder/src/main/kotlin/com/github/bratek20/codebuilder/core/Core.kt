@@ -53,16 +53,22 @@ class CodeBuilder(
         return " ".repeat(currentIndent)
     }
 
+    fun lineStart(value: String? = null): CodeBuilder {
+        linePartStarted = true
+        lines.add(indentString())
+
+        value?.let { linePart(it) }
+
+        return this
+    }
+
     fun linePart(value: String): CodeBuilder {
-        if (!linePartStarted) {
-            linePartStarted = true
-            lines.add(indentString())
-        }
         lines[lines.size - 1] += value
         return this
     }
 
-    fun endLinePart(): CodeBuilder {
+    fun lineEnd(value: String? = null): CodeBuilder {
+        value?.let { linePart(it) }
         linePartStarted = false
         return this
     }

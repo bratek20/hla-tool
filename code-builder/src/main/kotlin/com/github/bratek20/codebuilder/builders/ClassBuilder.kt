@@ -1,6 +1,5 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.*
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
@@ -16,6 +15,7 @@ class FieldBuilder: CodeBlockBuilder {
     var accessor: FieldAccessor? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        lineStart()
         accessor?.let {
             linePart("${it.name.lowercase()} ")
         }
@@ -25,7 +25,7 @@ class FieldBuilder: CodeBlockBuilder {
             linePart(" = ")
             add(it)
         }
-        endLinePart()
+        lineEnd()
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit

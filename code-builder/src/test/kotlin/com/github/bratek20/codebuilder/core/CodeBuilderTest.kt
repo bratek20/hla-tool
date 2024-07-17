@@ -14,9 +14,11 @@ class CodeBuilderTest {
 
                 emptyLine()
 
-                linePart("val")
+                lineStart("val")
                 linePart(" y")
-                linePart(" = 2")
+                lineEnd(" = 2")
+
+                line("// something")
 
                 untab()
                 line("}")
@@ -26,6 +28,7 @@ class CodeBuilderTest {
                     val x = 1
                 
                     val y = 2
+                    // something
                 }
             """
         }
@@ -48,7 +51,7 @@ class CodeBuilderTest {
 
                 add(linePartBlock("1"))
                 add(linePartBlock("2"))
-                endLinePart()
+                lineEnd()
 
                 addMany(
                     listOf("a", "b").map { lineBlock(it) }

@@ -8,35 +8,28 @@ class OpsTest {
     fun opsExamples() {
         testCodeBuilderOp {
             op = {
-                returnBlock {
-                    variable("1")
+                assign {
+                    variable = "variable"
+                    value = {
+                        plus {
+                            left = {
+                                variable("1")
+                            }
+                            right = {
+                                variable("2")
+                            }
+                        }
+                    }
                 }
-                endLinePart()
 
-                plus {
-                    left = {
-                        variable("1")
-                    }
-                    right = {
-                        variable("2")
-                    }
+                returnBlock {
+                    variable("a")
                 }
-                endLinePart()
             }
-            langExpected {
-                lang = Kotlin()
-                expected = """
-                    return 1
-                    1 + 2
-                """
-            }
-            langExpected {
-                lang = TypeScript()
-                expected = """
-                    return 1
-                    1 + 2
-                """
-            }
+            expected = """
+                variable = 1 + 2
+                return a
+            """
         }
     }
 }

@@ -7,6 +7,7 @@ import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
 import com.github.bratek20.codebuilder.core.linePartBlock
+import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -113,7 +114,9 @@ class MocksGenerator: FileGenerator() {
                         listOp(callsListName).add {
                             variable(inputArgName)
                         }
-                        line("return ${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
+                        returnBlock {
+                            linePart("${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
+                        }
                     }
                 }
                 emptyLine()
