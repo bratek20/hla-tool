@@ -11,6 +11,12 @@ fun pairType(first: TypeBuilder, second: TypeBuilder) = object: TypeBuilder {
     }
 }
 
+fun newPair(first: String, second: String) = object: LinePartBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        return c.lang.newPair(first, second)
+    }
+}
+
 class PairOperations(
     private val variableName: String
 ) {

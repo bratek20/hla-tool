@@ -7,7 +7,7 @@ namespace SomeModule {
         private readonly referenceOtherClassResponses: [OtherModule.ExpectedOtherClass, OtherModule.Builder.OtherClassDef][] = []
 
         setReferenceOtherClassResponse(args: OtherModule.ExpectedOtherClass, response: OtherModule.Builder.OtherClassDef) {
-            referenceOtherClassResponses.push(Pair(args, response))
+            referenceOtherClassResponses.push([args, response])
         }
 
         override referenceOtherClass(other: OtherClass): OtherClass {

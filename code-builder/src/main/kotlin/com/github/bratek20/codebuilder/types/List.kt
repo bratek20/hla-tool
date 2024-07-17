@@ -3,7 +3,6 @@ package com.github.bratek20.codebuilder.types
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.core.LinePartBuilder
-import com.github.bratek20.codebuilder.core.linePartBlock
 
 fun listType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder {
     override fun build(c: CodeBuilderContext): String {
@@ -30,8 +29,11 @@ class ListOperations(
         linePart("$variableName[$index]")
     }
 
-    fun add(element: String): CodeBuilderOps = {
-        linePart(this.c.lang.listAdd(variableName, element))
+    fun add(element: LinePartBuilder): CodeBuilderOps = {
+        linePart(this.c.lang.listAddCall(variableName))
+        linePart("(")
+        add(element)
+        linePart(")")
     }
 }
 fun listOp(variableName: String): ListOperations {

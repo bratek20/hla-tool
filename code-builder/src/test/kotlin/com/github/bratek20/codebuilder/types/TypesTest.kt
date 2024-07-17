@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.core.Kotlin
-import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.*
 import org.junit.jupiter.api.Test
 
 class TypesTest {
@@ -45,17 +42,22 @@ class TypesTest {
             op = {
                 add(pairType(type("SomeType"), baseType(BaseType.STRING)))
                 endLinePart()
+
+                add(newPair("varA", "varB"))
+                endLinePart()
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
                    Pair<SomeType, String>
+                   Pair(varA, varB)
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
                    [SomeType, string]
+                   [varA, varB]
                 """
             }
         }
@@ -127,7 +129,7 @@ class TypesTest {
                 add(listOp("list").get(0))
                 endLinePart()
 
-                add(listOp("list").add("\"someValue\""))
+                add(listOp("list").add(linePartBlock("\"someValue\"")))
                 endLinePart()
             }
             langExpected {
