@@ -13,13 +13,13 @@ class TypesTest {
     fun baseTypes() {
         testCodeBuilderOp {
             op = {
-                baseType(BaseType.INT)
+                add(baseType(BaseType.INT))
                 endLinePart()
 
-                baseType(BaseType.STRING)
+                add(baseType(BaseType.STRING))
                 endLinePart()
 
-                baseType(BaseType.BOOLEAN)
+                add(baseType(BaseType.BOOLEAN))
                 endLinePart()
             }
             langExpected {
