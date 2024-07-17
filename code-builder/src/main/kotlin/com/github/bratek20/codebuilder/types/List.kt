@@ -29,7 +29,7 @@ class ListOperations(
         linePart("$variableName[$index]")
     }
 
-    fun add(element: LinePartBuilder): CodeBuilderOps = {
+    fun add(element: CodeBuilderOps): CodeBuilderOps = {
         linePart(this.c.lang.listAddCall(variableName))
         linePart("(")
         add(element)

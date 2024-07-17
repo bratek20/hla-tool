@@ -3,6 +3,7 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.plus
 import com.github.bratek20.codebuilder.ops.returnBlock
+import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.baseType
 import org.junit.jupiter.api.Test
 
@@ -46,12 +47,12 @@ class FunctionBuilderTest {
                     }
                     returnType = baseType(BaseType.INT)
                     body = {
-                        add(returnBlock {
-                            add(plus {
-                                left = linePartBlock("a")
-                                right = linePartBlock("b")
-                            })
-                        })
+                        returnBlock {
+                            plus {
+                                left = { variable("a") }
+                                right = { variable("b") }
+                            }
+                        }
                     }
                 })
             }

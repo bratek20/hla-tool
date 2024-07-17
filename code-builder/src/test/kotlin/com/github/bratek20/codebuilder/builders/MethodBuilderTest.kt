@@ -3,6 +3,7 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.plus
 import com.github.bratek20.codebuilder.ops.returnBlock
+import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
@@ -50,12 +51,12 @@ class MethodBuilderTest {
                     }
                     returnType = baseType(BaseType.INT)
                     body = {
-                        add(returnBlock {
-                            add(plus {
-                                left = linePartBlock("a")
-                                right = linePartBlock("b")
-                            })
-                        })
+                        returnBlock {
+                            plus {
+                                left = { variable("a") }
+                                right = { variable("b") }
+                            }
+                        }
                     }
                 })
             }
@@ -90,12 +91,12 @@ class MethodBuilderTest {
                     }
                     returnType = baseType(BaseType.INT)
                     body = {
-                        add(returnBlock {
-                            add(plus {
-                                left = pairOp("p").first()
-                                right = pairOp("p").second()
-                            })
-                        })
+                        returnBlock {
+                            plus {
+                                left = { add(pairOp("p").first()) }
+                                right = { add(pairOp("p").second()) }
+                            }
+                        }
                     }
                 })
             }

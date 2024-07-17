@@ -1,6 +1,11 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.core.*
+import com.github.bratek20.codebuilder.core.BaseType
+import com.github.bratek20.codebuilder.core.Kotlin
+import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.ops.variable
 import org.junit.jupiter.api.Test
 
 class TypesTest {
@@ -8,13 +13,13 @@ class TypesTest {
     fun baseTypes() {
         testCodeBuilderOp {
             op = {
-                add(baseType(BaseType.INT))
+                baseType(BaseType.INT)
                 endLinePart()
 
-                add(baseType(BaseType.STRING))
+                baseType(BaseType.STRING)
                 endLinePart()
 
-                add(baseType(BaseType.BOOLEAN))
+                baseType(BaseType.BOOLEAN)
                 endLinePart()
             }
             langExpected {
@@ -129,21 +134,30 @@ class TypesTest {
                 add(listOp("list").get(0))
                 endLinePart()
 
-                add(listOp("list").add(linePartBlock("\"someValue\"")))
+                add(listOp("list").add {
+                    variable("someVar")
+                })
+                endLinePart()
+
+                add(listOp("list").add {
+                    string("someString")
+                })
                 endLinePart()
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
                    list[0]
-                   list.add("someValue")
+                   list.add(someVar)
+                   list.add("someString")
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
                    list[0]
-                   list.push("someValue")
+                   list.push(someVar)
+                   list.push("someString")
                 """
             }
         }
