@@ -115,6 +115,12 @@ class MocksGenerator: FileGenerator() {
                             variable(inputArgName)
                         }
                         returnBlock {
+//                            listOp(responsesListName).find {
+//                                it.isEqualTo {
+//                                    variable(inputArgName)
+//                                }
+//                            }
+                            //TODO methodCall, isEqualTo, support for ?., support for ?:
                             linePart("${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
                         }
                     }
