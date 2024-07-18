@@ -11,7 +11,22 @@ import com.some.pkg.typesmodule.api.*
 
 class SomeModuleWebClientConfig(val value: HttpClientConfig)
 
-class SomeInterfaceSomeCommandRequest(val id: SomeId, val amount: Int)
+class SomeInterfaceSomeCommandRequest(
+    val id: String,
+    val amount: Int
+) {
+    companion object {
+        fun create(
+            id: SomeId,
+            amount: Int
+        ): SomeInterfaceSomeCommandRequest {
+            return SomeInterfaceSomeCommandRequest(
+                id.value,
+                amount
+            )
+
+    }
+}
 class SomeInterfaceSomeQueryRequest(val query: SomeQueryInput)
 class SomeInterfaceOptMethodRequest(val optId: SomeId?)
 class SomeInterface2ReferenceOtherClassRequest(val other: OtherClass)
