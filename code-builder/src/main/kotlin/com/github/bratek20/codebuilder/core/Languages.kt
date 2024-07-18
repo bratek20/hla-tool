@@ -19,8 +19,12 @@ interface CodeBuilderLanguage {
 
     fun listType(elementType: String): String
     fun mutableListType(elementType: String): String
-    fun listAddCall(variableName: String): String
     fun emptyMutableList(): String
+    fun listAddCallName(): String
+    fun listFindBegin(): String
+    fun listFindEnd(): String
+
+    fun lambdaArrow(): String
 
     fun immutableFieldDeclaration(): String
 }
@@ -74,8 +78,20 @@ class Kotlin: CodeBuilderLanguage {
         return "MutableList<$elementType>"
     }
 
-    override fun listAddCall(variableName: String): String {
-        return "$variableName.add"
+    override fun listAddCallName(): String {
+        return "add"
+    }
+
+    override fun listFindBegin(): String {
+        return "find {"
+    }
+
+    override fun listFindEnd(): String {
+        return "}"
+    }
+
+    override fun lambdaArrow(): String {
+        return "->"
     }
 
     override fun emptyMutableList(): String {
@@ -136,8 +152,20 @@ class TypeScript: CodeBuilderLanguage {
         return "$elementType[]"
     }
 
-    override fun listAddCall(variableName: String): String {
-        return "$variableName.push"
+    override fun listAddCallName(): String {
+        return "push"
+    }
+
+    override fun listFindBegin(): String {
+        return "find("
+    }
+
+    override fun listFindEnd(): String {
+        return ")"
+    }
+
+    override fun lambdaArrow(): String {
+        return "=>"
     }
 
     override fun emptyMutableList(): String {

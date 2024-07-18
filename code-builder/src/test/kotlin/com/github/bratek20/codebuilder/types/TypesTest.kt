@@ -139,6 +139,9 @@ class TypesTest {
 
     @Test
     fun listOps() {
+        val list = emptyList<String>()
+        list.find { it -> it == "someString" }
+
         testCodeBuilderOp {
             op = {
                 lineStart()
@@ -152,6 +155,12 @@ class TypesTest {
                 listOp("list").add {
                     string("someString")
                 }
+
+                listOp("list").find {
+                    it {
+                        isEqualsTo { variable("other") }
+                    }
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -159,6 +168,7 @@ class TypesTest {
                    list[0]
                    list.add(someVar)
                    list.add("someString")
+                   list.find { it -> it == other }
                 """
             }
             langExpected {
@@ -167,6 +177,7 @@ class TypesTest {
                    list[0]
                    list.push(someVar)
                    list.push("someString")
+                   list.find( it => it == other )
                 """
             }
         }

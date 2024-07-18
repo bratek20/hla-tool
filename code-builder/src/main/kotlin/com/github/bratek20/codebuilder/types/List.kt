@@ -23,19 +23,41 @@ fun emptyMutableList(): LinePartBuilder = object : LinePartBuilder {
     }
 }
 
+class ItBuilder(
+    private val b: CodeBuilder
+) {
+    fun it(ops: CodeBuilderOps) {
+        b.add(ops)
+    }
+
+    fun isEqualsTo(other: CodeBuilderOps) {
+        b.linePart("it == ")
+        b.add(other)
+    }
+}
+typealias ItOps = ItBuilder.() -> Unit
+
 class ListOperations(
     private val b: CodeBuilder,
     private val variableName: String
 ) {
+    private val lang = b.c.lang
+
     fun get(index: Int) {
         b.linePart("$variableName[$index]")
     }
 
     fun add(element: CodeBuilderOps) {
-        b.lineStart(b.c.lang.listAddCall(variableName))
+        b.lineStart("${variableName}." + lang.listAddCallName())
         b.linePart("(")
         b.add(element)
         b.lineEnd(")")
+    }
+
+    fun find(predicate: ItOps) {
+        b.lineStart("${variableName}.${lang.listFindBegin()} it ${lang.lambdaArrow()} ")
+        ItBuilder(b).apply(predicate)
+        b.lineEnd(" " + b.c.lang.listFindEnd())
     }
 }
 
