@@ -29,7 +29,7 @@ class SomeInterfaceController(
     @PostMapping("/someCommand")
     fun someCommand(@RequestBody rawRequest: Struct): Unit {
         val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeCommandRequest::class.java)
-        api.someCommand(request.id, request.amount)
+        api.someCommand(request.getId(), request.getAmount())
     }
 
     @PostMapping("/someQuery")

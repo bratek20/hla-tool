@@ -12,9 +12,17 @@ import com.some.pkg.typesmodule.api.*
 class SomeModuleWebClientConfig(val value: HttpClientConfig)
 
 class SomeInterfaceSomeCommandRequest(
-    val id: String,
-    val amount: Int
+    private val id: String,
+    private val amount: Int
 ) {
+    fun getId(): SomeId {
+        return SomeId(id)
+    }
+
+    fun getAmount(): Int {
+        return amount
+    }
+
     companion object {
         fun create(
             id: SomeId,
@@ -24,6 +32,7 @@ class SomeInterfaceSomeCommandRequest(
                 id.value,
                 amount
             )
+        }
 
     }
 }

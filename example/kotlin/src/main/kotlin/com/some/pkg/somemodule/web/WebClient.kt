@@ -20,7 +20,7 @@ class SomeInterfaceWebClient(
     }
 
     override fun someCommand(id: SomeId, amount: Int): Unit {
-        client.post("/someInterface/someCommand", SomeInterfaceSomeCommandRequest(id, amount))
+        client.post("/someInterface/someCommand", SomeInterfaceSomeCommandRequest.create(id, amount))
     }
 
     override fun someQuery(query: SomeQueryInput): SomeClass {
