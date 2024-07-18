@@ -12,7 +12,7 @@ namespace SomeModule {
 
         override referenceOtherClass(other: OtherClass): OtherClass {
             referenceOtherClassCalls.push(other)
-            return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == "" }?.second ?: {})
+            return otherClass(referenceOtherClassResponses.find( it => diffOtherClass(other, it[0]) == "" )?.[1] ?? {})
         }
 
         assertReferenceOtherClassCalled(times: number = 1) {
