@@ -34,6 +34,31 @@ class CodeBuilderTest {
         }
     }
 
+    @Test
+    fun `should throw exceptions when line manipulation used badly`() {
+        testCodeBuilderOpException {
+            op = {
+                linePart("x")
+            }
+            expectedMessage = "linePart() without lineStart() is not allowed"
+        }
+
+        testCodeBuilderOpException {
+            op = {
+                lineStart()
+                lineStart()
+            }
+            expectedMessage = "lineStart() already called"
+        }
+
+        testCodeBuilderOpException {
+            op = {
+                lineEnd()
+            }
+            expectedMessage = "lineEnd() without lineStart() is not allowed"
+        }
+    }
+
     private fun codeBlockBuilderLangNamePrinter(): CodeBlockBuilder = object: CodeBlockBuilder {
         override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
             line(c.lang.name())
@@ -49,6 +74,7 @@ class CodeBuilderTest {
                 }
                 add(codeBlockBuilderLangNamePrinter())
 
+                lineStart()
                 add(linePartBlock("1"))
                 add(linePartBlock("2"))
                 lineEnd()

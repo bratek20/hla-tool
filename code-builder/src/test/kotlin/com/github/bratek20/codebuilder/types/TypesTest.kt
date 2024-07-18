@@ -48,9 +48,11 @@ class TypesTest {
     fun pairType() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 add(pairType(type("SomeType"), baseType(BaseType.STRING)))
                 lineEnd()
 
+                lineStart()
                 newPair("varA", "varB")
                 lineEnd()
             }
@@ -75,9 +77,11 @@ class TypesTest {
     fun pairOps() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 add(pairOp("pair").first())
                 lineEnd()
 
+                lineStart()
                 add(pairOp("pair").second())
                 lineEnd()
             }
@@ -102,12 +106,15 @@ class TypesTest {
     fun listType() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 add(listType(type("SomeType")))
                 lineEnd()
 
+                lineStart()
                 add(mutableListType(type("SomeType")))
                 lineEnd()
 
+                lineStart()
                 add(emptyMutableList())
                 lineEnd()
             }
@@ -134,14 +141,17 @@ class TypesTest {
     fun listOps() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 listOp("list").get(0)
                 lineEnd()
 
+                lineStart()
                 listOp("list").add {
                     variable("someVar")
                 }
                 lineEnd()
 
+                lineStart()
                 listOp("list").add {
                     string("someString")
                 }

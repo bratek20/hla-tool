@@ -25,6 +25,8 @@ fun linePartBlock(value: String) = object: LinePartBuilder {
     override fun build(c: CodeBuilderContext): String = value
 }
 
+class CodeBuilderException(message: String): Exception(message)
+
 class CodeBuilder(
     lang: CodeBuilderLanguage,
     indent: Int = 0
@@ -33,7 +35,7 @@ class CodeBuilder(
     private val lines = mutableListOf<String>()
 
     private var currentIndent = indent
-    private var linePartStarted = false
+    private var linePartModification = false
 
     fun line(value: String): CodeBuilder {
         return addFullLine("${indentString()}$value")
@@ -45,7 +47,7 @@ class CodeBuilder(
 
     private fun addFullLine(value: String): CodeBuilder {
         lines.add(value)
-        linePartStarted = false
+        linePartModification = false
         return this
     }
 
@@ -54,7 +56,11 @@ class CodeBuilder(
     }
 
     fun lineStart(value: String? = null): CodeBuilder {
-        linePartStarted = true
+        if (linePartModification) {
+            throw CodeBuilderException("lineStart() already called")
+        }
+
+        linePartModification = true
         lines.add(indentString())
 
         value?.let { linePart(it) }
@@ -63,14 +69,24 @@ class CodeBuilder(
     }
 
     fun linePart(value: String): CodeBuilder {
+        throwIfLineNotStarted("linePart()")
+
         lines[lines.size - 1] += value
         return this
     }
 
     fun lineEnd(value: String? = null): CodeBuilder {
+        throwIfLineNotStarted("lineEnd()")
+
         value?.let { linePart(it) }
-        linePartStarted = false
+        linePartModification = false
         return this
+    }
+
+    private fun throwIfLineNotStarted(name: String) {
+        if (!linePartModification) {
+            throw CodeBuilderException("$name without lineStart() is not allowed")
+        }
     }
 
     fun add(block: CodeBlockBuilder): CodeBuilder {
@@ -94,13 +110,13 @@ class CodeBuilder(
 
     fun tab(): CodeBuilder {
         currentIndent += 4
-        linePartStarted = false
+        linePartModification = false
         return this
     }
 
     fun untab(): CodeBuilder {
         currentIndent -= 4
-        linePartStarted = false
+        linePartModification = false
         return this
     }
 

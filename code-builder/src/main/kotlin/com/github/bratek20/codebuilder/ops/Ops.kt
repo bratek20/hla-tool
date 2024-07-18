@@ -6,8 +6,9 @@ import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.core.LinePartBuilder
 
 fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
-    linePart("return ")
+    lineStart("return ")
     add(block)
+    lineEnd()
     return this
 }
 
@@ -17,8 +18,9 @@ class AssignArgs {
 }
 fun CodeBuilder.assign(block: AssignArgs.()->Unit): CodeBuilder {
     val args = AssignArgs().apply(block)
-    linePart("${args.variable} = ")
+    lineStart("${args.variable} = ")
     add(args.value)
+    lineEnd()
     return this
 }
 
