@@ -154,7 +154,7 @@ class WebServerGenerator: FileGenerator() {
         val firstLine = if (method.hasArgs()) "val request = serializer.fromStruct(rawRequest, ${requestName(interfaceName, method)}::class.java)" else "// no request needed"
 
         val prefix = if (method.returnType != "Unit") "return serializer.asStruct(${responseName(interfaceName, method)}(" else ""
-        val apiCall = "api.${method.name}(${method.argsPassWithPrefix("request.")})"
+        val apiCall = "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
         val suffix = if (method.returnType != "Unit") "))" else ""
         val secondLine = "${prefix}${apiCall}${suffix}"
 

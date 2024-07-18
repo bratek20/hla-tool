@@ -35,13 +35,13 @@ class SomeInterfaceController(
     @PostMapping("/someQuery")
     fun someQuery(@RequestBody rawRequest: Struct): Struct {
         val request = serializer.fromStruct(rawRequest, SomeInterfaceSomeQueryRequest::class.java)
-        return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.query)))
+        return serializer.asStruct(SomeInterfaceSomeQueryResponse(api.someQuery(request.getQuery())))
     }
 
     @PostMapping("/optMethod")
     fun optMethod(@RequestBody rawRequest: Struct): Struct {
         val request = serializer.fromStruct(rawRequest, SomeInterfaceOptMethodRequest::class.java)
-        return serializer.asStruct(SomeInterfaceOptMethodResponse(api.optMethod(request.optId)))
+        return serializer.asStruct(SomeInterfaceOptMethodResponse(api.optMethod(request.getOptId())))
     }
 }
 
@@ -55,13 +55,13 @@ class SomeInterface2Controller(
     @PostMapping("/referenceOtherClass")
     fun referenceOtherClass(@RequestBody rawRequest: Struct): Struct {
         val request = serializer.fromStruct(rawRequest, SomeInterface2ReferenceOtherClassRequest::class.java)
-        return serializer.asStruct(SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.other)))
+        return serializer.asStruct(SomeInterface2ReferenceOtherClassResponse(api.referenceOtherClass(request.getOther())))
     }
 
     @PostMapping("/referenceLegacyType")
     fun referenceLegacyType(@RequestBody rawRequest: Struct): Struct {
         val request = serializer.fromStruct(rawRequest, SomeInterface2ReferenceLegacyTypeRequest::class.java)
-        return serializer.asStruct(SomeInterface2ReferenceLegacyTypeResponse(api.referenceLegacyType(request.legacyType)))
+        return serializer.asStruct(SomeInterface2ReferenceLegacyTypeResponse(api.referenceLegacyType(request.getLegacyType())))
     }
 }
 

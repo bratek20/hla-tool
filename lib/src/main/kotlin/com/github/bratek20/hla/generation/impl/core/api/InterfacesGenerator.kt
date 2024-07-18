@@ -4,6 +4,7 @@ import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.utils.camelToPascalCase
 
 data class ArgumentView(
     val name: String,
@@ -43,6 +44,14 @@ data class MethodView(
 
     fun argsPassWithPrefix(prefix: String): String {
         return args.joinToString(", ") { prefix + it.name }
+    }
+
+    //TODO remove when complex structure for web requests is added
+    private fun hackedGetter(name: String): String {
+        return "get" + camelToPascalCase(name) + "()"
+    }
+    fun argsGetPassWithPrefix(prefix: String): String {
+        return args.joinToString(", ") { prefix + hackedGetter(it.name) }
     }
 }
 
