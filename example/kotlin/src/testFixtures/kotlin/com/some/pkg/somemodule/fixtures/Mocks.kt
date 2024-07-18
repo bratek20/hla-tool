@@ -16,8 +16,8 @@ import com.some.pkg.somemodule.api.*
 
 class SomeInterface2Mock: SomeInterface2 {
     // referenceOtherClass
-    private val referenceOtherClassCalls = mutableListOf<OtherClass>()
-    private val referenceOtherClassResponses = mutableListOf<Pair<(ExpectedOtherClass.() -> Unit), (OtherClassDef.() -> Unit)>>()
+    private val referenceOtherClassCalls: MutableList<OtherClass> = mutableListOf()
+    private val referenceOtherClassResponses: MutableList<Pair<(ExpectedOtherClass.() -> Unit), (OtherClassDef.() -> Unit)>> = mutableListOf()
 
     fun setReferenceOtherClassResponse(args: (ExpectedOtherClass.() -> Unit), response: (OtherClassDef.() -> Unit)) {
         referenceOtherClassResponses.add(Pair(args, response))
@@ -36,10 +36,9 @@ class SomeInterface2Mock: SomeInterface2 {
         val calls = referenceOtherClassCalls.filter { diffOtherClass(it, args) == "" }
         assertThat(calls.size).withFailMessage("Expected referenceOtherClass to be called $times times, but was called $referenceOtherClassCalls times").isEqualTo(times)
     }
-
     // referenceLegacyType
-    private val referenceLegacyTypeCalls = mutableListOf<com.some.pkg.legacy.LegacyType>()
-    private val referenceLegacyTypeResponses = mutableListOf<Pair<com.some.pkg.legacy.LegacyType, com.some.pkg.legacy.LegacyType>>()
+    private val referenceLegacyTypeCalls: MutableList<com.some.pkg.legacy.LegacyType> = mutableListOf()
+    private val referenceLegacyTypeResponses: MutableList<Pair<com.some.pkg.legacy.LegacyType, com.some.pkg.legacy.LegacyType>> = mutableListOf()
 
     fun setReferenceLegacyTypeResponse(args: com.some.pkg.legacy.LegacyType, response: com.some.pkg.legacy.LegacyType) {
         referenceLegacyTypeResponses.add(Pair(args, response))

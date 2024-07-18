@@ -7,7 +7,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.GenerateResult
 
 fun shouldHandleDebug(profile: HlaProfile, moduleName: String): Boolean {
-    return profile.getLanguage() == ModuleLanguage.KOTLIN && moduleName.equals("SomeModule", ignoreCase = true)
+    return profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && moduleName.equals("SomeModule", ignoreCase = true)
 }
 
 fun handleDebug(generateResult: GenerateResult) {
