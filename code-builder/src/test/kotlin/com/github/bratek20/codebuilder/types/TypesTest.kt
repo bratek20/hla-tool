@@ -157,8 +157,8 @@ class TypesTest {
                 }
 
                 listOp("list").find {
-                    it {
-                        isEqualsTo { variable("other") }
+                    it.isEqualTo {
+                        variable("other")
                     }
                 }
             }

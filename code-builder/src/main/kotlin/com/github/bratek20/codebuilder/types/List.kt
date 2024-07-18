@@ -23,19 +23,21 @@ fun emptyMutableList(): LinePartBuilder = object : LinePartBuilder {
     }
 }
 
+class ItAccessor(
+    b: CodeBuilder
+) {
+    val it = ItBuilder(b)
+}
+typealias ItAccessorOps = ItAccessor.() -> Unit
+
 class ItBuilder(
     private val b: CodeBuilder
 ) {
-    fun it(ops: CodeBuilderOps) {
-        b.add(ops)
-    }
-
-    fun isEqualsTo(other: CodeBuilderOps) {
+    fun isEqualTo(other: CodeBuilderOps) {
         b.linePart("it == ")
         b.add(other)
     }
 }
-typealias ItOps = ItBuilder.() -> Unit
 
 class ListOperations(
     private val b: CodeBuilder,
@@ -54,9 +56,11 @@ class ListOperations(
         b.lineEnd(")")
     }
 
-    fun find(predicate: ItOps) {
+    fun find(predicate: ItAccessorOps) {
+        val itAccessor = ItAccessor(b)
+
         b.lineStart("${variableName}.${lang.listFindBegin()} it ${lang.lambdaArrow()} ")
-        ItBuilder(b).apply(predicate)
+        itAccessor.apply(predicate)
         b.lineEnd(" " + b.c.lang.listFindEnd())
     }
 }
