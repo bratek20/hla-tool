@@ -145,17 +145,13 @@ class TypesTest {
                 listOp("list").get(0)
                 lineEnd()
 
-                lineStart()
                 listOp("list").add {
                     variable("someVar")
                 }
-                lineEnd()
 
-                lineStart()
                 listOp("list").add {
                     string("someString")
                 }
-                lineEnd()
             }
             langExpected {
                 lang = Kotlin()

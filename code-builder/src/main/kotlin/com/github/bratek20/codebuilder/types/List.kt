@@ -32,10 +32,10 @@ class ListOperations(
     }
 
     fun add(element: CodeBuilderOps) {
-        b.linePart(b.c.lang.listAddCall(variableName))
+        b.lineStart(b.c.lang.listAddCall(variableName))
         b.linePart("(")
         b.add(element)
-        b.linePart(")")
+        b.lineEnd(")")
     }
 }
 
