@@ -24,11 +24,11 @@ class SomeInterfaceWebClient(
     }
 
     override fun someQuery(query: SomeQueryInput): SomeClass {
-        return client.post("/someInterface/someQuery", SomeInterfaceSomeQueryRequest(query)).getBody(SomeInterfaceSomeQueryResponse::class.java).value
+        return client.post("/someInterface/someQuery", SomeInterfaceSomeQueryRequest.create(query)).getBody(SomeInterfaceSomeQueryResponse::class.java).value
     }
 
     override fun optMethod(optId: SomeId?): SomeClass? {
-        return client.post("/someInterface/optMethod", SomeInterfaceOptMethodRequest(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).value
+        return client.post("/someInterface/optMethod", SomeInterfaceOptMethodRequest.create(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).value
     }
 }
 
@@ -39,11 +39,11 @@ class SomeInterface2WebClient(
     private val client = factory.create(config.value)
 
     override fun referenceOtherClass(other: OtherClass): OtherClass {
-        return client.post("/someInterface2/referenceOtherClass", SomeInterface2ReferenceOtherClassRequest(other)).getBody(SomeInterface2ReferenceOtherClassResponse::class.java).value
+        return client.post("/someInterface2/referenceOtherClass", SomeInterface2ReferenceOtherClassRequest.create(other)).getBody(SomeInterface2ReferenceOtherClassResponse::class.java).value
     }
 
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
-        return client.post("/someInterface2/referenceLegacyType", SomeInterface2ReferenceLegacyTypeRequest(legacyType)).getBody(SomeInterface2ReferenceLegacyTypeResponse::class.java).value
+        return client.post("/someInterface2/referenceLegacyType", SomeInterface2ReferenceLegacyTypeRequest.create(legacyType)).getBody(SomeInterface2ReferenceLegacyTypeResponse::class.java).value
     }
 }
 

@@ -99,7 +99,7 @@ class WebClientGenerator: FileGenerator() {
 
         val postUrl = "\"/${pascalToCamelCase(interfaceName)}/${method.name}\""
         val postBody = if(method.hasArgs())
-                "${requestName(interfaceName, method)}(${method.argsPass()})"
+                "${requestName(interfaceName, method)}.create(${method.argsPass()})"
             else
                 "null"
 
