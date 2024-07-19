@@ -80,11 +80,11 @@ class TypesTest {
         testCodeBuilderOp {
             op = {
                 lineStart()
-                add(pairOp("pair").first())
+                pairOp("pair").first()
                 lineEnd()
 
                 lineStart()
-                add(pairOp("pair").second())
+                pairOp("pair").second()
                 lineEnd()
             }
             langExpected {

@@ -112,7 +112,7 @@ class MocksGenerator: FileGenerator() {
                             variable(inputArgName)
                         }
                         assign {
-                            variable = "response"
+                            variable = "val findResult" // TODO variable should handle val
                             value = {
                                 listOp(responsesListName).find {
                                     isEqualTo {
@@ -130,7 +130,7 @@ class MocksGenerator: FileGenerator() {
                         }
                         returnBlock {
                             //TODO support for ?., support for ?:
-                            linePart("result?.second ?: $emptyDef)")
+                            linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")
                         }
                     }
                 }

@@ -167,8 +167,8 @@ class MethodAndFunctionBuilderTest {
                     body = {
                         returnBlock {
                             plus {
-                                left = { add(pairOp("p").first()) }
-                                right = { add(pairOp("p").second()) }
+                                left = { pairOp("p").first() }
+                                right = { pairOp("p").second() }
                             }
                         }
                     }

@@ -13,21 +13,18 @@ fun CodeBuilder.newPair(first: String, second: String): CodeBuilder {
 }
 
 class PairOperations(
+    private val b: CodeBuilder,
     private val variableName: String
 ) {
-    fun first(): LinePartBuilder = object: LinePartBuilder {
-        override fun build(c: CodeBuilderContext): String {
-            return c.lang.pairFirst(variableName)
-        }
+    fun first() {
+        b.linePart(b.c.lang.pairFirst(variableName))
     }
 
-    fun second(): LinePartBuilder = object: LinePartBuilder {
-        override fun build(c: CodeBuilderContext): String {
-            return c.lang.pairSecond(variableName)
-        }
+    fun second() {
+        b.linePart(b.c.lang.pairSecond(variableName))
     }
 }
 
-fun pairOp(variableName: String): PairOperations {
-    return PairOperations(variableName)
+fun CodeBuilder.pairOp(variableName: String): PairOperations {
+    return PairOperations(this, variableName)
 }
