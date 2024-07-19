@@ -158,12 +158,14 @@ class TypesTest {
                     string("someString")
                 }
 
+                lineStart()
                 listOp("list").find {
                     it.isEqualTo {
                         variable("other")
                     }
                 }
 
+                lineStart()
                 listOp("list").map {
                     plus {
                         left = { variable(it.name) }

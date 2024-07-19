@@ -57,7 +57,8 @@ class CodeBuilder(
 
     fun lineStart(value: String? = null): CodeBuilder {
         if (linePartModification) {
-            throw CodeBuilderException("lineStart() already called")
+            val msg = "Line start failed for `${value ?: ""}` - line already started! Previous full line: `${previousPreviousLine()}`, already started line: `${previousLine()}`"
+            throw CodeBuilderException(msg)
         }
 
         linePartModification = true
@@ -66,6 +67,22 @@ class CodeBuilder(
         value?.let { linePart(it) }
 
         return this
+    }
+
+    private fun previousPreviousLine(): String {
+        return if (lines.size < 2) {
+            ""
+        } else {
+            lines[lines.size - 2]
+        }
+    }
+
+    private fun previousLine(): String {
+        return if (lines.isEmpty()) {
+            ""
+        } else {
+            lines[lines.size - 1]
+        }
     }
 
     fun linePart(value: String): CodeBuilder {
@@ -85,7 +102,7 @@ class CodeBuilder(
 
     private fun throwIfLineNotStarted(name: String) {
         if (!linePartModification) {
-            throw CodeBuilderException("$name without lineStart() is not allowed")
+            throw CodeBuilderException("$name without lineStart() is not allowed, previous line: ${previousLine()}")
         }
     }
 

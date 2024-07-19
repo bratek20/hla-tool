@@ -93,6 +93,7 @@ class FunctionBuilder: MethodOrFunctionBuilder() {
     }
 }
 typealias FunctionBuilderOps = FunctionBuilder.() -> Unit
+fun function(block: FunctionBuilderOps) = FunctionBuilder().apply(block)
 fun CodeBuilder.function(block: FunctionBuilderOps): CodeBuilder {
     add(FunctionBuilder().apply(block))
     return this

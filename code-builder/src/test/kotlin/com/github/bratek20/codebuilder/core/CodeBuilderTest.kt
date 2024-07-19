@@ -38,24 +38,26 @@ class CodeBuilderTest {
     fun `should throw exceptions when line manipulation used badly`() {
         testCodeBuilderOpException {
             op = {
+                line("First line")
                 linePart("x")
             }
-            expectedMessage = "linePart() without lineStart() is not allowed"
+            expectedMessage = "linePart() without lineStart() is not allowed, previous line: First line"
         }
 
         testCodeBuilderOpException {
             op = {
-                lineStart()
-                lineStart()
+                line("First line")
+                lineStart("a")
+                lineStart("b")
             }
-            expectedMessage = "lineStart() already called"
+            expectedMessage = "Line start failed for `b` - line already started! Previous full line: `First line`, already started line: `a`"
         }
 
         testCodeBuilderOpException {
             op = {
                 lineEnd()
             }
-            expectedMessage = "lineEnd() without lineStart() is not allowed"
+            expectedMessage = "lineEnd() without lineStart() is not allowed, previous line: "
         }
     }
 

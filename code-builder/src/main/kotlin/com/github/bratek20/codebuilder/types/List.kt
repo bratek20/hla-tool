@@ -61,7 +61,7 @@ class ListOperations(
     fun find(predicate: ItOperationsOps) {
         val itOperations = ItOperations(b)
 
-        b.lineStart("${variableName}.${lang.listFindBegin()} it ${lang.lambdaArrow()} ")
+        b.linePart("${variableName}.${lang.listFindBegin()} it ${lang.lambdaArrow()} ")
         itOperations.apply(predicate)
         b.lineEnd(" " + b.c.lang.listFindEnd())
     }
@@ -69,7 +69,7 @@ class ListOperations(
     fun map(predicate: ItOperationsOps) {
         val itOperations = ItOperations(b)
 
-        b.lineStart("${variableName}.${lang.listMapBegin()} it ${lang.lambdaArrow()} ")
+        b.linePart("${variableName}.${lang.listMapBegin()} it ${lang.lambdaArrow()} ")
         itOperations.apply(predicate)
         b.lineEnd(" " + b.c.lang.listMapEnd())
     }
