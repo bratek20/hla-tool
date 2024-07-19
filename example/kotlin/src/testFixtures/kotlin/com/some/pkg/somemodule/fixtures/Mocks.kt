@@ -25,7 +25,8 @@ class SomeInterface2Mock: SomeInterface2 {
 
     override fun referenceOtherClass(other: OtherClass): OtherClass {
         referenceOtherClassCalls.add(other)
-        return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == "" }?.second ?: {})
+        val findResult = referenceOtherClassResponses.find { it -> diffOtherClass(other, it.first) == "" }
+        return otherClass(findResult?.second ?: {})
     }
 
     fun assertReferenceOtherClassCalled(times: Int = 1) {
@@ -46,7 +47,8 @@ class SomeInterface2Mock: SomeInterface2 {
 
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
         referenceLegacyTypeCalls.add(legacyType)
-        return legacyType(referenceLegacyTypeResponses.find { diffLegacyType(legacyType, it.first) == "" }?.second ?: null)
+        val findResult = referenceLegacyTypeResponses.find { it -> diffLegacyType(legacyType, it.first) == "" }
+        return legacyType(findResult?.second ?: null)
     }
 
     fun assertReferenceLegacyTypeCalled(times: Int = 1) {

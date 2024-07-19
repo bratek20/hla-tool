@@ -1,21 +1,20 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.plus
-import com.github.bratek20.codebuilder.ops.returnBlock
+import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
 import org.junit.jupiter.api.Test
 
-class MethodBuilderTest {
+class MethodAndFunctionBuilderTest {
     @Test
     fun `empty method`() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                method {
                     name = "someMethod"
-                })
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -35,10 +34,33 @@ class MethodBuilderTest {
     }
 
     @Test
-    fun `sum method`() {
+    fun `empty function`() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                function { name = "someFunction" }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    fun someFunction() {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    function someFunction() {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `sum method with calls`() {
+        testCodeBuilderOp {
+            op = {
+                method {
                     name = "sum"
                     addArg {
                         name = "a"
@@ -50,14 +72,63 @@ class MethodBuilderTest {
                     }
                     returnType = baseType(BaseType.INT)
                     body = {
-                        add(returnBlock {
-                            add(plus {
-                                left = linePartBlock("a")
-                                right = linePartBlock("b")
-                            })
-                        })
+                        returnBlock {
+                            plus {
+                                left = { variable("a") }
+                                right = { variable("b") }
+                            }
+                        }
                     }
-                })
+                }
+                assign {
+                    variable = "result"
+                    value = {
+                        methodCall {
+                            variableName = "this"
+                            methodName = "sum"
+
+                            addArg {
+                                const("1")
+                            }
+                            addArg {
+                                const("2")
+                            }
+                        }
+                    }
+                }
+                assign {
+                    variable = "sumOfSum"
+                    value = {
+                        plus {
+                            left = {
+                                methodCall {
+                                    variableName = "left"
+                                    methodName = "sum"
+
+                                    addArg {
+                                        const("1")
+                                    }
+                                    addArg {
+                                        const("2")
+                                    }
+                                }
+                            }
+                            right = {
+                                methodCall {
+                                    variableName = "right"
+                                    methodName = "sum"
+
+                                    addArg {
+                                        const("3")
+                                    }
+                                    addArg {
+                                        const("4")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -65,6 +136,8 @@ class MethodBuilderTest {
                     fun sum(a: Int, b: Int): Int {
                         return a + b
                     }
+                    result = this.sum(1, 2)
+                    sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }
             langExpected {
@@ -73,6 +146,8 @@ class MethodBuilderTest {
                     sum(a: number, b: number): number {
                         return a + b
                     }
+                    result = this.sum(1, 2)
+                    sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }
         }
@@ -82,7 +157,7 @@ class MethodBuilderTest {
     fun `pair arg`() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                method {
                     name = "sumPair"
                     addArg {
                         name = "p"
@@ -90,14 +165,14 @@ class MethodBuilderTest {
                     }
                     returnType = baseType(BaseType.INT)
                     body = {
-                        add(returnBlock {
-                            add(plus {
-                                left = pairOp("p").first()
-                                right = pairOp("p").second()
-                            })
-                        })
+                        returnBlock {
+                            plus {
+                                left = { pairOp("p").first() }
+                                right = { pairOp("p").second() }
+                            }
+                        }
                     }
-                })
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -122,7 +197,7 @@ class MethodBuilderTest {
     fun defaultArg() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                method {
                     name = "defaultArg"
                     addArg {
                         name = "a"
@@ -130,7 +205,7 @@ class MethodBuilderTest {
                         defaultValue = "5"
                     }
                     returnType = baseType(BaseType.INT)
-                })
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -148,4 +223,8 @@ class MethodBuilderTest {
             }
         }
     }
+
+
+
+
 }
