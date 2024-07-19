@@ -55,7 +55,7 @@ class ListOperations(
         b.lineStart("${variableName}." + lang.listAddCallName())
         b.linePart("(")
         b.add(element)
-        b.lineEnd(")")
+        b.lineSoftEnd(")")
     }
 
     fun find(predicate: ItOperationsOps) {
@@ -63,7 +63,7 @@ class ListOperations(
 
         b.linePart("${variableName}.${lang.listFindBegin()} it ${lang.lambdaArrow()} ")
         itOperations.apply(predicate)
-        b.lineEnd(" " + b.c.lang.listFindEnd())
+        b.lineSoftEnd(" " + b.c.lang.listFindEnd())
     }
 
     fun map(predicate: ItOperationsOps) {
@@ -71,7 +71,7 @@ class ListOperations(
 
         b.linePart("${variableName}.${lang.listMapBegin()} it ${lang.lambdaArrow()} ")
         itOperations.apply(predicate)
-        b.lineEnd(" " + b.c.lang.listMapEnd())
+        b.lineSoftEnd(" " + b.c.lang.listMapEnd())
     }
 }
 

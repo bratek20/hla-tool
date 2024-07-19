@@ -109,9 +109,8 @@ abstract class MethodOrFunctionCallBuilder: CodeBlockBuilder {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart()
+        lineSoftStart(beforeName())
 
-        linePart(beforeName())
         linePart("${getCallName()}(")
         args.forEachIndexed { index, arg ->
             add(arg)
@@ -119,9 +118,7 @@ abstract class MethodOrFunctionCallBuilder: CodeBlockBuilder {
                 linePart(", ")
             }
         }
-        linePart(")")
-
-        lineEnd()
+        lineSoftEnd(")")
     }
 }
 

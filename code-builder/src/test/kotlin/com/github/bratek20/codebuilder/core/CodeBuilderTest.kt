@@ -35,13 +35,53 @@ class CodeBuilderTest {
     }
 
     @Test
+    fun `lineSoftStart() - can start line but can also be used for started line`() {
+        testCodeBuilderOp {
+            op = {
+                lineSoftStart("a")
+                lineEnd()
+
+                lineStart("1")
+                linePart("2")
+                lineSoftStart()
+                lineSoftStart("3")
+                lineEnd()
+            }
+            expected = """
+                a
+                123
+            """
+        }
+    }
+
+    @Test
+    fun `lineSoftEnd() - allows for new line start but does not end line instantly`() {
+        testCodeBuilderOp {
+            op = {
+                lineStart("a")
+                lineSoftEnd("b")
+
+                lineStart("1")
+                lineSoftEnd("2")
+                linePart("3")
+                lineSoftEnd()
+                lineEnd("4")
+            }
+            expected = """
+                ab
+                1234
+            """
+        }
+    }
+
+    @Test
     fun `should throw exceptions when line manipulation used badly`() {
         testCodeBuilderOpException {
             op = {
                 line("First line")
                 linePart("x")
             }
-            expectedMessage = "linePart() without lineStart() is not allowed, previous line: First line"
+            expectedMessage = "linePart(\"x\") failed - line not started! Previous line: First line"
         }
 
         testCodeBuilderOpException {
@@ -50,14 +90,21 @@ class CodeBuilderTest {
                 lineStart("a")
                 lineStart("b")
             }
-            expectedMessage = "Line start failed for `b` - line already started! Previous full line: `First line`, already started line: `a`"
+            expectedMessage = "lineStart(\"b\") failed - line already started, current value: \"a\"! Previous full line: \"First line\""
         }
 
         testCodeBuilderOpException {
             op = {
-                lineEnd()
+                lineEnd("a")
             }
-            expectedMessage = "lineEnd() without lineStart() is not allowed, previous line: "
+            expectedMessage = "lineEnd(\"a\") failed - line not started! Previous line: "
+        }
+
+        testCodeBuilderOpException {
+            op = {
+                lineSoftEnd("a")
+            }
+            expectedMessage = "lineSoftEnd(\"a\") failed - line not started! Previous line: "
         }
     }
 

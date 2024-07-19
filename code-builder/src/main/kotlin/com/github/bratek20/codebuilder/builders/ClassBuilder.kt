@@ -25,7 +25,7 @@ class FieldBuilder: CodeBlockBuilder {
             linePart(" = ")
             add(it)
         }
-        lineEnd()
+        lineEnd("")
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit

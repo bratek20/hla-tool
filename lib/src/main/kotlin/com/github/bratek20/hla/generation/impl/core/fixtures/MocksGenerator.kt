@@ -115,13 +115,12 @@ class MocksGenerator: FileGenerator() {
                             variable = "response"
                             value = {
                                 listOp(responsesListName).find {
-                                    val itName = it.name
                                     isEqualTo {
                                         left = {
                                             functionCall {
                                                 name = inputDiffMethodName
                                                 addArg { variable(inputArgName) }
-                                                addArg { pairOp(itName).first() }
+                                                addArg { pairOp(it.name).first() }
                                             }
                                         }
                                         right = { string("") }

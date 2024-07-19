@@ -1,10 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.const
-import com.github.bratek20.codebuilder.ops.plus
-import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
@@ -60,7 +57,7 @@ class MethodAndFunctionBuilderTest {
     }
 
     @Test
-    fun `sum method with call`() {
+    fun `sum method with calls`() {
         testCodeBuilderOp {
             op = {
                 method {
@@ -83,15 +80,53 @@ class MethodAndFunctionBuilderTest {
                         }
                     }
                 }
-                methodCall {
-                    variableName = "this"
-                    methodName = "sum"
+                assign {
+                    variable = "result"
+                    value = {
+                        methodCall {
+                            variableName = "this"
+                            methodName = "sum"
 
-                    addArg {
-                        const("1")
+                            addArg {
+                                const("1")
+                            }
+                            addArg {
+                                const("2")
+                            }
+                        }
                     }
-                    addArg {
-                        const("2")
+                }
+                assign {
+                    variable = "sumOfSum"
+                    value = {
+                        plus {
+                            left = {
+                                methodCall {
+                                    variableName = "left"
+                                    methodName = "sum"
+
+                                    addArg {
+                                        const("1")
+                                    }
+                                    addArg {
+                                        const("2")
+                                    }
+                                }
+                            }
+                            right = {
+                                methodCall {
+                                    variableName = "right"
+                                    methodName = "sum"
+
+                                    addArg {
+                                        const("3")
+                                    }
+                                    addArg {
+                                        const("4")
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -101,7 +136,8 @@ class MethodAndFunctionBuilderTest {
                     fun sum(a: Int, b: Int): Int {
                         return a + b
                     }
-                    this.sum(1, 2)
+                    result = this.sum(1, 2)
+                    sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }
             langExpected {
@@ -110,58 +146,8 @@ class MethodAndFunctionBuilderTest {
                     sum(a: number, b: number): number {
                         return a + b
                     }
-                    this.sum(1, 2)
-                """
-            }
-        }
-    }
-
-    @Test
-    fun `sum function with call`() {
-        testCodeBuilderOp {
-            op = {
-                function {
-                    name = "sum"
-                    addArg {
-                        name = "a"
-                        type = baseType(BaseType.INT)
-                    }
-                    addArg {
-                        name = "b"
-                        type = baseType(BaseType.INT)
-                    }
-                    returnType = baseType(BaseType.INT)
-                    body = {
-                        returnBlock {
-                            plus {
-                                left = { variable("a") }
-                                right = { variable("b") }
-                            }
-                        }
-                    }
-                }
-                functionCall {
-                    name = "sum"
-                    addArg { const("1") }
-                    addArg { const("2") }
-                }
-            }
-            langExpected {
-                lang = Kotlin()
-                expected = """
-                    fun sum(a: Int, b: Int): Int {
-                        return a + b
-                    }
-                    sum(1, 2)
-                """
-            }
-            langExpected {
-                lang = TypeScript()
-                expected = """
-                    function sum(a: number, b: number): number {
-                        return a + b
-                    }
-                    sum(1, 2)
+                    result = this.sum(1, 2)
+                    sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }
         }
