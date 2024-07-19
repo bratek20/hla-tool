@@ -13,14 +13,21 @@ class OpsTest {
                     value = {
                         plus {
                             left = {
-                                variable("1")
+                                const("1")
                             }
                             right = {
-                                variable("2")
+                                const("2")
                             }
                         }
                     }
                 }
+
+                lineStart()
+                isEqualTo {
+                    left = { variable("a") }
+                    right = { variable("b") }
+                }
+                lineEnd()
 
                 returnBlock {
                     variable("a")
@@ -28,6 +35,7 @@ class OpsTest {
             }
             expected = """
                 variable = 1 + 2
+                a == b
                 return a
             """
         }

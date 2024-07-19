@@ -23,6 +23,8 @@ interface CodeBuilderLanguage {
     fun listAddCallName(): String
     fun listFindBegin(): String
     fun listFindEnd(): String
+    fun listMapBegin(): String
+    fun listMapEnd(): String
 
     fun lambdaArrow(): String
 
@@ -87,6 +89,14 @@ class Kotlin: CodeBuilderLanguage {
     }
 
     override fun listFindEnd(): String {
+        return "}"
+    }
+
+    override fun listMapBegin(): String {
+        return "map {"
+    }
+
+    override fun listMapEnd(): String {
         return "}"
     }
 
@@ -161,6 +171,14 @@ class TypeScript: CodeBuilderLanguage {
     }
 
     override fun listFindEnd(): String {
+        return ")"
+    }
+
+    override fun listMapBegin(): String {
+        return "map("
+    }
+
+    override fun listMapEnd(): String {
         return ")"
     }
 

@@ -3,10 +3,13 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.FieldAccessor
 import com.github.bratek20.codebuilder.builders.classBlock
+import com.github.bratek20.codebuilder.builders.methodCall
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
 import com.github.bratek20.codebuilder.core.linePartBlock
+import com.github.bratek20.codebuilder.ops.assign
+import com.github.bratek20.codebuilder.ops.isEqualTo
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.*
@@ -114,14 +117,26 @@ class MocksGenerator: FileGenerator() {
                         listOp(callsListName).add {
                             variable(inputArgName)
                         }
+                        assign {
+                            variable = "response"
+                            value = {
+                                listOp(responsesListName).find {
+                                    val itName = it.name
+                                    isEqualTo {
+                                        left = functionCall {
+                                            name = inputDiffMethodName
+                                            addArg { variable(inputArgName) }
+                                            addArg { pairOp(itName).first() }
+                                        }
+                                        right = string("")
+                                    }
+                            }
+                        }
                         returnBlock {
-//                            listOp(responsesListName).find {
-//                                it.isEqualTo {
-//                                    variable(inputArgName)
-//                                }
-//                            }
+
+                            }
                             //TODO methodCall, isEqualTo, support for ?., support for ?:
-                            linePart("${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
+                            linePart("result?.second ?: $emptyDef)")
                         }
                     }
                 }

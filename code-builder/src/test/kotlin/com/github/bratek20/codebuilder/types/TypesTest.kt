@@ -4,6 +4,8 @@ import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.ops.const
+import com.github.bratek20.codebuilder.ops.plus
 import com.github.bratek20.codebuilder.ops.string
 import com.github.bratek20.codebuilder.ops.variable
 import org.junit.jupiter.api.Test
@@ -161,6 +163,13 @@ class TypesTest {
                         variable("other")
                     }
                 }
+
+                listOp("list").map {
+                    plus {
+                        left = { variable(it.name) }
+                        right = { const("1") }
+                    }
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -169,6 +178,7 @@ class TypesTest {
                    list.add(someVar)
                    list.add("someString")
                    list.find { it -> it == other }
+                   list.map { it -> it + 1 }
                 """
             }
             langExpected {
@@ -178,6 +188,7 @@ class TypesTest {
                    list.push(someVar)
                    list.push("someString")
                    list.find( it => it == other )
+                   list.map( it => it + 1 )
                 """
             }
         }

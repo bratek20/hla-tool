@@ -33,6 +33,8 @@ typealias ItOperationsOps = ItOperations.() -> Unit
 class ItBuilder(
     private val b: CodeBuilder
 ) {
+    val name = "it"
+
     fun isEqualTo(other: CodeBuilderOps) {
         b.linePart("it == ")
         b.add(other)
@@ -62,6 +64,14 @@ class ListOperations(
         b.lineStart("${variableName}.${lang.listFindBegin()} it ${lang.lambdaArrow()} ")
         itOperations.apply(predicate)
         b.lineEnd(" " + b.c.lang.listFindEnd())
+    }
+
+    fun map(predicate: ItOperationsOps) {
+        val itOperations = ItOperations(b)
+
+        b.lineStart("${variableName}.${lang.listMapBegin()} it ${lang.lambdaArrow()} ")
+        itOperations.apply(predicate)
+        b.lineEnd(" " + b.c.lang.listMapEnd())
     }
 }
 

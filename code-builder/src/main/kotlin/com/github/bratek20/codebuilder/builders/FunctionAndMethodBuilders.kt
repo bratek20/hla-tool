@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.CodeBlockBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.types.TypeBuilder
@@ -80,7 +81,11 @@ class MethodBuilder: MethodOrFunctionBuilder() {
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
-fun method(block: MethodBuilderOps) = MethodBuilder().apply(block)
+fun CodeBuilder.method(block: MethodBuilderOps): CodeBuilder {
+    add(MethodBuilder().apply(block))
+    return this
+}
+
 
 class FunctionBuilder: MethodOrFunctionBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {
@@ -88,4 +93,61 @@ class FunctionBuilder: MethodOrFunctionBuilder() {
     }
 }
 typealias FunctionBuilderOps = FunctionBuilder.() -> Unit
-fun function(block: FunctionBuilderOps) = FunctionBuilder().apply(block)
+fun CodeBuilder.function(block: FunctionBuilderOps): CodeBuilder {
+    add(FunctionBuilder().apply(block))
+    return this
+}
+
+abstract class MethodOrFunctionCallBuilder: CodeBlockBuilder {
+    protected abstract fun getCallName(): String
+    protected abstract fun beforeName(): String
+
+    private val args: MutableList<CodeBuilderOps> = mutableListOf()
+    fun addArg(ops: CodeBuilderOps) {
+        args.add(ops)
+    }
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        lineStart()
+
+        linePart(beforeName())
+        linePart("${getCallName()}(")
+        args.forEachIndexed { index, arg ->
+            add(arg)
+            if (index != args.size - 1) {
+                linePart(", ")
+            }
+        }
+        linePart(")")
+
+        lineEnd()
+    }
+}
+
+class MethodCallBuilder: MethodOrFunctionCallBuilder() {
+    lateinit var methodName: String
+
+    var variableName: String? = null
+
+    override fun getCallName(): String {
+        return methodName
+    }
+
+    override fun beforeName(): String {
+        return variableName?.let { "$it." } ?: ""
+    }
+}
+fun CodeBuilder.methodCall(block: MethodCallBuilder.() -> Unit) = add(MethodCallBuilder().apply(block))
+
+class FunctionCallBuilder: MethodOrFunctionCallBuilder() {
+    lateinit var name: String
+
+    override fun getCallName(): String {
+        return name
+    }
+
+    override fun beforeName(): String {
+        return ""
+    }
+}
+fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))

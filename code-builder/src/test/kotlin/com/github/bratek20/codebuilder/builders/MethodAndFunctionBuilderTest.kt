@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
+import com.github.bratek20.codebuilder.ops.const
 import com.github.bratek20.codebuilder.ops.plus
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.variable
@@ -9,14 +10,14 @@ import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
 import org.junit.jupiter.api.Test
 
-class MethodBuilderTest {
+class MethodAndFunctionBuilderTest {
     @Test
     fun `empty method`() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                method {
                     name = "someMethod"
-                })
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -36,10 +37,33 @@ class MethodBuilderTest {
     }
 
     @Test
-    fun `sum method`() {
+    fun `empty function`() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                function { name = "someFunction" }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    fun someFunction() {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    function someFunction() {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `sum method with call`() {
+        testCodeBuilderOp {
+            op = {
+                method {
                     name = "sum"
                     addArg {
                         name = "a"
@@ -58,7 +82,18 @@ class MethodBuilderTest {
                             }
                         }
                     }
-                })
+                }
+                methodCall {
+                    variableName = "this"
+                    methodName = "sum"
+
+                    addArg {
+                        const("1")
+                    }
+                    addArg {
+                        const("2")
+                    }
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -66,6 +101,7 @@ class MethodBuilderTest {
                     fun sum(a: Int, b: Int): Int {
                         return a + b
                     }
+                    this.sum(1, 2)
                 """
             }
             langExpected {
@@ -74,6 +110,58 @@ class MethodBuilderTest {
                     sum(a: number, b: number): number {
                         return a + b
                     }
+                    this.sum(1, 2)
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `sum function with call`() {
+        testCodeBuilderOp {
+            op = {
+                function {
+                    name = "sum"
+                    addArg {
+                        name = "a"
+                        type = baseType(BaseType.INT)
+                    }
+                    addArg {
+                        name = "b"
+                        type = baseType(BaseType.INT)
+                    }
+                    returnType = baseType(BaseType.INT)
+                    body = {
+                        returnBlock {
+                            plus {
+                                left = { variable("a") }
+                                right = { variable("b") }
+                            }
+                        }
+                    }
+                }
+                functionCall {
+                    name = "sum"
+                    addArg { const("1") }
+                    addArg { const("2") }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    fun sum(a: Int, b: Int): Int {
+                        return a + b
+                    }
+                    sum(1, 2)
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    function sum(a: number, b: number): number {
+                        return a + b
+                    }
+                    sum(1, 2)
                 """
             }
         }
@@ -83,7 +171,7 @@ class MethodBuilderTest {
     fun `pair arg`() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                method {
                     name = "sumPair"
                     addArg {
                         name = "p"
@@ -98,7 +186,7 @@ class MethodBuilderTest {
                             }
                         }
                     }
-                })
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -123,7 +211,7 @@ class MethodBuilderTest {
     fun defaultArg() {
         testCodeBuilderOp {
             op = {
-                add(method {
+                method {
                     name = "defaultArg"
                     addArg {
                         name = "a"
@@ -131,7 +219,7 @@ class MethodBuilderTest {
                         defaultValue = "5"
                     }
                     returnType = baseType(BaseType.INT)
-                })
+                }
             }
             langExpected {
                 lang = Kotlin()
@@ -149,4 +237,8 @@ class MethodBuilderTest {
             }
         }
     }
+
+
+
+
 }
