@@ -5,17 +5,19 @@ class SomeException extends ApiException<SomeException> {
         super(SomeException, message)
     }
 
-    getType(): string {
+    getTypeName(): string {
         return "SomeException"
     }
 }
+ExceptionsRegistry.register(SomeException)
 
 class Some2Exception extends ApiException<Some2Exception> {
     constructor(message?: string) {
         super(Some2Exception, message)
     }
 
-    getType(): string {
+    getTypeName(): string {
         return "Some2Exception"
     }
 }
+ExceptionsRegistry.register(Some2Exception)
