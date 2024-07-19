@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.core
 
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThatThrownBy
 
 class ExpectedLanguageString {
     lateinit var lang: CodeBuilderLanguage
@@ -46,6 +47,24 @@ class CodeBuilderOpTester {
 }
 fun testCodeBuilderOp(init: CodeBuilderOpTester.() -> Unit) {
     CodeBuilderOpTester().apply(init).test()
+}
+
+class CodeBuilderOpExceptionTester {
+    lateinit var op: CodeBuilder.() -> Unit
+    var expectedMessage: String? = null
+
+    fun test() {
+        val assertion = assertThatThrownBy {
+            CodeBuilder(Kotlin()).apply(op).build()
+        }.isInstanceOf(CodeBuilderException::class.java);
+
+        expectedMessage?.let {
+            assertion.hasMessage(expectedMessage)
+        }
+    }
+}
+fun testCodeBuilderOpException(init: CodeBuilderOpExceptionTester.() -> Unit) {
+    CodeBuilderOpExceptionTester().apply(init).test()
 }
 
 private fun alignMultilineStringIndent(str: String): String {

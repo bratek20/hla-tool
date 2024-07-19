@@ -7,12 +7,13 @@ namespace SomeModule {
         private readonly referenceOtherClassResponses: [OtherModule.ExpectedOtherClass, OtherModule.Builder.OtherClassDef][] = []
 
         setReferenceOtherClassResponse(args: OtherModule.ExpectedOtherClass, response: OtherModule.Builder.OtherClassDef) {
-            referenceOtherClassResponses.push(Pair(args, response))
+            referenceOtherClassResponses.push([args, response])
         }
 
         override referenceOtherClass(other: OtherClass): OtherClass {
-            referenceOtherClassCalls.add(other)
-            return otherClass(referenceOtherClassResponses.find { diffOtherClass(other, it.first) == "" }?.second ?: {})
+            referenceOtherClassCalls.push(other)
+            val findResult = referenceOtherClassResponses.find( it => diffOtherClass(other, it[0]) == "" )
+            return otherClass(findResult?.second ?: {})
         }
 
         assertReferenceOtherClassCalled(times: number = 1) {
@@ -28,12 +29,13 @@ namespace SomeModule {
         private readonly referenceLegacyTypeResponses: [LegacyType, LegacyType][] = []
 
         setReferenceLegacyTypeResponse(args: LegacyType, response: LegacyType) {
-            referenceLegacyTypeResponses.push(Pair(args, response))
+            referenceLegacyTypeResponses.push([args, response])
         }
 
         override referenceLegacyType(legacyType: LegacyType): LegacyType {
-            referenceLegacyTypeCalls.add(legacyType)
-            return legacyType(referenceLegacyTypeResponses.find { diffLegacyType(legacyType, it.first) == "" }?.second ?: null)
+            referenceLegacyTypeCalls.push(legacyType)
+            val findResult = referenceLegacyTypeResponses.find( it => diffLegacyType(legacyType, it[0]) == "" )
+            return legacyType(findResult?.second ?: null)
         }
 
         assertReferenceLegacyTypeCalled(times: number = 1) {

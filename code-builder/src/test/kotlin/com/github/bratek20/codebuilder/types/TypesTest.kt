@@ -4,6 +4,10 @@ import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.ops.const
+import com.github.bratek20.codebuilder.ops.plus
+import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.ops.variable
 import org.junit.jupiter.api.Test
 
 class TypesTest {
@@ -11,14 +15,17 @@ class TypesTest {
     fun baseTypes() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 add(baseType(BaseType.INT))
-                endLinePart()
+                lineEnd()
 
+                lineStart()
                 add(baseType(BaseType.STRING))
-                endLinePart()
+                lineEnd()
 
+                lineStart()
                 add(baseType(BaseType.BOOLEAN))
-                endLinePart()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
@@ -43,19 +50,26 @@ class TypesTest {
     fun pairType() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 add(pairType(type("SomeType"), baseType(BaseType.STRING)))
-                endLinePart()
+                lineEnd()
+
+                lineStart()
+                newPair("varA", "varB")
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
                    Pair<SomeType, String>
+                   Pair(varA, varB)
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
                    [SomeType, string]
+                   [varA, varB]
                 """
             }
         }
@@ -65,11 +79,13 @@ class TypesTest {
     fun pairOps() {
         testCodeBuilderOp {
             op = {
-                add(pairOp("pair").first())
-                endLinePart()
+                lineStart()
+                pairOp("pair").first()
+                lineEnd()
 
-                add(pairOp("pair").second())
-                endLinePart()
+                lineStart()
+                pairOp("pair").second()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
@@ -92,14 +108,17 @@ class TypesTest {
     fun listType() {
         testCodeBuilderOp {
             op = {
+                lineStart()
                 add(listType(type("SomeType")))
-                endLinePart()
+                lineEnd()
 
+                lineStart()
                 add(mutableListType(type("SomeType")))
-                endLinePart()
+                lineEnd()
 
+                lineStart()
                 add(emptyMutableList())
-                endLinePart()
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()
@@ -122,26 +141,56 @@ class TypesTest {
 
     @Test
     fun listOps() {
+        val list = emptyList<String>()
+        list.find { it -> it == "someString" }
+
         testCodeBuilderOp {
             op = {
-                add(listOp("list").get(0))
-                endLinePart()
+                lineStart()
+                listOp("list").get(0)
+                lineEnd()
 
-                add(listOp("list").add("\"someValue\""))
-                endLinePart()
+                listOp("list").add {
+                    variable("someVar")
+                }
+
+                listOp("list").add {
+                    string("someString")
+                }
+
+                lineStart()
+                listOp("list").find {
+                    it.isEqualTo {
+                        variable("other")
+                    }
+                }
+
+                lineStart()
+                listOp("list").map {
+                    plus {
+                        left = { variable(it.name) }
+                        right = { const("1") }
+                    }
+                }
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
                    list[0]
-                   list.add("someValue")
+                   list.add(someVar)
+                   list.add("someString")
+                   list.find { it -> it == other }
+                   list.map { it -> it + 1 }
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
                    list[0]
-                   list.push("someValue")
+                   list.push(someVar)
+                   list.push("someString")
+                   list.find( it => it == other )
+                   list.map( it => it + 1 )
                 """
             }
         }

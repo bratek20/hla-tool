@@ -25,6 +25,8 @@ fun linePartBlock(value: String) = object: LinePartBuilder {
     override fun build(c: CodeBuilderContext): String = value
 }
 
+class CodeBuilderException(message: String): Exception(message)
+
 class CodeBuilder(
     lang: CodeBuilderLanguage,
     indent: Int = 0
@@ -33,7 +35,8 @@ class CodeBuilder(
     private val lines = mutableListOf<String>()
 
     private var currentIndent = indent
-    private var linePartStarted = false
+    private var lineManipulationStarted = false
+    private var lineManipulationSoftEnd = false
 
     fun line(value: String): CodeBuilder {
         return addFullLine("${indentString()}$value")
@@ -45,7 +48,7 @@ class CodeBuilder(
 
     private fun addFullLine(value: String): CodeBuilder {
         lines.add(value)
-        linePartStarted = false
+        onLineEnd()
         return this
     }
 
@@ -53,18 +56,75 @@ class CodeBuilder(
         return " ".repeat(currentIndent)
     }
 
-    fun linePart(value: String): CodeBuilder {
-        if (!linePartStarted) {
-            linePartStarted = true
+    fun lineStart(value: String? = null): CodeBuilder {
+        if (lineManipulationStarted && !lineManipulationSoftEnd) {
+            val msg = "lineStart(\"${value ?: ""}\") failed - line already started, current value: \"${previousLine()}\"! Previous full line: \"${previousPreviousLine()}\""
+            throw CodeBuilderException(msg)
+        }
+
+        lineManipulationStarted = true
+        lineManipulationSoftEnd = false
+        lines.add(indentString())
+
+        value?.let { linePart(it) }
+
+        return this
+    }
+
+    fun lineSoftStart(value: String? = null): CodeBuilder {
+        if (!lineManipulationStarted) {
+            lineManipulationStarted = true
             lines.add(indentString())
         }
+
+        value?.let { linePart(it) }
+        return this
+    }
+
+    private fun previousPreviousLine(): String {
+        return if (lines.size < 2) {
+            ""
+        } else {
+            lines[lines.size - 2]
+        }
+    }
+
+    private fun previousLine(): String {
+        return if (lines.isEmpty()) {
+            ""
+        } else {
+            lines[lines.size - 1]
+        }
+    }
+
+    fun linePart(value: String): CodeBuilder {
+        throwIfLineNotStarted("linePart", value)
+
         lines[lines.size - 1] += value
         return this
     }
 
-    fun endLinePart(): CodeBuilder {
-        linePartStarted = false
+    fun lineEnd(value: String? = null): CodeBuilder {
+        throwIfLineNotStarted("lineEnd", value ?: "")
+
+        linePart(value ?: "")
+        lineManipulationStarted = false
         return this
+    }
+
+    fun lineSoftEnd(value: String? = null): CodeBuilder {
+        throwIfLineNotStarted("lineSoftEnd", value ?: "")
+
+        lineManipulationSoftEnd = true
+        linePart(value ?: "")
+        return this
+    }
+
+    private fun throwIfLineNotStarted(methodName: String, value: String) {
+        if (!lineManipulationStarted) {
+            val msg = "$methodName(\"$value\") failed - line not started! Previous line: ${previousLine()}"
+            throw CodeBuilderException(msg)
+        }
     }
 
     fun add(block: CodeBlockBuilder): CodeBuilder {
@@ -88,14 +148,19 @@ class CodeBuilder(
 
     fun tab(): CodeBuilder {
         currentIndent += 4
-        linePartStarted = false
+        onLineEnd()
         return this
     }
 
     fun untab(): CodeBuilder {
         currentIndent -= 4
-        linePartStarted = false
+        onLineEnd()
         return this
+    }
+
+    private fun onLineEnd() {
+        lineManipulationStarted = false
+        lineManipulationSoftEnd = false
     }
 
 

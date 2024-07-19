@@ -13,13 +13,20 @@ interface CodeBuilderLanguage {
     fun mapBaseType(type: BaseType): String
 
     fun pairType(firstType: String, secondType: String): String
+    fun newPair(first: String, second: String): String
     fun pairFirst(variableName: String): String
     fun pairSecond(variableName: String): String
 
     fun listType(elementType: String): String
     fun mutableListType(elementType: String): String
-    fun listAdd(variableName: String, element: String): String
     fun emptyMutableList(): String
+    fun listAddCallName(): String
+    fun listFindBegin(): String
+    fun listFindEnd(): String
+    fun listMapBegin(): String
+    fun listMapEnd(): String
+
+    fun lambdaArrow(): String
 
     fun immutableFieldDeclaration(): String
 }
@@ -53,6 +60,10 @@ class Kotlin: CodeBuilderLanguage {
         return "Pair<$firstType, $secondType>"
     }
 
+    override fun newPair(first: String, second: String): String {
+        return "Pair($first, $second)"
+    }
+
     override fun pairFirst(variableName: String): String {
         return "${variableName}.first"
     }
@@ -69,8 +80,28 @@ class Kotlin: CodeBuilderLanguage {
         return "MutableList<$elementType>"
     }
 
-    override fun listAdd(variableName: String, element: String): String {
-        return "$variableName.add($element)"
+    override fun listAddCallName(): String {
+        return "add"
+    }
+
+    override fun listFindBegin(): String {
+        return "find {"
+    }
+
+    override fun listFindEnd(): String {
+        return "}"
+    }
+
+    override fun listMapBegin(): String {
+        return "map {"
+    }
+
+    override fun listMapEnd(): String {
+        return "}"
+    }
+
+    override fun lambdaArrow(): String {
+        return "->"
     }
 
     override fun emptyMutableList(): String {
@@ -111,6 +142,10 @@ class TypeScript: CodeBuilderLanguage {
         return "[$firstType, $secondType]"
     }
 
+    override fun newPair(first: String, second: String): String {
+        return "[$first, $second]"
+    }
+
     override fun pairFirst(variableName: String): String {
         return "${variableName}[0]"
     }
@@ -127,8 +162,28 @@ class TypeScript: CodeBuilderLanguage {
         return "$elementType[]"
     }
 
-    override fun listAdd(variableName: String, element: String): String {
-        return "$variableName.push($element)"
+    override fun listAddCallName(): String {
+        return "push"
+    }
+
+    override fun listFindBegin(): String {
+        return "find("
+    }
+
+    override fun listFindEnd(): String {
+        return ")"
+    }
+
+    override fun listMapBegin(): String {
+        return "map("
+    }
+
+    override fun listMapEnd(): String {
+        return ")"
+    }
+
+    override fun lambdaArrow(): String {
+        return "=>"
     }
 
     override fun emptyMutableList(): String {

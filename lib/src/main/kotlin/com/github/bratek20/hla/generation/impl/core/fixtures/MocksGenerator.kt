@@ -1,11 +1,11 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.codebuilder.builders.ClassBuilderOps
-import com.github.bratek20.codebuilder.builders.FieldAccessor
-import com.github.bratek20.codebuilder.builders.classBlock
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
+import com.github.bratek20.codebuilder.core.linePartBlock
+import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -94,7 +94,7 @@ class MocksGenerator: FileGenerator() {
                         type = type(defOutputType)
                     }
                     body = {
-                        add(listOp(responsesListName).add("Pair(args, response)"))
+                        listOp(responsesListName).add { newPair("args", "response") }
                     }
                 }
 
@@ -108,8 +108,30 @@ class MocksGenerator: FileGenerator() {
                         type = type(inputTypeName)
                     }
                     body = {
-                        line("${callsListName}.add($inputArgName)")
-                        line("return ${outputBuilderMethodName}(${responsesListName}.find { ${inputDiffMethodName}(${inputArgName}, it.first) == \"\" }?.second ?: $emptyDef)")
+                        listOp(callsListName).add {
+                            variable(inputArgName)
+                        }
+                        assign {
+                            variable = "val findResult" // TODO variable should handle val
+                            value = {
+                                listOp(responsesListName).find {
+                                    isEqualTo {
+                                        left = {
+                                            functionCall {
+                                                name = inputDiffMethodName
+                                                addArg { variable(inputArgName) }
+                                                addArg { pairOp(it.name).first() }
+                                            }
+                                        }
+                                        right = { string("") }
+                                    }
+                                }
+                            }
+                        }
+                        returnBlock {
+                            //TODO support for ?., support for ?:
+                            linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")
+                        }
                     }
                 }
                 emptyLine()
