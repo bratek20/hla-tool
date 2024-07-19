@@ -50,6 +50,10 @@ class ClassBuilder: CodeBlockBuilder {
         body.add(FieldBuilder().apply(block))
     }
 
+    fun constructorField(block: FieldBuilderOps) {
+
+    }
+
     fun emptyLine() {
         body.add(emptyLineBlock())
     }
@@ -65,4 +69,4 @@ class ClassBuilder: CodeBlockBuilder {
     }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit
-fun classBlock(block: ClassBuilderOps) = ClassBuilder().apply(block)
+fun CodeBuilder.classBlock(block: ClassBuilderOps) = add(ClassBuilder().apply(block))

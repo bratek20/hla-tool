@@ -74,6 +74,7 @@ abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
 }
 
 class MethodBuilder: MethodOrFunctionBuilder() {
+    var static: Boolean = false
     var override: Boolean = false
     override fun beforeName(c: CodeBuilderContext): String {
         val overridePart = if (override) "override " else ""
@@ -98,54 +99,3 @@ fun CodeBuilder.function(block: FunctionBuilderOps): CodeBuilder {
     add(FunctionBuilder().apply(block))
     return this
 }
-
-abstract class MethodOrFunctionCallBuilder: CodeBlockBuilder {
-    protected abstract fun getCallName(): String
-    protected abstract fun beforeName(): String
-
-    private val args: MutableList<CodeBuilderOps> = mutableListOf()
-    fun addArg(ops: CodeBuilderOps) {
-        args.add(ops)
-    }
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineSoftStart(beforeName())
-
-        linePart("${getCallName()}(")
-        args.forEachIndexed { index, arg ->
-            add(arg)
-            if (index != args.size - 1) {
-                linePart(", ")
-            }
-        }
-        lineSoftEnd(")")
-    }
-}
-
-class MethodCallBuilder: MethodOrFunctionCallBuilder() {
-    lateinit var methodName: String
-
-    var variableName: String? = null
-
-    override fun getCallName(): String {
-        return methodName
-    }
-
-    override fun beforeName(): String {
-        return variableName?.let { "$it." } ?: ""
-    }
-}
-fun CodeBuilder.methodCall(block: MethodCallBuilder.() -> Unit) = add(MethodCallBuilder().apply(block))
-
-class FunctionCallBuilder: MethodOrFunctionCallBuilder() {
-    lateinit var name: String
-
-    override fun getCallName(): String {
-        return name
-    }
-
-    override fun beforeName(): String {
-        return ""
-    }
-}
-fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
