@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
+import com.github.bratek20.codebuilder.ops.comment
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.baseType
@@ -66,9 +67,11 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    comment("some comment")
-                    method {
-                        name = "someMethod"
+                    body = {
+                        comment("some comment")
+                        method {
+                            name = "someMethod"
+                        }
                     }
                 }
             }
@@ -127,6 +130,56 @@ class ClassBuilderTest {
         }
     }
 
+
+    @Test
+    fun `constructor field`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    constructorField {
+                        name = "id"
+                        type = baseType(BaseType.STRING)
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass(
+                        val id: String,
+                    ) {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `static method`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    staticMethod {
+                        name = "someMethod"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass {
+                        companion object {
+                            fun someMethod() {
+                            }
+                        }
+                    }
+                """
+            }
+        }
+    }
+
     @Test
     fun complicatedClass() {
         testCodeBuilderOp {
@@ -143,36 +196,32 @@ class ClassBuilderTest {
                         name = "amount"
                         type = baseType(BaseType.INT)
                     }
-                    method {
-                        name = "getId"
-                        returnType = type("SomeId")
-                        body = {
-                            returnBlock {
-                                classConstructorCall {
-                                    className = "SomeId"
-                                    addArg {
-                                        variable("id")
+                    body = {
+                        method {
+                            name = "getId"
+                            returnType = type("SomeId")
+                            body = {
+                                returnBlock {
+                                    classConstructorCall {
+                                        className = "SomeId"
+                                        addArg {
+                                            variable("id")
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    method {
-                        name = "getId"
-                        returnType = type("SomeId")
-                        body = {
-                            returnBlock {
-                                classConstructorCall {
-                                    className = "SomeId"
-                                    addArg {
-                                        variable("id")
-                                    }
+                        method {
+                            name = "getAmount"
+                            returnType = baseType(BaseType.INT)
+                            body = {
+                                returnBlock {
+                                    variable("amount")
                                 }
                             }
                         }
                     }
-                    method {
-                        static = true
+                    staticMethod {
                         name = "create"
                         returnType = type("SomeInterfaceSomeCommandRequest")
                         addArg {

@@ -57,3 +57,7 @@ fun CodeBuilder.variable(name: String): CodeBuilder {
 fun CodeBuilder.string(name: String): CodeBuilder {
     return linePart("\"$name\"")
 }
+
+fun CodeBuilder.comment(value: String): CodeBuilder {
+    return line("// $value")
+}

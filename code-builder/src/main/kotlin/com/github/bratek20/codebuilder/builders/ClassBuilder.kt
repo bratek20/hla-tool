@@ -15,7 +15,7 @@ class FieldBuilder: CodeBlockBuilder {
     var accessor: FieldAccessor? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart()
+        lineSoftStart()
         accessor?.let {
             linePart("${it.name.lowercase()} ")
         }
@@ -25,7 +25,7 @@ class FieldBuilder: CodeBlockBuilder {
             linePart(" = ")
             add(it)
         }
-        lineEnd("")
+        lineSoftEnd()
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
@@ -35,37 +35,48 @@ class ClassBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var implementedInterfaceName: String? = null
+    var body: CodeBuilderOps? = null
 
-    private val body: MutableList<CodeBlockBuilder> = mutableListOf()
-
-    fun method(block: MethodBuilderOps) {
-        body.add(MethodBuilder().apply(block))
-    }
-
-    fun comment(value: String) {
-        body.add(lineBlock("// $value"))
-    }
-
-    fun field(block: FieldBuilderOps) {
-        body.add(FieldBuilder().apply(block))
-    }
+    private val constructorFields: MutableList<FieldBuilder> = mutableListOf()
 
     fun constructorField(block: FieldBuilderOps) {
-
+        constructorFields.add(FieldBuilder().apply(block))
     }
 
-    fun emptyLine() {
-        body.add(emptyLineBlock())
+    fun staticMethod(block: MethodBuilderOps) {
+        body = {
+            line("companion object {")
+            tab()
+            add(MethodBuilder().apply(block))
+            untab()
+            line("}")
+        }
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        val implementsPart = implementedInterfaceName?.let { c.lang.implements() + it } ?: ""
-
-        line("class $name${implementsPart} {")
+        add(classDeclaration(c))
         tab()
-        body.forEach { add(it) }
+        body?.let { add(it) }
         untab()
         line("}")
+    }
+
+    private fun classDeclaration(c: CodeBuilderContext): CodeBuilderOps = {
+        val implementsPart = implementedInterfaceName?.let { c.lang.implements() + it } ?: ""
+
+        if (c.lang is Kotlin && constructorFields.isNotEmpty()) {
+            line("class $name${implementsPart}(")
+            tab()
+            constructorFields.forEach { field ->
+                add(field)
+                linePart(",")
+            }
+            untab()
+            line(") {")
+        }
+        else {
+            line("class $name${implementsPart} {")
+        }
     }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit

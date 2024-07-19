@@ -74,7 +74,6 @@ abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
 }
 
 class MethodBuilder: MethodOrFunctionBuilder() {
-    var static: Boolean = false
     var override: Boolean = false
     override fun beforeName(c: CodeBuilderContext): String {
         val overridePart = if (override) "override " else ""
