@@ -81,20 +81,13 @@ class MethodBuilder: MethodOrFunctionBuilder() {
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
-fun CodeBuilder.method(block: MethodBuilderOps): CodeBuilder {
-    add(MethodBuilder().apply(block))
-    return this
-}
+fun CodeBuilder.method(block: MethodBuilderOps) = add(MethodBuilder().apply(block))
 
 
-class FunctionBuilder: MethodOrFunctionBuilder() {
+open class FunctionBuilder: MethodOrFunctionBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {
         return c.lang.functionDeclarationKeyword()
     }
 }
 typealias FunctionBuilderOps = FunctionBuilder.() -> Unit
-fun function(block: FunctionBuilderOps) = FunctionBuilder().apply(block)
-fun CodeBuilder.function(block: FunctionBuilderOps): CodeBuilder {
-    add(FunctionBuilder().apply(block))
-    return this
-}
+fun CodeBuilder.function(block: FunctionBuilderOps) = add(FunctionBuilder().apply(block))

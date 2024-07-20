@@ -31,7 +31,9 @@ class FieldBuilder: CodeBlockBuilder {
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
 fun CodeBuilder.field(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
 
-class ClassBuilder: CodeBlockBuilder {
+open class ClassBuilder: CodeBlockBuilder {
+    open fun beforeClassKeyword(): String = ""
+
     lateinit var name: String
 
     var implementedInterfaceName: String? = null
@@ -60,10 +62,12 @@ class ClassBuilder: CodeBlockBuilder {
     }
 
     private fun classDeclaration(c: CodeBuilderContext): CodeBuilderOps = {
+        val classPart = beforeClassKeyword() + "class "
         val implementsPart = implementedInterfaceName?.let { c.lang.implements() + it } ?: ""
+        val beginning = "$classPart$name$implementsPart"
 
         if (c.lang is Kotlin && constructorFields.isNotEmpty()) {
-            line("class $name${implementsPart}(")
+            line("$beginning(")
             tab()
             constructorFields.forEach { fieldOps ->
                 field(fieldOps)
@@ -74,7 +78,7 @@ class ClassBuilder: CodeBlockBuilder {
             line(") {")
         }
         else {
-            line("class $name${implementsPart} {")
+            line("$beginning {")
         }
     }
 
