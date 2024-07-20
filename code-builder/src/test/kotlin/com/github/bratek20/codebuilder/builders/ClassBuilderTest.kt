@@ -209,7 +209,7 @@ class ClassBuilderTest {
                             returnType = type("SomeId")
                             body = {
                                 returnBlock {
-                                    classConstructorCall {
+                                    constructorCall {
                                         className = "SomeId"
                                         addArg {
                                             variable("id")
@@ -241,7 +241,7 @@ class ClassBuilderTest {
                         }
                         body = {
                             returnBlock {
-                                classConstructorCall {
+                                constructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
                                     addArg {
                                         variable("id.value")

@@ -52,11 +52,11 @@ class FunctionCallBuilder: CallBuilder() {
 }
 fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
 
-class ClassConstructorCall: CallBuilder() {
+class ConstructorCallBuilder: CallBuilder() {
     lateinit var className: String
 
     override fun getCallName(): String {
         return className
     }
 }
-fun CodeBuilder.classConstructorCall(block: ClassConstructorCall.() -> Unit) = add(ClassConstructorCall().apply(block))
+fun CodeBuilder.constructorCall(block: ConstructorCallBuilder.() -> Unit) = add(ConstructorCallBuilder().apply(block))

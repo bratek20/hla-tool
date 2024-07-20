@@ -1,5 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core.web
 
+import com.github.bratek20.codebuilder.builders.classBlock
+import com.github.bratek20.codebuilder.builders.constructorCall
+import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.ops.returnBlock
+import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -32,13 +39,63 @@ class WebCommonGenerator: FileGenerator() {
         return "WebCommon"
     }
 
+    private fun requestClass(interfName: String, method: MethodView): String {
+        return CodeBuilder(c.language.base())
+            .add {
+                classBlock {
+                    name = requestName(interfName, method)
+                    method.args.forEach { arg ->
+                        constructorField {
+                            name = arg.name
+                            type = type(arg.apiType.serializableName())
+                        }
+                    }
+                    body = {
+                        method.args.forEach { arg ->
+                            method {
+                                name = "get${camelToPascalCase(arg.name)}"
+                                returnType = type(arg.type)
+                                body = {
+                                    returnBlock {
+                                        variable(arg.apiType.deserialize(arg.name))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    staticMethod {
+                        name = "create"
+                        returnType = type(requestName(interfName, method))
+                        method.args.map { arg ->
+                           addArg {
+                               name = arg.name
+                               type = type(arg.type)
+                           }
+                        }
+                        body = {
+                            returnBlock {
+                                constructorCall {
+                                    className = requestName(interfName, method)
+                                    method.args.forEach {
+                                        addArg {
+                                            variable(it.apiType.serialize(it.name))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .build()
+    }
     override fun generateFileContent(): FileContent {
         val exposedInterfaces = exposedInterfaces(c)
 
         val requests = exposedInterfaces.flatMap { interf ->
             interf.methods.mapNotNull { method ->
                 if (!method.hasArgs()) return@mapNotNull null
-                "class ${requestName(interf.name, method)}(${method.argsDeclarationWithPrefix("val ")})"
+                requestClass(interf.name, method)
             }
         }
 

@@ -68,6 +68,7 @@ class MocksGenerator: FileGenerator() {
                     "{}"
 
             return {
+                body = {
                 comment(def.name)
                 field {
                     accessor = FieldAccessor.PRIVATE
@@ -163,41 +164,46 @@ class MocksGenerator: FileGenerator() {
                         line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                     }
                 }
+                    }
             }
         }
 
         fun classes(indent: Int): String {
             return CodeBuilder(lang, indent)
-                .add(classBlock {
-                    name = "${interfaceName}Mock"
-                    implementedInterfaceName = interfaceName
-                    interf.methods.map {
-                        this.apply(mocksForMethod(it))
+                .add {
+                    classBlock {
+                        name = "${interfaceName}Mock"
+                        implementedInterfaceName = interfaceName
+                        interf.methods.map {
+                            this.apply(mocksForMethod(it))
+                        }
                     }
-                })
+                }
                 .build()
         }
 
         fun contextModule(): String {
             return CodeBuilder(lang)
-                .add(classBlock {
-                    name = "${moduleName}Mocks"
-                    implementedInterfaceName = "ContextModule"
-                    method {
-                        override = true
-                        name = "apply"
-                        addArg {
-                            name = "builder"
-                            type = type("ContextBuilder")
-                        }
-                        body = {
-                            line("builder")
-                            tab()
-                            line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
-                            untab()
+                .add {
+                    classBlock {
+                        name = "${moduleName}Mocks"
+                        implementedInterfaceName = "ContextModule"
+                        method {
+                            override = true
+                            name = "apply"
+                            addArg {
+                                name = "builder"
+                                type = type("ContextBuilder")
+                            }
+                            body = {
+                                line("builder")
+                                tab()
+                                line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
+                                untab()
+                            }
                         }
                     }
-                })
+                }
                 .build()
         }
     }
