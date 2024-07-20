@@ -2,8 +2,15 @@
 
 namespace SomeModule.Web {
     export class SomeInterfaceSomeEmptyMethodResponse {
+        constructor(
+            readonly value: void,
+        ) {}
     }
     export class SomeInterfaceSomeCommandRequest {
+        constructor(
+            private readonly id: string,
+            private readonly amount: number,
+        ) {}
         getId(): SomeId {
             return new SomeId(id)
         }
@@ -11,60 +18,76 @@ namespace SomeModule.Web {
             return amount
         }
         static create(id: SomeId, amount: number): SomeInterfaceSomeCommandRequest {
-            const instance = new SomeInterfaceSomeCommandRequest()
-            instance.id = id.value
-            instance.amount = amount
-            return instance
+            return SomeInterfaceSomeCommandRequest(id.value, amount)
         }
     }
     export class SomeInterfaceSomeCommandResponse {
+        constructor(
+            readonly value: void,
+        ) {}
     }
     export class SomeInterfaceSomeQueryRequest {
+        constructor(
+            private readonly query: SomeQueryInput,
+        ) {}
         getQuery(): SomeQueryInput {
             return query
         }
-        companion object {
-            create(query: SomeQueryInput): SomeInterfaceSomeQueryRequest {
-                return SomeInterfaceSomeQueryRequest(query)
-            }
+        static create(query: SomeQueryInput): SomeInterfaceSomeQueryRequest {
+            return SomeInterfaceSomeQueryRequest(query)
         }
     }
     export class SomeInterfaceSomeQueryResponse {
+        constructor(
+            readonly value: SomeClass,
+        ) {}
     }
     export class SomeInterfaceOptMethodRequest {
+        constructor(
+            private readonly optId: Optional<string>,
+        ) {}
         getOptId(): Optional<SomeId> {
             return Optional.of(optId).map(it => new SomeId(it))
         }
-        companion object {
-            create(optId: Optional<SomeId>): SomeInterfaceOptMethodRequest {
-                return SomeInterfaceOptMethodRequest(optId.map(it => it.value).orElse(undefined))
-            }
+        static create(optId: Optional<SomeId>): SomeInterfaceOptMethodRequest {
+            return SomeInterfaceOptMethodRequest(optId.map(it => it.value).orElse(undefined))
         }
     }
     export class SomeInterfaceOptMethodResponse {
+        constructor(
+            readonly value: Optional<SomeClass>,
+        ) {}
     }
     export class SomeInterface2ReferenceOtherClassRequest {
+        constructor(
+            private readonly other: OtherClass,
+        ) {}
         getOther(): OtherClass {
             return other
         }
-        companion object {
-            create(other: OtherClass): SomeInterface2ReferenceOtherClassRequest {
-                return SomeInterface2ReferenceOtherClassRequest(other)
-            }
+        static create(other: OtherClass): SomeInterface2ReferenceOtherClassRequest {
+            return SomeInterface2ReferenceOtherClassRequest(other)
         }
     }
     export class SomeInterface2ReferenceOtherClassResponse {
+        constructor(
+            readonly value: OtherClass,
+        ) {}
     }
     export class SomeInterface2ReferenceLegacyTypeRequest {
+        constructor(
+            private readonly legacyType: LegacyType,
+        ) {}
         getLegacyType(): LegacyType {
             return legacyType
         }
-        companion object {
-            create(legacyType: LegacyType): SomeInterface2ReferenceLegacyTypeRequest {
-                return SomeInterface2ReferenceLegacyTypeRequest(legacyType)
-            }
+        static create(legacyType: LegacyType): SomeInterface2ReferenceLegacyTypeRequest {
+            return SomeInterface2ReferenceLegacyTypeRequest(legacyType)
         }
     }
     export class SomeInterface2ReferenceLegacyTypeResponse {
+        constructor(
+            readonly value: LegacyType,
+        ) {}
     }
 }
