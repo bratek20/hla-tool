@@ -118,7 +118,7 @@ class WebCommonGenerator: FileGenerator() {
             .add {
                 if (c.lang is TypeScript) {
                     namespace {
-                        name = "Some"
+                        name = this@WebCommonGenerator.module.getName().value + ".Web"
                         classes.forEach(::classBlock)
                     }
                 } else {
