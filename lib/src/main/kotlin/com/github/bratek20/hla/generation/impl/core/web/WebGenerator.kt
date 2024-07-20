@@ -2,8 +2,6 @@ package com.github.bratek20.hla.generation.impl.core.web
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
-import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.variable
@@ -16,6 +14,7 @@ import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.MethodView
+import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -41,7 +40,7 @@ class WebCommonGenerator: FileGenerator() {
         return "WebCommon"
     }
 
-    private fun requestClass(interfName: String, method: MethodView): ClassBuilderOps {
+    private fun kotlinRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = requestName(interfName, method)
             method.args.forEach { arg ->
@@ -89,6 +88,54 @@ class WebCommonGenerator: FileGenerator() {
         }
     }
 
+    private fun typeScriptRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
+        return {
+            name = requestName(interfName, method)
+            body = {
+                method.args.forEach { arg ->
+                    field {
+                        accessor = FieldAccessor.PRIVATE
+                        name = arg.name
+                        type = type(arg.apiType.serializableName())
+                    }
+                }
+                method.args.forEach { arg ->
+                    method {
+                        name = "get${camelToPascalCase(arg.name)}"
+                        returnType = type(arg.type)
+                        body = {
+                            returnBlock {
+                                variable(arg.apiType.deserialize(arg.name))
+                            }
+                        }
+                    }
+                }
+            }
+            staticMethod {
+                name = "create"
+                returnType = type(requestName(interfName, method))
+                method.args.map { arg ->
+                    addArg {
+                        name = arg.name
+                        type = type(arg.type)
+                    }
+                }
+                body = {
+                    returnBlock {
+                        constructorCall {
+                            className = requestName(interfName, method)
+                            method.args.forEach {
+                                addArg {
+                                    variable(it.apiType.serialize(it.name))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun responseClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = responseName(interfName, method)
@@ -106,10 +153,18 @@ class WebCommonGenerator: FileGenerator() {
         exposedInterfaces.forEach { interf ->
             interf.methods.forEach { method ->
                 if (method.hasArgs()) {
-                    classes.add(requestClass(interf.name, method))
+                    if (c.language is KotlinSupport) {
+                        classes.add(kotlinRequestClass(interf.name, method))
+                    } else {
+                        classes.add(typeScriptRequestClass(interf.name, method))
+                    }
                 }
                 if (method.returnType != "Unit" && method.returnType != "void") {
-                    classes.add(responseClass(interf.name, method))
+                    if (c.language is KotlinSupport) {
+                        classes.add(responseClass(interf.name, method))
+                    } else {
+                        classes.add(responseClass(interf.name, method))
+                    }
                 }
             }
         }

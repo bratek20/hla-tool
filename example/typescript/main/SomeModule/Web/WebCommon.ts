@@ -2,10 +2,8 @@
 
 namespace SomeModule.Web {
     export class SomeInterfaceSomeCommandRequest {
-        constructor(
-            private readonly id: string,
-            private readonly amount: number,
-        ) {}
+        private readonly id: string
+        private readonly amount: number
         getId(): SomeId {
             return new SomeId(id)
         }
@@ -17,9 +15,7 @@ namespace SomeModule.Web {
         }
     }
     export class SomeInterfaceSomeQueryRequest {
-        constructor(
-            private readonly query: SomeQueryInput,
-        ) {}
+        private readonly query: SomeQueryInput
         getQuery(): SomeQueryInput {
             return query
         }
@@ -33,9 +29,7 @@ namespace SomeModule.Web {
         ) {}
     }
     export class SomeInterfaceOptMethodRequest {
-        constructor(
-            private readonly optId: Optional<string>,
-        ) {}
+        private readonly optId: Optional<string>
         getOptId(): Optional<SomeId> {
             return Optional.of(optId).map(it => new SomeId(it))
         }
@@ -49,9 +43,7 @@ namespace SomeModule.Web {
         ) {}
     }
     export class SomeInterface2ReferenceOtherClassRequest {
-        constructor(
-            private readonly other: OtherClass,
-        ) {}
+        private readonly other: OtherClass
         getOther(): OtherClass {
             return other
         }
@@ -65,9 +57,7 @@ namespace SomeModule.Web {
         ) {}
     }
     export class SomeInterface2ReferenceLegacyTypeRequest {
-        constructor(
-            private readonly legacyType: LegacyType,
-        ) {}
+        private readonly legacyType: LegacyType
         getLegacyType(): LegacyType {
             return legacyType
         }
