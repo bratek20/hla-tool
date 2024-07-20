@@ -160,7 +160,6 @@ class ClassBuilderTest {
                         ) {}
                     }
                 """
-
             }
         }
     }
@@ -188,6 +187,17 @@ class ClassBuilderTest {
                             }
                             fun otherMethod() {
                             }
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass {
+                        static someMethod() {
+                        }
+                        static otherMethod() {
                         }
                     }
                 """

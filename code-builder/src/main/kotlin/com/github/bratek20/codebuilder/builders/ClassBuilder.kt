@@ -31,6 +31,11 @@ class FieldBuilder: CodeBlockBuilder {
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
 fun CodeBuilder.field(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
 
+class StaticMethodBuilder: MethodBuilder() {
+    override fun beforeName(c: CodeBuilderContext): String {
+        return "static " + super.beforeName(c)
+    }
+}
 open class ClassBuilder: CodeBlockBuilder {
     open fun beforeClassKeyword(): String = ""
 
@@ -97,13 +102,20 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     private fun staticMethodsSection(c: CodeBuilderContext): CodeBuilderOps = {
-        line("companion object {")
-        tab()
-        staticMethods.forEach { methodOps ->
-            method(methodOps)
+        if (c.lang is Kotlin) {
+            line("companion object {")
+            tab()
+            staticMethods.forEach { methodOps ->
+                method(methodOps)
+            }
+            untab()
+            line("}")
         }
-        untab()
-        line("}")
+        else if (c.lang is TypeScript) {
+            staticMethods.forEach { methodOps ->
+                add(StaticMethodBuilder().apply(methodOps))
+            }
+        }
     }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit
