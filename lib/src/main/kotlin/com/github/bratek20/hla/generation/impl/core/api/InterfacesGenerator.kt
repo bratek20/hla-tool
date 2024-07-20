@@ -13,13 +13,13 @@ data class ArgumentView(
 )
 data class MethodView(
     val name: String,
-    val returnType: String?,
+    val returnType: String,
     val returnApiType: ApiType,
     val args: List<ArgumentView>,
     val throws: List<String>,
 ) {
     fun declaration(): String {
-        val returnSuffix = if (returnType != null) ": $returnType" else ""
+        val returnSuffix = ": $returnType"
         return "${name}(${argsDeclaration()})$returnSuffix"
     }
 

@@ -1,12 +1,17 @@
 package com.github.bratek20.hla.generation.impl.core.web
 
+import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.classBlock
 import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.builders.method
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.Kotlin
+import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.typescript.namespace
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -39,76 +44,93 @@ class WebCommonGenerator: FileGenerator() {
         return "WebCommon"
     }
 
-    private fun requestClass(interfName: String, method: MethodView): String {
-        return CodeBuilder(c.language.base())
-            .add {
-                classBlock {
-                    name = requestName(interfName, method)
-                    method.args.forEach { arg ->
-                        constructorField {
-                            name = arg.name
-                            type = type(arg.apiType.serializableName())
-                        }
-                    }
-                    body = {
-                        method.args.forEach { arg ->
-                            method {
-                                name = "get${camelToPascalCase(arg.name)}"
-                                returnType = type(arg.type)
-                                body = {
-                                    returnBlock {
-                                        variable(arg.apiType.deserialize(arg.name))
-                                    }
-                                }
+    private fun requestClass(interfName: String, method: MethodView): ClassBuilderOps {
+        return {
+            name = requestName(interfName, method)
+            method.args.forEach { arg ->
+                constructorField {
+                    name = arg.name
+                    type = type(arg.apiType.serializableName())
+                }
+            }
+            body = {
+                method.args.forEach { arg ->
+                    method {
+                        name = "get${camelToPascalCase(arg.name)}"
+                        returnType = type(arg.type)
+                        body = {
+                            returnBlock {
+                                variable(arg.apiType.deserialize(arg.name))
                             }
                         }
                     }
-                    staticMethod {
-                        name = "create"
-                        returnType = type(requestName(interfName, method))
-                        method.args.map { arg ->
-                           addArg {
-                               name = arg.name
-                               type = type(arg.type)
-                           }
-                        }
-                        body = {
-                            returnBlock {
-                                constructorCall {
-                                    className = requestName(interfName, method)
-                                    method.args.forEach {
-                                        addArg {
-                                            variable(it.apiType.serialize(it.name))
-                                        }
-                                    }
+                }
+            }
+            staticMethod {
+                name = "create"
+                returnType = type(requestName(interfName, method))
+                method.args.map { arg ->
+                   addArg {
+                       name = arg.name
+                       type = type(arg.type)
+                   }
+                }
+                body = {
+                    returnBlock {
+                        constructorCall {
+                            className = requestName(interfName, method)
+                            method.args.forEach {
+                                addArg {
+                                    variable(it.apiType.serialize(it.name))
                                 }
                             }
                         }
                     }
                 }
             }
-            .build()
+        }
+    }
+
+    private fun responseClass(interfName: String, method: MethodView): ClassBuilderOps {
+        return {
+            name = responseName(interfName, method)
+            constructorField {
+                name = "value"
+                type = type(method.returnType)
+            }
+        }
     }
     override fun generateFileContent(): FileContent {
         val exposedInterfaces = exposedInterfaces(c)
 
-        val requests = exposedInterfaces.flatMap { interf ->
-            interf.methods.mapNotNull { method ->
-                if (!method.hasArgs()) return@mapNotNull null
-                requestClass(interf.name, method)
+        val classes: MutableList<ClassBuilderOps> = mutableListOf()
+
+        exposedInterfaces.forEach { interf ->
+            interf.methods.forEach { method ->
+                if (method.hasArgs()) {
+                    classes.add(requestClass(interf.name, method))
+                }
+                if (method.returnType != "Unit") {
+                    classes.add(responseClass(interf.name, method))
+                }
             }
         }
 
-        val responses = exposedInterfaces.flatMap { interf ->
-            interf.methods.mapNotNull { method ->
-                if (method.returnType == "Unit") return@mapNotNull null
-                "class ${responseName(interf.name, method)}(val value: ${method.returnType})"
-            }
-        }
 
+        val view = CodeBuilder(c.language.base())
+            .add {
+                if (c.lang is TypeScript) {
+                    namespace {
+                        name = "Some"
+                        classes.forEach(::classBlock)
+                    }
+                } else {
+                    classes.forEach(::classBlock)
+                }
+            }
+            .build()
         return contentBuilder("webCommon.vm")
-            .put("requests", requests)
-            .put("responses", responses)
+            .put("view", view)
             .build()
     }
 }
