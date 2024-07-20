@@ -4,7 +4,7 @@ include("kotlin")
 include("kotlin2")
 include("tests")
 
-val catalogVersion = "1.0.39"
+val catalogVersion = "1.0.41"
 
 pluginManagement {
     repositories {
