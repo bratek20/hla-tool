@@ -29,7 +29,7 @@ class FieldBuilder: CodeBlockBuilder {
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
-fun field(block: FieldBuilderOps) = FieldBuilder().apply(block)
+fun CodeBuilder.field(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
 
 class ClassBuilder: CodeBlockBuilder {
     lateinit var name: String
@@ -37,26 +37,24 @@ class ClassBuilder: CodeBlockBuilder {
     var implementedInterfaceName: String? = null
     var body: CodeBuilderOps? = null
 
-    private val constructorFields: MutableList<FieldBuilder> = mutableListOf()
+    private val constructorFields: MutableList<FieldBuilderOps> = mutableListOf()
+    private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
 
     fun constructorField(block: FieldBuilderOps) {
-        constructorFields.add(FieldBuilder().apply(block))
+        constructorFields.add(block)
     }
 
     fun staticMethod(block: MethodBuilderOps) {
-        body = {
-            line("companion object {")
-            tab()
-            add(MethodBuilder().apply(block))
-            untab()
-            line("}")
-        }
+        staticMethods.add(block)
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         add(classDeclaration(c))
         tab()
         body?.let { add(it) }
+        if (staticMethods.isNotEmpty()) {
+            add(staticMethodsSection(c))
+        }
         untab()
         line("}")
     }
@@ -67,9 +65,10 @@ class ClassBuilder: CodeBlockBuilder {
         if (c.lang is Kotlin && constructorFields.isNotEmpty()) {
             line("class $name${implementsPart}(")
             tab()
-            constructorFields.forEach { field ->
-                add(field)
+            constructorFields.forEach { fieldOps ->
+                field(fieldOps)
                 linePart(",")
+                lineEnd()
             }
             untab()
             line(") {")
@@ -77,6 +76,16 @@ class ClassBuilder: CodeBlockBuilder {
         else {
             line("class $name${implementsPart} {")
         }
+    }
+
+    private fun staticMethodsSection(c: CodeBuilderContext): CodeBuilderOps = {
+        line("companion object {")
+        tab()
+        staticMethods.forEach { methodOps ->
+            method(methodOps)
+        }
+        untab()
+        line("}")
     }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit

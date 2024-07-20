@@ -94,16 +94,18 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    field {
-                        accessor = FieldAccessor.PRIVATE
-                        name = "a"
-                        type = type("A")
-                        value = linePartBlock("null")
-                    }
-                    emptyLine()
-                    field {
-                        name = "b"
-                        type = type("B")
+                    body = {
+                        field {
+                            accessor = FieldAccessor.PRIVATE
+                            name = "a"
+                            type = type("A")
+                            value = linePartBlock("null")
+                        }
+                        emptyLine()
+                        field {
+                            name = "b"
+                            type = type("B")
+                        }
                     }
                 }
             }
@@ -156,13 +158,16 @@ class ClassBuilderTest {
     }
 
     @Test
-    fun `static method`() {
+    fun `static methods`() {
         testCodeBuilderOp {
             op = {
                 classBlock {
                     name = "SomeClass"
                     staticMethod {
                         name = "someMethod"
+                    }
+                    staticMethod {
+                        name = "otherMethod"
                     }
                 }
             }
@@ -172,6 +177,8 @@ class ClassBuilderTest {
                     class SomeClass {
                         companion object {
                             fun someMethod() {
+                            }
+                            fun otherMethod() {
                             }
                         }
                     }
@@ -253,7 +260,7 @@ class ClassBuilderTest {
                 expected = """
                     class SomeInterfaceSomeCommandRequest(
                         private val id: String,
-                        private val amount: Int
+                        private val amount: Int,
                     ) {
                         fun getId(): SomeId {
                             return SomeId(id)
