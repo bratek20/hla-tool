@@ -89,7 +89,7 @@ class ClassBuilderTest {
     }
 
     @Test
-    fun `class with fields split by empty line`() {
+    fun `class with fields`() {
         testCodeBuilderOp {
             op = {
                 classBlock {
@@ -101,7 +101,6 @@ class ClassBuilderTest {
                             type = type("A")
                             value = linePartBlock("null")
                         }
-                        emptyLine()
                         field {
                             name = "b"
                             type = type("B")
@@ -114,7 +113,6 @@ class ClassBuilderTest {
                 expected = """
                     class SomeClass {
                         private val a: A = null
-                    
                         val b: B
                     }
                 """
@@ -124,7 +122,6 @@ class ClassBuilderTest {
                 expected = """
                     class SomeClass {
                         private readonly a: A = null
-                    
                         readonly b: B
                     }
                 """

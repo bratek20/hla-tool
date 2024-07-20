@@ -104,6 +104,7 @@ class MethodAndFunctionBuilderTest {
                                 methodCall {
                                     variableName = "left"
                                     methodName = "sum"
+                                    skipSoftEnd = true
 
                                     addArg {
                                         const("1")

@@ -75,6 +75,22 @@ class CodeBuilderTest {
     }
 
     @Test
+    fun `lineSoftStart() should start new line if lineSoftEnd() was used`() {
+        testCodeBuilderOp {
+            op = {
+                lineStart("a")
+                lineSoftEnd("b")
+                lineSoftStart("c")
+                lineEnd()
+            }
+            expected = """
+                ab
+                c
+            """
+        }
+    }
+
+    @Test
     fun `should throw exceptions when line manipulation used badly`() {
         testCodeBuilderOpException {
             op = {

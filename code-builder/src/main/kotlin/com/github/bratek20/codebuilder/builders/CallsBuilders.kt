@@ -9,6 +9,9 @@ abstract class CallBuilder: CodeBlockBuilder {
     protected abstract fun getCallName(): String
     protected open fun beforeName(): String = ""
 
+    // hacky solution to make work methodCall() + methodCall() example
+    var skipSoftEnd: Boolean? = null
+
     private val args: MutableList<CodeBuilderOps> = mutableListOf()
     fun addArg(ops: CodeBuilderOps) {
         args.add(ops)
@@ -24,7 +27,10 @@ abstract class CallBuilder: CodeBlockBuilder {
                 linePart(", ")
             }
         }
-        lineSoftEnd(")")
+        linePart(")")
+        if (skipSoftEnd != true) {
+            lineSoftEnd()
+        }
     }
 }
 

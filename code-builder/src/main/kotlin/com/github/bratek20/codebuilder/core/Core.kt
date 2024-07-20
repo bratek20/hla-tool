@@ -62,19 +62,22 @@ class CodeBuilder(
             throw CodeBuilderException(msg)
         }
 
-        lineManipulationStarted = true
-        lineManipulationSoftEnd = false
-        lines.add(indentString())
+        startLineManipulation()
 
         value?.let { linePart(it) }
 
         return this
     }
 
+    private fun startLineManipulation() {
+        lineManipulationStarted = true
+        lineManipulationSoftEnd = false
+        lines.add(indentString())
+    }
+
     fun lineSoftStart(value: String? = null): CodeBuilder {
-        if (!lineManipulationStarted) {
-            lineManipulationStarted = true
-            lines.add(indentString())
+        if (!lineManipulationStarted || lineManipulationSoftEnd) {
+            startLineManipulation()
         }
 
         value?.let { linePart(it) }
