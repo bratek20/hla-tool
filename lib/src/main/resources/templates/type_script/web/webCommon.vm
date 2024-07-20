@@ -1,0 +1,12 @@
+namespace ${moduleName}.Web {
+    export class ${moduleName}WebClientConfig {
+        constructor(readonly value: HttpClientConfig) {}
+    }
+#foreach($request in $requests)
+$request
+#end
+
+#foreach($respone in $responses)
+$respone
+#end
+}
