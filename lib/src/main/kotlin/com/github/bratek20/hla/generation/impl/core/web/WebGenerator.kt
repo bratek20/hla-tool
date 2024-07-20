@@ -108,7 +108,7 @@ class WebCommonGenerator: FileGenerator() {
                 if (method.hasArgs()) {
                     classes.add(requestClass(interf.name, method))
                 }
-                if (method.returnType != "Unit") {
+                if (method.returnType != "Unit" && method.returnType != "void") {
                     classes.add(responseClass(interf.name, method))
                 }
             }
