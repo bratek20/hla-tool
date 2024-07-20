@@ -151,6 +151,17 @@ class ClassBuilderTest {
                     }
                 """
             }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass {
+                        constructor(
+                            readonly id: string,
+                        ) {}
+                    }
+                """
+
+            }
         }
     }
 

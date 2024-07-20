@@ -77,6 +77,20 @@ open class ClassBuilder: CodeBlockBuilder {
             untab()
             line(") {")
         }
+        else if (c.lang is TypeScript && constructorFields.isNotEmpty()) {
+            line("$beginning {")
+            tab()
+            line("constructor(")
+            tab()
+            constructorFields.forEach { fieldOps ->
+                field(fieldOps)
+                linePart(",")
+                lineEnd()
+            }
+            untab()
+            line(") {}")
+            untab()
+        }
         else {
             line("$beginning {")
         }
