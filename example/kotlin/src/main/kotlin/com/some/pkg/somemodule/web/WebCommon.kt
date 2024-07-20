@@ -12,8 +12,8 @@ import com.some.pkg.typesmodule.api.*
 class SomeModuleWebClientConfig(val value: HttpClientConfig)
 
 class SomeInterfaceSomeCommandRequest(
-    val id: String,
-    val amount: Int,
+    private val id: String,
+    private val amount: Int,
 ) {
     fun getId(): SomeId {
         return SomeId(id)
@@ -28,7 +28,7 @@ class SomeInterfaceSomeCommandRequest(
     }
 }
 class SomeInterfaceSomeQueryRequest(
-    val query: SomeQueryInput,
+    private val query: SomeQueryInput,
 ) {
     fun getQuery(): SomeQueryInput {
         return query
@@ -39,8 +39,12 @@ class SomeInterfaceSomeQueryRequest(
         }
     }
 }
+class SomeInterfaceSomeQueryResponse(
+    val value: SomeClass,
+) {
+}
 class SomeInterfaceOptMethodRequest(
-    val optId: String?,
+    private val optId: String?,
 ) {
     fun getOptId(): SomeId? {
         return optId?.let { it -> SomeId(it) }
@@ -51,8 +55,12 @@ class SomeInterfaceOptMethodRequest(
         }
     }
 }
+class SomeInterfaceOptMethodResponse(
+    val value: SomeClass?,
+) {
+}
 class SomeInterface2ReferenceOtherClassRequest(
-    val other: OtherClass,
+    private val other: OtherClass,
 ) {
     fun getOther(): OtherClass {
         return other
@@ -63,8 +71,12 @@ class SomeInterface2ReferenceOtherClassRequest(
         }
     }
 }
+class SomeInterface2ReferenceOtherClassResponse(
+    val value: OtherClass,
+) {
+}
 class SomeInterface2ReferenceLegacyTypeRequest(
-    val legacyType: com.some.pkg.legacy.LegacyType,
+    private val legacyType: com.some.pkg.legacy.LegacyType,
 ) {
     fun getLegacyType(): com.some.pkg.legacy.LegacyType {
         return legacyType
@@ -75,8 +87,7 @@ class SomeInterface2ReferenceLegacyTypeRequest(
         }
     }
 }
-
-class SomeInterfaceSomeQueryResponse(val value: SomeClass)
-class SomeInterfaceOptMethodResponse(val value: SomeClass?)
-class SomeInterface2ReferenceOtherClassResponse(val value: OtherClass)
-class SomeInterface2ReferenceLegacyTypeResponse(val value: com.some.pkg.legacy.LegacyType)
+class SomeInterface2ReferenceLegacyTypeResponse(
+    val value: com.some.pkg.legacy.LegacyType,
+) {
+}

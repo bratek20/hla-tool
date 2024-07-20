@@ -1,9 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.web
 
-import com.github.bratek20.codebuilder.builders.ClassBuilderOps
-import com.github.bratek20.codebuilder.builders.classBlock
-import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.core.Kotlin
@@ -49,6 +46,7 @@ class WebCommonGenerator: FileGenerator() {
             name = requestName(interfName, method)
             method.args.forEach { arg ->
                 constructorField {
+                    accessor = FieldAccessor.PRIVATE
                     name = arg.name
                     type = type(arg.apiType.serializableName())
                 }
@@ -115,7 +113,6 @@ class WebCommonGenerator: FileGenerator() {
                 }
             }
         }
-
 
         val view = CodeBuilder(c.language.base())
             .add {
