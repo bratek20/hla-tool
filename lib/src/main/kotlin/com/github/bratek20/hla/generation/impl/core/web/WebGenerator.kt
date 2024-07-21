@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.web
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.ops.assign
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.type
@@ -44,11 +45,13 @@ class WebCommonGenerator: FileGenerator() {
     private fun kotlinRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = requestName(interfName, method)
-            method.args.forEach { arg ->
-                constructorField {
-                    accessor = FieldAccessor.PRIVATE
-                    name = arg.name
-                    type = type(arg.apiType.serializableName())
+            constructor {
+                method.args.forEach { arg ->
+                    addField {
+                        accessor = FieldAccessor.PRIVATE
+                        name = arg.name
+                        type = type(arg.apiType.serializableName())
+                    }
                 }
             }
             body = {
@@ -140,9 +143,11 @@ class WebCommonGenerator: FileGenerator() {
     private fun responseClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = responseName(interfName, method)
-            constructorField {
-                name = "value"
-                type = type(method.returnType)
+            constructor {
+                addField {
+                    name = "value"
+                    type = type(method.returnType)
+                }
             }
         }
     }
@@ -202,6 +207,76 @@ class WebClientGenerator: FileGenerator() {
         val methods: List<MethodView>
     )
 
+    private fun view(): String {
+//        namespace SomeModule.Web {
+//            export class SomeInterfaceWebClient implements SomeInterface {
+//            private readonly client: HttpClient
+//
+//            constructor(
+//                config: SomeModuleWebClientConfig,
+//                c: HandlerContext
+//            ) {
+//                this.client = HttpClient.Api.create(config.value, c)
+//            }
+//
+//            someEmptyMethod(): void {
+//            client.post("/someInterface/someEmptyMethod", Optional.empty())
+//        }
+//
+//            someCommand(id: SomeId, amount: number): void {
+//            client.post("/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)))
+//        }
+//
+//            someQuery(query: SomeQueryInput): SomeClass {
+//            return client.post("/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().value
+//        }
+//
+//            optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
+//            return client.post("/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().value
+//        }
+//        }
+//        }
+        val moduleName = c.module.getName().value
+        val interfs = exposedInterfaces(c)
+        return CodeBuilder(c.language.base())
+            .add {
+                namespace {
+                    name = "${moduleName}.Web"
+                    interfs.forEach { interf ->
+                        classBlock {
+                            name = "${interf.name}WebClient"
+                            implementedInterfaceName = interf.name
+                            constructor {
+                                addArg {
+                                    name = "config"
+                                    type = type("${moduleName}WebClientConfig")
+                                }
+                                addArg {
+                                    name = "c"
+                                    type = type("HandlerContext")
+                                }
+                                body = {
+                                    assign {
+                                        variable = "this.client"
+                                        value =  {
+                                            variable("HttpClient.Api.create(config.value, c)")
+                                        }
+                                    }
+                                }
+                            }
+                            interf.methods.forEach { method ->
+                                method {
+                                    name = method.declaration()
+                                    //body = method.body
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .build()
+    }
+
     override fun generateFileContent(): FileContent {
         return contentBuilder("webClient.vm")
             .put("interfaces", exposedInterfaces(c).map { interf ->
@@ -215,6 +290,7 @@ class WebClientGenerator: FileGenerator() {
                     }
                 )
             })
+            .put("view", view())
             .build()
     }
 
