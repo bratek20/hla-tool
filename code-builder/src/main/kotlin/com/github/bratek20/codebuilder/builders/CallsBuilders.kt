@@ -6,7 +6,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
 abstract class CallBuilder: CodeBlockBuilder {
-    protected abstract fun getCallName(): String
+    protected abstract fun getCallName(c: CodeBuilderContext): String
     protected open fun beforeName(): String = ""
 
     // hacky solution to make work methodCall() + methodCall() example
@@ -20,7 +20,7 @@ abstract class CallBuilder: CodeBlockBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         lineSoftStart(beforeName())
 
-        linePart("${getCallName()}(")
+        linePart("${getCallName(c)}(")
         args.forEachIndexed { index, arg ->
             add(arg)
             if (index != args.size - 1) {
@@ -39,7 +39,7 @@ class MethodCallBuilder: CallBuilder() {
 
     var variableName: String? = null
 
-    override fun getCallName(): String {
+    override fun getCallName(c: CodeBuilderContext): String {
         return methodName
     }
 
@@ -52,7 +52,7 @@ fun CodeBuilder.methodCall(block: MethodCallBuilder.() -> Unit) = add(MethodCall
 class FunctionCallBuilder: CallBuilder() {
     lateinit var name: String
 
-    override fun getCallName(): String {
+    override fun getCallName(c: CodeBuilderContext): String {
         return name
     }
 }
@@ -61,8 +61,8 @@ fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(Functi
 class ConstructorCallBuilder: CallBuilder() {
     lateinit var className: String
 
-    override fun getCallName(): String {
-        return className
+    override fun getCallName(c: CodeBuilderContext): String {
+        return c.lang.constructorCall(className)
     }
 }
 fun CodeBuilder.constructorCall(block: ConstructorCallBuilder.() -> Unit) = add(ConstructorCallBuilder().apply(block))

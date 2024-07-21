@@ -1,8 +1,8 @@
 package com.github.bratek20.codebuilder.typescript
 
+import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 class NamespaceBuilderTest {
@@ -18,6 +18,14 @@ class NamespaceBuilderTest {
                     function {
                         name = "someFunction"
                     }
+                    const {
+                        name = "someConst"
+                        value = {
+                            constructorCall {
+                                className = "SomeClass"
+                            }
+                        }
+                    }
                 }
             }
             langExpected {
@@ -28,6 +36,7 @@ class NamespaceBuilderTest {
                         }
                         export function someFunction() {
                         }
+                        export const someConst = new SomeClass()
                     }
                 """
             }

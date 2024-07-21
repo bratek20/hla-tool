@@ -13,6 +13,18 @@ class NamespaceFunctionBuilder: FunctionBuilder() {
     }
 }
 
+class ConstBuilder: CodeBlockBuilder {
+    lateinit var name: String
+    lateinit var value: CodeBuilderOps
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        lineSoftStart("export const $name = ")
+        add(value)
+        lineSoftEnd()
+    }
+}
+typealias ConstBuilderOps = ConstBuilder.() -> Unit
+
 class NamespaceBuilder: CodeBlockBuilder {
     lateinit var name: String
 
@@ -24,6 +36,10 @@ class NamespaceBuilder: CodeBlockBuilder {
 
     fun function(block: FunctionBuilderOps) {
         body.add(NamespaceFunctionBuilder().apply(block))
+    }
+
+    fun const(block: ConstBuilderOps) {
+        body.add(ConstBuilder().apply(block))
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {

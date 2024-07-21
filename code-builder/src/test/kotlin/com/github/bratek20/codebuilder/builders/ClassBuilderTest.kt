@@ -223,6 +223,24 @@ class ClassBuilderTest {
     }
 
     @Test
+    fun constructorCall() {
+        testCodeBuilderOp {
+            op = {
+                constructorCall {
+                    className = "SomeClass"
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = "SomeClass()"
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = "new SomeClass()"
+            }
+        }
+    }
+    @Test
     fun complicatedClass() {
         testCodeBuilderOp {
             op = {

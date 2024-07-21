@@ -29,6 +29,8 @@ interface CodeBuilderLanguage {
     fun lambdaArrow(): String
 
     fun immutableFieldDeclaration(): String
+
+    fun constructorCall(className: String): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -111,6 +113,10 @@ class Kotlin: CodeBuilderLanguage {
     override fun immutableFieldDeclaration(): String {
         return "val "
     }
+
+    override fun constructorCall(className: String): String {
+        return className
+    }
 }
 
 class TypeScript: CodeBuilderLanguage {
@@ -192,5 +198,9 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun immutableFieldDeclaration(): String {
         return "readonly "
+    }
+
+    override fun constructorCall(className: String): String {
+        return "new $className"
     }
 }

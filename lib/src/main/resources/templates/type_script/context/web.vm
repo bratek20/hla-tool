@@ -1,0 +1,11 @@
+namespace SomeModule.Api {
+    const config = new SomeModuleWebClientConfig(
+        HttpClientConfig.create(
+            EnvVars.Api.Get("BASE_URL"),
+            "someServerName",
+            Optional.of(HttpClientAuth.create(EnvVars.Api.Get("AUTH")))
+        )
+    )
+}
+
+$view

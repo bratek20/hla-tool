@@ -2,15 +2,15 @@
 
 namespace SomeModule.Api {
     const config = new SomeModuleWebClientConfig(
-        new HttpClientConfig(
-            EnvVars.get("BASE_URL"),
-            new HttpClientAuth(
-                EnvVars.get("USERNAME"),
-                EnvVars.get("PASSWORD"),
-            )
+        HttpClientConfig.create(
+            EnvVars.Api.Get("BASE_URL"),
+            "someServerName",
+            Optional.of(HttpClientAuth.create(EnvVars.Api.Get("AUTH")))
         )
     )
+}
 
+namespace SomeModule.Api {
     export function someEmptyMethod(c: HandlerContext): void {
         new Web.SomeInterfaceWebClient(c).someEmptyMethod()
     }
