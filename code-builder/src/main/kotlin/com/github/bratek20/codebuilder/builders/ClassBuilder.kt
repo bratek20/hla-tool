@@ -104,6 +104,15 @@ open class ClassBuilder: CodeBlockBuilder {
             add(constructor!!.getFieldsAndArgsOps())
             untab()
             line(") {")
+            if (constructor!!.body != null) {
+                tab()
+                line("init {")
+                tab()
+                add(constructor!!.body!!)
+                untab()
+                line("}")
+                untab()
+            }
         }
         else if (c.lang is TypeScript && constructor != null) {
             line("$beginning {")
@@ -112,7 +121,16 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             add(constructor!!.getFieldsAndArgsOps())
             untab()
-            line(") {}")
+            if (constructor!!.body != null) {
+                line(") {")
+                tab()
+                add(constructor!!.body!!)
+                untab()
+                line("}")
+            }
+            else {
+                line(") {}")
+            }
             untab()
         }
         else {
