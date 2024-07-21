@@ -131,14 +131,24 @@ class ClassBuilderTest {
 
 
     @Test
-    fun `constructor field`() {
+    fun `constructor - field, arg and body`() {
         testCodeBuilderOp {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    constructorField {
-                        name = "id"
-                        type = baseType(BaseType.STRING)
+                    constructor {
+                        addField {
+                            accessor = FieldAccessor.PRIVATE
+                            name = "idField"
+                            type = baseType(BaseType.STRING)
+                        }
+                        addArg {
+                            name = "idArg"
+                            type = baseType(BaseType.STRING)
+                        }
+                        body = {
+                            comment("some comment")
+                        }
                     }
                 }
             }
@@ -146,8 +156,12 @@ class ClassBuilderTest {
                 lang = Kotlin()
                 expected = """
                     class SomeClass(
-                        val id: String,
+                        private val idField: String,
+                        idArg: String
                     ) {
+                        init {
+                            // some comment
+                        }
                     }
                 """
             }
@@ -156,8 +170,11 @@ class ClassBuilderTest {
                 expected = """
                     class SomeClass {
                         constructor(
-                            readonly id: string,
-                        ) {}
+                            private readonly idField: string,
+                            idArg: string
+                        ) {
+                            // some comment
+                        }
                     }
                 """
             }
@@ -211,15 +228,17 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeInterfaceSomeCommandRequest"
-                    constructorField {
-                        accessor = FieldAccessor.PRIVATE
-                        name = "id"
-                        type = baseType(BaseType.STRING)
-                    }
-                    constructorField {
-                        accessor = FieldAccessor.PRIVATE
-                        name = "amount"
-                        type = baseType(BaseType.INT)
+                    constructor {
+                        addField {
+                            accessor = FieldAccessor.PRIVATE
+                            name = "id"
+                            type = baseType(BaseType.STRING)
+                        }
+                        addField {
+                            accessor = FieldAccessor.PRIVATE
+                            name = "amount"
+                            type = baseType(BaseType.INT)
+                        }
                     }
                     body = {
                         method {

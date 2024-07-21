@@ -36,19 +36,34 @@ class StaticMethodBuilder: MethodBuilder() {
         return "static " + super.beforeName(c)
     }
 }
+class ClassConstructorBuilder {
+    val fields: MutableList<FieldBuilderOps> = mutableListOf()
+    fun addField(block: FieldBuilderOps) {
+        fields.add(block)
+    }
+
+    val args: MutableList<ArgumentBuilderOps> = mutableListOf()
+    fun addArg(block: ArgumentBuilderOps) {
+        args.add(block)
+    }
+
+    var body: CodeBuilderOps? = null
+}
+typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
+
 open class ClassBuilder: CodeBlockBuilder {
     open fun beforeClassKeyword(): String = ""
 
     lateinit var name: String
 
     var implementedInterfaceName: String? = null
+    private var constructor: ClassConstructorBuilder? = null
     var body: CodeBuilderOps? = null
 
-    private val constructorFields: MutableList<FieldBuilderOps> = mutableListOf()
     private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
 
-    fun constructorField(block: FieldBuilderOps) {
-        constructorFields.add(block)
+    fun constructor(block: ClassConstructorBuilderOps) {
+        constructor = ClassConstructorBuilder().apply(block)
     }
 
     fun staticMethod(block: MethodBuilderOps) {
@@ -56,7 +71,7 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        add(classDeclaration(c))
+        add(classDeclarationWithConstructor(c))
         tab()
         body?.let { add(it) }
         if (staticMethods.isNotEmpty()) {
@@ -66,15 +81,15 @@ open class ClassBuilder: CodeBlockBuilder {
         line("}")
     }
 
-    private fun classDeclaration(c: CodeBuilderContext): CodeBuilderOps = {
+    private fun classDeclarationWithConstructor(c: CodeBuilderContext): CodeBuilderOps = {
         val classPart = beforeClassKeyword() + "class "
         val implementsPart = implementedInterfaceName?.let { c.lang.implements() + it } ?: ""
         val beginning = "$classPart$name$implementsPart"
 
-        if (c.lang is Kotlin && constructorFields.isNotEmpty()) {
+        if (c.lang is Kotlin && constructor != null) {
             line("$beginning(")
             tab()
-            constructorFields.forEach { fieldOps ->
+            constructor!!.fields.forEach { fieldOps ->
                 field(fieldOps)
                 linePart(",")
                 lineEnd()
@@ -82,12 +97,12 @@ open class ClassBuilder: CodeBlockBuilder {
             untab()
             line(") {")
         }
-        else if (c.lang is TypeScript && constructorFields.isNotEmpty()) {
+        else if (c.lang is TypeScript && constructor != null) {
             line("$beginning {")
             tab()
             line("constructor(")
             tab()
-            constructorFields.forEach { fieldOps ->
+            constructor!!.fields.forEach { fieldOps ->
                 field(fieldOps)
                 linePart(",")
                 lineEnd()
