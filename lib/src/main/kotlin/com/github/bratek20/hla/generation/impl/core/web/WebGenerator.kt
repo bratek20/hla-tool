@@ -15,6 +15,7 @@ import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.MethodView
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -254,7 +255,11 @@ class WebServerGenerator: FileGenerator() {
         val url: String,
     )
 
-    override fun generateFileContent(): FileContent {
+    override fun generateFileContent(): FileContent? {
+        if (c.language is TypeScriptSupport) {
+            return null
+        }
+
         return contentBuilder("webServer.vm")
             .put("interfaces", exposedInterfaces(c).map { interf ->
                 InterfaceView(
