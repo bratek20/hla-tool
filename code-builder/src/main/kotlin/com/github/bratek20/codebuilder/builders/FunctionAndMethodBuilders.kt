@@ -82,7 +82,7 @@ open class MethodBuilder: MethodOrFunctionBuilder() {
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
 fun CodeBuilder.method(block: MethodBuilderOps) = add(MethodBuilder().apply(block))
-
+fun method(block: MethodBuilderOps) = MethodBuilder().apply(block)
 
 open class FunctionBuilder: MethodOrFunctionBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {

@@ -2,14 +2,13 @@
 
 namespace SomeModule.Web {
     export class SomeInterfaceWebClient implements SomeInterface {
-        private readonly client: HttpClient
-
         constructor(
             config: SomeModuleWebClientConfig,
             c: HandlerContext
         ) {
             this.client = HttpClient.Api.create(config.value, c)
         }
+        private readonly client: HttpClient
 
         someEmptyMethod(): void {
             client.post("/someInterface/someEmptyMethod", Optional.empty())
@@ -28,3 +27,6 @@ namespace SomeModule.Web {
         }
     }
 }
+
+
+

@@ -1,5 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.MethodBuilder
+import com.github.bratek20.codebuilder.builders.MethodBuilderOps
+import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.utils.directory.api.FileContent
@@ -21,6 +25,17 @@ data class MethodView(
     fun declaration(): String {
         val returnSuffix = ": $returnType"
         return "${name}(${argsDeclaration()})$returnSuffix"
+    }
+
+    fun declarationCB(): MethodBuilder = method {
+        name = this@MethodView.name
+        args.forEach {
+            addArg {
+                name = it.name
+                type = type(it.type)
+            }
+        }
+        returnType = type(this@MethodView.returnType)
     }
 
     // used by velocity
