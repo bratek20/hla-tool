@@ -14,7 +14,7 @@ class ArgumentBuilder: CodeBlockBuilder {
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
         return {
-            linePart("$name: ")
+            lineSoftStart("$name: ")
             add(type)
             defaultValue?.let {
                 linePart(" = $it")
@@ -23,12 +23,12 @@ class ArgumentBuilder: CodeBlockBuilder {
     }
 }
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
-fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
+fun CodeBuilder.argument(block: ArgumentBuilderOps) = add(ArgumentBuilder().apply(block))
 
 class ArgumentListBuilder: CodeBlockBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun add(block: ArgumentBuilderOps) {
-        args.add(argument(block))
+        args.add(ArgumentBuilder().apply(block))
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {

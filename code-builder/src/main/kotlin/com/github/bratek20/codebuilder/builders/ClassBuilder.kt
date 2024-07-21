@@ -47,6 +47,18 @@ class ClassConstructorBuilder {
         args.add(block)
     }
 
+    fun getFieldsAndArgsOps(): CodeBuilderOps = {
+        fields.forEach { fieldOps ->
+            field(fieldOps)
+            linePart(",")
+            lineEnd()
+        }
+        args.forEach { argOps ->
+            argument(argOps)
+            linePart(",")
+            lineEnd()
+        }
+    }
     var body: CodeBuilderOps? = null
 }
 typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
@@ -89,11 +101,7 @@ open class ClassBuilder: CodeBlockBuilder {
         if (c.lang is Kotlin && constructor != null) {
             line("$beginning(")
             tab()
-            constructor!!.fields.forEach { fieldOps ->
-                field(fieldOps)
-                linePart(",")
-                lineEnd()
-            }
+            add(constructor!!.getFieldsAndArgsOps())
             untab()
             line(") {")
         }
@@ -102,11 +110,7 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             line("constructor(")
             tab()
-            constructor!!.fields.forEach { fieldOps ->
-                field(fieldOps)
-                linePart(",")
-                lineEnd()
-            }
+            add(constructor!!.getFieldsAndArgsOps())
             untab()
             line(") {}")
             untab()

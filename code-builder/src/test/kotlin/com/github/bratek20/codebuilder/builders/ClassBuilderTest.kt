@@ -157,7 +157,7 @@ class ClassBuilderTest {
                 expected = """
                     class SomeClass(
                         private val idField: String,
-                        idArg: String
+                        idArg: String,
                     ) {
                         init {
                             // some comment
@@ -171,7 +171,7 @@ class ClassBuilderTest {
                     class SomeClass {
                         constructor(
                             private readonly idField: string,
-                            idArg: string
+                            idArg: string,
                         ) {
                             // some comment
                         }
