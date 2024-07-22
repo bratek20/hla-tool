@@ -139,14 +139,14 @@ class WebCommonGenerator: FileGenerator() {
                                 className = requestName(interfName, method)
                             }
                         }
-                        method.args.forEach {
-                            assign {
-                                variable = {
-                                    name = "instance.${it.name}"
-                                }
-                                value = {
-                                    variable(it.apiType.serialize(it.name))
-                                }
+                    }
+                    method.args.forEach {
+                        assign {
+                            variable = {
+                                name = "instance.${it.name}"
+                            }
+                            value = {
+                                variable(it.apiType.serialize(it.name))
                             }
                         }
                     }

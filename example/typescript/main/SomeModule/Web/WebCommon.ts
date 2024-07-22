@@ -2,8 +2,8 @@
 
 namespace SomeModule.Web {
     export class SomeInterfaceSomeCommandRequest {
-        private id = STRING
-        private amount = NUMBER
+        private readonly id = TODO
+        private readonly amount = TODO
         getId(): SomeId {
             return new SomeId(id)
         }
@@ -11,19 +11,21 @@ namespace SomeModule.Web {
             return amount
         }
         static create(id: SomeId, amount: number): SomeInterfaceSomeCommandRequest {
-            const instance = new SomeInterfaceSomeCommandRequest()
+            instance = new SomeInterfaceSomeCommandRequest()
             instance.id = id.value
             instance.amount = amount
             return instance
         }
     }
     export class SomeInterfaceSomeQueryRequest {
-        private readonly query: SomeQueryInput
+        private readonly query = TODO
         getQuery(): SomeQueryInput {
             return query
         }
         static create(query: SomeQueryInput): SomeInterfaceSomeQueryRequest {
-            return SomeInterfaceSomeQueryRequest(query)
+            instance = new SomeInterfaceSomeQueryRequest()
+            instance.query = query
+            return instance
         }
     }
     export class SomeInterfaceSomeQueryResponse {
@@ -32,12 +34,14 @@ namespace SomeModule.Web {
         ) {}
     }
     export class SomeInterfaceOptMethodRequest {
-        private readonly optId: Optional<string>
+        private readonly optId = TODO
         getOptId(): Optional<SomeId> {
             return Optional.of(optId).map(it => new SomeId(it))
         }
         static create(optId: Optional<SomeId>): SomeInterfaceOptMethodRequest {
-            return SomeInterfaceOptMethodRequest(optId.map(it => it.value).orElse(undefined))
+            instance = new SomeInterfaceOptMethodRequest()
+            instance.optId = optId.map(it => it.value).orElse(undefined)
+            return instance
         }
     }
     export class SomeInterfaceOptMethodResponse {
@@ -46,12 +50,14 @@ namespace SomeModule.Web {
         ) {}
     }
     export class SomeInterface2ReferenceOtherClassRequest {
-        private readonly other: OtherClass
+        private readonly other = TODO
         getOther(): OtherClass {
             return other
         }
         static create(other: OtherClass): SomeInterface2ReferenceOtherClassRequest {
-            return SomeInterface2ReferenceOtherClassRequest(other)
+            instance = new SomeInterface2ReferenceOtherClassRequest()
+            instance.other = other
+            return instance
         }
     }
     export class SomeInterface2ReferenceOtherClassResponse {
@@ -60,12 +66,14 @@ namespace SomeModule.Web {
         ) {}
     }
     export class SomeInterface2ReferenceLegacyTypeRequest {
-        private readonly legacyType: LegacyType
+        private readonly legacyType = TODO
         getLegacyType(): LegacyType {
             return legacyType
         }
         static create(legacyType: LegacyType): SomeInterface2ReferenceLegacyTypeRequest {
-            return SomeInterface2ReferenceLegacyTypeRequest(legacyType)
+            instance = new SomeInterface2ReferenceLegacyTypeRequest()
+            instance.legacyType = legacyType
+            return instance
         }
     }
     export class SomeInterface2ReferenceLegacyTypeResponse {
