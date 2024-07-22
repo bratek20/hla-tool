@@ -29,9 +29,10 @@ namespace SomeModule.Web {
         }
     }
     export class SomeInterfaceSomeQueryResponse {
-        constructor(
-            readonly value: SomeClass,
-        ) {}
+        private value = new SomeClass
+        getValue(): SomeClass {
+            return value
+        }
     }
     export class SomeInterfaceOptMethodRequest {
         private optId = STRING
@@ -51,7 +52,7 @@ namespace SomeModule.Web {
         }
     }
     export class SomeInterface2ReferenceOtherClassRequest {
-        private other = TODO
+        private other = new OtherClass
         getOther(): OtherClass {
             return other
         }
@@ -62,12 +63,13 @@ namespace SomeModule.Web {
         }
     }
     export class SomeInterface2ReferenceOtherClassResponse {
-        constructor(
-            readonly value: OtherClass,
-        ) {}
+        private value = new OtherClass
+        getValue(): OtherClass {
+            return value
+        }
     }
     export class SomeInterface2ReferenceLegacyTypeRequest {
-        private legacyType = TODO
+        private legacyType = new LegacyType
         getLegacyType(): LegacyType {
             return legacyType
         }
@@ -78,8 +80,9 @@ namespace SomeModule.Web {
         }
     }
     export class SomeInterface2ReferenceLegacyTypeResponse {
-        constructor(
-            readonly value: LegacyType,
-        ) {}
+        private value = new LegacyType
+        getValue(): LegacyType {
+            return value
+        }
     }
 }
