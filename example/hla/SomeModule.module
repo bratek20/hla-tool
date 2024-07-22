@@ -113,6 +113,10 @@ Kotlin
     Records
         RecordClass
 Web
-    expose
-        SomeInterface
-        SomeInterface2
+    Http
+        ExposedInterfaces
+            SomeInterface
+            SomeInterface2
+        serverName = "someServerName"
+        baseUrl = "someService.baseUrl"
+        auth = "someService.auth"
