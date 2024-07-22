@@ -26,9 +26,13 @@ ValueObjects
         dataClasses: ComplexStructureDefinition[]
         dataKeys: KeyDefinition[]
 
+    HttpDefinition
+        exposedInterfaces: string[]
+        serverName: string?
+        baseUrl: string?
+        auth: string?
     WebSubmoduleDefinition
-        expose: string[]
-        serverUrl: string?
+        http: HttpDefinition?
 
     ExternalTypePackageMapping
         name: string

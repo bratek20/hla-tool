@@ -77,26 +77,65 @@ fun diffImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: Ex
     return result.joinToString("\n")
 }
 
+data class ExpectedHttpDefinition(
+    var exposedInterfaces: List<String>? = null,
+    var serverNameEmpty: Boolean? = null,
+    var serverName: String? = null,
+    var baseUrlEmpty: Boolean? = null,
+    var baseUrl: String? = null,
+    var authEmpty: Boolean? = null,
+    var auth: String? = null,
+)
+fun diffHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedHttpDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.exposedInterfaces?.let {
+        if (given.getExposedInterfaces().size != it.size) { result.add("${path}exposedInterfaces size ${given.getExposedInterfaces().size} != ${it.size}"); return@let }
+        given.getExposedInterfaces().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}exposedInterfaces[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    expected.serverNameEmpty?.let {
+        if ((given.getServerName() == null) != it) { result.add("${path}serverName empty ${(given.getServerName() == null)} != ${it}") }
+    }
+
+    expected.serverName?.let {
+        if (given.getServerName()!! != it) { result.add("${path}serverName ${given.getServerName()!!} != ${it}") }
+    }
+
+    expected.baseUrlEmpty?.let {
+        if ((given.getBaseUrl() == null) != it) { result.add("${path}baseUrl empty ${(given.getBaseUrl() == null)} != ${it}") }
+    }
+
+    expected.baseUrl?.let {
+        if (given.getBaseUrl()!! != it) { result.add("${path}baseUrl ${given.getBaseUrl()!!} != ${it}") }
+    }
+
+    expected.authEmpty?.let {
+        if ((given.getAuth() == null) != it) { result.add("${path}auth empty ${(given.getAuth() == null)} != ${it}") }
+    }
+
+    expected.auth?.let {
+        if (given.getAuth()!! != it) { result.add("${path}auth ${given.getAuth()!!} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedWebSubmoduleDefinition(
-    var expose: List<String>? = null,
-    var serverUrlEmpty: Boolean? = null,
-    var serverUrl: String? = null,
+    var httpEmpty: Boolean? = null,
+    var http: (ExpectedHttpDefinition.() -> Unit)? = null,
 )
 fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: ExpectedWebSubmoduleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedWebSubmoduleDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.expose?.let {
-        if (given.getExpose().size != it.size) { result.add("${path}expose size ${given.getExpose().size} != ${it.size}"); return@let }
-        given.getExpose().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}expose[${idx}] ${entry} != ${it[idx]}") } }
+    expected.httpEmpty?.let {
+        if ((given.getHttp() == null) != it) { result.add("${path}http empty ${(given.getHttp() == null)} != ${it}") }
     }
 
-    expected.serverUrlEmpty?.let {
-        if ((given.getServerUrl() == null) != it) { result.add("${path}serverUrl empty ${(given.getServerUrl() == null)} != ${it}") }
-    }
-
-    expected.serverUrl?.let {
-        if (given.getServerUrl()!! != it) { result.add("${path}serverUrl ${given.getServerUrl()!!} != ${it}") }
+    expected.http?.let {
+        if (diffHttpDefinition(given.getHttp()!!, it) != "") { result.add(diffHttpDefinition(given.getHttp()!!, it, "${path}http.")) }
     }
 
     return result.joinToString("\n")

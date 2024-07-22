@@ -79,26 +79,58 @@ data class ImplSubmoduleDefinition(
     }
 }
 
-data class WebSubmoduleDefinition(
-    private val expose: List<String>,
-    private val serverUrl: String?,
+data class HttpDefinition(
+    private val exposedInterfaces: List<String>,
+    private val serverName: String?,
+    private val baseUrl: String?,
+    private val auth: String?,
 ) {
-    fun getExpose(): List<String> {
-        return this.expose
+    fun getExposedInterfaces(): List<String> {
+        return this.exposedInterfaces
     }
 
-    fun getServerUrl(): String? {
-        return this.serverUrl
+    fun getServerName(): String? {
+        return this.serverName
+    }
+
+    fun getBaseUrl(): String? {
+        return this.baseUrl
+    }
+
+    fun getAuth(): String? {
+        return this.auth
     }
 
     companion object {
         fun create(
-            expose: List<String>,
-            serverUrl: String?,
+            exposedInterfaces: List<String>,
+            serverName: String?,
+            baseUrl: String?,
+            auth: String?,
+        ): HttpDefinition {
+            return HttpDefinition(
+                exposedInterfaces = exposedInterfaces,
+                serverName = serverName,
+                baseUrl = baseUrl,
+                auth = auth,
+            )
+        }
+    }
+}
+
+data class WebSubmoduleDefinition(
+    private val http: HttpDefinition?,
+) {
+    fun getHttp(): HttpDefinition? {
+        return this.http
+    }
+
+    companion object {
+        fun create(
+            http: HttpDefinition?,
         ): WebSubmoduleDefinition {
             return WebSubmoduleDefinition(
-                expose = expose,
-                serverUrl = serverUrl,
+                http = http,
             )
         }
     }

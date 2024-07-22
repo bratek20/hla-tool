@@ -43,15 +43,29 @@ fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): I
     )
 }
 
+data class HttpDefinitionDef(
+    var exposedInterfaces: List<String> = emptyList(),
+    var serverName: String? = null,
+    var baseUrl: String? = null,
+    var auth: String? = null,
+)
+fun httpDefinition(init: HttpDefinitionDef.() -> Unit = {}): HttpDefinition {
+    val def = HttpDefinitionDef().apply(init)
+    return HttpDefinition.create(
+        exposedInterfaces = def.exposedInterfaces,
+        serverName = def.serverName,
+        baseUrl = def.baseUrl,
+        auth = def.auth,
+    )
+}
+
 data class WebSubmoduleDefinitionDef(
-    var expose: List<String> = emptyList(),
-    var serverUrl: String? = null,
+    var http: (HttpDefinitionDef.() -> Unit)? = null,
 )
 fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): WebSubmoduleDefinition {
     val def = WebSubmoduleDefinitionDef().apply(init)
     return WebSubmoduleDefinition.create(
-        expose = def.expose,
-        serverUrl = def.serverUrl,
+        http = def.http?.let { it -> httpDefinition(it) },
     )
 }
 

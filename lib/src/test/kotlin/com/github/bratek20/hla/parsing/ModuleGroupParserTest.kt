@@ -695,20 +695,28 @@ class ModuleGroupParserTest {
             {
                 name = "OtherModule"
                 webSubmodule = {
-                    expose = listOf(
-                        "OtherInterface"
-                    )
-                    serverUrlEmpty = true
+                    http = {
+                        exposedInterfaces = listOf(
+                            "OtherInterface"
+                        )
+                        serverNameEmpty = true
+                        baseUrlEmpty = true
+                        authEmpty = true
+                    }
                 }
             },
             {
                 name = "SomeModule"
                 webSubmodule = {
-                    expose = listOf(
-                        "SomeInterface",
-                        "SomeInterface2"
-                    )
-                    serverUrl = "\"http://myhost:8080\""
+                    http = {
+                        exposedInterfaces = listOf(
+                            "SomeInterface",
+                            "SomeInterface2"
+                        )
+                        serverName = "someServerName"
+                        baseUrl = "someService.baseUrl"
+                        auth = "someService.auth"
+                    }
                 }
             },
         ))

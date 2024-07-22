@@ -6,7 +6,10 @@ Interfaces
         someMethod()
 
 Web
-    expose
-        SomeInterface
-        SomeInterface2
-    serverUrl = "http://myhost:8080"
+    Http
+        ExposedInterfaces
+            SomeInterface
+            SomeInterface2
+        serverName = "someServerName"
+        baseUrl = "someService.baseUrl"
+        auth = "someService.auth"

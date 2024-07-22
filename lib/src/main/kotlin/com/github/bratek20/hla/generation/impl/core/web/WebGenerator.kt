@@ -32,7 +32,7 @@ private fun exposedInterfaces(c: ModuleGenerationContext): List<InterfaceView> {
     val factory = InterfaceViewFactory(c.apiTypeFactory)
 
     val web = c.module.getWebSubmodule()!!
-    return web.getExpose()
+    return web.getHttp()!!.getExposedInterfaces()
         .map { name -> c.module.getInterfaces().first { it.getName() == name } }
         .map { factory.create(it) }
 }

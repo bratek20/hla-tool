@@ -108,15 +108,26 @@ class ModuleGroupParserLogic(
         )
     }
 
+    private fun parseOptVariable(elements: List<ParsedElement>, name: String): String? {
+        return elements.filterIsInstance<EqualsAssignment>().firstOrNull {
+            it.name == name
+        }?.value
+    }
+
     private fun parseWebSubmodule(elements: List<ParsedElement>): WebSubmoduleDefinition? {
         return findSection(elements, "Web")?.let { web ->
+            val http = findSection(web.elements, "Http")?.let { http ->
+                HttpDefinition(
+                    exposedInterfaces = http.elements.filterIsInstance<Section>().map {
+                        it.name
+                    },
+                    serverName = parseOptVariable(http.elements, "serverName"),
+                    baseUrl = parseOptVariable(http.elements, "baseUrl"),
+                    auth = parseOptVariable(http.elements, "auth"),
+                )
+            }
             return WebSubmoduleDefinition(
-                expose = findSection(web.elements, "expose")!!.elements.filterIsInstance<Section>().map {
-                    it.name
-                },
-                serverUrl = web.elements.filterIsInstance<EqualsAssignment>().firstOrNull {
-                    it.name == "serverUrl"
-                }?.value,
+                http = http
             )
         }
     }

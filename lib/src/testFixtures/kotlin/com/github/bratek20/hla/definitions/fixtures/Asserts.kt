@@ -24,6 +24,11 @@ fun assertImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: 
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefinition.() -> Unit) {
+    val diff = diffHttpDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: ExpectedWebSubmoduleDefinition.() -> Unit) {
     val diff = diffWebSubmoduleDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
