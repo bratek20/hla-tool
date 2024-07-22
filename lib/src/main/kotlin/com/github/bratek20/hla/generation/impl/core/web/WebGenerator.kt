@@ -102,6 +102,7 @@ class WebCommonGenerator: FileGenerator() {
                 method.args.forEach { arg ->
                     field {
                         accessor = FieldAccessor.PRIVATE
+                        mutable = true
                         name = arg.name
                         value = {
                             const(objectCreationType())
@@ -132,6 +133,7 @@ class WebCommonGenerator: FileGenerator() {
                 body = {
                     assign {
                         variable = {
+                            declare = true
                             name = "instance"
                         }
                         value = {
