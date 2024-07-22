@@ -1,9 +1,9 @@
-namespace SomeModule.Api {
-    const config = new SomeModuleWebClientConfig(
+namespace SomeModule.Web {
+    export const config = new SomeModuleWebClientConfig(
         HttpClientConfig.create(
-            EnvVars.Api.Get("BASE_URL"),
+            EnvVars.Api.Get(new VariableName("someService.baseUrl")),
             "someServerName",
-            Optional.of(HttpClientAuth.create(EnvVars.Api.Get("AUTH")))
+            Optional.of(HttpClientAuth.create(new VariableName("someService.auth")))
         )
     )
 }

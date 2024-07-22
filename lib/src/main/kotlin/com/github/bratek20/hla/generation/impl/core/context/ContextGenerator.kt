@@ -1,14 +1,13 @@
 package com.github.bratek20.hla.generation.impl.core.context
 
-import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
-import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
+import com.github.bratek20.utils.directory.api.FileContent
 
 class ImplContextGenerator: FileGenerator() {
     override fun name(): String {
@@ -46,49 +45,6 @@ class WebContextGenerator: FileGenerator() {
         val factory = InterfaceViewFactory(apiTypeFactory)
         val interfDefs = module.getInterfaces().filter { interfNames.contains(it.getName()) }
         val interfs = factory.create(interfDefs)
-//        namespace SomeModule.Api {
-//            const config = new SomeModuleWebClientConfig(
-//                new HttpClientConfig(
-//                        EnvVars.get("BASE_URL"),
-//                new HttpClientAuth(
-//                        EnvVars.get("USERNAME"),
-//                EnvVars.get("PASSWORD"),
-//            )
-//            )
-//            )
-//
-//            export function someEmptyMethod(c: HandlerContext): void {
-//            new Web.SomeInterfaceWebClient(c).someEmptyMethod()
-//        }
-//
-//            export function someCommand(id: SomeId, amount: number, c: HandlerContext): void {
-//            new Impl.SomeInterfaceLogic(c).someCommand(id, amount)
-//        }
-//
-//            export function someQuery(query: SomeQueryInput, c: HandlerContext): SomeClass {
-//            return new Impl.SomeInterfaceLogic(c).someQuery(query)
-//        }
-//
-//            export function optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {
-//            return new Impl.SomeInterfaceLogic(c).optMethod(optId)
-//        }
-//
-//            export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
-//            return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
-//        }
-//
-//            export function referenceLegacyType(legacyType: LegacyType, c: HandlerContext): LegacyType {
-//            return new Impl.SomeInterface2Logic(c).referenceLegacyType(legacyType)
-//        }
-//
-//            export function referenceInterface(empty: SomeEmptyInterface, c: HandlerContext): SomeEmptyInterface {
-//            return new Impl.SomeInterface3Logic(c).referenceInterface(empty)
-//        }
-//
-//            export function referenceOtherInterface(other: OtherInterface, c: HandlerContext): OtherInterface {
-//            return new Impl.SomeInterface3Logic(c).referenceOtherInterface(other)
-//        }
-//        }
         return CodeBuilder(c.language.base())
             .add {
                 namespace {
@@ -110,7 +66,7 @@ class WebContextGenerator: FileGenerator() {
                                 }
                                 body = {
                                     val returnPart = if (m.returnType != "void") "return " else ""
-                                    line("${returnPart}new Web.${interf.name}WebClient(c).${m.name}(${m.argsPass()})")
+                                    line("${returnPart}new Web.${interf.name}WebClient(Web.config, c).${m.name}(${m.argsPass()})")
                                 }
                             }
                         }
