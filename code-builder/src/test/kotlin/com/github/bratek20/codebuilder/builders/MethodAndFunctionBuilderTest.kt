@@ -81,7 +81,9 @@ class MethodAndFunctionBuilderTest {
                     }
                 }
                 assign {
-                    variable = "result"
+                    variable = {
+                        name = "result"
+                    }
                     value = {
                         methodCall {
                             variableName = "this"
@@ -97,7 +99,9 @@ class MethodAndFunctionBuilderTest {
                     }
                 }
                 assign {
-                    variable = "sumOfSum"
+                    variable = {
+                        name = "sumOfSum"
+                    }
                     value = {
                         plus {
                             left = {
@@ -137,8 +141,8 @@ class MethodAndFunctionBuilderTest {
                     fun sum(a: Int, b: Int): Int {
                         return a + b
                     }
-                    result = this.sum(1, 2)
-                    sumOfSum = left.sum(1, 2) + right.sum(3, 4)
+                    val result = this.sum(1, 2)
+                    val sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }
             langExpected {
@@ -147,8 +151,8 @@ class MethodAndFunctionBuilderTest {
                     sum(a: number, b: number): number {
                         return a + b
                     }
-                    result = this.sum(1, 2)
-                    sumOfSum = left.sum(1, 2) + right.sum(3, 4)
+                    const result = this.sum(1, 2)
+                    const sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }
         }

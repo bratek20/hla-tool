@@ -3,6 +3,7 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.comment
 import com.github.bratek20.codebuilder.ops.returnBlock
+import com.github.bratek20.codebuilder.ops.string
 import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
@@ -99,11 +100,16 @@ class ClassBuilderTest {
                             accessor = FieldAccessor.PRIVATE
                             name = "a"
                             type = type("A")
-                            value = linePartBlock("null")
+                            value = { variable("null") }
                         }
                         field {
                             name = "b"
                             type = type("B")
+                        }
+                        field {
+                            name = "noType"
+                            value = { string("someString") }
+                            mutable = true
                         }
                     }
                 }
@@ -114,6 +120,7 @@ class ClassBuilderTest {
                     class SomeClass {
                         private val a: A = null
                         val b: B
+                        var noType = "someString"
                     }
                 """
             }
@@ -123,12 +130,12 @@ class ClassBuilderTest {
                     class SomeClass {
                         private readonly a: A = null
                         readonly b: B
+                        noType = "someString"
                     }
                 """
             }
         }
     }
-
 
     @Test
     fun `constructor - field, arg and body`() {

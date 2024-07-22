@@ -9,18 +9,29 @@ enum class FieldAccessor {
 
 class FieldBuilder: CodeBlockBuilder {
     lateinit var name: String
-    lateinit var type: TypeBuilder
 
-    var value: LinePartBuilder? = null
+    var type: TypeBuilder? = null
+
+    var value: CodeBuilderOps? = null
     var accessor: FieldAccessor? = null
+    var mutable: Boolean = false
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         lineSoftStart()
         accessor?.let {
             linePart("${it.name.lowercase()} ")
         }
-        linePart("${c.lang.immutableFieldDeclaration()}$name: ")
-        add(type)
+        if (mutable) {
+            linePart(c.lang.mutableFieldDeclaration())
+        }
+        else {
+            linePart(c.lang.immutableFieldDeclaration())
+        }
+        linePart(name)
+        type?.let {
+            linePart(": ")
+            add(it)
+        }
         value?.let {
             linePart(" = ")
             add(it)

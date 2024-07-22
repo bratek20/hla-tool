@@ -70,13 +70,17 @@ class MocksGenerator: FileGenerator() {
                         accessor = FieldAccessor.PRIVATE
                         name = callsListName
                         type = mutableListType(type(inputTypeName))
-                        value = emptyMutableList()
+                        value = {
+                            add(emptyMutableList())
+                        }
                     }
                     field {
                         accessor = FieldAccessor.PRIVATE
                         name = responsesListName
                         type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
-                        value = emptyMutableList()
+                        value = {
+                            add(emptyMutableList())
+                        }
                     }
                     emptyLine()
 
@@ -109,7 +113,10 @@ class MocksGenerator: FileGenerator() {
                                 variable(inputArgName)
                             }
                             assign {
-                                variable = "val findResult" // TODO variable should handle val
+                                variable = {
+                                    declare = true
+                                    name = "findResult"
+                                }
                                 value = {
                                     listOp(responsesListName).find {
                                         isEqualTo {

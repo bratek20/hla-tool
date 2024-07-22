@@ -4,10 +4,7 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.ops.assign
-import com.github.bratek20.codebuilder.ops.comment
-import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
 import com.github.bratek20.utils.directory.api.FileContent
@@ -94,6 +91,10 @@ class WebCommonGenerator: FileGenerator() {
         }
     }
 
+    private fun objectCreationType(): String  {
+        return "TODO"
+    }
+
     private fun typeScriptRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = requestName(interfName, method)
@@ -102,7 +103,9 @@ class WebCommonGenerator: FileGenerator() {
                     field {
                         accessor = FieldAccessor.PRIVATE
                         name = arg.name
-                        type = type(arg.apiType.serializableName())
+                        value = {
+                            const(objectCreationType())
+                        }
                     }
                 }
                 method.args.forEach { arg ->
@@ -127,15 +130,28 @@ class WebCommonGenerator: FileGenerator() {
                     }
                 }
                 body = {
-                    returnBlock {
-                        constructorCall {
-                            className = requestName(interfName, method)
-                            method.args.forEach {
-                                addArg {
+                    assign {
+                        variable = {
+                            name = "instance"
+                        }
+                        value = {
+                            constructorCall {
+                                className = requestName(interfName, method)
+                            }
+                        }
+                        method.args.forEach {
+                            assign {
+                                variable = {
+                                    name = "instance.${it.name}"
+                                }
+                                value = {
                                     variable(it.apiType.serialize(it.name))
                                 }
                             }
                         }
+                    }
+                    returnBlock {
+                        variable("instance")
                     }
                 }
             }
@@ -232,7 +248,9 @@ class WebClientGenerator: FileGenerator() {
                                 }
                                 body = {
                                     assign {
-                                        variable = "this.client"
+                                        variable = {
+                                            name = "this.client"
+                                        }
                                         value =  {
                                             variable("HttpClient.Api.create(config.value, c)")
                                         }
