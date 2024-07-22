@@ -191,6 +191,19 @@ class WebCommonGenerator: FileGenerator() {
             }
         }
     }
+
+    private fun kotlinResponseClass(interfName: String, method: MethodView): ClassBuilderOps {
+        return {
+            name = responseName(interfName, method)
+            constructor {
+                addField {
+                    name = "value"
+                    type = type(method.returnType)
+                }
+            }
+        }
+    }
+
     override fun generateFileContent(): FileContent {
         val exposedInterfaces = exposedInterfaces(c)
 
@@ -207,7 +220,7 @@ class WebCommonGenerator: FileGenerator() {
                 }
                 if (method.returnType != "Unit" && method.returnType != "void") {
                     if (c.language is KotlinSupport) {
-                        classes.add(typeScriptResponseClass(interf.name, method))
+                        classes.add(kotlinResponseClass(interf.name, method))
                     } else {
                         classes.add(typeScriptResponseClass(interf.name, method))
                     }
@@ -226,7 +239,6 @@ class WebCommonGenerator: FileGenerator() {
                     classes.forEach(::classBlock)
                 }
             }
-            .emptyLine()
             .build()
         return contentBuilder("webCommon.vm")
             .put("view", view)
