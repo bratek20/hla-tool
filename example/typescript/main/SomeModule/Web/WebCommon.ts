@@ -2,7 +2,9 @@
 
 namespace SomeModule.Web {
     export class SomeModuleWebClientConfig {
-        constructor(readonly value: HttpClientConfig) {}
+        constructor(
+            readonly value: HttpClientConfig,
+        ) {}
     }
     export class SomeInterfaceSomeCommandRequest {
         private id = STRING

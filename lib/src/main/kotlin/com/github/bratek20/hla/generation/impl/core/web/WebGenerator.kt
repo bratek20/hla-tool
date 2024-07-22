@@ -117,7 +117,7 @@ class WebCommonGenerator: FileGenerator() {
                         returnType = type(arg.type)
                         body = {
                             returnBlock {
-                                variable(arg.apiType.deserialize(arg.name))
+                                variable(arg.apiType.deserialize("this." + arg.name))
                             }
                         }
                     }
@@ -228,11 +228,21 @@ class WebCommonGenerator: FileGenerator() {
             }
         }
 
+        val moduleName = c.module.getName().value
         val view = CodeBuilder(c.language.base())
             .add {
                 if (c.lang is TypeScript) {
                     namespace {
-                        name = this@WebCommonGenerator.module.getName().value + ".Web"
+                        name = "$moduleName.Web"
+                        classBlock {
+                            name = "${moduleName}WebClientConfig"
+                            constructor {
+                                addField {
+                                    name = "value"
+                                    type = type("HttpClientConfig")
+                                }
+                            }
+                        }
                         classes.forEach(::classBlock)
                     }
                 } else {
@@ -365,7 +375,7 @@ class WebClientGenerator: FileGenerator() {
         else
             "Optional.empty()"
 
-        return "${returnPart}client.post($postUrl, $postBody)$getBodyPart"
+        return "${returnPart}this.client.post($postUrl, $postBody)$getBodyPart"
     }
 }
 

@@ -3,7 +3,7 @@ namespace ${moduleName}.Web {
         HttpClientConfig.create(
             EnvVars.Api.Get(new VariableName($baseUrl)),
             $serverName,
-            Optional.of(HttpClientAuth.create(new VariableName($auth)))
+            Optional.of(HttpClientAuth.create(EnvVars.Api.Get(new VariableName($auth))))
         )
     )
 }
