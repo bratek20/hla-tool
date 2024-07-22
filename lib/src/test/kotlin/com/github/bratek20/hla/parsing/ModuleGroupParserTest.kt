@@ -702,6 +702,7 @@ class ModuleGroupParserTest {
                         serverNameEmpty = true
                         baseUrlEmpty = true
                         authEmpty = true
+                        urlPathPrefixEmpty = true
                     }
                 }
             },
@@ -716,6 +717,7 @@ class ModuleGroupParserTest {
                         serverName = "\"someServerName\""
                         baseUrl = "\"someService.baseUrl\""
                         auth = "\"someService.auth\""
+                        urlPathPrefix = "\"/some/prefix\""
                     }
                 }
             },

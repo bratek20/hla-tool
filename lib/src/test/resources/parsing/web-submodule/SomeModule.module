@@ -13,3 +13,4 @@ Web
         serverName = "someServerName"
         baseUrl = "someService.baseUrl"
         auth = "someService.auth"
+        urlPathPrefix = "/some/prefix"

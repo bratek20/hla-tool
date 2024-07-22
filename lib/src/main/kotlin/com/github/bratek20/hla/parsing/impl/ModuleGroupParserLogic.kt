@@ -123,6 +123,7 @@ class ModuleGroupParserLogic(
                     serverName = parseOptVariable(http.elements, "serverName"),
                     baseUrl = parseOptVariable(http.elements, "baseUrl"),
                     auth = parseOptVariable(http.elements, "auth"),
+                    urlPathPrefix = parseOptVariable(http.elements, "urlPathPrefix"),
                 )
             }
             return WebSubmoduleDefinition(

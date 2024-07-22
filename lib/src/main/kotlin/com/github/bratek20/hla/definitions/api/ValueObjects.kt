@@ -84,6 +84,7 @@ data class HttpDefinition(
     private val serverName: String?,
     private val baseUrl: String?,
     private val auth: String?,
+    private val urlPathPrefix: String?,
 ) {
     fun getExposedInterfaces(): List<String> {
         return this.exposedInterfaces
@@ -101,18 +102,24 @@ data class HttpDefinition(
         return this.auth
     }
 
+    fun getUrlPathPrefix(): String? {
+        return this.urlPathPrefix
+    }
+
     companion object {
         fun create(
             exposedInterfaces: List<String>,
             serverName: String?,
             baseUrl: String?,
             auth: String?,
+            urlPathPrefix: String?,
         ): HttpDefinition {
             return HttpDefinition(
                 exposedInterfaces = exposedInterfaces,
                 serverName = serverName,
                 baseUrl = baseUrl,
                 auth = auth,
+                urlPathPrefix = urlPathPrefix,
             )
         }
     }

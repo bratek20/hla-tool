@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 import com.some.pkg.somemodule.api.*
 
 @RestController
-@RequestMapping("/someInterface")
+@RequestMapping("/some/prefix/someInterface")
 class SomeInterfaceController(
     private val api: SomeInterface,
 ) {
@@ -46,7 +46,7 @@ class SomeInterfaceController(
 }
 
 @RestController
-@RequestMapping("/someInterface2")
+@RequestMapping("/some/prefix/someInterface2")
 class SomeInterface2Controller(
     private val api: SomeInterface2,
 ) {

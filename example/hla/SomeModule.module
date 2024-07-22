@@ -120,3 +120,4 @@ Web
         serverName = "someServerName2"
         baseUrl = "someService.baseUrl2"
         auth = "someService.auth2"
+        urlPathPrefix = "/some/prefix"

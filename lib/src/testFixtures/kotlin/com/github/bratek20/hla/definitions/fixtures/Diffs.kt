@@ -85,6 +85,8 @@ data class ExpectedHttpDefinition(
     var baseUrl: String? = null,
     var authEmpty: Boolean? = null,
     var auth: String? = null,
+    var urlPathPrefixEmpty: Boolean? = null,
+    var urlPathPrefix: String? = null,
 )
 fun diffHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedHttpDefinition().apply(expectedInit)
@@ -117,6 +119,14 @@ fun diffHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefiniti
 
     expected.auth?.let {
         if (given.getAuth()!! != it) { result.add("${path}auth ${given.getAuth()!!} != ${it}") }
+    }
+
+    expected.urlPathPrefixEmpty?.let {
+        if ((given.getUrlPathPrefix() == null) != it) { result.add("${path}urlPathPrefix empty ${(given.getUrlPathPrefix() == null)} != ${it}") }
+    }
+
+    expected.urlPathPrefix?.let {
+        if (given.getUrlPathPrefix()!! != it) { result.add("${path}urlPathPrefix ${given.getUrlPathPrefix()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

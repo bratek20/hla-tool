@@ -31,6 +31,8 @@ ValueObjects
         serverName: string?
         baseUrl: string?
         auth: string?
+        urlPathPrefix: string?
+
     WebSubmoduleDefinition
         http: HttpDefinition?
 
