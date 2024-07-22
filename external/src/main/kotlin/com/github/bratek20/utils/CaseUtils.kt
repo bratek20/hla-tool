@@ -13,3 +13,14 @@ fun camelToScreamingSnakeCase(name: String): String {
         "${it.groupValues[1]}_${it.groupValues[2]}"
     }.uppercase()
 }
+
+fun stringify(name: String): String {
+    return "\"$name\""
+}
+
+fun destringify(name: String): String {
+    if (name.length < 2 || name[0] != '"' || name[name.length - 1] != '"') {
+        return name
+    }
+    return name.substring(1, name.length - 1)
+}

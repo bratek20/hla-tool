@@ -18,6 +18,7 @@ import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.utils.camelToPascalCase
+import com.github.bratek20.utils.destringify
 import com.github.bratek20.utils.pascalToCamelCase
 
 private fun requestName(interfaceName: String, method: MethodView): String {
@@ -256,6 +257,10 @@ class WebCommonGenerator: FileGenerator() {
     }
 }
 
+private fun getUrlPathPrefix(c: ModuleGenerationContext): String {
+    return c.module.getWebSubmodule()!!.getHttp()!!.getUrlPathPrefix()?.let { destringify(it) } ?: ""
+}
+
 class WebClientGenerator: FileGenerator() {
     override fun name(): String {
         return "WebClient"
@@ -346,6 +351,10 @@ class WebClientGenerator: FileGenerator() {
         return method.declaration()
     }
 
+    private fun getPostUrl(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+        return "\"${getUrlPathPrefix(c)}/${pascalToCamelCase(interfaceName)}/${method.name}\""
+    }
+
     private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
         val returnPart = if (method.returnType != "Unit") "return " else ""
         val getBodyPart = if (method.returnType != "Unit")
@@ -353,7 +362,7 @@ class WebClientGenerator: FileGenerator() {
             else
                 ""
 
-        val postUrl = "\"/${pascalToCamelCase(interfaceName)}/${method.name}\""
+        val postUrl = getPostUrl(interfaceName, method)
         val postBody = if(method.hasArgs())
                 "${requestName(interfaceName, method)}.create(${method.argsPass()})"
             else
@@ -369,7 +378,7 @@ class WebClientGenerator: FileGenerator() {
         else
             ""
 
-        val postUrl = "\"/${pascalToCamelCase(interfaceName)}/${method.name}\""
+        val postUrl = getPostUrl(interfaceName, method)
         val postBody = if(method.hasArgs())
             "Optional.of(${requestName(interfaceName, method)}.create(${method.argsPass()}))"
         else
@@ -411,7 +420,7 @@ class WebServerGenerator: FileGenerator() {
                             url = "\"/${method.name}\""
                         )
                     },
-                    url = "\"/${pascalToCamelCase(interf.name)}\""
+                    url = "\"${getUrlPathPrefix(c)}/${pascalToCamelCase(interf.name)}\""
                 )
             })
             .build()
