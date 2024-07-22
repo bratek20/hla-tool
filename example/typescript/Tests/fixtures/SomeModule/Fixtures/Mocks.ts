@@ -12,7 +12,7 @@ namespace SomeModule {
 
         override referenceOtherClass(other: OtherClass): OtherClass {
             referenceOtherClassCalls.push(other)
-            val findResult = referenceOtherClassResponses.find( it => diffOtherClass(other, it[0]) == "" )
+            const findResult = referenceOtherClassResponses.find( it => diffOtherClass(other, it[0]) == "" )
             return otherClass(findResult?.second ?: {})
         }
 
@@ -34,7 +34,7 @@ namespace SomeModule {
 
         override referenceLegacyType(legacyType: LegacyType): LegacyType {
             referenceLegacyTypeCalls.push(legacyType)
-            val findResult = referenceLegacyTypeResponses.find( it => diffLegacyType(legacyType, it[0]) == "" )
+            const findResult = referenceLegacyTypeResponses.find( it => diffLegacyType(legacyType, it[0]) == "" )
             return legacyType(findResult?.second ?: null)
         }
 

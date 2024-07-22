@@ -11,10 +11,4 @@ import ${import}.api.*
 
 class ${moduleName}WebClientConfig(val value: HttpClientConfig)
 
-#foreach($request in $requests)
-$request
-#end
-
-#foreach($respone in $responses)
-$respone
-#end
+$view

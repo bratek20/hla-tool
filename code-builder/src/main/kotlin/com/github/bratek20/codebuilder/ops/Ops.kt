@@ -1,6 +1,8 @@
 package com.github.bratek20.codebuilder.ops
 
+import com.github.bratek20.codebuilder.core.CodeBlockBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
 fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
@@ -10,13 +12,33 @@ fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
     return this
 }
 
+class VariableBuilder: CodeBlockBuilder {
+    lateinit var name: String
+    var declare: Boolean = false
+    var mutable: Boolean = false
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        lineSoftStart()
+        if (declare) {
+            if (mutable) {
+                linePart(c.lang.mutableVariableDeclaration())
+            } else {
+                linePart(c.lang.immutableVariableDeclaration())
+            }
+        }
+        linePart(name)
+    }
+}
+typealias VariableBuilderOps = VariableBuilder.() -> Unit
+
 class AssignArgs {
-    lateinit var variable: String
+    lateinit var variable: VariableBuilderOps
     lateinit var value: CodeBuilderOps
 }
 fun CodeBuilder.assign(block: AssignArgs.()->Unit): CodeBuilder {
     val args = AssignArgs().apply(block)
-    lineStart("${args.variable} = ")
+    add(VariableBuilder().apply(args.variable))
+    linePart(" = ")
     add(args.value)
     lineEnd()
     return this
@@ -56,4 +78,8 @@ fun CodeBuilder.variable(name: String): CodeBuilder {
 
 fun CodeBuilder.string(name: String): CodeBuilder {
     return linePart("\"$name\"")
+}
+
+fun CodeBuilder.comment(value: String): CodeBuilder {
+    return line("// $value")
 }

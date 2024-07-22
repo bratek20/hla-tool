@@ -9,7 +9,10 @@ class OpsTest {
         testCodeBuilderOp {
             op = {
                 assign {
-                    variable = "variable"
+                    variable = {
+                        name = "variable"
+                        declare = true
+                    }
                     value = {
                         plus {
                             left = {
@@ -22,22 +25,55 @@ class OpsTest {
                     }
                 }
 
-                lineStart()
-                isEqualTo {
-                    left = { variable("a") }
-                    right = { variable("b") }
+                assign {
+                    variable = {
+                        name = "areEqual"
+                        declare = true
+                        mutable = true
+                    }
+                    value = {
+                        isEqualTo {
+                            left = {
+                                variable("a")
+                            }
+                            right = {
+                                variable("b")
+                            }
+                        }
+                    }
                 }
-                lineEnd()
+
+                assign {
+                    variable = {
+                        name = "areEqual"
+                    }
+                    value = {
+                        const("false")
+                    }
+                }
 
                 returnBlock {
                     variable("a")
                 }
             }
-            expected = """
-                variable = 1 + 2
-                a == b
-                return a
-            """
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    val variable = 1 + 2
+                    var areEqual = a == b
+                    areEqual = false
+                    return a
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    const variable = 1 + 2
+                    let areEqual = a == b
+                    areEqual = false
+                    return a
+                """
+            }
         }
     }
 }

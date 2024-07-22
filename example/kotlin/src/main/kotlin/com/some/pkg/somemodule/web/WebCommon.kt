@@ -11,13 +11,83 @@ import com.some.pkg.typesmodule.api.*
 
 class SomeModuleWebClientConfig(val value: HttpClientConfig)
 
-class SomeInterfaceSomeCommandRequest(val id: SomeId, val amount: Int)
-class SomeInterfaceSomeQueryRequest(val query: SomeQueryInput)
-class SomeInterfaceOptMethodRequest(val optId: SomeId?)
-class SomeInterface2ReferenceOtherClassRequest(val other: OtherClass)
-class SomeInterface2ReferenceLegacyTypeRequest(val legacyType: com.some.pkg.legacy.LegacyType)
-
-class SomeInterfaceSomeQueryResponse(val value: SomeClass)
-class SomeInterfaceOptMethodResponse(val value: SomeClass?)
-class SomeInterface2ReferenceOtherClassResponse(val value: OtherClass)
-class SomeInterface2ReferenceLegacyTypeResponse(val value: com.some.pkg.legacy.LegacyType)
+class SomeInterfaceSomeCommandRequest(
+    private val id: String,
+    private val amount: Int,
+) {
+    fun getId(): SomeId {
+        return SomeId(id)
+    }
+    fun getAmount(): Int {
+        return amount
+    }
+    companion object {
+        fun create(id: SomeId, amount: Int): SomeInterfaceSomeCommandRequest {
+            return SomeInterfaceSomeCommandRequest(id.value, amount)
+        }
+    }
+}
+class SomeInterfaceSomeQueryRequest(
+    private val query: SomeQueryInput,
+) {
+    fun getQuery(): SomeQueryInput {
+        return query
+    }
+    companion object {
+        fun create(query: SomeQueryInput): SomeInterfaceSomeQueryRequest {
+            return SomeInterfaceSomeQueryRequest(query)
+        }
+    }
+}
+class SomeInterfaceSomeQueryResponse(
+    val value: SomeClass,
+) {
+}
+class SomeInterfaceOptMethodRequest(
+    private val optId: String?,
+) {
+    fun getOptId(): SomeId? {
+        return optId?.let { it -> SomeId(it) }
+    }
+    companion object {
+        fun create(optId: SomeId?): SomeInterfaceOptMethodRequest {
+            return SomeInterfaceOptMethodRequest(optId?.let { it -> it.value })
+        }
+    }
+}
+class SomeInterfaceOptMethodResponse(
+    val value: SomeClass?,
+) {
+}
+class SomeInterface2ReferenceOtherClassRequest(
+    private val other: OtherClass,
+) {
+    fun getOther(): OtherClass {
+        return other
+    }
+    companion object {
+        fun create(other: OtherClass): SomeInterface2ReferenceOtherClassRequest {
+            return SomeInterface2ReferenceOtherClassRequest(other)
+        }
+    }
+}
+class SomeInterface2ReferenceOtherClassResponse(
+    val value: OtherClass,
+) {
+}
+class SomeInterface2ReferenceLegacyTypeRequest(
+    private val legacyType: com.some.pkg.legacy.LegacyType,
+) {
+    fun getLegacyType(): com.some.pkg.legacy.LegacyType {
+        return legacyType
+    }
+    companion object {
+        fun create(legacyType: com.some.pkg.legacy.LegacyType): SomeInterface2ReferenceLegacyTypeRequest {
+            return SomeInterface2ReferenceLegacyTypeRequest(legacyType)
+        }
+    }
+}
+class SomeInterface2ReferenceLegacyTypeResponse(
+    val value: com.some.pkg.legacy.LegacyType,
+) {
+}

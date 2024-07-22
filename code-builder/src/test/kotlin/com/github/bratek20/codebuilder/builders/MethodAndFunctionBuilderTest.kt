@@ -81,7 +81,9 @@ class MethodAndFunctionBuilderTest {
                     }
                 }
                 assign {
-                    variable = "result"
+                    variable = {
+                        name = "result"
+                    }
                     value = {
                         methodCall {
                             variableName = "this"
@@ -97,13 +99,16 @@ class MethodAndFunctionBuilderTest {
                     }
                 }
                 assign {
-                    variable = "sumOfSum"
+                    variable = {
+                        name = "sumOfSum"
+                    }
                     value = {
                         plus {
                             left = {
                                 methodCall {
                                     variableName = "left"
                                     methodName = "sum"
+                                    skipSoftEnd = true
 
                                     addArg {
                                         const("1")

@@ -14,7 +14,7 @@ class ArgumentBuilder: CodeBlockBuilder {
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
         return {
-            linePart("$name: ")
+            lineSoftStart("$name: ")
             add(type)
             defaultValue?.let {
                 linePart(" = $it")
@@ -23,12 +23,12 @@ class ArgumentBuilder: CodeBlockBuilder {
     }
 }
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
-fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
+fun CodeBuilder.argument(block: ArgumentBuilderOps) = add(ArgumentBuilder().apply(block))
 
 class ArgumentListBuilder: CodeBlockBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun add(block: ArgumentBuilderOps) {
-        args.add(argument(block))
+        args.add(ArgumentBuilder().apply(block))
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
@@ -73,7 +73,7 @@ abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
     }
 }
 
-class MethodBuilder: MethodOrFunctionBuilder() {
+open class MethodBuilder: MethodOrFunctionBuilder() {
     var override: Boolean = false
     override fun beforeName(c: CodeBuilderContext): String {
         val overridePart = if (override) "override " else ""
@@ -81,71 +81,14 @@ class MethodBuilder: MethodOrFunctionBuilder() {
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
-fun CodeBuilder.method(block: MethodBuilderOps): CodeBuilder {
-    add(MethodBuilder().apply(block))
-    return this
-}
+fun CodeBuilder.method(block: MethodBuilderOps) = add(MethodBuilder().apply(block))
+fun method(block: MethodBuilderOps) = MethodBuilder().apply(block)
 
-
-class FunctionBuilder: MethodOrFunctionBuilder() {
+open class FunctionBuilder: MethodOrFunctionBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {
         return c.lang.functionDeclarationKeyword()
     }
 }
 typealias FunctionBuilderOps = FunctionBuilder.() -> Unit
 fun function(block: FunctionBuilderOps) = FunctionBuilder().apply(block)
-fun CodeBuilder.function(block: FunctionBuilderOps): CodeBuilder {
-    add(FunctionBuilder().apply(block))
-    return this
-}
-
-abstract class MethodOrFunctionCallBuilder: CodeBlockBuilder {
-    protected abstract fun getCallName(): String
-    protected abstract fun beforeName(): String
-
-    private val args: MutableList<CodeBuilderOps> = mutableListOf()
-    fun addArg(ops: CodeBuilderOps) {
-        args.add(ops)
-    }
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineSoftStart(beforeName())
-
-        linePart("${getCallName()}(")
-        args.forEachIndexed { index, arg ->
-            add(arg)
-            if (index != args.size - 1) {
-                linePart(", ")
-            }
-        }
-        lineSoftEnd(")")
-    }
-}
-
-class MethodCallBuilder: MethodOrFunctionCallBuilder() {
-    lateinit var methodName: String
-
-    var variableName: String? = null
-
-    override fun getCallName(): String {
-        return methodName
-    }
-
-    override fun beforeName(): String {
-        return variableName?.let { "$it." } ?: ""
-    }
-}
-fun CodeBuilder.methodCall(block: MethodCallBuilder.() -> Unit) = add(MethodCallBuilder().apply(block))
-
-class FunctionCallBuilder: MethodOrFunctionCallBuilder() {
-    lateinit var name: String
-
-    override fun getCallName(): String {
-        return name
-    }
-
-    override fun beforeName(): String {
-        return ""
-    }
-}
-fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
+fun CodeBuilder.function(block: FunctionBuilderOps) = add(FunctionBuilder().apply(block))

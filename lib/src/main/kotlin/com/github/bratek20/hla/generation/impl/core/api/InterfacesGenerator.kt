@@ -1,9 +1,14 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.MethodBuilder
+import com.github.bratek20.codebuilder.builders.MethodBuilderOps
+import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.utils.camelToPascalCase
 
 data class ArgumentView(
     val name: String,
@@ -12,14 +17,25 @@ data class ArgumentView(
 )
 data class MethodView(
     val name: String,
-    val returnType: String?,
+    val returnType: String,
     val returnApiType: ApiType,
     val args: List<ArgumentView>,
     val throws: List<String>,
 ) {
     fun declaration(): String {
-        val returnSuffix = if (returnType != null) ": $returnType" else ""
+        val returnSuffix = ": $returnType"
         return "${name}(${argsDeclaration()})$returnSuffix"
+    }
+
+    fun declarationCB(): MethodBuilder = method {
+        name = this@MethodView.name
+        args.forEach {
+            addArg {
+                name = it.name
+                type = type(it.type)
+            }
+        }
+        returnType = type(this@MethodView.returnType)
     }
 
     // used by velocity
@@ -43,6 +59,14 @@ data class MethodView(
 
     fun argsPassWithPrefix(prefix: String): String {
         return args.joinToString(", ") { prefix + it.name }
+    }
+
+    //TODO remove when complex structure for web requests is added
+    private fun hackedGetter(name: String): String {
+        return "get" + camelToPascalCase(name) + "()"
+    }
+    fun argsGetPassWithPrefix(prefix: String): String {
+        return args.joinToString(", ") { prefix + hackedGetter(it.name) }
     }
 }
 

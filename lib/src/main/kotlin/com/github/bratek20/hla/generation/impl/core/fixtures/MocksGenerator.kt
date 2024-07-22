@@ -1,10 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
-import com.github.bratek20.codebuilder.core.linePartBlock
+import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
@@ -30,7 +27,7 @@ class MocksGenerator: FileGenerator() {
     ) {
         private val interfaceName = interf.name
 
-        private fun mocksForMethod(def: MethodView): ClassBuilderOps {
+        private fun mocksForMethod(def: MethodView): CodeBuilderOps {
             val upperCaseName = camelToPascalCase(def.name)
             val inputArgName = def.args.first().name
             val inputType = def.args.first().apiType
@@ -68,136 +65,151 @@ class MocksGenerator: FileGenerator() {
                     "{}"
 
             return {
-                comment(def.name)
-                field {
-                    accessor = FieldAccessor.PRIVATE
-                    name = callsListName
-                    type = mutableListType(type(inputTypeName))
-                    value = emptyMutableList()
-                }
-                field {
-                    accessor = FieldAccessor.PRIVATE
-                    name = responsesListName
-                    type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
-                    value = emptyMutableList()
-                }
-                emptyLine()
-
-                method {
-                    name = "set${upperCaseName}Response"
-                    addArg {
-                        name = "args"
-                        type = type(expectedInputType)
-                    }
-                    addArg {
-                        name = "response"
-                        type = type(defOutputType)
-                    }
-                    body = {
-                        listOp(responsesListName).add { newPair("args", "response") }
-                    }
-                }
-
-                emptyLine()
-                method {
-                    override = true
-                    name = def.name
-                    returnType = type(outputTypeName)
-                    addArg {
-                        name = inputArgName
-                        type = type(inputTypeName)
-                    }
-                    body = {
-                        listOp(callsListName).add {
-                            variable(inputArgName)
+                    comment(def.name)
+                    field {
+                        accessor = FieldAccessor.PRIVATE
+                        name = callsListName
+                        type = mutableListType(type(inputTypeName))
+                        value = {
+                            add(emptyMutableList())
                         }
-                        assign {
-                            variable = "val findResult" // TODO variable should handle val
-                            value = {
-                                listOp(responsesListName).find {
-                                    isEqualTo {
-                                        left = {
-                                            functionCall {
-                                                name = inputDiffMethodName
-                                                addArg { variable(inputArgName) }
-                                                addArg { pairOp(it.name).first() }
+                    }
+                    field {
+                        accessor = FieldAccessor.PRIVATE
+                        name = responsesListName
+                        type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
+                        value = {
+                            add(emptyMutableList())
+                        }
+                    }
+                    emptyLine()
+
+                    method {
+                        name = "set${upperCaseName}Response"
+                        addArg {
+                            name = "args"
+                            type = type(expectedInputType)
+                        }
+                        addArg {
+                            name = "response"
+                            type = type(defOutputType)
+                        }
+                        body = {
+                            listOp(responsesListName).add { newPair("args", "response") }
+                        }
+                    }
+
+                    emptyLine()
+                    method {
+                        override = true
+                        name = def.name
+                        returnType = type(outputTypeName)
+                        addArg {
+                            name = inputArgName
+                            type = type(inputTypeName)
+                        }
+                        body = {
+                            listOp(callsListName).add {
+                                variable(inputArgName)
+                            }
+                            assign {
+                                variable = {
+                                    declare = true
+                                    name = "findResult"
+                                }
+                                value = {
+                                    listOp(responsesListName).find {
+                                        isEqualTo {
+                                            left = {
+                                                functionCall {
+                                                    name = inputDiffMethodName
+                                                    addArg { variable(inputArgName) }
+                                                    addArg { pairOp(it.name).first() }
+                                                }
                                             }
+                                            right = { string("") }
                                         }
-                                        right = { string("") }
                                     }
                                 }
                             }
+                            returnBlock {
+                                //TODO support for ?., support for ?:
+                                linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")
+                            }
                         }
-                        returnBlock {
-                            //TODO support for ?., support for ?:
-                            linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")
+                    }
+                    emptyLine()
+                    method {
+                        name = "assert${upperCaseName}Called"
+                        addArg {
+                            name = "times"
+                            type = baseType(BaseType.INT)
+                            defaultValue = "1"
+                        }
+                        body = {
+                            line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                         }
                     }
-                }
-                emptyLine()
-                method {
-                    name = "assert${upperCaseName}Called"
-                    addArg {
-                        name = "times"
-                        type = baseType(BaseType.INT)
-                        defaultValue = "1"
+                    emptyLine()
+                    method {
+                        name = "assert${upperCaseName}CalledForArgs"
+                        addArg {
+                            name = "args"
+                            type = type(expectedInputType)
+                        }
+                        addArg {
+                            name = "times"
+                            type = baseType(BaseType.INT)
+                            defaultValue = "1"
+                        }
+                        body = {
+                            line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")
+                            line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
+                        }
                     }
-                    body = {
-                        line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
-                    }
-                }
-                emptyLine()
-                method {
-                    name = "assert${upperCaseName}CalledForArgs"
-                    addArg {
-                        name = "args"
-                        type = type(expectedInputType)
-                    }
-                    addArg {
-                        name = "times"
-                        type = baseType(BaseType.INT)
-                        defaultValue = "1"
-                    }
-                    body = {
-                        line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")
-                        line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
-                    }
-                }
             }
         }
 
         fun classes(indent: Int): String {
             return CodeBuilder(lang, indent)
-                .add(classBlock {
-                    name = "${interfaceName}Mock"
-                    implementedInterfaceName = interfaceName
-                    interf.methods.map {
-                        this.apply(mocksForMethod(it))
+                .add {
+                    classBlock {
+                        name = "${interfaceName}Mock"
+                        implementedInterfaceName = interfaceName
+                        body = {
+                            interf.methods.map {
+                                add(mocksForMethod(it))
+                            }
+                        }
                     }
-                })
+                }
                 .build()
         }
 
         fun contextModule(): String {
             return CodeBuilder(lang)
-                .add(classBlock {
-                    name = "${moduleName}Mocks"
-                    implementedInterfaceName = "ContextModule"
-                    method {
-                        override = true
-                        name = "apply"
-                        addArg {
-                            name = "builder"
-                            type = type("ContextBuilder")
-                        }
+                .add {
+                    classBlock {
+                        name = "${moduleName}Mocks"
+                        implementedInterfaceName = "ContextModule"
                         body = {
-                            line("builder")
-                            tab()
-                            line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
-                            untab()
+                            method {
+                                override = true
+                                name = "apply"
+                                addArg {
+                                    name = "builder"
+                                    type = type("ContextBuilder")
+                                }
+                                body = {
+                                    line("builder")
+                                    tab()
+                                    line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
+                                    untab()
+                                }
+                            }
                         }
                     }
-                })
+                }
                 .build()
         }
     }
