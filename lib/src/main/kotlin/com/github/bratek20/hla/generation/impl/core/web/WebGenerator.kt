@@ -2,7 +2,6 @@ package com.github.bratek20.hla.generation.impl.core.web
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.type
@@ -163,7 +162,7 @@ class WebCommonGenerator: FileGenerator() {
         }
     }
 
-    private fun responseClass(interfName: String, method: MethodView): ClassBuilderOps {
+    private fun typeScriptResponseClass(interfName: String, method: MethodView): ClassBuilderOps {
         val argName = "value"
         val argType = method.returnType
         val argApiType = method.returnApiType
@@ -208,9 +207,9 @@ class WebCommonGenerator: FileGenerator() {
                 }
                 if (method.returnType != "Unit" && method.returnType != "void") {
                     if (c.language is KotlinSupport) {
-                        classes.add(responseClass(interf.name, method))
+                        classes.add(typeScriptResponseClass(interf.name, method))
                     } else {
-                        classes.add(responseClass(interf.name, method))
+                        classes.add(typeScriptResponseClass(interf.name, method))
                     }
                 }
             }
