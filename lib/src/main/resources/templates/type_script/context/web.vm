@@ -1,5 +1,5 @@
-namespace SomeModule.Web {
-    export const config = new SomeModuleWebClientConfig(
+namespace ${moduleName}.Web {
+    export const config = new ${moduleName}WebClientConfig(
         HttpClientConfig.create(
             EnvVars.Api.Get(new VariableName($baseUrl)),
             $serverName,

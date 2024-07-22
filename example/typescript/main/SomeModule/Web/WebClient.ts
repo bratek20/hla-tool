@@ -10,16 +10,16 @@ namespace SomeModule.Web {
         }
         private readonly client: HttpClient
         someEmptyMethod(): void {
-            client.post("/someInterface/someEmptyMethod", Optional.empty())
+            this.client.post("/someInterface/someEmptyMethod", Optional.empty())
         }
         someCommand(id: SomeId, amount: number): void {
-            client.post("/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)))
+            this.client.post("/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)))
         }
         someQuery(query: SomeQueryInput): SomeClass {
-            return client.post("/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().value
+            return this.client.post("/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().value
         }
         optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
-            return client.post("/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().value
+            return this.client.post("/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().value
         }
     }
     export class SomeInterface2WebClient implements SomeInterface2 {
