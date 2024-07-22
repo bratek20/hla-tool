@@ -1,11 +1,11 @@
 package com.github.bratek20.utils.directory
 
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import com.github.bratek20.utils.directory.api.FileName
 import com.github.bratek20.utils.directory.api.Path
+import io.kotest.core.spec.style.StringSpec
 
 class PathTest : StringSpec({
 
