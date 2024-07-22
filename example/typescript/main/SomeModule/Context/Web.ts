@@ -15,18 +15,18 @@ namespace SomeModule.Api {
         new Web.SomeInterfaceWebClient(c).someEmptyMethod()
     }
     export function someCommand(id: SomeId, amount: number, c: HandlerContext): void {
-        new Impl.SomeInterfaceLogic(c).someCommand(id, amount)
+        new Web.SomeInterfaceWebClient(c).someCommand(id, amount)
     }
     export function someQuery(query: SomeQueryInput, c: HandlerContext): SomeClass {
-        return new Impl.SomeInterfaceLogic(c).someQuery(query)
+        return new Web.SomeInterfaceWebClient(c).someQuery(query)
     }
     export function optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {
-        return new Impl.SomeInterfaceLogic(c).optMethod(optId)
+        return new Web.SomeInterfaceWebClient(c).optMethod(optId)
     }
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
-        return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
+        return new Web.SomeInterface2WebClient(c).referenceOtherClass(other)
     }
     export function referenceLegacyType(legacyType: LegacyType, c: HandlerContext): LegacyType {
-        return new Impl.SomeInterface2Logic(c).referenceLegacyType(legacyType)
+        return new Web.SomeInterface2WebClient(c).referenceLegacyType(legacyType)
     }
 }

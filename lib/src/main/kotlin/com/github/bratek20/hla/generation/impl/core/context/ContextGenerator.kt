@@ -98,8 +98,19 @@ class WebContextGenerator: FileGenerator() {
                             function {
                                 name = m.name
                                 returnType = type(m.returnType)
+                                m.args.forEach { arg ->
+                                    addArg {
+                                        name = arg.name
+                                        type = type(arg.type)
+                                    }
+                                }
+                                addArg {
+                                    name = "c"
+                                    type = type("HandlerContext")
+                                }
                                 body = {
-                                    line("return new Web.${interf.name}WebClient(c).${m.name}(${m.argsPass()})")
+                                    val returnPart = if (m.returnType != "void") "return " else ""
+                                    line("${returnPart}new Web.${interf.name}WebClient(c).${m.name}(${m.argsPass()})")
                                 }
                             }
                         }
