@@ -713,9 +713,9 @@ class ModuleGroupParserTest {
                             "SomeInterface",
                             "SomeInterface2"
                         )
-                        serverName = "someServerName"
-                        baseUrl = "someService.baseUrl"
-                        auth = "someService.auth"
+                        serverName = "\"someServerName\""
+                        baseUrl = "\"someService.baseUrl\""
+                        auth = "\"someService.auth\""
                     }
                 }
             },
