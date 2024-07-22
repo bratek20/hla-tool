@@ -184,7 +184,7 @@ class WebCommonGenerator: FileGenerator() {
                     returnType = type(argType)
                     body = {
                         returnBlock {
-                            variable(argApiType.deserialize(argName))
+                            variable(argApiType.deserialize("this.$argName"))
                         }
                     }
                 }
@@ -365,7 +365,7 @@ class WebClientGenerator: FileGenerator() {
     private fun getBodyTS(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
         val returnPart = if (method.returnType != "void") "return " else ""
         val getBodyPart = if (method.returnType != "void")
-            ".getBody(${responseName(interfaceName, method)}).get().value"
+            ".getBody(${responseName(interfaceName, method)}).get().getValue()"
         else
             ""
 

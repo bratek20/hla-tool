@@ -36,7 +36,7 @@ namespace SomeModule.Web {
     export class SomeInterfaceSomeQueryResponse {
         private value = new SomeClass
         getValue(): SomeClass {
-            return value
+            return this.value
         }
     }
     export class SomeInterfaceOptMethodRequest {
@@ -53,7 +53,7 @@ namespace SomeModule.Web {
     export class SomeInterfaceOptMethodResponse {
         private value = new SomeClass
         getValue(): Optional<SomeClass> {
-            return Optional.of(value)
+            return Optional.of(this.value)
         }
     }
     export class SomeInterface2ReferenceOtherClassRequest {
@@ -70,7 +70,7 @@ namespace SomeModule.Web {
     export class SomeInterface2ReferenceOtherClassResponse {
         private value = new OtherClass
         getValue(): OtherClass {
-            return value
+            return this.value
         }
     }
     export class SomeInterface2ReferenceLegacyTypeRequest {
@@ -87,7 +87,7 @@ namespace SomeModule.Web {
     export class SomeInterface2ReferenceLegacyTypeResponse {
         private value = new LegacyType
         getValue(): LegacyType {
-            return value
+            return this.value
         }
     }
 }

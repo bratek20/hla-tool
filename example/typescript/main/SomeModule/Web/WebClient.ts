@@ -16,10 +16,10 @@ namespace SomeModule.Web {
             this.client.post("/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)))
         }
         someQuery(query: SomeQueryInput): SomeClass {
-            return this.client.post("/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().value
+            return this.client.post("/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().getValue()
         }
         optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
-            return this.client.post("/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().value
+            return this.client.post("/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().getValue()
         }
     }
     export class SomeInterface2WebClient implements SomeInterface2 {
@@ -31,10 +31,10 @@ namespace SomeModule.Web {
         }
         private readonly client: HttpClient
         referenceOtherClass(other: OtherClass): OtherClass {
-            return this.client.post("/someInterface2/referenceOtherClass", Optional.of(SomeInterface2ReferenceOtherClassRequest.create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).get().value
+            return this.client.post("/someInterface2/referenceOtherClass", Optional.of(SomeInterface2ReferenceOtherClassRequest.create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).get().getValue()
         }
         referenceLegacyType(legacyType: LegacyType): LegacyType {
-            return this.client.post("/someInterface2/referenceLegacyType", Optional.of(SomeInterface2ReferenceLegacyTypeRequest.create(legacyType))).getBody(SomeInterface2ReferenceLegacyTypeResponse).get().value
+            return this.client.post("/someInterface2/referenceLegacyType", Optional.of(SomeInterface2ReferenceLegacyTypeRequest.create(legacyType))).getBody(SomeInterface2ReferenceLegacyTypeResponse).get().getValue()
         }
     }
 }
