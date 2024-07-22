@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.context
 
 import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
@@ -36,12 +37,15 @@ class WebContextGenerator: FileGenerator() {
             contentBuilder("web.vm")
                 .put("serverUrl", web.getServerUrl() ?: "\"http://localhost:8080\"")
                 .put("interfaceNames", web.getExpose())
-                .put("view", view())
+                .put("view", view(web.getExpose()))
                 .build()
         }
     }
 
-    private fun view(): String {
+    private fun view(interfNames: List<String>): String {
+        val factory = InterfaceViewFactory(apiTypeFactory)
+        val interfDefs = module.getInterfaces().filter { interfNames.contains(it.getName()) }
+        val interfs = factory.create(interfDefs)
 //        namespace SomeModule.Api {
 //            const config = new SomeModuleWebClientConfig(
 //                new HttpClientConfig(
@@ -89,6 +93,17 @@ class WebContextGenerator: FileGenerator() {
             .add {
                 namespace {
                     name = "${this@WebContextGenerator.c.module.getName()}.Api"
+                    interfs.forEach { interf ->
+                        interf.methods.forEach { m ->
+                            function {
+                                name = m.name
+                                returnType = type(m.returnType)
+                                body = {
+                                    line("return new Web.${interf.name}WebClient(c).${m.name}(${m.argsPass()})")
+                                }
+                            }
+                        }
+                    }
                 }
             }
             .build()
