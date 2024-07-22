@@ -35,6 +35,9 @@ class WebContextGenerator: FileGenerator() {
         return c.module.getWebSubmodule()?.let { web ->
             contentBuilder("web.vm")
                 .put("serverUrl", "\"http://localhost:8080\"")
+                .put("serverName", web.getHttp()!!.getServerName())
+                .put("baseUrl", web.getHttp()!!.getBaseUrl())
+                .put("auth", web.getHttp()!!.getAuth())
                 .put("interfaceNames", web.getHttp()!!.getExposedInterfaces())
                 .put("view", view(web.getHttp()!!.getExposedInterfaces()))
                 .build()
