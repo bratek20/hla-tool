@@ -31,10 +31,10 @@ namespace SomeModule.Web {
         }
         private readonly client: HttpClient
         referenceOtherClass(other: OtherClass): OtherClass {
-            return client.post("/someInterface2/referenceOtherClass", Optional.of(SomeInterface2ReferenceOtherClassRequest.create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).get().value
+            return this.client.post("/someInterface2/referenceOtherClass", Optional.of(SomeInterface2ReferenceOtherClassRequest.create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).get().value
         }
         referenceLegacyType(legacyType: LegacyType): LegacyType {
-            return client.post("/someInterface2/referenceLegacyType", Optional.of(SomeInterface2ReferenceLegacyTypeRequest.create(legacyType))).getBody(SomeInterface2ReferenceLegacyTypeResponse).get().value
+            return this.client.post("/someInterface2/referenceLegacyType", Optional.of(SomeInterface2ReferenceLegacyTypeRequest.create(legacyType))).getBody(SomeInterface2ReferenceLegacyTypeResponse).get().value
         }
     }
 }

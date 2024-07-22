@@ -25,7 +25,7 @@ namespace SomeModule.Web {
     export class SomeInterfaceSomeQueryRequest {
         private query = new SomeQueryInput
         getQuery(): SomeQueryInput {
-            return query
+            return this.query
         }
         static create(query: SomeQueryInput): SomeInterfaceSomeQueryRequest {
             const instance = new SomeInterfaceSomeQueryRequest()
@@ -42,7 +42,7 @@ namespace SomeModule.Web {
     export class SomeInterfaceOptMethodRequest {
         private optId = STRING
         getOptId(): Optional<SomeId> {
-            return Optional.of(optId).map(it => new SomeId(it))
+            return Optional.of(this.optId).map(it => new SomeId(it))
         }
         static create(optId: Optional<SomeId>): SomeInterfaceOptMethodRequest {
             const instance = new SomeInterfaceOptMethodRequest()
@@ -59,7 +59,7 @@ namespace SomeModule.Web {
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = new OtherClass
         getOther(): OtherClass {
-            return other
+            return this.other
         }
         static create(other: OtherClass): SomeInterface2ReferenceOtherClassRequest {
             const instance = new SomeInterface2ReferenceOtherClassRequest()
@@ -76,7 +76,7 @@ namespace SomeModule.Web {
     export class SomeInterface2ReferenceLegacyTypeRequest {
         private legacyType = new LegacyType
         getLegacyType(): LegacyType {
-            return legacyType
+            return this.legacyType
         }
         static create(legacyType: LegacyType): SomeInterface2ReferenceLegacyTypeRequest {
             const instance = new SomeInterface2ReferenceLegacyTypeRequest()
