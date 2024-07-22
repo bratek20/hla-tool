@@ -2,8 +2,8 @@
 
 namespace SomeModule.Web {
     export class SomeInterfaceSomeCommandRequest {
-        private readonly id: string
-        private readonly amount: number
+        private id = STRING
+        private amount = NUMBER
         getId(): SomeId {
             return new SomeId(id)
         }
@@ -11,7 +11,10 @@ namespace SomeModule.Web {
             return amount
         }
         static create(id: SomeId, amount: number): SomeInterfaceSomeCommandRequest {
-            return SomeInterfaceSomeCommandRequest(id.value, amount)
+            const instance = new SomeInterfaceSomeCommandRequest()
+            instance.id = id.value
+            instance.amount = amount
+            return instance
         }
     }
     export class SomeInterfaceSomeQueryRequest {
