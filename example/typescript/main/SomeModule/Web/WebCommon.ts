@@ -2,8 +2,8 @@
 
 namespace SomeModule.Web {
     export class SomeInterfaceSomeCommandRequest {
-        private id = TODO
-        private amount = TODO
+        private id = STRING
+        private amount = NUMBER
         getId(): SomeId {
             return new SomeId(id)
         }
@@ -18,7 +18,7 @@ namespace SomeModule.Web {
         }
     }
     export class SomeInterfaceSomeQueryRequest {
-        private query = TODO
+        private query = new SomeQueryInput
         getQuery(): SomeQueryInput {
             return query
         }
@@ -34,7 +34,7 @@ namespace SomeModule.Web {
         ) {}
     }
     export class SomeInterfaceOptMethodRequest {
-        private optId = TODO
+        private optId = STRING
         getOptId(): Optional<SomeId> {
             return Optional.of(optId).map(it => new SomeId(it))
         }
@@ -45,9 +45,10 @@ namespace SomeModule.Web {
         }
     }
     export class SomeInterfaceOptMethodResponse {
-        constructor(
-            readonly value: Optional<SomeClass>,
-        ) {}
+        private value = new SomeClass
+        getValue(): Optional<SomeClass> {
+            return Optional.of(value)
+        }
     }
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = TODO

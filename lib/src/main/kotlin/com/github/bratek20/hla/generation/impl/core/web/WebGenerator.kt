@@ -11,10 +11,12 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import com.github.bratek20.hla.generation.impl.core.api.ApiType
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.MethodView
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
+import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.pascalToCamelCase
@@ -91,8 +93,9 @@ class WebCommonGenerator: FileGenerator() {
         }
     }
 
-    private fun objectCreationType(): String  {
-        return "TODO"
+    private fun objectCreationType(type: ApiType): String  {
+        val oc = ObjectCreationMapper()
+        return oc.map(type.serializableName())
     }
 
     private fun typeScriptRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
@@ -105,7 +108,7 @@ class WebCommonGenerator: FileGenerator() {
                         mutable = true
                         name = arg.name
                         value = {
-                            const(objectCreationType())
+                            const(objectCreationType(arg.apiType))
                         }
                     }
                 }
@@ -161,12 +164,30 @@ class WebCommonGenerator: FileGenerator() {
     }
 
     private fun responseClass(interfName: String, method: MethodView): ClassBuilderOps {
+        val argName = "value"
+        val argType = method.returnType
+        val argApiType = method.returnApiType
+
         return {
             name = responseName(interfName, method)
-            constructor {
-                addField {
-                    name = "value"
-                    type = type(method.returnType)
+            body = {
+                field {
+                    accessor = FieldAccessor.PRIVATE
+                    mutable = true
+                    name = argName
+                    value = {
+                        const(objectCreationType(argApiType))
+                    }
+                }
+
+                method {
+                    name = "get${camelToPascalCase(argName)}"
+                    returnType = type(argType)
+                    body = {
+                        returnBlock {
+                            variable(argApiType.deserialize(argName))
+                        }
+                    }
                 }
             }
         }
@@ -206,6 +227,7 @@ class WebCommonGenerator: FileGenerator() {
                     classes.forEach(::classBlock)
                 }
             }
+            .emptyLine()
             .build()
         return contentBuilder("webCommon.vm")
             .put("view", view)
