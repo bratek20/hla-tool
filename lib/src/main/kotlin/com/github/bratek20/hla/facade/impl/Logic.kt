@@ -75,12 +75,11 @@ class HlaFacadeLogic(
     }
 
     private fun logGeneratedModule(module: GeneratedModule, suffix: String) {
-        //TODO
-//        directory?.getDirectories()?.forEach { dir ->
-//            dir.getFiles().forEach {
-//                logger.info("${moduleName.value}/${dir.getName().value}/${it.getName().value} $suffix", this)
-//            }
-//        }
+        module.getSubmodules().forEach { sub ->
+            sub.getPatterns().forEach { patt ->
+                logger.info("${module.getName().value}/${sub.getName()}/${patt.getFile().getName().value} $suffix", this)
+            }
+        }
     }
 
     private fun parseGroup(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup {

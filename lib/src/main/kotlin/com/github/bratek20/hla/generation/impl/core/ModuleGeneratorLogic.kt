@@ -143,10 +143,17 @@ class ModuleGeneratorLogic(
                     )
                 ),
                 extractPatterns(
+                    main, SubmoduleName.Context, listOf(
+                        PatternName.Impl,
+                        PatternName.Web,
+                    )
+                ),
+                extractPatterns(
                     fixtures, SubmoduleName.Fixtures, listOf(
                         PatternName.Builders,
                         PatternName.Diffs,
                         PatternName.Asserts,
+                        PatternName.Mocks
                     )
                 ),
                 extractPatterns(
@@ -164,12 +171,15 @@ class ModuleGeneratorLogic(
         }
 
         val foundPatterns = mutableListOf<GeneratedPattern>()
-        val files = dir.getFiles()
-        for (file in files) {
-            val name = file.getName().value
-            for (pattern in patterns) {
-                if (name.lowercase() == pattern.name.lowercase()) {
-                    foundPatterns.add(GeneratedPattern.create(pattern, file.getContent()))
+        dir.getDirectories().forEach {
+            if (it.getName().value.lowercase() == submodule.name.lowercase()) {
+                for (pattern in patterns) {
+                    for (file in it.getFiles()) {
+                        val fileNameNoExt = file.getName().value.substringBeforeLast(".")
+                        if (fileNameNoExt.lowercase() == pattern.name.lowercase()) {
+                            foundPatterns.add(GeneratedPattern.create(pattern, file))
+                        }
+                    }
                 }
             }
         }

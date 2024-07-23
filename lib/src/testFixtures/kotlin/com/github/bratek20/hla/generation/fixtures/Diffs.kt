@@ -23,7 +23,7 @@ fun diffSubmoduleName(given: SubmoduleName, expected: String, path: String = "")
 
 data class ExpectedGeneratedPattern(
     var name: String? = null,
-    var content: String? = null,
+    var file: (ExpectedFile.() -> Unit)? = null,
 )
 fun diffGeneratedPattern(given: GeneratedPattern, expectedInit: ExpectedGeneratedPattern.() -> Unit, path: String = ""): String {
     val expected = ExpectedGeneratedPattern().apply(expectedInit)
@@ -33,8 +33,8 @@ fun diffGeneratedPattern(given: GeneratedPattern, expectedInit: ExpectedGenerate
         if (diffPatternName(given.getName(), it) != "") { result.add(diffPatternName(given.getName(), it, "${path}name.")) }
     }
 
-    expected.content?.let {
-        if (diffFileContent(given.getContent(), it) != "") { result.add(diffFileContent(given.getContent(), it, "${path}content.")) }
+    expected.file?.let {
+        if (diffFile(given.getFile(), it) != "") { result.add(diffFile(given.getFile(), it, "${path}file.")) }
     }
 
     return result.joinToString("\n")

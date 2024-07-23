@@ -13,13 +13,13 @@ import com.github.bratek20.hla.generation.api.*
 
 data class GeneratedPatternDef(
     var name: String = PatternName.Enums.name,
-    var content: String = "someValue",
+    var file: (FileDef.() -> Unit) = {},
 )
 fun generatedPattern(init: GeneratedPatternDef.() -> Unit = {}): GeneratedPattern {
     val def = GeneratedPatternDef().apply(init)
     return GeneratedPattern.create(
         name = PatternName.valueOf(def.name),
-        content = fileContentCreate(def.content),
+        file = file(def.file),
     )
 }
 

@@ -23,6 +23,7 @@ enum class PatternName {
     Builders,
     Diffs,
     Asserts,
+    Mocks,
     ImplTest,
 }
 

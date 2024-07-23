@@ -8,24 +8,24 @@ import com.github.bratek20.utils.directory.api.*
 
 data class GeneratedPattern(
     private val name: String,
-    private val content: String,
+    private val file: File,
 ) {
     fun getName(): PatternName {
         return PatternName.valueOf(this.name)
     }
 
-    fun getContent(): FileContent {
-        return fileContentCreate(this.content)
+    fun getFile(): File {
+        return this.file
     }
 
     companion object {
         fun create(
             name: PatternName,
-            content: FileContent,
+            file: File,
         ): GeneratedPattern {
             return GeneratedPattern(
                 name = name.name,
-                content = fileContentGetValue(content),
+                file = file,
             )
         }
     }

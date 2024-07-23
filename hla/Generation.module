@@ -29,6 +29,7 @@ Enums
         Builders
         Diffs
         Asserts
+        Mocks
 
         //tests
         ImplTest
@@ -44,7 +45,7 @@ Enums
 ValueObjects
     GeneratedPattern
         name: PatternName
-        content: FileContent
+        file: File
     GeneratedSubmodule
         name: SubmoduleName
         patterns: GeneratedPattern[]
