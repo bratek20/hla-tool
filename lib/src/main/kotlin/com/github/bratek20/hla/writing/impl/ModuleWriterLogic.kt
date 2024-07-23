@@ -1,19 +1,54 @@
 package com.github.bratek20.hla.writing.impl
 
-import com.github.bratek20.hla.generation.api.GenerateResult
+import com.github.bratek20.hla.generation.api.GeneratedModule
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
 import com.github.bratek20.utils.directory.api.Directories
+import com.github.bratek20.utils.directory.api.Directory
+import com.github.bratek20.utils.directory.api.DirectoryName
 import com.github.bratek20.utils.directory.api.Path
+
+class GenerateResult(
+    private val main: Directory,
+    private val fixtures: Directory,
+    private val tests: Directory?,
+) {
+    fun getMain(): Directory {
+        return main
+    }
+
+    fun getFixtures(): Directory {
+        return fixtures
+    }
+
+    fun getTests(): Directory? {
+        return tests
+    }
+}
 
 class ModuleWriterLogic(
     private val directories: Directories,
     private val filesModifiers: FilesModifiers
 ): ModuleWriter {
 
+    private fun calcGenerateResult(module: GeneratedModule): GenerateResult {
+        val main = Directory.create(
+            DirectoryName(""),
+            directories = listOf()
+        );
+        val fixtures = Directory.create(
+            DirectoryName(""),
+            directories = listOf()
+        );
+        val tests = Directory.create(
+            DirectoryName(""),
+            directories = listOf()
+        );
+        return GenerateResult(main, fixtures, tests)
+    }
     override fun write(args: WriteArgs) {
         val rootPath = args.getHlaFolderPath().add(args.getProfile().getPaths().getProject())
-        val generateResult = args.getGenerateResult()
+        val generateResult = calcGenerateResult(args.getModule())
         val profile = args.getProfile()
 
         val src = profile.getPaths().getSrc()

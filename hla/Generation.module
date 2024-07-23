@@ -1,21 +1,36 @@
 Enums
     PatternName
-        //api patterns
-        //impl patterns
+        //api
+        Enums
+        ValueObjects
+        DataClasses
+        DataKeys
+        PropertyKeys
+        Interfaces
+        Exceptions
+        CustomTypes
+        CustomTypesMapper
+        SerializedCustomTypes
+
+        //impl
         Logic
         Data
-        //web patterns
+
+        //web
         WebCommon
         WebServer
         WebClient
-        //context patterns
+
+        //context
         Impl
         Web
-        //fixtures patterns
+
+        //fixtures
         Builders
         Diffs
         Asserts
-        //tests patterns
+
+        //tests
         ImplTest
 
     SubmoduleName

@@ -3,6 +3,16 @@
 package com.github.bratek20.hla.generation.api
 
 enum class PatternName {
+    Enums,
+    ValueObjects,
+    DataClasses,
+    DataKeys,
+    PropertyKeys,
+    Interfaces,
+    Exceptions,
+    CustomTypes,
+    CustomTypesMapper,
+    SerializedCustomTypes,
     Logic,
     Data,
     WebCommon,
