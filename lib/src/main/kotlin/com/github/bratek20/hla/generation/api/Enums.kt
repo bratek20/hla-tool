@@ -3,24 +3,24 @@
 package com.github.bratek20.hla.generation.api
 
 enum class PatternName {
-    LOGIC,
-    DATA,
-    WEB_COMMON,
-    WEB_SERVER,
-    WEB_CLIENT,
-    IMPL,
-    WEB,
-    BUILDERS,
-    DIFFS,
-    ASSERTS,
-    IMPL_TEST,
+    Logic,
+    Data,
+    WebCommon,
+    WebServer,
+    WebClient,
+    Impl,
+    Web,
+    Builders,
+    Diffs,
+    Asserts,
+    ImplTest,
 }
 
 enum class SubmoduleName {
-    API,
-    IMPL,
-    WEB,
-    CONTEXT,
-    FIXTURES,
-    TESTS,
+    Api,
+    Impl,
+    Web,
+    Context,
+    Fixtures,
+    Tests,
 }

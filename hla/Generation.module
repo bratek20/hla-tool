@@ -2,29 +2,29 @@ Enums
     PatternName
         //api patterns
         //impl patterns
-        LOGIC
-        DATA
+        Logic
+        Data
         //web patterns
-        WEB_COMMON
-        WEB_SERVER
-        WEB_CLIENT
+        WebCommon
+        WebServer
+        WebClient
         //context patterns
-        IMPL
-        WEB
+        Impl
+        Web
         //fixtures patterns
-        BUILDERS
-        DIFFS
-        ASSERTS
+        Builders
+        Diffs
+        Asserts
         //tests patterns
-        IMPL_TEST
+        ImplTest
 
     SubmoduleName
-        API
-        IMPL
-        WEB
-        CONTEXT
-        FIXTURES
-        TESTS
+        Api
+        Impl
+        Web
+        Context
+        Fixtures
+        Tests
 
 ValueObjects
     GeneratedPattern

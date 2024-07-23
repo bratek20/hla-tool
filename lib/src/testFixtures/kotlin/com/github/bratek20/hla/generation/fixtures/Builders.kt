@@ -12,7 +12,7 @@ import com.github.bratek20.utils.directory.fixtures.*
 import com.github.bratek20.hla.generation.api.*
 
 data class GeneratedPatternDef(
-    var name: String = PatternName.LOGIC.name,
+    var name: String = PatternName.Logic.name,
     var content: String = "someValue",
 )
 fun generatedPattern(init: GeneratedPatternDef.() -> Unit = {}): GeneratedPattern {
@@ -24,7 +24,7 @@ fun generatedPattern(init: GeneratedPatternDef.() -> Unit = {}): GeneratedPatter
 }
 
 data class GeneratedSubmoduleDef(
-    var name: String = SubmoduleName.API.name,
+    var name: String = SubmoduleName.Api.name,
     var patterns: List<(GeneratedPatternDef.() -> Unit)> = emptyList(),
 )
 fun generatedSubmodule(init: GeneratedSubmoduleDef.() -> Unit = {}): GeneratedSubmodule {
