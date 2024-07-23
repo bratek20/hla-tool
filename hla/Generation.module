@@ -1,13 +1,47 @@
+Enums
+    PatternName
+        //api patterns
+        //impl patterns
+        LOGIC
+        DATA
+        //web patterns
+        WEB_COMMON
+        WEB_SERVER
+        WEB_CLIENT
+        //context patterns
+        IMPL
+        WEB
+        //fixtures patterns
+        BUILDERS
+        DIFFS
+        ASSERTS
+        //tests patterns
+        IMPL_TEST
+
+    SubmoduleName
+        API
+        IMPL
+        WEB
+        CONTEXT
+        FIXTURES
+        TESTS
+
+ValueObjects
+    GeneratedPattern
+        name: PatternName
+        content: FileContent
+    GeneratedSubmodule
+        name: SubmoduleName
+        patterns: GeneratedPattern[]
+    GeneratedModule
+        name: ModuleName
+        submodules: GeneratedSubmodule[]
 Interfaces
     ModuleGenerator
         GenerateArgs
             group: ModuleGroup
             moduleToGenerate: ModuleName
             onlyUpdate: bool
-        GenerateResult
-            main: Directory
-            fixtures: Directory
-            tests: Directory?
-        generate(args: GenerateArgs): GenerateResult
+        generate(args: GenerateArgs): GeneratedModule
             throws
                 UnknownTypeException

@@ -11,6 +11,75 @@ import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.generation.api.*
 
+fun diffPatternName(given: PatternName, expected: String, path: String = ""): String {
+    if (given != PatternName.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
+fun diffSubmoduleName(given: SubmoduleName, expected: String, path: String = ""): String {
+    if (given != SubmoduleName.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
+data class ExpectedGeneratedPattern(
+    var name: String? = null,
+    var content: String? = null,
+)
+fun diffGeneratedPattern(given: GeneratedPattern, expectedInit: ExpectedGeneratedPattern.() -> Unit, path: String = ""): String {
+    val expected = ExpectedGeneratedPattern().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (diffPatternName(given.getName(), it) != "") { result.add(diffPatternName(given.getName(), it, "${path}name.")) }
+    }
+
+    expected.content?.let {
+        if (diffFileContent(given.getContent(), it) != "") { result.add(diffFileContent(given.getContent(), it, "${path}content.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedGeneratedSubmodule(
+    var name: String? = null,
+    var patterns: List<(ExpectedGeneratedPattern.() -> Unit)>? = null,
+)
+fun diffGeneratedSubmodule(given: GeneratedSubmodule, expectedInit: ExpectedGeneratedSubmodule.() -> Unit, path: String = ""): String {
+    val expected = ExpectedGeneratedSubmodule().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (diffSubmoduleName(given.getName(), it) != "") { result.add(diffSubmoduleName(given.getName(), it, "${path}name.")) }
+    }
+
+    expected.patterns?.let {
+        if (given.getPatterns().size != it.size) { result.add("${path}patterns size ${given.getPatterns().size} != ${it.size}"); return@let }
+        given.getPatterns().forEachIndexed { idx, entry -> if (diffGeneratedPattern(entry, it[idx]) != "") { result.add(diffGeneratedPattern(entry, it[idx], "${path}patterns[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedGeneratedModule(
+    var name: String? = null,
+    var submodules: List<(ExpectedGeneratedSubmodule.() -> Unit)>? = null,
+)
+fun diffGeneratedModule(given: GeneratedModule, expectedInit: ExpectedGeneratedModule.() -> Unit, path: String = ""): String {
+    val expected = ExpectedGeneratedModule().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (diffModuleName(given.getName(), it) != "") { result.add(diffModuleName(given.getName(), it, "${path}name.")) }
+    }
+
+    expected.submodules?.let {
+        if (given.getSubmodules().size != it.size) { result.add("${path}submodules size ${given.getSubmodules().size} != ${it.size}"); return@let }
+        given.getSubmodules().forEachIndexed { idx, entry -> if (diffGeneratedSubmodule(entry, it[idx]) != "") { result.add(diffGeneratedSubmodule(entry, it[idx], "${path}submodules[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedGenerateArgs(
     var group: (ExpectedModuleGroup.() -> Unit)? = null,
     var moduleToGenerate: String? = null,
@@ -30,35 +99,6 @@ fun diffGenerateArgs(given: GenerateArgs, expectedInit: ExpectedGenerateArgs.() 
 
     expected.onlyUpdate?.let {
         if (given.getOnlyUpdate() != it) { result.add("${path}onlyUpdate ${given.getOnlyUpdate()} != ${it}") }
-    }
-
-    return result.joinToString("\n")
-}
-
-data class ExpectedGenerateResult(
-    var main: (ExpectedDirectory.() -> Unit)? = null,
-    var fixtures: (ExpectedDirectory.() -> Unit)? = null,
-    var testsEmpty: Boolean? = null,
-    var tests: (ExpectedDirectory.() -> Unit)? = null,
-)
-fun diffGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResult.() -> Unit, path: String = ""): String {
-    val expected = ExpectedGenerateResult().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.main?.let {
-        if (diffDirectory(given.getMain(), it) != "") { result.add(diffDirectory(given.getMain(), it, "${path}main.")) }
-    }
-
-    expected.fixtures?.let {
-        if (diffDirectory(given.getFixtures(), it) != "") { result.add(diffDirectory(given.getFixtures(), it, "${path}fixtures.")) }
-    }
-
-    expected.testsEmpty?.let {
-        if ((given.getTests() == null) != it) { result.add("${path}tests empty ${(given.getTests() == null)} != ${it}") }
-    }
-
-    expected.tests?.let {
-        if (diffDirectory(given.getTests()!!, it) != "") { result.add(diffDirectory(given.getTests()!!, it, "${path}tests.")) }
     }
 
     return result.joinToString("\n")

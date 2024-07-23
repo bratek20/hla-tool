@@ -13,12 +13,22 @@ import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.generation.api.*
 
-fun assertGenerateArgs(given: GenerateArgs, expectedInit: ExpectedGenerateArgs.() -> Unit) {
-    val diff = diffGenerateArgs(given, expectedInit)
+fun assertGeneratedPattern(given: GeneratedPattern, expectedInit: ExpectedGeneratedPattern.() -> Unit) {
+    val diff = diffGeneratedPattern(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertGenerateResult(given: GenerateResult, expectedInit: ExpectedGenerateResult.() -> Unit) {
-    val diff = diffGenerateResult(given, expectedInit)
+fun assertGeneratedSubmodule(given: GeneratedSubmodule, expectedInit: ExpectedGeneratedSubmodule.() -> Unit) {
+    val diff = diffGeneratedSubmodule(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertGeneratedModule(given: GeneratedModule, expectedInit: ExpectedGeneratedModule.() -> Unit) {
+    val diff = diffGeneratedModule(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertGenerateArgs(given: GenerateArgs, expectedInit: ExpectedGenerateArgs.() -> Unit) {
+    val diff = diffGenerateArgs(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

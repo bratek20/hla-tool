@@ -10,5 +10,5 @@ interface ModuleGenerator {
     @Throws(
         UnknownTypeException::class,
     )
-    fun generate(args: GenerateArgs): GenerateResult
+    fun generate(args: GenerateArgs): GeneratedModule
 }

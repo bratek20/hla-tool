@@ -13,7 +13,7 @@ import com.github.bratek20.hla.writing.api.*
 
 data class WriteArgsDef(
     var hlaFolderPath: String = "someValue",
-    var generateResult: (GenerateResultDef.() -> Unit) = {},
+    var module: (GeneratedModuleDef.() -> Unit) = {},
     var profile: (HlaProfileDef.() -> Unit) = {},
     var onlyUpdate: Boolean = false,
 )
@@ -21,7 +21,7 @@ fun writeArgs(init: WriteArgsDef.() -> Unit = {}): WriteArgs {
     val def = WriteArgsDef().apply(init)
     return WriteArgs.create(
         hlaFolderPath = pathCreate(def.hlaFolderPath),
-        generateResult = generateResult(def.generateResult),
+        module = generatedModule(def.module),
         profile = hlaProfile(def.profile),
         onlyUpdate = def.onlyUpdate,
     )

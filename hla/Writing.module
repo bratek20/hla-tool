@@ -2,7 +2,7 @@ Interfaces
     ModuleWriter
         WriteArgs
             hlaFolderPath: Path
-            generateResult: GenerateResult
+            module: GeneratedModule
             profile: HlaProfile
             onlyUpdate: bool
         write(args: WriteArgs)
