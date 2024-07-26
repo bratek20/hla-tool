@@ -118,15 +118,15 @@ class ModuleGeneratorLogic(
                 extractPatterns(
                     main, SubmoduleName.Api, listOf(
                         PatternName.Enums,
-                        PatternName.ValueObjects,
-                        PatternName.DataClasses,
-                        PatternName.DataKeys,
-                        PatternName.PropertyKeys,
-                        PatternName.Interfaces,
-                        PatternName.Exceptions,
                         PatternName.CustomTypes,
                         PatternName.CustomTypesMapper,
                         PatternName.SerializedCustomTypes,
+                        PatternName.ValueObjects,
+                        PatternName.DataClasses,
+                        PatternName.PropertyKeys,
+                        PatternName.DataKeys,
+                        PatternName.Exceptions,
+                        PatternName.Interfaces,
                     )
                 ),
                 extractPatterns(
@@ -138,8 +138,8 @@ class ModuleGeneratorLogic(
                 extractPatterns(
                     main, SubmoduleName.Web, listOf(
                         PatternName.WebCommon,
-                        PatternName.WebServer,
                         PatternName.WebClient,
+                        PatternName.WebServer,
                     )
                 ),
                 extractPatterns(
