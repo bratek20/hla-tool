@@ -35,10 +35,6 @@ class KotlinBuildersPattern(
         return "(${name}Def.() -> Unit)?"
     }
 
-    override fun defOptionalNonComplexType(name: String): String {
-        return "$name?"
-    }
-
     override fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String {
         return languageTypes.mapOptionalElement(optionalName, elementName, mapping)
     }

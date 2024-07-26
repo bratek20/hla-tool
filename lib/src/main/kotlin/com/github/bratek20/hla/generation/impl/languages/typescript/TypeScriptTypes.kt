@@ -62,12 +62,16 @@ class TypeScriptTypes(private val modules: ModuleGroupQueries): LanguageTypes {
         return "`$value`"
     }
 
-    override fun defaultValueForDefOptional(): String {
+    override fun undefinedValue(): String {
         return "undefined"
     }
 
     override fun wrapWithOptional(typeName: String): String {
         return "Optional<$typeName>"
+    }
+
+    override fun wrapWithSoftOptional(typeName: String): String {
+        return typeName
     }
 
     override fun mapOptionalElement(optionalName: String, elementName: String, mapping: String): String {

@@ -58,6 +58,11 @@ fun assertSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> U
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertClassUsingExternalType(given: ClassUsingExternalType, expectedInit: ExpectedClassUsingExternalType.() -> Unit) {
+    val diff = diffClassUsingExternalType(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertRecordClass(given: RecordClass, expectedInit: ExpectedRecordClass.() -> Unit) {
     val diff = diffRecordClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

@@ -45,6 +45,22 @@ abstract class StructureDefType<T: StructureApiType>(
     }
 }
 
+class ExternalDefType(
+    api: ExternalApiType,
+) : DefType<ExternalApiType>(api) {
+    override fun name(): String {
+        return languageTypes.wrapWithOptional(pascalToCamelCase(api.name()))
+    }
+
+    override fun defaultValue(): String {
+        return languageTypes.undefinedValue()
+    }
+
+    override fun build(variableName: String): String {
+        return pascalToCamelCase(api.rawName) + "($variableName)"
+    }
+}
+
 abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseDefType
@@ -145,11 +161,11 @@ class OptionalDefType(
         if (wrappedType is ComplexStructureDefType) {
             return pattern.defOptionalComplexType(wrappedType.api.name())
         }
-        return pattern.defOptionalNonComplexType(wrappedType.name())
+        return languageTypes.wrapWithSoftOptional(wrappedType.name())
     }
 
     override fun defaultValue(): String {
-        return languageTypes.defaultValueForDefOptional()
+        return languageTypes.undefinedValue()
     }
 
     override fun build(variableName: String): String {
@@ -210,6 +226,7 @@ class DefTypeFactory(
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
             is SerializableApiType -> ComplexStructureDefType(type, createFields(type.fields))
+            is ExternalApiType -> ExternalDefType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

@@ -7,6 +7,9 @@ CustomTypes
     DateRangeWrapper
         range: DateRange
 
+ExternalTypes
+    LegacyType
+
 ValueObjects
     SomeId: string
     SomeIntWrapper: int
@@ -44,6 +47,9 @@ ValueObjects
         optString: string?
         sameClassList: SomeClass6[] = []
 
+    ClassUsingExternalType
+        extType: LegacyType
+
     RecordClass
         id: SomeId
         amount: int
@@ -65,7 +71,6 @@ Properties
         customOpt: any? = empty
 
     "SomeKey" -> SomeProperty
-
 Data
     SomeData
         other: OtherData
@@ -79,8 +84,7 @@ Data
 
     "SomeKey" -> SomeData
 
-ExternalTypes
-    LegacyType
+
 
 Interfaces
     SomeEmptyInterface

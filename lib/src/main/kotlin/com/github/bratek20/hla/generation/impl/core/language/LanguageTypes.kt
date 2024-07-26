@@ -16,9 +16,11 @@ interface LanguageTypes {
 
     fun wrapWithString(value: String): String
 
-    fun defaultValueForDefOptional(): String
+    fun undefinedValue(): String
 
     fun wrapWithOptional(typeName: String): String
+    fun wrapWithSoftOptional(typeName: String): String
+
     fun mapOptionalElement(optionalName: String, elementName: String, mapping: String): String
     fun unwrapOptional(variableName: String): String
     fun serializeOptional(variableName: String): String

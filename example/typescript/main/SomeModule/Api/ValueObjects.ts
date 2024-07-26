@@ -267,6 +267,22 @@ class SomeClass6 {
     }
 }
 
+class ClassUsingExternalType {
+    private extType = new LegacyType
+
+    static create(
+        extType: LegacyType,
+    ): ClassUsingExternalType {
+        const instance = new ClassUsingExternalType()
+        instance.extType = extType
+        return instance
+    }
+
+    getExtType(): LegacyType {
+        return this.extType
+    }
+}
+
 class RecordClass {
     private id = STRING
     private amount = NUMBER

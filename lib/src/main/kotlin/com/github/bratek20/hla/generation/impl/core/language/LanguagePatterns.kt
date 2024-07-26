@@ -14,7 +14,6 @@ interface LanguageBuildersPattern {
     fun complexVoDefConstructor(name: String, arg: String): String
 
     fun defOptionalComplexType(name: String): String
-    fun defOptionalNonComplexType(name: String): String
     fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String
     fun mapOptionalDefBaseElement(variableName: String): String
 }
