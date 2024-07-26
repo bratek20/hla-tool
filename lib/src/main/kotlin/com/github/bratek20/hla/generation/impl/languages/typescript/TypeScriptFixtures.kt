@@ -36,10 +36,6 @@ class TypeScriptBuildersPattern(private val modules: ModuleGroupQueries) : Langu
         return defClassType(name)
     }
 
-    override fun defOptionalNonComplexType(name: String): String {
-        return name
-    }
-
     override fun mapOptionalDefElement(optionalName: String, elementName: String, mapping: String): String {
         return "Optional.of($optionalName).map($elementName => $mapping)"
     }

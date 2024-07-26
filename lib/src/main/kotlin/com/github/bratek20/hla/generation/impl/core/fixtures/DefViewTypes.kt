@@ -45,19 +45,19 @@ abstract class StructureDefType<T: StructureApiType>(
     }
 }
 
-class ExternalDefType<T: ExternalApiType>(
-    api: T,
-) : DefType<T>(api) {
+class ExternalDefType(
+    api: ExternalApiType,
+) : DefType<ExternalApiType>(api) {
     override fun name(): String {
-        return pascalToCamelCase(api.name())
+        return languageTypes.wrapWithOptional(pascalToCamelCase(api.name()))
     }
 
     override fun defaultValue(): String {
-        return "TODO_defaultValue"
+        return languageTypes.undefinedValue()
     }
 
     override fun build(variableName: String): String {
-        return "TODO_build"
+        return pascalToCamelCase(api.rawName) + "($variableName)"
     }
 }
 
@@ -161,11 +161,11 @@ class OptionalDefType(
         if (wrappedType is ComplexStructureDefType) {
             return pattern.defOptionalComplexType(wrappedType.api.name())
         }
-        return pattern.defOptionalNonComplexType(wrappedType.name())
+        return languageTypes.wrapWithSoftOptional(wrappedType.name())
     }
 
     override fun defaultValue(): String {
-        return languageTypes.defaultValueForDefOptional()
+        return languageTypes.undefinedValue()
     }
 
     override fun build(variableName: String): String {

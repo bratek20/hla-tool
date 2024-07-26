@@ -4,7 +4,6 @@ import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
-import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 
@@ -31,7 +30,7 @@ abstract class ExpectedType<T: ApiType>(
     }
 
     // used by velocity
-    fun diffFunName(): String {
+    open fun diffFunName(): String {
         return fixture.diffFunName(api.name())
     }
 
@@ -131,7 +130,7 @@ class ListExpectedTypeField(
     }
 }
 
-abstract class StructureExpectedType<T: StructureApiType>(
+abstract class ExpectedTypeWithFunName<T: ApiType>(
     api: T,
 ) : ExpectedType<T>(api) {
     override fun name(): String {
@@ -148,19 +147,15 @@ abstract class StructureExpectedType<T: StructureApiType>(
     }
 }
 
+abstract class StructureExpectedType<T: StructureApiType>(
+    api: T,
+) : ExpectedTypeWithFunName<T>(api)
+
 class ExternalExpectedType(
     api: ExternalApiType,
-) : ExpectedType<ExternalApiType>(api) {
-    override fun name(): String {
-        return "TODO_name"
-    }
-
-    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        return "TODO_diff"
-    }
-
-    override fun notEquals(givenVariable: String, expectedVariable: String): String {
-        return "TODO_notEquals"
+) : ExpectedTypeWithFunName<ExternalApiType>(api) {
+    override fun diffFunName(): String {
+        return fixture.diffFunName(api.rawName)
     }
 }
 

@@ -61,11 +61,15 @@ class KotlinTypes: LanguageTypes {
         return "\"$value\""
     }
 
-    override fun defaultValueForDefOptional(): String {
+    override fun undefinedValue(): String {
         return "null"
     }
 
     override fun wrapWithOptional(typeName: String): String {
+        return "$typeName?"
+    }
+
+    override fun wrapWithSoftOptional(typeName: String): String {
         return "$typeName?"
     }
 
