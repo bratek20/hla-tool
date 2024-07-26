@@ -76,7 +76,8 @@ Data
         other: OtherData
         custom: any
         customOpt: any?
-        goodDataName: string (from: gDN)
+        //Here startsFrom is not generated because not long or int
+        goodDataName: string (from: gDN, startsFrom: "some")
 
     SomeData2
         optEnum: SomeEnum?
