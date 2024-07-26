@@ -1,5 +1,8 @@
 package com.github.bratek20.hla.writing.impl
 
+import com.github.bratek20.hla.facade.api.HlaProfile
+import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.GeneratedModule
 import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -33,45 +36,60 @@ class ModuleWriterLogic(
     private val filesModifiers: FilesModifiers
 ): ModuleWriter {
 
-    private fun calcGenerateResult(module: GeneratedModule): GenerateResult {
+    //TODO-REF: profile should be not needed, write should be aware what language is used
+    //TODO-REF: calculation should be language strategy
+    private fun calcModuleDirectoryName(name: ModuleName, profile: HlaProfile): DirectoryName {
+        if (profile.getLanguage() == ModuleLanguage.KOTLIN) {
+            return DirectoryName(name.value.lowercase())
+        }
+        return DirectoryName(name.value)
+    }
+    private fun calcSubmoduleDirectoryName(name: SubmoduleName, profile: HlaProfile): DirectoryName {
+        if (profile.getLanguage() == ModuleLanguage.KOTLIN) {
+            return DirectoryName(name.name.lowercase())
+        }
+        return DirectoryName(name.name)
+    }
+
+    private fun calcGenerateResult(module: GeneratedModule, profile: HlaProfile): GenerateResult {
         val main = Directory.create(
-            DirectoryName(module.getName().value),
+            calcModuleDirectoryName(module.getName(), profile),
             directories = listOfNotNull(
-                submoduleToDirectory(SubmoduleName.Api, module.getSubmodules()),
-                submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules()),
-                submoduleToDirectory(SubmoduleName.Web, module.getSubmodules()),
-                submoduleToDirectory(SubmoduleName.Context, module.getSubmodules()),
+                submoduleToDirectory(SubmoduleName.Api, module.getSubmodules(), profile),
+                submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules(), profile),
+                submoduleToDirectory(SubmoduleName.Web, module.getSubmodules(), profile),
+                submoduleToDirectory(SubmoduleName.Context, module.getSubmodules(), profile),
             )
         );
         val fixtures = Directory.create(
-            DirectoryName(module.getName().value),
+            calcModuleDirectoryName(module.getName(), profile),
             directories = listOfNotNull(
-                submoduleToDirectory(SubmoduleName.Fixtures, module.getSubmodules()),
+                submoduleToDirectory(SubmoduleName.Fixtures, module.getSubmodules(), profile),
             )
         );
         val tests = Directory.create(
-            DirectoryName(module.getName().value),
+            calcModuleDirectoryName(module.getName(), profile),
             directories = listOfNotNull(
-                submoduleToDirectory(SubmoduleName.Tests, module.getSubmodules()),
+                submoduleToDirectory(SubmoduleName.Tests, module.getSubmodules(), profile),
             )
         );
         return GenerateResult(main, fixtures, tests)
     }
 
-    private fun submoduleToDirectory(name: SubmoduleName, subs: List<GeneratedSubmodule>): Directory? {
+    private fun submoduleToDirectory(name: SubmoduleName, subs: List<GeneratedSubmodule>, profile: HlaProfile): Directory? {
         val sub = subs.find { it.getName() == name }
         if (sub == null || sub.getPatterns().isEmpty()) {
             return null
         }
 
         return Directory.create(
-            name = DirectoryName(name.name),
+            name = calcSubmoduleDirectoryName(name, profile),
             files = sub.getPatterns().map { it.getFile() }
         )
     }
     override fun write(args: WriteArgs) {
         val rootPath = args.getHlaFolderPath().add(args.getProfile().getPaths().getProject())
-        val generateResult = calcGenerateResult(args.getModule())
+        val generateResult = calcGenerateResult(args.getModule(), args.getProfile())
         val profile = args.getProfile()
 
         val src = profile.getPaths().getSrc()
