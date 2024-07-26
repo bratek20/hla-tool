@@ -23,7 +23,7 @@ fun someId2(value: Int = 0): SomeId2 {
 
 data class SomeClassDef(
     var id: String = "someValue",
-    var amount: Int = 0,
+    var amount: Int = 10,
 )
 fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
     val def = SomeClassDef().apply(init)

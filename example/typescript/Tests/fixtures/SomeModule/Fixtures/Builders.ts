@@ -19,7 +19,7 @@ namespace SomeModule.Builder {
     }
     export function someClass(def?: SomeClassDef): SomeClass {
         const final_id = def?.id ?? "someValue"
-        const final_amount = def?.amount ?? 0
+        const final_amount = def?.amount ?? 10
 
         return SomeClass.create(
             new SomeId(final_id),
