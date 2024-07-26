@@ -16,7 +16,7 @@ ValueObjects
 
     SomeClass
         id: SomeId
-        amount: int (example: 10)
+        amount: int (startsFrom: 10)
 
     SomeClass2
         id: SomeId
