@@ -14,7 +14,6 @@ enum class PatternName {
     CustomTypesMapper,
     SerializedCustomTypes,
     Logic,
-    Data,
     WebCommon,
     WebServer,
     WebClient,

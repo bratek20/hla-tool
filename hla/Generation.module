@@ -14,7 +14,8 @@ Enums
 
         //impl
         Logic
-        Data
+        //DataClasses - declared in api
+        //DataKeys - declared in api
 
         //web
         WebCommon

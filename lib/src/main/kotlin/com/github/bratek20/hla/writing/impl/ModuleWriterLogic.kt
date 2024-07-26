@@ -1,6 +1,8 @@
 package com.github.bratek20.hla.writing.impl
 
 import com.github.bratek20.hla.generation.api.GeneratedModule
+import com.github.bratek20.hla.generation.api.GeneratedSubmodule
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
 import com.github.bratek20.utils.directory.api.Directories
@@ -33,18 +35,39 @@ class ModuleWriterLogic(
 
     private fun calcGenerateResult(module: GeneratedModule): GenerateResult {
         val main = Directory.create(
-            DirectoryName(""),
-            directories = listOf()
+            DirectoryName(module.getName().value),
+            directories = listOfNotNull(
+                submoduleToDirectory(SubmoduleName.Api, module.getSubmodules()),
+                submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules()),
+                submoduleToDirectory(SubmoduleName.Web, module.getSubmodules()),
+                submoduleToDirectory(SubmoduleName.Context, module.getSubmodules()),
+            )
         );
         val fixtures = Directory.create(
-            DirectoryName(""),
-            directories = listOf()
+            DirectoryName(module.getName().value),
+            directories = listOfNotNull(
+                submoduleToDirectory(SubmoduleName.Fixtures, module.getSubmodules()),
+            )
         );
         val tests = Directory.create(
-            DirectoryName(""),
-            directories = listOf()
+            DirectoryName(module.getName().value),
+            directories = listOfNotNull(
+                submoduleToDirectory(SubmoduleName.Tests, module.getSubmodules()),
+            )
         );
         return GenerateResult(main, fixtures, tests)
+    }
+
+    private fun submoduleToDirectory(name: SubmoduleName, subs: List<GeneratedSubmodule>): Directory? {
+        val sub = subs.find { it.getName() == name }
+        if (sub == null || sub.getPatterns().isEmpty()) {
+            return null
+        }
+
+        return Directory.create(
+            name = DirectoryName(name.name),
+            files = sub.getPatterns().map { it.getFile() }
+        )
     }
     override fun write(args: WriteArgs) {
         val rootPath = args.getHlaFolderPath().add(args.getProfile().getPaths().getProject())

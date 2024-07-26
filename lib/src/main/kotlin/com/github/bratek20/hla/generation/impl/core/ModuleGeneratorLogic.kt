@@ -132,7 +132,8 @@ class ModuleGeneratorLogic(
                 extractPatterns(
                     main, SubmoduleName.Impl, listOf(
                         PatternName.Logic,
-                        PatternName.Data,
+                        PatternName.DataClasses,
+                        PatternName.DataKeys,
                     )
                 ),
                 extractPatterns(
