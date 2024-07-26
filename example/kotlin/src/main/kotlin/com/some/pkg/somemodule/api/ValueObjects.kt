@@ -266,6 +266,24 @@ data class SomeClass6(
     }
 }
 
+data class ClassUsingExternalType(
+    private val extType: com.some.pkg.legacy.LegacyType,
+) {
+    fun getExtType(): com.some.pkg.legacy.LegacyType {
+        return this.extType
+    }
+
+    companion object {
+        fun create(
+            extType: com.some.pkg.legacy.LegacyType,
+        ): ClassUsingExternalType {
+            return ClassUsingExternalType(
+                extType = extType,
+            )
+        }
+    }
+}
+
 data class RecordClass(
     private val id: String,
     private val amount: Int,

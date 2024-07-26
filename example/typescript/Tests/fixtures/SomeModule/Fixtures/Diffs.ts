@@ -190,6 +190,19 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassUsingExternalType {
+        extType?: LegacyType,
+    }
+    export function diffClassUsingExternalType(given: ClassUsingExternalType, expected: ExpectedClassUsingExternalType, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.extType !== undefined) {
+            if (diffLegacyType(given.getExtType(), expected.extType) != "") { result.push(diffLegacyType(given.getExtType(), expected.extType, `${path}extType.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedRecordClass {
         id?: string,
         amount?: number,

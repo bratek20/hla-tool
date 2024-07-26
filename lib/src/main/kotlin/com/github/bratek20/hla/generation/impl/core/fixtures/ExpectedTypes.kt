@@ -4,7 +4,6 @@ import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
-import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 
@@ -31,7 +30,7 @@ abstract class ExpectedType<T: ApiType>(
     }
 
     // used by velocity
-    fun diffFunName(): String {
+    open fun diffFunName(): String {
         return fixture.diffFunName(api.name())
     }
 
@@ -131,7 +130,7 @@ class ListExpectedTypeField(
     }
 }
 
-abstract class StructureExpectedType<T: StructureApiType>(
+abstract class ExpectedTypeWithFunName<T: ApiType>(
     api: T,
 ) : ExpectedType<T>(api) {
     override fun name(): String {
@@ -145,6 +144,18 @@ abstract class StructureExpectedType<T: StructureApiType>(
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String {
         return "${diffFunName()}($givenVariable, $expectedVariable) != \"\""
+    }
+}
+
+abstract class StructureExpectedType<T: StructureApiType>(
+    api: T,
+) : ExpectedTypeWithFunName<T>(api)
+
+class ExternalExpectedType(
+    api: ExternalApiType,
+) : ExpectedTypeWithFunName<ExternalApiType>(api) {
+    override fun diffFunName(): String {
+        return fixture.diffFunName(api.rawName)
     }
 }
 
@@ -171,11 +182,6 @@ open class ComplexStructureExpectedType(
         return "Expected${api.name()}"
     }
 }
-
-class ComplexVOExpectedType(
-    api: ComplexStructureApiType<*>,
-    fields: List<ExpectedTypeField>
-) : ComplexStructureExpectedType(api, fields)
 
 class ComplexCustomExpectedType(
     api: ComplexStructureApiType<*>,
@@ -288,6 +294,7 @@ class ExpectedTypeFactory(
             is SerializableApiType -> PropertyExpectedType(type, createFields(type.fields))
             is SimpleCustomApiType -> SimpleCustomExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is ComplexCustomApiType -> ComplexCustomExpectedType(type, createFields(type.fields))
+            is ExternalApiType -> ExternalExpectedType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
