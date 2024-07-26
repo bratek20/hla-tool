@@ -148,6 +148,22 @@ abstract class StructureExpectedType<T: StructureApiType>(
     }
 }
 
+class ExternalExpectedType(
+    api: ExternalApiType,
+) : ExpectedType<ExternalApiType>(api) {
+    override fun name(): String {
+        return "TODO_name"
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        return "TODO_diff"
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+        return "TODO_notEquals"
+    }
+}
+
 open class ComplexStructureExpectedType(
     api: ComplexStructureApiType<*>,
     val fields: List<ExpectedTypeField>
@@ -171,11 +187,6 @@ open class ComplexStructureExpectedType(
         return "Expected${api.name()}"
     }
 }
-
-class ComplexVOExpectedType(
-    api: ComplexStructureApiType<*>,
-    fields: List<ExpectedTypeField>
-) : ComplexStructureExpectedType(api, fields)
 
 class ComplexCustomExpectedType(
     api: ComplexStructureApiType<*>,
@@ -288,6 +299,7 @@ class ExpectedTypeFactory(
             is SerializableApiType -> PropertyExpectedType(type, createFields(type.fields))
             is SimpleCustomApiType -> SimpleCustomExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is ComplexCustomApiType -> ComplexCustomExpectedType(type, createFields(type.fields))
+            is ExternalApiType -> ExternalExpectedType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

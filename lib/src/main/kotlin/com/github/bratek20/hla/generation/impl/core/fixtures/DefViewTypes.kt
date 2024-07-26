@@ -45,6 +45,22 @@ abstract class StructureDefType<T: StructureApiType>(
     }
 }
 
+class ExternalDefType<T: ExternalApiType>(
+    api: T,
+) : DefType<T>(api) {
+    override fun name(): String {
+        return pascalToCamelCase(api.name())
+    }
+
+    override fun defaultValue(): String {
+        return "TODO_defaultValue"
+    }
+
+    override fun build(variableName: String): String {
+        return "TODO_build"
+    }
+}
+
 abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseDefType
@@ -210,6 +226,7 @@ class DefTypeFactory(
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
             is SerializableApiType -> ComplexStructureDefType(type, createFields(type.fields))
+            is ExternalApiType -> ExternalDefType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

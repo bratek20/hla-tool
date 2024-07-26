@@ -204,6 +204,20 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     return result.joinToString("\n")
 }
 
+data class ExpectedClassUsingExternalType(
+    var extType: TODO_name? = null,
+)
+fun diffClassUsingExternalType(given: ClassUsingExternalType, expectedInit: ExpectedClassUsingExternalType.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassUsingExternalType().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.extType?.let {
+        if (TODO_notEquals) { result.add(TODO_diff) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedRecordClass(
     var id: String? = null,
     var amount: Int? = null,
