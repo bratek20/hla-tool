@@ -1,9 +1,15 @@
 #!/bin/bash
 
-URL="https://github.com/bratek20/hla-tool/releases/download/v1.0.0/hla-tool-1.0.0.jar"
-echo "Url = ${URL}"
+# Fetch latest release data silently
+LATEST_RELEASE=$(curl -s "https://api.github.com/repos/bratek20/hla-tool/releases/latest")
 
-# Download the jar file
-curl -L -o "tool.jar" "${URL}" --verbose
+# Get the URL of the JAR file from the latest release
+JAR_URL=$(echo $LATEST_RELEASE | grep -oP '"browser_download_url": "\K(.*?hla-tool.jar)(?=")')
 
-echo "Hla tool update done!"
+# Get the tag name (version) from the latest release
+VERSION=$(echo $LATEST_RELEASE | grep -oP '"tag_name": "\K(.*?)(?=")')
+
+# Download the JAR file silently
+curl -sL $JAR_URL -o tool.jar
+
+echo "Hla tool updated to the latest version ($VERSION)!"
