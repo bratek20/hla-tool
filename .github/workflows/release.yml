@@ -37,5 +37,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/libs/app.jar
-          asset_name: hla-tool-${{ github.ref }}.jar
+          asset_name: hla-tool.jar
           asset_content_type: application/java-archive
