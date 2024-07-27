@@ -7,6 +7,7 @@ import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -467,6 +468,10 @@ class WebServerGenerator: PatternGenerator() {
 class WebGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Web"
+    }
+
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Web
     }
 
     override fun velocityDirPath(): String {

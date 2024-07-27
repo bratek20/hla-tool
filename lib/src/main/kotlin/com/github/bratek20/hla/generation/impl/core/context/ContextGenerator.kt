@@ -4,6 +4,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
@@ -92,6 +93,10 @@ class WebContextGenerator: PatternGenerator() {
 class ContextGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Context"
+    }
+
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Context
     }
 
     override fun velocityDirPath(): String {

@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -270,6 +271,10 @@ class ApiGenerator: SubmoduleGenerator() {
         return "Api"
     }
 
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Api
+    }
+
     override fun velocityDirPath(): String {
         return "api"
     }
@@ -286,22 +291,6 @@ class ApiGenerator: SubmoduleGenerator() {
             PropertyOrDataKeysGenerator(true),
             ExceptionsGenerator(),
             InterfacesGenerator(),
-        )
-    }
-}
-
-class MacrosGenerator: SubmoduleGenerator() {
-    override fun name(): String {
-        return "Macros"
-    }
-
-    override fun velocityDirPath(): String {
-        return "macros"
-    }
-
-    override fun getFileGenerators(): List<PatternGenerator> {
-        return listOf(
-            MacrosBuilder()
         )
     }
 }

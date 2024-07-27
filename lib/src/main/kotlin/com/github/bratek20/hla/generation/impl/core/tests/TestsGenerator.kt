@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.tests
 
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -28,6 +29,10 @@ class ImplTestGenerator: PatternGenerator() {
 class TestsGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Tests"
+    }
+
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Tests
     }
 
     override fun velocityDirPath(): String {

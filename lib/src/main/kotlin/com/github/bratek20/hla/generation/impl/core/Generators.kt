@@ -4,6 +4,7 @@ import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.generation.api.GeneratedPattern
 import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
@@ -134,6 +135,8 @@ abstract class SubmoduleGenerator
     final override fun mode(): GeneratorMode {
         return GeneratorMode.START_AND_UPDATE
     }
+
+    abstract fun submoduleName(): SubmoduleName
 
     override fun init(c: ModuleGenerationContext, velocityPath: String) {
         super.init(c, velocityPath)

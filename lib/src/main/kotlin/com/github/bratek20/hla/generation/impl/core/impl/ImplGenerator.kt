@@ -5,6 +5,7 @@ import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
@@ -95,6 +96,10 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
 class ImplGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Impl"
+    }
+
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Impl
     }
 
     override fun velocityDirPath(): String {
