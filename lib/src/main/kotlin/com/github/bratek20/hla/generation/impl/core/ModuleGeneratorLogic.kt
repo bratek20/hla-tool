@@ -5,7 +5,6 @@ import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.*
 import com.github.bratek20.hla.generation.impl.core.api.ApiGenerator
-import com.github.bratek20.hla.generation.impl.core.api.MacrosGenerator
 import com.github.bratek20.hla.generation.impl.core.context.ContextGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
@@ -14,7 +13,6 @@ import com.github.bratek20.hla.generation.impl.core.web.WebGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.hla.velocity.api.VelocityFacade
-import com.github.bratek20.utils.directory.api.Directory
 
 data class DomainContext(
     val queries: ModuleGroupQueries,
@@ -27,57 +25,22 @@ data class DomainContext(
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
 ) : ModuleGenerator {
-
-    class RootMainGenerator: DirectoryGenerator() {
-        override fun name(): String {
-            return module.getName().value
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
+    class SubmodulesGenerator(
+        private val context: ModuleGenerationContext,
+    ) {
+        fun generate(): List<GeneratedSubmodule> {
             return listOf(
                 ApiGenerator(),
                 ImplGenerator(),
                 WebGenerator(),
-                ContextGenerator()
-            )
-        }
-    }
-
-    class RootFixturesGenerator: DirectoryGenerator() {
-        override fun name(): String {
-            return module.getName().value
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
-            return listOf(
+                ContextGenerator(),
                 FixturesGenerator(),
-            )
-        }
-    }
-
-    class RootTestsGenerator: DirectoryGenerator() {
-        override fun name(): String {
-            return module.getName().value
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
-            return listOf(
-                TestsGenerator()
-            )
-        }
-    }
-
-    class GenerationRoot: DirectoryGenerator() {
-        override fun name(): String {
-            return "root"
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
-            return listOf(
-                RootMainGenerator(),
-                RootFixturesGenerator(),
-                RootTestsGenerator()
-            )
+                TestsGenerator(),
+            ).mapNotNull {
+                it.init(context, "")
+                it.generateMacros()
+                it.generateSubmodule()
+            }
         }
     }
 
@@ -102,88 +65,9 @@ class ModuleGeneratorLogic(
             onlyPatterns = profile.getOnlyPatterns(),
         )
 
-        val root = GenerationRoot()
-        root.init(context, "")
-        root.generateMacros()
-        val result = root.generateDirectory()
-        requireNotNull(result)
-
-        val main = result.getDirectories()[0]
-        val fixtures = result.getDirectories()[1]
-        val tests = if (result.getDirectories().size > 2) result.getDirectories()[2] else null
-
         return GeneratedModule.create(
             name = moduleName,
-            submodules = listOfNotNull(
-                extractPatterns(
-                    main, SubmoduleName.Api, listOf(
-                        PatternName.Enums,
-                        PatternName.CustomTypes,
-                        PatternName.CustomTypesMapper,
-                        PatternName.SerializedCustomTypes,
-                        PatternName.ValueObjects,
-                        PatternName.DataClasses,
-                        PatternName.PropertyKeys,
-                        PatternName.DataKeys,
-                        PatternName.Exceptions,
-                        PatternName.Interfaces,
-                    )
-                ),
-                extractPatterns(
-                    main, SubmoduleName.Impl, listOf(
-                        PatternName.DataClasses,
-                        PatternName.DataKeys,
-                        PatternName.Logic,
-                    )
-                ),
-                extractPatterns(
-                    main, SubmoduleName.Web, listOf(
-                        PatternName.WebCommon,
-                        PatternName.WebClient,
-                        PatternName.WebServer,
-                    )
-                ),
-                extractPatterns(
-                    main, SubmoduleName.Context, listOf(
-                        PatternName.Impl,
-                        PatternName.Web,
-                    )
-                ),
-                extractPatterns(
-                    fixtures, SubmoduleName.Fixtures, listOf(
-                        PatternName.Builders,
-                        PatternName.Diffs,
-                        PatternName.Asserts,
-                        PatternName.Mocks
-                    )
-                ),
-                extractPatterns(
-                    tests, SubmoduleName.Tests, listOf(
-                        PatternName.ImplTest,
-                    )
-                ),
-            )
+            submodules = SubmodulesGenerator(context).generate()
         )
-    }
-
-    private fun extractPatterns(dir: Directory?, submodule: SubmoduleName, patterns: List<PatternName>): GeneratedSubmodule? {
-        if (dir == null) {
-            return null
-        }
-
-        val foundPatterns = mutableListOf<GeneratedPattern>()
-        dir.getDirectories().forEach {
-            if (it.getName().value.lowercase() == submodule.name.lowercase()) {
-                for (pattern in patterns) {
-                    for (file in it.getFiles()) {
-                        val fileNameNoExt = file.getName().value.substringBeforeLast(".")
-                        if (fileNameNoExt.lowercase() == pattern.name.lowercase()) {
-                            foundPatterns.add(GeneratedPattern.create(pattern, file))
-                        }
-                    }
-                }
-            }
-        }
-        return GeneratedSubmodule.create(submodule, foundPatterns)
     }
 }

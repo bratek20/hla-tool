@@ -3,7 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.context
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
-import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
+import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
@@ -80,7 +80,7 @@ class WebContextGenerator: FileGenerator() {
     }
 }
 
-class ContextGenerator: DirectoryGenerator() {
+class ContextGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Context"
     }

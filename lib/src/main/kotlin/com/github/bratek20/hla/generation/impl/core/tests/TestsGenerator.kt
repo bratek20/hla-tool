@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.tests
 
 import com.github.bratek20.utils.directory.api.FileContent
-import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
+import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 
@@ -20,7 +20,7 @@ class ImplTestGenerator: FileGenerator() {
     }
 }
 
-class TestsGenerator: DirectoryGenerator() {
+class TestsGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Tests"
     }

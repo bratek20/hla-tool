@@ -1,9 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
+import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 
-class FixturesGenerator: DirectoryGenerator() {
+class FixturesGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Fixtures"
     }

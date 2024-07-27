@@ -1,6 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
+import com.github.bratek20.hla.generation.api.GeneratedPattern
+import com.github.bratek20.hla.generation.api.GeneratedSubmodule
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
@@ -118,11 +121,10 @@ abstract class FileGenerator
     }
 }
 
-abstract class DirectoryGenerator
+abstract class SubmoduleGenerator
     : ModulePartGenerator()
 {
     private lateinit var fileGenerators: List<FileGenerator>
-    private lateinit var directoryGenerators: List<DirectoryGenerator>
 
     //TODO-REF current abstraction seems off
     // directory should not have mode, it simply is generated if has some file or directory
@@ -136,7 +138,6 @@ abstract class DirectoryGenerator
         super.init(c, velocityPath)
 
         fileGenerators = getFileGenerators()
-        directoryGenerators = getDirectoryGenerators()
 
         children().forEach { it.init(c, velocityDirPath()) }
     }
@@ -153,15 +154,11 @@ abstract class DirectoryGenerator
         return emptyList()
     }
 
-    open fun getDirectoryGenerators(): List<DirectoryGenerator> {
-        return emptyList()
-    }
-
     override fun children(): List<ModulePartGenerator> {
-        return fileGenerators + directoryGenerators
+        return fileGenerators
     }
 
-    fun generateDirectory(): Directory? {
+    fun generateSubmodule(): GeneratedSubmodule? {
         if (!shouldGenerateDirectory()) {
             return null
         }
@@ -174,22 +171,24 @@ abstract class DirectoryGenerator
             fileGenerator.generateFile()?.let { files.add(it) }
         }
 
-        val directories = mutableListOf<Directory>()
-        directoryGenerators.forEach { dirGenerator ->
-            if (dirGenerator.shouldSkip()) {
-                return@forEach
-            }
-            dirGenerator.generateDirectory()?.let { directories.add(it) }
-        }
+//        val directories = mutableListOf<Directory>()
+//        submoduleGenerators.forEach { dirGenerator ->
+//            if (dirGenerator.shouldSkip()) {
+//                return@forEach
+//            }
+//            dirGenerator.generateSubmodule()?.let { directories.add(it) }
+//        }
 
-        if (files.isEmpty() && directories.isEmpty()) {
+        if (files.isEmpty()) {
             return null
         }
 
-        return Directory(
-            name = language.adjustDirectoryName(name()),
-            files = files,
-            directories = directories
+        return GeneratedSubmodule(
+            name = name(),
+            patterns = files.map {
+                val patternName = PatternName.valueOf(it.getName().value.substringBeforeLast("."))
+                GeneratedPattern.create(patternName, it)
+            }
         )
     }
 

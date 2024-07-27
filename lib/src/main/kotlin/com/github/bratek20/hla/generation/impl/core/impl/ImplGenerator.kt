@@ -4,14 +4,12 @@ import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
-import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
+import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.generation.impl.core.api.DataClassApiType
 import com.github.bratek20.hla.generation.impl.core.api.DataClassesGenerator
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
-import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 
 class LogicGenerator: FileGenerator() {
     override fun name(): String {
@@ -89,7 +87,7 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
     }
 }
 
-class ImplGenerator: DirectoryGenerator() {
+class ImplGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Impl"
     }

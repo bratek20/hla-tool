@@ -7,7 +7,7 @@ import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
 import com.github.bratek20.utils.directory.api.FileContent
-import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
+import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.FileGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ApiType
@@ -451,7 +451,7 @@ class WebServerGenerator: FileGenerator() {
     }
 }
 
-class WebGenerator: DirectoryGenerator() {
+class WebGenerator: SubmoduleGenerator() {
     override fun name(): String {
         return "Web"
     }
