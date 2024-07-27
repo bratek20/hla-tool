@@ -1,13 +1,13 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.MethodBuilder
-import com.github.bratek20.codebuilder.builders.MethodBuilderOps
 import com.github.bratek20.codebuilder.builders.method
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.utils.directory.api.FileContent
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.utils.camelToPascalCase
 
 data class ArgumentView(
@@ -102,9 +102,13 @@ class InterfaceViewFactory(
     }
 }
 
-class InterfacesGenerator: FileGenerator() {
+class InterfacesGenerator: PatternGenerator() {
     override fun name(): String {
         return "Interfaces"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.Interfaces
     }
 
     override fun generateFileContent(): FileContent?{

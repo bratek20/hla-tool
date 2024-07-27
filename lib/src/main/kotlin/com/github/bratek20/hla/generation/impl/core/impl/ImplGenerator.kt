@@ -4,16 +4,21 @@ import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.DataClassesGenerator
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
 
-class LogicGenerator: FileGenerator() {
+class LogicGenerator: PatternGenerator() {
     override fun name(): String {
         return "Logic"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.Logic
     }
 
     override fun mode(): GeneratorMode {
@@ -102,7 +107,7 @@ class ImplGenerator: SubmoduleGenerator() {
         return generateLogic || generateData
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getFileGenerators(): List<PatternGenerator> {
         return listOf(
             ImplDataClassesGenerator(),
             ImplDataKeysGenerator(),

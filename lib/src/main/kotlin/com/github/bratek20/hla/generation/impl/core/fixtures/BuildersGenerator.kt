@@ -5,14 +5,19 @@ import com.github.bratek20.codebuilder.builders.function
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.TypeDefinition
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
-class BuildersGenerator: FileGenerator() {
+class BuildersGenerator: PatternGenerator() {
     override fun name(): String {
         return "Builders"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.Builders
     }
 
     data class SimpleBuilder(

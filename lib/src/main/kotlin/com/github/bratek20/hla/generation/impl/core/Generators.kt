@@ -9,7 +9,6 @@ import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
-import com.github.bratek20.utils.directory.api.Directory
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 
@@ -100,10 +99,12 @@ abstract class ModulePartGenerator {
     }
 }
 
-abstract class FileGenerator
+abstract class PatternGenerator
     : ModulePartGenerator()
 {
     abstract fun generateFileContent(): FileContent?
+
+    abstract fun patternName(): PatternName
 
     fun generateFile(): File? {
         var content = generateFileContent() ?: return null
@@ -124,7 +125,7 @@ abstract class FileGenerator
 abstract class SubmoduleGenerator
     : ModulePartGenerator()
 {
-    private lateinit var fileGenerators: List<FileGenerator>
+    private lateinit var patternGenerators: List<PatternGenerator>
 
     //TODO-REF current abstraction seems off
     // directory should not have mode, it simply is generated if has some file or directory
@@ -137,7 +138,7 @@ abstract class SubmoduleGenerator
     override fun init(c: ModuleGenerationContext, velocityPath: String) {
         super.init(c, velocityPath)
 
-        fileGenerators = getFileGenerators()
+        patternGenerators = getFileGenerators()
 
         children().forEach { it.init(c, velocityDirPath()) }
     }
@@ -150,12 +151,12 @@ abstract class SubmoduleGenerator
         return true
     }
 
-    open fun getFileGenerators(): List<FileGenerator> {
+    open fun getFileGenerators(): List<PatternGenerator> {
         return emptyList()
     }
 
     override fun children(): List<ModulePartGenerator> {
-        return fileGenerators
+        return patternGenerators
     }
 
     fun generateSubmodule(): GeneratedSubmodule? {
@@ -164,11 +165,11 @@ abstract class SubmoduleGenerator
         }
 
         val files = mutableListOf<File>()
-        fileGenerators.forEach { fileGenerator ->
-            if (fileGenerator.shouldSkip()) {
+        patternGenerators.forEach { patternGenerator ->
+            if (patternGenerator.shouldSkip()) {
                 return@forEach
             }
-            fileGenerator.generateFile()?.let { files.add(it) }
+            patternGenerator.generateFile()?.let { files.add(it) }
         }
 
 //        val directories = mutableListOf<Directory>()

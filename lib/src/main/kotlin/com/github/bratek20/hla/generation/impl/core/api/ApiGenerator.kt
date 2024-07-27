@@ -1,13 +1,14 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
-class MacrosBuilder: FileGenerator() {
+class MacrosBuilder: PatternGenerator() {
     override fun name(): String {
         return "Macros"
     }
@@ -18,11 +19,20 @@ class MacrosBuilder: FileGenerator() {
             .build()
         return null
     }
+
+    override fun patternName(): PatternName {
+        //hack
+        return PatternName.DataKeys
+    }
 }
 
-class ValueObjectsGenerator: FileGenerator() {
+class ValueObjectsGenerator: PatternGenerator() {
     override fun name(): String {
         return "ValueObjects"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.ValueObjects
     }
 
     override fun generateFileContent(): FileContent? {
@@ -38,11 +48,17 @@ class ValueObjectsGenerator: FileGenerator() {
             .put("complexValueObjects", complexValueObjects)
             .build()
     }
+
+
 }
 
-open class DataClassesGenerator: FileGenerator() {
+open class DataClassesGenerator: PatternGenerator() {
     override fun name(): String {
         return "DataClasses"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.DataClasses
     }
 
     protected open fun dataClasses(): List<ComplexStructureDefinition> {
@@ -62,9 +78,13 @@ open class DataClassesGenerator: FileGenerator() {
     }
 }
 
-open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator() {
+open class PropertyOrDataKeysGenerator(private val data: Boolean): PatternGenerator() {
     override fun name(): String {
         return if (data) "DataKeys" else "PropertyKeys"
+    }
+
+    override fun patternName(): PatternName {
+        return if (data) PatternName.DataKeys else PatternName.PropertyKeys
     }
 
     data class StorageTypeKey(
@@ -124,9 +144,13 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): FileGenerator
     }
 }
 
-class ExceptionsGenerator: FileGenerator() {
+class ExceptionsGenerator: PatternGenerator() {
     override fun name(): String {
         return "Exceptions"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.Exceptions
     }
 
     override fun generateFileContent(): FileContent?{
@@ -146,9 +170,13 @@ class ExceptionsGenerator: FileGenerator() {
     }
 }
 
-class EnumsGenerator: FileGenerator() {
+class EnumsGenerator: PatternGenerator() {
     override fun name(): String {
         return "Enums"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.Enums
     }
 
     override fun generateFileContent(): FileContent?{
@@ -162,9 +190,13 @@ class EnumsGenerator: FileGenerator() {
     }
 }
 
-class CustomTypesGenerator: FileGenerator() {
+class CustomTypesGenerator: PatternGenerator() {
     override fun name(): String {
         return "CustomTypes"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.CustomTypes
     }
 
     override fun mode(): GeneratorMode {
@@ -185,9 +217,12 @@ class CustomTypesGenerator: FileGenerator() {
     }
 }
 
-class CustomTypesMapperGenerator: FileGenerator() {
+class CustomTypesMapperGenerator: PatternGenerator() {
     override fun name(): String {
         return "CustomTypesMapper"
+    }
+    override fun patternName(): PatternName {
+        return PatternName.CustomTypesMapper
     }
 
     override fun mode(): GeneratorMode {
@@ -208,9 +243,13 @@ class CustomTypesMapperGenerator: FileGenerator() {
     }
 }
 
-class SerializedCustomTypesGenerator: FileGenerator() {
+class SerializedCustomTypesGenerator: PatternGenerator() {
     override fun name(): String {
         return "SerializedCustomTypes"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.SerializedCustomTypes
     }
 
     override fun generateFileContent(): FileContent?{
@@ -235,7 +274,7 @@ class ApiGenerator: SubmoduleGenerator() {
         return "api"
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getFileGenerators(): List<PatternGenerator> {
         return listOf(
             EnumsGenerator(),
             CustomTypesGenerator(),
@@ -260,7 +299,7 @@ class MacrosGenerator: SubmoduleGenerator() {
         return "macros"
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getFileGenerators(): List<PatternGenerator> {
         return listOf(
             MacrosBuilder()
         )

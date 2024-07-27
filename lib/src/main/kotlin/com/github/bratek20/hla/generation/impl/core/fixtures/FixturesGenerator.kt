@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
 class FixturesGenerator: SubmoduleGenerator() {
     override fun name(): String {
@@ -12,7 +12,7 @@ class FixturesGenerator: SubmoduleGenerator() {
         return "fixtures"
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getFileGenerators(): List<PatternGenerator> {
         return listOf(
             BuildersGenerator(),
             DiffsGenerator(),

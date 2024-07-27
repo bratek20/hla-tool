@@ -6,9 +6,10 @@ import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ApiType
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
@@ -38,9 +39,13 @@ private fun exposedInterfaces(c: ModuleGenerationContext): List<InterfaceView> {
         .map { factory.create(it) }
 }
 
-class WebCommonGenerator: FileGenerator() {
+class WebCommonGenerator: PatternGenerator() {
     override fun name(): String {
         return "WebCommon"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.WebCommon
     }
 
     private fun kotlinRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
@@ -261,9 +266,13 @@ private fun getUrlPathPrefix(c: ModuleGenerationContext): String {
     return c.module.getWebSubmodule()!!.getHttp()!!.getUrlPathPrefix()?.let { destringify(it) } ?: ""
 }
 
-class WebClientGenerator: FileGenerator() {
+class WebClientGenerator: PatternGenerator() {
     override fun name(): String {
         return "WebClient"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.WebClient
     }
 
     data class MethodView(
@@ -388,9 +397,13 @@ class WebClientGenerator: FileGenerator() {
     }
 }
 
-class WebServerGenerator: FileGenerator() {
+class WebServerGenerator: PatternGenerator() {
     override fun name(): String {
         return "WebServer"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.WebServer
     }
 
     data class MethodView(
@@ -464,7 +477,7 @@ class WebGenerator: SubmoduleGenerator() {
         return c.module.getWebSubmodule() != null
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getFileGenerators(): List<PatternGenerator> {
         return listOf(
             WebCommonGenerator(),
             WebClientGenerator(),

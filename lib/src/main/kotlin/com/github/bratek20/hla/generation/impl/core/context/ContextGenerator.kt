@@ -3,15 +3,20 @@ package com.github.bratek20.hla.generation.impl.core.context
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.utils.directory.api.FileContent
 
-class ImplContextGenerator: FileGenerator() {
+class ImplContextGenerator: PatternGenerator() {
     override fun name(): String {
         return "Impl"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.Impl
     }
 
     override fun mode(): GeneratorMode {
@@ -26,9 +31,13 @@ class ImplContextGenerator: FileGenerator() {
     }
 }
 
-class WebContextGenerator: FileGenerator() {
+class WebContextGenerator: PatternGenerator() {
     override fun name(): String {
         return "Web"
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.Web
     }
 
     override fun generateFileContent(): FileContent? {
@@ -93,7 +102,7 @@ class ContextGenerator: SubmoduleGenerator() {
         return module.getInterfaces().isNotEmpty()
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getFileGenerators(): List<PatternGenerator> {
         return listOf(
             ImplContextGenerator(),
             WebContextGenerator()
