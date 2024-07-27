@@ -87,7 +87,7 @@ abstract class PatternGenerator
         return GeneratorMode.START_AND_UPDATE
     }
 
-    fun generateFile(): File? {
+    fun generatePattern(): GeneratedPattern? {
         var content = generateFileContent() ?: return null
         if (mode() == GeneratorMode.START_AND_UPDATE) {
             val lines = listOf(
@@ -96,9 +96,12 @@ abstract class PatternGenerator
             ) + content.lines
             content = FileContent(lines)
         }
-        return File(
-            name = patternName().name + "." + language.filesExtension(),
-            content = content.toString()
+        return GeneratedPattern.create(
+            name = patternName(),
+            file = File(
+                name = patternName().name + "." + language.filesExtension(),
+                content = content.toString()
+            )
         )
     }
 
@@ -144,24 +147,21 @@ abstract class SubmoduleGenerator
             return null
         }
 
-        val files = mutableListOf<File>()
+        val patterns = mutableListOf<GeneratedPattern>()
         patternGenerators.forEach { patternGenerator ->
             if (patternGenerator.shouldSkip()) {
                 return@forEach
             }
-            patternGenerator.generateFile()?.let { files.add(it) }
+            patternGenerator.generatePattern()?.let { patterns.add(it) }
         }
 
-        if (files.isEmpty()) {
+        if (patterns.isEmpty()) {
             return null
         }
 
         return GeneratedSubmodule.create(
             name = submoduleName(),
-            patterns = files.map {
-                val patternName = PatternName.valueOf(it.getName().value.substringBeforeLast("."))
-                GeneratedPattern.create(patternName, it)
-            }
+            patterns = patterns
         )
     }
 
@@ -169,6 +169,6 @@ abstract class SubmoduleGenerator
     fun generateMacros() {
         val macros = MacrosBuilder()
         macros.init(c, "macros")
-        macros.generateFile()
+        macros.generatePattern()
     }
 }
