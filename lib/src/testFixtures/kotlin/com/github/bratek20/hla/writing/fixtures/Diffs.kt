@@ -13,7 +13,7 @@ import com.github.bratek20.hla.writing.api.*
 
 data class ExpectedWriteArgs(
     var hlaFolderPath: String? = null,
-    var generateResult: (ExpectedGenerateResult.() -> Unit)? = null,
+    var module: (ExpectedGeneratedModule.() -> Unit)? = null,
     var profile: (ExpectedHlaProfile.() -> Unit)? = null,
     var onlyUpdate: Boolean? = null,
 )
@@ -25,8 +25,8 @@ fun diffWriteArgs(given: WriteArgs, expectedInit: ExpectedWriteArgs.() -> Unit, 
         if (diffPath(given.getHlaFolderPath(), it) != "") { result.add(diffPath(given.getHlaFolderPath(), it, "${path}hlaFolderPath.")) }
     }
 
-    expected.generateResult?.let {
-        if (diffGenerateResult(given.getGenerateResult(), it) != "") { result.add(diffGenerateResult(given.getGenerateResult(), it, "${path}generateResult.")) }
+    expected.module?.let {
+        if (diffGeneratedModule(given.getModule(), it) != "") { result.add(diffGeneratedModule(given.getModule(), it, "${path}module.")) }
     }
 
     expected.profile?.let {

@@ -8,7 +8,7 @@ import com.github.bratek20.utils.directory.api.*
 
 data class WriteArgs(
     private val hlaFolderPath: String,
-    private val generateResult: GenerateResult,
+    private val module: GeneratedModule,
     private val profile: HlaProfile,
     private val onlyUpdate: Boolean,
 ) {
@@ -16,8 +16,8 @@ data class WriteArgs(
         return pathCreate(this.hlaFolderPath)
     }
 
-    fun getGenerateResult(): GenerateResult {
-        return this.generateResult
+    fun getModule(): GeneratedModule {
+        return this.module
     }
 
     fun getProfile(): HlaProfile {
@@ -31,13 +31,13 @@ data class WriteArgs(
     companion object {
         fun create(
             hlaFolderPath: Path,
-            generateResult: GenerateResult,
+            module: GeneratedModule,
             profile: HlaProfile,
             onlyUpdate: Boolean,
         ): WriteArgs {
             return WriteArgs(
                 hlaFolderPath = pathGetValue(hlaFolderPath),
-                generateResult = generateResult,
+                module = module,
                 profile = profile,
                 onlyUpdate = onlyUpdate,
             )

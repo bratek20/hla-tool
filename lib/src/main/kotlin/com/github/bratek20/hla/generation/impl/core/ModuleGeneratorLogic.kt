@@ -3,11 +3,8 @@ package com.github.bratek20.hla.generation.impl.core
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.hla.generation.api.GenerateArgs
-import com.github.bratek20.hla.generation.api.GenerateResult
-import com.github.bratek20.hla.generation.api.ModuleGenerator
+import com.github.bratek20.hla.generation.api.*
 import com.github.bratek20.hla.generation.impl.core.api.ApiGenerator
-import com.github.bratek20.hla.generation.impl.core.api.MacrosGenerator
 import com.github.bratek20.hla.generation.impl.core.context.ContextGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
@@ -28,61 +25,26 @@ data class DomainContext(
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
 ) : ModuleGenerator {
-
-    class RootMainGenerator: DirectoryGenerator() {
-        override fun name(): String {
-            return module.getName().value
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
+    class SubmodulesGenerator(
+        private val context: ModuleGenerationContext,
+    ) {
+        fun generate(): List<GeneratedSubmodule> {
             return listOf(
                 ApiGenerator(),
                 ImplGenerator(),
                 WebGenerator(),
-                ContextGenerator()
-            )
-        }
-    }
-
-    class RootFixturesGenerator: DirectoryGenerator() {
-        override fun name(): String {
-            return module.getName().value
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
-            return listOf(
+                ContextGenerator(),
                 FixturesGenerator(),
-            )
+                TestsGenerator(),
+            ).mapNotNull {
+                it.init(context, "")
+                it.generateMacros()
+                it.generateSubmodule()
+            }
         }
     }
 
-    class RootTestsGenerator: DirectoryGenerator() {
-        override fun name(): String {
-            return module.getName().value
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
-            return listOf(
-                TestsGenerator()
-            )
-        }
-    }
-
-    class GenerationRoot: DirectoryGenerator() {
-        override fun name(): String {
-            return "root"
-        }
-
-        override fun getDirectoryGenerators(): List<DirectoryGenerator> {
-            return listOf(
-                RootMainGenerator(),
-                RootFixturesGenerator(),
-                RootTestsGenerator()
-            )
-        }
-    }
-
-    override fun generate(args: GenerateArgs): GenerateResult {
+    override fun generate(args: GenerateArgs): GeneratedModule {
         val moduleName = args.getModuleToGenerate()
         val profile = args.getGroup().getProfile()
         val language = profile.getLanguage()
@@ -103,16 +65,9 @@ class ModuleGeneratorLogic(
             onlyPatterns = profile.getOnlyPatterns(),
         )
 
-        val root = GenerationRoot()
-        root.init(context, "")
-        root.generateMacros()
-        val result = root.generateDirectory()
-        requireNotNull(result)
-
-        return GenerateResult(
-            main = result.getDirectories()[0],
-            fixtures = result.getDirectories()[1],
-            tests = if (result.getDirectories().size > 2) result.getDirectories()[2] else null,
+        return GeneratedModule.create(
+            name = moduleName,
+            submodules = SubmodulesGenerator(context).generate()
         )
     }
 }

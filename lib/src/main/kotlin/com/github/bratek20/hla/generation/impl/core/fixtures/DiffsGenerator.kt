@@ -1,21 +1,20 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.codebuilder.*
 import com.github.bratek20.codebuilder.builders.FunctionBuilder
-import com.github.bratek20.codebuilder.builders.FunctionBuilderOps
 import com.github.bratek20.codebuilder.builders.function
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.TypeDefinition
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.utils.directory.api.FileContent
 
-class DiffsGenerator: FileGenerator() {
-    override fun name(): String {
-        return "Diffs"
+class DiffsGenerator: PatternGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.Diffs
     }
 
     override fun generateFileContent(): FileContent? {

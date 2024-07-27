@@ -1,13 +1,64 @@
+Enums
+    PatternName
+        //api
+        Enums
+        ValueObjects
+        DataClasses
+        DataKeys
+        PropertyKeys
+        Interfaces
+        Exceptions
+        CustomTypes
+        CustomTypesMapper
+        SerializedCustomTypes
+
+        //impl
+        Logic
+        //DataClasses - declared in api
+        //DataKeys - declared in api
+
+        //web
+        WebCommon
+        WebServer
+        WebClient
+
+        //context
+        Impl
+        Web
+
+        //fixtures
+        Builders
+        Diffs
+        Asserts
+        Mocks
+
+        //tests
+        ImplTest
+
+    SubmoduleName
+        Api
+        Impl
+        Web
+        Context
+        Fixtures
+        Tests
+
+ValueObjects
+    GeneratedPattern
+        name: PatternName
+        file: File
+    GeneratedSubmodule
+        name: SubmoduleName
+        patterns: GeneratedPattern[]
+    GeneratedModule
+        name: ModuleName
+        submodules: GeneratedSubmodule[]
 Interfaces
     ModuleGenerator
         GenerateArgs
             group: ModuleGroup
             moduleToGenerate: ModuleName
             onlyUpdate: bool
-        GenerateResult
-            main: Directory
-            fixtures: Directory
-            tests: Directory?
-        generate(args: GenerateArgs): GenerateResult
+        generate(args: GenerateArgs): GeneratedModule
             throws
                 UnknownTypeException

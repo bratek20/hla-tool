@@ -1,12 +1,15 @@
 package com.github.bratek20.hla.generation.impl.core
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
+import com.github.bratek20.hla.generation.api.GeneratedPattern
+import com.github.bratek20.hla.generation.api.GeneratedSubmodule
+import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
-import com.github.bratek20.utils.directory.api.Directory
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 
@@ -71,38 +74,20 @@ abstract class ModulePartGenerator {
 
         return builder
     }
+}
+
+abstract class PatternGenerator
+    : ModulePartGenerator()
+{
+    abstract fun generateFileContent(): FileContent?
+
+    abstract fun patternName(): PatternName
 
     open fun mode(): GeneratorMode {
         return GeneratorMode.START_AND_UPDATE
     }
 
-    fun shouldSkip(): Boolean {
-        if(c.onlyUpdate && mode() == GeneratorMode.ONLY_START) {
-            return true
-        }
-
-        if(c.onlyPatterns.isNotEmpty()) {
-            if (c.onlyPatterns.contains(name())) {
-                return false
-            }
-            return children().all { it.shouldSkip() }
-        }
-        return false
-    }
-
-    abstract fun name(): String
-
-    open fun children(): List<ModulePartGenerator> {
-        return emptyList()
-    }
-}
-
-abstract class FileGenerator
-    : ModulePartGenerator()
-{
-    abstract fun generateFileContent(): FileContent?
-
-    fun generateFile(): File? {
+    fun generatePattern(): GeneratedPattern? {
         var content = generateFileContent() ?: return null
         if (mode() == GeneratorMode.START_AND_UPDATE) {
             val lines = listOf(
@@ -111,85 +96,72 @@ abstract class FileGenerator
             ) + content.lines
             content = FileContent(lines)
         }
-        return File(
-            name = name() + "." + language.filesExtension(),
-            content = content.toString()
+        return GeneratedPattern.create(
+            name = patternName(),
+            file = File(
+                name = patternName().name + "." + language.filesExtension(),
+                content = content.toString()
+            )
         )
+    }
+
+    fun shouldSkip(): Boolean {
+        if(c.onlyUpdate && mode() == GeneratorMode.ONLY_START) {
+            return true
+        }
+
+        if(c.onlyPatterns.isNotEmpty() && !c.onlyPatterns.contains(patternName().name)) {
+            return true
+        }
+        return false
     }
 }
 
-abstract class DirectoryGenerator
+abstract class SubmoduleGenerator
     : ModulePartGenerator()
 {
-    private lateinit var fileGenerators: List<FileGenerator>
-    private lateinit var directoryGenerators: List<DirectoryGenerator>
+    private lateinit var patternGenerators: List<PatternGenerator>
 
-    //TODO-REF current abstraction seems off
-    // directory should not have mode, it simply is generated if has some file or directory
-    // so maybe it belongs only in FileGenerator
-    // but then ModulePartGenerator logic should be in DirectoryGenerator I guess
-    final override fun mode(): GeneratorMode {
-        return GeneratorMode.START_AND_UPDATE
-    }
+    abstract fun submoduleName(): SubmoduleName
 
     override fun init(c: ModuleGenerationContext, velocityPath: String) {
         super.init(c, velocityPath)
 
-        fileGenerators = getFileGenerators()
-        directoryGenerators = getDirectoryGenerators()
+        patternGenerators = getPatternGenerators()
 
-        children().forEach { it.init(c, velocityDirPath()) }
+        patternGenerators.forEach { it.init(c, velocityDirPath()) }
     }
 
     open fun velocityDirPath(): String {
         return ""
     }
 
-    open fun shouldGenerateDirectory(): Boolean {
+    open fun shouldGenerateSubmodule(): Boolean {
         return true
     }
 
-    open fun getFileGenerators(): List<FileGenerator> {
-        return emptyList()
-    }
+    abstract fun getPatternGenerators(): List<PatternGenerator>
 
-    open fun getDirectoryGenerators(): List<DirectoryGenerator> {
-        return emptyList()
-    }
-
-    override fun children(): List<ModulePartGenerator> {
-        return fileGenerators + directoryGenerators
-    }
-
-    fun generateDirectory(): Directory? {
-        if (!shouldGenerateDirectory()) {
+    fun generateSubmodule(): GeneratedSubmodule? {
+        if (!shouldGenerateSubmodule()) {
             return null
         }
 
-        val files = mutableListOf<File>()
-        fileGenerators.forEach { fileGenerator ->
-            if (fileGenerator.shouldSkip()) {
+        val patterns = mutableListOf<GeneratedPattern>()
+        patternGenerators.forEach { patternGenerator ->
+            if (patternGenerator.shouldSkip()) {
                 return@forEach
             }
-            fileGenerator.generateFile()?.let { files.add(it) }
+            patternGenerator.generatePattern()?.let { patterns.add(it) }
         }
 
-        val directories = mutableListOf<Directory>()
-        directoryGenerators.forEach { dirGenerator ->
-            if (dirGenerator.shouldSkip()) {
-                return@forEach
-            }
-            dirGenerator.generateDirectory()?.let { directories.add(it) }
-        }
-
-        if (files.isEmpty() && directories.isEmpty()) {
+        if (patterns.isEmpty()) {
             return null
         }
 
-        return Directory(
-            name = language.adjustDirectoryName(name()),
-            files = files,
-            directories = directories
+        return GeneratedSubmodule.create(
+            name = submoduleName(),
+            patterns = patterns
         )
     }
 
@@ -197,6 +169,6 @@ abstract class DirectoryGenerator
     fun generateMacros() {
         val macros = MacrosBuilder()
         macros.init(c, "macros")
-        macros.generateFile()
+        macros.generatePattern()
     }
 }

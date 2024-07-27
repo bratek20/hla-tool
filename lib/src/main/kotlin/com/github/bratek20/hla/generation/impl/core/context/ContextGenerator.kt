@@ -3,15 +3,17 @@ package com.github.bratek20.hla.generation.impl.core.context
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.namespace
-import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.utils.directory.api.FileContent
 
-class ImplContextGenerator: FileGenerator() {
-    override fun name(): String {
-        return "Impl"
+class ImplContextGenerator: PatternGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.Impl
     }
 
     override fun mode(): GeneratorMode {
@@ -26,9 +28,9 @@ class ImplContextGenerator: FileGenerator() {
     }
 }
 
-class WebContextGenerator: FileGenerator() {
-    override fun name(): String {
-        return "Web"
+class WebContextGenerator: PatternGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.Web
     }
 
     override fun generateFileContent(): FileContent? {
@@ -80,20 +82,20 @@ class WebContextGenerator: FileGenerator() {
     }
 }
 
-class ContextGenerator: DirectoryGenerator() {
-    override fun name(): String {
-        return "Context"
+class ContextGenerator: SubmoduleGenerator() {
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Context
     }
 
     override fun velocityDirPath(): String {
         return "context"
     }
 
-    override fun shouldGenerateDirectory(): Boolean {
+    override fun shouldGenerateSubmodule(): Boolean {
         return module.getInterfaces().isNotEmpty()
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplContextGenerator(),
             WebContextGenerator()

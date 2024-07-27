@@ -4,18 +4,18 @@ import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
-import com.github.bratek20.hla.generation.impl.core.DirectoryGenerator
-import com.github.bratek20.hla.generation.impl.core.FileGenerator
+import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
+import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.generation.impl.core.api.DataClassApiType
 import com.github.bratek20.hla.generation.impl.core.api.DataClassesGenerator
 import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
-import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 
-class LogicGenerator: FileGenerator() {
-    override fun name(): String {
-        return "Logic"
+class LogicGenerator: PatternGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.Logic
     }
 
     override fun mode(): GeneratorMode {
@@ -89,22 +89,22 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
     }
 }
 
-class ImplGenerator: DirectoryGenerator() {
-    override fun name(): String {
-        return "Impl"
+class ImplGenerator: SubmoduleGenerator() {
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Impl
     }
 
     override fun velocityDirPath(): String {
         return "impl"
     }
 
-    override fun shouldGenerateDirectory(): Boolean {
+    override fun shouldGenerateSubmodule(): Boolean {
         val generateLogic = module.getInterfaces().isNotEmpty()
         val generateData = module.getImplSubmodule() != null
         return generateLogic || generateData
     }
 
-    override fun getFileGenerators(): List<FileGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplDataClassesGenerator(),
             ImplDataKeysGenerator(),
