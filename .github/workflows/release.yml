@@ -10,16 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up JDK
-        uses: actions/setup-java@v2
+      - name: Build app
+        uses: bratek20/github-actions/run-gradlew-action@main
         with:
-          java-version: '17'
-
-      - name: Build project
-        run: ./gradlew app:build
+          args: app:build
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         id: create_release
