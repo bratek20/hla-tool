@@ -12,10 +12,6 @@ import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.utils.directory.api.FileContent
 
 class ImplContextGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Impl"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Impl
     }
@@ -33,10 +29,6 @@ class ImplContextGenerator: PatternGenerator() {
 }
 
 class WebContextGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Web"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Web
     }
@@ -91,10 +83,6 @@ class WebContextGenerator: PatternGenerator() {
 }
 
 class ContextGenerator: SubmoduleGenerator() {
-    override fun name(): String {
-        return "Context"
-    }
-
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Context
     }

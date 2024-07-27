@@ -8,10 +8,6 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 
 class ImplTestGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "ImplTest"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.ImplTest
     }
@@ -27,10 +23,6 @@ class ImplTestGenerator: PatternGenerator() {
 }
 
 class TestsGenerator: SubmoduleGenerator() {
-    override fun name(): String {
-        return "Tests"
-    }
-
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Tests
     }

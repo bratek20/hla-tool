@@ -10,10 +10,6 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class MacrosBuilder: PatternGenerator() {
-    override fun name(): String {
-        return "Macros"
-    }
-
     //TODO-REF: workaround to not generate file content but loading macros
     override fun generateFileContent(): FileContent? {
         contentBuilder("macros.vm")
@@ -28,10 +24,6 @@ class MacrosBuilder: PatternGenerator() {
 }
 
 class ValueObjectsGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "ValueObjects"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.ValueObjects
     }
@@ -54,10 +46,6 @@ class ValueObjectsGenerator: PatternGenerator() {
 }
 
 open class DataClassesGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "DataClasses"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.DataClasses
     }
@@ -80,10 +68,6 @@ open class DataClassesGenerator: PatternGenerator() {
 }
 
 open class PropertyOrDataKeysGenerator(private val data: Boolean): PatternGenerator() {
-    override fun name(): String {
-        return if (data) "DataKeys" else "PropertyKeys"
-    }
-
     override fun patternName(): PatternName {
         return if (data) PatternName.DataKeys else PatternName.PropertyKeys
     }
@@ -146,10 +130,6 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): PatternGenera
 }
 
 class ExceptionsGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Exceptions"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Exceptions
     }
@@ -172,10 +152,6 @@ class ExceptionsGenerator: PatternGenerator() {
 }
 
 class EnumsGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Enums"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Enums
     }
@@ -192,10 +168,6 @@ class EnumsGenerator: PatternGenerator() {
 }
 
 class CustomTypesGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "CustomTypes"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.CustomTypes
     }
@@ -219,9 +191,6 @@ class CustomTypesGenerator: PatternGenerator() {
 }
 
 class CustomTypesMapperGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "CustomTypesMapper"
-    }
     override fun patternName(): PatternName {
         return PatternName.CustomTypesMapper
     }
@@ -245,10 +214,6 @@ class CustomTypesMapperGenerator: PatternGenerator() {
 }
 
 class SerializedCustomTypesGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "SerializedCustomTypes"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.SerializedCustomTypes
     }
@@ -267,10 +232,6 @@ class SerializedCustomTypesGenerator: PatternGenerator() {
 }
 
 class ApiGenerator: SubmoduleGenerator() {
-    override fun name(): String {
-        return "Api"
-    }
-
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Api
     }

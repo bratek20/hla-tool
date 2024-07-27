@@ -103,10 +103,6 @@ class InterfaceViewFactory(
 }
 
 class InterfacesGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Interfaces"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Interfaces
     }

@@ -74,8 +74,6 @@ abstract class ModulePartGenerator {
 
         return builder
     }
-
-    abstract fun name(): String
 }
 
 abstract class PatternGenerator
@@ -99,7 +97,7 @@ abstract class PatternGenerator
             content = FileContent(lines)
         }
         return File(
-            name = name() + "." + language.filesExtension(),
+            name = patternName().name + "." + language.filesExtension(),
             content = content.toString()
         )
     }
@@ -109,7 +107,7 @@ abstract class PatternGenerator
             return true
         }
 
-        if(c.onlyPatterns.isNotEmpty() && !c.onlyPatterns.contains(name())) {
+        if(c.onlyPatterns.isNotEmpty() && !c.onlyPatterns.contains(patternName().name)) {
             return true
         }
         return false
@@ -158,8 +156,8 @@ abstract class SubmoduleGenerator
             return null
         }
 
-        return GeneratedSubmodule(
-            name = name(),
+        return GeneratedSubmodule.create(
+            name = submoduleName(),
             patterns = files.map {
                 val patternName = PatternName.valueOf(it.getName().value.substringBeforeLast("."))
                 GeneratedPattern.create(patternName, it)

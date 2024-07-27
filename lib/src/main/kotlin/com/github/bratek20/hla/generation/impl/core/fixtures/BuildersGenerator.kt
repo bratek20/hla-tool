@@ -12,10 +12,6 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
 class BuildersGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Builders"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Builders
     }

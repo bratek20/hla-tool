@@ -16,10 +16,6 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
 class MocksGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Mocks"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Mocks
     }

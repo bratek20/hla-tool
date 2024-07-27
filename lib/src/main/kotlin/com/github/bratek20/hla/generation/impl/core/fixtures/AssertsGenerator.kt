@@ -5,10 +5,6 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
 class AssertsGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Asserts"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Asserts
     }

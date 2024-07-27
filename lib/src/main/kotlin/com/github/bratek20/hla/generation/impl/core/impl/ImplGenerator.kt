@@ -14,10 +14,6 @@ import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
 
 class LogicGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Logic"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Logic
     }
@@ -94,10 +90,6 @@ class ImplDataKeysGenerator(): PropertyOrDataKeysGenerator(true) {
 }
 
 class ImplGenerator: SubmoduleGenerator() {
-    override fun name(): String {
-        return "Impl"
-    }
-
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Impl
     }

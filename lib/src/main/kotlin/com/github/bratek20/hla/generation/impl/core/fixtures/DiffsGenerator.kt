@@ -13,10 +13,6 @@ import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.utils.directory.api.FileContent
 
 class DiffsGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "Diffs"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Diffs
     }

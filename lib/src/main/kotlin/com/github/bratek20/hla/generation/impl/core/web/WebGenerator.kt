@@ -41,10 +41,6 @@ private fun exposedInterfaces(c: ModuleGenerationContext): List<InterfaceView> {
 }
 
 class WebCommonGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "WebCommon"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.WebCommon
     }
@@ -268,10 +264,6 @@ private fun getUrlPathPrefix(c: ModuleGenerationContext): String {
 }
 
 class WebClientGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "WebClient"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.WebClient
     }
@@ -399,10 +391,6 @@ class WebClientGenerator: PatternGenerator() {
 }
 
 class WebServerGenerator: PatternGenerator() {
-    override fun name(): String {
-        return "WebServer"
-    }
-
     override fun patternName(): PatternName {
         return PatternName.WebServer
     }
@@ -466,10 +454,6 @@ class WebServerGenerator: PatternGenerator() {
 }
 
 class WebGenerator: SubmoduleGenerator() {
-    override fun name(): String {
-        return "Web"
-    }
-
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Web
     }
