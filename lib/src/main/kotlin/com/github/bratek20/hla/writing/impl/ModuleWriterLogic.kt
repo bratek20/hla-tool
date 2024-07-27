@@ -73,7 +73,19 @@ class ModuleWriterLogic(
                 submoduleToDirectory(SubmoduleName.Tests, module.getSubmodules(), profile),
             )
         );
-        return GenerateResult(main, fixtures, tests)
+        return GenerateResult(
+            main,
+            fixtures,
+            toNullIfEmpty(tests)
+        )
+    }
+
+    private fun toNullIfEmpty(directory: Directory): Directory? {
+        return if (directory.getDirectories().isEmpty() && directory.getFiles().isEmpty()) {
+            null
+        } else {
+            directory
+        }
     }
 
     private fun submoduleToDirectory(name: SubmoduleName, subs: List<GeneratedSubmodule>, profile: HlaProfile): Directory? {
