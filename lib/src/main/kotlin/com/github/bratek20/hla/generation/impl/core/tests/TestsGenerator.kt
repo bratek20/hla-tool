@@ -39,7 +39,7 @@ class TestsGenerator: SubmoduleGenerator() {
         return "tests"
     }
 
-    override fun getFileGenerators(): List<PatternGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplTestGenerator(),
         )

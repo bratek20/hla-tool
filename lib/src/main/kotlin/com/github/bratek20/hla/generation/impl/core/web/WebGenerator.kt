@@ -478,11 +478,11 @@ class WebGenerator: SubmoduleGenerator() {
         return "web"
     }
 
-    override fun shouldGenerateDirectory(): Boolean {
+    override fun shouldGenerateSubmodule(): Boolean {
         return c.module.getWebSubmodule() != null
     }
 
-    override fun getFileGenerators(): List<PatternGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             WebCommonGenerator(),
             WebClientGenerator(),

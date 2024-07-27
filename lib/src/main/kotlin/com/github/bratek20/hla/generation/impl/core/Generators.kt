@@ -75,29 +75,7 @@ abstract class ModulePartGenerator {
         return builder
     }
 
-    open fun mode(): GeneratorMode {
-        return GeneratorMode.START_AND_UPDATE
-    }
-
-    fun shouldSkip(): Boolean {
-        if(c.onlyUpdate && mode() == GeneratorMode.ONLY_START) {
-            return true
-        }
-
-        if(c.onlyPatterns.isNotEmpty()) {
-            if (c.onlyPatterns.contains(name())) {
-                return false
-            }
-            return children().all { it.shouldSkip() }
-        }
-        return false
-    }
-
     abstract fun name(): String
-
-    open fun children(): List<ModulePartGenerator> {
-        return emptyList()
-    }
 }
 
 abstract class PatternGenerator
@@ -106,6 +84,10 @@ abstract class PatternGenerator
     abstract fun generateFileContent(): FileContent?
 
     abstract fun patternName(): PatternName
+
+    open fun mode(): GeneratorMode {
+        return GeneratorMode.START_AND_UPDATE
+    }
 
     fun generateFile(): File? {
         var content = generateFileContent() ?: return null
@@ -121,6 +103,17 @@ abstract class PatternGenerator
             content = content.toString()
         )
     }
+
+    fun shouldSkip(): Boolean {
+        if(c.onlyUpdate && mode() == GeneratorMode.ONLY_START) {
+            return true
+        }
+
+        if(c.onlyPatterns.isNotEmpty() && !c.onlyPatterns.contains(name())) {
+            return true
+        }
+        return false
+    }
 }
 
 abstract class SubmoduleGenerator
@@ -128,42 +121,28 @@ abstract class SubmoduleGenerator
 {
     private lateinit var patternGenerators: List<PatternGenerator>
 
-    //TODO-REF current abstraction seems off
-    // directory should not have mode, it simply is generated if has some file or directory
-    // so maybe it belongs only in FileGenerator
-    // but then ModulePartGenerator logic should be in DirectoryGenerator I guess
-    final override fun mode(): GeneratorMode {
-        return GeneratorMode.START_AND_UPDATE
-    }
-
     abstract fun submoduleName(): SubmoduleName
 
     override fun init(c: ModuleGenerationContext, velocityPath: String) {
         super.init(c, velocityPath)
 
-        patternGenerators = getFileGenerators()
+        patternGenerators = getPatternGenerators()
 
-        children().forEach { it.init(c, velocityDirPath()) }
+        patternGenerators.forEach { it.init(c, velocityDirPath()) }
     }
 
     open fun velocityDirPath(): String {
         return ""
     }
 
-    open fun shouldGenerateDirectory(): Boolean {
+    open fun shouldGenerateSubmodule(): Boolean {
         return true
     }
 
-    open fun getFileGenerators(): List<PatternGenerator> {
-        return emptyList()
-    }
-
-    override fun children(): List<ModulePartGenerator> {
-        return patternGenerators
-    }
+    abstract fun getPatternGenerators(): List<PatternGenerator>
 
     fun generateSubmodule(): GeneratedSubmodule? {
-        if (!shouldGenerateDirectory()) {
+        if (!shouldGenerateSubmodule()) {
             return null
         }
 
@@ -174,14 +153,6 @@ abstract class SubmoduleGenerator
             }
             patternGenerator.generateFile()?.let { files.add(it) }
         }
-
-//        val directories = mutableListOf<Directory>()
-//        submoduleGenerators.forEach { dirGenerator ->
-//            if (dirGenerator.shouldSkip()) {
-//                return@forEach
-//            }
-//            dirGenerator.generateSubmodule()?.let { directories.add(it) }
-//        }
 
         if (files.isEmpty()) {
             return null

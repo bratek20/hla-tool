@@ -398,13 +398,13 @@ class HlaFacadeTest {
 
 
     @Test
-    fun `should start module using onlyParts`() {
+    fun `should start module using onlyPatterns`() {
         //given
         val (directoriesMock, facade) = setup()
 
         val args = ModuleOperationArgs.create(
             moduleName = ModuleName("SomeModule"),
-            profileName = ProfileName("kotlinOnlyParts"),
+            profileName = ProfileName("kotlinOnlyPatterns"),
             hlaFolderPath = hlaFolderPath(),
         )
 

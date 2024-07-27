@@ -103,11 +103,11 @@ class ContextGenerator: SubmoduleGenerator() {
         return "context"
     }
 
-    override fun shouldGenerateDirectory(): Boolean {
+    override fun shouldGenerateSubmodule(): Boolean {
         return module.getInterfaces().isNotEmpty()
     }
 
-    override fun getFileGenerators(): List<PatternGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplContextGenerator(),
             WebContextGenerator()

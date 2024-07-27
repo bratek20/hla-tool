@@ -106,13 +106,13 @@ class ImplGenerator: SubmoduleGenerator() {
         return "impl"
     }
 
-    override fun shouldGenerateDirectory(): Boolean {
+    override fun shouldGenerateSubmodule(): Boolean {
         val generateLogic = module.getInterfaces().isNotEmpty()
         val generateData = module.getImplSubmodule() != null
         return generateLogic || generateData
     }
 
-    override fun getFileGenerators(): List<PatternGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplDataClassesGenerator(),
             ImplDataKeysGenerator(),

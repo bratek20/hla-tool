@@ -17,7 +17,7 @@ class FixturesGenerator: SubmoduleGenerator() {
         return "fixtures"
     }
 
-    override fun getFileGenerators(): List<PatternGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             BuildersGenerator(),
             DiffsGenerator(),

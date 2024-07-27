@@ -279,7 +279,7 @@ class ApiGenerator: SubmoduleGenerator() {
         return "api"
     }
 
-    override fun getFileGenerators(): List<PatternGenerator> {
+    override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             EnumsGenerator(),
             CustomTypesGenerator(),
