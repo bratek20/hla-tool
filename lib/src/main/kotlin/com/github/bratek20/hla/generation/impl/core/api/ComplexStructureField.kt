@@ -35,11 +35,11 @@ open class ComplexStructureField(
     }
 
     fun exampleValue(): String? {
-        val typeName = def.getType().getName()
-        val intBaseType = BaseType.INT.name.lowercase()
-        val longBaseType = BaseType.LONG.name.lowercase()
-        if(typeName ==  intBaseType || typeName == longBaseType) {
-            return def.getAttributes().firstOrNull { it.getName() == "example" || it.getName() == "startsFrom"}?.getValue()
+        if(type is BaseApiType) {
+            val basApiType = type as BaseApiType
+            if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT) {
+                return def.getAttributes().firstOrNull { it.getName() == "example" || it.getName() == "startsFrom"}?.getValue()
+            }
         }
         return def.getAttributes().firstOrNull { it.getName() == "example"}?.getValue()
     }
