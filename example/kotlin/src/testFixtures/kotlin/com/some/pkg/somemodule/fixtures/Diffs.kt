@@ -218,6 +218,26 @@ fun diffClassUsingExternalType(given: ClassUsingExternalType, expectedInit: Expe
     return result.joinToString("\n")
 }
 
+data class ExpectedClassHavingOptList(
+    var optListEmpty: Boolean? = null,
+    var optList: (ExpectedList<SomeClass>.() -> Unit)? = null,
+)
+fun diffClassHavingOptList(given: ClassHavingOptList, expectedInit: ExpectedClassHavingOptList.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassHavingOptList().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optListEmpty?.let {
+        if ((given.getOptList() == null) != it) { result.add("${path}optList empty ${(given.getOptList() == null)} != ${it}") }
+    }
+
+    expected.optList?.let {
+        if (notEquals not needed) { result.add(if (given.getOptList()!!.size != it.size) { result.add("${path}optList size ${given.getOptList()!!.size} != ${it.size}"); return@let }
+        given.getOptList()!!.forEachIndexed { idx, entry -> if (diffSomeClass(entry, it[idx]) != "") { result.add(diffSomeClass(entry, it[idx], "${path}optList[${idx}].")) } }) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedRecordClass(
     var id: String? = null,
     var amount: Int? = null,
