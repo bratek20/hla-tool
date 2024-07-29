@@ -12,11 +12,11 @@ ExternalTypes
 
 ValueObjects
     SomeId: string
-    SomeIntWrapper: int
+    SomeIntWrapper: int (startsFrom: 5)
 
     SomeClass
         id: SomeId
-        amount: int
+        amount: int (startsFrom: 10)
 
     SomeClass2
         id: SomeId
@@ -79,7 +79,8 @@ Data
         other: OtherData
         custom: any
         customOpt: any?
-        goodDataName: string (from: gDN)
+        //Here startsFrom is not generated because not long or int
+        goodDataName: string (from: gDN, startsFrom: "some")
 
     SomeData2
         optEnum: SomeEnum?
