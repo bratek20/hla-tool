@@ -7,7 +7,7 @@ data class ${vo.name()}(
     override fun toString(): String {
         return value.toString()
     }
-    #if($vo.serializableName() == "Int")
+    #if($vo.serializableName() == "Int" || $vo.serializableName() == "Long")
 
     operator fun plus(other: ${vo.name()}): ${vo.name()} {
         return ${vo.name()}(this.value + other.value)
