@@ -13,7 +13,7 @@ fun someId(value: String = "someValue"): SomeId {
     return SomeId(value)
 }
 
-fun someIntWrapper(value: Int = 0): SomeIntWrapper {
+fun someIntWrapper(value: Int = 5): SomeIntWrapper {
     return SomeIntWrapper(value)
 }
 

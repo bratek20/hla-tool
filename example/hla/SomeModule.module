@@ -12,7 +12,7 @@ ExternalTypes
 
 ValueObjects
     SomeId: string
-    SomeIntWrapper: int
+    SomeIntWrapper: int (startsFrom: 5)
 
     SomeClass
         id: SomeId

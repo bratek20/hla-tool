@@ -5,7 +5,7 @@ namespace SomeModule.Builder {
         return new SomeId(value)
     }
 
-    export function someIntWrapper(value: number = 0): SomeIntWrapper {
+    export function someIntWrapper(value: number = 5): SomeIntWrapper {
         return new SomeIntWrapper(value)
     }
 
