@@ -5,7 +5,9 @@ import com.github.bratek20.architecture.context.api.ContextModule
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.some.pkg.somemodule.api.*
+import com.some.pkg.somemodule.fixtures.assertClassHavingOptList
 import com.some.pkg.somemodule.fixtures.assertSomeClass
+import com.some.pkg.somemodule.fixtures.classHavingOptList
 import com.some.pkg.somemodule.fixtures.someQueryInput
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -84,5 +86,25 @@ open class SomeModuleImplTest {
                 message = "Some message"
             }
         )
+    }
+
+    @Test
+    fun `should support opt lists`() {
+        val c1 = classHavingOptList {}
+        val c2 = classHavingOptList {
+            optList = listOf {
+                id = "id"
+            }
+        }
+
+        assertClassHavingOptList(c1) {
+            optListEmpty = true
+        }
+
+        assertClassHavingOptList(c2) {
+            optList = listOf {
+                id = "id"
+            }
+        }
     }
 }

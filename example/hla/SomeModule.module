@@ -50,6 +50,9 @@ ValueObjects
     ClassUsingExternalType
         extType: LegacyType
 
+    ClassHavingOptList
+        optList: SomeClass[]?
+
     RecordClass
         id: SomeId
         amount: int

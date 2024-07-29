@@ -284,6 +284,24 @@ data class ClassUsingExternalType(
     }
 }
 
+data class ClassHavingOptList(
+    private val optList: List<SomeClass>?,
+) {
+    fun getOptList(): List<SomeClass>? {
+        return this.optList
+    }
+
+    companion object {
+        fun create(
+            optList: List<SomeClass>?,
+        ): ClassHavingOptList {
+            return ClassHavingOptList(
+                optList = optList,
+            )
+        }
+    }
+}
+
 data class RecordClass(
     private val id: String,
     private val amount: Int,

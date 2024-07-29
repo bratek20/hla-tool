@@ -283,6 +283,22 @@ class ClassUsingExternalType {
     }
 }
 
+class ClassHavingOptList {
+    private optList? = [new SomeClass]
+
+    static create(
+        optList: Optional<SomeClass[]>,
+    ): ClassHavingOptList {
+        const instance = new ClassHavingOptList()
+        instance.optList = optList.orElse(undefined)
+        return instance
+    }
+
+    getOptList(): Optional<SomeClass[]> {
+        return Optional.of(this.optList)
+    }
+}
+
 class RecordClass {
     private id = STRING
     private amount = NUMBER

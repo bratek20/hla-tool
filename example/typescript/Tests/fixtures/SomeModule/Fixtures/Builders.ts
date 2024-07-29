@@ -135,6 +135,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassHavingOptListDef {
+        optList?: SomeClassDef[],
+    }
+    export function classHavingOptList(def?: ClassHavingOptListDef): ClassHavingOptList {
+        const final_optList = def?.optList ?? undefined
+
+        return ClassHavingOptList.create(
+            Optional.of(final_optList).map(it => it.map(it => someClass(it))),
+        )
+    }
+
     export interface RecordClassDef {
         id?: string,
         amount?: number,

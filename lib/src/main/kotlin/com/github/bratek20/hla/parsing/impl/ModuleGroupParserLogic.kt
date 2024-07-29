@@ -221,16 +221,22 @@ class ModuleGroupParserLogic(
     }
 
     private fun parseType(typeValue: String): TypeDefinition {
-        if (typeValue.contains("[]")) {
+        if (typeValue.contains("[]?")) {
             return TypeDefinition(
-                name = typeValue.replace("[]", ""),
-                wrappers = listOf(TypeWrapper.LIST)
+                name = typeValue.replace("[]?", ""),
+                wrappers = listOf(TypeWrapper.OPTIONAL, TypeWrapper.LIST)
             )
         }
         if (typeValue.contains("?")) {
             return TypeDefinition(
                 name = typeValue.replace("?", ""),
                 wrappers = listOf(TypeWrapper.OPTIONAL)
+            )
+        }
+        if (typeValue.contains("[]")) {
+            return TypeDefinition(
+                name = typeValue.replace("[]", ""),
+                wrappers = listOf(TypeWrapper.LIST)
             )
         }
         return TypeDefinition(

@@ -121,6 +121,16 @@ fun classUsingExternalType(init: ClassUsingExternalTypeDef.() -> Unit = {}): Cla
     )
 }
 
+data class ClassHavingOptListDef(
+    var optList: List<(SomeClassDef.() -> Unit)>? = null,
+)
+fun classHavingOptList(init: ClassHavingOptListDef.() -> Unit = {}): ClassHavingOptList {
+    val def = ClassHavingOptListDef().apply(init)
+    return ClassHavingOptList.create(
+        optList = def.optList?.let { it -> it.map { it -> someClass(it) } },
+    )
+}
+
 data class RecordClassDef(
     var id: String = "someValue",
     var amount: Int = 0,
