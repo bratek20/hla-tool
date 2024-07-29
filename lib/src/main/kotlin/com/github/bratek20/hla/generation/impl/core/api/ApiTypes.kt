@@ -99,6 +99,9 @@ abstract class SimpleStructureApiType(
     }
 
     fun exampleValue(): String? {
+        if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT) {
+            return def.getAttributes().firstOrNull { it.getName() == "example" || it.getName() == "startsFrom" }?.getValue()
+        }
         return def.getAttributes().firstOrNull { it.getName() == "example" }?.getValue()
     }
 }

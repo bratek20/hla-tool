@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
-import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
+import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
@@ -35,7 +35,13 @@ open class ComplexStructureField(
     }
 
     fun exampleValue(): String? {
-        return def.getAttributes().firstOrNull { it.getName() == "example" }?.getValue()
+        if(type is BaseApiType) {
+            val basApiType = type as BaseApiType
+            if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT) {
+                return def.getAttributes().firstOrNull { it.getName() == "example" || it.getName() == "startsFrom"}?.getValue()
+            }
+        }
+        return def.getAttributes().firstOrNull { it.getName() == "example"}?.getValue()
     }
 
     fun defaultValue(): String? {

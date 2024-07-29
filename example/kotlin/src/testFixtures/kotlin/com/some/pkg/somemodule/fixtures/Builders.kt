@@ -13,7 +13,7 @@ fun someId(value: String = "someValue"): SomeId {
     return SomeId(value)
 }
 
-fun someIntWrapper(value: Int = 0): SomeIntWrapper {
+fun someIntWrapper(value: Int = 5): SomeIntWrapper {
     return SomeIntWrapper(value)
 }
 
@@ -23,7 +23,7 @@ fun someId2(value: Int = 0): SomeId2 {
 
 data class SomeClassDef(
     var id: String = "someValue",
-    var amount: Int = 0,
+    var amount: Int = 10,
 )
 fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
     val def = SomeClassDef().apply(init)
