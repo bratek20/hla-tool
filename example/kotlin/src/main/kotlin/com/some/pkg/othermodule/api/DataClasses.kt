@@ -22,4 +22,8 @@ data class OtherData(
             )
         }
     }
+
+    fun update(other: OtherData) {
+        this.id = other.id
+    }
 }
