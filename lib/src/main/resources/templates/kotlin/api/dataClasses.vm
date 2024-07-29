@@ -31,6 +31,12 @@ data class ${vo.name()}(
             )
         }
     }
+
+    fun update(other: ${vo.name()}) {
+       #foreach($setter in $vo.setters())
+        this.${setter.privateField} = other.${setter.privateField}
+       #end
+    }
 }#if($foreach.hasNext)
 
 
