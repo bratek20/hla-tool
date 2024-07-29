@@ -9,3 +9,23 @@ data class SimpleId(
         return value.toString()
     }
 }
+
+data class SomeLongWrapper(
+    val value: Long
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+
+    operator fun plus(other: SomeLongWrapper): SomeLongWrapper {
+        return SomeLongWrapper(this.value + other.value)
+    }
+
+    operator fun minus(other: SomeLongWrapper): SomeLongWrapper {
+        return SomeLongWrapper(this.value - other.value)
+    }
+
+    operator fun times(other: SomeLongWrapper): SomeLongWrapper {
+        return SomeLongWrapper(this.value * other.value)
+    }
+}
