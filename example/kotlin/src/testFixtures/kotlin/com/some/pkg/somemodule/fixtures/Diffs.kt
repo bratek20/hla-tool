@@ -220,7 +220,7 @@ fun diffClassUsingExternalType(given: ClassUsingExternalType, expectedInit: Expe
 
 data class ExpectedClassHavingOptList(
     var optListEmpty: Boolean? = null,
-    var optList: List<ExpectedSomeClass.() -> Unit>? = null,
+    var optList: List<(ExpectedSomeClass.() -> Unit)>? = null,
 )
 fun diffClassHavingOptList(given: ClassHavingOptList, expectedInit: ExpectedClassHavingOptList.() -> Unit, path: String = ""): String {
     val expected = ExpectedClassHavingOptList().apply(expectedInit)

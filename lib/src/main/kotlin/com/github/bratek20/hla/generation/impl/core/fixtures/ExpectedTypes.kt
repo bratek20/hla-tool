@@ -21,7 +21,7 @@ abstract class ExpectedType<T: ApiType>(
         return languageTypes.wrapWithString("$path \${$givenVariable} != \${$expectedVariable}")
     }
 
-    open fun notEquals(givenVariable: String, expectedVariable: String): String {
+    open fun notEquals(givenVariable: String, expectedVariable: String): String? {
         return "$givenVariable != $expectedVariable"
     }
 
@@ -92,8 +92,12 @@ open class DefaultExpectedTypeField(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
-        val x = type.diff(api.access(givenVariable), expectedVariable, "\${path}${name()}")
-        return "if (${type.notEquals(api.access(givenVariable), expectedVariable)}) { ${type.languageTypes.addListElement("result", x)} }"
+        val diffCall = type.diff(api.access(givenVariable), expectedVariable, "\${path}${name()}")
+        val ifCondition = type.notEquals(api.access(givenVariable), expectedVariable)
+        if (ifCondition == null) {
+            return diffCall
+        }
+        return "if (${type.notEquals(api.access(givenVariable), expectedVariable)}) { ${type.languageTypes.addListElement("result", diffCall)} }"
     }
 }
 
@@ -199,23 +203,20 @@ class OptionalExpectedType(
     private val wrappedType: ExpectedType<*>,
 ) : ExpectedType<OptionalApiType>(api) {
     override fun name(): String {
-        if (wrappedType is BaseExpectedType) {
+        if (wrappedType is ComplexStructureExpectedType) {
+            return fixture.expectedClassType(wrappedType.api.name())
+        }
+        if (wrappedType is ListExpectedType) {
             return wrappedType.name()
         }
-        if (wrappedType is SimpleStructureExpectedType<*>) {
-            return wrappedType.api.boxedType.name()
-        }
-        if (wrappedType is EnumExpectedType) {
-            return wrappedType.api.serializableName()
-        }
-        return fixture.expectedClassType(wrappedType.api.name())
+        return wrappedType.api.serializableName()
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         return wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
     }
 
-    override fun notEquals(givenVariable: String, expectedVariable: String): String {
+    override fun notEquals(givenVariable: String, expectedVariable: String): String? {
         return wrappedType.notEquals(api.unwrap(givenVariable), expectedVariable)
     }
 }
@@ -228,8 +229,8 @@ class ListExpectedType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun notEquals(givenVariable: String, expectedVariable: String): String {
-        return "notEquals not needed";
+    override fun notEquals(givenVariable: String, expectedVariable: String): String? {
+        return null
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
