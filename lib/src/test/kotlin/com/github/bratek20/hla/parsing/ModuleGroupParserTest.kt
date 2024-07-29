@@ -268,15 +268,27 @@ class ModuleGroupParserTest {
                     },
                     {
                         name = "SomeClass5"
-                        fields = listOf {
-                            name = "otherId"
-                            type = {
-                                name = "OtherId"
-                                wrappers = listOf(
-                                    "OPTIONAL"
-                                )
+                        fields = listOf(
+                            {
+                                name = "otherId"
+                                type = {
+                                    name = "OtherId"
+                                    wrappers = listOf(
+                                        "OPTIONAL"
+                                    )
+                                }
+                            },
+                            {
+                                name = "optOtherIds"
+                                type = {
+                                    name = "OtherId"
+                                    wrappers = listOf(
+                                        "OPTIONAL",
+                                        "LIST"
+                                    )
+                                }
                             }
-                        }
+                        )
                     }
                 )
                 interfaces = listOf {

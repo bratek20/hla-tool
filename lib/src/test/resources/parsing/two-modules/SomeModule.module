@@ -28,6 +28,7 @@ ValueObjects
 
     SomeClass5
         otherId: OtherId?
+        optOtherIds: OtherId[]?
 
 Interfaces
     SomeInterface
