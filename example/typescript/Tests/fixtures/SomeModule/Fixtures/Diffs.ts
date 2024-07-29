@@ -203,6 +203,25 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassHavingOptList {
+        optListEmpty?: boolean,
+        optList?: ExpectedSomeClass[],
+    }
+    export function diffClassHavingOptList(given: ClassHavingOptList, expected: ExpectedClassHavingOptList, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optListEmpty !== undefined) {
+            if (given.getOptList().isEmpty() != expected.optListEmpty) { result.push(`${path}optList empty ${given.getOptList().isEmpty()} != ${expected.optListEmpty}`) }
+        }
+
+        if (expected.optList !== undefined) {
+            if (given.getOptList().get().length != expected.optList.length) { result.push(`${path}optList size ${given.getOptList().get().length} != ${expected.optList.length}`) }
+            given.getOptList().get().forEach((entry, idx) => { if (diffSomeClass(entry, expected.optList[idx]) != "") { result.push(diffSomeClass(entry, expected.optList[idx], `${path}optList[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedRecordClass {
         id?: string,
         amount?: number,
