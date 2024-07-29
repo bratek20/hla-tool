@@ -220,7 +220,7 @@ fun diffClassUsingExternalType(given: ClassUsingExternalType, expectedInit: Expe
 
 data class ExpectedClassHavingOptList(
     var optListEmpty: Boolean? = null,
-    var optList: (ExpectedList<SomeClass>.() -> Unit)? = null,
+    var optList: List<ExpectedSomeClass.() -> Unit>? = null,
 )
 fun diffClassHavingOptList(given: ClassHavingOptList, expectedInit: ExpectedClassHavingOptList.() -> Unit, path: String = ""): String {
     val expected = ExpectedClassHavingOptList().apply(expectedInit)
@@ -231,8 +231,8 @@ fun diffClassHavingOptList(given: ClassHavingOptList, expectedInit: ExpectedClas
     }
 
     expected.optList?.let {
-        if (notEquals not needed) { result.add(if (given.getOptList()!!.size != it.size) { result.add("${path}optList size ${given.getOptList()!!.size} != ${it.size}"); return@let }
-        given.getOptList()!!.forEachIndexed { idx, entry -> if (diffSomeClass(entry, it[idx]) != "") { result.add(diffSomeClass(entry, it[idx], "${path}optList[${idx}].")) } }) }
+        if (given.getOptList()!!.size != it.size) { result.add("${path}optList size ${given.getOptList()!!.size} != ${it.size}"); return@let }
+        given.getOptList()!!.forEachIndexed { idx, entry -> if (diffSomeClass(entry, it[idx]) != "") { result.add(diffSomeClass(entry, it[idx], "${path}optList[${idx}].")) } }
     }
 
     return result.joinToString("\n")
