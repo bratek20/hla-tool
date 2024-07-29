@@ -5,4 +5,8 @@ namespace SimpleModule.Builder {
         return new SimpleId(value)
     }
 
+    export function someLongWrapper(value: number = 0): SomeLongWrapper {
+        return new SomeLongWrapper(value)
+    }
+
 }

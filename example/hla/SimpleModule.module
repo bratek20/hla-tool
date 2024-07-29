@@ -1,2 +1,3 @@
 ValueObjects
     SimpleId: string
+    SomeLongWrapper: long
