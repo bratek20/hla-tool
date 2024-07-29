@@ -5,4 +5,9 @@ namespace SimpleModule.Assert {
         const diff = diffSimpleId(given, expected)
         AssertEquals(diff, "", diff)
     }
+
+    export function someLongWrapper(given: SomeLongWrapper, expected: number) {
+        const diff = diffSomeLongWrapper(given, expected)
+        AssertEquals(diff, "", diff)
+    }
 }

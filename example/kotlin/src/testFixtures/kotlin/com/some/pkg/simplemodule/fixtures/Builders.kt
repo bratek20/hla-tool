@@ -7,3 +7,7 @@ import com.some.pkg.simplemodule.api.*
 fun simpleId(value: String = "someValue"): SimpleId {
     return SimpleId(value)
 }
+
+fun someLongWrapper(value: Long = 0L): SomeLongWrapper {
+    return SomeLongWrapper(value)
+}

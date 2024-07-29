@@ -13,3 +13,29 @@ class SimpleId {
         return this.value.toString()
     }
 }
+
+class SomeLongWrapper {
+    constructor(
+        public readonly value: number
+    ) {}
+
+    equals(other: SomeLongWrapper): boolean {
+        return this.value === other.value
+    }
+
+    toString(): string {
+        return this.value.toString()
+    }
+
+    plus(other: SomeLongWrapper): SomeLongWrapper {
+        return new SomeLongWrapper(this.value + other.value);
+    }
+
+    minus(other: SomeLongWrapper): SomeLongWrapper {
+        return new SomeLongWrapper(this.value - other.value);
+    }
+
+    times(other: SomeLongWrapper): SomeLongWrapper {
+        return new SomeLongWrapper(this.value * other.value);
+    }
+}

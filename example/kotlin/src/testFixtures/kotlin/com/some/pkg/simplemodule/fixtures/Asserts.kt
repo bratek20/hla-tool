@@ -10,3 +10,9 @@ fun assertSimpleId(given: SimpleId, expected: String) {
     val diff = diffSimpleId(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+
+fun assertSomeLongWrapper(given: SomeLongWrapper, expected: Long) {
+    val diff = diffSomeLongWrapper(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

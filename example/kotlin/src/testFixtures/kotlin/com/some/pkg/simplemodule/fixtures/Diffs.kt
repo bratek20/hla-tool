@@ -8,3 +8,8 @@ fun diffSimpleId(given: SimpleId, expected: String, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
+
+fun diffSomeLongWrapper(given: SomeLongWrapper, expected: Long, path: String = ""): String {
+    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}

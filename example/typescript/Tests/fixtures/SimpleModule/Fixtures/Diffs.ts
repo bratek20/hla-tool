@@ -5,4 +5,9 @@ namespace SimpleModule {
         if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
         return ""
     }
+
+    export function diffSomeLongWrapper(given: SomeLongWrapper, expected: number, path: string = ""): string {
+        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        return ""
+    }
 }
