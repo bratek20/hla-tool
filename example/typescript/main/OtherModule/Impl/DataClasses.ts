@@ -19,5 +19,9 @@ namespace OtherModule.Impl {
         setName(name: string): void {
             this.name = name
         }
+
+        update(other: OtherImplData) {
+            this.name = other.name
+        }
     }
 }

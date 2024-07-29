@@ -58,6 +58,13 @@ data class SomeData(
             )
         }
     }
+
+    fun update(other: SomeData) {
+        this.other = other.other
+        this.custom = other.custom
+        this.customOpt = other.customOpt
+        this.gDN = other.gDN
+    }
 }
 
 data class SomeData2(
@@ -90,5 +97,10 @@ data class SomeData2(
                 optCustomType = optCustomType?.let { it -> dateGetValue(it) },
             )
         }
+    }
+
+    fun update(other: SomeData2) {
+        this.optEnum = other.optEnum
+        this.optCustomType = other.optCustomType
     }
 }

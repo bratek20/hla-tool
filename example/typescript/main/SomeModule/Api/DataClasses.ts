@@ -51,6 +51,13 @@ class SomeData {
     setGoodDataName(goodDataName: string): void {
         this.gDN = goodDataName
     }
+
+    update(other: SomeData) {
+        this.other = other.other
+        this.custom = other.custom
+        this.customOpt = other.customOpt
+        this.gDN = other.gDN
+    }
 }
 
 class SomeData2 {
@@ -81,5 +88,10 @@ class SomeData2 {
 
     setOptCustomType(optCustomType: Optional<Date>): void {
         this.optCustomType = optCustomType.map(it => TypesModule.CustomTypesMapper.dateGetValue(it)).orElse(undefined)
+    }
+
+    update(other: SomeData2) {
+        this.optEnum = other.optEnum
+        this.optCustomType = other.optCustomType
     }
 }

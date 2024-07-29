@@ -22,4 +22,8 @@ data class OtherImplData(
             )
         }
     }
+
+    fun update(other: OtherImplData) {
+        this.name = other.name
+    }
 }

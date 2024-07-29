@@ -18,4 +18,8 @@ class OtherData {
     setId(id: OtherId): void {
         this.id = id.value
     }
+
+    update(other: OtherData) {
+        this.id = other.id
+    }
 }
