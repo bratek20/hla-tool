@@ -4,13 +4,11 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.*
+import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
-import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
-import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
-import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
-import com.github.bratek20.hla.generation.impl.core.api.MethodView
+import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
@@ -23,17 +21,27 @@ class MocksGenerator: PatternGenerator() {
     class View(
         val c: ModuleGenerationContext,
         val lang: CodeBuilderLanguage,
-        val interf: InterfaceView,
+        val interfs: List<InterfaceView>,
         val moduleName: String
     ) {
-        private val interfaceName = interf.name
 
         private fun mocksForMethod(def: MethodView): CodeBuilderOps {
             val upperCaseName = camelToPascalCase(def.name)
+            if (!def.hasArgs()) {
+                return {}
+            }
             val inputArgName = def.args.first().name
             val inputType = def.args.first().apiType
             val inputTypeName = def.args.first().type
+
+            if (inputType is InterfaceApiType) {
+                return {}
+            }
+
             val outputType = def.returnApiType
+            if (outputType is InterfaceApiType) {
+                return {}
+            }
             val outputTypeName = def.returnType!!
 
             val expectedInputType = if (inputType is ExternalApiType)
@@ -174,15 +182,19 @@ class MocksGenerator: PatternGenerator() {
         fun classes(indent: Int): String {
             return CodeBuilder(lang, indent)
                 .add {
-                    classBlock {
-                        name = "${interfaceName}Mock"
-                        implementedInterfaceName = interfaceName
-                        body = {
-                            interf.methods.map {
-                                add(mocksForMethod(it))
+                    interfs.forEach { interf ->
+                        val interfaceName = interf.name
+                        classBlock {
+                            name = "${interfaceName}Mock"
+                            implementedInterfaceName = interfaceName
+                            body = {
+                                interf.methods.map {
+                                    add(mocksForMethod(it))
+                                }
                             }
                         }
                     }
+
                 }
                 .build()
         }
@@ -190,6 +202,7 @@ class MocksGenerator: PatternGenerator() {
         fun contextModule(): String {
             return CodeBuilder(lang)
                 .add {
+
                     classBlock {
                         name = "${moduleName}Mocks"
                         implementedInterfaceName = "ContextModule"
@@ -204,7 +217,10 @@ class MocksGenerator: PatternGenerator() {
                                 body = {
                                     line("builder")
                                     tab()
-                                    line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
+                                    interfs.forEach { interf ->
+                                        val interfaceName = interf.name
+                                        line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
+                                    }
                                     untab()
                                 }
                             }
@@ -215,10 +231,10 @@ class MocksGenerator: PatternGenerator() {
         }
     }
     override fun generateFileContent(): FileContent? {
-        if(c.module.getInterfaces().none { it.getName() == "SomeInterface2" }) {
+        if(c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getInterfaces().none { it.getName() == "SomeInterface2" }) {
             return null
         }
-        val interf = c.module.getInterfaces().find { it.getName() == "SomeInterface2" }!!
+        val interf = c.module.getInterfaces()
         val interfView = InterfaceViewFactory(apiTypeFactory).create(interf)
         return contentBuilder("mocks.vm")
             .put("view", View(c, lang, interfView, "SomeModule"))
