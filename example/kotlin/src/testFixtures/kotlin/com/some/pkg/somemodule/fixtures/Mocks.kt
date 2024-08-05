@@ -14,6 +14,76 @@ import com.some.pkg.typesmodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
 
+class SomeEmptyInterfaceMock: SomeEmptyInterface {
+}
+class SomeInterfaceMock: SomeInterface {
+    // someCommand
+    private val someCommandCalls: MutableList<SomeId> = mutableListOf()
+    private val someCommandResponses: MutableList<Pair<String, Unit>> = mutableListOf()
+
+    fun setSomeCommandResponse(args: String, response: Unit) {
+        someCommandResponses.add(Pair(args, response))
+    }
+
+    override fun someCommand(id: SomeId): Unit {
+        someCommandCalls.add(id)
+        val findResult = someCommandResponses.find { it -> diffSomeId(id, it.first) == "" }
+        return unit(findResult?.second ?: {})
+    }
+
+    fun assertSomeCommandCalled(times: Int = 1) {
+        assertThat(someCommandCalls.size).withFailMessage("Expected someCommand to be called $times times, but was called $someCommandCalls times").isEqualTo(times)
+    }
+
+    fun assertSomeCommandCalledForArgs(args: String, times: Int = 1) {
+        val calls = someCommandCalls.filter { diffSomeId(it, args) == "" }
+        assertThat(calls.size).withFailMessage("Expected someCommand to be called $times times, but was called $someCommandCalls times").isEqualTo(times)
+    }
+    // someQuery
+    private val someQueryCalls: MutableList<SomeQueryInput> = mutableListOf()
+    private val someQueryResponses: MutableList<Pair<(ExpectedSomeQueryInput.() -> Unit), (SomeClassDef.() -> Unit)>> = mutableListOf()
+
+    fun setSomeQueryResponse(args: (ExpectedSomeQueryInput.() -> Unit), response: (SomeClassDef.() -> Unit)) {
+        someQueryResponses.add(Pair(args, response))
+    }
+
+    override fun someQuery(query: SomeQueryInput): SomeClass {
+        someQueryCalls.add(query)
+        val findResult = someQueryResponses.find { it -> diffSomeQueryInput(query, it.first) == "" }
+        return someClass(findResult?.second ?: {})
+    }
+
+    fun assertSomeQueryCalled(times: Int = 1) {
+        assertThat(someQueryCalls.size).withFailMessage("Expected someQuery to be called $times times, but was called $someQueryCalls times").isEqualTo(times)
+    }
+
+    fun assertSomeQueryCalledForArgs(args: (ExpectedSomeQueryInput.() -> Unit), times: Int = 1) {
+        val calls = someQueryCalls.filter { diffSomeQueryInput(it, args) == "" }
+        assertThat(calls.size).withFailMessage("Expected someQuery to be called $times times, but was called $someQueryCalls times").isEqualTo(times)
+    }
+    // optMethod
+    private val optMethodCalls: MutableList<SomeId?> = mutableListOf()
+    private val optMethodResponses: MutableList<Pair<String, (SomeClassDef.() -> Unit)?>> = mutableListOf()
+
+    fun setOptMethodResponse(args: String, response: (SomeClassDef.() -> Unit)?) {
+        optMethodResponses.add(Pair(args, response))
+    }
+
+    override fun optMethod(optId: SomeId?): SomeClass? {
+        optMethodCalls.add(optId)
+        val findResult = optMethodResponses.find { it -> diffSomeId?(optId, it.first) == "" }
+        return someClass?(findResult?.second ?: {})
+    }
+
+    fun assertOptMethodCalled(times: Int = 1) {
+        assertThat(optMethodCalls.size).withFailMessage("Expected optMethod to be called $times times, but was called $optMethodCalls times").isEqualTo(times)
+    }
+
+    fun assertOptMethodCalledForArgs(args: String, times: Int = 1) {
+        val calls = optMethodCalls.filter { diffSomeId?(it, args) == "" }
+        assertThat(calls.size).withFailMessage("Expected optMethod to be called $times times, but was called $optMethodCalls times").isEqualTo(times)
+    }
+}
 class SomeInterface2Mock: SomeInterface2 {
     // referenceOtherClass
     private val referenceOtherClassCalls: MutableList<OtherClass> = mutableListOf()
@@ -60,10 +130,15 @@ class SomeInterface2Mock: SomeInterface2 {
         assertThat(calls.size).withFailMessage("Expected referenceLegacyType to be called $times times, but was called $referenceLegacyTypeCalls times").isEqualTo(times)
     }
 }
+class SomeInterface3Mock: SomeInterface3 {
+}
 
 class SomeModuleMocks: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
+            .setImpl(SomeEmptyInterface::class.java, SomeEmptyInterfaceMock::class.java)
+            .setImpl(SomeInterface::class.java, SomeInterfaceMock::class.java)
             .setImpl(SomeInterface2::class.java, SomeInterface2Mock::class.java)
+            .setImpl(SomeInterface3::class.java, SomeInterface3Mock::class.java)
     }
 }
