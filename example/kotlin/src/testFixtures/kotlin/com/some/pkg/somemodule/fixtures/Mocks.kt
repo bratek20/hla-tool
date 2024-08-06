@@ -27,8 +27,6 @@ class SomeInterfaceMock: SomeInterface {
 
     override fun someCommand(id: SomeId): Unit {
         someCommandCalls.add(id)
-        val findResult = someCommandResponses.find { it -> diffSomeId(id, it.first) == "" }
-        return unit(findResult?.second ?: {})
     }
 
     fun assertSomeCommandCalled(times: Int = 1) {
@@ -45,6 +43,14 @@ class SomeInterfaceMock: SomeInterface {
 
     fun setSomeQueryResponse(args: (ExpectedSomeQueryInput.() -> Unit), response: (SomeClassDef.() -> Unit)) {
         someQueryResponses.add(Pair(args, response))
+    }
+
+    override fun someEmptyMethod() {
+        TODO("Not yet implemented")
+    }
+
+    override fun someCommand(id: SomeId, amount: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun someQuery(query: SomeQueryInput): SomeClass {
