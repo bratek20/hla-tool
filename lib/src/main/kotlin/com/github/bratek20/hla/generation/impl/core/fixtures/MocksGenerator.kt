@@ -234,7 +234,8 @@ class MocksGenerator: PatternGenerator() {
         if(c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getInterfaces().none { it.getName() == "SomeInterface2" }) {
             return null
         }
-        val interf = c.module.getInterfaces()
+        val interf = if(c.language.name() == ModuleLanguage.TYPE_SCRIPT) c.module.getInterfaces().filter { it.getName() == "SomeInterface2" } else c.module.getInterfaces()
+
         val interfView = InterfaceViewFactory(apiTypeFactory).create(interf)
         return contentBuilder("mocks.vm")
             .put("view", View(c, lang, interfView, "SomeModule"))

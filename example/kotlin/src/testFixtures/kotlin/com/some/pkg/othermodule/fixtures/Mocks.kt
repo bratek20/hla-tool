@@ -10,6 +10,9 @@ import com.github.bratek20.architecture.context.api.ContextModule
 import com.some.pkg.othermodule.api.*
 
 class OtherInterfaceMock: OtherInterface {
+    override fun otherMethod() {
+        TODO("Not yet implemented")
+    }
 }
 
 class SomeModuleMocks: ContextModule {
