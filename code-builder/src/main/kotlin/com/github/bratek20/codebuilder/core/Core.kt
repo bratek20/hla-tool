@@ -115,6 +115,10 @@ class CodeBuilder(
         return this
     }
 
+    fun statementLineEnd(): CodeBuilder {
+        return lineEnd(c.lang.statementTerminator())
+    }
+
     fun lineSoftEnd(value: String? = null): CodeBuilder {
         throwIfLineNotStarted("lineSoftEnd", value ?: "")
 

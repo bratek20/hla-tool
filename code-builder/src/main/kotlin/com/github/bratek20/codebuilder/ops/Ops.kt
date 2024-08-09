@@ -8,7 +8,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilderOps
 fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
     lineStart("return ")
     add(block)
-    lineEnd()
+    statementLineEnd()
     return this
 }
 
@@ -40,7 +40,7 @@ fun CodeBuilder.assign(block: AssignArgs.()->Unit): CodeBuilder {
     add(VariableBuilder().apply(args.variable))
     linePart(" = ")
     add(args.value)
-    lineEnd()
+    statementLineEnd()
     return this
 }
 

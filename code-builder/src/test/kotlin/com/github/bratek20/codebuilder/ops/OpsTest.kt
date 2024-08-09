@@ -74,6 +74,15 @@ class OpsTest {
                     return a
                 """
             }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    var variable = 1 + 2;
+                    var areEqual = a == b;
+                    areEqual = false;
+                    return a;
+                """
+            }
         }
     }
 }
