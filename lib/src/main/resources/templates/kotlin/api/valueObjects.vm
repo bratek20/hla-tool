@@ -17,8 +17,8 @@ data class ${vo.name()}(
         return ${vo.name()}(this.value - other.value)
     }
 
-    operator fun times(other: ${vo.name()}): ${vo.name()} {
-        return ${vo.name()}(this.value * other.value)
+    operator fun times(amount: Int): ${vo.name()} {
+        return ${vo.name()}(this.value * amount)
     }
     #end
 }#if($foreach.hasNext || $complexValueObjects.size() > 0)

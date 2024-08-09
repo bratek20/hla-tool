@@ -17,8 +17,8 @@ data class OtherId(
         return OtherId(this.value - other.value)
     }
 
-    operator fun times(other: OtherId): OtherId {
-        return OtherId(this.value * other.value)
+    operator fun times(amount: Int): OtherId {
+        return OtherId(this.value * amount)
     }
 }
 

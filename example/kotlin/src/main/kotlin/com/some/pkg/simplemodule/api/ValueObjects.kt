@@ -25,7 +25,7 @@ data class SomeLongWrapper(
         return SomeLongWrapper(this.value - other.value)
     }
 
-    operator fun times(other: SomeLongWrapper): SomeLongWrapper {
-        return SomeLongWrapper(this.value * other.value)
+    operator fun times(amount: Int): SomeLongWrapper {
+        return SomeLongWrapper(this.value * amount)
     }
 }

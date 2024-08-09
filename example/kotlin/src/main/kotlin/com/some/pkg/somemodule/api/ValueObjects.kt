@@ -28,8 +28,8 @@ data class SomeIntWrapper(
         return SomeIntWrapper(this.value - other.value)
     }
 
-    operator fun times(other: SomeIntWrapper): SomeIntWrapper {
-        return SomeIntWrapper(this.value * other.value)
+    operator fun times(amount: Int): SomeIntWrapper {
+        return SomeIntWrapper(this.value * amount)
     }
 }
 
@@ -48,8 +48,8 @@ data class SomeId2(
         return SomeId2(this.value - other.value)
     }
 
-    operator fun times(other: SomeId2): SomeId2 {
-        return SomeId2(this.value * other.value)
+    operator fun times(amount: Int): SomeId2 {
+        return SomeId2(this.value * amount)
     }
 }
 
