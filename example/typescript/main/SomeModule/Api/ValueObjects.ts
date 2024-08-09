@@ -35,8 +35,8 @@ class SomeIntWrapper {
         return new SomeIntWrapper(this.value - other.value);
     }
 
-    times(other: SomeIntWrapper): SomeIntWrapper {
-        return new SomeIntWrapper(this.value * other.value);
+    times(amount: number): SomeIntWrapper {
+        return new SomeIntWrapper(this.value * amount);
     }
 }
 
@@ -61,8 +61,8 @@ class SomeId2 {
         return new SomeId2(this.value - other.value);
     }
 
-    times(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value * other.value);
+    times(amount: number): SomeId2 {
+        return new SomeId2(this.value * amount);
     }
 }
 

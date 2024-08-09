@@ -35,7 +35,7 @@ class SomeLongWrapper {
         return new SomeLongWrapper(this.value - other.value);
     }
 
-    times(other: SomeLongWrapper): SomeLongWrapper {
-        return new SomeLongWrapper(this.value * other.value);
+    times(amount: number): SomeLongWrapper {
+        return new SomeLongWrapper(this.value * amount);
     }
 }

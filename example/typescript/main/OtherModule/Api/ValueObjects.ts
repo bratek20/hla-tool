@@ -21,8 +21,8 @@ class OtherId {
         return new OtherId(this.value - other.value);
     }
 
-    times(other: OtherId): OtherId {
-        return new OtherId(this.value * other.value);
+    times(amount: number): OtherId {
+        return new OtherId(this.value * amount);
     }
 }
 

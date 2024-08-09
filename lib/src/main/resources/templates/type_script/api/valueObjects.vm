@@ -21,8 +21,8 @@ class ${nt.name()} {
         return new ${nt.name()}(this.value - other.value);
     }
 
-    times(other: ${nt.name()}): ${nt.name()} {
-        return new ${nt.name()}(this.value * other.value);
+    times(amount: number): ${nt.name()} {
+        return new ${nt.name()}(this.value * amount);
     }
     #end
 }#if($foreach.hasNext || $complexValueObjects.size() > 0)
