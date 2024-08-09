@@ -2,14 +2,25 @@
 
 package com.some.pkg.somemodule.impl
 
+import com.some.pkg.somemodule.api.*
+
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 data class SomeImplData(
+    private var id: String,
     private var name: String,
 ) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
     fun getName(): String {
         return this.name
+    }
+
+    fun setId(id: SomeId) {
+        this.id = id.value
     }
 
     fun setName(name: String) {
@@ -18,15 +29,18 @@ data class SomeImplData(
 
     companion object {
         fun create(
+            id: SomeId,
             name: String,
         ): SomeImplData {
             return SomeImplData(
+                id = id.value,
                 name = name,
             )
         }
     }
 
     fun update(other: SomeImplData) {
+        this.id = other.id
         this.name = other.name
     }
 }

@@ -40,7 +40,12 @@ class ImplDataClassesGenerator: DataClassesGenerator() {
         val content = super.generateFileContent() ?: return null
         val lines = content.lines.toMutableList()
         if (language.name() == ModuleLanguage.KOTLIN) {
+            val apiPackage = lines[0].removePrefix("package ")
+
             lines[0] = lines[0].replace("api", "impl")
+            lines.add(1, "")
+            lines.add(2, "import $apiPackage.*")
+
             return FileContent(lines)
         }
 

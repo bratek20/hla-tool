@@ -91,6 +91,7 @@ Data
 Impl
     Data
         SomeImplData
+            id: SomeId
             name: string
 
         "someImplData" -> SomeImplData[]
