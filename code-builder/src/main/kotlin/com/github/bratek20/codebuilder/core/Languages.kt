@@ -249,7 +249,7 @@ class CSharp: CodeBuilderLanguage {
     }
 
     override fun implements(): String {
-        return " : "
+        return ": "
     }
 
     override fun methodDeclarationKeyword(): String {

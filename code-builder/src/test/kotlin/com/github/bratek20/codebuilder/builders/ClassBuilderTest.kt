@@ -33,6 +33,13 @@ class ClassBuilderTest {
                     }
                 """
             }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    class SomeClass {
+                    }
+                """
+            }
         }
     }
 
@@ -59,6 +66,13 @@ class ClassBuilderTest {
                     }
                 """
             }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    class SomeClass: SomeInterface {
+                    }
+                """
+            }
         }
     }
 
@@ -82,6 +96,16 @@ class ClassBuilderTest {
                     class SomeClass {
                         // some comment
                         fun someMethod() {
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass {
+                        // some comment
+                        someMethod() {
                         }
                     }
                 """
