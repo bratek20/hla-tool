@@ -22,10 +22,3 @@ DataKeys
 Interfaces
     OtherInterface
         otherMethod()
-
-Impl
-    DataClasses
-        OtherImplData
-            name: string
-    DataKeys
-        "otherImplData" -> OtherImplData[]

@@ -10,8 +10,6 @@
         "main/OtherModule/Api/DataKeys.ts",
         "main/OtherModule/Api/Interfaces.ts",
 
-        "main/OtherModule/Impl/DataClasses.ts",
-        "main/OtherModule/Impl/DataKeys.ts",
         "main/OtherModule/Impl/Logic.ts",
 
         "main/OtherModule/Context/Impl.ts",

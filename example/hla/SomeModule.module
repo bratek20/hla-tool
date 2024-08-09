@@ -88,7 +88,12 @@ Data
 
     "SomeKey" -> SomeData
 
+Impl
+    Data
+        SomeImplData
+            name: string
 
+        "someImplData" -> SomeImplData[]
 
 Interfaces
     SomeEmptyInterface
