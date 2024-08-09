@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.types
 
-import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.core.Kotlin
-import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.const
 import com.github.bratek20.codebuilder.ops.plus
 import com.github.bratek20.codebuilder.ops.string
@@ -43,6 +40,14 @@ class TypesTest {
                    boolean
                 """
             }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                   int
+                   string
+                   bool
+                """
+            }
         }
     }
 
@@ -72,6 +77,13 @@ class TypesTest {
                    [varA, varB]
                 """
             }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                   Tuple<SomeType, string>
+                   Tuple.Create(varA, varB)
+                """
+            }
         }
     }
 
@@ -99,6 +111,13 @@ class TypesTest {
                 expected = """
                    pair[0]
                    pair[1]
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                   pair.Item1
+                   pair.Item2
                 """
             }
         }
@@ -134,6 +153,14 @@ class TypesTest {
                    SomeType[]
                    SomeType[]
                    []
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                   List<SomeType>
+                   List<SomeType>
+                   new List<SomeType>()
                 """
             }
         }
@@ -191,6 +218,16 @@ class TypesTest {
                    list.push("someString")
                    list.find( it => it == other )
                    list.map( it => it + 1 )
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                   list[0]
+                   list.Add(someVar)
+                   list.Add("someString")
+                   list.Find( it => it == other )
+                   list.Select( it => it + 1 )
                 """
             }
         }

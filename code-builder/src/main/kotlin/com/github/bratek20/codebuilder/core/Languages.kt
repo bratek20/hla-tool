@@ -35,6 +35,8 @@ interface CodeBuilderLanguage {
     fun mutableVariableDeclaration(): String
 
     fun constructorCall(className: String): String
+
+    fun statementTerminator(): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -133,6 +135,10 @@ class Kotlin: CodeBuilderLanguage {
     override fun constructorCall(className: String): String {
         return className
     }
+
+    override fun statementTerminator(): String {
+        return ""
+    }
 }
 
 class TypeScript: CodeBuilderLanguage {
@@ -230,5 +236,111 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun constructorCall(className: String): String {
         return "new $className"
+    }
+
+    override fun statementTerminator(): String {
+        return ""
+    }
+}
+
+class CSharp: CodeBuilderLanguage {
+    override fun name(): String {
+        return "C#"
+    }
+
+    override fun implements(): String {
+        return ": "
+    }
+
+    override fun methodDeclarationKeyword(): String {
+        return "public "
+    }
+
+    override fun functionDeclarationKeyword(): String {
+        return "public "
+    }
+
+    override fun mapBaseType(type: BaseType): String {
+        return when (type) {
+            BaseType.INT -> "int"
+            BaseType.STRING -> "string"
+            BaseType.BOOLEAN -> "bool"
+        }
+    }
+
+    override fun pairType(firstType: String, secondType: String): String {
+        return "Tuple<$firstType, $secondType>"
+    }
+
+    override fun newPair(first: String, second: String): String {
+        return "Tuple.Create($first, $second)"
+    }
+
+    override fun pairFirst(variableName: String): String {
+        return "${variableName}.Item1"
+    }
+
+    override fun pairSecond(variableName: String): String {
+        return "${variableName}.Item2"
+    }
+
+    override fun listType(elementType: String): String {
+        return "List<$elementType>"
+    }
+
+    override fun mutableListType(elementType: String): String {
+        return "List<$elementType>"
+    }
+
+    override fun listAddCallName(): String {
+        return "Add"
+    }
+
+    override fun listFindBegin(): String {
+        return "Find("
+    }
+
+    override fun listFindEnd(): String {
+        return ")"
+    }
+
+    override fun listMapBegin(): String {
+        return "Select("
+    }
+
+    override fun listMapEnd(): String {
+        return ")"
+    }
+
+    override fun lambdaArrow(): String {
+        return "=>"
+    }
+
+    override fun emptyMutableList(): String {
+        return "new List<>()"
+    }
+
+    override fun immutableFieldDeclaration(): String {
+        return "readonly "
+    }
+
+    override fun mutableFieldDeclaration(): String {
+        return ""
+    }
+
+    override fun immutableVariableDeclaration(): String {
+        return "var "
+    }
+
+    override fun mutableVariableDeclaration(): String {
+        return "var "
+    }
+
+    override fun constructorCall(className: String): String {
+        return "new $className"
+    }
+
+    override fun statementTerminator(): String {
+        return ";"
     }
 }
