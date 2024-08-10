@@ -72,7 +72,7 @@ class MocksGenerator: PatternGenerator() {
                         name = callsListName
                         type = mutableListType(type(inputTypeName))
                         value = {
-                            add(emptyMutableList())
+                            add(emptyMutableList(type(inputTypeName)))
                         }
                     }
                     field {
@@ -80,7 +80,7 @@ class MocksGenerator: PatternGenerator() {
                         name = responsesListName
                         type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
                         value = {
-                            add(emptyMutableList())
+                            add(emptyMutableList(type(expectedInputType)))
                         }
                     }
                     emptyLine()

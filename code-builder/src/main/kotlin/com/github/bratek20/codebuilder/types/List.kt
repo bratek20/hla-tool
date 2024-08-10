@@ -17,9 +17,9 @@ fun mutableListType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder
     }
 }
 
-fun emptyMutableList(): LinePartBuilder = object : LinePartBuilder {
+fun emptyMutableList(elementType: TypeBuilder): LinePartBuilder = object : LinePartBuilder {
     override fun build(c: CodeBuilderContext): String {
-        return c.lang.emptyMutableList()
+        return c.lang.emptyMutableList(elementType.build(c))
     }
 }
 

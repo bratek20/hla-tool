@@ -136,7 +136,7 @@ class TypesTest {
                 lineEnd()
 
                 lineStart()
-                add(emptyMutableList())
+                add(emptyMutableList(type("SomeType")))
                 lineEnd()
             }
             langExpected {
