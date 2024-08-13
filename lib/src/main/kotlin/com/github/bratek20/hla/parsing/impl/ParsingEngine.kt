@@ -29,7 +29,7 @@ open class ParsedNode(
 class Section(
     indent: Int,
     val name: String,
-    val attributes: List<Attribute> = emptyList()
+    val attributes: List<Attribute>
 ) : ParsedNode(indent) {
 }
 
@@ -141,21 +141,10 @@ class ParsingEngine {
             val name = noIndentLine.substringBefore(":").trim()
             var rest = noIndentLine.substringAfter(":").trim()
             var defaultValue: String? = null
-            var attributes: List<Attribute> = emptyList()
-            if (rest.contains("(")) {
-                attributes = rest.substringAfter("(").substringBefore(")").split(",")
-                    .filter { it.isNotBlank() }
-                    .map {
-                        var attName = it
-                        var attValue = "true"
-                        if(it.contains(":")) {
-                            attName = it.substringBefore(":").trim()
-                            attValue = it.substringAfter(":").trim()
-                        }
-                        Attribute(attName, attValue)
-                    }
-                rest = rest.substringBefore("(").trim()
-            }
+            val attributesExtractionResult = extractAttributes(rest)
+            val attributes = attributesExtractionResult.attributes
+            rest = attributesExtractionResult.beforeAttributes
+
             if (rest.contains("=")) {
                 defaultValue = rest.substringAfter("=").trim()
                 rest = rest.substringBefore("=").trim()
@@ -186,7 +175,32 @@ class ParsingEngine {
                 return ParsedMapping(indent, key, it[1].trim())
             }
         } else {
-            return Section(indent, noIndentLine)
+            val result = extractAttributes(noIndentLine)
+            return Section(indent, result.beforeAttributes, result.attributes)
         }
+    }
+
+    class ExtractionResult(
+        val beforeAttributes: String,
+        val attributes: List<Attribute>
+    )
+    private fun extractAttributes(line: String): ExtractionResult {
+        val beforeAttributes = line.substringBefore("(").trim()
+        if (!line.contains("(")) {
+            return ExtractionResult(beforeAttributes, emptyList())
+        }
+        val attributes = line.substringAfter("(").substringBefore(")").split(",")
+            .filter { it.isNotBlank() }
+            .map {
+                var attName = it
+                var attValue = "true"
+                if(it.contains(":")) {
+                    attName = it.substringBefore(":").trim()
+                    attValue = it.substringAfter(":").trim()
+                }
+                Attribute(attName, attValue)
+            }
+
+        return ExtractionResult(beforeAttributes, attributes)
     }
 }

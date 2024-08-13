@@ -740,19 +740,18 @@ class ModuleGroupParserTest {
                             {
                                 name = "SomeInterface2"
                                 attributes = listOf {
-                                    name = "someAttribute"
-                                    value = "debug"
+                                    name = "debug"
                                 }
                             }
                         )
                         errorCodesMapping = listOf(
                             {
                                 exceptionName = "SomeException"
-                                code = "EC1"
+                                code = "\"EC1\""
                             },
                             {
                                 exceptionName = "SomeException2"
-                                code = "EC2"
+                                code = "\"EC2\""
                             }
                         )
                     }
