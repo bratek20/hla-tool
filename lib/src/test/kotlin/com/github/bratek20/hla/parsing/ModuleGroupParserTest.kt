@@ -731,6 +731,31 @@ class ModuleGroupParserTest {
                         auth = "\"someService.auth\""
                         urlPathPrefix = "\"/some/prefix\""
                     }
+                    playFabHandlers = {
+                        exposedInterfaces = listOf(
+                            {
+                                name = "SomeInterface"
+                                attributes = emptyList()
+                            },
+                            {
+                                name = "SomeInterface2"
+                                attributes = listOf {
+                                    name = "someAttribute"
+                                    value = "debug"
+                                }
+                            }
+                        )
+                        errorCodesMapping = listOf(
+                            {
+                                exceptionName = "SomeException"
+                                code = "EC1"
+                            },
+                            {
+                                exceptionName = "SomeException2"
+                                code = "EC2"
+                            }
+                        )
+                    }
                 }
             },
         ))

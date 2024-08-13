@@ -132,9 +132,71 @@ fun diffHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefiniti
     return result.joinToString("\n")
 }
 
+data class ExpectedExposedInterface(
+    var name: String? = null,
+    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
+)
+fun diffExposedInterface(given: ExposedInterface, expectedInit: ExpectedExposedInterface.() -> Unit, path: String = ""): String {
+    val expected = ExpectedExposedInterface().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.attributes?.let {
+        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
+        given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedErrorCodeMapping(
+    var exceptionName: String? = null,
+    var code: String? = null,
+)
+fun diffErrorCodeMapping(given: ErrorCodeMapping, expectedInit: ExpectedErrorCodeMapping.() -> Unit, path: String = ""): String {
+    val expected = ExpectedErrorCodeMapping().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.exceptionName?.let {
+        if (given.getExceptionName() != it) { result.add("${path}exceptionName ${given.getExceptionName()} != ${it}") }
+    }
+
+    expected.code?.let {
+        if (given.getCode() != it) { result.add("${path}code ${given.getCode()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedPlayFabHandlersDefinition(
+    var exposedInterfaces: List<(ExpectedExposedInterface.() -> Unit)>? = null,
+    var errorCodesMapping: List<(ExpectedErrorCodeMapping.() -> Unit)>? = null,
+)
+fun diffPlayFabHandlersDefinition(given: PlayFabHandlersDefinition, expectedInit: ExpectedPlayFabHandlersDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedPlayFabHandlersDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.exposedInterfaces?.let {
+        if (given.getExposedInterfaces().size != it.size) { result.add("${path}exposedInterfaces size ${given.getExposedInterfaces().size} != ${it.size}"); return@let }
+        given.getExposedInterfaces().forEachIndexed { idx, entry -> if (diffExposedInterface(entry, it[idx]) != "") { result.add(diffExposedInterface(entry, it[idx], "${path}exposedInterfaces[${idx}].")) } }
+    }
+
+    expected.errorCodesMapping?.let {
+        if (given.getErrorCodesMapping().size != it.size) { result.add("${path}errorCodesMapping size ${given.getErrorCodesMapping().size} != ${it.size}"); return@let }
+        given.getErrorCodesMapping().forEachIndexed { idx, entry -> if (diffErrorCodeMapping(entry, it[idx]) != "") { result.add(diffErrorCodeMapping(entry, it[idx], "${path}errorCodesMapping[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedWebSubmoduleDefinition(
     var httpEmpty: Boolean? = null,
     var http: (ExpectedHttpDefinition.() -> Unit)? = null,
+    var playFabHandlersEmpty: Boolean? = null,
+    var playFabHandlers: (ExpectedPlayFabHandlersDefinition.() -> Unit)? = null,
 )
 fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: ExpectedWebSubmoduleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedWebSubmoduleDefinition().apply(expectedInit)
@@ -146,6 +208,14 @@ fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Expe
 
     expected.http?.let {
         if (diffHttpDefinition(given.getHttp()!!, it) != "") { result.add(diffHttpDefinition(given.getHttp()!!, it, "${path}http.")) }
+    }
+
+    expected.playFabHandlersEmpty?.let {
+        if ((given.getPlayFabHandlers() == null) != it) { result.add("${path}playFabHandlers empty ${(given.getPlayFabHandlers() == null)} != ${it}") }
+    }
+
+    expected.playFabHandlers?.let {
+        if (diffPlayFabHandlersDefinition(given.getPlayFabHandlers()!!, it) != "") { result.add(diffPlayFabHandlersDefinition(given.getPlayFabHandlers()!!, it, "${path}playFabHandlers.")) }
     }
 
     return result.joinToString("\n")

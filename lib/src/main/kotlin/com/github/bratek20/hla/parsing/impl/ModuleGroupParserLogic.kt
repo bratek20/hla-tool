@@ -126,8 +126,15 @@ class ModuleGroupParserLogic(
                     urlPathPrefix = parseOptVariable(http.elements, "urlPathPrefix"),
                 )
             }
+            val playFabHandlers = findSection(web.elements, "PlayFabHandlers")?.let { s ->
+                PlayFabHandlersDefinition(
+                    exposedInterfaces = emptyList(),
+                    errorCodesMapping = emptyList(),
+                )
+            }
             return WebSubmoduleDefinition(
-                http = http
+                http = http,
+                playFabHandlers = playFabHandlers
             )
         }
     }
