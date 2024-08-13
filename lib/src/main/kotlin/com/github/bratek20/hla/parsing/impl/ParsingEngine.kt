@@ -29,6 +29,7 @@ open class ParsedNode(
 class Section(
     indent: Int,
     val name: String,
+    val attributes: List<Attribute> = emptyList()
 ) : ParsedNode(indent) {
 }
 

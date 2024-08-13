@@ -128,8 +128,11 @@ class ModuleGroupParserLogic(
             }
             val playFabHandlers = findSection(web.elements, "PlayFabHandlers")?.let { s ->
                 PlayFabHandlersDefinition(
-                    exposedInterfaces = emptyList(),
-                    errorCodesMapping = emptyList(),
+                    exposedInterfaces = parseExposedInterfaces(s.elements),
+                    errorCodesMapping = findSection(s.elements, "ErrorCodesMapping")?.elements
+                        ?.filterIsInstance<ParsedMapping>()?.map {
+                            ErrorCodeMapping(it.key, it.value)
+                        } ?: emptyList(),
                 )
             }
             return WebSubmoduleDefinition(
@@ -137,6 +140,15 @@ class ModuleGroupParserLogic(
                 playFabHandlers = playFabHandlers
             )
         }
+    }
+
+    private fun parseExposedInterfaces(elements: List<ParsedElement>): List<ExposedInterface> {
+        return findSection(elements, "ExposedInterfaces")?.elements?.filterIsInstance<Section>()?.map {
+            ExposedInterface(
+                name = it.name,
+                attributes = it.attributes
+            )
+        } ?: emptyList()
     }
 
     private fun findSection(elements: List<ParsedElement>, sectionName: String): Section? {
