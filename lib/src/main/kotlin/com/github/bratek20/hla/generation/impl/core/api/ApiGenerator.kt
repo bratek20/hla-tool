@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.enum
+import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -163,7 +165,17 @@ class EnumsGenerator: PatternGenerator() {
         }
 
         if (language.name() == ModuleLanguage.KOTLIN) {
-            return FileContent.fromString("");
+            val str = CodeBuilder(c.language.base())
+                .add {
+                    module.getEnums().forEach {
+                        enum {
+                            name = it.getName()
+                            it.getValues().forEach { addValue(it) }
+                        }
+                    }
+                }
+                .build()
+            return FileContent.fromString(str);
         }
         return contentBuilder("enums.vm")
             .put("enums", module.getEnums())
