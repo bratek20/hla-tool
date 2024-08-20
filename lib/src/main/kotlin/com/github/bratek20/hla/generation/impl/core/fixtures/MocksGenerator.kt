@@ -176,7 +176,7 @@ class MocksGenerator: PatternGenerator() {
                 .add {
                     classBlock {
                         name = "${interfaceName}Mock"
-                        implementedInterfaceName = interfaceName
+                        implements = interfaceName
                         body = {
                             interf.methods.map {
                                 add(mocksForMethod(it))
@@ -192,7 +192,7 @@ class MocksGenerator: PatternGenerator() {
                 .add {
                     classBlock {
                         name = "${moduleName}Mocks"
-                        implementedInterfaceName = "ContextModule"
+                        implements = "ContextModule"
                         body = {
                             method {
                                 override = true

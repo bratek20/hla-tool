@@ -44,12 +44,62 @@ class ClassBuilderTest {
     }
 
     @Test
+    fun `class extension`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    extends = "SomeParent"
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass: SomeParent {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass extends SomeParent {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `static field`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        static = true
+                        value = { constructorCall { className = "OtherClass"; addArg { string("SomeStr") } } }
+                    }
+                }
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass {
+                        static readonly someField = new OtherClass("SomeStr")
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
     fun `class with empty body that implements interface`() {
         testCodeBuilderOp {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    implementedInterfaceName = "SomeInterface"
+                    implements = "SomeInterface"
                 }
             }
             langExpected {
