@@ -169,6 +169,7 @@ class EnumsGenerator: PatternGenerator() {
 
     override fun applyOperations(cb: CodeBuilder) {
         cb.add {
+            //TODO-REF generalize
             line("package com.some.pkg.somemodule.api")
             line("")
             module.getEnums().forEach {

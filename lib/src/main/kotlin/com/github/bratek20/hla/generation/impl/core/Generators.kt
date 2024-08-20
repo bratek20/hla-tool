@@ -103,12 +103,20 @@ abstract class PatternGenerator
     fun generatePattern(): GeneratedPattern? {
         var content: FileContent?
         if (supportsCodeBuilder()) {
-            val cb = CodeBuilder(c.language.base())
-            applyOperations(cb)
-            content = FileContent.fromString(cb.build())
+            if (shouldGenerate()) {
+                val cb = CodeBuilder(c.language.base())
+                applyOperations(cb)
+                content = FileContent.fromString(cb.build())
+            } else {
+                content = null
+            }
         }
         else {
-            content = generateFileContent() ?: return null
+            content = generateFileContent()
+        }
+
+        if (content == null) {
+            return null
         }
 
         if (mode() == GeneratorMode.START_AND_UPDATE) {
