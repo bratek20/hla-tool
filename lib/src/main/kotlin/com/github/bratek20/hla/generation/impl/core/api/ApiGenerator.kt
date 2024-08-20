@@ -1,12 +1,20 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.classBlock
+import com.github.bratek20.codebuilder.builders.constructorCall
+import com.github.bratek20.codebuilder.builders.enum
+import com.github.bratek20.codebuilder.builders.field
+import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.ops.string
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class MacrosBuilder: PatternGenerator() {
@@ -156,14 +164,51 @@ class EnumsGenerator: PatternGenerator() {
         return PatternName.Enums
     }
 
-    override fun generateFileContent(): FileContent?{
-        if (module.getEnums().isEmpty()) {
-            return null
-        }
+    override fun supportsCodeBuilder(): Boolean {
+        return true
+    }
 
-        return contentBuilder("enums.vm")
-            .put("enums", module.getEnums())
-            .build()
+    override fun shouldGenerate(): Boolean {
+        return module.getEnums().isNotEmpty()
+    }
+
+    override fun applyOperations(cb: CodeBuilder) {
+        if (language.name() == ModuleLanguage.KOTLIN) {
+            val p = profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + ".api"
+            cb.add {
+                line("package $p")
+                line("")
+                module.getEnums().forEach {
+                    enum {
+                        name = it.getName()
+                        it.getValues().forEach { addValue(it) }
+                    }
+                }
+            }
+        }
+        if (language.name() == ModuleLanguage.TYPE_SCRIPT) {
+            cb.add {
+                module.getEnums().forEach {
+                    val enumName = it.getName()
+                    classBlock {
+                        name = enumName
+                        extends = "StringEnumClass"
+                        it.getValues().forEach {
+                            addField {
+                                name = it
+                                static = true
+                                value = { constructorCall {
+                                    className = enumName
+                                    addArg {
+                                        string(it)
+                                    }
+                                } }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

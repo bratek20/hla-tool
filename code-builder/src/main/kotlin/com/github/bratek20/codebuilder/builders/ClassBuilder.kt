@@ -14,12 +14,16 @@ class FieldBuilder: CodeBlockBuilder {
 
     var value: CodeBuilderOps? = null
     var accessor: FieldAccessor? = null
-    var mutable: Boolean = false
+    var mutable = false
+    var static = false
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         lineSoftStart()
         accessor?.let {
             linePart("${it.name.lowercase()} ")
+        }
+        if (static) {
+            linePart("static ")
         }
         if (mutable) {
             linePart(c.lang.mutableFieldDeclaration())
@@ -79,8 +83,10 @@ open class ClassBuilder: CodeBlockBuilder {
 
     lateinit var name: String
 
-    var implementedInterfaceName: String? = null
+    var implements: String? = null
+    var extends: String? = null
     private var constructor: ClassConstructorBuilder? = null
+    private val fields: MutableList<FieldBuilderOps> = mutableListOf()
     var body: CodeBuilderOps? = null
 
     private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
@@ -93,9 +99,16 @@ open class ClassBuilder: CodeBlockBuilder {
         staticMethods.add(block)
     }
 
+    fun addField(block: FieldBuilderOps) {
+        fields.add(block)
+    }
+
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         add(classDeclarationWithConstructor(c))
         tab()
+        fields.forEach { fieldOps ->
+            field(fieldOps)
+        }
         body?.let { add(it) }
         if (staticMethods.isNotEmpty()) {
             add(staticMethodsSection(c))
@@ -106,8 +119,9 @@ open class ClassBuilder: CodeBlockBuilder {
 
     private fun classDeclarationWithConstructor(c: CodeBuilderContext): CodeBuilderOps = {
         val classPart = beforeClassKeyword() + "class "
-        val implementsPart = implementedInterfaceName?.let { c.lang.implements() + it } ?: ""
-        val beginning = "$classPart$name$implementsPart"
+        var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
+        extendsOrImplementsPart = extends?.let { c.lang.extends() + it } ?: extendsOrImplementsPart
+        val beginning = "$classPart$name$extendsOrImplementsPart"
 
         if (c.lang is Kotlin && constructor != null) {
             line("$beginning(")

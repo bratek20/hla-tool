@@ -287,7 +287,7 @@ class WebClientGenerator: PatternGenerator() {
                     interfs.forEach { interf ->
                         classBlock {
                             name = "${interf.name}WebClient"
-                            implementedInterfaceName = interf.name
+                            implements = interf.name
 
                             constructor {
                                 addArg {

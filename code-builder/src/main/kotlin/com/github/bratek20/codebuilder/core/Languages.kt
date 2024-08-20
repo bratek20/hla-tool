@@ -6,7 +6,10 @@ enum class BaseType {
 
 interface CodeBuilderLanguage {
     fun name(): String
+
     fun implements(): String
+    fun extends(): String
+
     fun methodDeclarationKeyword(): String
     fun functionDeclarationKeyword(): String
 
@@ -45,6 +48,10 @@ class Kotlin: CodeBuilderLanguage {
     }
 
     override fun implements(): String {
+        return ": "
+    }
+
+    override fun extends(): String {
         return ": "
     }
 
@@ -150,6 +157,10 @@ class TypeScript: CodeBuilderLanguage {
         return " implements "
     }
 
+    override fun extends(): String {
+        return " extends "
+    }
+
     override fun methodDeclarationKeyword(): String {
         return ""
     }
@@ -249,6 +260,10 @@ class CSharp: CodeBuilderLanguage {
     }
 
     override fun implements(): String {
+        return ": "
+    }
+
+    override fun extends(): String {
         return ": "
     }
 
