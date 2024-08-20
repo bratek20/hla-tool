@@ -167,6 +167,8 @@ class EnumsGenerator: PatternGenerator() {
         if (language.name() == ModuleLanguage.KOTLIN) {
             val str = CodeBuilder(c.language.base())
                 .add {
+                    line("package com.some.pkg.somemodule.api")
+                    line("")
                     module.getEnums().forEach {
                         enum {
                             name = it.getName()
