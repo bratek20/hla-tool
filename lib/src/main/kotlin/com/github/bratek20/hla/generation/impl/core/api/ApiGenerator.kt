@@ -14,6 +14,7 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class MacrosBuilder: PatternGenerator() {
@@ -173,9 +174,9 @@ class EnumsGenerator: PatternGenerator() {
 
     override fun applyOperations(cb: CodeBuilder) {
         if (language.name() == ModuleLanguage.KOTLIN) {
+            val p = profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + ".api"
             cb.add {
-                //TODO-REF generalize
-                line("package com.some.pkg.somemodule.api")
+                line("package $p")
                 line("")
                 module.getEnums().forEach {
                     enum {

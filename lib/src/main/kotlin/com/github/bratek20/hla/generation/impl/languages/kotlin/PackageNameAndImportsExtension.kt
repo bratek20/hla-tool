@@ -5,7 +5,7 @@ import com.github.bratek20.hla.generation.impl.core.ContentBuilderExtension
 import com.github.bratek20.hla.generation.impl.core.DomainContext
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
 
-private fun profileToRootPackage(profile: HlaProfile): String {
+fun profileToRootPackage(profile: HlaProfile): String {
     val mainPath = profile.getPaths().getSrc().getMain()
     return mainPath.value
         .replace("src/main/kotlin/", "")
