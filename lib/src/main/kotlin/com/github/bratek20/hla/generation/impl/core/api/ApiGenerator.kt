@@ -143,11 +143,7 @@ class ExceptionsGenerator: PatternGenerator() {
     }
 
     override fun generateFileContent(): FileContent?{
-        val exceptions = module.getInterfaces()
-            .flatMap { it.getMethods() }
-            .flatMap { it.getThrows() }
-            .map { it.getName() }
-            .distinct()
+        val exceptions = modules.allExceptionNamesForCurrent()
 
         if (exceptions.isEmpty()) {
             return null
