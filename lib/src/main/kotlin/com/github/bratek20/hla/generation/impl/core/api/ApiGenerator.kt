@@ -5,6 +5,7 @@ import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.builders.enum
 import com.github.bratek20.codebuilder.builders.field
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.ops.string
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -140,6 +141,28 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): PatternGenera
 class ExceptionsGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.Exceptions
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return c.language.name() == ModuleLanguage.KOTLIN
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return modules.allExceptionNamesForCurrent().isNotEmpty()
+    }
+
+    override fun applyOperations(cb: CodeBuilder) {
+        cb.kotlinFile {
+            packageName = "xxx"
+
+            addImport("com.github.bratek20.architecture.exceptions.ApiException")
+
+            modules.allExceptionNamesForCurrent().forEach {
+                addClass {
+                    name = it
+                }
+            }
+        }
     }
 
     override fun generateFileContent(): FileContent?{

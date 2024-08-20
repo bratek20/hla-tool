@@ -6,7 +6,37 @@ import org.junit.jupiter.api.Test
 
 class KotlinFileBuilderTest {
     @Test
-    fun `should work`() {
+    fun `two classes`() {
+        testCodeBuilderOp {
+            op = {
+                kotlinFile {
+                    packageName = "com.some.pkg"
+
+                    addClass {
+                        name = "Class1"
+                    }
+                    addClass {
+                        name = "Class2"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    package com.some.pkg
+                    
+                    class Class1 {
+                    }
+                    
+                    class Class2 {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `all methods`() {
         testCodeBuilderOp {
             op = {
                 kotlinFile {

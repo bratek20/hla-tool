@@ -18,17 +18,25 @@ class KotlinFileBuilder: CodeBlockBuilder {
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         line("package $packageName")
-        emptyLine()
-        imports.forEach {
-            line("import $it")
+        if (imports.isNotEmpty()) {
+            emptyLine()
+            imports.forEach {
+                line("import $it")
+            }
         }
-        emptyLine()
-        classes.forEach {
-            classBlock(it)
+
+        if (classes.isNotEmpty()) {
+            classes.forEach {
+                emptyLine()
+                classBlock(it)
+            }
         }
-        emptyLine()
-        functions.forEach {
-            function(it)
+
+        if (functions.isNotEmpty()) {
+            functions.forEach {
+                emptyLine()
+                function(it)
+            }
         }
     }
 
