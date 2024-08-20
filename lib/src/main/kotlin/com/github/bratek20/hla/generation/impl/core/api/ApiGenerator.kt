@@ -159,26 +159,32 @@ class EnumsGenerator: PatternGenerator() {
         return PatternName.Enums
     }
 
-    override fun generateFileContent(): FileContent?{
+    override fun supportsCodeBuilder(): Boolean {
+        return language.name() == ModuleLanguage.KOTLIN
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return module.getEnums().isNotEmpty()
+    }
+
+    override fun applyOperations(cb: CodeBuilder) {
+        cb.add {
+            line("package com.some.pkg.somemodule.api")
+            line("")
+            module.getEnums().forEach {
+                enum {
+                    name = it.getName()
+                    it.getValues().forEach { addValue(it) }
+                }
+            }
+        }
+    }
+
+    override fun generateFileContent(): FileContent? {
         if (module.getEnums().isEmpty()) {
             return null
         }
 
-        if (language.name() == ModuleLanguage.KOTLIN) {
-            val str = CodeBuilder(c.language.base())
-                .add {
-                    line("package com.some.pkg.somemodule.api")
-                    line("")
-                    module.getEnums().forEach {
-                        enum {
-                            name = it.getName()
-                            it.getValues().forEach { addValue(it) }
-                        }
-                    }
-                }
-                .build()
-            return FileContent.fromString(str);
-        }
         return contentBuilder("enums.vm")
             .put("enums", module.getEnums())
             .build()
