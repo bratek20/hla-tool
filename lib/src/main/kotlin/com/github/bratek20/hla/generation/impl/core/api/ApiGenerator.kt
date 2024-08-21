@@ -155,26 +155,51 @@ class ExceptionsGenerator: PatternGenerator() {
     }
 
     override fun applyOperations(cb: CodeBuilder) {
-        cb.kotlinFile {
-            packageName = submodulePackage(SubmoduleName.Api, c)
+        if (c.language.name() == ModuleLanguage.KOTLIN) {
+            cb.kotlinFile {
+                packageName = submodulePackage(SubmoduleName.Api, c)
 
-            addImport("com.github.bratek20.architecture.exceptions.ApiException")
+                addImport("com.github.bratek20.architecture.exceptions.ApiException")
 
-            modules.allExceptionNamesForCurrent().forEach {
-                addClass {
-                    name = it
-                    extends = "ApiException"
-                    constructor {
-                        addArg {
-                            name = "message"
-                            type = baseType(BaseType.STRING)
-                            defaultValue = "\"\""
+                modules.allExceptionNamesForCurrent().forEach {
+                    addClass {
+                        name = it
+                        extends = "ApiException"
+                        constructor {
+                            addArg {
+                                name = "message"
+                                type = baseType(BaseType.STRING)
+                                defaultValue = "\"\""
+                            }
                         }
+                        addPassingArg("message")
                     }
-                    addPassingArg("message")
                 }
             }
         }
+        if (c.language.name() == ModuleLanguage.TYPE_SCRIPT) {
+            cb.kotlinFile {
+                packageName = submodulePackage(SubmoduleName.Api, c)
+
+                addImport("com.github.bratek20.architecture.exceptions.ApiException")
+
+                modules.allExceptionNamesForCurrent().forEach {
+                    addClass {
+                        name = it
+                        extends = "ApiException"
+                        constructor {
+                            addArg {
+                                name = "message"
+                                type = baseType(BaseType.STRING)
+                                defaultValue = "\"\""
+                            }
+                        }
+                        addPassingArg("message")
+                    }
+                }
+            }
+        }
+
     }
 
     override fun generateFileContent(): FileContent?{
