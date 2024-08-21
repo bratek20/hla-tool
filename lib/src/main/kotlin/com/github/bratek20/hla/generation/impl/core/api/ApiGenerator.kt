@@ -171,6 +171,7 @@ class ExceptionsGenerator: PatternGenerator() {
                             defaultValue = "\"\""
                         }
                     }
+                    addPassingArg("message")
                 }
             }
         }

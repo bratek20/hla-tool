@@ -435,7 +435,7 @@ class ClassBuilderTest {
                 lang = Kotlin()
                 expected = """
                     class SomeClass(
-                        someArg: SomeType
+                        someArg: SomeType,
                     ): SomeParent(someArg) {
                     }
                 """
@@ -444,7 +444,9 @@ class ClassBuilderTest {
                 lang = TypeScript()
                 expected = """
                     class SomeClass extends SomeParent {
-                        constructor(someArg: SomeType) {
+                        constructor(
+                            someArg: SomeType,
+                        ) {
                             super(someArg)
                         }
                     }

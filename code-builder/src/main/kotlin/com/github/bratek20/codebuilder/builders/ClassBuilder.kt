@@ -103,8 +103,9 @@ open class ClassBuilder: CodeBlockBuilder {
         fields.add(block)
     }
 
+    private val passingArgs: MutableList<String> = mutableListOf()
     fun addPassingArg(argName: String) {
-
+        passingArgs.add(argName)
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
@@ -125,14 +126,21 @@ open class ClassBuilder: CodeBlockBuilder {
         val classPart = beforeClassKeyword() + "class "
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
         extendsOrImplementsPart = extends?.let { c.lang.extends() + it } ?: extendsOrImplementsPart
-        val beginning = "$classPart$name$extendsOrImplementsPart"
+        val beginningWithoutExtendOrImplements = "$classPart$name"
+        val beginning = "$beginningWithoutExtendOrImplements$extendsOrImplementsPart"
 
         if (c.lang is Kotlin && constructor != null) {
-            line("$beginning(")
+            line("$beginningWithoutExtendOrImplements(")
             tab()
             add(constructor!!.getFieldsAndArgsOps())
             untab()
-            line(") {")
+            val passingArgsPart = if (passingArgs.isNotEmpty()) {
+                "(${passingArgs.joinToString(", ")})"
+            }
+            else {
+                ""
+            }
+            line(")$extendsOrImplementsPart$passingArgsPart {")
             if (constructor!!.body != null) {
                 tab()
                 line("init {")
@@ -154,6 +162,13 @@ open class ClassBuilder: CodeBlockBuilder {
                 line(") {")
                 tab()
                 add(constructor!!.body!!)
+                untab()
+                line("}")
+            }
+            else if (passingArgs.isNotEmpty()) {
+                line(") {")
+                tab()
+                line("super(${passingArgs.joinToString(", ")})")
                 untab()
                 line("}")
             }
