@@ -10,7 +10,11 @@ open class FileBuilder: CodeBlockBuilder {
     private val functions: MutableList<FunctionBuilderOps> = mutableListOf()
     private val enums: MutableList<EnumBuilderOps> = mutableListOf()
 
+    protected open fun beforeOperations(): CodeBuilderOps = {}
+    protected open fun afterOperations(): CodeBuilderOps = {}
+
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        add(beforeOperations())
 
         if (classes.isNotEmpty()) {
             classes.forEach {
@@ -32,6 +36,8 @@ open class FileBuilder: CodeBlockBuilder {
                 enum(it)
             }
         }
+
+        add(afterOperations())
     }
 
     fun addClass(classBlock: ClassBuilderOps) {

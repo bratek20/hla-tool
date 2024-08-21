@@ -11,8 +11,7 @@ class KotlinFileBuilder: FileBuilder() {
 
     private val imports: MutableList<String> = mutableListOf()
 
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+    override fun beforeOperations(): CodeBuilderOps = {
         line("package $packageName")
         if (imports.isNotEmpty()) {
             emptyLine()

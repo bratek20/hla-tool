@@ -9,6 +9,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.ops.string
 import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.codebuilder.typescript.typeScriptFile
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -147,7 +148,7 @@ class ExceptionsGenerator: PatternGenerator() {
     }
 
     override fun supportsCodeBuilder(): Boolean {
-        return c.language.name() == ModuleLanguage.KOTLIN
+        return true
     }
 
     override fun shouldGenerate(): Boolean {
@@ -178,11 +179,7 @@ class ExceptionsGenerator: PatternGenerator() {
             }
         }
         if (c.language.name() == ModuleLanguage.TYPE_SCRIPT) {
-            cb.kotlinFile {
-                packageName = submodulePackage(SubmoduleName.Api, c)
-
-                addImport("com.github.bratek20.architecture.exceptions.ApiException")
-
+            cb.typeScriptFile {
                 modules.allExceptionNamesForCurrent().forEach {
                     addClass {
                         name = it
@@ -199,19 +196,6 @@ class ExceptionsGenerator: PatternGenerator() {
                 }
             }
         }
-
-    }
-
-    override fun generateFileContent(): FileContent?{
-        val exceptions = modules.allExceptionNamesForCurrent()
-
-        if (exceptions.isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("exceptions.vm")
-            .put("exceptions", exceptions)
-            .build()
     }
 }
 

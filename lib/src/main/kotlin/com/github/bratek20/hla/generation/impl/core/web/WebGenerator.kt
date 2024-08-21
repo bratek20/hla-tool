@@ -237,7 +237,7 @@ class WebCommonGenerator: PatternGenerator() {
                 if (c.lang is TypeScript) {
                     namespace {
                         name = "$moduleName.Web"
-                        classBlock {
+                        addClass {
                             name = "${moduleName}WebClientConfig"
                             constructor {
                                 addField {
@@ -246,7 +246,7 @@ class WebCommonGenerator: PatternGenerator() {
                                 }
                             }
                         }
-                        classes.forEach(::classBlock)
+                        classes.forEach(::addClass)
                     }
                 } else {
                     classes.forEach(::classBlock)
@@ -285,7 +285,7 @@ class WebClientGenerator: PatternGenerator() {
                 namespace {
                     name = "${moduleName}.Web"
                     interfs.forEach { interf ->
-                        classBlock {
+                        addClass {
                             name = "${interf.name}WebClient"
                             implements = interf.name
 
