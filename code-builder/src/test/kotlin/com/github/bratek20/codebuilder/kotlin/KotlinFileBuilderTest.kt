@@ -52,6 +52,10 @@ class KotlinFileBuilderTest {
                     addFunction {
                         name = "someFun"
                     }
+
+                    addEnum {
+                        name = "SomeEnum"
+                    }
                 }
             }
             langExpected {
@@ -66,6 +70,9 @@ class KotlinFileBuilderTest {
                     }
                     
                     fun someFun() {
+                    }
+                    
+                    enum class SomeEnum {
                     }
                 """
             }

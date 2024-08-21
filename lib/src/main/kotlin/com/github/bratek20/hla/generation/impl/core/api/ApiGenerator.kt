@@ -4,9 +4,11 @@ import com.github.bratek20.codebuilder.builders.classBlock
 import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.builders.enum
 import com.github.bratek20.codebuilder.builders.field
+import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -15,6 +17,7 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
@@ -153,13 +156,21 @@ class ExceptionsGenerator: PatternGenerator() {
 
     override fun applyOperations(cb: CodeBuilder) {
         cb.kotlinFile {
-            packageName = "xxx"
+            packageName = submodulePackage(SubmoduleName.Api, c)
 
             addImport("com.github.bratek20.architecture.exceptions.ApiException")
 
             modules.allExceptionNamesForCurrent().forEach {
                 addClass {
                     name = it
+                    extends = "ApiException"
+                    constructor {
+                        addArg {
+                            name = "message"
+                            type = baseType(BaseType.STRING)
+                            defaultValue = "\"\""
+                        }
+                    }
                 }
             }
         }
@@ -178,6 +189,10 @@ class ExceptionsGenerator: PatternGenerator() {
     }
 }
 
+fun submodulePackage(submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + "." + submodule.name.lowercase()
+}
+
 class EnumsGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.Enums
@@ -193,12 +208,10 @@ class EnumsGenerator: PatternGenerator() {
 
     override fun applyOperations(cb: CodeBuilder) {
         if (language.name() == ModuleLanguage.KOTLIN) {
-            val p = profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + ".api"
-            cb.add {
-                line("package $p")
-                line("")
+            cb.kotlinFile {
+                packageName = submodulePackage(SubmoduleName.Api, c)
                 module.getEnums().forEach {
-                    enum {
+                    addEnum {
                         name = it.getName()
                         it.getValues().forEach { addValue(it) }
                     }

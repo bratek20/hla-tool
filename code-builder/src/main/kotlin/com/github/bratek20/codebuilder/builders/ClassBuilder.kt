@@ -103,6 +103,10 @@ open class ClassBuilder: CodeBlockBuilder {
         fields.add(block)
     }
 
+    fun addPassingArg(argName: String) {
+
+    }
+
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         add(classDeclarationWithConstructor(c))
         tab()

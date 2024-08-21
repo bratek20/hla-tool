@@ -414,4 +414,42 @@ class ClassBuilderTest {
             }
         }
     }
+
+    @Test
+    fun `extension with passing argument`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    extends = "SomeParent"
+                    constructor {
+                        addArg {
+                            name = "someArg"
+                            type = type("SomeType")
+                        }
+                    }
+                    addPassingArg("someArg")
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass(
+                        someArg: SomeType
+                    ): SomeParent(someArg) {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass extends SomeParent {
+                        constructor(someArg: SomeType) {
+                            super(someArg)
+                        }
+                    }
+                """
+            }
+        }
+    }
 }
