@@ -2,13 +2,15 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.classBlock
 import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.builders.enum
-import com.github.bratek20.codebuilder.builders.field
+import com.github.bratek20.codebuilder.builders.method
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.kotlin.kotlinFile
+import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.codebuilder.typescript.typeScriptFile
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -165,7 +167,9 @@ class ExceptionsGenerator: PatternGenerator() {
                 modules.allExceptionNamesForCurrent().forEach {
                     addClass {
                         name = it
-                        extends = "ApiException"
+                        extends {
+                            className = "ApiException"
+                        }
                         constructor {
                             addArg {
                                 name = "message"
@@ -183,7 +187,10 @@ class ExceptionsGenerator: PatternGenerator() {
                 modules.allExceptionNamesForCurrent().forEach {
                     addClass {
                         name = it
-                        extends = "ApiException"
+                        extends {
+                            className = "ApiException"
+                            generic = type(it)
+                        }
                         constructor {
                             addArg {
                                 name = "message"
@@ -192,6 +199,22 @@ class ExceptionsGenerator: PatternGenerator() {
                             }
                         }
                         addPassingArg("message")
+
+                        addMethod {
+                            name = "getTypeName"
+                            returnType = baseType(BaseType.STRING)
+                            body = {
+                                returnBlock {
+                                    string(it)
+                                }
+                            }
+                        }
+                    }
+                    addFunctionCall {
+                        name = "ExceptionsRegistry.register"
+                        addArg {
+                           variable(it)
+                        }
                     }
                 }
             }
@@ -234,7 +257,9 @@ class EnumsGenerator: PatternGenerator() {
                     val enumName = it.getName()
                     classBlock {
                         name = enumName
-                        extends = "StringEnumClass"
+                        extends {
+                            className = "StringEnumClass"
+                        }
                         it.getValues().forEach {
                             addField {
                                 name = it

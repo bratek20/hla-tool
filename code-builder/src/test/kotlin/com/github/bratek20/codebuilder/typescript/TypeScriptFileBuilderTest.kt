@@ -36,4 +36,24 @@ class TypeScriptFileBuilderTest {
             }
         }
     }
+
+    @Test
+    fun functionCall() {
+        testCodeBuilderOp {
+            op = {
+                typeScriptFile {
+                    addFunctionCall {
+                        name = "someFun"
+                    }
+                }
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    
+                    someFun()
+                """
+            }
+        }
+    }
 }

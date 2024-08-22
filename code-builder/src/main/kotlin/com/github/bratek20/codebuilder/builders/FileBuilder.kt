@@ -9,6 +9,7 @@ open class FileBuilder: CodeBlockBuilder {
     private val classes: MutableList<ClassBuilderOps> = mutableListOf()
     private val functions: MutableList<FunctionBuilderOps> = mutableListOf()
     private val enums: MutableList<EnumBuilderOps> = mutableListOf()
+    private val functionCalls: MutableList<FunctionCallBuilderOps> = mutableListOf()
 
     protected open fun beforeOperations(): CodeBuilderOps = {}
     protected open fun afterOperations(): CodeBuilderOps = {}
@@ -37,6 +38,13 @@ open class FileBuilder: CodeBlockBuilder {
             }
         }
 
+        if (functionCalls.isNotEmpty()) {
+            functionCalls.forEach {
+                emptyLine()
+                functionCall(it)
+            }
+        }
+
         add(afterOperations())
     }
 
@@ -50,6 +58,10 @@ open class FileBuilder: CodeBlockBuilder {
 
     fun addEnum(enumBlock: EnumBuilderOps) {
         enums.add(enumBlock)
+    }
+
+    fun addFunctionCall(functionCall: FunctionCallBuilderOps) {
+        functionCalls.add(functionCall)
     }
 }
 typealias FileBuilderOps = FileBuilder.() -> Unit

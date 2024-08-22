@@ -56,6 +56,7 @@ class FunctionCallBuilder: CallBuilder() {
         return name
     }
 }
+typealias FunctionCallBuilderOps = FunctionCallBuilder.() -> Unit
 fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
 
 class ConstructorCallBuilder: CallBuilder() {
