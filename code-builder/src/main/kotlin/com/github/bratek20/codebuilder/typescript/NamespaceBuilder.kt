@@ -30,7 +30,7 @@ class NamespaceBuilder: CodeBlockBuilder {
 
     private val body: MutableList<CodeBlockBuilder> = mutableListOf()
 
-    fun classBlock(block: ClassBuilderOps) {
+    fun addClass(block: ClassBuilderOps) {
         body.add(NamespaceClassBuilder().apply(block))
     }
 

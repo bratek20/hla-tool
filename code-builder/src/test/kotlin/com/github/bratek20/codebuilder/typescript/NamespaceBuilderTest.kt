@@ -12,7 +12,7 @@ class NamespaceBuilderTest {
             op = {
                 namespace {
                     name = "SomeNamespace"
-                    classBlock {
+                    addClass {
                         name = "SomeClass"
                     }
                     function {

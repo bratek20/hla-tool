@@ -49,6 +49,8 @@ abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
     var returnType: TypeBuilder? = null
     var body: CodeBuilderOps? = null
 
+    var comment: String? = null
+
     protected val args: ArgumentListBuilder = ArgumentListBuilder()
     fun addArg(ops: ArgumentBuilderOps) {
         args.add(ops)
@@ -57,6 +59,9 @@ abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
     protected abstract fun beforeName(c: CodeBuilderContext): String
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        comment?.let {
+            line("// $it")
+        }
         lineStart("${beforeName(c)}$name")
         add(args)
         returnType?.let {

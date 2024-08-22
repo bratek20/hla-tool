@@ -78,29 +78,55 @@ class ClassConstructorBuilder {
 }
 typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
+class ExtendsBuilder: LinePartBuilder {
+    lateinit var className: String
+    var generic: TypeBuilder? = null
+
+    override fun build(c: CodeBuilderContext): String {
+        val genericPart = generic?.let { "<${it.build(c)}>" } ?: ""
+        return "$className$genericPart"
+    }
+}
+typealias ExtendsBuilderOps = ExtendsBuilder.() -> Unit
+
 open class ClassBuilder: CodeBlockBuilder {
     open fun beforeClassKeyword(): String = ""
 
     lateinit var name: String
 
     var implements: String? = null
-    var extends: String? = null
+
     private var constructor: ClassConstructorBuilder? = null
     private val fields: MutableList<FieldBuilderOps> = mutableListOf()
     var body: CodeBuilderOps? = null
 
     private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
 
+    private var extends: ExtendsBuilderOps? = null
+    fun extends(block: ExtendsBuilderOps) {
+        extends = block
+    }
+
     fun constructor(block: ClassConstructorBuilderOps) {
         constructor = ClassConstructorBuilder().apply(block)
     }
 
-    fun staticMethod(block: MethodBuilderOps) {
+    fun addStaticMethod(block: MethodBuilderOps) {
         staticMethods.add(block)
+    }
+
+    private val methods: MutableList<MethodBuilderOps> = mutableListOf()
+    fun addMethod(block: MethodBuilderOps) {
+        methods.add(block)
     }
 
     fun addField(block: FieldBuilderOps) {
         fields.add(block)
+    }
+
+    private val passingArgs: MutableList<String> = mutableListOf()
+    fun addPassingArg(argName: String) {
+        passingArgs.add(argName)
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
@@ -110,6 +136,9 @@ open class ClassBuilder: CodeBlockBuilder {
             field(fieldOps)
         }
         body?.let { add(it) }
+        methods.forEach { methodOps ->
+            method(methodOps)
+        }
         if (staticMethods.isNotEmpty()) {
             add(staticMethodsSection(c))
         }
@@ -120,15 +149,22 @@ open class ClassBuilder: CodeBlockBuilder {
     private fun classDeclarationWithConstructor(c: CodeBuilderContext): CodeBuilderOps = {
         val classPart = beforeClassKeyword() + "class "
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
-        extendsOrImplementsPart = extends?.let { c.lang.extends() + it } ?: extendsOrImplementsPart
-        val beginning = "$classPart$name$extendsOrImplementsPart"
+        extendsOrImplementsPart = extends?.let { c.lang.extends() + ExtendsBuilder().apply(it).build(c) } ?: extendsOrImplementsPart
+        val beginningWithoutExtendOrImplements = "$classPart$name"
+        val beginning = "$beginningWithoutExtendOrImplements$extendsOrImplementsPart"
 
         if (c.lang is Kotlin && constructor != null) {
-            line("$beginning(")
+            line("$beginningWithoutExtendOrImplements(")
             tab()
             add(constructor!!.getFieldsAndArgsOps())
             untab()
-            line(") {")
+            val passingArgsPart = if (passingArgs.isNotEmpty()) {
+                "(${passingArgs.joinToString(", ")})"
+            }
+            else {
+                ""
+            }
+            line(")$extendsOrImplementsPart$passingArgsPart {")
             if (constructor!!.body != null) {
                 tab()
                 line("init {")
@@ -150,6 +186,13 @@ open class ClassBuilder: CodeBlockBuilder {
                 line(") {")
                 tab()
                 add(constructor!!.body!!)
+                untab()
+                line("}")
+            }
+            else if (passingArgs.isNotEmpty()) {
+                line(") {")
+                tab()
+                line("super(${passingArgs.joinToString(", ")})")
                 untab()
                 line("}")
             }

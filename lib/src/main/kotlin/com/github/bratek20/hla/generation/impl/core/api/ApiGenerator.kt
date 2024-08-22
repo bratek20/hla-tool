@@ -2,10 +2,16 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.classBlock
 import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.builders.enum
-import com.github.bratek20.codebuilder.builders.field
+import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.kotlin.kotlinFile
+import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.typescript.typeScriptFile
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -14,6 +20,7 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
@@ -142,21 +149,82 @@ class ExceptionsGenerator: PatternGenerator() {
         return PatternName.Exceptions
     }
 
-    override fun generateFileContent(): FileContent?{
-        val exceptions = module.getInterfaces()
-            .flatMap { it.getMethods() }
-            .flatMap { it.getThrows() }
-            .map { it.getName() }
-            .distinct()
-
-        if (exceptions.isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("exceptions.vm")
-            .put("exceptions", exceptions)
-            .build()
+    override fun supportsCodeBuilder(): Boolean {
+        return true
     }
+
+    override fun shouldGenerate(): Boolean {
+        return modules.allExceptionNamesForCurrent().isNotEmpty()
+    }
+
+    override fun applyOperations(cb: CodeBuilder) {
+        if (c.language.name() == ModuleLanguage.KOTLIN) {
+            cb.kotlinFile {
+                packageName = submodulePackage(SubmoduleName.Api, c)
+
+                addImport("com.github.bratek20.architecture.exceptions.ApiException")
+
+                modules.allExceptionNamesForCurrent().forEach {
+                    addClass {
+                        name = it
+                        extends {
+                            className = "ApiException"
+                        }
+                        constructor {
+                            addArg {
+                                name = "message"
+                                type = baseType(BaseType.STRING)
+                                defaultValue = "\"\""
+                            }
+                        }
+                        addPassingArg("message")
+                    }
+                }
+            }
+        }
+        if (c.language.name() == ModuleLanguage.TYPE_SCRIPT) {
+            cb.typeScriptFile {
+                modules.allExceptionNamesForCurrent().forEach {
+                    addClass {
+                        name = it
+                        extends {
+                            className = "ApiException"
+                            generic = type(it)
+                        }
+                        constructor {
+                            addArg {
+                                name = "message"
+                                type = baseType(BaseType.STRING)
+                                defaultValue = "\"\""
+                            }
+                        }
+                        addPassingArg(it)
+                        addPassingArg("message")
+
+                        addMethod {
+                            name = "getTypeName"
+                            returnType = baseType(BaseType.STRING)
+                            body = {
+                                returnBlock {
+                                    string(it)
+                                }
+                            }
+                        }
+                    }
+                    addFunctionCall {
+                        name = "ExceptionsRegistry.register"
+                        addArg {
+                           variable(it)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun submodulePackage(submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + "." + submodule.name.lowercase()
 }
 
 class EnumsGenerator: PatternGenerator() {
@@ -174,12 +242,10 @@ class EnumsGenerator: PatternGenerator() {
 
     override fun applyOperations(cb: CodeBuilder) {
         if (language.name() == ModuleLanguage.KOTLIN) {
-            val p = profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + ".api"
-            cb.add {
-                line("package $p")
-                line("")
+            cb.kotlinFile {
+                packageName = submodulePackage(SubmoduleName.Api, c)
                 module.getEnums().forEach {
-                    enum {
+                    addEnum {
                         name = it.getName()
                         it.getValues().forEach { addValue(it) }
                     }
@@ -192,7 +258,9 @@ class EnumsGenerator: PatternGenerator() {
                     val enumName = it.getName()
                     classBlock {
                         name = enumName
-                        extends = "StringEnumClass"
+                        extends {
+                            className = "StringEnumClass"
+                        }
                         it.getValues().forEach {
                             addField {
                                 name = it

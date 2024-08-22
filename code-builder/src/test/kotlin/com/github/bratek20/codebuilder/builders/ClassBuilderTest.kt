@@ -49,7 +49,9 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    extends = "SomeParent"
+                    extends {
+                        className = "SomeParent"
+                    }
                 }
             }
             langExpected {
@@ -133,8 +135,8 @@ class ClassBuilderTest {
                 classBlock {
                     name = "SomeClass"
                     body = {
-                        comment("some comment")
-                        method {
+                        addMethod {
+                            comment = "some comment"
                             name = "someMethod"
                         }
                     }
@@ -268,10 +270,10 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    staticMethod {
+                    addStaticMethod {
                         name = "someMethod"
                     }
-                    staticMethod {
+                    addStaticMethod {
                         name = "otherMethod"
                     }
                 }
@@ -364,7 +366,7 @@ class ClassBuilderTest {
                             }
                         }
                     }
-                    staticMethod {
+                    addStaticMethod {
                         name = "create"
                         returnType = type("SomeInterfaceSomeCommandRequest")
                         addArg {
@@ -409,6 +411,70 @@ class ClassBuilderTest {
                                 return SomeInterfaceSomeCommandRequest(id.value, amount)
                             }
                         }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `extension with passing argument`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    extends {
+                        className = "SomeParent"
+                    }
+                    constructor {
+                        addArg {
+                            name = "someArg"
+                            type = type("SomeType")
+                        }
+                    }
+                    addPassingArg("someArg")
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass(
+                        someArg: SomeType,
+                    ): SomeParent(someArg) {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass extends SomeParent {
+                        constructor(
+                            someArg: SomeType,
+                        ) {
+                            super(someArg)
+                        }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `extension with generic`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    extends {
+                        className = "SomeParent"
+                        generic = type("SomeType")
+                    }
+                }
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass extends SomeParent<SomeType> {
                     }
                 """
             }
