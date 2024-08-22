@@ -198,6 +198,7 @@ class ExceptionsGenerator: PatternGenerator() {
                                 defaultValue = "\"\""
                             }
                         }
+                        addPassingArg(it)
                         addPassingArg("message")
 
                         addMethod {

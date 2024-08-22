@@ -6,10 +6,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
 open class FileBuilder: CodeBlockBuilder {
-    private val classes: MutableList<ClassBuilderOps> = mutableListOf()
-    private val functions: MutableList<FunctionBuilderOps> = mutableListOf()
-    private val enums: MutableList<EnumBuilderOps> = mutableListOf()
-    private val functionCalls: MutableList<FunctionCallBuilderOps> = mutableListOf()
+    private val ops: MutableList<CodeBuilderOps> = mutableListOf()
 
     protected open fun beforeOperations(): CodeBuilderOps = {}
     protected open fun afterOperations(): CodeBuilderOps = {}
@@ -17,51 +14,36 @@ open class FileBuilder: CodeBlockBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         add(beforeOperations())
 
-        if (classes.isNotEmpty()) {
-            classes.forEach {
-                emptyLine()
-                classBlock(it)
-            }
-        }
-
-        if (functions.isNotEmpty()) {
-            functions.forEach {
-                emptyLine()
-                function(it)
-            }
-        }
-
-        if (enums.isNotEmpty()) {
-            enums.forEach {
-                emptyLine()
-                enum(it)
-            }
-        }
-
-        if (functionCalls.isNotEmpty()) {
-            functionCalls.forEach {
-                emptyLine()
-                functionCall(it)
-            }
+        ops.forEach {
+            emptyLine()
+            add(it)
         }
 
         add(afterOperations())
     }
 
     fun addClass(classBlock: ClassBuilderOps) {
-        classes.add(classBlock)
+        ops.add {
+            classBlock(classBlock)
+        }
     }
 
     fun addFunction(function: FunctionBuilderOps) {
-        functions.add(function)
+        ops.add {
+            function(function)
+        }
     }
 
     fun addEnum(enumBlock: EnumBuilderOps) {
-        enums.add(enumBlock)
+        ops.add {
+            enum(enumBlock)
+        }
     }
 
     fun addFunctionCall(functionCall: FunctionCallBuilderOps) {
-        functionCalls.add(functionCall)
+        ops.add {
+            functionCall(functionCall)
+        }
     }
 }
 typealias FileBuilderOps = FileBuilder.() -> Unit

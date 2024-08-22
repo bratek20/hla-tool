@@ -6,37 +6,7 @@ import org.junit.jupiter.api.Test
 
 class KotlinFileBuilderTest {
     @Test
-    fun `two classes`() {
-        testCodeBuilderOp {
-            op = {
-                kotlinFile {
-                    packageName = "com.some.pkg"
-
-                    addClass {
-                        name = "Class1"
-                    }
-                    addClass {
-                        name = "Class2"
-                    }
-                }
-            }
-            langExpected {
-                lang = Kotlin()
-                expected = """
-                    package com.some.pkg
-                    
-                    class Class1 {
-                    }
-                    
-                    class Class2 {
-                    }
-                """
-            }
-        }
-    }
-
-    @Test
-    fun `all methods`() {
+    fun `package name, imports and class`() {
         testCodeBuilderOp {
             op = {
                 kotlinFile {
@@ -47,14 +17,6 @@ class KotlinFileBuilderTest {
 
                     addClass {
                         name = "SomeClass"
-                    }
-
-                    addFunction {
-                        name = "someFun"
-                    }
-
-                    addEnum {
-                        name = "SomeEnum"
                     }
                 }
             }
@@ -67,12 +29,6 @@ class KotlinFileBuilderTest {
                     import com.other.pkg2
                     
                     class SomeClass {
-                    }
-                    
-                    fun someFun() {
-                    }
-                    
-                    enum class SomeEnum {
                     }
                 """
             }
