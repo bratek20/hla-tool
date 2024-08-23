@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.languages.csharp
 
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -40,6 +41,6 @@ class CSharpSupport(private val c: DomainContext): LanguageSupport {
     }
 
     override fun base(): CodeBuilderLanguage {
-        return TypeScript()
+        return CSharp()
     }
 }

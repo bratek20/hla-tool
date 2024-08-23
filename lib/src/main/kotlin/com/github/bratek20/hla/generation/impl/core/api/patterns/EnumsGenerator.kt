@@ -4,6 +4,7 @@ import com.github.bratek20.codebuilder.builders.classBlock
 import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.builders.file
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.languages.csharp.cSharpFile
 import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.ops.string
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptFile
@@ -64,7 +65,7 @@ class EnumsGenerator: PatternGenerator() {
             }
         }
         if (language.name() == ModuleLanguage.C_SHARP) {
-            cb.typeScriptFile {
+            cb.cSharpFile {
                 namespace {
                     name = "SomeModule.Api"
                     module.getEnums().forEach {

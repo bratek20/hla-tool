@@ -12,6 +12,8 @@ interface CodeBuilderLanguage {
 
     fun defaultClassAccessor(): String
 
+    fun enumDeclaration(): String
+
     fun methodDeclarationKeyword(): String
     fun functionDeclarationKeyword(): String
 
@@ -42,6 +44,7 @@ interface CodeBuilderLanguage {
     fun constructorCall(className: String): String
 
     fun statementTerminator(): String
+
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -59,6 +62,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun defaultClassAccessor(): String {
         return ""
+    }
+
+    override fun enumDeclaration(): String {
+        return "enum class "
     }
 
     override fun methodDeclarationKeyword(): String {
@@ -171,6 +178,10 @@ class TypeScript: CodeBuilderLanguage {
         return ""
     }
 
+    override fun enumDeclaration(): String {
+        return "enum "
+    }
+
     override fun methodDeclarationKeyword(): String {
         return ""
     }
@@ -279,6 +290,10 @@ class CSharp: CodeBuilderLanguage {
 
     override fun defaultClassAccessor(): String {
         return "public "
+    }
+
+    override fun enumDeclaration(): String {
+        return "enum "
     }
 
     override fun methodDeclarationKeyword(): String {
