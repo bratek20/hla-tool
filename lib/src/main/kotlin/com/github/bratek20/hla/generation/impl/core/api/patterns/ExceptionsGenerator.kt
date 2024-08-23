@@ -2,13 +2,13 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.kotlin.kotlinFile
+import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.string
 import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
-import com.github.bratek20.codebuilder.typescript.typeScriptFile
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptFile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName

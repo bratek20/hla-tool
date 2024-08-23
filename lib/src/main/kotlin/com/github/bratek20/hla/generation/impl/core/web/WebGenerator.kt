@@ -5,7 +5,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.type
-import com.github.bratek20.codebuilder.typescript.namespace
+import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.FileContent

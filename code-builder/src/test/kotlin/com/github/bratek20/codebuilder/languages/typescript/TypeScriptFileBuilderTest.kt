@@ -1,4 +1,4 @@
-package com.github.bratek20.codebuilder.typescript
+package com.github.bratek20.codebuilder.languages.typescript
 
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp

@@ -2,9 +2,11 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.classBlock
 import com.github.bratek20.codebuilder.builders.constructorCall
+import com.github.bratek20.codebuilder.builders.file
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.kotlin.kotlinFile
+import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptFile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -56,6 +58,19 @@ class EnumsGenerator: PatternGenerator() {
                                     }
                                 } }
                             }
+                        }
+                    }
+                }
+            }
+        }
+        if (language.name() == ModuleLanguage.C_SHARP) {
+            cb.typeScriptFile {
+                namespace {
+                    name = "SomeModule.Api"
+                    module.getEnums().forEach {
+                        addEnum {
+                            name = it.getName()
+                            it.getValues().forEach { addValue(it) }
                         }
                     }
                 }

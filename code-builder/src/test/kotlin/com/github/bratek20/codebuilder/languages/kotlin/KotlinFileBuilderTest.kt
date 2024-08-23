@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.kotlin
 
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
 import org.junit.jupiter.api.Test
 
 class KotlinFileBuilderTest {

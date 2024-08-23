@@ -1,4 +1,4 @@
-package com.github.bratek20.codebuilder.kotlin
+package com.github.bratek20.codebuilder.languages.kotlin
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBlockBuilder

@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.context
 
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.type
-import com.github.bratek20.codebuilder.typescript.namespace
+import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
@@ -56,7 +56,7 @@ class WebContextGenerator: PatternGenerator() {
                     name = "${this@WebContextGenerator.c.module.getName()}.Api"
                     interfs.forEach { interf ->
                         interf.methods.forEach { m ->
-                            function {
+                            addFunction {
                                 name = m.name
                                 returnType = type(m.returnType)
                                 m.args.forEach { arg ->
