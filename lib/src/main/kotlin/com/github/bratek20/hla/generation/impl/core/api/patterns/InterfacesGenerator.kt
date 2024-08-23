@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.generation.impl.core.api
+package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.MethodBuilder
 import com.github.bratek20.codebuilder.builders.method
@@ -8,6 +8,8 @@ import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.core.api.ApiType
+import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.utils.camelToPascalCase
 
 data class ArgumentView(
