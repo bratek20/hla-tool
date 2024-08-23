@@ -17,6 +17,15 @@ profiles:
         test: "Tests/test"
         fixtures: "Tests/fixtures"
 
+  - name: "cSharp"
+    language: "C_SHARP"
+    paths:
+      project: "../c-sharp"
+      src:
+        main: "Main"
+        test: "Tests/Test"
+        fixtures: "Tests/Fixtures"
+
   - name: "kotlinOnlyPatterns"
     language: "KOTLIN"
     paths:

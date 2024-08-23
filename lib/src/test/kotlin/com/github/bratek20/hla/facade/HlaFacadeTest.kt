@@ -86,8 +86,20 @@ class HlaFacadeTest {
             )
         }
 
+        fun cSharpTestPaths(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/c-sharp/Main/$moduleName",
+                exampleFixturesPath = "../example/c-sharp/Tests/fixtures/$moduleName",
+                exampleTestsPath = "../example/c-sharp/Tests/test/$moduleName",
+                expectedMainPath = "../example/hla/../c-sharp/Main",
+                expectedFixturesPath = "../example/hla/../c-sharp/Tests/fixtures",
+                expectedTestsPath = "../example/hla/../c-sharp/Tests/test",
+            )
+        }
+
         private val KOTLIN_PROFILE = "kotlin"
         private val TYPE_SCRIPT_PROFILE = "typeScript"
+        private val C_SHARP_PROFILE = "cSharp"
 
         private val KOTLIN_2_PROFILE = "kotlin2"
         private val TYPE_SCRIPT_2_PROFILE = "typeScript2"
@@ -104,6 +116,7 @@ class HlaFacadeTest {
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("OtherModule")
                 ),
+
                 Arguments.of(
                     "SomeModule",
                     KOTLIN_PROFILE,
@@ -115,6 +128,12 @@ class HlaFacadeTest {
                     typescriptTestPaths("SomeModule")
                 ),
                 Arguments.of(
+                    "SomeModule",
+                    C_SHARP_PROFILE,
+                    cSharpTestPaths("SomeModule")
+                ),
+
+                Arguments.of(
                     "TypesModule",
                     KOTLIN_PROFILE,
                     kotlinTestPaths("typesmodule")
@@ -124,6 +143,7 @@ class HlaFacadeTest {
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("TypesModule")
                 ),
+
                 Arguments.of(
                     "SimpleModule",
                     KOTLIN_PROFILE,
@@ -134,6 +154,7 @@ class HlaFacadeTest {
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("SimpleModule")
                 ),
+
                 Arguments.of(
                     "ImportingModule",
                     KOTLIN_2_PROFILE,
