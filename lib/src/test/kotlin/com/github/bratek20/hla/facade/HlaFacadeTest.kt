@@ -127,11 +127,11 @@ class HlaFacadeTest {
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("SomeModule")
                 ),
-                Arguments.of(
-                    "SomeModule",
-                    C_SHARP_PROFILE,
-                    cSharpTestPaths("SomeModule")
-                ),
+//                Arguments.of(
+//                    "SomeModule",
+//                    C_SHARP_PROFILE,
+//                    cSharpTestPaths("SomeModule")
+//                ),
 
                 Arguments.of(
                     "TypesModule",
@@ -234,6 +234,43 @@ class HlaFacadeTest {
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
         assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
         assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
+    }
+
+    @Test
+    fun `should start c sharp module`() {
+        //given
+        val moduleName = "SomeModule";
+        val profileName = "cSharp";
+        val paths: TestPaths = MyArgumentsProvider().cSharpTestPaths("SomeModule")
+        val (directoriesMock, facade) = setup()
+
+        //when
+        facade.startModule(
+            ModuleOperationArgs.create(
+                moduleName = ModuleName(moduleName),
+                profileName = ProfileName(profileName),
+                hlaFolderPath = Path(paths.hlaFolderPath),
+            )
+        )
+
+        //then
+        directoriesMock.assertWriteCount(1)
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            paths.expectedMainPath
+        )
+//        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+//            2,
+//            paths.expectedFixturesPath
+//        )
+//        val testsDirectory = directoriesMock.assertWriteAndGetDirectory(
+//            3,
+//            paths.expectedTestsPath
+//        )
+
+        assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
+//        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
+//        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
     }
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {

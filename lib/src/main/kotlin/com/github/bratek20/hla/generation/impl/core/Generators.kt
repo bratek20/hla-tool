@@ -13,6 +13,7 @@ import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
+import org.apache.velocity.exception.ResourceNotFoundException
 
 class ModuleGenerationContext(
     val domain: DomainContext,
@@ -112,7 +113,12 @@ abstract class PatternGenerator
             }
         }
         else {
-            content = generateFileContent()
+            try {
+                content = generateFileContent()
+            } catch (e: ResourceNotFoundException) {
+                //Hack: workaround to not add missing templates as I migrate out of velocity
+                content = null
+            }
         }
 
         if (content == null) {

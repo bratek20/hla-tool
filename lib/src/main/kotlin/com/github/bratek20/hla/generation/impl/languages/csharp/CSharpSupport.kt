@@ -1,9 +1,13 @@
 package com.github.bratek20.hla.generation.impl.languages.csharp
 
 import com.github.bratek20.codebuilder.core.CodeBuilderLanguage
+import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.impl.core.DomainContext
 import com.github.bratek20.hla.generation.impl.core.language.*
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptAssertsPattern
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptBuildersPattern
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptDtoPattern
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 
 class CSharpSupport(private val c: DomainContext): LanguageSupport {
@@ -24,18 +28,18 @@ class CSharpSupport(private val c: DomainContext): LanguageSupport {
     }
 
     override fun assertsFixture(): LanguageAssertsPattern {
-        TODO("Not yet implemented")
+        return TypeScriptAssertsPattern(c.queries)
     }
 
     override fun buildersFixture(): LanguageBuildersPattern {
-        TODO("Not yet implemented")
+        return TypeScriptBuildersPattern(c.queries)
     }
 
     override fun dtoPattern(): LanguageDtoPattern {
-        TODO("Not yet implemented")
+        return TypeScriptDtoPattern(c.queries)
     }
 
     override fun base(): CodeBuilderLanguage {
-        TODO("Not yet implemented")
+        return TypeScript()
     }
 }

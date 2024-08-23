@@ -15,14 +15,14 @@ import com.github.bratek20.utils.directory.api.Path
 
 class GenerateResult(
     private val main: Directory,
-    private val fixtures: Directory,
+    private val fixtures: Directory?,
     private val tests: Directory?,
 ) {
     fun getMain(): Directory {
         return main
     }
 
-    fun getFixtures(): Directory {
+    fun getFixtures(): Directory? {
         return fixtures
     }
 
@@ -75,7 +75,7 @@ class ModuleWriterLogic(
         );
         return GenerateResult(
             main,
-            fixtures,
+            toNullIfEmpty(fixtures),
             toNullIfEmpty(tests)
         )
     }
@@ -122,7 +122,7 @@ class ModuleWriterLogic(
 
     private fun writeDirectories(paths: Paths, generateResult: GenerateResult) {
         directories.write(paths.main, generateResult.getMain())
-        directories.write(paths.fixtures, generateResult.getFixtures())
+        generateResult.getFixtures()?.let { directories.write(paths.fixtures, it) }
         generateResult.getTests()?.let { directories.write(paths.test, it) }
     }
 
