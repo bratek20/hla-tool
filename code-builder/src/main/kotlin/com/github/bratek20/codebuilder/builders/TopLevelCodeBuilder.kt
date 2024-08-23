@@ -5,7 +5,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
-open class FileBuilder: CodeBlockBuilder {
+open class TopLevelCodeBuilder: CodeBlockBuilder {
     private val ops: MutableList<CodeBuilderOps> = mutableListOf()
 
     protected open fun beforeOperations(): CodeBuilderOps = {}
@@ -14,9 +14,11 @@ open class FileBuilder: CodeBlockBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         add(beforeOperations())
 
-        ops.forEach {
-            emptyLine()
-            add(it)
+        ops.forEachIndexed { idx, op ->
+            add(op)
+            if (idx != ops.size - 1) {
+                emptyLine()
+            }
         }
 
         add(afterOperations())
@@ -46,5 +48,5 @@ open class FileBuilder: CodeBlockBuilder {
         }
     }
 }
-typealias FileBuilderOps = FileBuilder.() -> Unit
-fun CodeBuilder.file(block: FileBuilderOps) = add(FileBuilder().apply(block))
+typealias FileBuilderOps = TopLevelCodeBuilder.() -> Unit
+fun CodeBuilder.file(block: FileBuilderOps) = add(TopLevelCodeBuilder().apply(block))

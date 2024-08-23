@@ -29,7 +29,6 @@ class TypeScriptFileBuilderTest {
                         export class SomeClass {
                         }
                     }
-                    
                     class OuterClass {
                     }
                 """
@@ -50,7 +49,6 @@ class TypeScriptFileBuilderTest {
             langExpected {
                 lang = TypeScript()
                 expected = """
-                    
                     someFun()
                 """
             }

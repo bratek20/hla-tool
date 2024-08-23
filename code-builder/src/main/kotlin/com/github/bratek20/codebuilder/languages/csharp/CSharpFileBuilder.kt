@@ -1,10 +1,10 @@
 package com.github.bratek20.codebuilder.languages.csharp
 
-import com.github.bratek20.codebuilder.builders.FileBuilder
+import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
-class CSharpFileBuilder: FileBuilder() {
+class CSharpFileBuilder: TopLevelCodeBuilder() {
     private var namespace: CSharpNamespaceBuilderOps? = null
 
     fun namespace(ops: CSharpNamespaceBuilderOps) {

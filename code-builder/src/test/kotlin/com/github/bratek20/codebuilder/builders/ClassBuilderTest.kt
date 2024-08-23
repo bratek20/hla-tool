@@ -36,7 +36,7 @@ class ClassBuilderTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                    class SomeClass {
+                    public class SomeClass {
                     }
                 """
             }
@@ -121,7 +121,7 @@ class ClassBuilderTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                    class SomeClass: SomeInterface {
+                    public class SomeClass: SomeInterface {
                     }
                 """
             }

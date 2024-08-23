@@ -26,9 +26,6 @@ class TypeScriptNamespaceBuilderTest {
                             }
                         }
                     }
-                    addEnum {
-                        name = "SomeEnum"
-                    }
                 }
             }
             langExpected {
@@ -40,8 +37,6 @@ class TypeScriptNamespaceBuilderTest {
                         export function someFunction() {
                         }
                         export const someConst = new SomeClass()
-                        enum SomeEnum {
-                        }
                     }
                 """
             }

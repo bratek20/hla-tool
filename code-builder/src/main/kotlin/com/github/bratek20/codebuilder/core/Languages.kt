@@ -10,6 +10,8 @@ interface CodeBuilderLanguage {
     fun implements(): String
     fun extends(): String
 
+    fun defaultClassAccessor(): String
+
     fun methodDeclarationKeyword(): String
     fun functionDeclarationKeyword(): String
 
@@ -53,6 +55,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun extends(): String {
         return ": "
+    }
+
+    override fun defaultClassAccessor(): String {
+        return ""
     }
 
     override fun methodDeclarationKeyword(): String {
@@ -161,6 +167,10 @@ class TypeScript: CodeBuilderLanguage {
         return " extends "
     }
 
+    override fun defaultClassAccessor(): String {
+        return ""
+    }
+
     override fun methodDeclarationKeyword(): String {
         return ""
     }
@@ -265,6 +275,10 @@ class CSharp: CodeBuilderLanguage {
 
     override fun extends(): String {
         return ": "
+    }
+
+    override fun defaultClassAccessor(): String {
+        return "public "
     }
 
     override fun methodDeclarationKeyword(): String {
