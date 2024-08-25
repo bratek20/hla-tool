@@ -1,7 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class InterfaceBuilder: CodeBlockBuilder {
     lateinit var name: String
@@ -12,7 +11,7 @@ class InterfaceBuilder: CodeBlockBuilder {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        val x = c.lang.defaultClassAccessor() + "interface " + name
+        val x = c.lang.defaultTopLevelAccessor() + "interface " + name
         line("$x {")
         
         tab()

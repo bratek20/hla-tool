@@ -66,11 +66,23 @@ abstract class MethodOrFunctionWithoutBodyBuilder: CodeBlockBuilder {
         comment?.let {
             line("// $it")
         }
-        lineStart("${beforeName(c)}$name")
-        add(args)
-        returnType?.let {
-            linePart(": ")
-            add(it)
+        if (c.lang is CSharp) {
+            lineStart()
+            returnType?.let {
+                add(it)
+                linePart(" ")
+            } ?: linePart("void ")
+            linePart(name)
+            add(args)
+            statementLineEnd()
+        }
+        else {
+            lineStart("${beforeName(c)}$name")
+            add(args)
+            returnType?.let {
+                linePart(": ")
+                add(it)
+            }
         }
     }
 }
