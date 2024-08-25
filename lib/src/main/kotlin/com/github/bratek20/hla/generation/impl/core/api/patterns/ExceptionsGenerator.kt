@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
+import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilder
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.languages.csharp.cSharpFile
@@ -30,6 +31,25 @@ class ExceptionsGenerator: PatternGenerator() {
         return modules.allExceptionNamesForCurrent().isNotEmpty()
     }
 
+    private fun defaultAddExceptions(builder: TopLevelCodeBuilder) {
+        modules.allExceptionNamesForCurrent().forEach {
+            builder.addClass {
+                name = it
+                extends {
+                    className = "ApiException"
+                }
+                constructor {
+                    addArg {
+                        name = "message"
+                        type = baseType(BaseType.STRING)
+                        defaultValue = "\"\""
+                    }
+                }
+                addPassingArg("message")
+            }
+        }
+    }
+
     override fun applyOperations(cb: CodeBuilder) {
         if (c.language.name() == ModuleLanguage.KOTLIN) {
             cb.kotlinFile {
@@ -37,21 +57,17 @@ class ExceptionsGenerator: PatternGenerator() {
 
                 addImport("com.github.bratek20.architecture.exceptions.ApiException")
 
-                modules.allExceptionNamesForCurrent().forEach {
-                    addClass {
-                        name = it
-                        extends {
-                            className = "ApiException"
-                        }
-                        constructor {
-                            addArg {
-                                name = "message"
-                                type = baseType(BaseType.STRING)
-                                defaultValue = "\"\""
-                            }
-                        }
-                        addPassingArg("message")
-                    }
+                defaultAddExceptions(this)
+            }
+        }
+        if (c.language.name() == ModuleLanguage.C_SHARP) {
+            cb.cSharpFile {
+                addUsing("B20.Architecture.Exceptions.ApiException")
+
+                namespace {
+                    name = submoduleNamespace(SubmoduleName.Api, c)
+
+                    defaultAddExceptions(this)
                 }
             }
         }
@@ -88,32 +104,6 @@ class ExceptionsGenerator: PatternGenerator() {
                         name = "ExceptionsRegistry.register"
                         addArg {
                            variable(it)
-                        }
-                    }
-                }
-            }
-        }
-        if (c.language.name() == ModuleLanguage.C_SHARP) {
-            cb.cSharpFile {
-                addUsing("B20.Architecture.Exceptions.ApiException")
-
-                namespace {
-                    name = submoduleNamespace(SubmoduleName.Api, c)
-
-                    modules.allExceptionNamesForCurrent().forEach {
-                        addClass {
-                            name = it
-                            extends {
-                                className = "ApiException"
-                            }
-                            constructor {
-                                addArg {
-                                    name = "message"
-                                    type = baseType(BaseType.STRING)
-                                    defaultValue = "\"\""
-                                }
-                            }
-                            addPassingArg("message")
                         }
                     }
                 }
