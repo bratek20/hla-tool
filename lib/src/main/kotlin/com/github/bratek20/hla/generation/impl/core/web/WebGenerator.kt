@@ -5,7 +5,7 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.type
-import com.github.bratek20.codebuilder.typescript.namespace
+import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.FileContent
@@ -13,9 +13,9 @@ import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ApiType
-import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
-import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
-import com.github.bratek20.hla.generation.impl.core.api.MethodView
+import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceView
+import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
+import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
@@ -349,15 +349,15 @@ class WebClientGenerator: PatternGenerator() {
             .build()
     }
 
-    private fun getDeclaration(method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+    private fun getDeclaration(method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
         return method.declaration()
     }
 
-    private fun getPostUrl(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+    private fun getPostUrl(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
         return "\"${getUrlPathPrefix(c)}/${pascalToCamelCase(interfaceName)}/${method.name}\""
     }
 
-    private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+    private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
         val returnPart = if (method.returnType != "Unit") "return " else ""
         val getBodyPart = if (method.returnType != "Unit")
                 ".getBody(${responseName(interfaceName, method)}::class.java).value"
@@ -373,7 +373,7 @@ class WebClientGenerator: PatternGenerator() {
         return "${returnPart}client.post($postUrl, $postBody)$getBodyPart"
     }
 
-    private fun getBodyTS(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+    private fun getBodyTS(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
         val returnPart = if (method.returnType != "void") "return " else ""
         val getBodyPart = if (method.returnType != "void")
             ".getBody(${responseName(interfaceName, method)}).get().getValue()"
@@ -428,7 +428,7 @@ class WebServerGenerator: PatternGenerator() {
             .build()
     }
 
-    private fun getDeclaration(method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+    private fun getDeclaration(method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
         val returnType = if (method.returnType != "Unit") "Struct" else "Unit"
         val body = if(method.hasArgs())
             "@RequestBody rawRequest: Struct"
@@ -437,7 +437,7 @@ class WebServerGenerator: PatternGenerator() {
         return "${method.name}($body): $returnType"
     }
 
-    private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.MethodView): String {
+    private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
         val firstLine = if (method.hasArgs()) "val request = serializer.fromStruct(rawRequest, ${requestName(interfaceName, method)}::class.java)" else "// no request needed"
 
         val prefix = if (method.returnType != "Unit") "return serializer.asStruct(${responseName(interfaceName, method)}(" else ""

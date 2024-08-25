@@ -36,7 +36,7 @@ class ClassBuilderTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                    class SomeClass {
+                    public class SomeClass {
                     }
                 """
             }
@@ -65,6 +65,13 @@ class ClassBuilderTest {
                 lang = TypeScript()
                 expected = """
                     class SomeClass extends SomeParent {
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass: SomeParent {
                     }
                 """
             }
@@ -121,7 +128,7 @@ class ClassBuilderTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                    class SomeClass: SomeInterface {
+                    public class SomeClass: SomeInterface {
                     }
                 """
             }
@@ -439,7 +446,7 @@ class ClassBuilderTest {
                 lang = Kotlin()
                 expected = """
                     class SomeClass(
-                        someArg: SomeType,
+                        someArg: SomeType
                     ): SomeParent(someArg) {
                     }
                 """
@@ -449,9 +456,20 @@ class ClassBuilderTest {
                 expected = """
                     class SomeClass extends SomeParent {
                         constructor(
-                            someArg: SomeType,
+                            someArg: SomeType
                         ) {
                             super(someArg)
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass: SomeParent {
+                        public SomeClass(
+                            SomeType someArg
+                        ): base(someArg) {
                         }
                     }
                 """

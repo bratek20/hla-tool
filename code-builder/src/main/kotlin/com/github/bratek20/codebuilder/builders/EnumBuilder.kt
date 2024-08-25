@@ -10,16 +10,14 @@ class EnumBuilder: CodeBlockBuilder {
 
     private val values: MutableList<String> = mutableListOf()
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
-        return {
-            line("enum class $name {")
-            tab()
-            values.forEach {
-                line("$it,")
-            }
-            untab()
-            line("}")
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        line("${c.lang.defaultClassAccessor()}${c.lang.enumDeclaration()}$name {")
+        tab()
+        values.forEach {
+            line("$it,")
         }
+        untab()
+        line("}")
     }
 
     fun addValue(value: String) {

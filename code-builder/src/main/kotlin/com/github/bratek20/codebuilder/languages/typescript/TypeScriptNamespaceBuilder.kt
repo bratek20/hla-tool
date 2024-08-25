@@ -1,4 +1,4 @@
-package com.github.bratek20.codebuilder.typescript
+package com.github.bratek20.codebuilder.languages.typescript
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
@@ -25,7 +25,7 @@ class ConstBuilder: CodeBlockBuilder {
 }
 typealias ConstBuilderOps = ConstBuilder.() -> Unit
 
-class NamespaceBuilder: CodeBlockBuilder {
+class TypeScriptNamespaceBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     private val body: MutableList<CodeBlockBuilder> = mutableListOf()
@@ -34,12 +34,16 @@ class NamespaceBuilder: CodeBlockBuilder {
         body.add(NamespaceClassBuilder().apply(block))
     }
 
-    fun function(block: FunctionBuilderOps) {
+    fun addFunction(block: FunctionBuilderOps) {
         body.add(NamespaceFunctionBuilder().apply(block))
     }
 
-    fun const(block: ConstBuilderOps) {
+    fun addConst(block: ConstBuilderOps) {
         body.add(ConstBuilder().apply(block))
+    }
+
+    fun addEnum(block: EnumBuilderOps) {
+        body.add(EnumBuilder().apply(block))
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
@@ -50,5 +54,5 @@ class NamespaceBuilder: CodeBlockBuilder {
         line("}")
     }
 }
-typealias NamespaceBuilderOps = NamespaceBuilder.() -> Unit
-fun CodeBuilder.namespace(block: NamespaceBuilderOps) = add(NamespaceBuilder().apply(block))
+typealias TypeScriptNamespaceBuilderOps = TypeScriptNamespaceBuilder.() -> Unit
+fun CodeBuilder.namespace(block: TypeScriptNamespaceBuilderOps) = add(TypeScriptNamespaceBuilder().apply(block))

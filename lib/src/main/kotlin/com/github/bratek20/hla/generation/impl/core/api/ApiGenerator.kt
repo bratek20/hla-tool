@@ -1,19 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
-import com.github.bratek20.codebuilder.builders.classBlock
-import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.builders.method
-import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.kotlin.kotlinFile
-import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.string
-import com.github.bratek20.codebuilder.ops.variable
-import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.type
-import com.github.bratek20.codebuilder.typescript.typeScriptFile
 import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.FileContent
@@ -21,6 +8,9 @@ import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import com.github.bratek20.hla.generation.impl.core.api.patterns.EnumsGenerator
+import com.github.bratek20.hla.generation.impl.core.api.patterns.ExceptionsGenerator
+import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfacesGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
@@ -144,140 +134,12 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): PatternGenera
     }
 }
 
-class ExceptionsGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.Exceptions
-    }
-
-    override fun supportsCodeBuilder(): Boolean {
-        return true
-    }
-
-    override fun shouldGenerate(): Boolean {
-        return modules.allExceptionNamesForCurrent().isNotEmpty()
-    }
-
-    override fun applyOperations(cb: CodeBuilder) {
-        if (c.language.name() == ModuleLanguage.KOTLIN) {
-            cb.kotlinFile {
-                packageName = submodulePackage(SubmoduleName.Api, c)
-
-                addImport("com.github.bratek20.architecture.exceptions.ApiException")
-
-                modules.allExceptionNamesForCurrent().forEach {
-                    addClass {
-                        name = it
-                        extends {
-                            className = "ApiException"
-                        }
-                        constructor {
-                            addArg {
-                                name = "message"
-                                type = baseType(BaseType.STRING)
-                                defaultValue = "\"\""
-                            }
-                        }
-                        addPassingArg("message")
-                    }
-                }
-            }
-        }
-        if (c.language.name() == ModuleLanguage.TYPE_SCRIPT) {
-            cb.typeScriptFile {
-                modules.allExceptionNamesForCurrent().forEach {
-                    addClass {
-                        name = it
-                        extends {
-                            className = "ApiException"
-                            generic = type(it)
-                        }
-                        constructor {
-                            addArg {
-                                name = "message"
-                                type = baseType(BaseType.STRING)
-                                defaultValue = "\"\""
-                            }
-                        }
-                        addPassingArg(it)
-                        addPassingArg("message")
-
-                        addMethod {
-                            name = "getTypeName"
-                            returnType = baseType(BaseType.STRING)
-                            body = {
-                                returnBlock {
-                                    string(it)
-                                }
-                            }
-                        }
-                    }
-                    addFunctionCall {
-                        name = "ExceptionsRegistry.register"
-                        addArg {
-                           variable(it)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 fun submodulePackage(submodule: SubmoduleName, c: ModuleGenerationContext): String {
     return profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + "." + submodule.name.lowercase()
 }
 
-class EnumsGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.Enums
-    }
-
-    override fun supportsCodeBuilder(): Boolean {
-        return true
-    }
-
-    override fun shouldGenerate(): Boolean {
-        return module.getEnums().isNotEmpty()
-    }
-
-    override fun applyOperations(cb: CodeBuilder) {
-        if (language.name() == ModuleLanguage.KOTLIN) {
-            cb.kotlinFile {
-                packageName = submodulePackage(SubmoduleName.Api, c)
-                module.getEnums().forEach {
-                    addEnum {
-                        name = it.getName()
-                        it.getValues().forEach { addValue(it) }
-                    }
-                }
-            }
-        }
-        if (language.name() == ModuleLanguage.TYPE_SCRIPT) {
-            cb.add {
-                module.getEnums().forEach {
-                    val enumName = it.getName()
-                    classBlock {
-                        name = enumName
-                        extends {
-                            className = "StringEnumClass"
-                        }
-                        it.getValues().forEach {
-                            addField {
-                                name = it
-                                static = true
-                                value = { constructorCall {
-                                    className = enumName
-                                    addArg {
-                                        string(it)
-                                    }
-                                } }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return c.module.getName().value + "." + submodule.name
 }
 
 class CustomTypesGenerator: PatternGenerator() {

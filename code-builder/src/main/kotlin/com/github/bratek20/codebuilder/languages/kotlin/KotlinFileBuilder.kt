@@ -1,12 +1,10 @@
-package com.github.bratek20.codebuilder.kotlin
+package com.github.bratek20.codebuilder.languages.kotlin
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.core.CodeBlockBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
-class KotlinFileBuilder: FileBuilder() {
+class KotlinFileBuilder: TopLevelCodeBuilder() {
     lateinit var packageName: String
 
     private val imports: MutableList<String> = mutableListOf()
@@ -18,6 +16,7 @@ class KotlinFileBuilder: FileBuilder() {
             imports.forEach {
                 line("import $it")
             }
+            emptyLine()
         }
     }
 

@@ -10,6 +10,7 @@ import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
 import com.github.bratek20.hla.generation.impl.core.tests.TestsGenerator
 import com.github.bratek20.hla.generation.impl.core.web.WebGenerator
+import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.hla.velocity.api.VelocityFacade
@@ -60,6 +61,7 @@ class ModuleGeneratorLogic(
             language = when (language) {
                 ModuleLanguage.KOTLIN -> KotlinSupport(domainContext)
                 ModuleLanguage.TYPE_SCRIPT -> TypeScriptSupport(domainContext)
+                ModuleLanguage.C_SHARP -> CSharpSupport(domainContext)
             },
             onlyUpdate = args.getOnlyUpdate(),
             onlyPatterns = profile.getOnlyPatterns(),

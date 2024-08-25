@@ -1,13 +1,13 @@
-package com.github.bratek20.codebuilder.typescript
+package com.github.bratek20.codebuilder.languages.typescript
 
-import com.github.bratek20.codebuilder.builders.FileBuilder
+import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
-class TypeScriptFileBuilder: FileBuilder() {
-    private var namespace: NamespaceBuilderOps? = null
+class TypeScriptFileBuilder: TopLevelCodeBuilder() {
+    private var namespace: TypeScriptNamespaceBuilderOps? = null
 
-    fun namespace(block: NamespaceBuilderOps) {
+    fun namespace(block: TypeScriptNamespaceBuilderOps) {
         namespace = block
     }
 

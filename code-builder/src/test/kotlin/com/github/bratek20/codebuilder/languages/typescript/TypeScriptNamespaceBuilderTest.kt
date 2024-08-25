@@ -1,11 +1,11 @@
-package com.github.bratek20.codebuilder.typescript
+package com.github.bratek20.codebuilder.languages.typescript
 
 import com.github.bratek20.codebuilder.builders.constructorCall
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
-class NamespaceBuilderTest {
+class TypeScriptNamespaceBuilderTest {
     @Test
     fun `should work`() {
         testCodeBuilderOp {
@@ -15,10 +15,10 @@ class NamespaceBuilderTest {
                     addClass {
                         name = "SomeClass"
                     }
-                    function {
+                    addFunction {
                         name = "someFunction"
                     }
-                    const {
+                    addConst {
                         name = "someConst"
                         value = {
                             constructorCall {

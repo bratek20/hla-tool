@@ -4,7 +4,7 @@ import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
-class FileBuilderTest {
+class TopLevelCodeBuilderTest {
     @Test
     fun `two classes`() {
         testCodeBuilderOp {
@@ -21,7 +21,6 @@ class FileBuilderTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                    
                     class Class1 {
                     }
                     
@@ -53,7 +52,6 @@ class FileBuilderTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                    
                     class SomeClass {
                     }
                     
@@ -87,8 +85,7 @@ class FileBuilderTest {
             }
             langExpected {
                 lang = Kotlin()
-                expected = """
-                    
+                expected = """ 
                     class SomeClass {
                     }
                     
