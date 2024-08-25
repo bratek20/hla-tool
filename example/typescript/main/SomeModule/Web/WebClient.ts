@@ -4,7 +4,7 @@ namespace SomeModule.Web {
     export class SomeInterfaceWebClient implements SomeInterface {
         constructor(
             config: SomeModuleWebClientConfig,
-            c: HandlerContext,
+            c: HandlerContext
         ) {
             this.client = HttpClient.Api.create(config.value, c)
         }
@@ -25,7 +25,7 @@ namespace SomeModule.Web {
     export class SomeInterface2WebClient implements SomeInterface2 {
         constructor(
             config: SomeModuleWebClientConfig,
-            c: HandlerContext,
+            c: HandlerContext
         ) {
             this.client = HttpClient.Api.create(config.value, c)
         }

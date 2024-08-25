@@ -2,7 +2,7 @@
 
 class SomeException extends ApiException<SomeException> {
     constructor(
-        message: string = "",
+        message: string = ""
     ) {
         super(SomeException, message)
     }
@@ -15,7 +15,7 @@ ExceptionsRegistry.register(SomeException)
 
 class Some2Exception extends ApiException<Some2Exception> {
     constructor(
-        message: string = "",
+        message: string = ""
     ) {
         super(Some2Exception, message)
     }
