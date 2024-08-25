@@ -13,28 +13,29 @@ namespace SomeModule.Api
 
     public interface SomeInterface
     {
-        void SomeEmptyMethod();
+        void someEmptyMethod();
 
-        /// <exception cref="RectProviderNotSetException"/>
-        void SomeCommand(SomeId id, int amount);
+        /// <exception cref="SomeException"/>
+        /// <exception cref="SomeException2"/>
+        void someCommand(SomeId id, int amount);
 
-        /// <exception cref="RectProviderNotSetException"/>
-        SomeClass SomeQuery(SomeQueryInput query);
+        /// <exception cref="SomeException"/>
+        SomeClass someQuery(SomeQueryInput query);
 
-        Optional<SomeClass> OptMethod(Optional<SomeId> optId);
+        Optional<SomeClass> optMethod(Optional<SomeId> optId);
     }
 
     public interface SomeInterface2
     {
-        OtherClass ReferenceOtherClass(OtherClass other);
+        OtherClass referenceOtherClass(OtherClass other);
 
-        LegacyType ReferenceLegacyType(LegacyType legacyType);
+        LegacyType referenceLegacyType(LegacyType legacyType);
     }
 
     public interface SomeInterface3
     {
-        SomeEmptyInterface ReferenceInterface(SomeEmptyInterface empty);
+        SomeEmptyInterface referenceInterface(SomeEmptyInterface empty);
 
-        OtherInterface ReferenceOtherInterface(OtherInterface other);
+        OtherInterface referenceOtherInterface(OtherInterface other);
     }
 }
