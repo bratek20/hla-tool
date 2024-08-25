@@ -48,7 +48,7 @@ class ArgumentListBuilder: CodeBlockBuilder {
     }
 }
 
-abstract class MethodOrFunctionWithoutBodyBuilder: CodeBlockBuilder {
+abstract class MethodOrFunctionSignatureBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var returnType: TypeBuilder? = null
@@ -74,7 +74,6 @@ abstract class MethodOrFunctionWithoutBodyBuilder: CodeBlockBuilder {
             } ?: linePart("void ")
             linePart(name)
             add(args)
-            statementLineEnd()
         }
         else {
             lineStart("${beforeName(c)}$name")
@@ -87,9 +86,14 @@ abstract class MethodOrFunctionWithoutBodyBuilder: CodeBlockBuilder {
     }
 }
 
-class InterfaceMethodBuilder: MethodOrFunctionWithoutBodyBuilder() {
+class InterfaceMethodBuilder: MethodOrFunctionSignatureBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {
         return c.lang.methodDeclarationKeyword()
+    }
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        add(super.getOperations(c))
+        statementLineEnd()
     }
 
     companion object {
@@ -101,7 +105,7 @@ class InterfaceMethodBuilder: MethodOrFunctionWithoutBodyBuilder() {
 typealias InterfaceMethodBuilderOps = InterfaceMethodBuilder.() -> Unit
 
 
-abstract class MethodOrFunctionBuilder: MethodOrFunctionWithoutBodyBuilder() {
+abstract class MethodOrFunctionBuilder: MethodOrFunctionSignatureBuilder() {
     var body: CodeBuilderOps? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
