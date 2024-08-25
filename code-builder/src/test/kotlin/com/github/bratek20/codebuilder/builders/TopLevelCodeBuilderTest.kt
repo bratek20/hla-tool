@@ -6,6 +6,47 @@ import org.junit.jupiter.api.Test
 
 class TopLevelCodeBuilderTest {
     @Test
+    fun `all methods`() {
+        testCodeBuilderOp {
+            op = {
+                file {
+                    addInterface {
+                        name = "SomeInterface"
+                    }
+
+                    addClass {
+                        name = "SomeClass"
+                    }
+
+                    addFunction {
+                        name = "someFun"
+                    }
+
+                    addEnum {
+                        name = "SomeEnum"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    interface SomeInterface {
+                    }
+                    
+                    class SomeClass {
+                    }
+                    
+                    fun someFun() {
+                    }
+                    
+                    enum class SomeEnum {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
     fun `two classes`() {
         testCodeBuilderOp {
             op = {
@@ -31,39 +72,7 @@ class TopLevelCodeBuilderTest {
         }
     }
 
-    @Test
-    fun `all methods`() {
-        testCodeBuilderOp {
-            op = {
-                file {
-                    addClass {
-                        name = "SomeClass"
-                    }
 
-                    addFunction {
-                        name = "someFun"
-                    }
-
-                    addEnum {
-                        name = "SomeEnum"
-                    }
-                }
-            }
-            langExpected {
-                lang = Kotlin()
-                expected = """
-                    class SomeClass {
-                    }
-                    
-                    fun someFun() {
-                    }
-                    
-                    enum class SomeEnum {
-                    }
-                """
-            }
-        }
-    }
 
     @Test
     fun `should keep add order`() {

@@ -2,6 +2,9 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.MethodBuilder
 import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.core.CSharp
+import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.languages.csharp.cSharpFile
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
@@ -121,5 +124,29 @@ class InterfacesGenerator: PatternGenerator() {
             .build()
     }
 
+    override fun shouldGenerate(): Boolean {
+        return module.getInterfaces().isNotEmpty()
+    }
 
+    override fun supportsCodeBuilder(): Boolean {
+        return lang is CSharp
+    }
+
+    override fun applyOperations(cb: CodeBuilder) {
+        val factory = InterfaceViewFactory(apiTypeFactory)
+
+        val interfaces = factory.create(module.getInterfaces())
+
+        cb.cSharpFile {
+            namespace {
+                name = "OtherModule.Api"
+                addInterface {
+                    name = "OtherInterface"
+                    addMethod {
+                        name = "otherMethod"
+                    }
+                }
+            }
+        }
+    }
 }

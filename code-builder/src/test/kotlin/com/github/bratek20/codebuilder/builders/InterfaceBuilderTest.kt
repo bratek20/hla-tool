@@ -43,6 +43,49 @@ class InterfaceBuilderTest {
         }
     }
 
+    @Test
+    fun `interface with comment and method`() {
+        testCodeBuilderOp {
+            op = {
+                interfaceBlock {
+                    name = "SomeInterface"
+
+                    addMethod {
+                        comment = "some comment"
+                        name = "someMethod"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeInterface {
+                        // some comment
+                        fun someMethod()
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    interface SomeInterface {
+                        // some comment
+                        someMethod(): void
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public interface SomeInterface {
+                        // some comment
+                        void someMethod();
+                    }
+                """
+            }
+        }
+    }
+
 /*
     @Test
     fun `class extension`() {
@@ -105,42 +148,7 @@ class InterfaceBuilderTest {
         }
     }
 
-    @Test
-    fun `class with comment and method`() {
-        testCodeBuilderOp {
-            op = {
-                classBlock {
-                    name = "SomeClass"
-                    body = {
-                        addMethod {
-                            comment = "some comment"
-                            name = "someMethod"
-                        }
-                    }
-                }
-            }
-            langExpected {
-                lang = Kotlin()
-                expected = """
-                    class SomeClass {
-                        // some comment
-                        fun someMethod() {
-                        }
-                    }
-                """
-            }
-            langExpected {
-                lang = TypeScript()
-                expected = """
-                    class SomeClass {
-                        // some comment
-                        someMethod() {
-                        }
-                    }
-                """
-            }
-        }
-    }
+
 
     @Test
     fun `extension with generic`() {
