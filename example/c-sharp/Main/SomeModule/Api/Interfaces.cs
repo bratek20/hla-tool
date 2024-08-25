@@ -5,14 +5,11 @@ using B20.Ext;
 using OtherModule.Api;
 using TypesModule.Api;
 
-namespace SomeModule.Api
-{
-    public interface SomeEmptyInterface
-    {
+namespace SomeModule.Api {
+    public interface SomeEmptyInterface {
     }
 
-    public interface SomeInterface
-    {
+    public interface SomeInterface {
         void someEmptyMethod();
 
         /// <exception cref="SomeException"/>
@@ -25,15 +22,13 @@ namespace SomeModule.Api
         Optional<SomeClass> optMethod(Optional<SomeId> optId);
     }
 
-    public interface SomeInterface2
-    {
+    public interface SomeInterface2 {
         OtherClass referenceOtherClass(OtherClass other);
 
         LegacyType referenceLegacyType(LegacyType legacyType);
     }
 
-    public interface SomeInterface3
-    {
+    public interface SomeInterface3 {
         SomeEmptyInterface referenceInterface(SomeEmptyInterface empty);
 
         OtherInterface referenceOtherInterface(OtherInterface other);

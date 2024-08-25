@@ -52,6 +52,9 @@ data class MethodView(
             }
         }
         returnType = type(this@MethodView.returnType)
+        this@MethodView.throws.forEach {
+            addThrows(it)
+        }
     }
 
     // used by velocity

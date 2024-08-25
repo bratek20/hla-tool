@@ -60,12 +60,46 @@ abstract class MethodOrFunctionSignatureBuilder: CodeBlockBuilder {
         args.add(ops)
     }
 
+    private val throws: MutableList<String> = mutableListOf()
+    fun addThrows(exceptionName: String) {
+        throws.add(exceptionName)
+    }
+
     protected abstract fun beforeName(c: CodeBuilderContext): String
+
+    private fun throwsOps(): CodeBuilderOps = {
+        if (throws.isNotEmpty()) {
+            when (c.lang) {
+                is Kotlin -> {
+                    line("@Throws(")
+                    tab()
+                    throws.forEach { exceptionName ->
+                        line("$exceptionName::class,")
+                    }
+                    untab()
+                    line(")")
+                }
+                is TypeScript -> {
+                    line("/**")
+                    throws.forEach { exceptionName ->
+                        line("* @throws { $exceptionName }")
+                    }
+                    line("*/")
+                }
+                is CSharp -> {
+                    throws.forEach { exceptionName ->
+                        line("/// <exception cref=\"$exceptionName\"/>")
+                    }
+                }
+            }
+        }
+    }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         comment?.let {
             line("// $it")
         }
+        add(throwsOps())
         if (c.lang is CSharp) {
             lineStart()
             returnType?.let {

@@ -15,9 +15,9 @@ class InterfaceBuilder: CodeBlockBuilder {
         line("$x {")
         
         tab()
-        methods.forEach { methodOps ->
-            add(InterfaceMethodBuilder.create(methodOps))
-        }
+        addManyWithEmptyLineBetween(methods.map { methodOps ->
+            InterfaceMethodBuilder.create(methodOps)
+        })
         untab()
         
         line("}")
