@@ -6,8 +6,8 @@ import com.github.bratek20.codebuilder.types.TypeBuilder
 class InterfaceBuilder: CodeBlockBuilder {
     lateinit var name: String
 
-    private val methods: MutableList<MethodBuilderOps> = mutableListOf()
-    fun addMethod(block: MethodBuilderOps) {
+    private val methods: MutableList<InterfaceMethodBuilderOps> = mutableListOf()
+    fun addMethod(block: InterfaceMethodBuilderOps) {
         methods.add(block)
     }
 
@@ -17,7 +17,7 @@ class InterfaceBuilder: CodeBlockBuilder {
         
         tab()
         methods.forEach { methodOps ->
-            method(methodOps)
+            add(InterfaceMethodBuilder.create(methodOps))
         }
         untab()
         

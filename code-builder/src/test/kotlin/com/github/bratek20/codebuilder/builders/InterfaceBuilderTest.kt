@@ -59,7 +59,7 @@ class InterfaceBuilderTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                    class SomeInterface {
+                    interface SomeInterface {
                         // some comment
                         fun someMethod()
                     }
@@ -70,7 +70,7 @@ class InterfaceBuilderTest {
                 expected = """
                     interface SomeInterface {
                         // some comment
-                        someMethod(): void
+                        someMethod()
                     }
                 """
             }

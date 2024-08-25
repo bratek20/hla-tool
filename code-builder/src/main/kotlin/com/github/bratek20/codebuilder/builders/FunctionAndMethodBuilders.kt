@@ -48,11 +48,10 @@ class ArgumentListBuilder: CodeBlockBuilder {
     }
 }
 
-abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
+abstract class MethodOrFunctionWithoutBodyBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var returnType: TypeBuilder? = null
-    var body: CodeBuilderOps? = null
 
     var comment: String? = null
 
@@ -73,12 +72,33 @@ abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
             linePart(": ")
             add(it)
         }
-        linePart(" {")
+    }
+}
 
+class InterfaceMethodBuilder: MethodOrFunctionWithoutBodyBuilder() {
+    override fun beforeName(c: CodeBuilderContext): String {
+        return c.lang.methodDeclarationKeyword()
+    }
+
+    companion object {
+        fun create(block: InterfaceMethodBuilderOps): InterfaceMethodBuilder {
+            return InterfaceMethodBuilder().apply(block)
+        }
+    }
+}
+typealias InterfaceMethodBuilderOps = InterfaceMethodBuilder.() -> Unit
+
+
+abstract class MethodOrFunctionBuilder: MethodOrFunctionWithoutBodyBuilder() {
+    var body: CodeBuilderOps? = null
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        add(super.getOperations(c))
+
+        linePart(" {")
         tab()
         body?.let { add(it) }
         untab()
-
         line("}")
     }
 }
