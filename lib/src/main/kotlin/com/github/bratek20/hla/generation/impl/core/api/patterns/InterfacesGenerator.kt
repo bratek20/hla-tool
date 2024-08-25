@@ -1,7 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
-import com.github.bratek20.codebuilder.builders.MethodBuilder
-import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.languages.csharp.cSharpFile
@@ -32,7 +31,19 @@ data class MethodView(
         return "${name}(${argsDeclaration()})$returnSuffix"
     }
 
+    //TODO-REF remove duplication with declarationCBInterface
     fun declarationCB(): MethodBuilder = method {
+        name = this@MethodView.name
+        args.forEach {
+            addArg {
+                name = it.name
+                type = type(it.type)
+            }
+        }
+        returnType = type(this@MethodView.returnType)
+    }
+
+    fun declarationCBInterface(): InterfaceMethodBuilderOps = {
         name = this@MethodView.name
         args.forEach {
             addArg {
@@ -78,7 +89,14 @@ data class MethodView(
 data class InterfaceView(
     val name: String,
     val methods: List<MethodView>
-)
+) {
+    fun declarationCB(): InterfaceBuilderOps = {
+        name = this@InterfaceView.name
+        methods.forEach {
+            addMethod(it.declarationCBInterface())
+        }
+    }
+}
 
 class InterfaceViewFactory(
     private val apiTypeFactory: ApiTypeFactory
@@ -140,11 +158,8 @@ class InterfacesGenerator: PatternGenerator() {
         cb.cSharpFile {
             namespace {
                 name = "OtherModule.Api"
-                addInterface {
-                    name = "OtherInterface"
-                    addMethod {
-                        name = "otherMethod"
-                    }
+                interfaces.forEach {
+                    addInterface(it.declarationCB())
                 }
             }
         }
