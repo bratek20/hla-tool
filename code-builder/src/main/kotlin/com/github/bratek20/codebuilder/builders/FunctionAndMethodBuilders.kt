@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.core.CodeBlockBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class ArgumentBuilder: CodeBlockBuilder {
@@ -14,8 +11,16 @@ class ArgumentBuilder: CodeBlockBuilder {
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
         return {
-            lineSoftStart("$name: ")
-            add(type)
+            if (c.lang is CSharp) {
+                lineSoftStart()
+                add(type)
+                linePart(" $name")
+            }
+            else {
+                lineSoftStart("$name: ")
+                add(type)
+            }
+
             defaultValue?.let {
                 linePart(" = $it")
             }

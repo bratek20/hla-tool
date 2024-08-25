@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.languages.csharp.cSharpFile
 import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.string
@@ -13,6 +14,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.core.api.submoduleNamespace
 import com.github.bratek20.hla.generation.impl.core.api.submodulePackage
 
 class ExceptionsGenerator: PatternGenerator() {
@@ -86,6 +88,32 @@ class ExceptionsGenerator: PatternGenerator() {
                         name = "ExceptionsRegistry.register"
                         addArg {
                            variable(it)
+                        }
+                    }
+                }
+            }
+        }
+        if (c.language.name() == ModuleLanguage.C_SHARP) {
+            cb.cSharpFile {
+                addUsing("B20.Architecture.Exceptions.ApiException")
+
+                namespace {
+                    name = submoduleNamespace(SubmoduleName.Api, c)
+
+                    modules.allExceptionNamesForCurrent().forEach {
+                        addClass {
+                            name = it
+                            extends {
+                                className = "ApiException"
+                            }
+                            constructor {
+                                addArg {
+                                    name = "message"
+                                    type = baseType(BaseType.STRING)
+                                    defaultValue = "\"\""
+                                }
+                            }
+                            addPassingArg("message")
                         }
                     }
                 }

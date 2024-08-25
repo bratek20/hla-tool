@@ -138,6 +138,10 @@ fun submodulePackage(submodule: SubmoduleName, c: ModuleGenerationContext): Stri
     return profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + "." + submodule.name.lowercase()
 }
 
+fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return c.module.getName().value + "." + submodule.name
+}
+
 class CustomTypesGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.CustomTypes

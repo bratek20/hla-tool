@@ -68,9 +68,11 @@ class ClassConstructorBuilder {
             linePart(",")
             lineEnd()
         }
-        args.forEach { argOps ->
+        args.forEachIndexed { idx, argOps ->
             argument(argOps)
-            linePart(",")
+            if (idx != args.size - 1) {
+                linePart(",")
+            }
             lineEnd()
         }
     }
@@ -194,6 +196,22 @@ open class ClassBuilder: CodeBlockBuilder {
                 tab()
                 line("super(${passingArgs.joinToString(", ")})")
                 untab()
+                line("}")
+            }
+            else {
+                line(") {}")
+            }
+            untab()
+        }
+        else if (c.lang is CSharp && constructor != null) {
+            line("$beginning {")
+            tab()
+            line("public $name(")
+            tab()
+            add(constructor!!.getFieldsAndArgsOps())
+            untab()
+            if (passingArgs.isNotEmpty()) {
+                line("): base(${passingArgs.joinToString(", ")}) {")
                 line("}")
             }
             else {

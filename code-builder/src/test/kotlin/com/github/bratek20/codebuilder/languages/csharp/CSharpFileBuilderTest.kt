@@ -6,6 +6,25 @@ import org.junit.jupiter.api.Test
 
 class CSharpFileBuilderTest {
     @Test
+    fun using() {
+        testCodeBuilderOp {
+            op = {
+                cSharpFile {
+                    addUsing("SomeNamespace")
+                    addUsing("SomeOtherNamespace")
+                }
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    using SomeNamespace;
+                    using SomeOtherNamespace;
+                    
+                """
+            }
+        }
+    }
+    @Test
     fun namespace() {
         testCodeBuilderOp {
             op = {
