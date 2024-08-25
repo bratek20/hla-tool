@@ -9,6 +9,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
+import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
 import com.github.bratek20.utils.directory.api.File
@@ -115,7 +116,7 @@ abstract class PatternGenerator
         else {
             try {
                 content = generateFileContent()
-            } catch (e: ResourceNotFoundException) {
+            } catch (e: TemplateNotFoundException) {
                 //Hack: workaround to not add missing templates as I migrate out of velocity
                 content = null
             }
