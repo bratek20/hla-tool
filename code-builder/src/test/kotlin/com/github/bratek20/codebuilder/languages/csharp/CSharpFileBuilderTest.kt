@@ -29,11 +29,10 @@ class CSharpFileBuilderTest {
         testCodeBuilderOp {
             op = {
                 cSharpFile {
-                    namespace {
-                        name = "SomeNamespace"
-                        addClass {
-                            name = "SomeClass"
-                        }
+                    namespace("SomeNamespace")
+
+                    addClass {
+                        name = "SomeClass"
                     }
                 }
             }

@@ -1,7 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core
 
+import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.languages.csharp.cSharpFile
+import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptFile
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
+import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.GeneratedPattern
 import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.PatternName
@@ -9,12 +14,12 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
+import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
-import org.apache.velocity.exception.ResourceNotFoundException
 
 class ModuleGenerationContext(
     val domain: DomainContext,
@@ -79,6 +84,14 @@ abstract class ModulePartGenerator {
     }
 }
 
+private fun submodulePackage(submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + "." + submodule.name.lowercase()
+}
+
+private fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return c.module.getName().value + "." + submodule.name
+}
+
 abstract class PatternGenerator
     : ModulePartGenerator()
 {
@@ -99,15 +112,61 @@ abstract class PatternGenerator
         return true
     }
 
-    open fun applyOperations(cb: CodeBuilder) {}
+    open fun getOperations(): TopLevelCodeBuilderOps = {}
 
+    open fun extraKotlinImports(): List<String> {
+        return emptyList()
+    }
+
+    open fun extraCSharpUsings(): List<String> {
+        return emptyList()
+    }
+
+    private fun populatedCodeBuilder(): CodeBuilder {
+        val cb = CodeBuilder(c.language.base())
+        when (c.language.name()) {
+            ModuleLanguage.KOTLIN -> {
+                cb.kotlinFile {
+                    packageName = submodulePackage(SubmoduleName.Api, c)
+
+                    extraKotlinImports().forEach {
+                        addImport(it)
+                    }
+
+                    apply(getOperations())
+                }
+            }
+            ModuleLanguage.TYPE_SCRIPT -> {
+                cb.typeScriptFile {
+                    apply(getOperations())
+                }
+            }
+            ModuleLanguage.C_SHARP -> {
+                cb.cSharpFile {
+                    addUsing("B20.Ext")
+
+                    extraCSharpUsings().forEach {
+                        addUsing(it)
+                    }
+
+                    modules.getCurrentDependencies().forEach {
+                        addUsing(it.getModule().getName().value + ".Api")
+                    }
+
+                    namespace(submoduleNamespace(SubmoduleName.Api, c))
+
+                    apply(getOperations())
+                }
+            }
+        }
+        return cb
+    }
 
     fun generatePattern(): GeneratedPattern? {
         var content: FileContent?
         if (supportsCodeBuilder()) {
             if (shouldGenerate()) {
-                val cb = CodeBuilder(c.language.base())
-                applyOperations(cb)
+                val cb = populatedCodeBuilder()
                 content = FileContent.fromString(cb.build())
             } else {
                 content = null

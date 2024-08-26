@@ -5,15 +5,15 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
 class CSharpFileBuilder: TopLevelCodeBuilder() {
-    private var namespace: CSharpNamespaceBuilderOps? = null
+    private var namespaceName: String? = null
 
     private val usings = mutableListOf<String>()
     fun addUsing(using: String) {
         usings.add(using)
     }
 
-    fun namespace(ops: CSharpNamespaceBuilderOps) {
-        namespace = ops
+    fun namespace(name: String) {
+        namespaceName = name
     }
 
     override fun beforeOperations(): CodeBuilderOps = {
@@ -22,7 +22,17 @@ class CSharpFileBuilder: TopLevelCodeBuilder() {
             emptyLine()
         }
 
-        namespace?.let { add(CSharpNamespaceBuilder.create(it)) }
+        namespaceName?.let {
+            line("namespace $it {")
+            tab()
+        }
+    }
+
+    override fun afterOperations(): CodeBuilderOps = {
+        namespaceName?.let {
+            untab()
+            line("}")
+        }
     }
 }
 
