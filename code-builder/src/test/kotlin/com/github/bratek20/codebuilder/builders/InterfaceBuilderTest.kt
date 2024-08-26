@@ -43,6 +43,164 @@ class InterfaceBuilderTest {
         }
     }
 
+    @Test
+    fun `method comment`() {
+        testCodeBuilderOp {
+            op = {
+                interfaceBlock {
+                    name = "SomeInterface"
+
+                    addMethod {
+                        comment = "some comment"
+                        name = "someMethod"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    interface SomeInterface {
+                        // some comment
+                        fun someMethod()
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    interface SomeInterface {
+                        // some comment
+                        someMethod()
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public interface SomeInterface {
+                        // some comment
+                        void someMethod();
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `method throws documentation`() {
+        testCodeBuilderOp {
+            op = {
+                interfaceBlock {
+                    name = "SomeInterface"
+
+                    addMethod {
+                        name = "oneExceptionMethod"
+                        addThrows("SomeException")
+                    }
+                    addMethod {
+                        name = "twoExceptionsMethod"
+                        addThrows("SomeException")
+                        addThrows("AnotherException")
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    interface SomeInterface {
+                        @Throws(
+                            SomeException::class,
+                        )
+                        fun oneExceptionMethod()
+                    
+                        @Throws(
+                            SomeException::class,
+                            AnotherException::class,
+                        )
+                        fun twoExceptionsMethod()
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    interface SomeInterface {
+                        /**
+                        * @throws { SomeException }
+                        */
+                        oneExceptionMethod()
+                    
+                        /**
+                        * @throws { SomeException }
+                        * @throws { AnotherException }
+                        */
+                        twoExceptionsMethod()
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public interface SomeInterface {
+                        /// <exception cref="SomeException"/>
+                        void oneExceptionMethod();
+                    
+                        /// <exception cref="SomeException"/>
+                        /// <exception cref="AnotherException"/>
+                        void twoExceptionsMethod();
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `two methods`() {
+        testCodeBuilderOp {
+            op = {
+                interfaceBlock {
+                    name = "SomeInterface"
+
+                    addMethod {
+                        name = "method1"
+                    }
+                    addMethod {
+                        name = "method2"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    interface SomeInterface {
+                        fun method1()
+                    
+                        fun method2()
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    interface SomeInterface {
+                        method1()
+                    
+                        method2()
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public interface SomeInterface {
+                        void method1();
+                    
+                        void method2();
+                    }
+                """
+            }
+        }
+    }
 /*
     @Test
     fun `class extension`() {
@@ -105,42 +263,7 @@ class InterfaceBuilderTest {
         }
     }
 
-    @Test
-    fun `class with comment and method`() {
-        testCodeBuilderOp {
-            op = {
-                classBlock {
-                    name = "SomeClass"
-                    body = {
-                        addMethod {
-                            comment = "some comment"
-                            name = "someMethod"
-                        }
-                    }
-                }
-            }
-            langExpected {
-                lang = Kotlin()
-                expected = """
-                    class SomeClass {
-                        // some comment
-                        fun someMethod() {
-                        }
-                    }
-                """
-            }
-            langExpected {
-                lang = TypeScript()
-                expected = """
-                    class SomeClass {
-                        // some comment
-                        someMethod() {
-                        }
-                    }
-                """
-            }
-        }
-    }
+
 
     @Test
     fun `extension with generic`() {

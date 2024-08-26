@@ -11,7 +11,7 @@ class EnumBuilder: CodeBlockBuilder {
     private val values: MutableList<String> = mutableListOf()
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        line("${c.lang.defaultClassAccessor()}${c.lang.enumDeclaration()}$name {")
+        line("${c.lang.defaultTopLevelAccessor()}${c.lang.enumDeclaration()}$name {")
         tab()
         values.forEach {
             line("$it,")

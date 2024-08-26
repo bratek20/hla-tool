@@ -153,6 +153,16 @@ class CodeBuilder(
         return this
     }
 
+    fun addManyWithEmptyLineBetween(builders: List<CodeBlockBuilder>): CodeBuilder {
+        builders.forEachIndexed { index, builder ->
+            add(builder)
+            if (index < builders.size - 1) {
+                emptyLine()
+            }
+        }
+        return this
+    }
+
     fun tab(): CodeBuilder {
         currentIndent += 4
         onLineEnd()

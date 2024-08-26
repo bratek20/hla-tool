@@ -19,7 +19,6 @@ import com.github.bratek20.utils.directory.api.Path
 import com.github.bratek20.utils.directory.context.DirectoriesMocks
 import com.github.bratek20.utils.directory.fixtures.FilesMock
 import com.github.bratek20.utils.directory.fixtures.assertDirectory
-import com.github.bratek20.utils.directory.fixtures.assertDirectoryExt
 import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.utils.directory.impl.FilesLogic
 import com.github.bratek20.hla.facade.api.*
@@ -39,7 +38,7 @@ class HlaFacadeTest {
         val hlaFolderPath: String = "../example/hla"
     )
 
-    class MyArgumentsProvider : ArgumentsProvider {
+    class ShouldStartModuleArgsProvider : ArgumentsProvider {
         fun kotlinTestPaths(packageName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/kotlin/src/main/kotlin/com/some/pkg/$packageName",
@@ -86,20 +85,8 @@ class HlaFacadeTest {
             )
         }
 
-        fun cSharpTestPaths(moduleName: String): TestPaths {
-            return TestPaths(
-                exampleMainPath = "../example/c-sharp/Main/$moduleName",
-                exampleFixturesPath = "../example/c-sharp/Tests/fixtures/$moduleName",
-                exampleTestsPath = "../example/c-sharp/Tests/test/$moduleName",
-                expectedMainPath = "../example/hla/../c-sharp/Main",
-                expectedFixturesPath = "../example/hla/../c-sharp/Tests/fixtures",
-                expectedTestsPath = "../example/hla/../c-sharp/Tests/test",
-            )
-        }
-
         private val KOTLIN_PROFILE = "kotlin"
         private val TYPE_SCRIPT_PROFILE = "typeScript"
-        private val C_SHARP_PROFILE = "cSharp"
 
         private val KOTLIN_2_PROFILE = "kotlin2"
         private val TYPE_SCRIPT_2_PROFILE = "typeScript2"
@@ -127,11 +114,6 @@ class HlaFacadeTest {
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("SomeModule")
                 ),
-//                Arguments.of(
-//                    "SomeModule",
-//                    C_SHARP_PROFILE,
-//                    cSharpTestPaths("SomeModule")
-//                ),
 
                 Arguments.of(
                     "TypesModule",
@@ -169,6 +151,37 @@ class HlaFacadeTest {
         }
     }
 
+    //TODO-REF merge with ShouldStartModuleArgsProvider when cSharp will be fully integrated
+    class ShouldStartCSharpModuleArgsProvider : ArgumentsProvider {
+        fun cSharpTestPaths(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/c-sharp/Main/$moduleName",
+                exampleFixturesPath = "../example/c-sharp/Tests/fixtures/$moduleName",
+                exampleTestsPath = "../example/c-sharp/Tests/test/$moduleName",
+                expectedMainPath = "../example/hla/../c-sharp/Main",
+                expectedFixturesPath = "../example/hla/../c-sharp/Tests/fixtures",
+                expectedTestsPath = "../example/hla/../c-sharp/Tests/test",
+            )
+        }
+
+        private val C_SHARP_PROFILE = "cSharp"
+
+        override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
+            return Stream.of(
+                Arguments.of(
+                    "OtherModule",
+                    C_SHARP_PROFILE,
+                    cSharpTestPaths("OtherModule")
+                ),
+                Arguments.of(
+                    "SomeModule",
+                    C_SHARP_PROFILE,
+                    cSharpTestPaths("SomeModule")
+                ),
+            )
+        }
+    }
+
     data class SetupResult(
         val directoriesMock: DirectoriesMock,
         val facade: HlaFacade,
@@ -198,7 +211,7 @@ class HlaFacadeTest {
     }
 
     @ParameterizedTest(name = "{0} ({1})")
-    @ArgumentsSource(MyArgumentsProvider::class)
+    @ArgumentsSource(ShouldStartModuleArgsProvider::class)
     fun `should start module`(
         moduleName: String,
         profileName: String,
@@ -236,12 +249,14 @@ class HlaFacadeTest {
         assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
     }
 
-    @Test
-    fun `should start c sharp module`() {
+    @ParameterizedTest(name = "{0} ({1})")
+    @ArgumentsSource(ShouldStartCSharpModuleArgsProvider::class)
+    fun `should start c sharp module`(
+        moduleName: String,
+        profileName: String,
+        paths: TestPaths
+    ) {
         //given
-        val moduleName = "SomeModule";
-        val profileName = "cSharp";
-        val paths: TestPaths = MyArgumentsProvider().cSharpTestPaths("SomeModule")
         val (directoriesMock, facade) = setup()
 
         //when
@@ -327,7 +342,7 @@ class HlaFacadeTest {
         facade.updateModule(args)
 
         //then
-        val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
+        val paths = ShouldStartModuleArgsProvider().kotlinTestPaths("somemodule")
         directoriesMock.assertWriteCount(5)
 
         val mainDirectoryStart = directoriesMock.assertWriteAndGetDirectory(
@@ -475,7 +490,7 @@ class HlaFacadeTest {
 
         //then
         directoriesMock.assertWriteCount(2)
-        val paths = MyArgumentsProvider().kotlinTestPaths("somemodule")
+        val paths = ShouldStartModuleArgsProvider().kotlinTestPaths("somemodule")
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath

@@ -10,7 +10,7 @@ interface CodeBuilderLanguage {
     fun implements(): String
     fun extends(): String
 
-    fun defaultClassAccessor(): String
+    fun defaultTopLevelAccessor(): String
 
     fun enumDeclaration(): String
 
@@ -60,7 +60,7 @@ class Kotlin: CodeBuilderLanguage {
         return ": "
     }
 
-    override fun defaultClassAccessor(): String {
+    override fun defaultTopLevelAccessor(): String {
         return ""
     }
 
@@ -174,7 +174,7 @@ class TypeScript: CodeBuilderLanguage {
         return " extends "
     }
 
-    override fun defaultClassAccessor(): String {
+    override fun defaultTopLevelAccessor(): String {
         return ""
     }
 
@@ -288,7 +288,7 @@ class CSharp: CodeBuilderLanguage {
         return ": "
     }
 
-    override fun defaultClassAccessor(): String {
+    override fun defaultTopLevelAccessor(): String {
         return "public "
     }
 
@@ -297,11 +297,11 @@ class CSharp: CodeBuilderLanguage {
     }
 
     override fun methodDeclarationKeyword(): String {
-        return "public "
+        return ""
     }
 
     override fun functionDeclarationKeyword(): String {
-        return "public "
+        return ""
     }
 
     override fun mapBaseType(type: BaseType): String {

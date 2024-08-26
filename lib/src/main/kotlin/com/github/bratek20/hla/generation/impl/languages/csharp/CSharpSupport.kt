@@ -17,7 +17,7 @@ class CSharpSupport(private val c: DomainContext): LanguageSupport {
     }
 
     override fun types(): LanguageTypes {
-        return TypeScriptTypes(c.queries)
+        return CSharpTypes()
     }
 
     override fun filesExtension(): String {

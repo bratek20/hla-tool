@@ -24,6 +24,12 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
         add(afterOperations())
     }
 
+    fun addInterface(ops: InterfaceBuilderOps) {
+        this.ops.add {
+            interfaceBlock(ops)
+        }
+    }
+
     fun addClass(classBlock: ClassBuilderOps) {
         ops.add {
             classBlock(classBlock)

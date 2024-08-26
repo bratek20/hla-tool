@@ -1,24 +1,23 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class InterfaceBuilder: CodeBlockBuilder {
     lateinit var name: String
 
-    private val methods: MutableList<MethodBuilderOps> = mutableListOf()
-    fun addMethod(block: MethodBuilderOps) {
+    private val methods: MutableList<InterfaceMethodBuilderOps> = mutableListOf()
+    fun addMethod(block: InterfaceMethodBuilderOps) {
         methods.add(block)
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        val x = c.lang.defaultClassAccessor() + "interface " + name
+        val x = c.lang.defaultTopLevelAccessor() + "interface " + name
         line("$x {")
         
         tab()
-        methods.forEach { methodOps ->
-            method(methodOps)
-        }
+        addManyWithEmptyLineBetween(methods.map { methodOps ->
+            InterfaceMethodBuilder.create(methodOps)
+        })
         untab()
         
         line("}")

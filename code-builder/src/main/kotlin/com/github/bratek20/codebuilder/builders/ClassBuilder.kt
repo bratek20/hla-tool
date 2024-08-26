@@ -149,7 +149,7 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     private fun classDeclarationWithConstructor(c: CodeBuilderContext): CodeBuilderOps = {
-        val classPart = beforeClassKeyword() + c.lang.defaultClassAccessor() + "class "
+        val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + "class "
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
         extendsOrImplementsPart = extends?.let { c.lang.extends() + ExtendsBuilder().apply(it).build(c) } ?: extendsOrImplementsPart
         val beginningWithoutExtendOrImplements = "$classPart$name"
