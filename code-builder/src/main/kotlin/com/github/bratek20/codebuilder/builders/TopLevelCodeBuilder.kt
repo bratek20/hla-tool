@@ -54,5 +54,5 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
         }
     }
 }
-typealias FileBuilderOps = TopLevelCodeBuilder.() -> Unit
-fun CodeBuilder.file(block: FileBuilderOps) = add(TopLevelCodeBuilder().apply(block))
+typealias TopLevelCodeBuilderOps = TopLevelCodeBuilder.() -> Unit
+fun CodeBuilder.file(block: TopLevelCodeBuilderOps) = add(TopLevelCodeBuilder().apply(block))
