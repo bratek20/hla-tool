@@ -172,11 +172,10 @@ class InterfacesGenerator: PatternGenerator() {
         cb.cSharpFile {
             addUsingForDependencies(this)
 
-            namespace {
-                name = submoduleNamespace(SubmoduleName.Api, c)
-                interfaces.forEach {
-                    addInterface(it.declarationCB())
-                }
+            namespace(submoduleNamespace(SubmoduleName.Api, c))
+
+            interfaces.forEach {
+                addInterface(it.declarationCB())
             }
         }
     }

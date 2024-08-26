@@ -64,11 +64,9 @@ class ExceptionsGenerator: PatternGenerator() {
             cb.cSharpFile {
                 addUsing("B20.Architecture.Exceptions.ApiException")
 
-                namespace {
-                    name = submoduleNamespace(SubmoduleName.Api, c)
+                namespace(submoduleNamespace(SubmoduleName.Api, c))
 
-                    defaultAddExceptions(this)
-                }
+                defaultAddExceptions(this)
             }
         }
         if (c.language.name() == ModuleLanguage.TYPE_SCRIPT) {

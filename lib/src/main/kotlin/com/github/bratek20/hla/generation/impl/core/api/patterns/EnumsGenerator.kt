@@ -67,13 +67,12 @@ class EnumsGenerator: PatternGenerator() {
         }
         if (language.name() == ModuleLanguage.C_SHARP) {
             cb.cSharpFile {
-                namespace {
-                    name = submoduleNamespace(SubmoduleName.Api, c)
-                    module.getEnums().forEach {
-                        addEnum {
-                            name = it.getName()
-                            it.getValues().forEach { addValue(it) }
-                        }
+                namespace(submoduleNamespace(SubmoduleName.Api, c))
+
+                module.getEnums().forEach {
+                    addEnum {
+                        name = it.getName()
+                        it.getValues().forEach { addValue(it) }
                     }
                 }
             }
