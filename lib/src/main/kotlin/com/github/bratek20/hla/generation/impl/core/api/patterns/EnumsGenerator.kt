@@ -12,6 +12,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.core.api.submoduleNamespace
 import com.github.bratek20.hla.generation.impl.core.api.submodulePackage
 
 class EnumsGenerator: PatternGenerator() {
@@ -67,7 +68,7 @@ class EnumsGenerator: PatternGenerator() {
         if (language.name() == ModuleLanguage.C_SHARP) {
             cb.cSharpFile {
                 namespace {
-                    name = "SomeModule.Api"
+                    name = submoduleNamespace(SubmoduleName.Api, c)
                     module.getEnums().forEach {
                         addEnum {
                             name = it.getName()
