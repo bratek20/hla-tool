@@ -33,5 +33,17 @@ interface SomeInterface3 {
 }
 
 interface SomeModuleHandlers {
+    /**
+     * @throws { SomeException }
+     * @throws { Some2Exception }
+     */
     someHandler(i: SomeHandlerInput): SomeHandlerOutput
+
+    someHandler2(i: SomeHandlerInput): SomeHandlerOutput
+}
+
+interface SomeModuleDebugHandlers {
+    someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput
+
+    someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
 }
