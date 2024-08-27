@@ -258,6 +258,42 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeHandlerInput {
+        id?: string,
+        amount?: number,
+    }
+    export function diffSomeHandlerInput(given: SomeHandlerInput, expected: ExpectedSomeHandlerInput, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeHandlerOutput {
+        id?: string,
+        amount?: number,
+    }
+    export function diffSomeHandlerOutput(given: SomeHandlerOutput, expected: ExpectedSomeHandlerOutput, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeProperty {
         other?: OtherModule.ExpectedOtherProperty,
         id2Empty?: boolean,

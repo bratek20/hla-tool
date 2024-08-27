@@ -31,3 +31,7 @@ interface SomeInterface3 {
 
     referenceOtherInterface(other: OtherInterface): OtherInterface
 }
+
+interface SomeModuleHandlers {
+    someHandler(i: SomeHandlerInput): SomeHandlerOutput
+}

@@ -78,6 +78,16 @@ fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryI
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomeHandlerInput(given: SomeHandlerInput, expectedInit: ExpectedSomeHandlerInput.() -> Unit) {
+    val diff = diffSomeHandlerInput(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeHandlerOutput(given: SomeHandlerOutput, expectedInit: ExpectedSomeHandlerOutput.() -> Unit) {
+    val diff = diffSomeHandlerOutput(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit) {
     val diff = diffSomeProperty(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

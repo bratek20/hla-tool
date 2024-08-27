@@ -174,6 +174,34 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeHandlerInputDef {
+        id?: string,
+        amount?: number,
+    }
+    export function someHandlerInput(def?: SomeHandlerInputDef): SomeHandlerInput {
+        const final_id = def?.id ?? "someValue"
+        const final_amount = def?.amount ?? 0
+
+        return SomeHandlerInput.create(
+            new SomeId(final_id),
+            final_amount,
+        )
+    }
+
+    export interface SomeHandlerOutputDef {
+        id?: string,
+        amount?: number,
+    }
+    export function someHandlerOutput(def?: SomeHandlerOutputDef): SomeHandlerOutput {
+        const final_id = def?.id ?? "someValue"
+        const final_amount = def?.amount ?? 0
+
+        return SomeHandlerOutput.create(
+            new SomeId(final_id),
+            final_amount,
+        )
+    }
+
     export interface SomePropertyDef {
         other?: OtherModule.Builder.OtherPropertyDef,
         id2?: number,

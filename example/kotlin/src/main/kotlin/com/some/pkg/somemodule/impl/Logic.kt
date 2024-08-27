@@ -45,3 +45,9 @@ class SomeInterface3Logic: SomeInterface3 {
         TODO("Not yet implemented")
     }
 }
+
+class SomeModuleHandlersLogic: SomeModuleHandlers {
+    override fun someHandler(i: SomeHandlerInput): SomeHandlerOutput {
+        TODO("Not yet implemented")
+    }
+}

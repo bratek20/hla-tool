@@ -352,6 +352,56 @@ data class SomeQueryInput(
     }
 }
 
+data class SomeHandlerInput(
+    private val id: String,
+    private val amount: Int,
+) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
+    fun getAmount(): Int {
+        return this.amount
+    }
+
+    companion object {
+        fun create(
+            id: SomeId,
+            amount: Int,
+        ): SomeHandlerInput {
+            return SomeHandlerInput(
+                id = id.value,
+                amount = amount,
+            )
+        }
+    }
+}
+
+data class SomeHandlerOutput(
+    private val id: String,
+    private val amount: Int,
+) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
+    fun getAmount(): Int {
+        return this.amount
+    }
+
+    companion object {
+        fun create(
+            id: SomeId,
+            amount: Int,
+        ): SomeHandlerOutput {
+            return SomeHandlerOutput(
+                id = id.value,
+                amount = amount,
+            )
+        }
+    }
+}
+
 data class SomeProperty(
     private val other: OtherProperty,
     private val id2: Int?,

@@ -345,6 +345,52 @@ class SomeQueryInput {
     }
 }
 
+class SomeHandlerInput {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): SomeHandlerInput {
+        const instance = new SomeHandlerInput()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}
+
+class SomeHandlerOutput {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): SomeHandlerOutput {
+        const instance = new SomeHandlerOutput()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}
+
 class SomeProperty {
     private other = new OtherProperty
     private id2? = NUMBER

@@ -62,4 +62,15 @@ namespace SomeModule.Impl {
             return undefined
         }
     }
+
+    export class SomeModuleHandlersLogic implements SomeModuleHandlers {
+        constructor(
+            private readonly c: HandlerContext,
+        ) {}
+
+        someHandler(i: SomeHandlerInput): SomeHandlerOutput {
+            // TODO
+            return undefined
+        }
+    }
 }

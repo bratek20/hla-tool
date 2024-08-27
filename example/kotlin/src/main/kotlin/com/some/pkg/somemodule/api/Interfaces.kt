@@ -36,3 +36,7 @@ interface SomeInterface3 {
 
     fun referenceOtherInterface(other: OtherInterface): OtherInterface
 }
+
+interface SomeModuleHandlers {
+    fun someHandler(i: SomeHandlerInput): SomeHandlerOutput
+}
