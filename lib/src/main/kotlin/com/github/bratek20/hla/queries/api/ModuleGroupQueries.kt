@@ -184,6 +184,14 @@ class ModuleGroupQueries(
         return module.getComplexValueObjects() + module.getComplexCustomTypes() + module.getDataClasses()
     }
 
+    fun allExceptionNamesForCurrent(): List<String> {
+        return currentModule.getInterfaces()
+            .flatMap { it.getMethods() }
+            .flatMap { it.getThrows() }
+            .map { it.getName() }
+            .distinct()
+    }
+
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {
         return modules.map { it.getName() to allModuleTypeNames(it) }
     }

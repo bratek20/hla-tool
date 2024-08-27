@@ -6,7 +6,14 @@ enum class BaseType {
 
 interface CodeBuilderLanguage {
     fun name(): String
+
     fun implements(): String
+    fun extends(): String
+
+    fun defaultTopLevelAccessor(): String
+
+    fun enumDeclaration(): String
+
     fun methodDeclarationKeyword(): String
     fun functionDeclarationKeyword(): String
 
@@ -37,6 +44,7 @@ interface CodeBuilderLanguage {
     fun constructorCall(className: String): String
 
     fun statementTerminator(): String
+
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -46,6 +54,18 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun implements(): String {
         return ": "
+    }
+
+    override fun extends(): String {
+        return ": "
+    }
+
+    override fun defaultTopLevelAccessor(): String {
+        return ""
+    }
+
+    override fun enumDeclaration(): String {
+        return "enum class "
     }
 
     override fun methodDeclarationKeyword(): String {
@@ -150,6 +170,18 @@ class TypeScript: CodeBuilderLanguage {
         return " implements "
     }
 
+    override fun extends(): String {
+        return " extends "
+    }
+
+    override fun defaultTopLevelAccessor(): String {
+        return ""
+    }
+
+    override fun enumDeclaration(): String {
+        return "enum "
+    }
+
     override fun methodDeclarationKeyword(): String {
         return ""
     }
@@ -252,12 +284,24 @@ class CSharp: CodeBuilderLanguage {
         return ": "
     }
 
-    override fun methodDeclarationKeyword(): String {
+    override fun extends(): String {
+        return ": "
+    }
+
+    override fun defaultTopLevelAccessor(): String {
         return "public "
     }
 
+    override fun enumDeclaration(): String {
+        return "enum "
+    }
+
+    override fun methodDeclarationKeyword(): String {
+        return ""
+    }
+
     override fun functionDeclarationKeyword(): String {
-        return "public "
+        return ""
     }
 
     override fun mapBaseType(type: BaseType): String {

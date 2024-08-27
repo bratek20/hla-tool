@@ -83,7 +83,7 @@ class FilesModifiers(
         updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getMain())}${moduleName}/")
 
         val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(FileName("tsconfig.json")))
-        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures(), "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getFixtures())}${moduleName}/")
+        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures()!!, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getFixtures())}${moduleName}/")
         generateResult.getTests()?.let {
             testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getTest())}${moduleName}/")
         }

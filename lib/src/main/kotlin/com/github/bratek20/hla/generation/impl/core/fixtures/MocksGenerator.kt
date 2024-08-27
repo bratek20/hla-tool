@@ -8,9 +8,9 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
-import com.github.bratek20.hla.generation.impl.core.api.InterfaceView
-import com.github.bratek20.hla.generation.impl.core.api.InterfaceViewFactory
-import com.github.bratek20.hla.generation.impl.core.api.MethodView
+import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceView
+import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
+import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
@@ -176,7 +176,7 @@ class MocksGenerator: PatternGenerator() {
                 .add {
                     classBlock {
                         name = "${interfaceName}Mock"
-                        implementedInterfaceName = interfaceName
+                        implements = interfaceName
                         body = {
                             interf.methods.map {
                                 add(mocksForMethod(it))
@@ -192,7 +192,7 @@ class MocksGenerator: PatternGenerator() {
                 .add {
                     classBlock {
                         name = "${moduleName}Mocks"
-                        implementedInterfaceName = "ContextModule"
+                        implements = "ContextModule"
                         body = {
                             method {
                                 override = true

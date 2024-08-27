@@ -36,7 +36,66 @@ class ClassBuilderTest {
             langExpected {
                 lang = CSharp()
                 expected = """
+                    public class SomeClass {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `class extension`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    extends {
+                        className = "SomeParent"
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass: SomeParent {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass extends SomeParent {
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass: SomeParent {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `static field`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        static = true
+                        value = { constructorCall { className = "OtherClass"; addArg { string("SomeStr") } } }
+                    }
+                }
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
                     class SomeClass {
+                        static readonly someField = new OtherClass("SomeStr")
                     }
                 """
             }
@@ -49,7 +108,7 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    implementedInterfaceName = "SomeInterface"
+                    implements = "SomeInterface"
                 }
             }
             langExpected {
@@ -69,7 +128,7 @@ class ClassBuilderTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                    class SomeClass: SomeInterface {
+                    public class SomeClass: SomeInterface {
                     }
                 """
             }
@@ -83,8 +142,8 @@ class ClassBuilderTest {
                 classBlock {
                     name = "SomeClass"
                     body = {
-                        comment("some comment")
-                        method {
+                        addMethod {
+                            comment = "some comment"
                             name = "someMethod"
                         }
                     }
@@ -188,7 +247,7 @@ class ClassBuilderTest {
                 expected = """
                     class SomeClass(
                         private val idField: String,
-                        idArg: String,
+                        idArg: String
                     ) {
                         init {
                             // some comment
@@ -202,7 +261,7 @@ class ClassBuilderTest {
                     class SomeClass {
                         constructor(
                             private readonly idField: string,
-                            idArg: string,
+                            idArg: string
                         ) {
                             // some comment
                         }
@@ -218,10 +277,10 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    staticMethod {
+                    addStaticMethod {
                         name = "someMethod"
                     }
-                    staticMethod {
+                    addStaticMethod {
                         name = "otherMethod"
                     }
                 }
@@ -314,7 +373,7 @@ class ClassBuilderTest {
                             }
                         }
                     }
-                    staticMethod {
+                    addStaticMethod {
                         name = "create"
                         returnType = type("SomeInterfaceSomeCommandRequest")
                         addArg {
@@ -359,6 +418,81 @@ class ClassBuilderTest {
                                 return SomeInterfaceSomeCommandRequest(id.value, amount)
                             }
                         }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `extension with passing argument`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    extends {
+                        className = "SomeParent"
+                    }
+                    constructor {
+                        addArg {
+                            name = "someArg"
+                            type = type("SomeType")
+                        }
+                    }
+                    addPassingArg("someArg")
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass(
+                        someArg: SomeType
+                    ): SomeParent(someArg) {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass extends SomeParent {
+                        constructor(
+                            someArg: SomeType
+                        ) {
+                            super(someArg)
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass: SomeParent {
+                        public SomeClass(
+                            SomeType someArg
+                        ): base(someArg) {
+                        }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `extension with generic`() {
+        testCodeBuilderOp {
+            op = {
+                classBlock {
+                    name = "SomeClass"
+                    extends {
+                        className = "SomeParent"
+                        generic = type("SomeType")
+                    }
+                }
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass extends SomeParent<SomeType> {
                     }
                 """
             }

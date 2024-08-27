@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.velocity.impl
 
+import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
 import org.apache.velocity.Template
 import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
@@ -9,6 +10,7 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.fileContentFromString
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
+import java.io.FileNotFoundException
 import java.io.StringWriter
 
 class VelocityFileContentBuilderImpl(
@@ -38,6 +40,9 @@ class VelocityFacadeImpl: VelocityFacade {
     }
 
     override fun contentBuilder(templatePath: String): VelocityFileContentBuilder {
+        this::class.java.classLoader.getResource(templatePath)
+            ?: throw TemplateNotFoundException("Template not found: $templatePath")
+
         val template = engine.getTemplate(templatePath)
         return VelocityFileContentBuilderImpl(template)
     }

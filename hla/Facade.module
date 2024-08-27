@@ -2,6 +2,7 @@ Enums
     ModuleLanguage
         KOTLIN
         TYPE_SCRIPT
+        C_SHARP
 
 Properties
     ModuleName: string

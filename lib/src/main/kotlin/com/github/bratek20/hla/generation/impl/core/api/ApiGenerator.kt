@@ -7,6 +7,11 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
+import com.github.bratek20.hla.generation.impl.core.api.patterns.EnumsGenerator
+import com.github.bratek20.hla.generation.impl.core.api.patterns.ExceptionsGenerator
+import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfacesGenerator
+import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class MacrosBuilder: PatternGenerator() {
@@ -126,44 +131,6 @@ open class PropertyOrDataKeysGenerator(private val data: Boolean): PatternGenera
             keyType = keyType,
             data = data
         )
-    }
-}
-
-class ExceptionsGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.Exceptions
-    }
-
-    override fun generateFileContent(): FileContent?{
-        val exceptions = module.getInterfaces()
-            .flatMap { it.getMethods() }
-            .flatMap { it.getThrows() }
-            .map { it.getName() }
-            .distinct()
-
-        if (exceptions.isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("exceptions.vm")
-            .put("exceptions", exceptions)
-            .build()
-    }
-}
-
-class EnumsGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.Enums
-    }
-
-    override fun generateFileContent(): FileContent?{
-        if (module.getEnums().isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("enums.vm")
-            .put("enums", module.getEnums())
-            .build()
     }
 }
 

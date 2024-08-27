@@ -1,14 +1,16 @@
-package com.github.bratek20.hla.generation.impl.core.api
+package com.github.bratek20.hla.generation.impl.core.api.patterns
 
-import com.github.bratek20.codebuilder.builders.MethodBuilder
-import com.github.bratek20.codebuilder.builders.method
+import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.core.api.ApiType
+import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.utils.camelToPascalCase
+import com.github.bratek20.utils.directory.api.FileContent
 
 data class ArgumentView(
     val name: String,
@@ -27,6 +29,7 @@ data class MethodView(
         return "${name}(${argsDeclaration()})$returnSuffix"
     }
 
+    //TODO-REF remove duplication with declarationCBInterface
     fun declarationCB(): MethodBuilder = method {
         name = this@MethodView.name
         args.forEach {
@@ -36,6 +39,20 @@ data class MethodView(
             }
         }
         returnType = type(this@MethodView.returnType)
+    }
+
+    fun declarationCBInterface(): InterfaceMethodBuilderOps = {
+        name = this@MethodView.name
+        args.forEach {
+            addArg {
+                name = it.name
+                type = type(it.type)
+            }
+        }
+        returnType = type(this@MethodView.returnType)
+        this@MethodView.throws.forEach {
+            addThrows(it)
+        }
     }
 
     // used by velocity
@@ -73,7 +90,14 @@ data class MethodView(
 data class InterfaceView(
     val name: String,
     val methods: List<MethodView>
-)
+) {
+    fun declarationCB(): InterfaceBuilderOps = {
+        name = this@InterfaceView.name
+        methods.forEach {
+            addMethod(it.declarationCBInterface())
+        }
+    }
+}
 
 class InterfaceViewFactory(
     private val apiTypeFactory: ApiTypeFactory
@@ -119,5 +143,21 @@ class InterfacesGenerator: PatternGenerator() {
             .build()
     }
 
+    override fun shouldGenerate(): Boolean {
+        return module.getInterfaces().isNotEmpty()
+    }
 
+    override fun supportsCodeBuilder(): Boolean {
+        return lang is CSharp
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        val factory = InterfaceViewFactory(apiTypeFactory)
+
+        val interfaces = factory.create(module.getInterfaces())
+
+        interfaces.forEach {
+            addInterface(it.declarationCB())
+        }
+    }
 }

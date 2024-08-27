@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.core.CodeBlockBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class ArgumentBuilder: CodeBlockBuilder {
@@ -14,8 +11,16 @@ class ArgumentBuilder: CodeBlockBuilder {
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
         return {
-            lineSoftStart("$name: ")
-            add(type)
+            if (c.lang is CSharp) {
+                lineSoftStart()
+                add(type)
+                linePart(" $name")
+            }
+            else {
+                lineSoftStart("$name: ")
+                add(type)
+            }
+
             defaultValue?.let {
                 linePart(" = $it")
             }
@@ -43,32 +48,107 @@ class ArgumentListBuilder: CodeBlockBuilder {
     }
 }
 
-abstract class MethodOrFunctionBuilder: CodeBlockBuilder {
+abstract class MethodOrFunctionSignatureBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var returnType: TypeBuilder? = null
-    var body: CodeBuilderOps? = null
+
+    var comment: String? = null
 
     protected val args: ArgumentListBuilder = ArgumentListBuilder()
     fun addArg(ops: ArgumentBuilderOps) {
         args.add(ops)
     }
 
+    private val throws: MutableList<String> = mutableListOf()
+    fun addThrows(exceptionName: String) {
+        throws.add(exceptionName)
+    }
+
     protected abstract fun beforeName(c: CodeBuilderContext): String
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart("${beforeName(c)}$name")
-        add(args)
-        returnType?.let {
-            linePart(": ")
-            add(it)
+    private fun throwsOps(): CodeBuilderOps = {
+        if (throws.isNotEmpty()) {
+            when (c.lang) {
+                is Kotlin -> {
+                    line("@Throws(")
+                    tab()
+                    throws.forEach { exceptionName ->
+                        line("$exceptionName::class,")
+                    }
+                    untab()
+                    line(")")
+                }
+                is TypeScript -> {
+                    line("/**")
+                    throws.forEach { exceptionName ->
+                        line("* @throws { $exceptionName }")
+                    }
+                    line("*/")
+                }
+                is CSharp -> {
+                    throws.forEach { exceptionName ->
+                        line("/// <exception cref=\"$exceptionName\"/>")
+                    }
+                }
+            }
         }
-        linePart(" {")
+    }
 
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        comment?.let {
+            line("// $it")
+        }
+        add(throwsOps())
+        if (c.lang is CSharp) {
+            lineStart()
+            returnType?.let {
+                add(it)
+                linePart(" ")
+            } ?: linePart("void ")
+            linePart(name)
+            add(args)
+        }
+        else {
+            lineStart("${beforeName(c)}$name")
+            add(args)
+            returnType?.let {
+                linePart(": ")
+                add(it)
+            }
+        }
+    }
+}
+
+class InterfaceMethodBuilder: MethodOrFunctionSignatureBuilder() {
+    override fun beforeName(c: CodeBuilderContext): String {
+        return c.lang.methodDeclarationKeyword()
+    }
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        add(super.getOperations(c))
+        statementLineEnd()
+    }
+
+    companion object {
+        fun create(block: InterfaceMethodBuilderOps): InterfaceMethodBuilder {
+            return InterfaceMethodBuilder().apply(block)
+        }
+    }
+}
+typealias InterfaceMethodBuilderOps = InterfaceMethodBuilder.() -> Unit
+
+
+abstract class MethodOrFunctionBuilder: MethodOrFunctionSignatureBuilder() {
+    var body: CodeBuilderOps? = null
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        add(super.getOperations(c))
+
+        linePart(" {")
         tab()
         body?.let { add(it) }
         untab()
-
         line("}")
     }
 }
