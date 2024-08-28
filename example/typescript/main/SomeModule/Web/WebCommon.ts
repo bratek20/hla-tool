@@ -6,6 +6,7 @@ namespace SomeModule.Web {
             readonly value: HttpClientConfig,
         ) {}
     }
+
     export class SomeInterfaceSomeCommandRequest {
         private id = STRING
         private amount = NUMBER
@@ -22,6 +23,7 @@ namespace SomeModule.Web {
             return instance
         }
     }
+
     export class SomeInterfaceSomeQueryRequest {
         private query = new SomeQueryInput
         getQuery(): SomeQueryInput {
@@ -33,12 +35,14 @@ namespace SomeModule.Web {
             return instance
         }
     }
+
     export class SomeInterfaceSomeQueryResponse {
         private value = new SomeClass
         getValue(): SomeClass {
             return this.value
         }
     }
+
     export class SomeInterfaceOptMethodRequest {
         private optId = STRING
         getOptId(): Optional<SomeId> {
@@ -50,12 +54,14 @@ namespace SomeModule.Web {
             return instance
         }
     }
+
     export class SomeInterfaceOptMethodResponse {
         private value = new SomeClass
         getValue(): Optional<SomeClass> {
             return Optional.of(this.value)
         }
     }
+
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = new OtherClass
         getOther(): OtherClass {
@@ -67,12 +73,14 @@ namespace SomeModule.Web {
             return instance
         }
     }
+
     export class SomeInterface2ReferenceOtherClassResponse {
         private value = new OtherClass
         getValue(): OtherClass {
             return this.value
         }
     }
+
     export class SomeInterface2ReferenceLegacyTypeRequest {
         private legacyType = new LegacyType
         getLegacyType(): LegacyType {
@@ -84,6 +92,7 @@ namespace SomeModule.Web {
             return instance
         }
     }
+
     export class SomeInterface2ReferenceLegacyTypeResponse {
         private value = new LegacyType
         getValue(): LegacyType {

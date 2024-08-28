@@ -22,6 +22,7 @@ namespace SomeModule.Web {
             return this.client.post("/some/prefix/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().getValue()
         }
     }
+
     export class SomeInterface2WebClient implements SomeInterface2 {
         constructor(
             config: SomeModuleWebClientConfig,
