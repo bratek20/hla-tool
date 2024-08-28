@@ -19,6 +19,14 @@ class MocksGenerator: PatternGenerator() {
         return PatternName.Mocks
     }
 
+    override fun supportsCodeBuilder(): Boolean {
+        return true
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return module.getInterfaces().isNotEmpty()
+    }
+
     class View(
         val c: ModuleGenerationContext,
         val lang: CodeBuilderLanguage,
@@ -212,15 +220,5 @@ class MocksGenerator: PatternGenerator() {
                 }
                 .build()
         }
-    }
-    override fun generateFileContent(): FileContent? {
-        if(c.module.getInterfaces().none { it.getName() == "SomeInterface2" }) {
-            return null
-        }
-        val interf = c.module.getInterfaces().find { it.getName() == "SomeInterface2" }!!
-        val interfView = InterfaceViewFactory(apiTypeFactory).create(interf)
-        return contentBuilder("mocks.vm")
-            .put("view", View(c, lang, interfView, "SomeModule"))
-            .build()
     }
 }

@@ -64,7 +64,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                 addVariableAssignment {
                     declare = true
                     name = "request"
-                    blockValue = functionCall {
+                    value = functionCall {
                         name = "ObjectCreation.Api.FromInterface"
                         addArg(variable("SomeHandlerInput"))
                         addArg(variable("rawRequest"))
@@ -74,7 +74,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                 addVariableAssignment {
                     declare = true
                     name = "response"
-                    blockValue = functionCall {
+                    value = functionCall {
                         name = "Api.someHandler"
                         addArg(variable("request"))
                         addArg(variable("c"))

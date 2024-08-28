@@ -300,14 +300,14 @@ class WebClientGenerator: PatternGenerator() {
                                     type = type("HandlerContext")
                                 }
                                 body = {
-                                    legacyAssign {
-                                        variable = {
-                                            name = "this.client"
+                                    add(variableAssignment {
+                                        name = "this.client"
+                                        value = functionCall {
+                                            name = "HttpClient.Api.create"
+                                            addArg(variable("config.value"))
+                                            addArg(variable("c"))
                                         }
-                                        value =  {
-                                            legacyVariable("HttpClient.Api.create(config.value, c)")
-                                        }
-                                    }
+                                    })
                                 }
                             }
                             body = {
