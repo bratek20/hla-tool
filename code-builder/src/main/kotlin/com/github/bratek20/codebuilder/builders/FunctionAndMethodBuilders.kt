@@ -1,6 +1,8 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
+import com.github.bratek20.codebuilder.ops.VariableAssignmentBuilder
+import com.github.bratek20.codebuilder.ops.VariableAssignmentBuilderOps
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class ArgumentBuilder: CodeBlockBuilder {
@@ -138,16 +140,40 @@ class InterfaceMethodBuilder: MethodOrFunctionSignatureBuilder() {
 }
 typealias InterfaceMethodBuilderOps = InterfaceMethodBuilder.() -> Unit
 
+class BodyBuilder: CodeBlockBuilder {
+    private val ops: MutableList<CodeBlockBuilder> = mutableListOf()
+
+    fun addFunctionCall(block: FunctionCallBuilderOps) {
+        ops.add(FunctionCallBuilder().apply(block))
+    }
+
+    fun addVariableAssignment(block: VariableAssignmentBuilderOps) {
+        ops.add(VariableAssignmentBuilder().apply(block))
+    }
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        ops.forEach {
+            add(it)
+        }
+    }
+}
+typealias BodyBuilderOps = BodyBuilder.() -> Unit
 
 abstract class MethodOrFunctionBuilder: MethodOrFunctionSignatureBuilder() {
-    var body: CodeBuilderOps? = null
+    var legacyBody: CodeBuilderOps? = null
+
+    private var body: BodyBuilderOps? = null
+    fun body(block: BodyBuilderOps) {
+        body = block
+    }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         add(super.getOperations(c))
 
         linePart(" {")
         tab()
-        body?.let { add(it) }
+        legacyBody?.let { add(it) }
+        body?.let { add(BodyBuilder().apply(it)) }
         untab()
         line("}")
     }

@@ -62,7 +62,8 @@ class FunctionCallBuilder: CallBuilder() {
     }
 }
 typealias FunctionCallBuilderOps = FunctionCallBuilder.() -> Unit
-fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
+fun CodeBuilder.legacyFunctionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
+fun functionCall(block: FunctionCallBuilderOps) = FunctionCallBuilder().apply(block)
 
 class ConstructorCallBuilder: CallBuilder() {
     lateinit var className: String

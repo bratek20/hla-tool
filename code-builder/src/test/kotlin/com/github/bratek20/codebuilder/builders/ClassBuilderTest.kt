@@ -180,7 +180,7 @@ class ClassBuilderTest {
                             accessor = FieldAccessor.PRIVATE
                             name = "a"
                             type = type("A")
-                            value = { variableLegacy("null") }
+                            value = { legacyVariable("null") }
                         }
                         field {
                             name = "b"
@@ -349,7 +349,7 @@ class ClassBuilderTest {
                         method {
                             name = "getId"
                             returnType = type("SomeId")
-                            body = {
+                            legacyBody = {
                                 returnBlock {
                                     constructorCall {
                                         className = "SomeId"
@@ -361,9 +361,9 @@ class ClassBuilderTest {
                         method {
                             name = "getAmount"
                             returnType = baseType(BaseType.INT)
-                            body = {
+                            legacyBody = {
                                 returnBlock {
-                                    variableLegacy("amount")
+                                    legacyVariable("amount")
                                 }
                             }
                         }
@@ -379,15 +379,15 @@ class ClassBuilderTest {
                             type = baseType(BaseType.INT)
                             name = "amount"
                         }
-                        body = {
+                        legacyBody = {
                             returnBlock {
                                 constructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
                                     addArgLegacy {
-                                        variableLegacy("id.value")
+                                        legacyVariable("id.value")
                                     }
                                     addArgLegacy {
-                                        variableLegacy("amount")
+                                        legacyVariable("amount")
                                     }
                                 }
                             }

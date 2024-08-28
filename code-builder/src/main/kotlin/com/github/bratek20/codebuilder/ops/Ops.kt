@@ -9,10 +9,28 @@ fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
     return this
 }
 
-class VariableAssignBuilder: CodeBlockBuilder {
+interface ExpressionBuilder: LinePartBuilder
+
+class VariableBuilder(
+    val name: String,
+): ExpressionBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        return name
+    }
+}
+fun variable(name: String): VariableBuilder {
+    return VariableBuilder(name)
+}
+
+class VariableAssignmentBuilder: CodeBlockBuilder {
     lateinit var name: String
+
     var declare: Boolean = false
     var mutable: Boolean = false
+
+
+    var value: ExpressionBuilder? = null
+    var blockValue: CodeBlockBuilder? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         lineSoftStart()
@@ -24,17 +42,28 @@ class VariableAssignBuilder: CodeBlockBuilder {
             }
         }
         linePart(name)
+
+        value?.let {
+            linePart(" = ")
+            add(it)
+            statementLineEnd()
+        }
+        blockValue?.let {
+            linePart(" = ")
+            add(it)
+        }
     }
 }
-typealias VariableAssignBuilderOps = VariableAssignBuilder.() -> Unit
+typealias VariableAssignmentBuilderOps = VariableAssignmentBuilder.() -> Unit
+fun variableAssignment(block: VariableAssignmentBuilderOps) = VariableAssignmentBuilder().apply(block)
 
 class AssignArgs {
-    lateinit var variable: VariableAssignBuilderOps
+    lateinit var variable: VariableAssignmentBuilderOps
     lateinit var value: CodeBuilderOps
 }
 fun CodeBuilder.assign(block: AssignArgs.()->Unit): CodeBuilder {
     val args = AssignArgs().apply(block)
-    add(VariableAssignBuilder().apply(args.variable))
+    add(VariableAssignmentBuilder().apply(args.variable))
     linePart(" = ")
     add(args.value)
     statementLineEnd()
@@ -65,24 +94,15 @@ fun CodeBuilder.isEqualTo(block: IsEqualToArgs.()->Unit): CodeBuilder {
     return this
 }
 
-fun CodeBuilder.const(name: String): CodeBuilder {
+fun CodeBuilder.legacyConst(name: String): CodeBuilder {
     return linePart(name)
 }
 
-fun CodeBuilder.variableLegacy(name: String): CodeBuilder {
+fun CodeBuilder.legacyVariable(name: String): CodeBuilder {
     return linePart(name)
 }
 
-class VariableBuilder(
-    val name: String,
-): LinePartBuilder {
-    override fun build(c: CodeBuilderContext): String {
-        return name
-    }
-}
-fun variable(name: String): VariableBuilder {
-    return VariableBuilder(name)
-}
+
 
 fun CodeBuilder.string(name: String): CodeBuilder {
     return linePart("\"$name\"")

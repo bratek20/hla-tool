@@ -5,9 +5,9 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.codebuilder.ops.assign
-import com.github.bratek20.codebuilder.ops.const
+import com.github.bratek20.codebuilder.ops.legacyConst
 import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.variableLegacy
+import com.github.bratek20.codebuilder.ops.legacyVariable
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -63,9 +63,9 @@ class WebCommonGenerator: PatternGenerator() {
                     method {
                         name = "get${camelToPascalCase(arg.name)}"
                         returnType = type(arg.type)
-                        body = {
+                        legacyBody = {
                             returnBlock {
-                                variableLegacy(arg.apiType.deserialize(arg.name))
+                                legacyVariable(arg.apiType.deserialize(arg.name))
                             }
                         }
                     }
@@ -80,13 +80,13 @@ class WebCommonGenerator: PatternGenerator() {
                         type = type(arg.type)
                     }
                 }
-                body = {
+                legacyBody = {
                     returnBlock {
                         constructorCall {
                             className = requestName(interfName, method)
                             method.args.forEach {
                                 addArgLegacy {
-                                    variableLegacy(it.apiType.serialize(it.name))
+                                    legacyVariable(it.apiType.serialize(it.name))
                                 }
                             }
                         }
@@ -111,7 +111,7 @@ class WebCommonGenerator: PatternGenerator() {
                         mutable = true
                         name = arg.name
                         value = {
-                            const(objectCreationType(arg.apiType))
+                            legacyConst(objectCreationType(arg.apiType))
                         }
                     }
                 }
@@ -119,9 +119,9 @@ class WebCommonGenerator: PatternGenerator() {
                     method {
                         name = "get${camelToPascalCase(arg.name)}"
                         returnType = type(arg.type)
-                        body = {
+                        legacyBody = {
                             returnBlock {
-                                variableLegacy(arg.apiType.deserialize("this." + arg.name))
+                                legacyVariable(arg.apiType.deserialize("this." + arg.name))
                             }
                         }
                     }
@@ -136,7 +136,7 @@ class WebCommonGenerator: PatternGenerator() {
                         type = type(arg.type)
                     }
                 }
-                body = {
+                legacyBody = {
                     assign {
                         variable = {
                             declare = true
@@ -154,12 +154,12 @@ class WebCommonGenerator: PatternGenerator() {
                                 name = "instance.${it.name}"
                             }
                             value = {
-                                variableLegacy(it.apiType.serialize(it.name))
+                                legacyVariable(it.apiType.serialize(it.name))
                             }
                         }
                     }
                     returnBlock {
-                        variableLegacy("instance")
+                        legacyVariable("instance")
                     }
                 }
             }
@@ -179,16 +179,16 @@ class WebCommonGenerator: PatternGenerator() {
                     mutable = true
                     name = argName
                     value = {
-                        const(objectCreationType(argApiType))
+                        legacyConst(objectCreationType(argApiType))
                     }
                 }
 
                 method {
                     name = "get${camelToPascalCase(argName)}"
                     returnType = type(argType)
-                    body = {
+                    legacyBody = {
                         returnBlock {
-                            variableLegacy(argApiType.deserialize("this.$argName"))
+                            legacyVariable(argApiType.deserialize("this.$argName"))
                         }
                     }
                 }
@@ -305,7 +305,7 @@ class WebClientGenerator: PatternGenerator() {
                                             name = "this.client"
                                         }
                                         value =  {
-                                            variableLegacy("HttpClient.Api.create(config.value, c)")
+                                            legacyVariable("HttpClient.Api.create(config.value, c)")
                                         }
                                     }
                                 }
@@ -319,7 +319,7 @@ class WebClientGenerator: PatternGenerator() {
                                 interf.methods.forEach { m ->
                                     add(
                                         m.declarationCB().apply {
-                                            body = {
+                                            legacyBody = {
                                                 line(getBodyTS(interf.name, m))
                                             }
                                         }

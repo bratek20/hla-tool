@@ -57,6 +57,42 @@ class MethodAndFunctionBuilderTest {
     }
 
     @Test
+    fun `function with body`() {
+        testCodeBuilderOp {
+            op = {
+                function {
+                    name = "someFunction"
+                    body {
+                        addFunctionCall {
+                            name = "someOtherFunction"
+                        }
+                        addVariableAssignment {
+                            name = "a"
+                        }
+                    }
+                }
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    fun someFunction() {
+                        someOtherFunction()
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    function someFunction() {
+                        someOtherFunction()
+                    }
+                """
+            }
+        }
+    }
+
+
+    @Test
     fun `sum method with calls`() {
         testCodeBuilderOp {
             op = {
@@ -71,11 +107,11 @@ class MethodAndFunctionBuilderTest {
                         type = baseType(BaseType.INT)
                     }
                     returnType = baseType(BaseType.INT)
-                    body = {
+                    legacyBody = {
                         returnBlock {
                             plus {
-                                left = { variableLegacy("a") }
-                                right = { variableLegacy("b") }
+                                left = { legacyVariable("a") }
+                                right = { legacyVariable("b") }
                             }
                         }
                     }
@@ -90,10 +126,10 @@ class MethodAndFunctionBuilderTest {
                             methodName = "sum"
 
                             addArgLegacy {
-                                const("1")
+                                legacyConst("1")
                             }
                             addArgLegacy {
-                                const("2")
+                                legacyConst("2")
                             }
                         }
                     }
@@ -111,10 +147,10 @@ class MethodAndFunctionBuilderTest {
                                     skipSoftEnd = true
 
                                     addArgLegacy {
-                                        const("1")
+                                        legacyConst("1")
                                     }
                                     addArgLegacy {
-                                        const("2")
+                                        legacyConst("2")
                                     }
                                 }
                             }
@@ -124,10 +160,10 @@ class MethodAndFunctionBuilderTest {
                                     methodName = "sum"
 
                                     addArgLegacy {
-                                        const("3")
+                                        legacyConst("3")
                                     }
                                     addArgLegacy {
-                                        const("4")
+                                        legacyConst("4")
                                     }
                                 }
                             }
@@ -169,7 +205,7 @@ class MethodAndFunctionBuilderTest {
                         type = pairType(baseType(BaseType.INT), baseType(BaseType.INT))
                     }
                     returnType = baseType(BaseType.INT)
-                    body = {
+                    legacyBody = {
                         returnBlock {
                             plus {
                                 left = { pairOp("p").first() }

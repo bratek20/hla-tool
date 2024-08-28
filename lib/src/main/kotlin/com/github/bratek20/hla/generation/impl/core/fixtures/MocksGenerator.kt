@@ -95,7 +95,7 @@ class MocksGenerator: PatternGenerator() {
                             name = "response"
                             type = type(defOutputType)
                         }
-                        body = {
+                        legacyBody = {
                             listOp(responsesListName).add { newPair("args", "response") }
                         }
                     }
@@ -109,9 +109,9 @@ class MocksGenerator: PatternGenerator() {
                             name = inputArgName
                             type = type(inputTypeName)
                         }
-                        body = {
+                        legacyBody = {
                             listOp(callsListName).add {
-                                variableLegacy(inputArgName)
+                                legacyVariable(inputArgName)
                             }
                             assign {
                                 variable = {
@@ -122,9 +122,9 @@ class MocksGenerator: PatternGenerator() {
                                     listOp(responsesListName).find {
                                         isEqualTo {
                                             left = {
-                                                functionCall {
+                                                legacyFunctionCall {
                                                     name = inputDiffMethodName
-                                                    addArgLegacy { variableLegacy(inputArgName) }
+                                                    addArgLegacy { legacyVariable(inputArgName) }
                                                     addArgLegacy { pairOp(it.name).first() }
                                                 }
                                             }
@@ -147,7 +147,7 @@ class MocksGenerator: PatternGenerator() {
                             type = baseType(BaseType.INT)
                             defaultValue = "1"
                         }
-                        body = {
+                        legacyBody = {
                             line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                         }
                     }
@@ -163,7 +163,7 @@ class MocksGenerator: PatternGenerator() {
                             type = baseType(BaseType.INT)
                             defaultValue = "1"
                         }
-                        body = {
+                        legacyBody = {
                             line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")
                             line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                         }
@@ -201,7 +201,7 @@ class MocksGenerator: PatternGenerator() {
                                     name = "builder"
                                     type = type("ContextBuilder")
                                 }
-                                body = {
+                                legacyBody = {
                                     line("builder")
                                     tab()
                                     line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")

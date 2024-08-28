@@ -16,10 +16,10 @@ class OpsTest {
                     value = {
                         plus {
                             left = {
-                                const("1")
+                                legacyConst("1")
                             }
                             right = {
-                                const("2")
+                                legacyConst("2")
                             }
                         }
                     }
@@ -34,10 +34,10 @@ class OpsTest {
                     value = {
                         isEqualTo {
                             left = {
-                                variableLegacy("a")
+                                legacyVariable("a")
                             }
                             right = {
-                                variableLegacy("b")
+                                legacyVariable("b")
                             }
                         }
                     }
@@ -48,12 +48,12 @@ class OpsTest {
                         name = "areEqual"
                     }
                     value = {
-                        const("false")
+                        legacyConst("false")
                     }
                 }
 
                 returnBlock {
-                    variableLegacy("a")
+                    legacyVariable("a")
                 }
             }
             langExpected {
