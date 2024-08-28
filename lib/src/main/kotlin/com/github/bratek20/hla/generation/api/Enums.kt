@@ -17,6 +17,7 @@ enum class PatternName {
     WebCommon,
     WebServer,
     WebClient,
+    PlayFabHandlers,
     Impl,
     Web,
     Builders,

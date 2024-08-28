@@ -21,6 +21,7 @@ Enums
         WebCommon
         WebServer
         WebClient
+        PlayFabHandlers
 
         //context
         Impl
