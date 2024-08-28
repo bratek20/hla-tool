@@ -72,4 +72,5 @@ class ConstructorCallBuilder: CallBuilder() {
         return c.lang.constructorCall(className)
     }
 }
-fun CodeBuilder.constructorCall(block: ConstructorCallBuilder.() -> Unit) = add(ConstructorCallBuilder().apply(block))
+fun constructorCall(block: ConstructorCallBuilder.() -> Unit) = ConstructorCallBuilder().apply(block)
+fun CodeBuilder.legacyConstructorCall(block: ConstructorCallBuilder.() -> Unit) = add(ConstructorCallBuilder().apply(block))

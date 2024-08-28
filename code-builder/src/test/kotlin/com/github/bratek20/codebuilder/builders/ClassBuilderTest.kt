@@ -83,7 +83,7 @@ class ClassBuilderTest {
                     addField {
                         name = "someField"
                         static = true
-                        value = { constructorCall { className = "OtherClass"; addArgLegacy { string("SomeStr") } } }
+                        value = { legacyConstructorCall { className = "OtherClass"; addArgLegacy { string("SomeStr") } } }
                     }
                 }
             }
@@ -312,7 +312,7 @@ class ClassBuilderTest {
     fun constructorCall() {
         testCodeBuilderOp {
             op = {
-                constructorCall {
+                legacyConstructorCall {
                     className = "SomeClass"
                 }
             }
@@ -350,7 +350,7 @@ class ClassBuilderTest {
                             returnType = type("SomeId")
                             legacyBody = {
                                 legacyReturn {
-                                    constructorCall {
+                                    legacyConstructorCall {
                                         className = "SomeId"
                                         addArg(variable("id"))
                                     }
@@ -380,7 +380,7 @@ class ClassBuilderTest {
                         }
                         legacyBody = {
                             legacyReturn {
-                                constructorCall {
+                                legacyConstructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
                                     addArgLegacy {
                                         legacyVariable("id.value")

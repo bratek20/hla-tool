@@ -82,7 +82,7 @@ class WebCommonGenerator: PatternGenerator() {
                 }
                 legacyBody = {
                     legacyReturn {
-                        constructorCall {
+                        legacyConstructorCall {
                             className = requestName(interfName, method)
                             method.args.forEach {
                                 addArgLegacy {
@@ -137,26 +137,19 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
                 legacyBody = {
-                    legacyAssign {
-                        variable = {
-                            declare = true
-                            name = "instance"
+                    add(variableAssignment {
+
+                        declare = true
+                        name = "instance"
+                        value = constructorCall {
+                            className = requestName(interfName, method)
                         }
-                        value = {
-                            constructorCall {
-                                className = requestName(interfName, method)
-                            }
-                        }
-                    }
+                    })
                     method.args.forEach {
-                        legacyAssign {
-                            variable = {
-                                name = "instance.${it.name}"
-                            }
-                            value = {
-                                legacyVariable(it.apiType.serialize(it.name))
-                            }
-                        }
+                        add(variableAssignment {
+                            name = "instance.${it.name}"
+                            value = variable(it.apiType.serialize(it.name))
+                        })
                     }
                     legacyReturn {
                         legacyVariable("instance")
