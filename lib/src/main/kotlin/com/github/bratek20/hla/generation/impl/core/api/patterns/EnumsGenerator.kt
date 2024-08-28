@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.builders.string
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator

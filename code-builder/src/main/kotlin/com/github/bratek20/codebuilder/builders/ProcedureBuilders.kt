@@ -1,8 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.VariableAssignmentBuilder
-import com.github.bratek20.codebuilder.ops.VariableAssignmentBuilderOps
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
 class ArgumentBuilder: CodeBlockBuilder {
@@ -50,7 +48,7 @@ class ArgumentListBuilder: CodeBlockBuilder {
     }
 }
 
-abstract class MethodOrFunctionSignatureBuilder: CodeBlockBuilder {
+abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
     lateinit var name: String
 
     var returnType: TypeBuilder? = null
@@ -122,7 +120,7 @@ abstract class MethodOrFunctionSignatureBuilder: CodeBlockBuilder {
     }
 }
 
-class InterfaceMethodBuilder: MethodOrFunctionSignatureBuilder() {
+class InterfaceMethodBuilder: ProcedureSignatureBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {
         return c.lang.methodDeclarationKeyword()
     }
@@ -140,26 +138,9 @@ class InterfaceMethodBuilder: MethodOrFunctionSignatureBuilder() {
 }
 typealias InterfaceMethodBuilderOps = InterfaceMethodBuilder.() -> Unit
 
-class BodyBuilder: CodeBlockBuilder {
-    private val ops: MutableList<CodeBlockBuilder> = mutableListOf()
 
-    fun addFunctionCall(block: FunctionCallBuilderOps) {
-        ops.add(FunctionCallBuilder().apply(block))
-    }
 
-    fun addVariableAssignment(block: VariableAssignmentBuilderOps) {
-        ops.add(VariableAssignmentBuilder().apply(block))
-    }
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        ops.forEach {
-            add(it)
-        }
-    }
-}
-typealias BodyBuilderOps = BodyBuilder.() -> Unit
-
-abstract class MethodOrFunctionBuilder: MethodOrFunctionSignatureBuilder() {
+abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
     var legacyBody: CodeBuilderOps? = null
 
     private var body: BodyBuilderOps? = null
@@ -179,7 +160,7 @@ abstract class MethodOrFunctionBuilder: MethodOrFunctionSignatureBuilder() {
     }
 }
 
-open class MethodBuilder: MethodOrFunctionBuilder() {
+open class MethodBuilder: ProcedureBuilder() {
     var override: Boolean = false
     override fun beforeName(c: CodeBuilderContext): String {
         val overridePart = if (override) "override " else ""
@@ -187,10 +168,10 @@ open class MethodBuilder: MethodOrFunctionBuilder() {
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
-fun CodeBuilder.method(block: MethodBuilderOps) = add(MethodBuilder().apply(block))
+fun CodeBuilder.legacyMethod(block: MethodBuilderOps) = add(MethodBuilder().apply(block))
 fun method(block: MethodBuilderOps) = MethodBuilder().apply(block)
 
-open class FunctionBuilder: MethodOrFunctionBuilder() {
+open class FunctionBuilder: ProcedureBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {
         return c.lang.functionDeclarationKeyword()
     }

@@ -1,7 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
 import org.junit.jupiter.api.Test
@@ -346,11 +345,11 @@ class ClassBuilderTest {
                         }
                     }
                     body = {
-                        method {
+                        legacyMethod {
                             name = "getId"
                             returnType = type("SomeId")
                             legacyBody = {
-                                returnBlock {
+                                legacyReturn {
                                     constructorCall {
                                         className = "SomeId"
                                         addArg(variable("id"))
@@ -358,11 +357,11 @@ class ClassBuilderTest {
                                 }
                             }
                         }
-                        method {
+                        legacyMethod {
                             name = "getAmount"
                             returnType = baseType(BaseType.INT)
                             legacyBody = {
-                                returnBlock {
+                                legacyReturn {
                                     legacyVariable("amount")
                                 }
                             }
@@ -380,7 +379,7 @@ class ClassBuilderTest {
                             name = "amount"
                         }
                         legacyBody = {
-                            returnBlock {
+                            legacyReturn {
                                 constructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
                                     addArgLegacy {

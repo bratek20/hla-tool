@@ -3,8 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.web
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.builders.functionCall
 import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.ops.variable
-import com.github.bratek20.codebuilder.ops.variableAssignment
+import com.github.bratek20.codebuilder.builders.variable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -73,6 +72,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                     }
                 }
                 addVariableAssignment {
+                    declare = true
                     name = "response"
                     blockValue = functionCall {
                         name = "Api.someHandler"

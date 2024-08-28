@@ -2,9 +2,9 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.string
-import com.github.bratek20.codebuilder.ops.legacyVariable
+import com.github.bratek20.codebuilder.builders.legacyReturn
+import com.github.bratek20.codebuilder.builders.string
+import com.github.bratek20.codebuilder.builders.legacyVariable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -47,7 +47,7 @@ class ExceptionsGenerator: PatternGenerator() {
                         name = "getTypeName"
                         returnType = baseType(BaseType.STRING)
                         legacyBody = {
-                            returnBlock {
+                            legacyReturn {
                                 string(it)
                             }
                         }

@@ -4,10 +4,10 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.languages.typescript.namespace
-import com.github.bratek20.codebuilder.ops.assign
-import com.github.bratek20.codebuilder.ops.legacyConst
-import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.legacyVariable
+import com.github.bratek20.codebuilder.builders.legacyAssign
+import com.github.bratek20.codebuilder.builders.legacyConst
+import com.github.bratek20.codebuilder.builders.legacyReturn
+import com.github.bratek20.codebuilder.builders.legacyVariable
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -60,11 +60,11 @@ class WebCommonGenerator: PatternGenerator() {
             }
             body = {
                 method.args.forEach { arg ->
-                    method {
+                    legacyMethod {
                         name = "get${camelToPascalCase(arg.name)}"
                         returnType = type(arg.type)
                         legacyBody = {
-                            returnBlock {
+                            legacyReturn {
                                 legacyVariable(arg.apiType.deserialize(arg.name))
                             }
                         }
@@ -81,7 +81,7 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
                 legacyBody = {
-                    returnBlock {
+                    legacyReturn {
                         constructorCall {
                             className = requestName(interfName, method)
                             method.args.forEach {
@@ -116,11 +116,11 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
                 method.args.forEach { arg ->
-                    method {
+                    legacyMethod {
                         name = "get${camelToPascalCase(arg.name)}"
                         returnType = type(arg.type)
                         legacyBody = {
-                            returnBlock {
+                            legacyReturn {
                                 legacyVariable(arg.apiType.deserialize("this." + arg.name))
                             }
                         }
@@ -137,7 +137,7 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
                 legacyBody = {
-                    assign {
+                    legacyAssign {
                         variable = {
                             declare = true
                             name = "instance"
@@ -149,7 +149,7 @@ class WebCommonGenerator: PatternGenerator() {
                         }
                     }
                     method.args.forEach {
-                        assign {
+                        legacyAssign {
                             variable = {
                                 name = "instance.${it.name}"
                             }
@@ -158,7 +158,7 @@ class WebCommonGenerator: PatternGenerator() {
                             }
                         }
                     }
-                    returnBlock {
+                    legacyReturn {
                         legacyVariable("instance")
                     }
                 }
@@ -183,11 +183,11 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
 
-                method {
+                legacyMethod {
                     name = "get${camelToPascalCase(argName)}"
                     returnType = type(argType)
                     legacyBody = {
-                        returnBlock {
+                        legacyReturn {
                             legacyVariable(argApiType.deserialize("this.$argName"))
                         }
                     }
@@ -300,7 +300,7 @@ class WebClientGenerator: PatternGenerator() {
                                     type = type("HandlerContext")
                                 }
                                 body = {
-                                    assign {
+                                    legacyAssign {
                                         variable = {
                                             name = "this.client"
                                         }

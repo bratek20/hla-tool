@@ -1,5 +1,6 @@
 package com.github.bratek20.codebuilder.ops
 
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
 import org.junit.jupiter.api.Test
 
@@ -8,13 +9,13 @@ class OpsTest {
     fun opsExamples() {
         testCodeBuilderOp {
             op = {
-                assign {
+                legacyAssign {
                     variable = {
                         name = "variable"
                         declare = true
                     }
                     value = {
-                        plus {
+                        legacyPlus {
                             left = {
                                 legacyConst("1")
                             }
@@ -25,7 +26,7 @@ class OpsTest {
                     }
                 }
 
-                assign {
+                legacyAssign {
                     variable = {
                         name = "areEqual"
                         declare = true
@@ -43,7 +44,7 @@ class OpsTest {
                     }
                 }
 
-                assign {
+                legacyAssign {
                     variable = {
                         name = "areEqual"
                     }
@@ -52,7 +53,7 @@ class OpsTest {
                     }
                 }
 
-                returnBlock {
+                legacyReturn {
                     legacyVariable("a")
                 }
             }

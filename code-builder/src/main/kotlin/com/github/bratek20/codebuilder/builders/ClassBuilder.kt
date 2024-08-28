@@ -139,7 +139,7 @@ open class ClassBuilder: CodeBlockBuilder {
         }
         body?.let { add(it) }
         methods.forEach { methodOps ->
-            method(methodOps)
+            legacyMethod(methodOps)
         }
         if (staticMethods.isNotEmpty()) {
             add(staticMethodsSection(c))
@@ -229,7 +229,7 @@ open class ClassBuilder: CodeBlockBuilder {
             line("companion object {")
             tab()
             staticMethods.forEach { methodOps ->
-                method(methodOps)
+                legacyMethod(methodOps)
             }
             untab()
             line("}")

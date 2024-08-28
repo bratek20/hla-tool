@@ -2,7 +2,6 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -85,7 +84,7 @@ class MocksGenerator: PatternGenerator() {
                     }
                     emptyLine()
 
-                    method {
+                    legacyMethod {
                         name = "set${upperCaseName}Response"
                         addArg {
                             name = "args"
@@ -101,7 +100,7 @@ class MocksGenerator: PatternGenerator() {
                     }
 
                     emptyLine()
-                    method {
+                    legacyMethod {
                         override = true
                         name = def.name
                         returnType = type(outputTypeName)
@@ -113,7 +112,7 @@ class MocksGenerator: PatternGenerator() {
                             listOp(callsListName).add {
                                 legacyVariable(inputArgName)
                             }
-                            assign {
+                            legacyAssign {
                                 variable = {
                                     declare = true
                                     name = "findResult"
@@ -133,14 +132,14 @@ class MocksGenerator: PatternGenerator() {
                                     }
                                 }
                             }
-                            returnBlock {
+                            legacyReturn {
                                 //TODO support for ?., support for ?:
                                 linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")
                             }
                         }
                     }
                     emptyLine()
-                    method {
+                    legacyMethod {
                         name = "assert${upperCaseName}Called"
                         addArg {
                             name = "times"
@@ -152,7 +151,7 @@ class MocksGenerator: PatternGenerator() {
                         }
                     }
                     emptyLine()
-                    method {
+                    legacyMethod {
                         name = "assert${upperCaseName}CalledForArgs"
                         addArg {
                             name = "args"
@@ -194,7 +193,7 @@ class MocksGenerator: PatternGenerator() {
                         name = "${moduleName}Mocks"
                         implements = "ContextModule"
                         body = {
-                            method {
+                            legacyMethod {
                                 override = true
                                 name = "apply"
                                 addArg {

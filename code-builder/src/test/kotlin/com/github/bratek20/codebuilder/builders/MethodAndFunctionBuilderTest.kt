@@ -1,7 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
@@ -12,7 +11,7 @@ class MethodAndFunctionBuilderTest {
     fun `empty method`() {
         testCodeBuilderOp {
             op = {
-                method {
+                legacyMethod {
                     name = "someMethod"
                 }
             }
@@ -68,7 +67,9 @@ class MethodAndFunctionBuilderTest {
                         }
                         addVariableAssignment {
                             name = "a"
+                            value = variable("1")
                         }
+                        addReturn(variable("a"))
                     }
                 }
             }
@@ -77,6 +78,8 @@ class MethodAndFunctionBuilderTest {
                 expected = """
                     fun someFunction() {
                         someOtherFunction()
+                        a = 1
+                        return a
                     }
                 """
             }
@@ -85,6 +88,8 @@ class MethodAndFunctionBuilderTest {
                 expected = """
                     function someFunction() {
                         someOtherFunction()
+                        a = 1
+                        return a
                     }
                 """
             }
@@ -96,7 +101,7 @@ class MethodAndFunctionBuilderTest {
     fun `sum method with calls`() {
         testCodeBuilderOp {
             op = {
-                method {
+                add(method {
                     name = "sum"
                     addArg {
                         name = "a"
@@ -107,69 +112,49 @@ class MethodAndFunctionBuilderTest {
                         type = baseType(BaseType.INT)
                     }
                     returnType = baseType(BaseType.INT)
-                    legacyBody = {
-                        returnBlock {
+                    body {
+                        addReturn(
                             plus {
-                                left = { legacyVariable("a") }
-                                right = { legacyVariable("b") }
+                                left = variable("a")
+                                right = variable("b")
                             }
+                        )
+                    }
+                })
+                add(variableAssignment {
+                    name = "result"
+                    value = methodCall {
+                        variableName = "this"
+                        methodName = "sum"
+
+                        addArgLegacy {
+                            legacyConst("1")
+                        }
+                        addArgLegacy {
+                            legacyConst("2")
                         }
                     }
-                }
-                assign {
-                    variable = {
-                        name = "result"
-                    }
-                    value = {
-                        methodCall {
-                            variableName = "this"
+                })
+                add(variableAssignment {
+                    name = "sumOfSum"
+                    value = plus {
+                        left = methodCall {
+                            variableName = "left"
+                            methodName = "sum"
+                            skipSoftEnd = true
+
+                            addArg(const(1))
+                            addArg(const(2))
+                        }
+                        right = methodCall {
+                            variableName = "right"
                             methodName = "sum"
 
-                            addArgLegacy {
-                                legacyConst("1")
-                            }
-                            addArgLegacy {
-                                legacyConst("2")
-                            }
+                            addArg(const(3))
+                            addArg(const(4))
                         }
                     }
-                }
-                assign {
-                    variable = {
-                        name = "sumOfSum"
-                    }
-                    value = {
-                        plus {
-                            left = {
-                                methodCall {
-                                    variableName = "left"
-                                    methodName = "sum"
-                                    skipSoftEnd = true
-
-                                    addArgLegacy {
-                                        legacyConst("1")
-                                    }
-                                    addArgLegacy {
-                                        legacyConst("2")
-                                    }
-                                }
-                            }
-                            right = {
-                                methodCall {
-                                    variableName = "right"
-                                    methodName = "sum"
-
-                                    addArgLegacy {
-                                        legacyConst("3")
-                                    }
-                                    addArgLegacy {
-                                        legacyConst("4")
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -198,7 +183,7 @@ class MethodAndFunctionBuilderTest {
     fun `pair arg`() {
         testCodeBuilderOp {
             op = {
-                method {
+                legacyMethod {
                     name = "sumPair"
                     addArg {
                         name = "p"
@@ -206,8 +191,8 @@ class MethodAndFunctionBuilderTest {
                     }
                     returnType = baseType(BaseType.INT)
                     legacyBody = {
-                        returnBlock {
-                            plus {
+                        legacyReturn {
+                            legacyPlus {
                                 left = { pairOp("p").first() }
                                 right = { pairOp("p").second() }
                             }
@@ -238,7 +223,7 @@ class MethodAndFunctionBuilderTest {
     fun defaultArg() {
         testCodeBuilderOp {
             op = {
-                method {
+                legacyMethod {
                     name = "defaultArg"
                     addArg {
                         name = "a"

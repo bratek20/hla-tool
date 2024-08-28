@@ -2,7 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 
-abstract class CallBuilder: CodeBlockBuilder {
+abstract class CallBuilder: ExpressionBuilder {
     protected abstract fun getCallName(c: CodeBuilderContext): String
     protected open fun beforeName(): String = ""
 
@@ -16,9 +16,9 @@ abstract class CallBuilder: CodeBlockBuilder {
         args.add(ops)
     }
 
-    fun addArg(linePartBuilder: LinePartBuilder) {
+    fun addArg(exp: ExpressionBuilder) {
         args.add {
-            add(linePartBuilder)
+            add(exp)
         }
     }
 
@@ -52,7 +52,7 @@ class MethodCallBuilder: CallBuilder() {
         return variableName?.let { "$it." } ?: ""
     }
 }
-fun CodeBuilder.methodCall(block: MethodCallBuilder.() -> Unit) = add(MethodCallBuilder().apply(block))
+fun methodCall(block: MethodCallBuilder.() -> Unit) = MethodCallBuilder().apply(block)
 
 class FunctionCallBuilder: CallBuilder() {
     lateinit var name: String
