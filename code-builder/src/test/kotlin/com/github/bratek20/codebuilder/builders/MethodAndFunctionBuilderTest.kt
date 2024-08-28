@@ -74,8 +74,8 @@ class MethodAndFunctionBuilderTest {
                     body = {
                         returnBlock {
                             plus {
-                                left = { variable("a") }
-                                right = { variable("b") }
+                                left = { variableLegacy("a") }
+                                right = { variableLegacy("b") }
                             }
                         }
                     }
@@ -89,10 +89,10 @@ class MethodAndFunctionBuilderTest {
                             variableName = "this"
                             methodName = "sum"
 
-                            addArg {
+                            addArgLegacy {
                                 const("1")
                             }
-                            addArg {
+                            addArgLegacy {
                                 const("2")
                             }
                         }
@@ -110,10 +110,10 @@ class MethodAndFunctionBuilderTest {
                                     methodName = "sum"
                                     skipSoftEnd = true
 
-                                    addArg {
+                                    addArgLegacy {
                                         const("1")
                                     }
-                                    addArg {
+                                    addArgLegacy {
                                         const("2")
                                     }
                                 }
@@ -123,10 +123,10 @@ class MethodAndFunctionBuilderTest {
                                     variableName = "right"
                                     methodName = "sum"
 
-                                    addArg {
+                                    addArgLegacy {
                                         const("3")
                                     }
-                                    addArg {
+                                    addArgLegacy {
                                         const("4")
                                     }
                                 }

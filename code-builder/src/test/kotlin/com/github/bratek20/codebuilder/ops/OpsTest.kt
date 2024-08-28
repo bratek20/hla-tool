@@ -34,10 +34,10 @@ class OpsTest {
                     value = {
                         isEqualTo {
                             left = {
-                                variable("a")
+                                variableLegacy("a")
                             }
                             right = {
-                                variable("b")
+                                variableLegacy("b")
                             }
                         }
                     }
@@ -53,7 +53,7 @@ class OpsTest {
                 }
 
                 returnBlock {
-                    variable("a")
+                    variableLegacy("a")
                 }
             }
             langExpected {

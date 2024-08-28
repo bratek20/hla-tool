@@ -95,6 +95,9 @@ private fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationCont
 abstract class PatternGenerator
     : ModulePartGenerator()
 {
+    lateinit var submodule: SubmoduleName
+
+
     @Deprecated("Migrate to code builder", ReplaceWith("applyOperations"))
     open fun generateFileContent(): FileContent? { return null }
 
@@ -122,12 +125,16 @@ abstract class PatternGenerator
         return emptyList()
     }
 
+    open fun doNotGenerateTypeScriptNamespace(): Boolean {
+        return false
+    }
+
     private fun populatedCodeBuilder(): CodeBuilder {
         val cb = CodeBuilder(c.language.base())
         when (c.language.name()) {
             ModuleLanguage.KOTLIN -> {
                 cb.kotlinFile {
-                    packageName = submodulePackage(SubmoduleName.Api, c)
+                    packageName = submodulePackage(submodule, c)
 
                     extraKotlinImports().forEach {
                         addImport(it)
@@ -138,7 +145,16 @@ abstract class PatternGenerator
             }
             ModuleLanguage.TYPE_SCRIPT -> {
                 cb.typeScriptFile {
-                    apply(getOperations())
+                    if (doNotGenerateTypeScriptNamespace()) {
+                        apply(getOperations())
+                    }
+                    else {
+                        namespace {
+                            name = submoduleNamespace(submodule, c)
+
+                            apply(getOperations())
+                        }
+                    }
                 }
             }
             ModuleLanguage.C_SHARP -> {
@@ -153,7 +169,7 @@ abstract class PatternGenerator
                         addUsing(it.getModule().getName().value + ".Api")
                     }
 
-                    namespace(submoduleNamespace(SubmoduleName.Api, c))
+                    namespace(submoduleNamespace(submodule, c))
 
                     apply(getOperations())
                 }
@@ -225,7 +241,10 @@ abstract class SubmoduleGenerator
 
         patternGenerators = getPatternGenerators()
 
-        patternGenerators.forEach { it.init(c, velocityDirPath()) }
+        patternGenerators.forEach {
+            it.init(c, velocityDirPath())
+            it.submodule = submoduleName()
+        }
     }
 
     open fun velocityDirPath(): String {

@@ -4,7 +4,7 @@ import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.ops.const
 import com.github.bratek20.codebuilder.ops.plus
 import com.github.bratek20.codebuilder.ops.string
-import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.ops.variableLegacy
 import org.junit.jupiter.api.Test
 
 class TypesTest {
@@ -178,7 +178,7 @@ class TypesTest {
                 lineEnd()
 
                 listOp("list").add {
-                    variable("someVar")
+                    variableLegacy("someVar")
                 }
 
                 listOp("list").add {
@@ -188,14 +188,14 @@ class TypesTest {
                 lineStart()
                 listOp("list").find {
                     it.isEqualTo {
-                        variable("other")
+                        variableLegacy("other")
                     }
                 }
 
                 lineStart()
                 listOp("list").map {
                     plus {
-                        left = { variable(it.name) }
+                        left = { variableLegacy(it.name) }
                         right = { const("1") }
                     }
                 }

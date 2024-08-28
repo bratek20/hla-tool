@@ -111,7 +111,7 @@ class MocksGenerator: PatternGenerator() {
                         }
                         body = {
                             listOp(callsListName).add {
-                                variable(inputArgName)
+                                variableLegacy(inputArgName)
                             }
                             assign {
                                 variable = {
@@ -124,8 +124,8 @@ class MocksGenerator: PatternGenerator() {
                                             left = {
                                                 functionCall {
                                                     name = inputDiffMethodName
-                                                    addArg { variable(inputArgName) }
-                                                    addArg { pairOp(it.name).first() }
+                                                    addArgLegacy { variableLegacy(inputArgName) }
+                                                    addArgLegacy { pairOp(it.name).first() }
                                                 }
                                             }
                                             right = { string("") }

@@ -26,6 +26,9 @@ class TypeScriptNamespaceBuilderTest {
                             }
                         }
                     }
+                    addFunctionCall {
+                        name = "someFunction"
+                    }
                 }
             }
             langExpected {
@@ -34,9 +37,13 @@ class TypeScriptNamespaceBuilderTest {
                     namespace SomeNamespace {
                         export class SomeClass {
                         }
+                    
                         export function someFunction() {
                         }
+                    
                         export const someConst = new SomeClass()
+                    
+                        someFunction()
                     }
                 """
             }

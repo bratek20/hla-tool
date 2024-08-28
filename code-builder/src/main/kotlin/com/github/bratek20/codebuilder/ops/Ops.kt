@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.ops
 
-import com.github.bratek20.codebuilder.core.CodeBlockBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.*
 
 fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
     lineStart("return ")
@@ -12,7 +9,7 @@ fun CodeBuilder.returnBlock(block: CodeBuilderOps): CodeBuilder {
     return this
 }
 
-class VariableBuilder: CodeBlockBuilder {
+class VariableAssignBuilder: CodeBlockBuilder {
     lateinit var name: String
     var declare: Boolean = false
     var mutable: Boolean = false
@@ -29,15 +26,15 @@ class VariableBuilder: CodeBlockBuilder {
         linePart(name)
     }
 }
-typealias VariableBuilderOps = VariableBuilder.() -> Unit
+typealias VariableAssignBuilderOps = VariableAssignBuilder.() -> Unit
 
 class AssignArgs {
-    lateinit var variable: VariableBuilderOps
+    lateinit var variable: VariableAssignBuilderOps
     lateinit var value: CodeBuilderOps
 }
 fun CodeBuilder.assign(block: AssignArgs.()->Unit): CodeBuilder {
     val args = AssignArgs().apply(block)
-    add(VariableBuilder().apply(args.variable))
+    add(VariableAssignBuilder().apply(args.variable))
     linePart(" = ")
     add(args.value)
     statementLineEnd()
@@ -72,8 +69,19 @@ fun CodeBuilder.const(name: String): CodeBuilder {
     return linePart(name)
 }
 
-fun CodeBuilder.variable(name: String): CodeBuilder {
+fun CodeBuilder.variableLegacy(name: String): CodeBuilder {
     return linePart(name)
+}
+
+class VariableBuilder(
+    val name: String,
+): LinePartBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        return name
+    }
+}
+fun variable(name: String): VariableBuilder {
+    return VariableBuilder(name)
 }
 
 fun CodeBuilder.string(name: String): CodeBuilder {

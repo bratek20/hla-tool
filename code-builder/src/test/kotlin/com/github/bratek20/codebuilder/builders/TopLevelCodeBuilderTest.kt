@@ -22,6 +22,8 @@ class TopLevelCodeBuilderTest {
                         name = "someFun"
                     }
 
+                    addEmptyLines(2)
+
                     addEnum {
                         name = "SomeEnum"
                     }
@@ -38,6 +40,8 @@ class TopLevelCodeBuilderTest {
                     
                     fun someFun() {
                     }
+                    
+                    
                     
                     enum class SomeEnum {
                     }

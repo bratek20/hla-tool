@@ -7,7 +7,7 @@ import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.codebuilder.ops.assign
 import com.github.bratek20.codebuilder.ops.const
 import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.ops.variableLegacy
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -65,7 +65,7 @@ class WebCommonGenerator: PatternGenerator() {
                         returnType = type(arg.type)
                         body = {
                             returnBlock {
-                                variable(arg.apiType.deserialize(arg.name))
+                                variableLegacy(arg.apiType.deserialize(arg.name))
                             }
                         }
                     }
@@ -85,8 +85,8 @@ class WebCommonGenerator: PatternGenerator() {
                         constructorCall {
                             className = requestName(interfName, method)
                             method.args.forEach {
-                                addArg {
-                                    variable(it.apiType.serialize(it.name))
+                                addArgLegacy {
+                                    variableLegacy(it.apiType.serialize(it.name))
                                 }
                             }
                         }
@@ -121,7 +121,7 @@ class WebCommonGenerator: PatternGenerator() {
                         returnType = type(arg.type)
                         body = {
                             returnBlock {
-                                variable(arg.apiType.deserialize("this." + arg.name))
+                                variableLegacy(arg.apiType.deserialize("this." + arg.name))
                             }
                         }
                     }
@@ -154,12 +154,12 @@ class WebCommonGenerator: PatternGenerator() {
                                 name = "instance.${it.name}"
                             }
                             value = {
-                                variable(it.apiType.serialize(it.name))
+                                variableLegacy(it.apiType.serialize(it.name))
                             }
                         }
                     }
                     returnBlock {
-                        variable("instance")
+                        variableLegacy("instance")
                     }
                 }
             }
@@ -188,7 +188,7 @@ class WebCommonGenerator: PatternGenerator() {
                     returnType = type(argType)
                     body = {
                         returnBlock {
-                            variable(argApiType.deserialize("this.$argName"))
+                            variableLegacy(argApiType.deserialize("this.$argName"))
                         }
                     }
                 }
@@ -305,7 +305,7 @@ class WebClientGenerator: PatternGenerator() {
                                             name = "this.client"
                                         }
                                         value =  {
-                                            variable("HttpClient.Api.create(config.value, c)")
+                                            variableLegacy("HttpClient.Api.create(config.value, c)")
                                         }
                                     }
                                 }

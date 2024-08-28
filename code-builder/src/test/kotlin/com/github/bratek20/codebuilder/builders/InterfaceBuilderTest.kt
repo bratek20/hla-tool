@@ -1,12 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.comment
-import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.string
-import com.github.bratek20.codebuilder.ops.variable
-import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.type
 import org.junit.jupiter.api.Test
 
 class InterfaceBuilderTest {

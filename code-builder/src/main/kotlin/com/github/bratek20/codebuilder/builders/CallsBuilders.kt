@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.core.CodeBlockBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.*
 
 abstract class CallBuilder: CodeBlockBuilder {
     protected abstract fun getCallName(c: CodeBuilderContext): String
@@ -13,8 +10,16 @@ abstract class CallBuilder: CodeBlockBuilder {
     var skipSoftEnd: Boolean? = null
 
     private val args: MutableList<CodeBuilderOps> = mutableListOf()
-    fun addArg(ops: CodeBuilderOps) {
+
+    @Deprecated("Use addArg instead", ReplaceWith("addArg"))
+    fun addArgLegacy(ops: CodeBuilderOps) {
         args.add(ops)
+    }
+
+    fun addArg(linePartBuilder: LinePartBuilder) {
+        args.add {
+            add(linePartBuilder)
+        }
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {

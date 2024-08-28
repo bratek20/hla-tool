@@ -1,11 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilder
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.ops.returnBlock
 import com.github.bratek20.codebuilder.ops.string
-import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.ops.variableLegacy
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -56,8 +55,8 @@ class ExceptionsGenerator: PatternGenerator() {
                 }
                 addFunctionCall {
                     name = "ExceptionsRegistry.register"
-                    addArg {
-                        variable(it)
+                    addArgLegacy {
+                        variableLegacy(it)
                     }
                 }
             }
@@ -87,5 +86,9 @@ class ExceptionsGenerator: PatternGenerator() {
 
     override fun extraCSharpUsings(): List<String> {
         return listOf("B20.Architecture.Exceptions.ApiException")
+    }
+
+    override fun doNotGenerateTypeScriptNamespace(): Boolean {
+        return true
     }
 }
