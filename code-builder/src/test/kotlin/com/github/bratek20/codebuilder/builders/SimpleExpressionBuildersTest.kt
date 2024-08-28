@@ -1,14 +1,11 @@
-package com.github.bratek20.codebuilder.ops
+package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.builders.functionCall
-import com.github.bratek20.codebuilder.builders.variable
-import com.github.bratek20.codebuilder.builders.variableAssignment
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
-class VariableAssignmentBuilderTest {
+class SimpleExpressionBuildersTest {
     @Test
     fun `variable assignment`() {
         testCodeBuilderOp {
