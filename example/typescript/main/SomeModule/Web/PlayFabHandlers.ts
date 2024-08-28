@@ -14,21 +14,21 @@ namespace SomeModule.Web {
     }
 
     function someHandler2(rawRequest: any, c: HandlerContext): IOpResult {
-        const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors());
-        const response = Api.someHandler2(request, c);
-        return Utils.OK(response);
+        const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
+        const response = Api.someHandler2(request, c)
+        return Utils.OK(response)
     }
 
     function someDebugHandler(rawRequest: any, c: HandlerContext): IOpResult {
-        const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors());
-        const response = Api.someDebugHandler(request, c);
-        return Utils.OK(response);
+        const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
+        const response = Api.someDebugHandler(request, c)
+        return Utils.OK(response)
     }
 
     function someDebugHandler2(rawRequest: any, c: HandlerContext): IOpResult {
-        const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors());
-        const response = Api.someDebugHandler2(request, c);
-        return Utils.OK(response);
+        const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
+        const response = Api.someDebugHandler2(request, c)
+        return Utils.OK(response)
     }
 
     // Error Codes Mapping

@@ -24,11 +24,22 @@ class PlayFabHandlersGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
+        val moduleName = c.module.getName().value
+
+        val allExposedInterfaces = c.module.getWebSubmodule()!!.getPlayFabHandlers()!!.getExposedInterfaces()
+        val normalExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } == null}
+        val debugExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } != null }
+
         addFunctionCall {
             name = "Handlers.Api.RegisterModuleHandlers"
-            addArg(variable("DependencyName.SomeModule"))
-            addArg(variable("[\"SomeModule.someHandler\", someHandler]"))
-            addArg(variable("[\"SomeModule.someHandler2\", someHandler2]"))
+            addArg(variable("DependencyName.$moduleName"))
+            normalExposedInterfaces.forEach {
+                module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
+                    interf.getMethods().forEach { method ->
+                        addArg(variable("[\"$moduleName.${it.getName()}.${method.getName()}\", ${method.getName()}]"))
+                    }
+                }
+            }
         }
 
         addFunction {
@@ -36,52 +47,63 @@ class PlayFabHandlersGenerator: PatternGenerator() {
             body {
                 addFunctionCall {
                     name = "Handlers.Api.RegisterModuleHandlers"
-                    addArg(variable("DependencyName.SomeModule"))
-                    addArg(variable("[\"SomeModule.Debug.someDebugHandler\", someDebugHandler]"))
-                    addArg(variable("[\"SomeModule.Debug.someDebugHandler2\", someDebugHandler2]"))
-                }
-            }
-        }
-
-//        function someHandler(rawRequest: any, c: HandlerContext): IOpResult {
-//            const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors());
-//            const response = Api.someHandler(request, c);
-//            return Utils.OK(response);
-//        }
-        addFunction {
-            name = "someHandler"
-            addArg {
-                name = "rawRequest"
-                type = baseType(BaseType.ANY)
-            }
-            addArg {
-                name = "c"
-                type = type("HandlerContext")
-            }
-            returnType = type("IOpResult")
-
-            body {
-                addVariableAssignment {
-                    declare = true
-                    name = "request"
-                    value = functionCall {
-                        name = "ObjectCreation.Api.FromInterface"
-                        addArg(variable("SomeHandlerInput"))
-                        addArg(variable("rawRequest"))
-                        addArg(variable("ObjectCreationOptions.noErrors()"))
-                    }
-                }
-                addVariableAssignment {
-                    declare = true
-                    name = "response"
-                    value = functionCall {
-                        name = "Api.someHandler"
-                        addArg(variable("request"))
-                        addArg(variable("c"))
+                    addArg(variable("DependencyName.$moduleName"))
+                    debugExposedInterfaces.forEach {
+                        module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
+                            interf.getMethods().forEach { method ->
+                                addArg(variable("[\"$moduleName.${it.getName()}.${method.getName()}\", ${method.getName()}]"))
+                            }
+                        }
                     }
                 }
             }
         }
-        addEmptyLines(24)
+
+        allExposedInterfaces.forEach {
+            module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
+                interf.getMethods().forEach { method ->
+                    addFunction {
+                        name = method.getName()
+                        addArg {
+                            name = "rawRequest"
+                            type = baseType(BaseType.ANY)
+                        }
+                        addArg {
+                            name = "c"
+                            type = type("HandlerContext")
+                        }
+                        returnType = type("IOpResult")
+
+                        body {
+                            addVariableAssignment {
+                                declare = true
+                                name = "request"
+                                value = functionCall {
+                                    name = "ObjectCreation.Api.FromInterface"
+                                    addArg(variable("${it.getName()}Input"))
+                                    addArg(variable("rawRequest"))
+                                    addArg(variable("ObjectCreationOptions.noErrors()"))
+                                }
+                            }
+                            addVariableAssignment {
+                                declare = true
+                                name = "response"
+                                value = functionCall {
+                                    name = "Api.${it.getName()}"
+                                    addArg(variable("request"))
+                                    addArg(variable("c"))
+                                }
+                            }
+                            addReturn(functionCall {
+                                name = "Utils.OK"
+                                addArg(variable("response"))
+                            })
+                        }
+                    }
+                }
+            }
+        }
+
+        addEmptyLines(5)
     }
 }
