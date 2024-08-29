@@ -81,7 +81,7 @@ data class SomeClass(
 data class SomeClass2(
     private val id: String,
     private val names: List<String>,
-    private val ids: List<SomeId>,
+    private val ids: List<String>,
     private val enabled: Boolean = true,
 ) {
     fun getId(): SomeId {
@@ -93,7 +93,7 @@ data class SomeClass2(
     }
 
     fun getIds(): List<SomeId> {
-        return this.ids
+        return this.ids.map { it -> SomeId(it) }
     }
 
     fun getEnabled(): Boolean {
@@ -110,7 +110,7 @@ data class SomeClass2(
             return SomeClass2(
                 id = id.value,
                 names = names,
-                ids = ids,
+                ids = ids.map { it -> it.value },
                 enabled = enabled,
             )
         }
@@ -152,7 +152,7 @@ data class SomeClass3(
 data class SomeClass4(
     private val otherId: Int,
     private val otherClass: OtherClass,
-    private val otherIdList: List<OtherId>,
+    private val otherIdList: List<Int>,
     private val otherClassList: List<OtherClass>,
 ) {
     fun getOtherId(): OtherId {
@@ -164,7 +164,7 @@ data class SomeClass4(
     }
 
     fun getOtherIdList(): List<OtherId> {
-        return this.otherIdList
+        return this.otherIdList.map { it -> OtherId(it) }
     }
 
     fun getOtherClassList(): List<OtherClass> {
@@ -181,7 +181,7 @@ data class SomeClass4(
             return SomeClass4(
                 otherId = otherId.value,
                 otherClass = otherClass,
-                otherIdList = otherIdList,
+                otherIdList = otherIdList.map { it -> it.value },
                 otherClassList = otherClassList,
             )
         }

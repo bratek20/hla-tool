@@ -5,10 +5,7 @@ import com.github.bratek20.architecture.context.api.ContextModule
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.some.pkg.somemodule.api.*
-import com.some.pkg.somemodule.fixtures.assertClassHavingOptList
-import com.some.pkg.somemodule.fixtures.assertSomeClass
-import com.some.pkg.somemodule.fixtures.classHavingOptList
-import com.some.pkg.somemodule.fixtures.someQueryInput
+import com.some.pkg.somemodule.fixtures.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -33,6 +30,10 @@ class TestSomeInterfaceLogic: SomeInterface {
 
     override fun optMethod(optId: SomeId?): SomeClass? {
         TODO("Not yet implemented")
+    }
+
+    override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
+        return list
     }
 
 }
@@ -106,5 +107,19 @@ open class SomeModuleImplTest {
                 id = "id"
             }
         }
+    }
+
+    @Test
+    fun `should support list of simple vo`() {
+        val result = someInterface.methodWithListOfSimpleVO(
+            listOf(
+                someId("id1"),
+                someId("id2")
+            )
+        )
+
+        assert(result.size == 2)
+        assert(result[0].value == "id1")
+        assert(result[1].value == "id2")
     }
 }

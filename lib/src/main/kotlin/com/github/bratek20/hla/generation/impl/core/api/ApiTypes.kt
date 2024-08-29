@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.generation.impl.core.fixtures.BaseDefType
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
@@ -248,6 +249,24 @@ class ListApiType(
 ) : ApiType() {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
+    }
+
+    override fun serializableName(): String {
+        return languageTypes.wrapWithList(wrappedType.serializableName())
+    }
+
+    override fun deserialize(variableName: String): String {
+        if (wrappedType.name() == wrappedType.serializableName()) {
+            return variableName
+        }
+        return languageTypes.mapListElements(variableName, "it", wrappedType.deserialize("it"))
+    }
+
+    override fun serialize(variableName: String): String {
+        if (wrappedType.name() == wrappedType.serializableName()) {
+            return variableName
+        }
+        return languageTypes.mapListElements(variableName, "it", wrappedType.serialize("it"))
     }
 }
 

@@ -30,6 +30,10 @@ class SomeInterfaceWebClient(
     override fun optMethod(optId: SomeId?): SomeClass? {
         return client.post("/some/prefix/someInterface/optMethod", SomeInterfaceOptMethodRequest.create(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).value
     }
+
+    override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
+        return client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", SomeInterfaceMethodWithListOfSimpleVORequest.create(list)).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse::class.java).value
+    }
 }
 
 class SomeInterface2WebClient(

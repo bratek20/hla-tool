@@ -27,6 +27,10 @@ namespace SomeModule.Api {
         return new Web.SomeInterfaceWebClient(Web.config, c).optMethod(optId)
     }
 
+    export function methodWithListOfSimpleVO(list: SomeId[], c: HandlerContext): SomeId[] {
+        return new Web.SomeInterfaceWebClient(Web.config, c).methodWithListOfSimpleVO(list)
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Web.SomeInterface2WebClient(Web.config, c).referenceOtherClass(other)
     }

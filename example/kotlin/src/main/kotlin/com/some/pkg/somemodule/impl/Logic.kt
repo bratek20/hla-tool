@@ -24,6 +24,10 @@ class SomeInterfaceLogic: SomeInterface {
     override fun optMethod(optId: SomeId?): SomeClass? {
         TODO("Not yet implemented")
     }
+
+    override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
+        TODO("Not yet implemented")
+    }
 }
 
 class SomeInterface2Logic: SomeInterface2 {

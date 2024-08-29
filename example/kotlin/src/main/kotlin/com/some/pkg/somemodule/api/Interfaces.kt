@@ -23,6 +23,8 @@ interface SomeInterface {
     fun someQuery(query: SomeQueryInput): SomeClass
 
     fun optMethod(optId: SomeId?): SomeClass?
+
+    fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId>
 }
 
 interface SomeInterface2 {
