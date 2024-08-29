@@ -4,8 +4,7 @@ namespace OtherModule.Web {
     Handlers.Api.RegisterModuleHandlers(DependencyName.OtherModule, ["OtherModule.otherHandler", otherHandler])
 
     export function otherHandler(rawRequest: any, c: HandlerContext): IOpResult {
-        const request = ObjectCreation.Api.FromInterface(OtherHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
-        const response = Api.otherHandler(request, c)
-        return Utils.OK(response)
+        Api.otherHandler(c)
+        return Utils.OK({})
     }
 }

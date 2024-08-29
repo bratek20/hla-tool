@@ -7,9 +7,3 @@ class OtherInterfaceLogic: OtherInterface {
         TODO("Not yet implemented")
     }
 }
-
-class OtherModuleHandlersLogic: OtherModuleHandlers {
-    override fun otherHandler(i: OtherHandlerInput): OtherHandlerOutput {
-        TODO("Not yet implemented")
-    }
-}
