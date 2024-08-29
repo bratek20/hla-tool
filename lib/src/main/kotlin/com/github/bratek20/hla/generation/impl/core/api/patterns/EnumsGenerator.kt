@@ -1,15 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
-import com.github.bratek20.codebuilder.builders.classBlock
-import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.languages.csharp.cSharpFile
-import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
-import com.github.bratek20.codebuilder.ops.string
+import com.github.bratek20.codebuilder.builders.legacyConstructorCall
+import com.github.bratek20.codebuilder.builders.string
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
 class EnumsGenerator: PatternGenerator() {
@@ -38,9 +33,9 @@ class EnumsGenerator: PatternGenerator() {
                         addField {
                             name = it
                             static = true
-                            value = { constructorCall {
+                            value = { legacyConstructorCall {
                                 className = enumName
-                                addArg {
+                                addArgLegacy {
                                     string(it)
                                 }
                             } }
@@ -57,5 +52,9 @@ class EnumsGenerator: PatternGenerator() {
                 }
             }
         }
+    }
+
+    override fun doNotGenerateTypeScriptNamespace(): Boolean {
+        return true
     }
 }

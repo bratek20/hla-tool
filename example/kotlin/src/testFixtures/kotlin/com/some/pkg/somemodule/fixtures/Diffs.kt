@@ -276,6 +276,44 @@ fun diffSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInp
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeHandlerInput(
+    var id: String? = null,
+    var amount: Int? = null,
+)
+fun diffSomeHandlerInput(given: SomeHandlerInput, expectedInit: ExpectedSomeHandlerInput.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeHandlerInput().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+    }
+
+    expected.amount?.let {
+        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeHandlerOutput(
+    var id: String? = null,
+    var amount: Int? = null,
+)
+fun diffSomeHandlerOutput(given: SomeHandlerOutput, expectedInit: ExpectedSomeHandlerOutput.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeHandlerOutput().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+    }
+
+    expected.amount?.let {
+        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeProperty(
     var other: (ExpectedOtherProperty.() -> Unit)? = null,
     var id2Empty: Boolean? = null,

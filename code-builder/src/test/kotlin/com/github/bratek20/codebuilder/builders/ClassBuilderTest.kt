@@ -1,10 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.comment
-import com.github.bratek20.codebuilder.ops.returnBlock
-import com.github.bratek20.codebuilder.ops.string
-import com.github.bratek20.codebuilder.ops.variable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
 import org.junit.jupiter.api.Test
@@ -87,7 +83,7 @@ class ClassBuilderTest {
                     addField {
                         name = "someField"
                         static = true
-                        value = { constructorCall { className = "OtherClass"; addArg { string("SomeStr") } } }
+                        value = { legacyConstructorCall { className = "OtherClass"; addArgLegacy { string("SomeStr") } } }
                     }
                 }
             }
@@ -183,7 +179,7 @@ class ClassBuilderTest {
                             accessor = FieldAccessor.PRIVATE
                             name = "a"
                             type = type("A")
-                            value = { variable("null") }
+                            value = { legacyVariable("null") }
                         }
                         field {
                             name = "b"
@@ -316,7 +312,7 @@ class ClassBuilderTest {
     fun constructorCall() {
         testCodeBuilderOp {
             op = {
-                constructorCall {
+                legacyConstructorCall {
                     className = "SomeClass"
                 }
             }
@@ -349,26 +345,24 @@ class ClassBuilderTest {
                         }
                     }
                     body = {
-                        method {
+                        legacyMethod {
                             name = "getId"
                             returnType = type("SomeId")
-                            body = {
-                                returnBlock {
-                                    constructorCall {
+                            legacyBody = {
+                                legacyReturn {
+                                    legacyConstructorCall {
                                         className = "SomeId"
-                                        addArg {
-                                            variable("id")
-                                        }
+                                        addArg(variable("id"))
                                     }
                                 }
                             }
                         }
-                        method {
+                        legacyMethod {
                             name = "getAmount"
                             returnType = baseType(BaseType.INT)
-                            body = {
-                                returnBlock {
-                                    variable("amount")
+                            legacyBody = {
+                                legacyReturn {
+                                    legacyVariable("amount")
                                 }
                             }
                         }
@@ -384,15 +378,15 @@ class ClassBuilderTest {
                             type = baseType(BaseType.INT)
                             name = "amount"
                         }
-                        body = {
-                            returnBlock {
-                                constructorCall {
+                        legacyBody = {
+                            legacyReturn {
+                                legacyConstructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
-                                    addArg {
-                                        variable("id.value")
+                                    addArgLegacy {
+                                        legacyVariable("id.value")
                                     }
-                                    addArg {
-                                        variable("amount")
+                                    addArgLegacy {
+                                        legacyVariable("amount")
                                     }
                                 }
                             }

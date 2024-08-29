@@ -36,3 +36,19 @@ interface SomeInterface3 {
 
     fun referenceOtherInterface(other: OtherInterface): OtherInterface
 }
+
+interface SomeModuleHandlers {
+    @Throws(
+        SomeException::class,
+        Some2Exception::class,
+    )
+    fun someHandler(i: SomeHandlerInput): SomeHandlerOutput
+
+    fun someHandler2(i: SomeHandlerInput): SomeHandlerOutput
+}
+
+interface SomeModuleDebugHandlers {
+    fun someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput
+
+    fun someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
+}

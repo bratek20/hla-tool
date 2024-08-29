@@ -4,8 +4,8 @@ import com.github.bratek20.architecture.context.someContextBuilder
 import com.some.pkg.othermodule.fixtures.assertOtherClass
 import com.some.pkg.othermodule.fixtures.otherClass
 import com.some.pkg.somemodule.api.SomeInterface2
-import com.some.pkg.somemodule.fixtures.SomeInterface2Mock
-import com.some.pkg.somemodule.fixtures.SomeModuleMocks
+import graveyard.SomeInterface2Mock
+import graveyard.SomeModuleMocks
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

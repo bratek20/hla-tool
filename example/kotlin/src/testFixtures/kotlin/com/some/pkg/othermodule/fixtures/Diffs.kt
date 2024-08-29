@@ -47,6 +47,34 @@ fun diffOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Uni
     return result.joinToString("\n")
 }
 
+data class ExpectedOtherHandlerInput(
+    var id: Int? = null,
+)
+fun diffOtherHandlerInput(given: OtherHandlerInput, expectedInit: ExpectedOtherHandlerInput.() -> Unit, path: String = ""): String {
+    val expected = ExpectedOtherHandlerInput().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffOtherId(given.getId(), it) != "") { result.add(diffOtherId(given.getId(), it, "${path}id.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedOtherHandlerOutput(
+    var id: Int? = null,
+)
+fun diffOtherHandlerOutput(given: OtherHandlerOutput, expectedInit: ExpectedOtherHandlerOutput.() -> Unit, path: String = ""): String {
+    val expected = ExpectedOtherHandlerOutput().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffOtherId(given.getId(), it) != "") { result.add(diffOtherId(given.getId(), it, "${path}id.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedOtherData(
     var id: Int? = null,
 )

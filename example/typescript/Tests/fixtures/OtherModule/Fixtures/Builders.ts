@@ -33,6 +33,28 @@ namespace OtherModule.Builder {
         )
     }
 
+    export interface OtherHandlerInputDef {
+        id?: number,
+    }
+    export function otherHandlerInput(def?: OtherHandlerInputDef): OtherHandlerInput {
+        const final_id = def?.id ?? 0
+
+        return OtherHandlerInput.create(
+            new OtherId(final_id),
+        )
+    }
+
+    export interface OtherHandlerOutputDef {
+        id?: number,
+    }
+    export function otherHandlerOutput(def?: OtherHandlerOutputDef): OtherHandlerOutput {
+        const final_id = def?.id ?? 0
+
+        return OtherHandlerOutput.create(
+            new OtherId(final_id),
+        )
+    }
+
     export interface OtherDataDef {
         id?: number,
     }

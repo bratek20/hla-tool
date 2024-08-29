@@ -31,4 +31,20 @@ namespace SomeModule.Api {
     export function referenceOtherInterface(other: OtherInterface, c: HandlerContext): OtherInterface {
         return new Impl.SomeInterface3Logic(c).referenceOtherInterface(other)
     }
+
+    export function someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleHandlersLogic(c).someHandler(i)
+    }
+
+    export function someHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleHandlersLogic(c).someHandler2(i)
+    }
+
+    export function someDebugHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleDebugHandlersLogic(c).someDebugHandler(i)
+    }
+
+    export function someDebugHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleDebugHandlersLogic(c).someDebugHandler2(i)
+    }
 }

@@ -1,11 +1,8 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.core.CodeBlockBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.*
 
-abstract class CallBuilder: CodeBlockBuilder {
+abstract class CallBuilder: ExpressionBuilder {
     protected abstract fun getCallName(c: CodeBuilderContext): String
     protected open fun beforeName(): String = ""
 
@@ -13,8 +10,16 @@ abstract class CallBuilder: CodeBlockBuilder {
     var skipSoftEnd: Boolean? = null
 
     private val args: MutableList<CodeBuilderOps> = mutableListOf()
-    fun addArg(ops: CodeBuilderOps) {
+
+    @Deprecated("Use addArg instead", ReplaceWith("addArg"))
+    fun addArgLegacy(ops: CodeBuilderOps) {
         args.add(ops)
+    }
+
+    fun addArg(exp: ExpressionBuilder) {
+        args.add {
+            add(exp)
+        }
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
@@ -47,7 +52,7 @@ class MethodCallBuilder: CallBuilder() {
         return variableName?.let { "$it." } ?: ""
     }
 }
-fun CodeBuilder.methodCall(block: MethodCallBuilder.() -> Unit) = add(MethodCallBuilder().apply(block))
+fun methodCall(block: MethodCallBuilder.() -> Unit) = MethodCallBuilder().apply(block)
 
 class FunctionCallBuilder: CallBuilder() {
     lateinit var name: String
@@ -57,7 +62,8 @@ class FunctionCallBuilder: CallBuilder() {
     }
 }
 typealias FunctionCallBuilderOps = FunctionCallBuilder.() -> Unit
-fun CodeBuilder.functionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
+fun CodeBuilder.legacyFunctionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
+fun functionCall(block: FunctionCallBuilderOps) = FunctionCallBuilder().apply(block)
 
 class ConstructorCallBuilder: CallBuilder() {
     lateinit var className: String
@@ -66,4 +72,5 @@ class ConstructorCallBuilder: CallBuilder() {
         return c.lang.constructorCall(className)
     }
 }
-fun CodeBuilder.constructorCall(block: ConstructorCallBuilder.() -> Unit) = add(ConstructorCallBuilder().apply(block))
+fun constructorCall(block: ConstructorCallBuilder.() -> Unit) = ConstructorCallBuilder().apply(block)
+fun CodeBuilder.legacyConstructorCall(block: ConstructorCallBuilder.() -> Unit) = add(ConstructorCallBuilder().apply(block))

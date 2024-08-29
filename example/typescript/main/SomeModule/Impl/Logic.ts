@@ -62,4 +62,36 @@ namespace SomeModule.Impl {
             return undefined
         }
     }
+
+    export class SomeModuleHandlersLogic implements SomeModuleHandlers {
+        constructor(
+            private readonly c: HandlerContext,
+        ) {}
+
+        someHandler(i: SomeHandlerInput): SomeHandlerOutput {
+            // TODO
+            return undefined
+        }
+
+        someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
+            // TODO
+            return undefined
+        }
+    }
+
+    export class SomeModuleDebugHandlersLogic implements SomeModuleDebugHandlers {
+        constructor(
+            private readonly c: HandlerContext,
+        ) {}
+
+        someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
+            // TODO
+            return undefined
+        }
+
+        someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
+            // TODO
+            return undefined
+        }
+    }
 }

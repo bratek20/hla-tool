@@ -29,6 +29,21 @@ fun assertHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefini
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertExposedInterface(given: ExposedInterface, expectedInit: ExpectedExposedInterface.() -> Unit) {
+    val diff = diffExposedInterface(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertErrorCodeMapping(given: ErrorCodeMapping, expectedInit: ExpectedErrorCodeMapping.() -> Unit) {
+    val diff = diffErrorCodeMapping(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertPlayFabHandlersDefinition(given: PlayFabHandlersDefinition, expectedInit: ExpectedPlayFabHandlersDefinition.() -> Unit) {
+    val diff = diffPlayFabHandlersDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: ExpectedWebSubmoduleDefinition.() -> Unit) {
     val diff = diffWebSubmoduleDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

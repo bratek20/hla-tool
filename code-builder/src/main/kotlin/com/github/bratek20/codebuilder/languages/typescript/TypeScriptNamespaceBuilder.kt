@@ -25,33 +25,33 @@ class ConstBuilder: CodeBlockBuilder {
 }
 typealias ConstBuilderOps = ConstBuilder.() -> Unit
 
-class TypeScriptNamespaceBuilder: CodeBlockBuilder {
+class TypeScriptNamespaceBuilder: TopLevelCodeBuilder() {
     lateinit var name: String
 
-    private val body: MutableList<CodeBlockBuilder> = mutableListOf()
-
-    fun addClass(block: ClassBuilderOps) {
-        body.add(NamespaceClassBuilder().apply(block))
+    override fun addClass(block: ClassBuilderOps) {
+        addOp(NamespaceClassBuilder().apply(block))
     }
 
-    fun addFunction(block: FunctionBuilderOps) {
-        body.add(NamespaceFunctionBuilder().apply(block))
+    override fun addFunction(block: FunctionBuilderOps) {
+        addOp(NamespaceFunctionBuilder().apply(block))
     }
 
     fun addConst(block: ConstBuilderOps) {
-        body.add(ConstBuilder().apply(block))
+        addOp(ConstBuilder().apply(block))
     }
 
-    fun addEnum(block: EnumBuilderOps) {
-        body.add(EnumBuilder().apply(block))
+    override fun beforeOperations(): CodeBuilderOps {
+        return {
+            line("namespace $name {")
+            tab()
+        }
     }
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        line("namespace $name {")
-        tab()
-        body.forEach { add(it) }
-        untab()
-        line("}")
+    override fun afterOperations(): CodeBuilderOps {
+        return {
+            untab()
+            line("}")
+        }
     }
 }
 typealias TypeScriptNamespaceBuilderOps = TypeScriptNamespaceBuilder.() -> Unit

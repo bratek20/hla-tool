@@ -61,13 +61,51 @@ fun httpDefinition(init: HttpDefinitionDef.() -> Unit = {}): HttpDefinition {
     )
 }
 
+data class ExposedInterfaceDef(
+    var name: String = "someValue",
+    var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
+)
+fun exposedInterface(init: ExposedInterfaceDef.() -> Unit = {}): ExposedInterface {
+    val def = ExposedInterfaceDef().apply(init)
+    return ExposedInterface.create(
+        name = def.name,
+        attributes = def.attributes.map { it -> attribute(it) },
+    )
+}
+
+data class ErrorCodeMappingDef(
+    var exceptionName: String = "someValue",
+    var code: String = "someValue",
+)
+fun errorCodeMapping(init: ErrorCodeMappingDef.() -> Unit = {}): ErrorCodeMapping {
+    val def = ErrorCodeMappingDef().apply(init)
+    return ErrorCodeMapping.create(
+        exceptionName = def.exceptionName,
+        code = def.code,
+    )
+}
+
+data class PlayFabHandlersDefinitionDef(
+    var exposedInterfaces: List<(ExposedInterfaceDef.() -> Unit)> = emptyList(),
+    var errorCodesMapping: List<(ErrorCodeMappingDef.() -> Unit)> = emptyList(),
+)
+fun playFabHandlersDefinition(init: PlayFabHandlersDefinitionDef.() -> Unit = {}): PlayFabHandlersDefinition {
+    val def = PlayFabHandlersDefinitionDef().apply(init)
+    return PlayFabHandlersDefinition.create(
+        exposedInterfaces = def.exposedInterfaces.map { it -> exposedInterface(it) },
+        errorCodesMapping = def.errorCodesMapping.map { it -> errorCodeMapping(it) },
+    )
+}
+
 data class WebSubmoduleDefinitionDef(
     var http: (HttpDefinitionDef.() -> Unit)? = null,
+    var playFabHandlers: (PlayFabHandlersDefinitionDef.() -> Unit)? = null,
 )
 fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): WebSubmoduleDefinition {
     val def = WebSubmoduleDefinitionDef().apply(init)
     return WebSubmoduleDefinition.create(
         http = def.http?.let { it -> httpDefinition(it) },
+        playFabHandlers = def.playFabHandlers?.let { it -> playFabHandlersDefinition(it) },
     )
 }
 

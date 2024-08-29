@@ -5,3 +5,7 @@ package com.some.pkg.othermodule.api
 interface OtherInterface {
     fun otherMethod(): Unit
 }
+
+interface OtherModuleHandlers {
+    fun otherHandler(i: OtherHandlerInput): OtherHandlerOutput
+}

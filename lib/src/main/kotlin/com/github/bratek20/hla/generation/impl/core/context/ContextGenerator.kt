@@ -34,6 +34,9 @@ class WebContextGenerator: PatternGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
+        if (c.module.getWebSubmodule()?.getHttp() == null) {
+            return null
+        }
         return c.module.getWebSubmodule()?.let { web ->
             contentBuilder("web.vm")
                 .put("serverUrl", "\"http://localhost:8080\"")
@@ -69,7 +72,7 @@ class WebContextGenerator: PatternGenerator() {
                                     name = "c"
                                     type = type("HandlerContext")
                                 }
-                                body = {
+                                legacyBody = {
                                     val returnPart = if (m.returnType != "void") "return " else ""
                                     line("${returnPart}new Web.${interf.name}WebClient(Web.config, c).${m.name}(${m.argsPass()})")
                                 }

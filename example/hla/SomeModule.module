@@ -121,6 +121,25 @@ Interfaces
         referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
         referenceOtherInterface(other: OtherInterface): OtherInterface
 
+    SomeModuleHandlers
+        SomeHandlerInput
+            id: SomeId
+            amount: int
+        SomeHandlerOutput
+            id: SomeId
+            amount: int
+        someHandler(i: SomeHandlerInput): SomeHandlerOutput
+            throws
+                SomeException
+                Some2Exception
+
+        someHandler2(i: SomeHandlerInput): SomeHandlerOutput
+
+    SomeModuleDebugHandlers
+        someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput
+
+        someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
+
 Kotlin
     ExternalTypePackages
         LegacyType -> com.some.pkg.legacy
@@ -135,3 +154,11 @@ Web
         baseUrl = "someService.baseUrl2"
         auth = "someService.auth2"
         urlPathPrefix = "/some/prefix"
+
+    PlayFabHandlers
+        ExposedInterfaces
+            SomeModuleHandlers
+            SomeModuleDebugHandlers (debug)
+        ErrorCodesMapping
+            SomeException -> "EC1"
+            Some2Exception -> "EC2"
