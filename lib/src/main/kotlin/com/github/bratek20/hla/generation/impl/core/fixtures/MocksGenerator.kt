@@ -27,6 +27,10 @@ class MocksGenerator: PatternGenerator() {
         return module.getInterfaces().isNotEmpty()
     }
 
+    override fun doNotGenerateTypeScriptNamespace(): Boolean {
+        return true
+    }
+
     class View(
         val c: ModuleGenerationContext,
         val lang: CodeBuilderLanguage,
