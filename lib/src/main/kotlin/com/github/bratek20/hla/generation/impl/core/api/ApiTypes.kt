@@ -256,14 +256,14 @@ class ListApiType(
     }
 
     override fun deserialize(variableName: String): String {
-        if (wrappedType is BaseApiType) {
+        if (wrappedType.name() == wrappedType.serializableName()) {
             return variableName
         }
         return languageTypes.mapListElements(variableName, "it", wrappedType.deserialize("it"))
     }
 
     override fun serialize(variableName: String): String {
-        if (wrappedType is BaseApiType) {
+        if (wrappedType.name() == wrappedType.serializableName()) {
             return variableName
         }
         return languageTypes.mapListElements(variableName, "it", wrappedType.serialize("it"))
