@@ -14,18 +14,27 @@ namespace SomeModule.Api {
     export function someEmptyMethod(c: HandlerContext): void {
         new Web.SomeInterfaceWebClient(Web.config, c).someEmptyMethod()
     }
+
     export function someCommand(id: SomeId, amount: number, c: HandlerContext): void {
         new Web.SomeInterfaceWebClient(Web.config, c).someCommand(id, amount)
     }
+
     export function someQuery(query: SomeQueryInput, c: HandlerContext): SomeClass {
         return new Web.SomeInterfaceWebClient(Web.config, c).someQuery(query)
     }
+
     export function optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {
         return new Web.SomeInterfaceWebClient(Web.config, c).optMethod(optId)
     }
+
+    export function methodWithListOfSimpleVO(list: SomeId[], c: HandlerContext): SomeId[] {
+        return new Web.SomeInterfaceWebClient(Web.config, c).methodWithListOfSimpleVO(list)
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Web.SomeInterface2WebClient(Web.config, c).referenceOtherClass(other)
     }
+
     export function referenceLegacyType(legacyType: LegacyType, c: HandlerContext): LegacyType {
         return new Web.SomeInterface2WebClient(Web.config, c).referenceLegacyType(legacyType)
     }

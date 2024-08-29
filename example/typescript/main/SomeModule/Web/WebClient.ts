@@ -21,7 +21,11 @@ namespace SomeModule.Web {
         optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
             return this.client.post("/some/prefix/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().getValue()
         }
+        methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
+            return this.client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional.of(SomeInterfaceMethodWithListOfSimpleVORequest.create(list))).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse).get().getValue()
+        }
     }
+
     export class SomeInterface2WebClient implements SomeInterface2 {
         constructor(
             config: SomeModuleWebClientConfig,

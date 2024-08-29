@@ -19,6 +19,8 @@ namespace SomeModule.Api {
         SomeClass someQuery(SomeQueryInput query);
 
         Optional<SomeClass> optMethod(Optional<SomeId> optId);
+
+        SomeId[] methodWithListOfSimpleVO(SomeId[] list);
     }
 
     public interface SomeInterface2 {
@@ -31,5 +33,19 @@ namespace SomeModule.Api {
         SomeEmptyInterface referenceInterface(SomeEmptyInterface empty);
 
         OtherInterface referenceOtherInterface(OtherInterface other);
+    }
+
+    public interface SomeModuleHandlers {
+        /// <exception cref="SomeException"/>
+        /// <exception cref="Some2Exception"/>
+        SomeHandlerOutput someHandler(SomeHandlerInput i);
+
+        SomeHandlerOutput someHandler2(SomeHandlerInput i);
+    }
+
+    public interface SomeModuleDebugHandlers {
+        SomeHandlerOutput someDebugHandler(SomeHandlerInput i);
+
+        SomeHandlerOutput someDebugHandler2(SomeHandlerInput i);
     }
 }

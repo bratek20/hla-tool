@@ -70,7 +70,7 @@ class DiffsGenerator: PatternGenerator() {
                 defaultValue = "\"\""
             }
             returnType = baseType(BaseType.STRING)
-            body = {
+            legacyBody = {
                 line("if (given != expected) { return \"\${path}value \${given} != \${expected}\" }")
                 line("return \"\"")
             }

@@ -23,6 +23,8 @@ interface SomeInterface {
     fun someQuery(query: SomeQueryInput): SomeClass
 
     fun optMethod(optId: SomeId?): SomeClass?
+
+    fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId>
 }
 
 interface SomeInterface2 {
@@ -35,4 +37,20 @@ interface SomeInterface3 {
     fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 
     fun referenceOtherInterface(other: OtherInterface): OtherInterface
+}
+
+interface SomeModuleHandlers {
+    @Throws(
+        SomeException::class,
+        Some2Exception::class,
+    )
+    fun someHandler(i: SomeHandlerInput): SomeHandlerOutput
+
+    fun someHandler2(i: SomeHandlerInput): SomeHandlerOutput
+}
+
+interface SomeModuleDebugHandlers {
+    fun someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput
+
+    fun someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
 }

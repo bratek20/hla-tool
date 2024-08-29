@@ -92,7 +92,7 @@ class SomeClass {
 class SomeClass2 {
     private id = STRING
     private names = [STRING]
-    private ids = [new SomeId]
+    private ids = [STRING]
     private enabled = BOOLEAN
 
     static create(
@@ -104,7 +104,7 @@ class SomeClass2 {
         const instance = new SomeClass2()
         instance.id = id.value
         instance.names = names
-        instance.ids = ids
+        instance.ids = ids.map(it => it.value)
         instance.enabled = enabled
         return instance
     }
@@ -118,7 +118,7 @@ class SomeClass2 {
     }
 
     getIds(): SomeId[] {
-        return this.ids
+        return this.ids.map(it => new SomeId(it))
     }
 
     getEnabled(): boolean {
@@ -159,7 +159,7 @@ class SomeClass3 {
 class SomeClass4 {
     private otherId = NUMBER
     private otherClass = new OtherClass
-    private otherIdList = [new OtherId]
+    private otherIdList = [NUMBER]
     private otherClassList = [new OtherClass]
 
     static create(
@@ -171,7 +171,7 @@ class SomeClass4 {
         const instance = new SomeClass4()
         instance.otherId = otherId.value
         instance.otherClass = otherClass
-        instance.otherIdList = otherIdList
+        instance.otherIdList = otherIdList.map(it => it.value)
         instance.otherClassList = otherClassList
         return instance
     }
@@ -185,7 +185,7 @@ class SomeClass4 {
     }
 
     getOtherIdList(): OtherId[] {
-        return this.otherIdList
+        return this.otherIdList.map(it => new OtherId(it))
     }
 
     getOtherClassList(): OtherClass[] {
@@ -331,6 +331,52 @@ class SomeQueryInput {
         amount: number,
     ): SomeQueryInput {
         const instance = new SomeQueryInput()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}
+
+class SomeHandlerInput {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): SomeHandlerInput {
+        const instance = new SomeHandlerInput()
+        instance.id = id.value
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}
+
+class SomeHandlerOutput {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): SomeHandlerOutput {
+        const instance = new SomeHandlerOutput()
         instance.id = id.value
         instance.amount = amount
         return instance

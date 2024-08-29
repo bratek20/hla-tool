@@ -1,10 +1,10 @@
 package com.github.bratek20.codebuilder.types
 
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.const
-import com.github.bratek20.codebuilder.ops.plus
-import com.github.bratek20.codebuilder.ops.string
-import com.github.bratek20.codebuilder.ops.variable
+import com.github.bratek20.codebuilder.builders.legacyConst
+import com.github.bratek20.codebuilder.builders.legacyPlus
+import com.github.bratek20.codebuilder.builders.string
+import com.github.bratek20.codebuilder.builders.legacyVariable
 import org.junit.jupiter.api.Test
 
 class TypesTest {
@@ -178,7 +178,7 @@ class TypesTest {
                 lineEnd()
 
                 listOp("list").add {
-                    variable("someVar")
+                    legacyVariable("someVar")
                 }
 
                 listOp("list").add {
@@ -188,15 +188,15 @@ class TypesTest {
                 lineStart()
                 listOp("list").find {
                     it.isEqualTo {
-                        variable("other")
+                        legacyVariable("other")
                     }
                 }
 
                 lineStart()
                 listOp("list").map {
-                    plus {
-                        left = { variable(it.name) }
-                        right = { const("1") }
+                    legacyPlus {
+                        left = { legacyVariable(it.name) }
+                        right = { legacyConst("1") }
                     }
                 }
             }

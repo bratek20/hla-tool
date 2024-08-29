@@ -1,7 +1,7 @@
 package com.github.bratek20.codebuilder.core
 
 enum class BaseType {
-    INT, STRING, BOOLEAN
+    INT, STRING, BOOLEAN, ANY
 }
 
 interface CodeBuilderLanguage {
@@ -81,6 +81,7 @@ class Kotlin: CodeBuilderLanguage {
             BaseType.INT -> "Int"
             BaseType.STRING -> "String"
             BaseType.BOOLEAN -> "Boolean"
+            BaseType.ANY -> "Any"
         }
     }
 
@@ -195,6 +196,7 @@ class TypeScript: CodeBuilderLanguage {
             BaseType.INT -> "number"
             BaseType.STRING -> "string"
             BaseType.BOOLEAN -> "boolean"
+            BaseType.ANY -> "any"
         }
     }
 
@@ -309,6 +311,7 @@ class CSharp: CodeBuilderLanguage {
             BaseType.INT -> "int"
             BaseType.STRING -> "string"
             BaseType.BOOLEAN -> "bool"
+            BaseType.ANY -> "object"
         }
     }
 

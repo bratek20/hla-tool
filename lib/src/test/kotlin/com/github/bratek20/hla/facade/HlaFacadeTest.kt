@@ -156,11 +156,11 @@ class HlaFacadeTest {
         fun cSharpTestPaths(moduleName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/c-sharp/Main/$moduleName",
-                exampleFixturesPath = "../example/c-sharp/Tests/fixtures/$moduleName",
-                exampleTestsPath = "../example/c-sharp/Tests/test/$moduleName",
+                exampleFixturesPath = "../example/c-sharp/Tests/Fixtures/$moduleName",
+                exampleTestsPath = "../example/c-sharp/Tests/Test/$moduleName",
                 expectedMainPath = "../example/hla/../c-sharp/Main",
-                expectedFixturesPath = "../example/hla/../c-sharp/Tests/fixtures",
-                expectedTestsPath = "../example/hla/../c-sharp/Tests/test",
+                expectedFixturesPath = "../example/hla/../c-sharp/Tests/Fixtures",
+                expectedTestsPath = "../example/hla/../c-sharp/Tests/Test",
             )
         }
 
@@ -269,22 +269,22 @@ class HlaFacadeTest {
         )
 
         //then
-        directoriesMock.assertWriteCount(1)
+        directoriesMock.assertWriteCount(2)
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
         )
-//        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
-//            2,
-//            paths.expectedFixturesPath
-//        )
+        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+            2,
+            paths.expectedFixturesPath
+        )
 //        val testsDirectory = directoriesMock.assertWriteAndGetDirectory(
 //            3,
 //            paths.expectedTestsPath
 //        )
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
-//        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
+        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
 //        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
     }
 
@@ -336,6 +336,10 @@ class HlaFacadeTest {
         val expectedMainDirectoriesToSkipUpdate = setOf<String>(
         )
 
+        val expectedFixturesFilesToSkipUpdate = setOf(
+            "fixtures/Mocks",
+        )
+
         //tests directory is not updated
 
         //when
@@ -376,11 +380,17 @@ class HlaFacadeTest {
                 "Directory somemodule/$it not found in second directory"
             }
 
+        val expectedFixturesDifference = expectedFixturesFilesToSkipUpdate.map {
+            "File somemodule/$it.kt not found in second directory"
+        }
+
         assertThat(mainCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
             expectedMainDifference
         )
 
-        assertThat(fixturesCompareResult.getDifferences()).isEmpty()
+        assertThat(fixturesCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
+            expectedFixturesDifference
+        )
     }
 
     @Nested
@@ -468,7 +478,6 @@ class HlaFacadeTest {
                 "SomeModule/Fixtures/Builders.kt updated",
                 "SomeModule/Fixtures/Diffs.kt updated",
                 "SomeModule/Fixtures/Asserts.kt updated",
-                "SomeModule/Fixtures/Mocks.kt updated",
             )
         }
     }

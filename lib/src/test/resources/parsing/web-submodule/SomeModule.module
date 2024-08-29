@@ -14,3 +14,10 @@ Web
         baseUrl = "someService.baseUrl"
         auth = "someService.auth"
         urlPathPrefix = "/some/prefix"
+    PlayFabHandlers
+        ExposedInterfaces
+            SomeInterface
+            SomeInterface2 (debug)
+        ErrorCodesMapping
+            SomeException -> "EC1"
+            SomeException2 -> "EC2"

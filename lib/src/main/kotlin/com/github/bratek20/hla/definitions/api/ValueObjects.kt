@@ -125,19 +125,101 @@ data class HttpDefinition(
     }
 }
 
+data class ExposedInterface(
+    private val name: String,
+    private val attributes: List<Attribute>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getAttributes(): List<Attribute> {
+        return this.attributes
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            attributes: List<Attribute>,
+        ): ExposedInterface {
+            return ExposedInterface(
+                name = name,
+                attributes = attributes,
+            )
+        }
+    }
+}
+
+data class ErrorCodeMapping(
+    private val exceptionName: String,
+    private val code: String,
+) {
+    fun getExceptionName(): String {
+        return this.exceptionName
+    }
+
+    fun getCode(): String {
+        return this.code
+    }
+
+    companion object {
+        fun create(
+            exceptionName: String,
+            code: String,
+        ): ErrorCodeMapping {
+            return ErrorCodeMapping(
+                exceptionName = exceptionName,
+                code = code,
+            )
+        }
+    }
+}
+
+data class PlayFabHandlersDefinition(
+    private val exposedInterfaces: List<ExposedInterface>,
+    private val errorCodesMapping: List<ErrorCodeMapping>,
+) {
+    fun getExposedInterfaces(): List<ExposedInterface> {
+        return this.exposedInterfaces
+    }
+
+    fun getErrorCodesMapping(): List<ErrorCodeMapping> {
+        return this.errorCodesMapping
+    }
+
+    companion object {
+        fun create(
+            exposedInterfaces: List<ExposedInterface>,
+            errorCodesMapping: List<ErrorCodeMapping>,
+        ): PlayFabHandlersDefinition {
+            return PlayFabHandlersDefinition(
+                exposedInterfaces = exposedInterfaces,
+                errorCodesMapping = errorCodesMapping,
+            )
+        }
+    }
+}
+
 data class WebSubmoduleDefinition(
     private val http: HttpDefinition?,
+    private val playFabHandlers: PlayFabHandlersDefinition?,
 ) {
     fun getHttp(): HttpDefinition? {
         return this.http
     }
 
+    fun getPlayFabHandlers(): PlayFabHandlersDefinition? {
+        return this.playFabHandlers
+    }
+
     companion object {
         fun create(
             http: HttpDefinition?,
+            playFabHandlers: PlayFabHandlersDefinition?,
         ): WebSubmoduleDefinition {
             return WebSubmoduleDefinition(
                 http = http,
+                playFabHandlers = playFabHandlers,
             )
         }
     }

@@ -33,8 +33,21 @@ ValueObjects
         auth: string?
         urlPathPrefix: string?
 
+    ExposedInterface
+        name: string
+        attributes: Attribute[]
+
+    ErrorCodeMapping
+        exceptionName: string
+        code: string
+
+    PlayFabHandlersDefinition
+        exposedInterfaces: ExposedInterface[]
+        errorCodesMapping: ErrorCodeMapping[]
+
     WebSubmoduleDefinition
         http: HttpDefinition?
+        playFabHandlers: PlayFabHandlersDefinition?
 
     ExternalTypePackageMapping
         name: string

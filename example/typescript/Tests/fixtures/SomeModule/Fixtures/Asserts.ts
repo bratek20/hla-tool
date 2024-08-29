@@ -66,6 +66,16 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someHandlerInput(given: SomeHandlerInput, expected: ExpectedSomeHandlerInput) {
+        const diff = diffSomeHandlerInput(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someHandlerOutput(given: SomeHandlerOutput, expected: ExpectedSomeHandlerOutput) {
+        const diff = diffSomeHandlerOutput(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someProperty(given: SomeProperty, expected: ExpectedSomeProperty) {
         const diff = diffSomeProperty(given, expected)
         AssertEquals(diff, "", diff)

@@ -16,6 +16,10 @@ namespace SomeModule.Api {
         return new Impl.SomeInterfaceLogic(c).optMethod(optId)
     }
 
+    export function methodWithListOfSimpleVO(list: SomeId[], c: HandlerContext): SomeId[] {
+        return new Impl.SomeInterfaceLogic(c).methodWithListOfSimpleVO(list)
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
     }
@@ -30,5 +34,21 @@ namespace SomeModule.Api {
 
     export function referenceOtherInterface(other: OtherInterface, c: HandlerContext): OtherInterface {
         return new Impl.SomeInterface3Logic(c).referenceOtherInterface(other)
+    }
+
+    export function someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleHandlersLogic(c).someHandler(i)
+    }
+
+    export function someHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleHandlersLogic(c).someHandler2(i)
+    }
+
+    export function someDebugHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleDebugHandlersLogic(c).someDebugHandler(i)
+    }
+
+    export function someDebugHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new Impl.SomeModuleDebugHandlersLogic(c).someDebugHandler2(i)
     }
 }

@@ -155,6 +155,30 @@ fun someQueryInput(init: SomeQueryInputDef.() -> Unit = {}): SomeQueryInput {
     )
 }
 
+data class SomeHandlerInputDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun someHandlerInput(init: SomeHandlerInputDef.() -> Unit = {}): SomeHandlerInput {
+    val def = SomeHandlerInputDef().apply(init)
+    return SomeHandlerInput.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}
+
+data class SomeHandlerOutputDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun someHandlerOutput(init: SomeHandlerOutputDef.() -> Unit = {}): SomeHandlerOutput {
+    val def = SomeHandlerOutputDef().apply(init)
+    return SomeHandlerOutput.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}
+
 data class SomePropertyDef(
     var other: (OtherPropertyDef.() -> Unit) = {},
     var id2: Int? = null,

@@ -39,7 +39,7 @@ class BuildersGenerator: PatternGenerator() {
                 this.type = type(apiType.name() + "?") //TODO soft optional type wrap?
             }
             returnType = type(apiType.name())
-            body = {
+            legacyBody = {
                 line("return value!!") // TODO soft optional unpack?
             }
         }

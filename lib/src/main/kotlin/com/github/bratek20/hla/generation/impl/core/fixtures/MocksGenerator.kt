@@ -2,9 +2,9 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.ops.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
@@ -16,8 +16,24 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
 class MocksGenerator: PatternGenerator() {
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
+    }
+
     override fun patternName(): PatternName {
         return PatternName.Mocks
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return true
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return module.getInterfaces().isNotEmpty()
+    }
+
+    override fun doNotGenerateTypeScriptNamespace(): Boolean {
+        return true
     }
 
     class View(
@@ -85,7 +101,7 @@ class MocksGenerator: PatternGenerator() {
                     }
                     emptyLine()
 
-                    method {
+                    legacyMethod {
                         name = "set${upperCaseName}Response"
                         addArg {
                             name = "args"
@@ -95,13 +111,13 @@ class MocksGenerator: PatternGenerator() {
                             name = "response"
                             type = type(defOutputType)
                         }
-                        body = {
+                        legacyBody = {
                             listOp(responsesListName).add { newPair("args", "response") }
                         }
                     }
 
                     emptyLine()
-                    method {
+                    legacyMethod {
                         override = true
                         name = def.name
                         returnType = type(outputTypeName)
@@ -109,11 +125,11 @@ class MocksGenerator: PatternGenerator() {
                             name = inputArgName
                             type = type(inputTypeName)
                         }
-                        body = {
+                        legacyBody = {
                             listOp(callsListName).add {
-                                variable(inputArgName)
+                                legacyVariable(inputArgName)
                             }
-                            assign {
+                            legacyAssign {
                                 variable = {
                                     declare = true
                                     name = "findResult"
@@ -122,10 +138,10 @@ class MocksGenerator: PatternGenerator() {
                                     listOp(responsesListName).find {
                                         isEqualTo {
                                             left = {
-                                                functionCall {
+                                                legacyFunctionCall {
                                                     name = inputDiffMethodName
-                                                    addArg { variable(inputArgName) }
-                                                    addArg { pairOp(it.name).first() }
+                                                    addArgLegacy { legacyVariable(inputArgName) }
+                                                    addArgLegacy { pairOp(it.name).first() }
                                                 }
                                             }
                                             right = { string("") }
@@ -133,26 +149,26 @@ class MocksGenerator: PatternGenerator() {
                                     }
                                 }
                             }
-                            returnBlock {
+                            legacyReturn {
                                 //TODO support for ?., support for ?:
                                 linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")
                             }
                         }
                     }
                     emptyLine()
-                    method {
+                    legacyMethod {
                         name = "assert${upperCaseName}Called"
                         addArg {
                             name = "times"
                             type = baseType(BaseType.INT)
                             defaultValue = "1"
                         }
-                        body = {
+                        legacyBody = {
                             line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                         }
                     }
                     emptyLine()
-                    method {
+                    legacyMethod {
                         name = "assert${upperCaseName}CalledForArgs"
                         addArg {
                             name = "args"
@@ -163,7 +179,7 @@ class MocksGenerator: PatternGenerator() {
                             type = baseType(BaseType.INT)
                             defaultValue = "1"
                         }
-                        body = {
+                        legacyBody = {
                             line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")
                             line("assertThat(calls.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
                         }
@@ -194,14 +210,14 @@ class MocksGenerator: PatternGenerator() {
                         name = "${moduleName}Mocks"
                         implements = "ContextModule"
                         body = {
-                            method {
+                            legacyMethod {
                                 override = true
                                 name = "apply"
                                 addArg {
                                     name = "builder"
                                     type = type("ContextBuilder")
                                 }
-                                body = {
+                                legacyBody = {
                                     line("builder")
                                     tab()
                                     line(".setImpl($interfaceName::class.java, ${interfaceName}Mock::class.java)")
@@ -213,15 +229,5 @@ class MocksGenerator: PatternGenerator() {
                 }
                 .build()
         }
-    }
-    override fun generateFileContent(): FileContent? {
-        if(c.module.getInterfaces().none { it.getName() == "SomeInterface2" }) {
-            return null
-        }
-        val interf = c.module.getInterfaces().find { it.getName() == "SomeInterface2" }!!
-        val interfView = InterfaceViewFactory(apiTypeFactory).create(interf)
-        return contentBuilder("mocks.vm")
-            .put("view", View(c, lang, interfView, "SomeModule"))
-            .build()
     }
 }

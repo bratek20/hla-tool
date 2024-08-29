@@ -17,6 +17,9 @@ fun emptyLineBlock() = object: CodeBlockBuilder {
         emptyLine()
     }
 }
+fun noOpBlock() = object: CodeBlockBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {}
+}
 
 interface LinePartBuilder {
     fun build(c: CodeBuilderContext): String

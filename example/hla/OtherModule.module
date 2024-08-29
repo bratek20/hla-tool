@@ -22,3 +22,8 @@ DataKeys
 Interfaces
     OtherInterface
         otherMethod()
+
+Web
+    PlayFabHandlers
+        ExposedInterfaces
+            OtherInterface
