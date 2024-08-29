@@ -45,10 +45,12 @@ class PlayFabHandlersGenerator: PatternGenerator() {
 
         addFunctionCall(registerModuleHandlersCall(normalExposedInterfaces))
 
-        addFunction {
-            name = "RegisterDebugHandlers"
-            body {
-                addFunctionCall(registerModuleHandlersCall(debugExposedInterfaces, true))
+        if (debugExposedInterfaces.isNotEmpty()) {
+            addFunction {
+                name = "RegisterDebugHandlers"
+                body {
+                    addFunctionCall(registerModuleHandlersCall(debugExposedInterfaces, true))
+                }
             }
         }
 
@@ -99,12 +101,14 @@ class PlayFabHandlersGenerator: PatternGenerator() {
             }
         }
 
-        addComment("Error Codes Mapping")
-        playFabHandlers.getErrorCodesMapping().forEach {
-            addFunctionCall {
-                name = "Handlers.Api.AddExceptionMapper"
-                addArg(variable(it.getExceptionName()))
-                addArg(expression("(e, c) => Utils.ECNR(${it.getCode()}, e.message, c)"))
+        if (playFabHandlers.getErrorCodesMapping().isNotEmpty()) {
+            addComment("Error Codes Mapping")
+            playFabHandlers.getErrorCodesMapping().forEach {
+                addFunctionCall {
+                    name = "Handlers.Api.AddExceptionMapper"
+                    addArg(variable(it.getExceptionName()))
+                    addArg(expression("(e, c) => Utils.ECNR(${it.getCode()}, e.message, c)"))
+                }
             }
         }
     }
