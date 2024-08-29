@@ -3,3 +3,7 @@
 interface OtherInterface {
     otherMethod(): void
 }
+
+interface OtherModuleHandlers {
+    otherHandler(i: OtherHandlerInput): OtherHandlerOutput
+}

@@ -32,6 +32,26 @@ fun otherClass(init: OtherClassDef.() -> Unit = {}): OtherClass {
     )
 }
 
+data class OtherHandlerInputDef(
+    var id: Int = 0,
+)
+fun otherHandlerInput(init: OtherHandlerInputDef.() -> Unit = {}): OtherHandlerInput {
+    val def = OtherHandlerInputDef().apply(init)
+    return OtherHandlerInput.create(
+        id = OtherId(def.id),
+    )
+}
+
+data class OtherHandlerOutputDef(
+    var id: Int = 0,
+)
+fun otherHandlerOutput(init: OtherHandlerOutputDef.() -> Unit = {}): OtherHandlerOutput {
+    val def = OtherHandlerOutputDef().apply(init)
+    return OtherHandlerOutput.create(
+        id = OtherId(def.id),
+    )
+}
+
 data class OtherDataDef(
     var id: Int = 0,
 )

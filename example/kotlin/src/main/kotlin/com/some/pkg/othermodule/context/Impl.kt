@@ -10,5 +10,6 @@ class OtherModuleImpl: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
             .setImpl(OtherInterface::class.java, OtherInterfaceLogic::class.java)
+            .setImpl(OtherModuleHandlers::class.java, OtherModuleHandlersLogic::class.java)
     }
 }

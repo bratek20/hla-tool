@@ -71,3 +71,39 @@ data class OtherClass(
         }
     }
 }
+
+data class OtherHandlerInput(
+    private val id: Int,
+) {
+    fun getId(): OtherId {
+        return OtherId(this.id)
+    }
+
+    companion object {
+        fun create(
+            id: OtherId,
+        ): OtherHandlerInput {
+            return OtherHandlerInput(
+                id = id.value,
+            )
+        }
+    }
+}
+
+data class OtherHandlerOutput(
+    private val id: Int,
+) {
+    fun getId(): OtherId {
+        return OtherId(this.id)
+    }
+
+    companion object {
+        fun create(
+            id: OtherId,
+        ): OtherHandlerOutput {
+            return OtherHandlerOutput(
+                id = id.value,
+            )
+        }
+    }
+}
