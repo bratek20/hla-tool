@@ -73,12 +73,14 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                             require(method.getArgs().size <= 1) {
                                 "Handler method need to have at most one argument"
                             }
-                            if (method.getArgs().size == 1) {
+                            val hasRequest = method.getArgs().size == 1
+                            if (hasRequest) {
                                 addVariableAssignment {
                                     declare = true
-                                    name = method.getArgs()[0].getName()
+                                    name = "request"
                                     value = functionCall {
                                         name = "ObjectCreation.Api.FromInterface"
+                                        addArg(variable(method.getArgs().first().getType().getName()))
                                         addArg(variable("rawRequest"))
                                         addArg(variable("ObjectCreationOptions.noErrors()"))
                                     }
@@ -86,21 +88,23 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                             }
 
                             val hasResponse = method.getReturnType().getName() != "void"
-                            val fromInterfaceCall: FunctionCallBuilderOps = {
-                                name = "ObjectCreation.Api.FromInterface"
-                                addArg(variable("rawRequest"))
-                                addArg(variable("ObjectCreationOptions.noErrors()"))
+                            val apiCall: FunctionCallBuilderOps = {
+                                name = "Api." + method.getName()
+                                if (hasRequest) {
+                                    addArg(variable("request"))
+                                }
+                                addArg(variable("c"))
                             }
 
                             if (hasResponse) {
                                 addVariableAssignment {
                                     declare = true
-                                    name = "request"
-                                    value = functionCall(fromInterfaceCall)
+                                    name = "response"
+                                    value = functionCall(apiCall)
                                 }
                             }
                             else {
-                                addFunctionCall(fromInterfaceCall)
+                                addFunctionCall(apiCall)
                             }
 
                             addReturn(functionCall {
