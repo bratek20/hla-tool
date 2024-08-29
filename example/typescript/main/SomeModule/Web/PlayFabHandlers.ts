@@ -13,25 +13,26 @@ namespace SomeModule.Web {
         return Utils.OK(response)
     }
 
-    function someHandler2(rawRequest: any, c: HandlerContext): IOpResult {
+    export function someHandler2(rawRequest: any, c: HandlerContext): IOpResult {
         const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
         const response = Api.someHandler2(request, c)
         return Utils.OK(response)
     }
 
-    function someDebugHandler(rawRequest: any, c: HandlerContext): IOpResult {
+    export function someDebugHandler(rawRequest: any, c: HandlerContext): IOpResult {
         const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
         const response = Api.someDebugHandler(request, c)
         return Utils.OK(response)
     }
 
-    function someDebugHandler2(rawRequest: any, c: HandlerContext): IOpResult {
+    export function someDebugHandler2(rawRequest: any, c: HandlerContext): IOpResult {
         const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
         const response = Api.someDebugHandler2(request, c)
         return Utils.OK(response)
     }
 
     // Error Codes Mapping
-    Handlers.Api.AddExceptionMapper(SomeException, (e, c) => Utils.ECNR("EC1", e.message, c));
-    Handlers.Api.AddExceptionMapper(Some2Exception, (e, c) => Utils.ECNR("EC2", e.message, c));
+    Handlers.Api.AddExceptionMapper(SomeException, (e, c) => Utils.ECNR("EC1", e.message, c))
+
+    Handlers.Api.AddExceptionMapper(Some2Exception, (e, c) => Utils.ECNR("EC2", e.message, c))
 }

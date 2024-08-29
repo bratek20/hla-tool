@@ -62,6 +62,9 @@ abstract class ModulePartGenerator {
     protected val module
         get() = c.module
 
+    protected val moduleName
+        get() = module.getName().value
+
     protected val modules
         get() = c.domain.queries
 

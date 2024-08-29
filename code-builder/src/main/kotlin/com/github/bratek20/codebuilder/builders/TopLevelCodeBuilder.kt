@@ -4,8 +4,17 @@ import com.github.bratek20.codebuilder.core.*
 
 open class TopLevelCodeBuilder: CodeBlockBuilder {
     private val ops: MutableList<CodeBlockBuilder> = mutableListOf()
+    private var noEmptyLineAfter = false
     protected fun addOp(op: CodeBlockBuilder) {
+        if (ops.isNotEmpty() && !noEmptyLineAfter) {
+            ops.add(emptyLineBlock())
+        }
         ops.add(op)
+        noEmptyLineAfter = false
+    }
+    private fun addOpNoEmptyLineAfter(op: CodeBlockBuilder) {
+        addOp(op)
+        noEmptyLineAfter = true
     }
 
     protected open fun beforeOperations(): CodeBuilderOps = {}
@@ -14,11 +23,8 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         add(beforeOperations())
 
-        ops.forEachIndexed { idx, op ->
-            add(op)
-            if (idx != ops.size - 1) {
-                emptyLine()
-            }
+        ops.forEach {
+            add(it)
         }
 
         add(afterOperations())
@@ -44,10 +50,14 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
         addOp(FunctionCallBuilder().apply(functionCall))
     }
 
-    fun addEmptyLines(amount: Int) {
+    fun addExtraEmptyLines(amount: Int) {
         for (i in 0 until amount) {
             addOp(noOpBlock())
         }
+    }
+
+    fun addComment(comment: String) {
+        addOpNoEmptyLineAfter(lineBlock("// $comment"))
     }
 }
 typealias TopLevelCodeBuilderOps = TopLevelCodeBuilder.() -> Unit

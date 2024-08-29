@@ -1,11 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.web
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
-import com.github.bratek20.codebuilder.builders.functionCall
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.builders.variable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.hla.definitions.api.ExposedInterface
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -23,39 +22,33 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getWebSubmodule()?.getPlayFabHandlers() != null
     }
 
-    override fun getOperations(): TopLevelCodeBuilderOps = {
-        val moduleName = c.module.getName().value
-
-        val allExposedInterfaces = c.module.getWebSubmodule()!!.getPlayFabHandlers()!!.getExposedInterfaces()
-        val normalExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } == null}
-        val debugExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } != null }
-
-        addFunctionCall {
-            name = "Handlers.Api.RegisterModuleHandlers"
-            addArg(variable("DependencyName.$moduleName"))
-            normalExposedInterfaces.forEach {
-                module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
-                    interf.getMethods().forEach { method ->
-                        addArg(variable("[\"$moduleName.${it.getName()}.${method.getName()}\", ${method.getName()}]"))
-                    }
+    private fun registerModuleHandlersCall(
+        exposedInterfaces: List<ExposedInterface>,
+        addDebugToHandlerName: Boolean = false
+    ): FunctionCallBuilderOps = {
+        name = "Handlers.Api.RegisterModuleHandlers"
+        addArg(variable("DependencyName.$moduleName"))
+        exposedInterfaces.forEach {
+            module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
+                interf.getMethods().forEach { method ->
+                    val debugPart = if (addDebugToHandlerName) ".Debug" else ""
+                    addArg(variable("[\"$moduleName$debugPart.${method.getName()}\", ${method.getName()}]"))
                 }
             }
         }
+    }
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        val playFabHandlers = c.module.getWebSubmodule()!!.getPlayFabHandlers()!!
+        val allExposedInterfaces = playFabHandlers.getExposedInterfaces()
+        val normalExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } == null}
+        val debugExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } != null }
+
+        addFunctionCall(registerModuleHandlersCall(normalExposedInterfaces))
 
         addFunction {
             name = "RegisterDebugHandlers"
             body {
-                addFunctionCall {
-                    name = "Handlers.Api.RegisterModuleHandlers"
-                    addArg(variable("DependencyName.$moduleName"))
-                    debugExposedInterfaces.forEach {
-                        module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
-                            interf.getMethods().forEach { method ->
-                                addArg(variable("[\"$moduleName.${it.getName()}.${method.getName()}\", ${method.getName()}]"))
-                            }
-                        }
-                    }
-                }
+                addFunctionCall(registerModuleHandlersCall(debugExposedInterfaces, true))
             }
         }
 
@@ -80,7 +73,9 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                                 name = "request"
                                 value = functionCall {
                                     name = "ObjectCreation.Api.FromInterface"
-                                    addArg(variable("${it.getName()}Input"))
+
+                                    require(method.getArgs().size == 1)
+                                    addArg(variable(method.getArgs()[0].getType().getName()))
                                     addArg(variable("rawRequest"))
                                     addArg(variable("ObjectCreationOptions.noErrors()"))
                                 }
@@ -89,7 +84,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                                 declare = true
                                 name = "response"
                                 value = functionCall {
-                                    name = "Api.${it.getName()}"
+                                    name = "Api.${method.getName()}"
                                     addArg(variable("request"))
                                     addArg(variable("c"))
                                 }
@@ -104,6 +99,13 @@ class PlayFabHandlersGenerator: PatternGenerator() {
             }
         }
 
-        addEmptyLines(5)
+        addComment("Error Codes Mapping")
+        playFabHandlers.getErrorCodesMapping().forEach {
+            addFunctionCall {
+                name = "Handlers.Api.AddExceptionMapper"
+                addArg(variable(it.getExceptionName()))
+                addArg(expression("(e, c) => Utils.ECNR(${it.getCode()}, e.message, c)"))
+            }
+        }
     }
 }

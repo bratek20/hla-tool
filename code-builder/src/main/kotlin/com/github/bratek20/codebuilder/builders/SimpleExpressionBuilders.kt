@@ -23,16 +23,16 @@ class ExpressionLinePartBuilder(
         linePart(value)
     }
 }
+fun expression(value: String): ExpressionBuilder {
+    return ExpressionLinePartBuilder(value)
+}
 
 fun variable(name: String): ExpressionBuilder {
-    return ExpressionLinePartBuilder(name)
+    return expression(name)
 }
 
-fun const(name: String): ExpressionBuilder {
-    return ExpressionLinePartBuilder(name)
-}
 fun const(value: Int): ExpressionBuilder {
-    return const(value.toString())
+    return expression(value.toString())
 }
 
 class VariableAssignmentBuilder: CodeBlockBuilder {

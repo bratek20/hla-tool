@@ -18,11 +18,12 @@ class TopLevelCodeBuilderTest {
                         name = "SomeClass"
                     }
 
+                    addComment("Some comment")
                     addFunction {
                         name = "someFun"
                     }
 
-                    addEmptyLines(2)
+                    addExtraEmptyLines(2)
 
                     addEnum {
                         name = "SomeEnum"
@@ -38,6 +39,7 @@ class TopLevelCodeBuilderTest {
                     class SomeClass {
                     }
                     
+                    // Some comment
                     fun someFun() {
                     }
                     
