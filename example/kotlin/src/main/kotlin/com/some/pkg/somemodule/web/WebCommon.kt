@@ -60,14 +60,14 @@ class SomeInterfaceOptMethodResponse(
 ) {
 }
 class SomeInterfaceMethodWithListOfSimpleVORequest(
-    private val list: List<SomeId>,
+    private val list: List<String>,
 ) {
     fun getList(): List<SomeId> {
-        return list
+        return list.map { it -> SomeId(it) }
     }
     companion object {
         fun create(list: List<SomeId>): SomeInterfaceMethodWithListOfSimpleVORequest {
-            return SomeInterfaceMethodWithListOfSimpleVORequest(list)
+            return SomeInterfaceMethodWithListOfSimpleVORequest(list.map { it -> it.value })
         }
     }
 }

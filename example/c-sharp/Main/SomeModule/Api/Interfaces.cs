@@ -19,6 +19,8 @@ namespace SomeModule.Api {
         SomeClass someQuery(SomeQueryInput query);
 
         Optional<SomeClass> optMethod(Optional<SomeId> optId);
+
+        SomeId[] methodWithListOfSimpleVO(SomeId[] list);
     }
 
     public interface SomeInterface2 {
