@@ -101,17 +101,22 @@ Interfaces
 
     SomeInterface
         someEmptyMethod()
+
         someCommand(id: SomeId, amount: int)
             throws
                 SomeException
                 Some2Exception
+
         SomeQueryInput
             id: SomeId
             amount: int
         someQuery(query: SomeQueryInput): SomeClass
             throws
                 SomeException
+
         optMethod(optId: SomeId?): SomeClass?
+
+        methodWithListOfSimpleVO(list: SomeId[]): SomeId[]
 
     SomeInterface2
         referenceOtherClass(other: OtherClass): OtherClass

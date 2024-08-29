@@ -62,6 +62,25 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodWithListOfSimpleVORequest {
+        private list = [new SomeId]
+        getList(): SomeId[] {
+            return this.list
+        }
+        static create(list: SomeId[]): SomeInterfaceMethodWithListOfSimpleVORequest {
+            const instance = new SomeInterfaceMethodWithListOfSimpleVORequest()
+            instance.list = list
+            return instance
+        }
+    }
+
+    export class SomeInterfaceMethodWithListOfSimpleVOResponse {
+        private value = [new SomeId]
+        getValue(): SomeId[] {
+            return this.value
+        }
+    }
+
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = new OtherClass
         getOther(): OtherClass {

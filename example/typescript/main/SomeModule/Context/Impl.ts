@@ -16,6 +16,10 @@ namespace SomeModule.Api {
         return new Impl.SomeInterfaceLogic(c).optMethod(optId)
     }
 
+    export function methodWithListOfSimpleVO(list: SomeId[], c: HandlerContext): SomeId[] {
+        return new Impl.SomeInterfaceLogic(c).methodWithListOfSimpleVO(list)
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
     }

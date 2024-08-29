@@ -18,6 +18,8 @@ interface SomeInterface {
     someQuery(query: SomeQueryInput): SomeClass
 
     optMethod(optId: Optional<SomeId>): Optional<SomeClass>
+
+    methodWithListOfSimpleVO(list: SomeId[]): SomeId[]
 }
 
 interface SomeInterface2 {

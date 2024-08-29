@@ -29,6 +29,11 @@ namespace SomeModule.Impl {
             // TODO
             return undefined
         }
+
+        methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
+            // TODO
+            return undefined
+        }
     }
 
     export class SomeInterface2Logic implements SomeInterface2 {

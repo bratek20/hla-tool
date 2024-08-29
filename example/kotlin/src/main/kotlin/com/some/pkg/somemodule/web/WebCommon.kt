@@ -59,6 +59,22 @@ class SomeInterfaceOptMethodResponse(
     val value: SomeClass?,
 ) {
 }
+class SomeInterfaceMethodWithListOfSimpleVORequest(
+    private val list: List<SomeId>,
+) {
+    fun getList(): List<SomeId> {
+        return list
+    }
+    companion object {
+        fun create(list: List<SomeId>): SomeInterfaceMethodWithListOfSimpleVORequest {
+            return SomeInterfaceMethodWithListOfSimpleVORequest(list)
+        }
+    }
+}
+class SomeInterfaceMethodWithListOfSimpleVOResponse(
+    val value: List<SomeId>,
+) {
+}
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass,
 ) {

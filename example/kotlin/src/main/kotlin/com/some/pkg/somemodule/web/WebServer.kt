@@ -43,6 +43,12 @@ class SomeInterfaceController(
         val request = serializer.fromStruct(rawRequest, SomeInterfaceOptMethodRequest::class.java)
         return serializer.asStruct(SomeInterfaceOptMethodResponse(api.optMethod(request.getOptId())))
     }
+
+    @PostMapping("/methodWithListOfSimpleVO")
+    fun methodWithListOfSimpleVO(@RequestBody rawRequest: Struct): Struct {
+        val request = serializer.fromStruct(rawRequest, SomeInterfaceMethodWithListOfSimpleVORequest::class.java)
+        return serializer.asStruct(SomeInterfaceMethodWithListOfSimpleVOResponse(api.methodWithListOfSimpleVO(request.getList())))
+    }
 }
 
 @RestController
