@@ -336,6 +336,10 @@ class HlaFacadeTest {
         val expectedMainDirectoriesToSkipUpdate = setOf<String>(
         )
 
+        val expectedFixturesFilesToSkipUpdate = setOf(
+            "fixtures/Mocks",
+        )
+
         //tests directory is not updated
 
         //when
@@ -376,11 +380,17 @@ class HlaFacadeTest {
                 "Directory somemodule/$it not found in second directory"
             }
 
+        val expectedFixturesDifference = expectedFixturesFilesToSkipUpdate.map {
+            "File somemodule/$it.kt not found in second directory"
+        }
+
         assertThat(mainCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
             expectedMainDifference
         )
 
-        assertThat(fixturesCompareResult.getDifferences()).isEmpty()
+        assertThat(fixturesCompareResult.getDifferences()).containsExactlyInAnyOrderElementsOf(
+            expectedFixturesDifference
+        )
     }
 
     @Nested
@@ -468,7 +478,6 @@ class HlaFacadeTest {
                 "SomeModule/Fixtures/Builders.kt updated",
                 "SomeModule/Fixtures/Diffs.kt updated",
                 "SomeModule/Fixtures/Asserts.kt updated",
-                "SomeModule/Fixtures/Mocks.kt updated",
             )
         }
     }
