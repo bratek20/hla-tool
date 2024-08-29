@@ -34,6 +34,9 @@ class WebContextGenerator: PatternGenerator() {
     }
 
     override fun generateFileContent(): FileContent? {
+        if (c.module.getWebSubmodule()?.getHttp() == null) {
+            return null
+        }
         return c.module.getWebSubmodule()?.let { web ->
             contentBuilder("web.vm")
                 .put("serverUrl", "\"http://localhost:8080\"")

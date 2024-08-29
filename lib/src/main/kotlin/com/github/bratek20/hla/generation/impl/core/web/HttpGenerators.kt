@@ -201,7 +201,11 @@ class WebCommonGenerator: PatternGenerator() {
         }
     }
 
-    override fun generateFileContent(): FileContent {
+    override fun generateFileContent(): FileContent? {
+        if (c.module.getWebSubmodule()?.getHttp() == null) {
+            return null
+        }
+
         val exposedInterfaces = exposedInterfaces(c)
 
         val classes: MutableList<ClassBuilderOps> = mutableListOf()
@@ -326,7 +330,11 @@ class WebClientGenerator: PatternGenerator() {
             .build()
     }
 
-    override fun generateFileContent(): FileContent {
+    override fun generateFileContent(): FileContent? {
+        if (c.module.getWebSubmodule()?.getHttp() == null) {
+            return null
+        }
+
         return contentBuilder("webClient.vm")
             .put("interfaces", exposedInterfaces(c).map { interf ->
                 InterfaceView(
@@ -401,6 +409,9 @@ class WebServerGenerator: PatternGenerator() {
     )
 
     override fun generateFileContent(): FileContent? {
+        if (c.module.getWebSubmodule()?.getHttp() == null) {
+            return null
+        }
         if (c.language is TypeScriptSupport) {
             return null
         }

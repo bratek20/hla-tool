@@ -74,7 +74,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                                 value = functionCall {
                                     name = "ObjectCreation.Api.FromInterface"
 
-                                    require(method.getArgs().size == 1)
+                                    require(method.getArgs().size == 1) { "Handler method need to have exactly one argument" }
                                     addArg(variable(method.getArgs()[0].getType().getName()))
                                     addArg(variable("rawRequest"))
                                     addArg(variable("ObjectCreationOptions.noErrors()"))
