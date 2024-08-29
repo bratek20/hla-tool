@@ -42,32 +42,6 @@ namespace OtherModule {
         return result.join("\n")
     }
 
-    export interface ExpectedOtherHandlerInput {
-        id?: number,
-    }
-    export function diffOtherHandlerInput(given: OtherHandlerInput, expected: ExpectedOtherHandlerInput, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.id !== undefined) {
-            if (diffOtherId(given.getId(), expected.id) != "") { result.push(diffOtherId(given.getId(), expected.id, `${path}id.`)) }
-        }
-
-        return result.join("\n")
-    }
-
-    export interface ExpectedOtherHandlerOutput {
-        id?: number,
-    }
-    export function diffOtherHandlerOutput(given: OtherHandlerOutput, expected: ExpectedOtherHandlerOutput, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.id !== undefined) {
-            if (diffOtherId(given.getId(), expected.id) != "") { result.push(diffOtherId(given.getId(), expected.id, `${path}id.`)) }
-        }
-
-        return result.join("\n")
-    }
-
     export interface ExpectedOtherData {
         id?: number,
     }
