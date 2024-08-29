@@ -81,7 +81,7 @@ data class SomeClass(
 data class SomeClass2(
     private val id: String,
     private val names: List<String>,
-    private val ids: List<SomeId>,
+    private val ids: List<String>,
     private val enabled: Boolean = true,
 ) {
     fun getId(): SomeId {
@@ -93,7 +93,7 @@ data class SomeClass2(
     }
 
     fun getIds(): List<SomeId> {
-        return this.ids
+        return this.ids.map { it -> SomeId(it) }
     }
 
     fun getEnabled(): Boolean {
