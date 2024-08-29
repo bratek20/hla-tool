@@ -23,13 +23,7 @@ Interfaces
     OtherInterface
         otherMethod()
 
-    OtherModuleHandlers
-        OtherHandlerInput
-            id: OtherId
-        OtherHandlerOutput
-            id: OtherId
-        otherHandler(i: OtherHandlerInput): OtherHandlerOutput
 Web
     PlayFabHandlers
         ExposedInterfaces
-            OtherModuleHandlers
+            OtherInterface

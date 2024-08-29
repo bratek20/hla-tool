@@ -21,16 +21,6 @@ fun assertOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> U
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertOtherHandlerInput(given: OtherHandlerInput, expectedInit: ExpectedOtherHandlerInput.() -> Unit) {
-    val diff = diffOtherHandlerInput(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
-fun assertOtherHandlerOutput(given: OtherHandlerOutput, expectedInit: ExpectedOtherHandlerOutput.() -> Unit) {
-    val diff = diffOtherHandlerOutput(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
 fun assertOtherData(given: OtherData, expectedInit: ExpectedOtherData.() -> Unit) {
     val diff = diffOtherData(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

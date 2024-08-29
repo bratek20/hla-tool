@@ -4,6 +4,7 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
@@ -15,6 +16,10 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
 class MocksGenerator: PatternGenerator() {
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
+    }
+
     override fun patternName(): PatternName {
         return PatternName.Mocks
     }
@@ -25,6 +30,10 @@ class MocksGenerator: PatternGenerator() {
 
     override fun shouldGenerate(): Boolean {
         return module.getInterfaces().isNotEmpty()
+    }
+
+    override fun doNotGenerateTypeScriptNamespace(): Boolean {
+        return true
     }
 
     class View(

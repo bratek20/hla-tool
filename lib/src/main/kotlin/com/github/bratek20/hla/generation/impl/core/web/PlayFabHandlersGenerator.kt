@@ -70,30 +70,50 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                         returnType = type("IOpResult")
 
                         body {
-                            addVariableAssignment {
-                                declare = true
-                                name = "request"
-                                value = functionCall {
-                                    name = "ObjectCreation.Api.FromInterface"
+                            require(method.getArgs().size <= 1) {
+                                "Handler method need to have at most one argument"
+                            }
+                            val hasRequest = method.getArgs().size == 1
+                            if (hasRequest) {
+                                addVariableAssignment {
+                                    declare = true
+                                    name = "request"
+                                    value = functionCall {
+                                        name = "ObjectCreation.Api.FromInterface"
+                                        addArg(variable(method.getArgs().first().getType().getName()))
+                                        addArg(variable("rawRequest"))
+                                        addArg(variable("ObjectCreationOptions.noErrors()"))
+                                    }
+                                }
+                            }
 
-                                    require(method.getArgs().size == 1) { "Handler method need to have exactly one argument" }
-                                    addArg(variable(method.getArgs()[0].getType().getName()))
-                                    addArg(variable("rawRequest"))
-                                    addArg(variable("ObjectCreationOptions.noErrors()"))
-                                }
-                            }
-                            addVariableAssignment {
-                                declare = true
-                                name = "response"
-                                value = functionCall {
-                                    name = "Api.${method.getName()}"
+                            val hasResponse = method.getReturnType().getName() != "void"
+                            val apiCall: FunctionCallBuilderOps = {
+                                name = "Api." + method.getName()
+                                if (hasRequest) {
                                     addArg(variable("request"))
-                                    addArg(variable("c"))
+                                }
+                                addArg(variable("c"))
+                            }
+
+                            if (hasResponse) {
+                                addVariableAssignment {
+                                    declare = true
+                                    name = "response"
+                                    value = functionCall(apiCall)
                                 }
                             }
+                            else {
+                                addFunctionCall(apiCall)
+                            }
+
                             addReturn(functionCall {
                                 name = "Utils.OK"
-                                addArg(variable("response"))
+                                if (hasResponse) {
+                                    addArg(variable("response"))
+                                } else {
+                                    addArg(expression("{}"))
+                                }
                             })
                         }
                     }

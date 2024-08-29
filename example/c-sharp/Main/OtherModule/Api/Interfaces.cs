@@ -6,8 +6,4 @@ namespace OtherModule.Api {
     public interface OtherInterface {
         void otherMethod();
     }
-
-    public interface OtherModuleHandlers {
-        OtherHandlerOutput otherHandler(OtherHandlerInput i);
-    }
 }

@@ -9,15 +9,4 @@ namespace OtherModule.Impl {
             return undefined
         }
     }
-
-    export class OtherModuleHandlersLogic implements OtherModuleHandlers {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
-
-        otherHandler(i: OtherHandlerInput): OtherHandlerOutput {
-            // TODO
-            return undefined
-        }
-    }
 }

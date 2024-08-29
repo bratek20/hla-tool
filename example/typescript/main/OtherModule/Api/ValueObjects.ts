@@ -71,35 +71,3 @@ class OtherClass {
         return this.amount
     }
 }
-
-class OtherHandlerInput {
-    private id = NUMBER
-
-    static create(
-        id: OtherId,
-    ): OtherHandlerInput {
-        const instance = new OtherHandlerInput()
-        instance.id = id.value
-        return instance
-    }
-
-    getId(): OtherId {
-        return new OtherId(this.id)
-    }
-}
-
-class OtherHandlerOutput {
-    private id = NUMBER
-
-    static create(
-        id: OtherId,
-    ): OtherHandlerOutput {
-        const instance = new OtherHandlerOutput()
-        instance.id = id.value
-        return instance
-    }
-
-    getId(): OtherId {
-        return new OtherId(this.id)
-    }
-}

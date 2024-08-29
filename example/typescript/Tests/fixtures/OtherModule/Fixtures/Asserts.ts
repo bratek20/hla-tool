@@ -16,16 +16,6 @@ namespace OtherModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function otherHandlerInput(given: OtherHandlerInput, expected: ExpectedOtherHandlerInput) {
-        const diff = diffOtherHandlerInput(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
-    export function otherHandlerOutput(given: OtherHandlerOutput, expected: ExpectedOtherHandlerOutput) {
-        const diff = diffOtherHandlerOutput(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
     export function otherData(given: OtherData, expected: ExpectedOtherData) {
         const diff = diffOtherData(given, expected)
         AssertEquals(diff, "", diff)
