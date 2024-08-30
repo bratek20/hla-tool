@@ -28,4 +28,21 @@ class CodeBuilderOpTesterTest {
             """
         }
     }
+
+    @Test
+    fun `should align empty tabs`() {
+        testOp {
+            op = {
+                line("val x = 1")
+                emptyLine()
+                line("val y = 2")
+            }
+            //note tab in line 2 between val x and val y
+            expected = """
+                val x = 1
+                    
+                val y = 2
+            """
+        }
+    }
 }

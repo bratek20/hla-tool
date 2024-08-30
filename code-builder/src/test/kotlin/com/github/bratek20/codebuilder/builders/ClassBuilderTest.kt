@@ -578,12 +578,13 @@ class ClassBuilderTest {
                 lang = CSharp()
                 expected = """
                     public class SomeClass {
+                        readonly int someField;
+                    
                         public SomeClass(
                             int someField
                         ) {
                             this.someField = someField;
                         }
-                        readonly int someField;
                     }
                 """
             }
@@ -627,12 +628,13 @@ class ClassBuilderTest {
                 lang = CSharp()
                 expected = """
                     public class SimpleValueObject {
+                        public int Value { get; }
+                    
                         public SimpleValueObject(
                             int value
                         ) {
                             Value = value;
                         }
-                        public int Value { get; }
                     }
                 """
             }

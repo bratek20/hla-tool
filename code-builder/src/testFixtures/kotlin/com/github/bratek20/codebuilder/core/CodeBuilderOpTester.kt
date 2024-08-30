@@ -110,5 +110,14 @@ private fun alignMultilineStringIndent(str: String): String {
         .map { it.length }
         .minOrNull() ?: 0
 
-    return lines.map { it.drop(smallestIndent) }.joinToString("\n")
+    return lines
+        .map { it.drop(smallestIndent) }
+        .map {
+            if (it.isBlank()) {
+                ""
+            } else {
+                it
+            }
+        }
+        .joinToString("\n")
 }

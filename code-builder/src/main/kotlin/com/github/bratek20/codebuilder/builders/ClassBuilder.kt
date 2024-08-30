@@ -178,13 +178,14 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        addOps(classDeclarationWithConstructor(c))
+        addOps(classDeclarationWithFieldConstructor(c))
         tab()
         fieldOps.forEach { ops ->
             if (!c.lang.supportsFieldDeclarationInConstructor() || !field(ops).fromConstructor) {
                 add(field(ops))
             }
         }
+        addOps(nonFieldConstructorOps(c))
         legacyBody?.let { addOps(it) }
         methods.forEach { method ->
             add(method)
@@ -196,7 +197,42 @@ open class ClassBuilder: CodeBlockBuilder {
         line("}")
     }
 
-    private fun classDeclarationWithConstructor(c: CodeBuilderContext): CodeBuilderOps = {
+    private fun nonFieldConstructorOps(c: CodeBuilderContext): CodeBuilderOps = {
+        if (c.lang is CSharp && shouldGenerateConstructor()) {
+            if (fields.isNotEmpty()) {
+                emptyLine()
+            }
+
+            line("public $name(")
+            tab()
+            addOps(getConstructorArgsOps())
+            untab()
+
+            if (passingArgs.isNotEmpty()) {
+                line("): base(${passingArgs.joinToString(", ")}) {")
+                line("}")
+            }
+            else if (constructorFields.isNotEmpty()) {
+                line(") {")
+                tab()
+                constructorFields.forEach { field ->
+                    if (field.getter) {
+                        line("${camelToPascalCase(field.name)} = ${field.name};")
+                    }
+                    else {
+                        line("this.${field.name} = ${field.name};")
+                    }
+                }
+                untab()
+                line("}")
+            }
+            else {
+                line(") {}")
+            }
+        }
+    }
+
+    private fun classDeclarationWithFieldConstructor(c: CodeBuilderContext): CodeBuilderOps = {
         val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + "class "
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
         extendsOrImplementsPart = extends?.let { c.lang.extends() + ExtendsBuilder().apply(it).build(c) } ?: extendsOrImplementsPart
@@ -243,37 +279,6 @@ open class ClassBuilder: CodeBlockBuilder {
                 line(") {")
                 tab()
                 line("super(${passingArgs.joinToString(", ")})")
-                untab()
-                line("}")
-            }
-            else {
-                line(") {}")
-            }
-            untab()
-        }
-        else if (c.lang is CSharp && shouldGenerateConstructor()) {
-            line("$beginning {")
-            tab()
-            line("public $name(")
-            tab()
-            addOps(getConstructorArgsOps())
-            untab()
-
-            if (passingArgs.isNotEmpty()) {
-                line("): base(${passingArgs.joinToString(", ")}) {")
-                line("}")
-            }
-            else if (constructorFields.isNotEmpty()) {
-                line(") {")
-                tab()
-                constructorFields.forEach { field ->
-                    if (field.getter) {
-                        line("${camelToPascalCase(field.name)} = ${field.name};")
-                    }
-                    else {
-                        line("this.${field.name} = ${field.name};")
-                    }
-                }
                 untab()
                 line("}")
             }
