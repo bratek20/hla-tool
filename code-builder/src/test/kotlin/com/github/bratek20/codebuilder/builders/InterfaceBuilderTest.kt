@@ -73,7 +73,7 @@ class InterfaceBuilderTest {
                 expected = """
                     public interface SomeInterface {
                         // some comment
-                        void someMethod();
+                        void SomeMethod();
                     }
                 """
             }
@@ -137,11 +137,11 @@ class InterfaceBuilderTest {
                 expected = """
                     public interface SomeInterface {
                         /// <exception cref="SomeException"/>
-                        void oneExceptionMethod();
+                        void OneExceptionMethod();
                     
                         /// <exception cref="SomeException"/>
                         /// <exception cref="AnotherException"/>
-                        void twoExceptionsMethod();
+                        void TwoExceptionsMethod();
                     }
                 """
             }
@@ -187,9 +187,9 @@ class InterfaceBuilderTest {
                 lang = CSharp()
                 expected = """
                     public interface SomeInterface {
-                        void method1();
+                        void Method1();
                     
-                        void method2();
+                        void Method2();
                     }
                 """
             }

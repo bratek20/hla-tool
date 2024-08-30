@@ -102,11 +102,6 @@ typealias FieldBuilderOps = FieldBuilder.() -> Unit
 fun CodeBuilder.legacyField(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
 fun field(block: FieldBuilderOps) = FieldBuilder().apply(block)
 
-class StaticMethodBuilder: MethodBuilder() {
-    override fun beforeName(c: CodeBuilderContext): String {
-        return "static " + super.beforeName(c)
-    }
-}
 class ClassConstructorBuilder {
     private val args: MutableList<ArgumentBuilderOps> = mutableListOf()
     fun addArg(block: ArgumentBuilderOps) {
@@ -146,7 +141,7 @@ open class ClassBuilder: CodeBlockBuilder {
     private val fields: MutableList<FieldBuilder> = mutableListOf()
 
     var legacyBody: CodeBuilderOps? = null
-    private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
+
 
     private var extends: ExtendsBuilderOps? = null
     fun extends(block: ExtendsBuilderOps) {
@@ -157,14 +152,14 @@ open class ClassBuilder: CodeBlockBuilder {
         constructor = ClassConstructorBuilder().apply(block)
     }
 
-    //TODO-REF use addMethod and filter by static
-    fun addStaticMethod(block: MethodBuilderOps) {
-        staticMethods.add(block)
-    }
+    private val allMethods: MutableList<MethodBuilder> = mutableListOf()
+    private val staticMethods
+        get() = allMethods.filter { it.static }
+    private val methods
+        get() = allMethods.filter { !it.static }
 
-    private val methods: MutableList<MethodBuilder> = mutableListOf()
     fun addMethod(ops: MethodBuilderOps) {
-        methods.add(method(ops))
+        allMethods.add(method(ops))
     }
 
     fun addField(ops: FieldBuilderOps) {
@@ -307,7 +302,7 @@ open class ClassBuilder: CodeBlockBuilder {
         finalArgs.forEachIndexed { idx, arg ->
             add(arg)
             if (idx != finalArgs.size - 1) {
-                linePart(", ")
+                linePart(",")
             }
             lineEnd()
         }
@@ -344,15 +339,15 @@ open class ClassBuilder: CodeBlockBuilder {
         if (c.lang is Kotlin) {
             line("companion object {")
             tab()
-            staticMethods.forEach { methodOps ->
-                legacyMethod(methodOps)
+            staticMethods.forEach { method ->
+                add(method)
             }
             untab()
             line("}")
         }
-        else if (c.lang is TypeScript) {
-            staticMethods.forEach { methodOps ->
-                add(StaticMethodBuilder().apply(methodOps))
+        else {
+            staticMethods.forEach { method ->
+                add(method)
             }
         }
     }

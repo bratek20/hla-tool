@@ -4,19 +4,23 @@ using B20.Ext;
 
 namespace OtherModule.Api {
     public class OtherId {
+        public int Value { get; }
+
         public OtherId(
             int value
         ) {
             Value = value;
         }
-        public int Value { get; }
     }
 
     public class OtherProperty {
-        private int id;
-        private string name;
+        readonly int id;
+        readonly string name;
 
-        public OtherProperty(int id, string name) {
+        public OtherProperty(
+            int id,
+            string name
+        ) {
             this.id = id;
             this.name = name;
         }

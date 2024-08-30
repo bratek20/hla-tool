@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.utils.camelToPascalCase
 
 class ArgumentBuilder: CodeBlockBuilder {
     lateinit var name: String
@@ -101,12 +102,12 @@ abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
         }
         addOps(throwsOps())
         if (c.lang is CSharp) {
-            lineStart()
+            lineStart(beforeName(c))
             returnType?.let {
                 add(it)
                 linePart(" ")
             } ?: linePart("void ")
-            linePart(name)
+            linePart(camelToPascalCase(name))
             add(args)
         }
         else {
@@ -138,8 +139,6 @@ class InterfaceMethodBuilder: ProcedureSignatureBuilder() {
 }
 typealias InterfaceMethodBuilderOps = InterfaceMethodBuilder.() -> Unit
 
-
-
 abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
     var legacyBody: CodeBuilderOps? = null
 
@@ -160,11 +159,14 @@ abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
     }
 }
 
-open class MethodBuilder: ProcedureBuilder() {
+class MethodBuilder: ProcedureBuilder() {
     var override: Boolean = false
+    var static: Boolean = false
+
     override fun beforeName(c: CodeBuilderContext): String {
         val overridePart = if (override) "override " else ""
-        return "${overridePart}${c.lang.methodDeclarationKeyword()}"
+        val staticPart = if (static && c.lang.supportsStaticKeyword()) "static " else ""
+        return "${c.lang.defaultTopLevelAccessor()}${staticPart}${overridePart}${c.lang.methodDeclarationKeyword()}"
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
@@ -178,4 +180,3 @@ open class FunctionBuilder: ProcedureBuilder() {
 }
 typealias FunctionBuilderOps = FunctionBuilder.() -> Unit
 fun function(block: FunctionBuilderOps) = FunctionBuilder().apply(block)
-fun CodeBuilder.legacyFunction(block: FunctionBuilderOps) = add(FunctionBuilder().apply(block))

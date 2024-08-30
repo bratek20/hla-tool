@@ -1,6 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
+import com.github.bratek20.codebuilder.builders.constructorCall
+import com.github.bratek20.codebuilder.builders.returnStatement
+import com.github.bratek20.codebuilder.builders.variable
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -44,8 +47,23 @@ class ValueObjectsGenerator: PatternGenerator() {
                 name = "name"
                 fromConstructor = true
             }
+
+            addMethod {
+                name = "GetId"
+                returnType = typeName("OtherId")
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
+                            className = "OtherId"
+                            addArg {
+                                variable("id")
+                            }
+                        }
+                    })
+                }
+            }
         }
-        addExtraEmptyLines(32)
+        addExtraEmptyLines(31)
     }
 
     override fun generateFileContent(): FileContent? {

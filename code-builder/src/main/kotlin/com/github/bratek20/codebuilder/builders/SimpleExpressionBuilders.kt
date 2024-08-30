@@ -3,6 +3,7 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.CodeBlockBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.utils.camelToPascalCase
 
 //part of line
 interface ExpressionBuilder: CodeBlockBuilder
@@ -21,6 +22,28 @@ fun expression(value: String): ExpressionBuilder {
 
 fun variable(name: String): ExpressionBuilder {
     return expression(name)
+}
+
+class GetterFieldAccessBuilder: ExpressionBuilder {
+    lateinit var variableName: String
+    lateinit var fieldName: String
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        val finalFieldName = if (c.lang.areMethodsPascalCase()) {
+            camelToPascalCase(fieldName)
+        } else {
+            fieldName
+        }
+        linePart("$variableName.$finalFieldName")
+    }
+}
+typealias GetterFieldAccessBuilderOps = GetterFieldAccessBuilder.() -> Unit
+fun getterFieldAccess(ops: GetterFieldAccessBuilderOps) = GetterFieldAccessBuilder().apply(ops)
+
+fun instanceVariable(name: String): ExpressionBuilder = object : ExpressionBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart("${c.lang.softThis()}$name")
+    }
 }
 
 fun const(value: Int): ExpressionBuilder {

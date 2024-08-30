@@ -63,6 +63,10 @@ interface CodeBuilderLanguage {
 
     fun supportsFieldTypeDeductionFromAssignedValue(): Boolean
     fun supportsFieldDeclarationInConstructor(): Boolean
+
+    fun softThis(): String
+
+    fun areMethodsPascalCase(): Boolean = false
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -201,6 +205,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun supportsFieldDeclarationInConstructor(): Boolean {
         return true
+    }
+
+    override fun softThis(): String {
+        return ""
     }
 }
 
@@ -341,6 +349,10 @@ class TypeScript: CodeBuilderLanguage {
     override fun supportsFieldDeclarationInConstructor(): Boolean {
         return true
     }
+
+    override fun softThis(): String {
+        return "this."
+    }
 }
 
 class CSharp: CodeBuilderLanguage {
@@ -479,5 +491,13 @@ class CSharp: CodeBuilderLanguage {
 
     override fun supportsFieldDeclarationInConstructor(): Boolean {
         return false
+    }
+
+    override fun softThis(): String {
+        return ""
+    }
+
+    override fun areMethodsPascalCase(): Boolean {
+        return true
     }
 }

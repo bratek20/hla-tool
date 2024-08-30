@@ -282,10 +282,12 @@ class ClassBuilderTest {
             op = {
                 add(classBlock {
                     name = "SomeClass"
-                    addStaticMethod {
+                    addMethod {
+                        static = true
                         name = "someMethod"
                     }
-                    addStaticMethod {
+                    addMethod {
+                        static = true
                         name = "otherMethod"
                     }
                 })
@@ -310,6 +312,17 @@ class ClassBuilderTest {
                         static someMethod() {
                         }
                         static otherMethod() {
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        public static void SomeMethod() {
+                        }
+                        public static void OtherMethod() {
                         }
                     }
                 """
@@ -363,7 +376,7 @@ class ClassBuilderTest {
                                 constructorCall {
                                     className = "SomeId"
                                     addArg {
-                                        variable("id")
+                                        instanceVariable("id")
                                     }
                                 }
                             })
@@ -374,11 +387,12 @@ class ClassBuilderTest {
                         returnType = baseType(BaseType.INT)
                         setBody {
                             add(returnStatement {
-                                variable("amount")
+                                instanceVariable("amount")
                             })
                         }
                     }
-                    addStaticMethod {
+                    addMethod {
+                        static = true
                         name = "create"
                         returnType = typeName("SomeInterfaceSomeCommandRequest")
                         addArg {
@@ -394,7 +408,10 @@ class ClassBuilderTest {
                                 constructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
                                     addArg {
-                                        variable("id.value")
+                                        getterFieldAccess {
+                                            variableName = "id"
+                                            fieldName = "value"
+                                        }
                                     }
                                     addArg {
                                         variable("amount")
@@ -422,6 +439,52 @@ class ClassBuilderTest {
                             fun create(id: SomeId, amount: Int): SomeInterfaceSomeCommandRequest {
                                 return SomeInterfaceSomeCommandRequest(id.value, amount)
                             }
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeInterfaceSomeCommandRequest {
+                        constructor(
+                            private readonly id: string,
+                            private readonly amount: number
+                        ) {}
+                        getId(): SomeId {
+                            return new SomeId(this.id)
+                        }
+                        getAmount(): number {
+                            return this.amount
+                        }
+                        static create(id: SomeId, amount: number): SomeInterfaceSomeCommandRequest {
+                            return new SomeInterfaceSomeCommandRequest(id.value, amount)
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeInterfaceSomeCommandRequest {
+                        readonly string id;
+                        readonly int amount;
+                    
+                        public SomeInterfaceSomeCommandRequest(
+                            string id,
+                            int amount
+                        ) {
+                            this.id = id;
+                            this.amount = amount;
+                        }
+                        public SomeId GetId() {
+                            return new SomeId(id);
+                        }
+                        public int GetAmount() {
+                            return amount;
+                        }
+                        public static SomeInterfaceSomeCommandRequest Create(SomeId id, int amount) {
+                            return new SomeInterfaceSomeCommandRequest(id.Value, amount);
                         }
                     }
                 """
@@ -572,6 +635,11 @@ class ClassBuilderTest {
                         type = baseType(BaseType.INT)
                         fromConstructor = true
                     }
+                    addField {
+                        name = "otherField"
+                        type = baseType(BaseType.INT)
+                        fromConstructor = true
+                    }
                 })
             }
             langExpected {
@@ -579,11 +647,14 @@ class ClassBuilderTest {
                 expected = """
                     public class SomeClass {
                         readonly int someField;
+                        readonly int otherField;
                     
                         public SomeClass(
-                            int someField
+                            int someField,
+                            int otherField
                         ) {
                             this.someField = someField;
+                            this.otherField = otherField;
                         }
                     }
                 """
