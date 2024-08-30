@@ -341,30 +341,32 @@ class ClassBuilderTest {
             op = {
                 add(classBlock {
                     name = "SomeInterfaceSomeCommandRequest"
-                    constructor {
-                        addField {
-                            modifier = AccessModifier.PRIVATE
-                            name = "id"
-                            type = baseType(BaseType.STRING)
-                        }
-                        addField {
-                            modifier = AccessModifier.PRIVATE
-                            name = "amount"
-                            type = baseType(BaseType.INT)
-                        }
+
+                    addField {
+                        modifier = AccessModifier.PRIVATE
+                        name = "id"
+                        type = baseType(BaseType.STRING)
+                        fromConstructor = true
                     }
+                    addField {
+                        modifier = AccessModifier.PRIVATE
+                        name = "amount"
+                        type = baseType(BaseType.INT)
+                        fromConstructor = true
+                    }
+
                     addMethod {
                         name = "getId"
                         returnType = typeName("SomeId")
                         setBody {
-                            legacyReturn {
-                                legacyConstructorCall {
+                            add(returnStatement {
+                                constructorCall {
                                     className = "SomeId"
                                     addArg {
                                         variable("id")
                                     }
                                 }
-                            }
+                            })
                         }
                     }
                     addMethod {

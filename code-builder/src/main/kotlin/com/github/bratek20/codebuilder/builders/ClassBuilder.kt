@@ -184,7 +184,7 @@ open class ClassBuilder: CodeBlockBuilder {
         val beginningWithoutExtendOrImplements = "$classPart$name"
         val beginning = "$beginningWithoutExtendOrImplements$extendsOrImplementsPart"
 
-        if (c.lang is Kotlin && constructor != null) {
+        if (c.lang is Kotlin && shouldGenerateConstructor()) {
             line("$beginningWithoutExtendOrImplements(")
             tab()
             addOps(getFieldsAndArgsOps())
@@ -196,7 +196,7 @@ open class ClassBuilder: CodeBlockBuilder {
                 ""
             }
             line(")$extendsOrImplementsPart$passingArgsPart {")
-            if (constructor!!.getBody() != null) {
+            if (constructor?.getBody() != null) {
                 tab()
                 line("init {")
                 tab()
@@ -206,14 +206,14 @@ open class ClassBuilder: CodeBlockBuilder {
                 untab()
             }
         }
-        else if (c.lang is TypeScript && constructor != null) {
+        else if (c.lang is TypeScript && shouldGenerateConstructor()) {
             line("$beginning {")
             tab()
             line("constructor(")
             tab()
             addOps(getFieldsAndArgsOps())
             untab()
-            if (constructor!!.getBody() != null) {
+            if (constructor?.getBody() != null) {
                 line(") {")
                 tab()
                 add(constructor!!.getBody()!!)
@@ -232,7 +232,7 @@ open class ClassBuilder: CodeBlockBuilder {
             }
             untab()
         }
-        else if (c.lang is CSharp && constructor != null) {
+        else if (c.lang is CSharp && shouldGenerateConstructor()) {
             line("$beginning {")
             tab()
             line("public $name(")
@@ -277,13 +277,20 @@ open class ClassBuilder: CodeBlockBuilder {
             linePart(",")
             lineEnd()
         }
-        constructor!!.getArgs().forEachIndexed { idx, arg ->
+        constructor?.getArgs()?.forEachIndexed { idx, arg ->
             add(arg)
             if (idx != constructor!!.getArgs().size - 1) {
                 linePart(",")
             }
             lineEnd()
         }
+    }
+
+    private fun shouldGenerateConstructor(): Boolean {
+        if (constructor != null) {
+            return true
+        }
+        return fields.any { it.fromConstructor }
     }
 
     private fun staticMethodsSection(c: CodeBuilderContext): CodeBuilderOps = {
