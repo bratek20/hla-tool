@@ -3,27 +3,24 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
-enum class FieldAccessor {
-    PRIVATE, PROTECTED, PUBLIC
-}
-
 class FieldBuilder: CodeBlockBuilder {
+    lateinit var type: TypeBuilder
     lateinit var name: String
-
-    var type: TypeBuilder? = null
 
     var legacyValue: CodeBuilderOps? = null
     var value: ExpressionBuilder? = null
 
-    var accessor: FieldAccessor? = null
+    var accessor: AccessModifier = AccessModifier.PRIVATE
     var mutable = false
     var static = false
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineSoftStart()
-        accessor?.let {
-            linePart("${it.name.lowercase()} ")
+        lineStart()
+
+        if (accessor != c.lang.defaultAccessModifierForClassMembers()) {
+            linePart("${accessor.name.lowercase()} ")
         }
+
         if (static) {
             linePart("static ")
         }
@@ -33,10 +30,17 @@ class FieldBuilder: CodeBlockBuilder {
         else {
             linePart(c.lang.immutableFieldDeclaration())
         }
-        linePart(name)
-        type?.let {
-            linePart(": ")
-            add(it)
+
+
+        when(c.lang.typeDeclarationStyle()) {
+            TypeDeclarationStyle.TYPE_FIRST -> {
+                add(type)
+                linePart(" $name")
+            }
+            TypeDeclarationStyle.VARIABLE_FIRST -> {
+                linePart("$name: ")
+                add(type)
+            }
         }
         legacyValue?.let {
             linePart(" = ")
@@ -46,7 +50,7 @@ class FieldBuilder: CodeBlockBuilder {
             linePart(" = ")
             add(it)
         }
-        lineSoftEnd()
+        statementLineEnd()
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit

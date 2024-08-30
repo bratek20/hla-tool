@@ -4,6 +4,15 @@ enum class BaseType {
     INT, STRING, BOOLEAN, ANY
 }
 
+enum class TypeDeclarationStyle {
+    TYPE_FIRST,
+    VARIABLE_FIRST
+}
+
+enum class AccessModifier {
+    PRIVATE, PROTECTED, PUBLIC, INTERNAL
+}
+
 interface CodeBuilderLanguage {
     fun name(): String
 
@@ -45,6 +54,12 @@ interface CodeBuilderLanguage {
 
     fun statementTerminator(): String
 
+    fun supportsStaticKeyword(): Boolean
+
+    fun typeDeclarationStyle(): TypeDeclarationStyle
+
+    fun defaultAccessModifierForTopLevelTypes(): AccessModifier
+    fun defaultAccessModifierForClassMembers(): AccessModifier
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -159,6 +174,22 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun statementTerminator(): String {
         return ""
+    }
+
+    override fun supportsStaticKeyword(): Boolean {
+        return false
+    }
+
+    override fun typeDeclarationStyle(): TypeDeclarationStyle {
+        return TypeDeclarationStyle.VARIABLE_FIRST
+    }
+
+    override fun defaultAccessModifierForTopLevelTypes(): AccessModifier {
+        return AccessModifier.PUBLIC
+    }
+
+    override fun defaultAccessModifierForClassMembers(): AccessModifier {
+        return AccessModifier.PUBLIC
     }
 }
 
@@ -275,6 +306,22 @@ class TypeScript: CodeBuilderLanguage {
     override fun statementTerminator(): String {
         return ""
     }
+
+    override fun supportsStaticKeyword(): Boolean {
+        return true
+    }
+
+    override fun typeDeclarationStyle(): TypeDeclarationStyle {
+        return TypeDeclarationStyle.VARIABLE_FIRST
+    }
+
+    override fun defaultAccessModifierForTopLevelTypes(): AccessModifier {
+        return AccessModifier.PUBLIC
+    }
+
+    override fun defaultAccessModifierForClassMembers(): AccessModifier {
+        return AccessModifier.PUBLIC
+    }
 }
 
 class CSharp: CodeBuilderLanguage {
@@ -389,5 +436,21 @@ class CSharp: CodeBuilderLanguage {
 
     override fun statementTerminator(): String {
         return ";"
+    }
+
+    override fun supportsStaticKeyword(): Boolean {
+        return true
+    }
+
+    override fun typeDeclarationStyle(): TypeDeclarationStyle {
+        return TypeDeclarationStyle.TYPE_FIRST
+    }
+
+    override fun defaultAccessModifierForTopLevelTypes(): AccessModifier {
+        return AccessModifier.INTERNAL
+    }
+
+    override fun defaultAccessModifierForClassMembers(): AccessModifier {
+        return AccessModifier.PRIVATE
     }
 }

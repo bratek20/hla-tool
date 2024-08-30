@@ -82,7 +82,7 @@ class MocksGenerator: PatternGenerator() {
             return {
                     legacyComment(def.name)
                     legacyField {
-                        accessor = FieldAccessor.PRIVATE
+                        accessor = AccessModifier.PRIVATE
                         name = callsListName
                         type = mutableListType(type(inputTypeName))
                         legacyValue = {
@@ -90,7 +90,7 @@ class MocksGenerator: PatternGenerator() {
                         }
                     }
                     legacyField {
-                        accessor = FieldAccessor.PRIVATE
+                        accessor = AccessModifier.PRIVATE
                         name = responsesListName
                         type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
                         legacyValue = {

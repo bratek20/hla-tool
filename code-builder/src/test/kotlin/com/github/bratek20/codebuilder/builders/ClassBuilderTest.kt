@@ -81,6 +81,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     addField {
+                        type = type("OtherClass")
                         name = "someField"
                         static = true
                         value = constructorCall {
@@ -96,7 +97,7 @@ class ClassBuilderTest {
                 lang = TypeScript()
                 expected = """
                     class SomeClass {
-                        static readonly someField = new OtherClass("SomeStr")
+                        private static readonly someField: OtherClass = new OtherClass("SomeStr")
                     }
                 """
             }
@@ -142,11 +143,10 @@ class ClassBuilderTest {
             op = {
                 add(classBlock {
                     name = "SomeClass"
-                    legacyBody = {
-                        addMethod {
-                            comment = "some comment"
-                            name = "someMethod"
-                        }
+
+                    addMethod {
+                        comment = "some comment"
+                        name = "someMethod"
                     }
                 })
             }
@@ -181,19 +181,14 @@ class ClassBuilderTest {
                     name = "SomeClass"
 
                     addField {
-                        accessor = FieldAccessor.PRIVATE
                         name = "a"
                         type = type("A")
                         value = variable("null")
                     }
                     addField {
+                        accessor = AccessModifier.PUBLIC
                         name = "b"
                         type = type("B")
-                    }
-                    addField {
-                        name = "noType"
-                        value = string("someString")
-                        mutable = true
                     }
                 })
             }
@@ -203,7 +198,6 @@ class ClassBuilderTest {
                     class SomeClass {
                         private val a: A = null
                         val b: B
-                        var noType = "someString"
                     }
                 """
             }
@@ -213,7 +207,15 @@ class ClassBuilderTest {
                     class SomeClass {
                         private readonly a: A = null
                         readonly b: B
-                        noType = "someString"
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        readonly A a = null;
+                        public readonly B b;
                     }
                 """
             }
@@ -228,7 +230,7 @@ class ClassBuilderTest {
                     name = "SomeClass"
                     constructor {
                         addField {
-                            accessor = FieldAccessor.PRIVATE
+                            accessor = AccessModifier.PRIVATE
                             name = "idField"
                             type = baseType(BaseType.STRING)
                         }
@@ -340,12 +342,12 @@ class ClassBuilderTest {
                     name = "SomeInterfaceSomeCommandRequest"
                     constructor {
                         addField {
-                            accessor = FieldAccessor.PRIVATE
+                            accessor = AccessModifier.PRIVATE
                             name = "id"
                             type = baseType(BaseType.STRING)
                         }
                         addField {
-                            accessor = FieldAccessor.PRIVATE
+                            accessor = AccessModifier.PRIVATE
                             name = "amount"
                             type = baseType(BaseType.INT)
                         }
