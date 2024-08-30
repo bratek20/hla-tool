@@ -73,7 +73,8 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
             }
-            addStaticMethod {
+            addMethod {
+                static = true
                 name = "create"
                 returnType = typeName(requestName(interfName, method))
                 method.args.map { arg ->
@@ -128,7 +129,8 @@ class WebCommonGenerator: PatternGenerator() {
                 }
             }
 
-            addStaticMethod {
+            addMethod {
+                static = true
                 name = "create"
                 returnType = typeName(requestName(interfName, method))
                 method.args.map { arg ->

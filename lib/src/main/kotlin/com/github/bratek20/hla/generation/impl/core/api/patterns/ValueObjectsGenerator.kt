@@ -1,9 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
-import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.builders.returnStatement
-import com.github.bratek20.codebuilder.builders.variable
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -62,8 +59,132 @@ class ValueObjectsGenerator: PatternGenerator() {
                     })
                 }
             }
+            addMethod {
+                name = "GetName"
+                returnType = typeName("string")
+                setBody {
+                    add(returnStatement {
+                        variable("name")
+                    })
+                }
+            }
+
+            addMethod {
+                static = true
+                returnType = typeName("OtherProperty")
+                name = "create"
+                addArg {
+                    type = typeName("OtherId")
+                    name = "id"
+                }
+                addArg {
+                    type = typeName("string")
+                    name = "name"
+                }
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
+                            className = "OtherProperty"
+                            addArg {
+                                getterFieldAccess {
+                                    variableName = "id"
+                                    fieldName = "value"
+                                }
+                            }
+                            addArg {
+                                variable("name")
+                            }
+                        }
+                    })
+                }
+            }
         }
-        addExtraEmptyLines(31)
+
+//        public class OtherClass {
+//            private int id;
+//            private int amount;
+//
+//            public OtherClass(int id, int amount) {
+//                this.id = id;
+//                this.amount = amount;
+//            }
+//            public OtherId GetId() {
+//                return new OtherId(Id);
+//            }
+//            public int GetAmount() {
+//                return amount;
+//            }
+//            public static OtherClass Create(OtherId id, int amount) {
+//                return new OtherClass(id.Value, amount);
+//            }
+//        }
+        addClass {
+            name = "OtherClass"
+            addField {
+                type = typeName("int")
+                name = "id"
+                fromConstructor = true
+            }
+            addField {
+                type = typeName("int")
+                name = "amount"
+                fromConstructor = true
+            }
+
+            addMethod {
+                name = "GetId"
+                returnType = typeName("OtherId")
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
+                            className = "OtherId"
+                            addArg {
+                                variable("id")
+                            }
+                        }
+                    })
+                }
+            }
+            addMethod {
+                name = "GetAmount"
+                returnType = typeName("int")
+                setBody {
+                    add(returnStatement {
+                        variable("amount")
+                    })
+                }
+            }
+
+            addMethod {
+                static = true
+                returnType = typeName("OtherClass")
+                name = "Create"
+                addArg {
+                    type = typeName("OtherId")
+                    name = "id"
+                }
+                addArg {
+                    type = typeName("int")
+                    name = "amount"
+                }
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
+                            className = "OtherClass"
+                            addArg {
+                                getterFieldAccess {
+                                    variableName = "id"
+                                    fieldName = "value"
+                                }
+                            }
+                            addArg {
+                                variable("amount")
+                            }
+                        }
+                    })
+                }
+            }
+        }
     }
 
     override fun generateFileContent(): FileContent? {
