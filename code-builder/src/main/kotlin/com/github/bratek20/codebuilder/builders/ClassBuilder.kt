@@ -3,7 +3,9 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 
-class FieldBuilder: CodeBlockBuilder {
+class FieldBuilder(
+    private val endStatement: Boolean = true
+): CodeBlockBuilder {
     lateinit var type: TypeBuilder
     lateinit var name: String
 
@@ -50,7 +52,10 @@ class FieldBuilder: CodeBlockBuilder {
             linePart(" = ")
             add(it)
         }
-        statementLineEnd()
+
+        if(endStatement) {
+            statementLineEnd()
+        }
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
@@ -74,7 +79,7 @@ class ClassConstructorBuilder {
 
     fun getFieldsAndArgsOps(): CodeBuilderOps = {
         fields.forEach { fieldOps ->
-            legacyField(fieldOps)
+            add(FieldBuilder(false).apply(fieldOps))
             linePart(",")
             lineEnd()
         }
