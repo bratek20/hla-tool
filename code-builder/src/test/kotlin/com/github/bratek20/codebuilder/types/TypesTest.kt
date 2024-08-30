@@ -89,11 +89,11 @@ class TypesTest {
         testOp {
             op = {
                 lineStart()
-                legacyPairOp("pair").first()
+                add(pairOp("pair").first())
                 lineEnd()
 
                 lineStart()
-                legacyPairOp("pair").second()
+                add(pairOp("pair").second())
                 lineEnd()
             }
             langExpected {
