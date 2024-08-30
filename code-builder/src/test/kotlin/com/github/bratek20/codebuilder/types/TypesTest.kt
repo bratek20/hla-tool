@@ -225,4 +225,43 @@ class TypesTest {
             }
         }
     }
+
+    @Test
+    fun optionalOps() {
+        testOp {
+            op = {
+                lineStart()
+                add(optionalOp("optional").get())
+                lineEnd()
+
+                add(optionalOp("optional").map {
+                    plus {
+                        left = variable("it")
+                        right = const(1)
+                    }
+                })
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                   optional!!
+                   optional.map { it -> it + 1 }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                   optional.get()
+                   optional.map( it => it + 1 )
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                   optional.get()
+                   optional.Select( it => it + 1 )
+                """
+            }
+        }
+    }
 }

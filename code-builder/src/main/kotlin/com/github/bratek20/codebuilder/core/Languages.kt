@@ -42,6 +42,8 @@ interface CodeBuilderLanguage {
     fun listMapBegin(): String
     fun listMapEnd(): String
 
+    fun optionalGet(variableName: String): String
+
     fun lambdaArrow(): String
 
     fun immutableFieldDeclaration(): String
@@ -149,6 +151,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun listMapEnd(): String {
         return "}"
+    }
+
+    override fun optionalGet(variableName: String): String {
+        return "${variableName}!!"
     }
 
     override fun lambdaArrow(): String {
@@ -294,6 +300,10 @@ class TypeScript: CodeBuilderLanguage {
         return ")"
     }
 
+    override fun optionalGet(variableName: String): String {
+        return "$variableName.get()"
+    }
+
     override fun lambdaArrow(): String {
         return "=>"
     }
@@ -435,6 +445,10 @@ class CSharp: CodeBuilderLanguage {
 
     override fun listMapEnd(): String {
         return ")"
+    }
+
+    override fun optionalGet(variableName: String): String {
+        return "$variableName.get()"
     }
 
     override fun lambdaArrow(): String {
