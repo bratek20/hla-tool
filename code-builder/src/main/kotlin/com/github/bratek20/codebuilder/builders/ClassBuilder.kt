@@ -112,7 +112,7 @@ open class ClassBuilder: CodeBlockBuilder {
 
     private var constructor: ClassConstructorBuilder? = null
     private val fields: MutableList<FieldBuilderOps> = mutableListOf()
-    var body: CodeBuilderOps? = null
+    var legacyBody: CodeBuilderOps? = null
 
     private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
 
@@ -149,7 +149,7 @@ open class ClassBuilder: CodeBlockBuilder {
         fields.forEach { fieldOps ->
             field(fieldOps)
         }
-        body?.let { addOps(it) }
+        legacyBody?.let { addOps(it) }
         methods.forEach { methodOps ->
             legacyMethod(methodOps)
         }

@@ -142,7 +142,7 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    body = {
+                    legacyBody = {
                         addMethod {
                             comment = "some comment"
                             name = "someMethod"
@@ -179,7 +179,7 @@ class ClassBuilderTest {
             op = {
                 classBlock {
                     name = "SomeClass"
-                    body = {
+                    legacyBody = {
                         field {
                             accessor = FieldAccessor.PRIVATE
                             name = "a"
@@ -351,7 +351,7 @@ class ClassBuilderTest {
                             type = baseType(BaseType.INT)
                         }
                     }
-                    body = {
+                    legacyBody = {
                         legacyMethod {
                             name = "getId"
                             returnType = type("SomeId")

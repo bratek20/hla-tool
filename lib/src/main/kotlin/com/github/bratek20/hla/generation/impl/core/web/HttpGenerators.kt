@@ -57,7 +57,7 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
             }
-            body = {
+            legacyBody = {
                 method.args.forEach { arg ->
                     legacyMethod {
                         name = "get${camelToPascalCase(arg.name)}"
@@ -103,7 +103,7 @@ class WebCommonGenerator: PatternGenerator() {
     private fun typeScriptRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = requestName(interfName, method)
-            body = {
+            legacyBody = {
                 method.args.forEach { arg ->
                     field {
                         accessor = FieldAccessor.PRIVATE
@@ -165,7 +165,7 @@ class WebCommonGenerator: PatternGenerator() {
 
         return {
             name = responseName(interfName, method)
-            body = {
+            legacyBody = {
                 field {
                     accessor = FieldAccessor.PRIVATE
                     mutable = true
@@ -295,18 +295,22 @@ class WebClientGenerator: PatternGenerator() {
                                     name = "c"
                                     type = type("HandlerContext")
                                 }
-                                body = {
+                                setBody {
                                     add(variableAssignment {
                                         name = "this.client"
                                         value = functionCall {
                                             name = "HttpClient.Api.create"
-                                            addArg(variable("config.value"))
-                                            addArg(variable("c"))
+                                            addArg {
+                                                variable("config.value")
+                                            }
+                                            addArg {
+                                                variable("c")
+                                            }
                                         }
                                     })
                                 }
                             }
-                            body = {
+                            legacyBody = {
                                 field {
                                     accessor = FieldAccessor.PRIVATE
                                     name = "client"
