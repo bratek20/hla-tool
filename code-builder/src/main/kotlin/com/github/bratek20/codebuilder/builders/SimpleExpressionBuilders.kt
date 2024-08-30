@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.CodeBlockBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.utils.camelToPascalCase
@@ -82,4 +83,18 @@ class CommentBuilder(
 typealias StringProvider = () -> String
 fun comment(comment: StringProvider): CommentBuilder {
     return CommentBuilder(comment())
+}
+
+class IsEqualToArgs {
+    lateinit var left: ExpressionBuilder
+    lateinit var right: ExpressionBuilder
+}
+fun isEqualTo(block: IsEqualToArgs.() -> Unit) = object : ExpressionBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        val args = IsEqualToArgs().apply(block)
+
+        add(args.left)
+        linePart(" == ")
+        add(args.right)
+    }
 }

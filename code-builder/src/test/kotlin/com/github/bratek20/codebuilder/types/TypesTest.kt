@@ -1,10 +1,7 @@
 package com.github.bratek20.codebuilder.types
 
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.builders.legacyConst
-import com.github.bratek20.codebuilder.builders.legacyPlus
-import com.github.bratek20.codebuilder.builders.legacyString
-import com.github.bratek20.codebuilder.builders.legacyVariable
 import org.junit.jupiter.api.Test
 
 class TypesTest {
@@ -168,37 +165,33 @@ class TypesTest {
 
     @Test
     fun listOps() {
-        val list = emptyList<String>()
-        list.find { it -> it == "someString" }
-
         testOp {
             op = {
                 lineStart()
-                listOp("list").get(0)
+                add(listOp("list").get(0))
                 lineEnd()
 
-                listOp("list").add {
-                    legacyVariable("someVar")
-                }
+                add(listOp("list").add {
+                    variable("someVar")
+                })
 
-                listOp("list").add {
-                    legacyString("someString")
-                }
+                add(listOp("list").add {
+                    string("someString")
+                })
 
-                lineStart()
-                listOp("list").find {
-                    it.isEqualTo {
-                        legacyVariable("other")
+                add(listOp("list").find {
+                    isEqualTo {
+                        left = variable("it")
+                        right = variable("other")
                     }
-                }
+                })
 
-                lineStart()
-                listOp("list").map {
-                    legacyPlus {
-                        left = { legacyVariable(it.name) }
-                        right = { legacyConst("1") }
+                add(listOp("list").map {
+                    plus {
+                        left = variable("it")
+                        right = const(1)
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()

@@ -44,12 +44,12 @@ fun CodeBuilder.legacyPlus(block: PlusArgs.()->Unit): CodeBuilder {
     return this
 }
 
-class IsEqualToArgs {
+class LegacyIsEqualToArgs {
     lateinit var left: CodeBuilderOps
     lateinit var right: CodeBuilderOps
 }
-fun CodeBuilder.isEqualTo(block: IsEqualToArgs.()->Unit): CodeBuilder {
-    val args = IsEqualToArgs().apply(block)
+fun CodeBuilder.legacyIsEqualTo(block: LegacyIsEqualToArgs.()->Unit): CodeBuilder {
+    val args = LegacyIsEqualToArgs().apply(block)
     addOps(args.left)
     linePart(" == ")
     addOps(args.right)

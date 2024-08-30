@@ -134,7 +134,7 @@ class MocksGenerator: PatternGenerator() {
                                 }
                                 value = {
                                     listOp(responsesListName).find {
-                                        isEqualTo {
+                                        legacyIsEqualTo {
                                             left = {
                                                 legacyFunctionCall {
                                                     name = inputDiffMethodName

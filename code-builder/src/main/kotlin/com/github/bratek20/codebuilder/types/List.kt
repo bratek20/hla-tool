@@ -1,5 +1,9 @@
 package com.github.bratek20.codebuilder.types
 
+import com.github.bratek20.codebuilder.builders.ExpressionBuilder
+import com.github.bratek20.codebuilder.builders.ExpressionBuilderProvider
+import com.github.bratek20.codebuilder.builders.StatementBuilder
+import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
@@ -23,58 +27,47 @@ fun emptyMutableList(elementType: TypeBuilder): LinePartBuilder = object : LineP
     }
 }
 
-class ItOperations(
-    b: CodeBuilder
-) {
-    val it = ItBuilder(b)
-}
-typealias ItOperationsOps = ItOperations.() -> Unit
-
-class ItBuilder(
-    private val b: CodeBuilder
-) {
+class ItOpsBuilder: ExpressionBuilder {
     val name = "it"
 
-    fun isEqualTo(other: CodeBuilderOps) {
-        b.linePart("it == ")
-        b.addOps(other)
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+
     }
 }
+typealias ItOpsBuilderOps = ItOpsBuilder.() -> Unit
+fun itOps(block: ItOpsBuilderOps) = ItOpsBuilder().apply(block)
 
 class ListOperations(
-    private val b: CodeBuilder,
     private val variableName: String
 ) {
-    private val lang = b.c.lang
+    fun get(index: Int): ExpressionBuilder = expression("$variableName[$index]")
 
-    fun get(index: Int) {
-        b.linePart("$variableName[$index]")
+    fun add(element: ExpressionBuilderProvider): StatementBuilder = object : StatementBuilder {
+        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+            lineStart("${variableName}." + c.lang.listAddCallName())
+            linePart("(")
+            add(element())
+            lineSoftEnd(")")
+        }
     }
 
-    fun add(element: CodeBuilderOps) {
-        b.lineStart("${variableName}." + lang.listAddCallName())
-        b.linePart("(")
-        b.addOps(element)
-        b.lineSoftEnd(")")
+    fun find(predicate: ExpressionBuilderProvider): StatementBuilder = object : StatementBuilder {
+        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+            lineSoftStart("${variableName}.${c.lang.listFindBegin()} it ${c.lang.lambdaArrow()} ")
+            add(predicate())
+            lineSoftEnd(" " + c.lang.listFindEnd())
+        }
     }
 
-    fun find(predicate: ItOperationsOps) {
-        val itOperations = ItOperations(b)
-
-        b.linePart("${variableName}.${lang.listFindBegin()} it ${lang.lambdaArrow()} ")
-        itOperations.apply(predicate)
-        b.lineSoftEnd(" " + b.c.lang.listFindEnd())
-    }
-
-    fun map(predicate: ItOperationsOps) {
-        val itOperations = ItOperations(b)
-
-        b.linePart("${variableName}.${lang.listMapBegin()} it ${lang.lambdaArrow()} ")
-        itOperations.apply(predicate)
-        b.lineSoftEnd(" " + b.c.lang.listMapEnd())
+    fun map(predicate: ExpressionBuilderProvider): StatementBuilder = object : StatementBuilder {
+        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+            lineSoftStart("${variableName}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
+            add(predicate())
+            lineSoftEnd(" " + c.lang.listMapEnd())
+        }
     }
 }
 
-fun CodeBuilder.listOp(variableName: String): ListOperations {
-    return ListOperations(this, variableName)
+fun listOp(variableName: String): ListOperations {
+    return ListOperations(variableName)
 }
