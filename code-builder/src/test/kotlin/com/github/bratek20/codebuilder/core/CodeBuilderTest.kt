@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 class CodeBuilderTest {
     @Test
     fun `should support lines and tab operations`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 line("{")
                 tab()
@@ -36,7 +36,7 @@ class CodeBuilderTest {
 
     @Test
     fun `lineSoftStart() - can start line but can also be used for started line`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineSoftStart("a")
                 lineEnd()
@@ -56,7 +56,7 @@ class CodeBuilderTest {
 
     @Test
     fun `lineSoftEnd() - allows for new line start but does not end line instantly`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart("a")
                 lineSoftEnd("b")
@@ -76,7 +76,7 @@ class CodeBuilderTest {
 
     @Test
     fun `lineSoftStart() should start new line if lineSoftEnd() was used`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart("a")
                 lineSoftEnd("b")
@@ -92,7 +92,7 @@ class CodeBuilderTest {
 
     @Test
     fun `should throw exceptions when line manipulation used badly`() {
-        testCodeBuilderOpException {
+        testOpException {
             op = {
                 line("First line")
                 linePart("x")
@@ -100,7 +100,7 @@ class CodeBuilderTest {
             expectedMessage = "linePart(\"x\") failed - line not started! Previous line: First line"
         }
 
-        testCodeBuilderOpException {
+        testOpException {
             op = {
                 line("First line")
                 lineStart("a")
@@ -109,14 +109,14 @@ class CodeBuilderTest {
             expectedMessage = "lineStart(\"b\") failed - line already started, current value: \"a\"! Previous full line: \"First line\""
         }
 
-        testCodeBuilderOpException {
+        testOpException {
             op = {
                 lineEnd("a")
             }
             expectedMessage = "lineEnd(\"a\") failed - line not started! Previous line: "
         }
 
-        testCodeBuilderOpException {
+        testOpException {
             op = {
                 lineSoftEnd("a")
             }
@@ -132,9 +132,9 @@ class CodeBuilderTest {
 
     @Test
     fun `should support add addMany and context reading`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                add {
+                addOps {
                     line("x")
                 }
                 add(codeBlockBuilderLangNamePrinter())
@@ -168,6 +168,28 @@ class CodeBuilderTest {
                     b
                 """
             }
+        }
+    }
+
+
+    private fun failingCodeBlockBuilder(): CodeBlockBuilder = object: CodeBlockBuilder {
+        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+
+        }
+
+        override fun validate(c: CodeBuilderContext): ValidationResult {
+            return ValidationResult.failure("Some error message")
+        }
+    }
+
+    @Test
+    fun `should throw validation exception if code block builder validate returns failure`() {
+        testOpException {
+            op = {
+                add(failingCodeBlockBuilder())
+            }
+            expectedExceptionType = CodeBuilderValidationException::class.java
+            expectedMessage = "Some error message"
         }
     }
 }

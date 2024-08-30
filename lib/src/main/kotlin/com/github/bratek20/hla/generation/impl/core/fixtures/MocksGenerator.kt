@@ -9,10 +9,8 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceView
-import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
 import com.github.bratek20.utils.camelToPascalCase
-import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
 class MocksGenerator: PatternGenerator() {
@@ -82,21 +80,21 @@ class MocksGenerator: PatternGenerator() {
                     "{}"
 
             return {
-                    comment(def.name)
-                    field {
-                        accessor = FieldAccessor.PRIVATE
+                    legacyComment(def.name)
+                    legacyField {
+                        modifier = AccessModifier.PRIVATE
                         name = callsListName
-                        type = mutableListType(type(inputTypeName))
-                        value = {
-                            add(emptyMutableList(type(inputTypeName)))
+                        type = mutableListType(typeName(inputTypeName))
+                        legacyValue = {
+                            add(emptyMutableList(typeName(inputTypeName)))
                         }
                     }
-                    field {
-                        accessor = FieldAccessor.PRIVATE
+                    legacyField {
+                        modifier = AccessModifier.PRIVATE
                         name = responsesListName
-                        type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
-                        value = {
-                            add(emptyMutableList(type(expectedInputType)))
+                        type = mutableListType(pairType(typeName(expectedInputType), typeName(defOutputType)))
+                        legacyValue = {
+                            add(emptyMutableList(typeName(expectedInputType)))
                         }
                     }
                     emptyLine()
@@ -105,14 +103,16 @@ class MocksGenerator: PatternGenerator() {
                         name = "set${upperCaseName}Response"
                         addArg {
                             name = "args"
-                            type = type(expectedInputType)
+                            type = typeName(expectedInputType)
                         }
                         addArg {
                             name = "response"
-                            type = type(defOutputType)
+                            type = typeName(defOutputType)
                         }
-                        legacyBody = {
-                            listOp(responsesListName).add { newPair("args", "response") }
+                        setBody {
+                            add(listOp(responsesListName).add {
+                                newPair("args", "response")
+                            })
                         }
                     }
 
@@ -120,35 +120,35 @@ class MocksGenerator: PatternGenerator() {
                     legacyMethod {
                         override = true
                         name = def.name
-                        returnType = type(outputTypeName)
+                        returnType = typeName(outputTypeName)
                         addArg {
                             name = inputArgName
-                            type = type(inputTypeName)
+                            type = typeName(inputTypeName)
                         }
-                        legacyBody = {
-                            listOp(callsListName).add {
-                                legacyVariable(inputArgName)
-                            }
-                            legacyAssign {
-                                variable = {
-                                    declare = true
-                                    name = "findResult"
-                                }
-                                value = {
-                                    listOp(responsesListName).find {
-                                        isEqualTo {
-                                            left = {
-                                                legacyFunctionCall {
-                                                    name = inputDiffMethodName
-                                                    addArgLegacy { legacyVariable(inputArgName) }
-                                                    addArgLegacy { pairOp(it.name).first() }
-                                                }
+                        setBody {
+                            add(listOp(callsListName).add {
+                                variable(inputArgName)
+                            })
+                            add(variableAssignment {
+                                declare = true
+                                name = "findResult"
+
+                                value = listOp(responsesListName).find {
+                                    isEqualTo {
+                                        left = functionCall {
+                                            name = inputDiffMethodName
+                                            addArg {
+                                                variable(inputArgName)
                                             }
-                                            right = { string("") }
+                                            addArg {
+                                                pairOp("it").first()
+                                            }
                                         }
+
+                                        right = string("")
                                     }
                                 }
-                            }
+                            })
                             legacyReturn {
                                 //TODO support for ?., support for ?:
                                 linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")
@@ -172,7 +172,7 @@ class MocksGenerator: PatternGenerator() {
                         name = "assert${upperCaseName}CalledForArgs"
                         addArg {
                             name = "args"
-                            type = type(expectedInputType)
+                            type = typeName(expectedInputType)
                         }
                         addArg {
                             name = "times"
@@ -189,13 +189,13 @@ class MocksGenerator: PatternGenerator() {
 
         fun classes(indent: Int): String {
             return CodeBuilder(lang, indent)
-                .add {
-                    classBlock {
+                .addOps {
+                    legacyClassBlock {
                         name = "${interfaceName}Mock"
                         implements = interfaceName
-                        body = {
+                        legacyBody = {
                             interf.methods.map {
-                                add(mocksForMethod(it))
+                                addOps(mocksForMethod(it))
                             }
                         }
                     }
@@ -205,17 +205,17 @@ class MocksGenerator: PatternGenerator() {
 
         fun contextModule(): String {
             return CodeBuilder(lang)
-                .add {
-                    classBlock {
+                .addOps {
+                    legacyClassBlock {
                         name = "${moduleName}Mocks"
                         implements = "ContextModule"
-                        body = {
+                        legacyBody = {
                             legacyMethod {
                                 override = true
                                 name = "apply"
                                 addArg {
                                     name = "builder"
-                                    type = type("ContextBuilder")
+                                    type = typeName("ContextBuilder")
                                 }
                                 legacyBody = {
                                     line("builder")

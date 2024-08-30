@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.context
 
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -54,23 +54,23 @@ class WebContextGenerator: PatternGenerator() {
         val interfDefs = module.getInterfaces().filter { interfNames.contains(it.getName()) }
         val interfs = factory.create(interfDefs)
         return CodeBuilder(c.language.base())
-            .add {
+            .addOps {
                 namespace {
                     name = "${this@WebContextGenerator.c.module.getName()}.Api"
                     interfs.forEach { interf ->
                         interf.methods.forEach { m ->
                             addFunction {
                                 name = m.name
-                                returnType = type(m.returnType)
+                                returnType = typeName(m.returnType)
                                 m.args.forEach { arg ->
                                     addArg {
                                         name = arg.name
-                                        type = type(arg.type)
+                                        type = typeName(arg.type)
                                     }
                                 }
                                 addArg {
                                     name = "c"
-                                    type = type("HandlerContext")
+                                    type = typeName("HandlerContext")
                                 }
                                 legacyBody = {
                                     val returnPart = if (m.returnType != "void") "return " else ""

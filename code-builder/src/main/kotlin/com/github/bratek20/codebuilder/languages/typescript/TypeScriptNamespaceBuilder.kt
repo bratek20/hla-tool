@@ -19,7 +19,7 @@ class ConstBuilder: CodeBlockBuilder {
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         lineSoftStart("export const $name = ")
-        add(value)
+        addOps(value)
         lineSoftEnd()
     }
 }

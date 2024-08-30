@@ -9,43 +9,43 @@ namespace SomeModule.Api {
     }
 
     public interface SomeInterface {
-        void someEmptyMethod();
+        void SomeEmptyMethod();
 
         /// <exception cref="SomeException"/>
         /// <exception cref="Some2Exception"/>
-        void someCommand(SomeId id, int amount);
+        void SomeCommand(SomeId id, int amount);
 
         /// <exception cref="SomeException"/>
-        SomeClass someQuery(SomeQueryInput query);
+        SomeClass SomeQuery(SomeQueryInput query);
 
-        Optional<SomeClass> optMethod(Optional<SomeId> optId);
+        Optional<SomeClass> OptMethod(Optional<SomeId> optId);
 
-        SomeId[] methodWithListOfSimpleVO(SomeId[] list);
+        SomeId[] MethodWithListOfSimpleVO(SomeId[] list);
     }
 
     public interface SomeInterface2 {
-        OtherClass referenceOtherClass(OtherClass other);
+        OtherClass ReferenceOtherClass(OtherClass other);
 
-        LegacyType referenceLegacyType(LegacyType legacyType);
+        LegacyType ReferenceLegacyType(LegacyType legacyType);
     }
 
     public interface SomeInterface3 {
-        SomeEmptyInterface referenceInterface(SomeEmptyInterface empty);
+        SomeEmptyInterface ReferenceInterface(SomeEmptyInterface empty);
 
-        OtherInterface referenceOtherInterface(OtherInterface other);
+        OtherInterface ReferenceOtherInterface(OtherInterface other);
     }
 
     public interface SomeModuleHandlers {
         /// <exception cref="SomeException"/>
         /// <exception cref="Some2Exception"/>
-        SomeHandlerOutput someHandler(SomeHandlerInput i);
+        SomeHandlerOutput SomeHandler(SomeHandlerInput i);
 
-        SomeHandlerOutput someHandler2(SomeHandlerInput i);
+        SomeHandlerOutput SomeHandler2(SomeHandlerInput i);
     }
 
     public interface SomeModuleDebugHandlers {
-        SomeHandlerOutput someDebugHandler(SomeHandlerInput i);
+        SomeHandlerOutput SomeDebugHandler(SomeHandlerInput i);
 
-        SomeHandlerOutput someDebugHandler2(SomeHandlerInput i);
+        SomeHandlerOutput SomeDebugHandler2(SomeHandlerInput i);
     }
 }

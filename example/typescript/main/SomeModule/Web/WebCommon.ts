@@ -3,7 +3,7 @@
 namespace SomeModule.Web {
     export class SomeModuleWebClientConfig {
         constructor(
-            readonly value: HttpClientConfig,
+            readonly value: HttpClientConfig
         ) {}
     }
 

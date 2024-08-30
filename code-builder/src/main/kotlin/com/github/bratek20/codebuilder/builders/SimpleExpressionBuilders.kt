@@ -1,20 +1,14 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.CodeBlockBuilder
+import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.utils.camelToPascalCase
 
+//part of line
 interface ExpressionBuilder: CodeBlockBuilder
-
-class ReturnBuilder(
-    private val value: ExpressionBuilder
-): CodeBlockBuilder {
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart("return ")
-        add(value)
-        statementLineEnd()
-    }
-}
+typealias ExpressionBuilderProvider = () -> ExpressionBuilder
 
 class ExpressionLinePartBuilder(
     val value: String,
@@ -31,36 +25,35 @@ fun variable(name: String): ExpressionBuilder {
     return expression(name)
 }
 
+class GetterFieldAccessBuilder: ExpressionBuilder {
+    lateinit var variableName: String
+    lateinit var fieldName: String
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        val finalFieldName = if (c.lang.areMethodsPascalCase()) {
+            camelToPascalCase(fieldName)
+        } else {
+            fieldName
+        }
+        linePart("$variableName.$finalFieldName")
+    }
+}
+typealias GetterFieldAccessBuilderOps = GetterFieldAccessBuilder.() -> Unit
+fun getterFieldAccess(ops: GetterFieldAccessBuilderOps) = GetterFieldAccessBuilder().apply(ops)
+
+fun instanceVariable(name: String): ExpressionBuilder = object : ExpressionBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart("${c.lang.softThis()}$name")
+    }
+}
+
 fun const(value: Int): ExpressionBuilder {
     return expression(value.toString())
 }
 
-class VariableAssignmentBuilder: CodeBlockBuilder {
-    lateinit var name: String
-    lateinit var value: ExpressionBuilder
-
-    var declare: Boolean = false
-    var mutable: Boolean = false
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart()
-
-        if (declare) {
-            if (mutable) {
-                linePart(c.lang.mutableVariableDeclaration())
-            } else {
-                linePart(c.lang.immutableVariableDeclaration())
-            }
-        }
-
-        linePart("$name = ")
-        add(value)
-
-        statementLineEnd()
-    }
+fun string(value: String): ExpressionBuilder {
+    return expression("\"$value\"")
 }
-typealias VariableAssignmentBuilderOps = VariableAssignmentBuilder.() -> Unit
-fun variableAssignment(block: VariableAssignmentBuilderOps) = VariableAssignmentBuilder().apply(block)
 
 class PlusBuilder: ExpressionBuilder {
     lateinit var left: ExpressionBuilder
@@ -76,4 +69,32 @@ class PlusBuilder: ExpressionBuilder {
 typealias PlusBuilderOps = PlusBuilder.() -> Unit
 fun plus(ops: PlusBuilderOps): PlusBuilder {
     return PlusBuilder().apply(ops)
+}
+
+
+class CommentBuilder(
+    private val comment: String,
+): ExpressionBuilder, StatementBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        lineSoftStart("// $comment")
+        lineSoftEnd()
+    }
+}
+typealias StringProvider = () -> String
+fun comment(comment: StringProvider): CommentBuilder {
+    return CommentBuilder(comment())
+}
+
+class IsEqualToArgs {
+    lateinit var left: ExpressionBuilder
+    lateinit var right: ExpressionBuilder
+}
+fun isEqualTo(block: IsEqualToArgs.() -> Unit) = object : ExpressionBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        val args = IsEqualToArgs().apply(block)
+
+        add(args.left)
+        linePart(" == ")
+        add(args.right)
+    }
 }

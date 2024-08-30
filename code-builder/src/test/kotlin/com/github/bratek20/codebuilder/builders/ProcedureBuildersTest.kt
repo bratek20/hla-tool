@@ -6,14 +6,14 @@ import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
 import org.junit.jupiter.api.Test
 
-class MethodAndFunctionBuilderTest {
+class ProcedureBuildersTest {
     @Test
     fun `empty method`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                legacyMethod {
+                add(method {
                     name = "someMethod"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -34,9 +34,11 @@ class MethodAndFunctionBuilderTest {
 
     @Test
     fun `empty function`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                function { name = "someFunction" }
+                add(function {
+                    name = "someFunction"
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -57,21 +59,23 @@ class MethodAndFunctionBuilderTest {
 
     @Test
     fun `function with body`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                function {
+                add(function {
                     name = "someFunction"
-                    body {
+                    setBody {
                         addFunctionCall {
                             name = "someOtherFunction"
                         }
-                        addVariableAssignment {
+                        add(variableAssignment {
                             name = "a"
                             value = variable("1")
-                        }
-                        addReturn(variable("a"))
+                        })
+                        add(returnStatement {
+                            variable("a")
+                        })
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -99,7 +103,7 @@ class MethodAndFunctionBuilderTest {
 
     @Test
     fun `sum method with calls`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(method {
                     name = "sum"
@@ -112,13 +116,13 @@ class MethodAndFunctionBuilderTest {
                         type = baseType(BaseType.INT)
                     }
                     returnType = baseType(BaseType.INT)
-                    body {
-                        addReturn(
+                    setBody {
+                        add(returnStatement {
                             plus {
                                 left = variable("a")
                                 right = variable("b")
                             }
-                        )
+                        })
                     }
                 })
                 add(variableAssignment {
@@ -127,11 +131,11 @@ class MethodAndFunctionBuilderTest {
                         variableName = "this"
                         methodName = "sum"
 
-                        addArgLegacy {
-                            legacyConst("1")
+                        addArg {
+                            const(1)
                         }
-                        addArgLegacy {
-                            legacyConst("2")
+                        addArg {
+                            const(2)
                         }
                     }
                 })
@@ -143,15 +147,23 @@ class MethodAndFunctionBuilderTest {
                             methodName = "sum"
                             skipSoftEnd = true
 
-                            addArg(const(1))
-                            addArg(const(2))
+                            addArg {
+                                const(1)
+                            }
+                            addArg {
+                                const(2)
+                            }
                         }
                         right = methodCall {
                             variableName = "right"
                             methodName = "sum"
 
-                            addArg(const(3))
-                            addArg(const(4))
+                            addArg {
+                                const(3)
+                            }
+                            addArg {
+                                const(4)
+                            }
                         }
                     }
                 })
@@ -181,24 +193,24 @@ class MethodAndFunctionBuilderTest {
 
     @Test
     fun `pair arg`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                legacyMethod {
+                add(method {
                     name = "sumPair"
                     addArg {
                         name = "p"
                         type = pairType(baseType(BaseType.INT), baseType(BaseType.INT))
                     }
                     returnType = baseType(BaseType.INT)
-                    legacyBody = {
-                        legacyReturn {
-                            legacyPlus {
-                                left = { pairOp("p").first() }
-                                right = { pairOp("p").second() }
+                    setBody {
+                        add(returnStatement {
+                            plus {
+                                left = pairOp("p").first()
+                                right = pairOp("p").second()
                             }
-                        }
+                        })
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -221,9 +233,9 @@ class MethodAndFunctionBuilderTest {
 
     @Test
     fun defaultArg() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                legacyMethod {
+                add(method {
                     name = "defaultArg"
                     addArg {
                         name = "a"
@@ -231,7 +243,7 @@ class MethodAndFunctionBuilderTest {
                         defaultValue = "5"
                     }
                     returnType = baseType(BaseType.INT)
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -249,8 +261,4 @@ class MethodAndFunctionBuilderTest {
             }
         }
     }
-
-
-
-
 }

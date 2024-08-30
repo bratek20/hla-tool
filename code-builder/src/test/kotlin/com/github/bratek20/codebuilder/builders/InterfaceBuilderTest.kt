@@ -7,7 +7,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `empty interface`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
@@ -39,7 +39,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `method comment`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
@@ -73,7 +73,7 @@ class InterfaceBuilderTest {
                 expected = """
                     public interface SomeInterface {
                         // some comment
-                        void someMethod();
+                        void SomeMethod();
                     }
                 """
             }
@@ -82,7 +82,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `method throws documentation`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
@@ -137,11 +137,11 @@ class InterfaceBuilderTest {
                 expected = """
                     public interface SomeInterface {
                         /// <exception cref="SomeException"/>
-                        void oneExceptionMethod();
+                        void OneExceptionMethod();
                     
                         /// <exception cref="SomeException"/>
                         /// <exception cref="AnotherException"/>
-                        void twoExceptionsMethod();
+                        void TwoExceptionsMethod();
                     }
                 """
             }
@@ -150,7 +150,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `two methods`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
@@ -187,9 +187,9 @@ class InterfaceBuilderTest {
                 lang = CSharp()
                 expected = """
                     public interface SomeInterface {
-                        void method1();
+                        void Method1();
                     
-                        void method2();
+                        void Method2();
                     }
                 """
             }

@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
@@ -35,10 +35,10 @@ data class MethodView(
         args.forEach {
             addArg {
                 name = it.name
-                type = type(it.type)
+                type = typeName(it.type)
             }
         }
-        returnType = type(this@MethodView.returnType)
+        returnType = typeName(this@MethodView.returnType)
     }
 
     fun declarationCBInterface(): InterfaceMethodBuilderOps = {
@@ -46,10 +46,10 @@ data class MethodView(
         args.forEach {
             addArg {
                 name = it.name
-                type = type(it.type)
+                type = typeName(it.type)
             }
         }
-        returnType = type(this@MethodView.returnType)
+        returnType = typeName(this@MethodView.returnType)
         this@MethodView.throws.forEach {
             addThrows(it)
         }

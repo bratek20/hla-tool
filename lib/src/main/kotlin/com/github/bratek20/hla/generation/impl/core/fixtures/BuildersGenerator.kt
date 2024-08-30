@@ -3,7 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.codebuilder.builders.FunctionBuilder
 import com.github.bratek20.codebuilder.builders.function
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -36,9 +36,9 @@ class BuildersGenerator: PatternGenerator() {
             name = pascalToCamelCase(apiType.rawName)
             addArg {
                 name = "value"
-                this.type = type(apiType.name() + "?") //TODO soft optional type wrap?
+                this.type = typeName(apiType.name() + "?") //TODO soft optional type wrap?
             }
-            returnType = type(apiType.name())
+            returnType = typeName(apiType.name())
             legacyBody = {
                 line("return value!!") // TODO soft optional unpack?
             }

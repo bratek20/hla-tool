@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
+import com.github.bratek20.utils.camelToPascalCase
 
 abstract class CallBuilder: ExpressionBuilder {
     protected abstract fun getCallName(c: CodeBuilderContext): String
@@ -16,9 +17,9 @@ abstract class CallBuilder: ExpressionBuilder {
         args.add(ops)
     }
 
-    fun addArg(exp: ExpressionBuilder) {
+    fun addArg(exp: ExpressionBuilderProvider) {
         args.add {
-            add(exp)
+            add(exp())
         }
     }
 
@@ -27,7 +28,7 @@ abstract class CallBuilder: ExpressionBuilder {
 
         linePart("${getCallName(c)}(")
         args.forEachIndexed { index, arg ->
-            add(arg)
+            addOps(arg)
             if (index != args.size - 1) {
                 linePart(", ")
             }
@@ -45,7 +46,11 @@ class MethodCallBuilder: CallBuilder() {
     var variableName: String? = null
 
     override fun getCallName(c: CodeBuilderContext): String {
-        return methodName
+        return if (c.lang.areMethodsPascalCase()) {
+            camelToPascalCase(methodName)
+        } else {
+            methodName
+        }
     }
 
     override fun beforeName(): String {

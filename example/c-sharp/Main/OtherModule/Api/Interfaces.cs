@@ -4,6 +4,6 @@ using B20.Ext;
 
 namespace OtherModule.Api {
     public interface OtherInterface {
-        void otherMethod();
+        void OtherMethod();
     }
 }

@@ -1,16 +1,13 @@
 package com.github.bratek20.codebuilder.types
 
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.builders.legacyConst
-import com.github.bratek20.codebuilder.builders.legacyPlus
-import com.github.bratek20.codebuilder.builders.string
-import com.github.bratek20.codebuilder.builders.legacyVariable
 import org.junit.jupiter.api.Test
 
 class TypesTest {
     @Test
     fun baseTypes() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
                 add(baseType(BaseType.INT))
@@ -53,14 +50,14 @@ class TypesTest {
 
     @Test
     fun pairType() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
-                add(pairType(type("SomeType"), baseType(BaseType.STRING)))
+                add(pairType(typeName("SomeType"), baseType(BaseType.STRING)))
                 lineEnd()
 
                 lineStart()
-                newPair("varA", "varB")
+                legacyNewPair("varA", "varB")
                 lineEnd()
             }
             langExpected {
@@ -89,14 +86,14 @@ class TypesTest {
 
     @Test
     fun pairOps() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
-                pairOp("pair").first()
+                add(pairOp("pair").first())
                 lineEnd()
 
                 lineStart()
-                pairOp("pair").second()
+                add(pairOp("pair").second())
                 lineEnd()
             }
             langExpected {
@@ -125,18 +122,18 @@ class TypesTest {
 
     @Test
     fun listType() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
-                add(listType(type("SomeType")))
+                add(listType(typeName("SomeType")))
                 lineEnd()
 
                 lineStart()
-                add(mutableListType(type("SomeType")))
+                add(mutableListType(typeName("SomeType")))
                 lineEnd()
 
                 lineStart()
-                add(emptyMutableList(type("SomeType")))
+                add(emptyMutableList(typeName("SomeType")))
                 lineEnd()
             }
             langExpected {
@@ -168,37 +165,33 @@ class TypesTest {
 
     @Test
     fun listOps() {
-        val list = emptyList<String>()
-        list.find { it -> it == "someString" }
-
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
-                listOp("list").get(0)
+                add(listOp("list").get(0))
                 lineEnd()
 
-                listOp("list").add {
-                    legacyVariable("someVar")
-                }
+                add(listOp("list").add {
+                    variable("someVar")
+                })
 
-                listOp("list").add {
+                add(listOp("list").add {
                     string("someString")
-                }
+                })
 
-                lineStart()
-                listOp("list").find {
-                    it.isEqualTo {
-                        legacyVariable("other")
+                add(listOp("list").find {
+                    isEqualTo {
+                        left = variable("it")
+                        right = variable("other")
                     }
-                }
+                })
 
-                lineStart()
-                listOp("list").map {
-                    legacyPlus {
-                        left = { legacyVariable(it.name) }
-                        right = { legacyConst("1") }
+                add(listOp("list").map {
+                    plus {
+                        left = variable("it")
+                        right = const(1)
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()

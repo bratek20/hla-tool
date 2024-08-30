@@ -5,7 +5,7 @@ import com.github.bratek20.codebuilder.core.LinePartBuilder
 
 interface TypeBuilder: LinePartBuilder
 
-fun type(value: String): TypeBuilder = object: TypeBuilder {
+fun typeName(value: String): TypeBuilder = object: TypeBuilder {
     override fun build(c: CodeBuilderContext): String {
         return value
     }

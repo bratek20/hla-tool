@@ -11,11 +11,11 @@ fun CodeBuilder.legacyVariable(name: String): CodeBuilder {
     return linePart(name)
 }
 
-fun CodeBuilder.string(name: String): CodeBuilder {
+fun CodeBuilder.legacyString(name: String): CodeBuilder {
     return linePart("\"$name\"")
 }
 
-fun CodeBuilder.comment(value: String): CodeBuilder {
+fun CodeBuilder.legacyComment(value: String): CodeBuilder {
     return line("// $value")
 }
 
@@ -27,7 +27,7 @@ fun CodeBuilder.legacyAssign(block: AssignArgs.()->Unit): CodeBuilder {
     val args = AssignArgs().apply(block)
     add(VariableAssignmentBuilder().apply(args.variable))
     linePart(" = ")
-    add(args.value)
+    addOps(args.value)
     statementLineEnd()
     return this
 }
@@ -38,27 +38,27 @@ class PlusArgs {
 }
 fun CodeBuilder.legacyPlus(block: PlusArgs.()->Unit): CodeBuilder {
     val args = PlusArgs().apply(block)
-    add(args.left)
+    addOps(args.left)
     linePart(" + ")
-    add(args.right)
+    addOps(args.right)
     return this
 }
 
-class IsEqualToArgs {
+class LegacyIsEqualToArgs {
     lateinit var left: CodeBuilderOps
     lateinit var right: CodeBuilderOps
 }
-fun CodeBuilder.isEqualTo(block: IsEqualToArgs.()->Unit): CodeBuilder {
-    val args = IsEqualToArgs().apply(block)
-    add(args.left)
+fun CodeBuilder.legacyIsEqualTo(block: LegacyIsEqualToArgs.()->Unit): CodeBuilder {
+    val args = LegacyIsEqualToArgs().apply(block)
+    addOps(args.left)
     linePart(" == ")
-    add(args.right)
+    addOps(args.right)
     return this
 }
 
 fun CodeBuilder.legacyReturn(block: CodeBuilderOps): CodeBuilder {
     lineStart("return ")
-    add(block)
+    addOps(block)
     statementLineEnd()
     return this
 }

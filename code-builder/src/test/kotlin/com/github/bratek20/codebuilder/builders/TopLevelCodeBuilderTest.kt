@@ -1,13 +1,13 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.Kotlin
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class TopLevelCodeBuilderTest {
     @Test
     fun `all methods`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 file {
                     addInterface {
@@ -54,7 +54,7 @@ class TopLevelCodeBuilderTest {
 
     @Test
     fun `two classes`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 file {
                     addClass {
@@ -82,7 +82,7 @@ class TopLevelCodeBuilderTest {
 
     @Test
     fun `should keep add order`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 file {
                     addClass {

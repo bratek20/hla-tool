@@ -2,18 +2,18 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import org.junit.jupiter.api.Test
 
 class ClassBuilderTest {
 
     @Test
     fun `empty class`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -41,14 +41,14 @@ class ClassBuilderTest {
 
     @Test
     fun `class extension`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -76,22 +76,28 @@ class ClassBuilderTest {
 
     @Test
     fun `static field`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     addField {
+                        type = typeName("OtherClass")
                         name = "someField"
                         static = true
-                        value = { legacyConstructorCall { className = "OtherClass"; addArgLegacy { string("SomeStr") } } }
+                        value = constructorCall {
+                            className = "OtherClass"
+                            addArg {
+                                string("SomeStr")
+                            }
+                        }
                     }
-                }
+                })
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
                     class SomeClass {
-                        static readonly someField = new OtherClass("SomeStr")
+                        private static readonly someField: OtherClass = new OtherClass("SomeStr")
                     }
                 """
             }
@@ -100,12 +106,12 @@ class ClassBuilderTest {
 
     @Test
     fun `class with empty body that implements interface`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     implements = "SomeInterface"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -133,17 +139,16 @@ class ClassBuilderTest {
 
     @Test
     fun `class with comment and method`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
-                    body = {
-                        addMethod {
-                            comment = "some comment"
-                            name = "someMethod"
-                        }
+
+                    addMethod {
+                        comment = "some comment"
+                        name = "someMethod"
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -170,28 +175,22 @@ class ClassBuilderTest {
 
     @Test
     fun `class with fields`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
-                    body = {
-                        field {
-                            accessor = FieldAccessor.PRIVATE
-                            name = "a"
-                            type = type("A")
-                            value = { legacyVariable("null") }
-                        }
-                        field {
-                            name = "b"
-                            type = type("B")
-                        }
-                        field {
-                            name = "noType"
-                            value = { string("someString") }
-                            mutable = true
-                        }
+
+                    addField {
+                        name = "a"
+                        type = typeName("A")
+                        value = variable("null")
                     }
-                }
+                    addField {
+                        modifier = AccessModifier.PUBLIC
+                        name = "b"
+                        type = typeName("B")
+                    }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -199,7 +198,6 @@ class ClassBuilderTest {
                     class SomeClass {
                         private val a: A = null
                         val b: B
-                        var noType = "someString"
                     }
                 """
             }
@@ -209,7 +207,15 @@ class ClassBuilderTest {
                     class SomeClass {
                         private readonly a: A = null
                         readonly b: B
-                        noType = "someString"
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        readonly A a = null;
+                        public readonly B b;
                     }
                 """
             }
@@ -218,25 +224,28 @@ class ClassBuilderTest {
 
     @Test
     fun `constructor - field, arg and body`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
+                    addField {
+                        modifier = AccessModifier.PRIVATE
+                        name = "idField"
+                        type = baseType(BaseType.STRING)
+                        fromConstructor = true
+                    }
                     constructor {
-                        addField {
-                            accessor = FieldAccessor.PRIVATE
-                            name = "idField"
-                            type = baseType(BaseType.STRING)
-                        }
                         addArg {
                             name = "idArg"
                             type = baseType(BaseType.STRING)
                         }
-                        body = {
-                            comment("some comment")
+                        setBody {
+                            add(comment {
+                                "some comment"
+                            })
                         }
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -269,17 +278,19 @@ class ClassBuilderTest {
 
     @Test
     fun `static methods`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
-                    addStaticMethod {
+                    addMethod {
+                        static = true
                         name = "someMethod"
                     }
-                    addStaticMethod {
+                    addMethod {
+                        static = true
                         name = "otherMethod"
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -305,16 +316,27 @@ class ClassBuilderTest {
                     }
                 """
             }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        public static void SomeMethod() {
+                        }
+                        public static void OtherMethod() {
+                        }
+                    }
+                """
+            }
         }
     }
 
     @Test
     fun constructorCall() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                legacyConstructorCall {
+                add(constructorCall {
                     className = "SomeClass"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -328,78 +350,84 @@ class ClassBuilderTest {
     }
     @Test
     fun complicatedClass() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeInterfaceSomeCommandRequest"
-                    constructor {
-                        addField {
-                            accessor = FieldAccessor.PRIVATE
-                            name = "id"
-                            type = baseType(BaseType.STRING)
-                        }
-                        addField {
-                            accessor = FieldAccessor.PRIVATE
-                            name = "amount"
-                            type = baseType(BaseType.INT)
-                        }
+
+                    addField {
+                        modifier = AccessModifier.PRIVATE
+                        name = "id"
+                        type = baseType(BaseType.STRING)
+                        fromConstructor = true
                     }
-                    body = {
-                        legacyMethod {
-                            name = "getId"
-                            returnType = type("SomeId")
-                            legacyBody = {
-                                legacyReturn {
-                                    legacyConstructorCall {
-                                        className = "SomeId"
-                                        addArg(variable("id"))
+                    addField {
+                        modifier = AccessModifier.PRIVATE
+                        name = "amount"
+                        type = baseType(BaseType.INT)
+                        fromConstructor = true
+                    }
+
+                    addMethod {
+                        name = "getId"
+                        returnType = typeName("SomeId")
+                        setBody {
+                            add(returnStatement {
+                                constructorCall {
+                                    className = "SomeId"
+                                    addArg {
+                                        instanceVariable("id")
                                     }
                                 }
-                            }
-                        }
-                        legacyMethod {
-                            name = "getAmount"
-                            returnType = baseType(BaseType.INT)
-                            legacyBody = {
-                                legacyReturn {
-                                    legacyVariable("amount")
-                                }
-                            }
+                            })
                         }
                     }
-                    addStaticMethod {
+                    addMethod {
+                        name = "getAmount"
+                        returnType = baseType(BaseType.INT)
+                        setBody {
+                            add(returnStatement {
+                                instanceVariable("amount")
+                            })
+                        }
+                    }
+                    addMethod {
+                        static = true
                         name = "create"
-                        returnType = type("SomeInterfaceSomeCommandRequest")
+                        returnType = typeName("SomeInterfaceSomeCommandRequest")
                         addArg {
-                            type = type("SomeId")
+                            type = typeName("SomeId")
                             name = "id"
                         }
                         addArg {
                             type = baseType(BaseType.INT)
                             name = "amount"
                         }
-                        legacyBody = {
-                            legacyReturn {
-                                legacyConstructorCall {
+                        setBody {
+                            add(returnStatement {
+                                constructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
-                                    addArgLegacy {
-                                        legacyVariable("id.value")
+                                    addArg {
+                                        getterFieldAccess {
+                                            variableName = "id"
+                                            fieldName = "value"
+                                        }
                                     }
-                                    addArgLegacy {
-                                        legacyVariable("amount")
+                                    addArg {
+                                        variable("amount")
                                     }
                                 }
-                            }
+                            })
                         }
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
                     class SomeInterfaceSomeCommandRequest(
                         private val id: String,
-                        private val amount: Int,
+                        private val amount: Int
                     ) {
                         fun getId(): SomeId {
                             return SomeId(id)
@@ -415,14 +443,60 @@ class ClassBuilderTest {
                     }
                 """
             }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeInterfaceSomeCommandRequest {
+                        constructor(
+                            private readonly id: string,
+                            private readonly amount: number
+                        ) {}
+                        getId(): SomeId {
+                            return new SomeId(this.id)
+                        }
+                        getAmount(): number {
+                            return this.amount
+                        }
+                        static create(id: SomeId, amount: number): SomeInterfaceSomeCommandRequest {
+                            return new SomeInterfaceSomeCommandRequest(id.value, amount)
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeInterfaceSomeCommandRequest {
+                        readonly string id;
+                        readonly int amount;
+                    
+                        public SomeInterfaceSomeCommandRequest(
+                            string id,
+                            int amount
+                        ) {
+                            this.id = id;
+                            this.amount = amount;
+                        }
+                        public SomeId GetId() {
+                            return new SomeId(id);
+                        }
+                        public int GetAmount() {
+                            return amount;
+                        }
+                        public static SomeInterfaceSomeCommandRequest Create(SomeId id, int amount) {
+                            return new SomeInterfaceSomeCommandRequest(id.Value, amount);
+                        }
+                    }
+                """
+            }
         }
     }
 
     @Test
     fun `extension with passing argument`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
@@ -430,11 +504,11 @@ class ClassBuilderTest {
                     constructor {
                         addArg {
                             name = "someArg"
-                            type = type("SomeType")
+                            type = typeName("SomeType")
                         }
                     }
                     addPassingArg("someArg")
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -473,20 +547,165 @@ class ClassBuilderTest {
 
     @Test
     fun `extension with generic`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
-                        generic = type("SomeType")
+                        generic = typeName("SomeType")
                     }
-                }
+                })
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
                     class SomeClass extends SomeParent<SomeType> {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `field with deducted type`() {
+        testOpValidation {
+            language = Kotlin()
+            op = {
+                add(field {
+                    name = "someField"
+                })
+            }
+            errorMessage = "Field `someField` - type can not be deducted, value is required"
+        }
+        testOpValidation {
+            language = Kotlin()
+            op = {
+                add(field {
+                    name = "someField"
+                    value = const(1)
+                })
+            }
+            success = true
+        }
+        testOpValidation {
+            language = CSharp()
+            op = {
+                add(field {
+                    name = "someField"
+                    value = const(1)
+                })
+            }
+            errorMessage = "Field `someField` - type deduction not supported in C#"
+        }
+    }
+
+    @Test
+    fun `class with field getter`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        type = baseType(BaseType.INT)
+                        getter = true
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        public int SomeField { get; }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `class with field set by constructor`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        type = baseType(BaseType.INT)
+                        fromConstructor = true
+                    }
+                    addField {
+                        name = "otherField"
+                        type = baseType(BaseType.INT)
+                        fromConstructor = true
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        readonly int someField;
+                        readonly int otherField;
+                    
+                        public SomeClass(
+                            int someField,
+                            int otherField
+                        ) {
+                            this.someField = someField;
+                            this.otherField = otherField;
+                        }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `simple value object`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SimpleValueObject"
+                    addField {
+                        name = "value"
+                        type = baseType(BaseType.INT)
+                        getter = true
+                        fromConstructor = true
+                    }
+                })
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SimpleValueObject(
+                        val value: Int
+                    ) {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SimpleValueObject {
+                        constructor(
+                            readonly value: number
+                        ) {}
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SimpleValueObject {
+                        public int Value { get; }
+                    
+                        public SimpleValueObject(
+                            int value
+                        ) {
+                            Value = value;
+                        }
                     }
                 """
             }

@@ -4,9 +4,23 @@ class CodeBuilderContext(
     val lang: CodeBuilderLanguage
 )
 
+data class ValidationResult(
+    val errorMessage: String?
+) {
+    companion object {
+        fun success() = ValidationResult(null)
+        fun failure(message: String) = ValidationResult(message)
+    }
+}
+
+class CodeBuilderValidationException(message: String): CodeBuilderException(message)
+
 interface CodeBlockBuilder {
     fun getOperations(c: CodeBuilderContext): CodeBuilderOps
+
+    fun validate(c: CodeBuilderContext): ValidationResult = ValidationResult.success()
 }
+
 fun lineBlock(value: String) = object: CodeBlockBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         line(value)
@@ -28,7 +42,7 @@ fun linePartBlock(value: String) = object: LinePartBuilder {
     override fun build(c: CodeBuilderContext): String = value
 }
 
-class CodeBuilderException(message: String): Exception(message)
+open class CodeBuilderException(message: String): Exception(message)
 
 class CodeBuilder(
     lang: CodeBuilderLanguage,
@@ -138,11 +152,16 @@ class CodeBuilder(
     }
 
     fun add(block: CodeBlockBuilder): CodeBuilder {
+        block.validate(c).let {
+            if (it.errorMessage != null) {
+                throw CodeBuilderValidationException(it.errorMessage)
+            }
+        }
         this.apply(block.getOperations(c))
         return this
     }
 
-    fun add(ops: CodeBuilderOps): CodeBuilder {
+    fun addOps(ops: CodeBuilderOps): CodeBuilder {
         ops(this)
         return this
     }

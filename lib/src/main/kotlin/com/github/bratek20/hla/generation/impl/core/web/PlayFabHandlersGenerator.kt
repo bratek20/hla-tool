@@ -3,7 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.web
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.ExposedInterface
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -27,12 +27,16 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         addDebugToHandlerName: Boolean = false
     ): FunctionCallBuilderOps = {
         name = "Handlers.Api.RegisterModuleHandlers"
-        addArg(variable("DependencyName.$moduleName"))
+        addArg{
+            variable("DependencyName.$moduleName")
+        }
         exposedInterfaces.forEach {
             module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
                 interf.getMethods().forEach { method ->
                     val debugPart = if (addDebugToHandlerName) ".Debug" else ""
-                    addArg(variable("[\"$moduleName$debugPart.${method.getName()}\", ${method.getName()}]"))
+                    addArg{
+                        variable("[\"$moduleName$debugPart.${method.getName()}\", ${method.getName()}]")
+                    }
                 }
             }
         }
@@ -48,7 +52,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         if (debugExposedInterfaces.isNotEmpty()) {
             addFunction {
                 name = "RegisterDebugHandlers"
-                body {
+                setBody {
                     addFunctionCall(registerModuleHandlersCall(debugExposedInterfaces, true))
                 }
             }
@@ -65,54 +69,70 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                         }
                         addArg {
                             name = "c"
-                            type = type("HandlerContext")
+                            type = typeName("HandlerContext")
                         }
-                        returnType = type("IOpResult")
+                        returnType = typeName("IOpResult")
 
-                        body {
+                        setBody {
                             require(method.getArgs().size <= 1) {
                                 "Handler method need to have at most one argument"
                             }
                             val hasRequest = method.getArgs().size == 1
                             if (hasRequest) {
-                                addVariableAssignment {
+                                add(variableAssignment {
                                     declare = true
                                     name = "request"
                                     value = functionCall {
                                         name = "ObjectCreation.Api.FromInterface"
-                                        addArg(variable(method.getArgs().first().getType().getName()))
-                                        addArg(variable("rawRequest"))
-                                        addArg(variable("ObjectCreationOptions.noErrors()"))
+                                        addArg{
+                                            variable(method.getArgs().first().getType().getName())
+                                        }
+                                        addArg{
+                                            variable("rawRequest")
+                                        }
+                                        addArg{
+                                            variable("ObjectCreationOptions.noErrors()")
+                                        }
                                     }
-                                }
+                                })
                             }
 
                             val hasResponse = method.getReturnType().getName() != "void"
                             val apiCall: FunctionCallBuilderOps = {
                                 name = "Api." + method.getName()
                                 if (hasRequest) {
-                                    addArg(variable("request"))
+                                    addArg{
+                                        variable("request")
+                                    }
                                 }
-                                addArg(variable("c"))
+                                addArg{
+                                    variable("c")
+                                }
                             }
 
                             if (hasResponse) {
-                                addVariableAssignment {
+                                add(variableAssignment {
                                     declare = true
                                     name = "response"
                                     value = functionCall(apiCall)
-                                }
+                                })
                             }
                             else {
                                 addFunctionCall(apiCall)
                             }
 
-                            addReturn(functionCall {
-                                name = "Utils.OK"
-                                if (hasResponse) {
-                                    addArg(variable("response"))
-                                } else {
-                                    addArg(expression("{}"))
+                            add(returnStatement {
+                                functionCall {
+                                    name = "Utils.OK"
+                                    if (hasResponse) {
+                                        addArg{
+                                            variable("response")
+                                        }
+                                    } else {
+                                        addArg{
+                                            expression("{}")
+                                        }
+                                    }
                                 }
                             })
                         }
@@ -126,8 +146,12 @@ class PlayFabHandlersGenerator: PatternGenerator() {
             playFabHandlers.getErrorCodesMapping().forEach {
                 addFunctionCall {
                     name = "Handlers.Api.AddExceptionMapper"
-                    addArg(variable(it.getExceptionName()))
-                    addArg(expression("(e, c) => Utils.ECNR(${it.getCode()}, e.message, c)"))
+                    addArg{
+                        variable(it.getExceptionName())
+                    }
+                    addArg{
+                        expression("(e, c) => Utils.ECNR(${it.getCode()}, e.message, c)")
+                    }
                 }
             }
         }

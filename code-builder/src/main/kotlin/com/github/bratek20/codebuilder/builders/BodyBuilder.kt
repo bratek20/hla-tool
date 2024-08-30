@@ -9,12 +9,8 @@ class BodyBuilder: CodeBlockBuilder {
         ops.add(FunctionCallBuilder().apply(block))
     }
 
-    fun addVariableAssignment(block: VariableAssignmentBuilderOps) {
-        ops.add(VariableAssignmentBuilder().apply(block))
-    }
-
-    fun addReturn(block: ExpressionBuilder) {
-        ops.add(ReturnBuilder(block))
+    fun add(block: StatementBuilder) {
+        ops.add(block)
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {

@@ -1,7 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.types.listOp
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.generation.impl.core.fixtures.BaseDefType
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
@@ -24,13 +26,19 @@ abstract class ApiType {
         return name()
     }
 
+    @Deprecated("Use modernDeserialize instead", ReplaceWith("modernDeserialize(variableName)"))
     open fun deserialize(variableName: String): String {
         return variableName
     }
 
+    abstract fun modernDeserialize(variableName: String): ExpressionBuilder
+
+    @Deprecated("Use modernDeserialize instead", ReplaceWith("modernSerialize(variableName)"))
     open fun serialize(variableName: String): String {
         return variableName
     }
+
+    abstract fun modernSerialize(variableName: String): ExpressionBuilder
 
     override fun toString(): String {
         return "$javaClass(name=${name()})"
@@ -43,6 +51,14 @@ class BaseApiType(
     override fun name(): String {
         return languageTypes.mapBaseType(name)
     }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
 }
 
 class InterfaceApiType(
@@ -50,6 +66,14 @@ class InterfaceApiType(
 ) : ApiType() {
     override fun name(): String {
         return name
+    }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
     }
 }
 
@@ -66,9 +90,17 @@ class ExternalApiType(
         }
         return rawName
     }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
 }
 
-open class StructureApiType(
+abstract class StructureApiType(
     val name: String
 ) : ApiType() {
     override fun name(): String {
@@ -115,8 +147,34 @@ class SimpleValueObjectApiType(
         return languageTypes.classConstructorCall(name)
     }
 
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return constructorCall {
+            className = name
+            addArg {
+                variable(variableName)
+            }
+        }
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return getterFieldAccess {
+            this.variableName = variableName
+            fieldName = "value"
+        }
+    }
+
     override fun unbox(variableName: String): String {
         return "$variableName.value"
+    }
+
+    fun getClassOps(): ClassBuilderOps =  {
+        name = name()
+        addField {
+            type = typeName(boxedType.name())
+            name = "value"
+            fromConstructor = true
+            getter = true
+        }
     }
 }
 
@@ -130,6 +188,14 @@ class SimpleCustomApiType(
 
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name)
+    }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return expression(languageTypes.customTypeConstructorCall(name) + "($variableName)")
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return expression(languageTypes.customTypeGetterCall(name, "value") + "($variableName)")
     }
 
     override fun deserialize(variableName: String): String {
@@ -148,7 +214,7 @@ class SimpleCustomApiType(
 }
 
 
-open class ComplexStructureApiType<T: ComplexStructureField>(
+abstract class ComplexStructureApiType<T: ComplexStructureField>(
     name: String,
     val fields: List<T>
 ) : StructureApiType(name) {
@@ -194,6 +260,14 @@ class ComplexCustomApiType(
     override fun deserialize(variableName: String): String {
         return "${variableName}.toCustomType()"
     }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return expression("${variableName}.toCustomType()")
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return expression("${variableName}.fromCustomType()")
+    }
 }
 
 data class ComplexStructureGetter(
@@ -226,12 +300,67 @@ open class SerializableApiType(
     override fun constructorCall(): String {
         return languageTypes.propertyClassConstructorCall(name())
     }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
 }
 
 class ComplexValueObjectApiType(
     name: String,
     fields: List<ComplexStructureField>
-) : SerializableApiType(name, fields)
+) : SerializableApiType(name, fields) {
+    fun getClassOps(): ClassBuilderOps = {
+        name = name()
+        fields.forEach {
+            addField {
+                type = typeName(it.type.serializableName())
+                name = it.name
+                fromConstructor = true
+            }
+        }
+
+        fields.forEach {
+            addMethod {
+                name = it.getterName()
+                returnType = typeName(it.type.name())
+                setBody {
+                    add(returnStatement {
+                        it.type.modernDeserialize(it.name)
+                    })
+                }
+            }
+        }
+
+        addMethod {
+            static = true
+            returnType = typeName(this@ComplexValueObjectApiType.name)
+            name = "create"
+            fields.forEach {
+                addArg {
+                    type = typeName(it.type.name())
+                    name = it.name
+                }
+            }
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = this@ComplexValueObjectApiType.name
+                        fields.forEach {
+                            addArg {
+                                it.type.modernSerialize(it.name)
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+}
 
 class DataClassApiType(
     name: String,
@@ -262,11 +391,29 @@ class ListApiType(
         return languageTypes.mapListElements(variableName, "it", wrappedType.deserialize("it"))
     }
 
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        if (wrappedType.name() == wrappedType.serializableName()) {
+            return variable(variableName)
+        }
+        return listOp(variableName).map {
+            wrappedType.modernDeserialize("it")
+        }
+    }
+
     override fun serialize(variableName: String): String {
         if (wrappedType.name() == wrappedType.serializableName()) {
             return variableName
         }
         return languageTypes.mapListElements(variableName, "it", wrappedType.serialize("it"))
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        if (wrappedType.name() == wrappedType.serializableName()) {
+            return variable(variableName)
+        }
+        return listOp(variableName).map {
+            wrappedType.modernSerialize("it")
+        }
     }
 }
 
@@ -294,12 +441,20 @@ class OptionalApiType(
         return languageTypes.mapOptionalElement(asOptional, "it", mapping)
     }
 
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return expression("TODO OptionalApiType.modernDeserialize")
+    }
+
     override fun serialize(variableName: String): String {
         val mapping = wrappedType.serialize("it")
         if (mapping == "it") {
             return languageTypes.serializeOptional(variableName)
         }
         return languageTypes.serializeOptional(languageTypes.mapOptionalElement(variableName, "it", mapping))
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return expression("TODO OptionalApiType.modernSerialize")
     }
 }
 
@@ -322,8 +477,16 @@ class EnumApiType(
         return languageTypes.deserializeEnum(name(), variableName)
     }
 
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return expression(languageTypes.deserializeEnum(name(), variableName))
+    }
+
     override fun serialize(variableName: String): String {
         return languageTypes.serializeEnum(variableName)
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return expression(languageTypes.serializeEnum(variableName))
     }
 }
 

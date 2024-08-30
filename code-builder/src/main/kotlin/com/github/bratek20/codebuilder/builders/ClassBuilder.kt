@@ -2,81 +2,119 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.utils.camelToPascalCase
 
-enum class FieldAccessor {
-    PRIVATE, PROTECTED, PUBLIC
-}
-
-class FieldBuilder: CodeBlockBuilder {
+class FieldBuilder(
+    private val endStatement: Boolean = true
+): CodeBlockBuilder {
     lateinit var name: String
 
     var type: TypeBuilder? = null
+    var legacyValue: CodeBuilderOps? = null
+    var value: ExpressionBuilder? = null
 
-    var value: CodeBuilderOps? = null
-    var accessor: FieldAccessor? = null
+    var modifier: AccessModifier = AccessModifier.PRIVATE
     var mutable = false
     var static = false
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineSoftStart()
-        accessor?.let {
-            linePart("${it.name.lowercase()} ")
+    var getter = false
+    var fromConstructor = false
+
+    override fun validate(c: CodeBuilderContext): ValidationResult {
+        if (type == null) {
+            if (!c.lang.supportsFieldTypeDeductionFromAssignedValue()) {
+                return ValidationResult.failure("Field `$name` - type deduction not supported in ${c.lang.name()}")
+            }
+            else if (value == null) {
+                return ValidationResult.failure("Field `$name` - type can not be deducted, value is required")
+            }
         }
-        if (static) {
-            linePart("static ")
+
+        return ValidationResult.success()
+    }
+
+    private fun getOperationsForCSharpGetter(): CodeBuilderOps = {
+        lineStart("public ")
+        add(type!!)
+        lineEnd(" ${camelToPascalCase(name)} { get; }")
+    }
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
+        if (getter && c.lang is CSharp) {
+            return getOperationsForCSharpGetter()
         }
-        if (mutable) {
-            linePart(c.lang.mutableFieldDeclaration())
+        return {
+            lineStart()
+
+            val finalModifier = if (getter) {
+                AccessModifier.PUBLIC
+            }
+            else {
+                modifier
+            }
+
+            if (finalModifier != c.lang.defaultAccessModifierForClassMembers()) {
+                linePart("${finalModifier.name.lowercase()} ")
+            }
+
+            if (static) {
+                linePart("static ")
+            }
+            if (mutable) {
+                linePart(c.lang.mutableFieldDeclaration())
+            }
+            else {
+                linePart(c.lang.immutableFieldDeclaration())
+            }
+
+            when(c.lang.typeDeclarationStyle()) {
+                TypeDeclarationStyle.TYPE_FIRST -> {
+                    type?.let {
+                        add(it)
+                        linePart(" ")
+                    }
+                    linePart(name)
+                }
+                TypeDeclarationStyle.VARIABLE_FIRST -> {
+                    linePart(name)
+                    type?.let {
+                        linePart(": ")
+                        add(it)
+                    }
+                }
+            }
+            legacyValue?.let {
+                linePart(" = ")
+                addOps(it)
+            }
+            value?.let {
+                linePart(" = ")
+                add(it)
+            }
+
+            if(endStatement) {
+                statementLineEnd()
+            }
         }
-        else {
-            linePart(c.lang.immutableFieldDeclaration())
-        }
-        linePart(name)
-        type?.let {
-            linePart(": ")
-            add(it)
-        }
-        value?.let {
-            linePart(" = ")
-            add(it)
-        }
-        lineSoftEnd()
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
-fun CodeBuilder.field(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
+fun CodeBuilder.legacyField(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
+fun field(block: FieldBuilderOps) = FieldBuilder().apply(block)
 
-class StaticMethodBuilder: MethodBuilder() {
-    override fun beforeName(c: CodeBuilderContext): String {
-        return "static " + super.beforeName(c)
-    }
-}
 class ClassConstructorBuilder {
-    val fields: MutableList<FieldBuilderOps> = mutableListOf()
-    fun addField(block: FieldBuilderOps) {
-        fields.add(block)
-    }
-
-    val args: MutableList<ArgumentBuilderOps> = mutableListOf()
+    private val args: MutableList<ArgumentBuilderOps> = mutableListOf()
     fun addArg(block: ArgumentBuilderOps) {
         args.add(block)
     }
 
-    fun getFieldsAndArgsOps(): CodeBuilderOps = {
-        fields.forEach { fieldOps ->
-            field(fieldOps)
-            linePart(",")
-            lineEnd()
-        }
-        args.forEachIndexed { idx, argOps ->
-            argument(argOps)
-            if (idx != args.size - 1) {
-                linePart(",")
-            }
-            lineEnd()
-        }
+    private var body: BodyBuilderOps? = null
+    fun setBody(block: BodyBuilderOps) {
+        body = block
     }
-    var body: CodeBuilderOps? = null
+
+    fun getBody(): BodyBuilder? = body?.let { BodyBuilder().apply(it) }
+    fun getArgs(): List<ArgumentBuilder> = args.map { ArgumentBuilder().apply(it) }
 }
 typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
@@ -99,10 +137,11 @@ open class ClassBuilder: CodeBlockBuilder {
     var implements: String? = null
 
     private var constructor: ClassConstructorBuilder? = null
-    private val fields: MutableList<FieldBuilderOps> = mutableListOf()
-    var body: CodeBuilderOps? = null
+    private val fieldOps: MutableList<FieldBuilderOps> = mutableListOf()
+    private val fields: MutableList<FieldBuilder> = mutableListOf()
 
-    private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
+    var legacyBody: CodeBuilderOps? = null
+
 
     private var extends: ExtendsBuilderOps? = null
     fun extends(block: ExtendsBuilderOps) {
@@ -113,17 +152,19 @@ open class ClassBuilder: CodeBlockBuilder {
         constructor = ClassConstructorBuilder().apply(block)
     }
 
-    fun addStaticMethod(block: MethodBuilderOps) {
-        staticMethods.add(block)
+    private val allMethods: MutableList<MethodBuilder> = mutableListOf()
+    private val staticMethods
+        get() = allMethods.filter { it.static }
+    private val methods
+        get() = allMethods.filter { !it.static }
+
+    fun addMethod(ops: MethodBuilderOps) {
+        allMethods.add(method(ops))
     }
 
-    private val methods: MutableList<MethodBuilderOps> = mutableListOf()
-    fun addMethod(block: MethodBuilderOps) {
-        methods.add(block)
-    }
-
-    fun addField(block: FieldBuilderOps) {
-        fields.add(block)
+    fun addField(ops: FieldBuilderOps) {
+        fieldOps.add(ops)
+        fields.add(field(ops))
     }
 
     private val passingArgs: MutableList<String> = mutableListOf()
@@ -132,33 +173,71 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        add(classDeclarationWithConstructor(c))
+        addOps(classDeclarationWithFieldConstructor(c))
         tab()
-        fields.forEach { fieldOps ->
-            field(fieldOps)
+        fieldOps.forEach { ops ->
+            if (!c.lang.supportsFieldDeclarationInConstructor() || !field(ops).fromConstructor) {
+                add(field(ops))
+            }
         }
-        body?.let { add(it) }
-        methods.forEach { methodOps ->
-            legacyMethod(methodOps)
+        addOps(nonFieldConstructorOps(c))
+        legacyBody?.let { addOps(it) }
+        methods.forEach { method ->
+            add(method)
         }
         if (staticMethods.isNotEmpty()) {
-            add(staticMethodsSection(c))
+            addOps(staticMethodsSection(c))
         }
         untab()
         line("}")
     }
 
-    private fun classDeclarationWithConstructor(c: CodeBuilderContext): CodeBuilderOps = {
+    private fun nonFieldConstructorOps(c: CodeBuilderContext): CodeBuilderOps = {
+        if (c.lang is CSharp && shouldGenerateConstructor()) {
+            if (fields.isNotEmpty()) {
+                emptyLine()
+            }
+
+            line("public $name(")
+            tab()
+            addOps(getConstructorArgsOps())
+            untab()
+
+            if (passingArgs.isNotEmpty()) {
+                line("): base(${passingArgs.joinToString(", ")}) {")
+                line("}")
+            }
+            else if (constructorFields.isNotEmpty()) {
+                line(") {")
+                tab()
+                constructorFields.forEach { field ->
+                    if (field.getter) {
+                        line("${camelToPascalCase(field.name)} = ${field.name};")
+                    }
+                    else {
+                        line("this.${field.name} = ${field.name};")
+                    }
+                }
+                untab()
+                line("}")
+            }
+            else {
+                line(") {}")
+            }
+        }
+    }
+
+    private fun classDeclarationWithFieldConstructor(c: CodeBuilderContext): CodeBuilderOps = {
         val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + "class "
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
         extendsOrImplementsPart = extends?.let { c.lang.extends() + ExtendsBuilder().apply(it).build(c) } ?: extendsOrImplementsPart
         val beginningWithoutExtendOrImplements = "$classPart$name"
         val beginning = "$beginningWithoutExtendOrImplements$extendsOrImplementsPart"
 
-        if (c.lang is Kotlin && constructor != null) {
+        if (c.lang is Kotlin && shouldGenerateConstructor()) {
             line("$beginningWithoutExtendOrImplements(")
             tab()
-            add(constructor!!.getFieldsAndArgsOps())
+            addOps(getFieldsAndArgsOps())
             untab()
             val passingArgsPart = if (passingArgs.isNotEmpty()) {
                 "(${passingArgs.joinToString(", ")})"
@@ -167,27 +246,27 @@ open class ClassBuilder: CodeBlockBuilder {
                 ""
             }
             line(")$extendsOrImplementsPart$passingArgsPart {")
-            if (constructor!!.body != null) {
+            if (constructor?.getBody() != null) {
                 tab()
                 line("init {")
                 tab()
-                add(constructor!!.body!!)
+                add(constructor!!.getBody()!!)
                 untab()
                 line("}")
                 untab()
             }
         }
-        else if (c.lang is TypeScript && constructor != null) {
+        else if (c.lang is TypeScript && shouldGenerateConstructor()) {
             line("$beginning {")
             tab()
             line("constructor(")
             tab()
-            add(constructor!!.getFieldsAndArgsOps())
+            addOps(getFieldsAndArgsOps())
             untab()
-            if (constructor!!.body != null) {
+            if (constructor?.getBody() != null) {
                 line(") {")
                 tab()
-                add(constructor!!.body!!)
+                add(constructor!!.getBody()!!)
                 untab()
                 line("}")
             }
@@ -203,43 +282,76 @@ open class ClassBuilder: CodeBlockBuilder {
             }
             untab()
         }
-        else if (c.lang is CSharp && constructor != null) {
-            line("$beginning {")
-            tab()
-            line("public $name(")
-            tab()
-            add(constructor!!.getFieldsAndArgsOps())
-            untab()
-            if (passingArgs.isNotEmpty()) {
-                line("): base(${passingArgs.joinToString(", ")}) {")
-                line("}")
-            }
-            else {
-                line(") {}")
-            }
-            untab()
-        }
         else {
             line("$beginning {")
         }
+    }
+
+    private val constructorFields
+        get() = fields.filter { it.fromConstructor }
+
+    private fun getConstructorArgsOps(): CodeBuilderOps = {
+        val constructorFields = fields.filter { it.fromConstructor }
+        val finalArgs = constructorFields.map { field ->
+            argument {
+                name = field.name
+                type = field.type!!
+            }
+        } + (constructor?.getArgs() ?: emptyList())
+
+        finalArgs.forEachIndexed { idx, arg ->
+            add(arg)
+            if (idx != finalArgs.size - 1) {
+                linePart(",")
+            }
+            lineEnd()
+        }
+    }
+
+    private fun getFieldsAndArgsOps(): CodeBuilderOps = {
+        fieldOps.forEachIndexed { idx, field ->
+            add(FieldBuilder(false).apply(field))
+            if (idx != fieldOps.size - 1 || constructorArgs.isNotEmpty()) {
+                linePart(",")
+            }
+            lineEnd()
+        }
+        constructorArgs.forEachIndexed { idx, arg ->
+            add(arg)
+            if (idx != constructorArgs.size - 1) {
+                linePart(",")
+            }
+            lineEnd()
+        }
+    }
+
+    private val constructorArgs
+        get() = constructor?.getArgs() ?: emptyList()
+
+    private fun shouldGenerateConstructor(): Boolean {
+        if (constructor != null) {
+            return true
+        }
+        return fields.any { it.fromConstructor }
     }
 
     private fun staticMethodsSection(c: CodeBuilderContext): CodeBuilderOps = {
         if (c.lang is Kotlin) {
             line("companion object {")
             tab()
-            staticMethods.forEach { methodOps ->
-                legacyMethod(methodOps)
+            staticMethods.forEach { method ->
+                add(method)
             }
             untab()
             line("}")
         }
-        else if (c.lang is TypeScript) {
-            staticMethods.forEach { methodOps ->
-                add(StaticMethodBuilder().apply(methodOps))
+        else {
+            staticMethods.forEach { method ->
+                add(method)
             }
         }
     }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit
-fun CodeBuilder.classBlock(block: ClassBuilderOps) = add(ClassBuilder().apply(block))
+fun CodeBuilder.legacyClassBlock(block: ClassBuilderOps) = add(ClassBuilder().apply(block))
+fun classBlock(block: ClassBuilderOps) = ClassBuilder().apply(block)

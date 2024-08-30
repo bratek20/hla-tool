@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.core
 
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
 
 class ExpectedLanguageString {
@@ -45,26 +46,61 @@ class CodeBuilderOpTester {
             .isEqualTo(finalExpected)
     }
 }
-fun testCodeBuilderOp(init: CodeBuilderOpTester.() -> Unit) {
+fun testOp(init: CodeBuilderOpTester.() -> Unit) {
     CodeBuilderOpTester().apply(init).test()
 }
 
 class CodeBuilderOpExceptionTester {
     lateinit var op: CodeBuilder.() -> Unit
+    var expectedExceptionType: Class<out CodeBuilderException> = CodeBuilderException::class.java
     var expectedMessage: String? = null
 
     fun test() {
         val assertion = assertThatThrownBy {
             CodeBuilder(Kotlin()).apply(op).build()
-        }.isInstanceOf(CodeBuilderException::class.java);
+        }.isInstanceOf(expectedExceptionType);
 
         expectedMessage?.let {
             assertion.hasMessage(expectedMessage)
         }
     }
 }
-fun testCodeBuilderOpException(init: CodeBuilderOpExceptionTester.() -> Unit) {
+fun testOpException(init: CodeBuilderOpExceptionTester.() -> Unit) {
     CodeBuilderOpExceptionTester().apply(init).test()
+}
+
+class CodeBuilderOpValidationTester {
+    lateinit var op: CodeBuilder.() -> Unit
+
+    var language: CodeBuilderLanguage = Kotlin()
+    var success: Boolean? = null
+    var errorMessage: String? = null
+
+    fun test() {
+        success?.let {
+            val assertion = assertThatCode {
+                CodeBuilder(language).apply(op).build()
+            }
+
+            if (it) {
+                assertion.doesNotThrowAnyException()
+            } else {
+                assertion.isInstanceOf(CodeBuilderValidationException::class.java)
+            }
+        }
+
+        errorMessage?.let {
+            val assertion = assertThatThrownBy {
+                CodeBuilder(language).apply(op).build()
+            }
+
+            assertion.isInstanceOf(CodeBuilderValidationException::class.java)
+                .hasMessage(errorMessage)
+        }
+    }
+}
+fun testOpValidation(init: CodeBuilderOpValidationTester.() -> Unit) {
+    CodeBuilderOpValidationTester().apply(init).test()
 }
 
 private fun alignMultilineStringIndent(str: String): String {
@@ -74,5 +110,14 @@ private fun alignMultilineStringIndent(str: String): String {
         .map { it.length }
         .minOrNull() ?: 0
 
-    return lines.map { it.drop(smallestIndent) }.joinToString("\n")
+    return lines
+        .map { it.drop(smallestIndent) }
+        .map {
+            if (it.isBlank()) {
+                ""
+            } else {
+                it
+            }
+        }
+        .joinToString("\n")
 }

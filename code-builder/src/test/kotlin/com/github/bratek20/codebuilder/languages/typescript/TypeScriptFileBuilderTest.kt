@@ -1,13 +1,13 @@
 package com.github.bratek20.codebuilder.languages.typescript
 
 import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class TypeScriptFileBuilderTest {
     @Test
     fun namespace() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 typeScriptFile {
                     namespace {
@@ -38,7 +38,7 @@ class TypeScriptFileBuilderTest {
 
     @Test
     fun functionCall() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 typeScriptFile {
                     addFunctionCall {

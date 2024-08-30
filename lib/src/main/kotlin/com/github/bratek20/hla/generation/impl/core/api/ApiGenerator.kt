@@ -7,11 +7,10 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.patterns.EnumsGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.ExceptionsGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfacesGenerator
-import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.generation.impl.core.api.patterns.ValueObjectsGenerator
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class MacrosBuilder: PatternGenerator() {
@@ -26,28 +25,6 @@ class MacrosBuilder: PatternGenerator() {
         //hack
         return PatternName.DataKeys
     }
-}
-
-class ValueObjectsGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.ValueObjects
-    }
-
-    override fun generateFileContent(): FileContent? {
-        val simpleValueObjects = module.getSimpleValueObjects().map { apiTypeFactory.create<SimpleValueObjectApiType>(it) }
-        val complexValueObjects = module.getComplexValueObjects().map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
-
-        if (simpleValueObjects.isEmpty() && complexValueObjects.isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("valueObjects.vm")
-            .put("simpleValueObjects", simpleValueObjects)
-            .put("complexValueObjects", complexValueObjects)
-            .build()
-    }
-
-
 }
 
 open class DataClassesGenerator: PatternGenerator() {
