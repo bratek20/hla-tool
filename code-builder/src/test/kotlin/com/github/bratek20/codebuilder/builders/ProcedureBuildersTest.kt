@@ -6,14 +6,14 @@ import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
 import org.junit.jupiter.api.Test
 
-class MethodAndFunctionBuilderTest {
+class ProcedureBuildersTest {
     @Test
     fun `empty method`() {
         testCodeBuilderOp {
             op = {
-                legacyMethod {
+                add(method {
                     name = "someMethod"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -36,7 +36,9 @@ class MethodAndFunctionBuilderTest {
     fun `empty function`() {
         testCodeBuilderOp {
             op = {
-                legacyFunction { name = "someFunction" }
+                add(function {
+                    name = "someFunction"
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -61,7 +63,7 @@ class MethodAndFunctionBuilderTest {
             op = {
                 add(function {
                     name = "someFunction"
-                    body {
+                    setBody {
                         addFunctionCall {
                             name = "someOtherFunction"
                         }
@@ -114,7 +116,7 @@ class MethodAndFunctionBuilderTest {
                         type = baseType(BaseType.INT)
                     }
                     returnType = baseType(BaseType.INT)
-                    body {
+                    setBody {
                         add(returnStatement {
                             plus {
                                 left = variable("a")
@@ -193,7 +195,7 @@ class MethodAndFunctionBuilderTest {
     fun `pair arg`() {
         testCodeBuilderOp {
             op = {
-                legacyMethod {
+                add(method {
                     name = "sumPair"
                     addArg {
                         name = "p"
@@ -208,7 +210,7 @@ class MethodAndFunctionBuilderTest {
                             }
                         }
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -233,7 +235,7 @@ class MethodAndFunctionBuilderTest {
     fun defaultArg() {
         testCodeBuilderOp {
             op = {
-                legacyMethod {
+                add(method {
                     name = "defaultArg"
                     addArg {
                         name = "a"
@@ -241,7 +243,7 @@ class MethodAndFunctionBuilderTest {
                         defaultValue = "5"
                     }
                     returnType = baseType(BaseType.INT)
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -259,8 +261,4 @@ class MethodAndFunctionBuilderTest {
             }
         }
     }
-
-
-
-
 }

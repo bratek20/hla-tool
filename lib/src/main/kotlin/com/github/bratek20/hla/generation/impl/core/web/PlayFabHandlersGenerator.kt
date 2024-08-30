@@ -52,7 +52,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         if (debugExposedInterfaces.isNotEmpty()) {
             addFunction {
                 name = "RegisterDebugHandlers"
-                body {
+                setBody {
                     addFunctionCall(registerModuleHandlersCall(debugExposedInterfaces, true))
                 }
             }
@@ -73,7 +73,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                         }
                         returnType = type("IOpResult")
 
-                        body {
+                        setBody {
                             require(method.getArgs().size <= 1) {
                                 "Handler method need to have at most one argument"
                             }

@@ -144,7 +144,7 @@ abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
     var legacyBody: CodeBuilderOps? = null
 
     private var body: BodyBuilderOps? = null
-    fun body(block: BodyBuilderOps) {
+    fun setBody(block: BodyBuilderOps) {
         body = block
     }
 

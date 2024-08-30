@@ -351,29 +351,27 @@ class ClassBuilderTest {
                             type = baseType(BaseType.INT)
                         }
                     }
-                    legacyBody = {
-                        legacyMethod {
-                            name = "getId"
-                            returnType = type("SomeId")
-                            legacyBody = {
-                                legacyReturn {
-                                    legacyConstructorCall {
-                                        className = "SomeId"
-                                        addArg {
-                                            variable("id")
-                                        }
+                    addMethod {
+                        name = "getId"
+                        returnType = type("SomeId")
+                        setBody {
+                            legacyReturn {
+                                legacyConstructorCall {
+                                    className = "SomeId"
+                                    addArg {
+                                        variable("id")
                                     }
                                 }
                             }
                         }
-                        legacyMethod {
-                            name = "getAmount"
-                            returnType = baseType(BaseType.INT)
-                            legacyBody = {
-                                legacyReturn {
-                                    legacyVariable("amount")
-                                }
-                            }
+                    }
+                    addMethod {
+                        name = "getAmount"
+                        returnType = baseType(BaseType.INT)
+                        setBody {
+                            add(returnStatement {
+                                variable("amount")
+                            })
                         }
                     }
                     addStaticMethod {
@@ -387,18 +385,18 @@ class ClassBuilderTest {
                             type = baseType(BaseType.INT)
                             name = "amount"
                         }
-                        legacyBody = {
-                            legacyReturn {
-                                legacyConstructorCall {
+                        setBody {
+                            add(returnStatement {
+                                constructorCall {
                                     className = "SomeInterfaceSomeCommandRequest"
-                                    addArgLegacy {
-                                        legacyVariable("id.value")
+                                    addArg {
+                                        variable("id.value")
                                     }
-                                    addArgLegacy {
-                                        legacyVariable("amount")
+                                    addArg {
+                                        variable("amount")
                                     }
                                 }
-                            }
+                            })
                         }
                     }
                 }

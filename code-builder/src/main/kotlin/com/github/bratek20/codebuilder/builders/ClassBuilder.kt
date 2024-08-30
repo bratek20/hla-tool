@@ -114,6 +114,11 @@ open class ClassBuilder: CodeBlockBuilder {
     private val fields: MutableList<FieldBuilderOps> = mutableListOf()
     var legacyBody: CodeBuilderOps? = null
 
+    fun setBody(block: BodyBuilderOps) {
+        legacyBody = {
+            add(BodyBuilder().apply(block))
+        }
+    }
     private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
 
     private var extends: ExtendsBuilderOps? = null
@@ -125,6 +130,7 @@ open class ClassBuilder: CodeBlockBuilder {
         constructor = ClassConstructorBuilder().apply(block)
     }
 
+    //TODO-REF use addMethod and filter by static
     fun addStaticMethod(block: MethodBuilderOps) {
         staticMethods.add(block)
     }
