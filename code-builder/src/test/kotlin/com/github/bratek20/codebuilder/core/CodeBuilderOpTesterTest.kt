@@ -1,12 +1,11 @@
 package com.github.bratek20.codebuilder.core
 
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
 import org.junit.jupiter.api.Test
 
 class CodeBuilderOpTesterTest {
     @Test
     fun `should do nothing if single line string used`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 line("val x = 1")
             }
@@ -16,7 +15,7 @@ class CodeBuilderOpTesterTest {
 
     @Test
     fun `should align indent when multiline string used`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 line("val x = 1")
                 emptyLine()

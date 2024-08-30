@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 class TypesTest {
     @Test
     fun baseTypes() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
                 add(baseType(BaseType.INT))
@@ -53,7 +53,7 @@ class TypesTest {
 
     @Test
     fun pairType() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
                 add(pairType(typeName("SomeType"), baseType(BaseType.STRING)))
@@ -89,7 +89,7 @@ class TypesTest {
 
     @Test
     fun pairOps() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
                 pairOp("pair").first()
@@ -125,7 +125,7 @@ class TypesTest {
 
     @Test
     fun listType() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
                 add(listType(typeName("SomeType")))
@@ -171,7 +171,7 @@ class TypesTest {
         val list = emptyList<String>()
         list.find { it -> it == "someString" }
 
-        testCodeBuilderOp {
+        testOp {
             op = {
                 lineStart()
                 listOp("list").get(0)

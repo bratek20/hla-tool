@@ -2,13 +2,13 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class SimpleExpressionBuildersTest {
     @Test
     fun `variable assignment`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(variableAssignment {
                     name = "someVariable"

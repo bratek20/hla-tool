@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class ProcedureBuildersTest {
     @Test
     fun `empty method`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(method {
                     name = "someMethod"
@@ -34,7 +34,7 @@ class ProcedureBuildersTest {
 
     @Test
     fun `empty function`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(function {
                     name = "someFunction"
@@ -59,7 +59,7 @@ class ProcedureBuildersTest {
 
     @Test
     fun `function with body`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(function {
                     name = "someFunction"
@@ -103,7 +103,7 @@ class ProcedureBuildersTest {
 
     @Test
     fun `sum method with calls`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(method {
                     name = "sum"
@@ -193,7 +193,7 @@ class ProcedureBuildersTest {
 
     @Test
     fun `pair arg`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(method {
                     name = "sumPair"
@@ -233,7 +233,7 @@ class ProcedureBuildersTest {
 
     @Test
     fun defaultArg() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(method {
                     name = "defaultArg"

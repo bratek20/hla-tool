@@ -1,13 +1,13 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class CallBuilderTest {
     @Test
     fun functionCallWithVarArgs() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 legacyFunctionCall {
                     name = "someFunction"

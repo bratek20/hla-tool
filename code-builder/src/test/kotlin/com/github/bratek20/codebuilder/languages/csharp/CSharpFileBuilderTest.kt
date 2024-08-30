@@ -1,13 +1,13 @@
 package com.github.bratek20.codebuilder.languages.csharp
 
 import com.github.bratek20.codebuilder.core.CSharp
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
+import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class CSharpFileBuilderTest {
     @Test
     fun using() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 cSharpFile {
                     addUsing("SomeNamespace")
@@ -26,7 +26,7 @@ class CSharpFileBuilderTest {
     }
     @Test
     fun namespace() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 cSharpFile {
                     namespace("SomeNamespace")

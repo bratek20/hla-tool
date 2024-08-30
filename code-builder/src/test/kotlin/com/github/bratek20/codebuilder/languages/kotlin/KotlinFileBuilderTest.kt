@@ -1,14 +1,13 @@
 package com.github.bratek20.codebuilder.languages.kotlin
 
 import com.github.bratek20.codebuilder.core.Kotlin
-import com.github.bratek20.codebuilder.core.testCodeBuilderOp
-import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
+import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class KotlinFileBuilderTest {
     @Test
     fun `package name, imports and class`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 kotlinFile {
                     packageName = "com.some.pkg"

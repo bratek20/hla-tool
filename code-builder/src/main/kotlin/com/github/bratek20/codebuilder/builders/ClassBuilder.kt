@@ -6,9 +6,9 @@ import com.github.bratek20.codebuilder.types.TypeBuilder
 class FieldBuilder(
     private val endStatement: Boolean = true
 ): CodeBlockBuilder {
-    lateinit var type: TypeBuilder
     lateinit var name: String
 
+    var type: TypeBuilder? = null
     var legacyValue: CodeBuilderOps? = null
     var value: ExpressionBuilder? = null
 
@@ -16,19 +16,20 @@ class FieldBuilder(
     var mutable = false
     var static = false
 
-    private fun ensure() {
-        // Check if 'type' is initialized
-        if (!::type.isInitialized) {
-            throw IllegalStateException("Field 'type' must be initialized before building the code block.")
+    override fun validate(c: CodeBuilderContext): ValidationResult {
+        if (type == null) {
+            if (!c.lang.supportsFieldTypeDeductionFromAssignedValue()) {
+                return ValidationResult.failure("Field `$name` - type deduction not supported in ${c.lang.name()}")
+            }
+            else if (value == null) {
+                return ValidationResult.failure("Field `$name` - type can not be deducted, value is required")
+            }
         }
-        // Check if 'name' is initialized
-        if (!::name.isInitialized) {
-            throw IllegalStateException("Field 'name' must be initialized before building the code block.")
-        }
+
+        return ValidationResult.success()
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        ensure()
         lineStart()
 
         if (modifier != c.lang.defaultAccessModifierForClassMembers()) {
@@ -48,12 +49,18 @@ class FieldBuilder(
 
         when(c.lang.typeDeclarationStyle()) {
             TypeDeclarationStyle.TYPE_FIRST -> {
-                add(type)
-                linePart(" $name")
+                type?.let {
+                    add(it)
+                    linePart(" ")
+                }
+                linePart(name)
             }
             TypeDeclarationStyle.VARIABLE_FIRST -> {
-                linePart("$name: ")
-                add(type)
+                linePart(name)
+                type?.let {
+                    linePart(": ")
+                    add(it)
+                }
             }
         }
         legacyValue?.let {
@@ -72,6 +79,7 @@ class FieldBuilder(
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
 fun CodeBuilder.legacyField(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
+fun field(block: FieldBuilderOps) = FieldBuilder().apply(block)
 
 class StaticMethodBuilder: MethodBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {

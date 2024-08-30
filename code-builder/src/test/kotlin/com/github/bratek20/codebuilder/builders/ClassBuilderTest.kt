@@ -9,7 +9,7 @@ class ClassBuilderTest {
 
     @Test
     fun `empty class`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -41,7 +41,7 @@ class ClassBuilderTest {
 
     @Test
     fun `class extension`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -76,7 +76,7 @@ class ClassBuilderTest {
 
     @Test
     fun `static field`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -106,7 +106,7 @@ class ClassBuilderTest {
 
     @Test
     fun `class with empty body that implements interface`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -139,7 +139,7 @@ class ClassBuilderTest {
 
     @Test
     fun `class with comment and method`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -175,7 +175,7 @@ class ClassBuilderTest {
 
     @Test
     fun `class with fields`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -224,7 +224,7 @@ class ClassBuilderTest {
 
     @Test
     fun `constructor - field, arg and body`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -277,7 +277,7 @@ class ClassBuilderTest {
 
     @Test
     fun `static methods`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -318,7 +318,7 @@ class ClassBuilderTest {
 
     @Test
     fun constructorCall() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(constructorCall {
                     className = "SomeClass"
@@ -336,7 +336,7 @@ class ClassBuilderTest {
     }
     @Test
     fun complicatedClass() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeInterfaceSomeCommandRequest"
@@ -428,7 +428,7 @@ class ClassBuilderTest {
 
     @Test
     fun `extension with passing argument`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -481,7 +481,7 @@ class ClassBuilderTest {
 
     @Test
     fun `extension with generic`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
@@ -498,6 +498,39 @@ class ClassBuilderTest {
                     }
                 """
             }
+        }
+    }
+
+    @Test
+    fun `field with deducted type`() {
+        testOpValidation {
+            language = Kotlin()
+            op = {
+                add(field {
+                    name = "someField"
+                })
+            }
+            errorMessage = "Field `someField` - type can not be deducted, value is required"
+        }
+        testOpValidation {
+            language = Kotlin()
+            op = {
+                add(field {
+                    name = "someField"
+                    value = const(1)
+                })
+            }
+            success = true
+        }
+        testOpValidation {
+            language = CSharp()
+            op = {
+                add(field {
+                    name = "someField"
+                    value = const(1)
+                })
+            }
+            errorMessage = "Field `someField` - type deduction not supported in C#"
         }
     }
 }

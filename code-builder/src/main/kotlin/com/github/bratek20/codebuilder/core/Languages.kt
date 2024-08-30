@@ -61,7 +61,7 @@ interface CodeBuilderLanguage {
     fun defaultAccessModifierForTopLevelTypes(): AccessModifier
     fun defaultAccessModifierForClassMembers(): AccessModifier
 
-    fun supportsFieldTypeDeductionFromAssignedValue()
+    fun supportsFieldTypeDeductionFromAssignedValue(): Boolean
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -192,6 +192,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun defaultAccessModifierForClassMembers(): AccessModifier {
         return AccessModifier.PUBLIC
+    }
+
+    override fun supportsFieldTypeDeductionFromAssignedValue(): Boolean {
+        return true
     }
 }
 
@@ -324,6 +328,10 @@ class TypeScript: CodeBuilderLanguage {
     override fun defaultAccessModifierForClassMembers(): AccessModifier {
         return AccessModifier.PUBLIC
     }
+
+    override fun supportsFieldTypeDeductionFromAssignedValue(): Boolean {
+        return true
+    }
 }
 
 class CSharp: CodeBuilderLanguage {
@@ -454,5 +462,9 @@ class CSharp: CodeBuilderLanguage {
 
     override fun defaultAccessModifierForClassMembers(): AccessModifier {
         return AccessModifier.PRIVATE
+    }
+
+    override fun supportsFieldTypeDeductionFromAssignedValue(): Boolean {
+        return false
     }
 }

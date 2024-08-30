@@ -7,7 +7,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `empty interface`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
@@ -39,7 +39,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `method comment`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
@@ -82,7 +82,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `method throws documentation`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
@@ -150,7 +150,7 @@ class InterfaceBuilderTest {
 
     @Test
     fun `two methods`() {
-        testCodeBuilderOp {
+        testOp {
             op = {
                 interfaceBlock {
                     name = "SomeInterface"
