@@ -56,7 +56,7 @@ class TypesTest {
         testCodeBuilderOp {
             op = {
                 lineStart()
-                add(pairType(type("SomeType"), baseType(BaseType.STRING)))
+                add(pairType(typeName("SomeType"), baseType(BaseType.STRING)))
                 lineEnd()
 
                 lineStart()
@@ -128,15 +128,15 @@ class TypesTest {
         testCodeBuilderOp {
             op = {
                 lineStart()
-                add(listType(type("SomeType")))
+                add(listType(typeName("SomeType")))
                 lineEnd()
 
                 lineStart()
-                add(mutableListType(type("SomeType")))
+                add(mutableListType(typeName("SomeType")))
                 lineEnd()
 
                 lineStart()
-                add(emptyMutableList(type("SomeType")))
+                add(emptyMutableList(typeName("SomeType")))
                 lineEnd()
             }
             langExpected {

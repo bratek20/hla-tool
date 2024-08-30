@@ -3,7 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.web
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.ExposedInterface
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -69,9 +69,9 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                         }
                         addArg {
                             name = "c"
-                            type = type("HandlerContext")
+                            type = typeName("HandlerContext")
                         }
-                        returnType = type("IOpResult")
+                        returnType = typeName("IOpResult")
 
                         setBody {
                             require(method.getArgs().size <= 1) {

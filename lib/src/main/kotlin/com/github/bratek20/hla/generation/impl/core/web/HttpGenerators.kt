@@ -7,7 +7,8 @@ import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.codebuilder.builders.legacyConst
 import com.github.bratek20.codebuilder.builders.legacyReturn
 import com.github.bratek20.codebuilder.builders.legacyVariable
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.core.AccessModifier
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -51,9 +52,9 @@ class WebCommonGenerator: PatternGenerator() {
             constructor {
                 method.args.forEach { arg ->
                     addField {
-                        accessor = FieldAccessor.PRIVATE
+                        modifier = AccessModifier.PRIVATE
                         name = arg.name
-                        type = type(arg.apiType.serializableName())
+                        type = typeName(arg.apiType.serializableName())
                     }
                 }
             }
@@ -61,7 +62,7 @@ class WebCommonGenerator: PatternGenerator() {
                 method.args.forEach { arg ->
                     legacyMethod {
                         name = "get${camelToPascalCase(arg.name)}"
-                        returnType = type(arg.type)
+                        returnType = typeName(arg.type)
                         legacyBody = {
                             legacyReturn {
                                 legacyVariable(arg.apiType.deserialize(arg.name))
@@ -72,11 +73,11 @@ class WebCommonGenerator: PatternGenerator() {
             }
             addStaticMethod {
                 name = "create"
-                returnType = type(requestName(interfName, method))
+                returnType = typeName(requestName(interfName, method))
                 method.args.map { arg ->
                     addArg {
                         name = arg.name
-                        type = type(arg.type)
+                        type = typeName(arg.type)
                     }
                 }
                 legacyBody = {
@@ -106,8 +107,9 @@ class WebCommonGenerator: PatternGenerator() {
             legacyBody = {
                 method.args.forEach { arg ->
                     legacyField {
-                        accessor = FieldAccessor.PRIVATE
+                        modifier = AccessModifier.PRIVATE
                         mutable = true
+                        type = typeName(arg.apiType.serializableName())
                         name = arg.name
                         legacyValue = {
                             legacyConst(objectCreationType(arg.apiType))
@@ -117,7 +119,7 @@ class WebCommonGenerator: PatternGenerator() {
                 method.args.forEach { arg ->
                     legacyMethod {
                         name = "get${camelToPascalCase(arg.name)}"
-                        returnType = type(arg.type)
+                        returnType = typeName(arg.type)
                         legacyBody = {
                             legacyReturn {
                                 legacyVariable(arg.apiType.deserialize("this." + arg.name))
@@ -128,11 +130,11 @@ class WebCommonGenerator: PatternGenerator() {
             }
             addStaticMethod {
                 name = "create"
-                returnType = type(requestName(interfName, method))
+                returnType = typeName(requestName(interfName, method))
                 method.args.map { arg ->
                     addArg {
                         name = arg.name
-                        type = type(arg.type)
+                        type = typeName(arg.type)
                     }
                 }
                 legacyBody = {
@@ -167,7 +169,7 @@ class WebCommonGenerator: PatternGenerator() {
             name = responseName(interfName, method)
             legacyBody = {
                 legacyField {
-                    accessor = FieldAccessor.PRIVATE
+                    modifier = AccessModifier.PRIVATE
                     mutable = true
                     name = argName
                     legacyValue = {
@@ -177,7 +179,7 @@ class WebCommonGenerator: PatternGenerator() {
 
                 legacyMethod {
                     name = "get${camelToPascalCase(argName)}"
-                    returnType = type(argType)
+                    returnType = typeName(argType)
                     legacyBody = {
                         legacyReturn {
                             legacyVariable(argApiType.deserialize("this.$argName"))
@@ -193,8 +195,9 @@ class WebCommonGenerator: PatternGenerator() {
             name = responseName(interfName, method)
             constructor {
                 addField {
+                    modifier = AccessModifier.PUBLIC
+                    type = typeName(method.returnType)
                     name = "value"
-                    type = type(method.returnType)
                 }
             }
         }
@@ -239,7 +242,7 @@ class WebCommonGenerator: PatternGenerator() {
                             constructor {
                                 addField {
                                     name = "value"
-                                    type = type("HttpClientConfig")
+                                    type = typeName("HttpClientConfig")
                                 }
                             }
                         }
@@ -289,11 +292,11 @@ class WebClientGenerator: PatternGenerator() {
                             constructor {
                                 addArg {
                                     name = "config"
-                                    type = type("${moduleName}WebClientConfig")
+                                    type = typeName("${moduleName}WebClientConfig")
                                 }
                                 addArg {
                                     name = "c"
-                                    type = type("HandlerContext")
+                                    type = typeName("HandlerContext")
                                 }
                                 setBody {
                                     add(variableAssignment {
@@ -312,9 +315,9 @@ class WebClientGenerator: PatternGenerator() {
                             }
                             legacyBody = {
                                 legacyField {
-                                    accessor = FieldAccessor.PRIVATE
+                                    modifier = AccessModifier.PRIVATE
                                     name = "client"
-                                    type = type("HttpClient")
+                                    type = typeName("HttpClient")
                                 }
                                 interf.methods.forEach { m ->
                                     add(

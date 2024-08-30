@@ -5,7 +5,7 @@ import com.github.bratek20.codebuilder.builders.function
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -58,11 +58,11 @@ class DiffsGenerator: PatternGenerator() {
             name = "diff" + apiType.rawName
             addArg {
                 name = "given"
-                this.type = type(apiType.name())
+                this.type = typeName(apiType.name())
             }
             addArg {
                 name = "expected"
-                this.type = type(apiType.name())
+                this.type = typeName(apiType.name())
             }
             addArg {
                 name = "path"

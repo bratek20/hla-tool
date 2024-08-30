@@ -12,15 +12,27 @@ class FieldBuilder(
     var legacyValue: CodeBuilderOps? = null
     var value: ExpressionBuilder? = null
 
-    var accessor: AccessModifier = AccessModifier.PRIVATE
+    var modifier: AccessModifier = AccessModifier.PRIVATE
     var mutable = false
     var static = false
 
+    private fun ensure() {
+        // Check if 'type' is initialized
+        if (!::type.isInitialized) {
+            throw IllegalStateException("Field 'type' must be initialized before building the code block.")
+        }
+        // Check if 'name' is initialized
+        if (!::name.isInitialized) {
+            throw IllegalStateException("Field 'name' must be initialized before building the code block.")
+        }
+    }
+
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        ensure()
         lineStart()
 
-        if (accessor != c.lang.defaultAccessModifierForClassMembers()) {
-            linePart("${accessor.name.lowercase()} ")
+        if (modifier != c.lang.defaultAccessModifierForClassMembers()) {
+            linePart("${modifier.name.lowercase()} ")
         }
 
         if (static) {

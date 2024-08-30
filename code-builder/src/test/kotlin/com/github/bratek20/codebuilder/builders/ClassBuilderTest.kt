@@ -2,7 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.type
+import com.github.bratek20.codebuilder.types.typeName
 import org.junit.jupiter.api.Test
 
 class ClassBuilderTest {
@@ -81,7 +81,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     addField {
-                        type = type("OtherClass")
+                        type = typeName("OtherClass")
                         name = "someField"
                         static = true
                         value = constructorCall {
@@ -182,13 +182,13 @@ class ClassBuilderTest {
 
                     addField {
                         name = "a"
-                        type = type("A")
+                        type = typeName("A")
                         value = variable("null")
                     }
                     addField {
-                        accessor = AccessModifier.PUBLIC
+                        modifier = AccessModifier.PUBLIC
                         name = "b"
-                        type = type("B")
+                        type = typeName("B")
                     }
                 })
             }
@@ -230,7 +230,7 @@ class ClassBuilderTest {
                     name = "SomeClass"
                     constructor {
                         addField {
-                            accessor = AccessModifier.PRIVATE
+                            modifier = AccessModifier.PRIVATE
                             name = "idField"
                             type = baseType(BaseType.STRING)
                         }
@@ -342,19 +342,19 @@ class ClassBuilderTest {
                     name = "SomeInterfaceSomeCommandRequest"
                     constructor {
                         addField {
-                            accessor = AccessModifier.PRIVATE
+                            modifier = AccessModifier.PRIVATE
                             name = "id"
                             type = baseType(BaseType.STRING)
                         }
                         addField {
-                            accessor = AccessModifier.PRIVATE
+                            modifier = AccessModifier.PRIVATE
                             name = "amount"
                             type = baseType(BaseType.INT)
                         }
                     }
                     addMethod {
                         name = "getId"
-                        returnType = type("SomeId")
+                        returnType = typeName("SomeId")
                         setBody {
                             legacyReturn {
                                 legacyConstructorCall {
@@ -377,9 +377,9 @@ class ClassBuilderTest {
                     }
                     addStaticMethod {
                         name = "create"
-                        returnType = type("SomeInterfaceSomeCommandRequest")
+                        returnType = typeName("SomeInterfaceSomeCommandRequest")
                         addArg {
-                            type = type("SomeId")
+                            type = typeName("SomeId")
                             name = "id"
                         }
                         addArg {
@@ -438,7 +438,7 @@ class ClassBuilderTest {
                     constructor {
                         addArg {
                             name = "someArg"
-                            type = type("SomeType")
+                            type = typeName("SomeType")
                         }
                     }
                     addPassingArg("someArg")
@@ -487,7 +487,7 @@ class ClassBuilderTest {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
-                        generic = type("SomeType")
+                        generic = typeName("SomeType")
                     }
                 })
             }

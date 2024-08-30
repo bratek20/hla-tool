@@ -82,19 +82,19 @@ class MocksGenerator: PatternGenerator() {
             return {
                     legacyComment(def.name)
                     legacyField {
-                        accessor = AccessModifier.PRIVATE
+                        modifier = AccessModifier.PRIVATE
                         name = callsListName
-                        type = mutableListType(type(inputTypeName))
+                        type = mutableListType(typeName(inputTypeName))
                         legacyValue = {
-                            add(emptyMutableList(type(inputTypeName)))
+                            add(emptyMutableList(typeName(inputTypeName)))
                         }
                     }
                     legacyField {
-                        accessor = AccessModifier.PRIVATE
+                        modifier = AccessModifier.PRIVATE
                         name = responsesListName
-                        type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
+                        type = mutableListType(pairType(typeName(expectedInputType), typeName(defOutputType)))
                         legacyValue = {
-                            add(emptyMutableList(type(expectedInputType)))
+                            add(emptyMutableList(typeName(expectedInputType)))
                         }
                     }
                     emptyLine()
@@ -103,11 +103,11 @@ class MocksGenerator: PatternGenerator() {
                         name = "set${upperCaseName}Response"
                         addArg {
                             name = "args"
-                            type = type(expectedInputType)
+                            type = typeName(expectedInputType)
                         }
                         addArg {
                             name = "response"
-                            type = type(defOutputType)
+                            type = typeName(defOutputType)
                         }
                         legacyBody = {
                             listOp(responsesListName).add { newPair("args", "response") }
@@ -118,10 +118,10 @@ class MocksGenerator: PatternGenerator() {
                     legacyMethod {
                         override = true
                         name = def.name
-                        returnType = type(outputTypeName)
+                        returnType = typeName(outputTypeName)
                         addArg {
                             name = inputArgName
-                            type = type(inputTypeName)
+                            type = typeName(inputTypeName)
                         }
                         legacyBody = {
                             listOp(callsListName).add {
@@ -170,7 +170,7 @@ class MocksGenerator: PatternGenerator() {
                         name = "assert${upperCaseName}CalledForArgs"
                         addArg {
                             name = "args"
-                            type = type(expectedInputType)
+                            type = typeName(expectedInputType)
                         }
                         addArg {
                             name = "times"
@@ -213,7 +213,7 @@ class MocksGenerator: PatternGenerator() {
                                 name = "apply"
                                 addArg {
                                     name = "builder"
-                                    type = type("ContextBuilder")
+                                    type = typeName("ContextBuilder")
                                 }
                                 legacyBody = {
                                     line("builder")
