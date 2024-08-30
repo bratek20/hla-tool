@@ -104,30 +104,28 @@ class WebCommonGenerator: PatternGenerator() {
     private fun typeScriptRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = requestName(interfName, method)
-            legacyBody = {
-                method.args.forEach { arg ->
-                    legacyField {
-                        modifier = AccessModifier.PRIVATE
-                        mutable = true
-                        type = typeName(arg.apiType.serializableName())
-                        name = arg.name
-                        legacyValue = {
-                            legacyConst(objectCreationType(arg.apiType))
-                        }
-                    }
+
+            method.args.forEach { arg ->
+                addField {
+                    modifier = AccessModifier.PRIVATE
+                    mutable = true
+                    name = arg.name
+                    value = variable(objectCreationType(arg.apiType))
                 }
-                method.args.forEach { arg ->
-                    legacyMethod {
-                        name = "get${camelToPascalCase(arg.name)}"
-                        returnType = typeName(arg.type)
-                        legacyBody = {
-                            legacyReturn {
-                                legacyVariable(arg.apiType.deserialize("this." + arg.name))
-                            }
-                        }
+            }
+
+            method.args.forEach { arg ->
+                addMethod {
+                    name = "get${camelToPascalCase(arg.name)}"
+                    returnType = typeName(arg.type)
+                    setBody {
+                        add(returnStatement {
+                            variable(arg.apiType.deserialize("this." + arg.name))
+                        })
                     }
                 }
             }
+
             addStaticMethod {
                 name = "create"
                 returnType = typeName(requestName(interfName, method))
@@ -137,9 +135,8 @@ class WebCommonGenerator: PatternGenerator() {
                         type = typeName(arg.type)
                     }
                 }
-                legacyBody = {
+                setBody {
                     add(variableAssignment {
-
                         declare = true
                         name = "instance"
                         value = constructorCall {
@@ -152,9 +149,9 @@ class WebCommonGenerator: PatternGenerator() {
                             value = variable(it.apiType.serialize(it.name))
                         })
                     }
-                    legacyReturn {
-                        legacyVariable("instance")
-                    }
+                    add(returnStatement {
+                        variable("instance")
+                    })
                 }
             }
         }
@@ -167,23 +164,20 @@ class WebCommonGenerator: PatternGenerator() {
 
         return {
             name = responseName(interfName, method)
-            legacyBody = {
-                legacyField {
-                    modifier = AccessModifier.PRIVATE
-                    mutable = true
-                    name = argName
-                    legacyValue = {
-                        legacyConst(objectCreationType(argApiType))
-                    }
-                }
 
-                legacyMethod {
-                    name = "get${camelToPascalCase(argName)}"
-                    returnType = typeName(argType)
-                    legacyBody = {
-                        legacyReturn {
-                            legacyVariable(argApiType.deserialize("this.$argName"))
-                        }
+            addField {
+                modifier = AccessModifier.PRIVATE
+                mutable = true
+                name = argName
+                value = variable(objectCreationType(argApiType))
+            }
+
+            addMethod {
+                name = "get${camelToPascalCase(argName)}"
+                returnType = typeName(argType)
+                legacyBody = {
+                    legacyReturn {
+                        legacyVariable(argApiType.deserialize("this.$argName"))
                     }
                 }
             }
@@ -241,6 +235,7 @@ class WebCommonGenerator: PatternGenerator() {
                             name = "${moduleName}WebClientConfig"
                             constructor {
                                 addField {
+                                    modifier = AccessModifier.PUBLIC
                                     name = "value"
                                     type = typeName("HttpClientConfig")
                                 }

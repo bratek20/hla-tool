@@ -1,8 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
-import com.github.bratek20.codebuilder.builders.legacyConstructorCall
-import com.github.bratek20.codebuilder.builders.legacyString
+import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -31,14 +30,15 @@ class EnumsGenerator: PatternGenerator() {
                     }
                     it.getValues().forEach {
                         addField {
-                            name = it
+                            modifier = AccessModifier.PUBLIC
                             static = true
-                            legacyValue = { legacyConstructorCall {
+                            name = it
+                            value = constructorCall {
                                 className = enumName
-                                addArgLegacy {
-                                    legacyString(it)
+                                addArg {
+                                    string(it)
                                 }
-                            } }
+                            }
                         }
                     }
                 }
