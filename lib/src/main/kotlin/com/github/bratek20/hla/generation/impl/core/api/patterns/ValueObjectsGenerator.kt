@@ -23,101 +23,17 @@ class ValueObjectsGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        addClass {
-            name = "OtherId"
-            addField {
-                type = typeName("int")
-                name = "value"
-                fromConstructor = true
-                getter = true
-            }
+        val simpleVOs = module.getSimpleValueObjects().map {
+            apiTypeFactory.create<SimpleValueObjectApiType>(it)
         }
-        addClass {
-            name = "OtherProperty"
-            addField {
-                type = typeName("int")
-                name = "id"
-                fromConstructor = true
-            }
-            addField {
-                type = typeName("string")
-                name = "name"
-                fromConstructor = true
-            }
-
-            addMethod {
-                name = "GetId"
-                returnType = typeName("OtherId")
-                setBody {
-                    add(returnStatement {
-                        constructorCall {
-                            className = "OtherId"
-                            addArg {
-                                variable("id")
-                            }
-                        }
-                    })
-                }
-            }
-            addMethod {
-                name = "GetName"
-                returnType = typeName("string")
-                setBody {
-                    add(returnStatement {
-                        variable("name")
-                    })
-                }
-            }
-
-            addMethod {
-                static = true
-                returnType = typeName("OtherProperty")
-                name = "create"
-                addArg {
-                    type = typeName("OtherId")
-                    name = "id"
-                }
-                addArg {
-                    type = typeName("string")
-                    name = "name"
-                }
-                setBody {
-                    add(returnStatement {
-                        constructorCall {
-                            className = "OtherProperty"
-                            addArg {
-                                getterFieldAccess {
-                                    variableName = "id"
-                                    fieldName = "value"
-                                }
-                            }
-                            addArg {
-                                variable("name")
-                            }
-                        }
-                    })
-                }
-            }
+        val complexVOs = module.getComplexValueObjects().map {
+            apiTypeFactory.create<ComplexValueObjectApiType>(it)
         }
+        simpleVOs.forEach {
+            addClass(it.getClassOps())
+        }
+        addClass(complexVOs[0].getClassOps())
 
-//        public class OtherClass {
-//            private int id;
-//            private int amount;
-//
-//            public OtherClass(int id, int amount) {
-//                this.id = id;
-//                this.amount = amount;
-//            }
-//            public OtherId GetId() {
-//                return new OtherId(Id);
-//            }
-//            public int GetAmount() {
-//                return amount;
-//            }
-//            public static OtherClass Create(OtherId id, int amount) {
-//                return new OtherClass(id.Value, amount);
-//            }
-//        }
         addClass {
             name = "OtherClass"
             addField {

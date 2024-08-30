@@ -1,5 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.ClassBuilderOps
+import com.github.bratek20.codebuilder.builders.getterFieldAccess
+import com.github.bratek20.codebuilder.builders.returnStatement
+import com.github.bratek20.codebuilder.builders.variable
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.fixtures.BaseDefType
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
@@ -118,6 +123,16 @@ class SimpleValueObjectApiType(
     override fun unbox(variableName: String): String {
         return "$variableName.value"
     }
+
+    fun getClassOps(): ClassBuilderOps =  {
+        name = name()
+        addField {
+            type = typeName(boxedType.name())
+            name = "value"
+            fromConstructor = true
+            getter = true
+        }
+    }
 }
 
 class SimpleCustomApiType(
@@ -231,7 +246,70 @@ open class SerializableApiType(
 class ComplexValueObjectApiType(
     name: String,
     fields: List<ComplexStructureField>
-) : SerializableApiType(name, fields)
+) : SerializableApiType(name, fields) {
+    fun getClassOps(): ClassBuilderOps = {
+        name = name()
+        fields.forEach {
+            addField {
+                type = typeName(it.type.serializableName())
+                name = it.name
+                fromConstructor = true
+            }
+        }
+
+        addMethod {
+            name = fields[0].getterName()
+            returnType = typeName(fields[0].type.name())
+            setBody {
+                add(returnStatement {
+                    com.github.bratek20.codebuilder.builders.constructorCall {
+                        className = fields[0].type.name()
+                        addArg {
+                            variable(fields[0].name)
+                        }
+                    }
+                })
+            }
+        }
+        addMethod {
+            name = fields[1].getterName()
+            returnType = typeName(fields[1].type.name())
+            setBody {
+                add(returnStatement {
+                    variable(fields[1].name)
+                })
+            }
+        }
+
+        addMethod {
+            static = true
+            returnType = typeName(this@ComplexValueObjectApiType.name)
+            name = "create"
+            fields.forEach {
+                addArg {
+                    type = typeName(it.type.name())
+                    name = it.name
+                }
+            }
+            setBody {
+                add(returnStatement {
+                    com.github.bratek20.codebuilder.builders.constructorCall {
+                        className = this@ComplexValueObjectApiType.name
+                        addArg {
+                            getterFieldAccess {
+                                variableName = "id"
+                                fieldName = "value"
+                            }
+                        }
+                        addArg {
+                            variable("name")
+                        }
+                    }
+                })
+            }
+        }
+    }
+}
 
 class DataClassApiType(
     name: String,
