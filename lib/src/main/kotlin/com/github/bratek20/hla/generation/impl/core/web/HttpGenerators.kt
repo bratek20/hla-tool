@@ -105,7 +105,7 @@ class WebCommonGenerator: PatternGenerator() {
             name = requestName(interfName, method)
             legacyBody = {
                 method.args.forEach { arg ->
-                    field {
+                    legacyField {
                         accessor = FieldAccessor.PRIVATE
                         mutable = true
                         name = arg.name
@@ -166,7 +166,7 @@ class WebCommonGenerator: PatternGenerator() {
         return {
             name = responseName(interfName, method)
             legacyBody = {
-                field {
+                legacyField {
                     accessor = FieldAccessor.PRIVATE
                     mutable = true
                     name = argName
@@ -246,7 +246,7 @@ class WebCommonGenerator: PatternGenerator() {
                         classes.forEach(::addClass)
                     }
                 } else {
-                    classes.forEach(::classBlock)
+                    classes.forEach(::legacyClassBlock)
                 }
             }
             .build()
@@ -311,7 +311,7 @@ class WebClientGenerator: PatternGenerator() {
                                 }
                             }
                             legacyBody = {
-                                field {
+                                legacyField {
                                     accessor = FieldAccessor.PRIVATE
                                     name = "client"
                                     type = type("HttpClient")

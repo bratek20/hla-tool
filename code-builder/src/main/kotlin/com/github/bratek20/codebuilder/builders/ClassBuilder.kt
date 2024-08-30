@@ -50,7 +50,7 @@ class FieldBuilder: CodeBlockBuilder {
     }
 }
 typealias FieldBuilderOps = FieldBuilder.() -> Unit
-fun CodeBuilder.field(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
+fun CodeBuilder.legacyField(block: FieldBuilderOps) = add(FieldBuilder().apply(block))
 
 class StaticMethodBuilder: MethodBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {
@@ -70,7 +70,7 @@ class ClassConstructorBuilder {
 
     fun getFieldsAndArgsOps(): CodeBuilderOps = {
         fields.forEach { fieldOps ->
-            field(fieldOps)
+            legacyField(fieldOps)
             linePart(",")
             lineEnd()
         }
@@ -113,12 +113,6 @@ open class ClassBuilder: CodeBlockBuilder {
     private var constructor: ClassConstructorBuilder? = null
     private val fields: MutableList<FieldBuilderOps> = mutableListOf()
     var legacyBody: CodeBuilderOps? = null
-
-    fun setBody(block: BodyBuilderOps) {
-        legacyBody = {
-            add(BodyBuilder().apply(block))
-        }
-    }
     private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
 
     private var extends: ExtendsBuilderOps? = null
@@ -153,7 +147,7 @@ open class ClassBuilder: CodeBlockBuilder {
         addOps(classDeclarationWithConstructor(c))
         tab()
         fields.forEach { fieldOps ->
-            field(fieldOps)
+            legacyField(fieldOps)
         }
         legacyBody?.let { addOps(it) }
         methods.forEach { methodOps ->
@@ -260,4 +254,5 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 }
 typealias ClassBuilderOps = ClassBuilder.() -> Unit
-fun CodeBuilder.classBlock(block: ClassBuilderOps) = add(ClassBuilder().apply(block))
+fun CodeBuilder.legacyClassBlock(block: ClassBuilderOps) = add(ClassBuilder().apply(block))
+fun classBlock(block: ClassBuilderOps) = ClassBuilder().apply(block)

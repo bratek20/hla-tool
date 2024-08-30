@@ -81,7 +81,7 @@ class MocksGenerator: PatternGenerator() {
 
             return {
                     legacyComment(def.name)
-                    field {
+                    legacyField {
                         accessor = FieldAccessor.PRIVATE
                         name = callsListName
                         type = mutableListType(type(inputTypeName))
@@ -89,7 +89,7 @@ class MocksGenerator: PatternGenerator() {
                             add(emptyMutableList(type(inputTypeName)))
                         }
                     }
-                    field {
+                    legacyField {
                         accessor = FieldAccessor.PRIVATE
                         name = responsesListName
                         type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
@@ -188,7 +188,7 @@ class MocksGenerator: PatternGenerator() {
         fun classes(indent: Int): String {
             return CodeBuilder(lang, indent)
                 .addOps {
-                    classBlock {
+                    legacyClassBlock {
                         name = "${interfaceName}Mock"
                         implements = interfaceName
                         legacyBody = {
@@ -204,7 +204,7 @@ class MocksGenerator: PatternGenerator() {
         fun contextModule(): String {
             return CodeBuilder(lang)
                 .addOps {
-                    classBlock {
+                    legacyClassBlock {
                         name = "${moduleName}Mocks"
                         implements = "ContextModule"
                         legacyBody = {

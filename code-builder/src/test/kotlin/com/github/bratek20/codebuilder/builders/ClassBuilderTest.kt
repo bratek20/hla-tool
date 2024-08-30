@@ -11,9 +11,9 @@ class ClassBuilderTest {
     fun `empty class`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -43,12 +43,12 @@ class ClassBuilderTest {
     fun `class extension`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -78,7 +78,7 @@ class ClassBuilderTest {
     fun `static field`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     addField {
                         name = "someField"
@@ -90,7 +90,7 @@ class ClassBuilderTest {
                             }
                         }
                     }
-                }
+                })
             }
             langExpected {
                 lang = TypeScript()
@@ -107,10 +107,10 @@ class ClassBuilderTest {
     fun `class with empty body that implements interface`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     implements = "SomeInterface"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -140,7 +140,7 @@ class ClassBuilderTest {
     fun `class with comment and method`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     legacyBody = {
                         addMethod {
@@ -148,7 +148,7 @@ class ClassBuilderTest {
                             name = "someMethod"
                         }
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -177,26 +177,25 @@ class ClassBuilderTest {
     fun `class with fields`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
-                    legacyBody = {
-                        field {
-                            accessor = FieldAccessor.PRIVATE
-                            name = "a"
-                            type = type("A")
-                            value = variable("null")
-                        }
-                        field {
-                            name = "b"
-                            type = type("B")
-                        }
-                        field {
-                            name = "noType"
-                            value = string("someString")
-                            mutable = true
-                        }
+
+                    addField {
+                        accessor = FieldAccessor.PRIVATE
+                        name = "a"
+                        type = type("A")
+                        value = variable("null")
                     }
-                }
+                    addField {
+                        name = "b"
+                        type = type("B")
+                    }
+                    addField {
+                        name = "noType"
+                        value = string("someString")
+                        mutable = true
+                    }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -225,7 +224,7 @@ class ClassBuilderTest {
     fun `constructor - field, arg and body`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     constructor {
                         addField {
@@ -243,7 +242,7 @@ class ClassBuilderTest {
                             })
                         }
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -278,7 +277,7 @@ class ClassBuilderTest {
     fun `static methods`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     addStaticMethod {
                         name = "someMethod"
@@ -286,7 +285,7 @@ class ClassBuilderTest {
                     addStaticMethod {
                         name = "otherMethod"
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -319,9 +318,9 @@ class ClassBuilderTest {
     fun constructorCall() {
         testCodeBuilderOp {
             op = {
-                legacyConstructorCall {
+                add(constructorCall {
                     className = "SomeClass"
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -337,7 +336,7 @@ class ClassBuilderTest {
     fun complicatedClass() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeInterfaceSomeCommandRequest"
                     constructor {
                         addField {
@@ -399,7 +398,7 @@ class ClassBuilderTest {
                             })
                         }
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -429,7 +428,7 @@ class ClassBuilderTest {
     fun `extension with passing argument`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
@@ -441,7 +440,7 @@ class ClassBuilderTest {
                         }
                     }
                     addPassingArg("someArg")
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -482,13 +481,13 @@ class ClassBuilderTest {
     fun `extension with generic`() {
         testCodeBuilderOp {
             op = {
-                classBlock {
+                add(classBlock {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
                         generic = type("SomeType")
                     }
-                }
+                })
             }
             langExpected {
                 lang = TypeScript()
