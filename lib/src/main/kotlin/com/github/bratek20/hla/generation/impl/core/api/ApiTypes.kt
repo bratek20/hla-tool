@@ -1,12 +1,8 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
-import com.github.bratek20.codebuilder.builders.ClassBuilderOps
-import com.github.bratek20.codebuilder.builders.getterFieldAccess
-import com.github.bratek20.codebuilder.builders.returnStatement
-import com.github.bratek20.codebuilder.builders.variable
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.generation.impl.core.fixtures.BaseDefType
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
@@ -29,13 +25,17 @@ abstract class ApiType {
         return name()
     }
 
-    open fun deserialize(variableName: String): String {
+    open fun legacyDeserialize(variableName: String): String {
         return variableName
     }
 
-    open fun serialize(variableName: String): String {
+    abstract fun deserialize(variableName: String): ExpressionBuilder
+
+    open fun legacySerialize(variableName: String): String {
         return variableName
     }
+
+    abstract fun serialize(variableName: String): ExpressionBuilder
 
     override fun toString(): String {
         return "$javaClass(name=${name()})"
@@ -48,6 +48,14 @@ class BaseApiType(
     override fun name(): String {
         return languageTypes.mapBaseType(name)
     }
+
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
 }
 
 class InterfaceApiType(
@@ -55,6 +63,14 @@ class InterfaceApiType(
 ) : ApiType() {
     override fun name(): String {
         return name
+    }
+
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
     }
 }
 
@@ -71,9 +87,17 @@ class ExternalApiType(
         }
         return rawName
     }
+
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
 }
 
-open class StructureApiType(
+abstract class StructureApiType(
     val name: String
 ) : ApiType() {
     override fun name(): String {
@@ -94,13 +118,13 @@ abstract class SimpleStructureApiType(
         return boxedType.name()
     }
 
-    override fun deserialize(variableName: String) : String {
+    override fun legacyDeserialize(variableName: String) : String {
         return constructorCall() + "($variableName)"
     }
 
     abstract fun unbox(variableName: String): String;
 
-    override fun serialize(variableName: String): String {
+    override fun legacySerialize(variableName: String): String {
         return unbox(variableName)
     }
 
@@ -118,6 +142,22 @@ class SimpleValueObjectApiType(
 ) : SimpleStructureApiType(def, boxedType) {
     override fun constructorCall(): String {
         return languageTypes.classConstructorCall(name)
+    }
+
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        return constructorCall {
+            className = name
+            addArg {
+                variable(variableName)
+            }
+        }
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        return getterFieldAccess {
+            this.variableName = variableName
+            fieldName = "value"
+        }
     }
 
     override fun unbox(variableName: String): String {
@@ -147,7 +187,15 @@ class SimpleCustomApiType(
         return languageTypes.customTypeConstructorCall(name)
     }
 
-    override fun deserialize(variableName: String): String {
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun legacyDeserialize(variableName: String): String {
         return languageTypes.customTypeConstructorCall(name) + "($variableName)"
     }
 
@@ -170,6 +218,14 @@ open class ComplexStructureApiType<T: ComplexStructureField>(
 
     open fun accessField(fieldName: String, variableName: String): String {
         return "$variableName.$fieldName"
+    }
+
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
     }
 }
 
@@ -202,11 +258,11 @@ class ComplexCustomApiType(
         return getterName(fieldName) + "($variableName)"
     }
 
-    override fun serialize(variableName: String): String {
+    override fun legacySerialize(variableName: String): String {
         return "${serializableName()}.fromCustomType($variableName)"
     }
 
-    override fun deserialize(variableName: String): String {
+    override fun legacyDeserialize(variableName: String): String {
         return "${variableName}.toCustomType()"
     }
 }
@@ -257,27 +313,15 @@ class ComplexValueObjectApiType(
             }
         }
 
-        addMethod {
-            name = fields[0].getterName()
-            returnType = typeName(fields[0].type.name())
-            setBody {
-                add(returnStatement {
-                    com.github.bratek20.codebuilder.builders.constructorCall {
-                        className = fields[0].type.name()
-                        addArg {
-                            variable(fields[0].name)
-                        }
-                    }
-                })
-            }
-        }
-        addMethod {
-            name = fields[1].getterName()
-            returnType = typeName(fields[1].type.name())
-            setBody {
-                add(returnStatement {
-                    variable(fields[1].name)
-                })
+        fields.forEach {
+            addMethod {
+                name = it.getterName()
+                returnType = typeName(it.type.name())
+                setBody {
+                    add(returnStatement {
+                        it.type.deserialize(it.name)
+                    })
+                }
             }
         }
 
@@ -293,16 +337,12 @@ class ComplexValueObjectApiType(
             }
             setBody {
                 add(returnStatement {
-                    com.github.bratek20.codebuilder.builders.constructorCall {
+                    constructorCall {
                         className = this@ComplexValueObjectApiType.name
-                        addArg {
-                            getterFieldAccess {
-                                variableName = "id"
-                                fieldName = "value"
+                        fields.forEach {
+                            addArg {
+                                it.type.serialize(it.name)
                             }
-                        }
-                        addArg {
-                            variable("name")
                         }
                     }
                 })
@@ -333,18 +373,26 @@ class ListApiType(
         return languageTypes.wrapWithList(wrappedType.serializableName())
     }
 
-    override fun deserialize(variableName: String): String {
+    override fun legacyDeserialize(variableName: String): String {
         if (wrappedType.name() == wrappedType.serializableName()) {
             return variableName
         }
-        return languageTypes.mapListElements(variableName, "it", wrappedType.deserialize("it"))
+        return languageTypes.mapListElements(variableName, "it", wrappedType.legacyDeserialize("it"))
     }
 
-    override fun serialize(variableName: String): String {
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun legacySerialize(variableName: String): String {
         if (wrappedType.name() == wrappedType.serializableName()) {
             return variableName
         }
-        return languageTypes.mapListElements(variableName, "it", wrappedType.serialize("it"))
+        return languageTypes.mapListElements(variableName, "it", wrappedType.legacySerialize("it"))
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
     }
 }
 
@@ -363,8 +411,8 @@ class OptionalApiType(
         return languageTypes.unwrapOptional(variableName)
     }
 
-    override fun deserialize(variableName: String): String {
-        val mapping = wrappedType.deserialize("it")
+    override fun legacyDeserialize(variableName: String): String {
+        val mapping = wrappedType.legacyDeserialize("it")
         val asOptional = languageTypes.deserializeOptional(variableName)
         if (mapping == "it") {
             return asOptional
@@ -372,12 +420,20 @@ class OptionalApiType(
         return languageTypes.mapOptionalElement(asOptional, "it", mapping)
     }
 
-    override fun serialize(variableName: String): String {
-        val mapping = wrappedType.serialize("it")
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun legacySerialize(variableName: String): String {
+        val mapping = wrappedType.legacySerialize("it")
         if (mapping == "it") {
             return languageTypes.serializeOptional(variableName)
         }
         return languageTypes.serializeOptional(languageTypes.mapOptionalElement(variableName, "it", mapping))
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
     }
 }
 
@@ -396,12 +452,20 @@ class EnumApiType(
         return name() + "." + def.getValues().first()
     }
 
-    override fun deserialize(variableName: String): String {
+    override fun legacyDeserialize(variableName: String): String {
         return languageTypes.deserializeEnum(name(), variableName)
     }
 
-    override fun serialize(variableName: String): String {
+    override fun deserialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun legacySerialize(variableName: String): String {
         return languageTypes.serializeEnum(variableName)
+    }
+
+    override fun serialize(variableName: String): ExpressionBuilder {
+        TODO("Not yet implemented")
     }
 }
 

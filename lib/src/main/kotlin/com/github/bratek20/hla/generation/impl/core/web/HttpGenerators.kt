@@ -4,7 +4,6 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.languages.typescript.namespace
-import com.github.bratek20.codebuilder.builders.legacyConst
 import com.github.bratek20.codebuilder.builders.legacyReturn
 import com.github.bratek20.codebuilder.builders.legacyVariable
 import com.github.bratek20.codebuilder.core.AccessModifier
@@ -67,7 +66,7 @@ class WebCommonGenerator: PatternGenerator() {
                         returnType = typeName(arg.type)
                         legacyBody = {
                             legacyReturn {
-                                legacyVariable(arg.apiType.deserialize(arg.name))
+                                legacyVariable(arg.apiType.legacyDeserialize(arg.name))
                             }
                         }
                     }
@@ -89,7 +88,7 @@ class WebCommonGenerator: PatternGenerator() {
                             className = requestName(interfName, method)
                             method.args.forEach {
                                 addArgLegacy {
-                                    legacyVariable(it.apiType.serialize(it.name))
+                                    legacyVariable(it.apiType.legacySerialize(it.name))
                                 }
                             }
                         }
@@ -123,7 +122,7 @@ class WebCommonGenerator: PatternGenerator() {
                     returnType = typeName(arg.type)
                     setBody {
                         add(returnStatement {
-                            variable(arg.apiType.deserialize("this." + arg.name))
+                            variable(arg.apiType.legacyDeserialize("this." + arg.name))
                         })
                     }
                 }
@@ -150,7 +149,7 @@ class WebCommonGenerator: PatternGenerator() {
                     method.args.forEach {
                         add(variableAssignment {
                             name = "instance.${it.name}"
-                            value = variable(it.apiType.serialize(it.name))
+                            value = variable(it.apiType.legacySerialize(it.name))
                         })
                     }
                     add(returnStatement {
@@ -181,7 +180,7 @@ class WebCommonGenerator: PatternGenerator() {
                 returnType = typeName(argType)
                 legacyBody = {
                     legacyReturn {
-                        legacyVariable(argApiType.deserialize("this.$argName"))
+                        legacyVariable(argApiType.legacyDeserialize("this.$argName"))
                     }
                 }
             }

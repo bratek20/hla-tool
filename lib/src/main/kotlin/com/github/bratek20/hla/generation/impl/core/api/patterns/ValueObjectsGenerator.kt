@@ -32,74 +32,8 @@ class ValueObjectsGenerator: PatternGenerator() {
         simpleVOs.forEach {
             addClass(it.getClassOps())
         }
-        addClass(complexVOs[0].getClassOps())
-
-        addClass {
-            name = "OtherClass"
-            addField {
-                type = typeName("int")
-                name = "id"
-                fromConstructor = true
-            }
-            addField {
-                type = typeName("int")
-                name = "amount"
-                fromConstructor = true
-            }
-
-            addMethod {
-                name = "GetId"
-                returnType = typeName("OtherId")
-                setBody {
-                    add(returnStatement {
-                        constructorCall {
-                            className = "OtherId"
-                            addArg {
-                                variable("id")
-                            }
-                        }
-                    })
-                }
-            }
-            addMethod {
-                name = "GetAmount"
-                returnType = typeName("int")
-                setBody {
-                    add(returnStatement {
-                        variable("amount")
-                    })
-                }
-            }
-
-            addMethod {
-                static = true
-                returnType = typeName("OtherClass")
-                name = "Create"
-                addArg {
-                    type = typeName("OtherId")
-                    name = "id"
-                }
-                addArg {
-                    type = typeName("int")
-                    name = "amount"
-                }
-                setBody {
-                    add(returnStatement {
-                        constructorCall {
-                            className = "OtherClass"
-                            addArg {
-                                getterFieldAccess {
-                                    variableName = "id"
-                                    fieldName = "value"
-                                }
-                            }
-                            addArg {
-                                variable("amount")
-                            }
-                        }
-                    })
-                }
-            }
+        complexVOs.forEach {
+            addClass(it.getClassOps())
         }
     }
 

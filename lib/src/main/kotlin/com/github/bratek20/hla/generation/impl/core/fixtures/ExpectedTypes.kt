@@ -264,8 +264,8 @@ class EnumExpectedType(
     api: EnumApiType,
 ) : ExpectedType<EnumApiType>(api) {
     fun diffBody(givenVariable: String, expectedVariable: String): String {
-        val result = languageTypes.wrapWithString("\${path}value \${${api.serialize(givenVariable)}} != \${$expectedVariable}")
-        return "if (${givenVariable} != ${api.deserialize(expectedVariable)}) { return $result }"
+        val result = languageTypes.wrapWithString("\${path}value \${${api.legacySerialize(givenVariable)}} != \${$expectedVariable}")
+        return "if (${givenVariable} != ${api.legacyDeserialize(expectedVariable)}) { return $result }"
     }
 
     override fun name(): String {
