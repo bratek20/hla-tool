@@ -49,15 +49,16 @@ class WebCommonGenerator: PatternGenerator() {
     private fun kotlinRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = requestName(interfName, method)
-            constructor {
-                method.args.forEach { arg ->
-                    addField {
-                        modifier = AccessModifier.PRIVATE
-                        name = arg.name
-                        type = typeName(arg.apiType.serializableName())
-                    }
+
+            method.args.forEach { arg ->
+                addField {
+                    modifier = AccessModifier.PRIVATE
+                    name = arg.name
+                    type = typeName(arg.apiType.serializableName())
+                    fromConstructor = true
                 }
             }
+
             legacyBody = {
                 method.args.forEach { arg ->
                     legacyMethod {
@@ -80,9 +81,9 @@ class WebCommonGenerator: PatternGenerator() {
                         type = typeName(arg.type)
                     }
                 }
-                legacyBody = {
-                    legacyReturn {
-                        legacyConstructorCall {
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
                             className = requestName(interfName, method)
                             method.args.forEach {
                                 addArgLegacy {
@@ -90,7 +91,7 @@ class WebCommonGenerator: PatternGenerator() {
                                 }
                             }
                         }
-                    }
+                    })
                 }
             }
         }
@@ -187,12 +188,12 @@ class WebCommonGenerator: PatternGenerator() {
     private fun kotlinResponseClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = responseName(interfName, method)
-            constructor {
-                addField {
-                    modifier = AccessModifier.PUBLIC
-                    type = typeName(method.returnType)
-                    name = "value"
-                }
+
+            addField {
+                modifier = AccessModifier.PUBLIC
+                type = typeName(method.returnType)
+                name = "value"
+                fromConstructor = true
             }
         }
     }
@@ -233,12 +234,12 @@ class WebCommonGenerator: PatternGenerator() {
                         name = "$moduleName.Web"
                         addClass {
                             name = "${moduleName}WebClientConfig"
-                            constructor {
-                                addField {
-                                    modifier = AccessModifier.PUBLIC
-                                    name = "value"
-                                    type = typeName("HttpClientConfig")
-                                }
+
+                            addField {
+                                modifier = AccessModifier.PUBLIC
+                                name = "value"
+                                type = typeName("HttpClientConfig")
+                                fromConstructor = true
                             }
                         }
                         classes.forEach(::addClass)
