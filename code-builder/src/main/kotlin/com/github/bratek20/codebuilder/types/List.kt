@@ -59,7 +59,7 @@ class ListOperations(
         }
     }
 
-    fun map(predicate: ExpressionBuilderProvider): StatementBuilder = object : StatementBuilder {
+    fun map(predicate: ExpressionBuilderProvider): ExpressionBuilder = object : ExpressionBuilder {
         override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
             lineSoftStart("${variableName}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
             add(predicate())

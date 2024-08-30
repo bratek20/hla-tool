@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.types.listOp
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
@@ -91,11 +92,11 @@ class ExternalApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return variable(variableName)
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return variable(variableName)
     }
 }
 
@@ -190,11 +191,11 @@ class SimpleCustomApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return expression(languageTypes.customTypeConstructorCall(name) + "($variableName)")
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return expression(languageTypes.customTypeGetterCall(name, "value") + "($variableName)")
     }
 
     override fun deserialize(variableName: String): String {
@@ -213,21 +214,13 @@ class SimpleCustomApiType(
 }
 
 
-open class ComplexStructureApiType<T: ComplexStructureField>(
+abstract class ComplexStructureApiType<T: ComplexStructureField>(
     name: String,
     val fields: List<T>
 ) : StructureApiType(name) {
 
     open fun accessField(fieldName: String, variableName: String): String {
         return "$variableName.$fieldName"
-    }
-
-    override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
-    }
-
-    override fun modernSerialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
     }
 }
 
@@ -267,6 +260,14 @@ class ComplexCustomApiType(
     override fun deserialize(variableName: String): String {
         return "${variableName}.toCustomType()"
     }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return expression("${variableName}.toCustomType()")
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return expression("${variableName}.fromCustomType()")
+    }
 }
 
 data class ComplexStructureGetter(
@@ -298,6 +299,14 @@ open class SerializableApiType(
 
     override fun constructorCall(): String {
         return languageTypes.propertyClassConstructorCall(name())
+    }
+
+    override fun modernDeserialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
+    }
+
+    override fun modernSerialize(variableName: String): ExpressionBuilder {
+        return variable(variableName)
     }
 }
 
@@ -383,7 +392,12 @@ class ListApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        if (wrappedType.name() == wrappedType.serializableName()) {
+            return variable(variableName)
+        }
+        return listOp(variableName).map {
+            wrappedType.modernDeserialize("it")
+        }
     }
 
     override fun serialize(variableName: String): String {
@@ -394,7 +408,12 @@ class ListApiType(
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        if (wrappedType.name() == wrappedType.serializableName()) {
+            return variable(variableName)
+        }
+        return listOp(variableName).map {
+            wrappedType.modernSerialize("it")
+        }
     }
 }
 
@@ -423,7 +442,7 @@ class OptionalApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return expression("TODO OptionalApiType.modernDeserialize")
     }
 
     override fun serialize(variableName: String): String {
@@ -435,7 +454,7 @@ class OptionalApiType(
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return expression("TODO OptionalApiType.modernSerialize")
     }
 }
 
@@ -459,7 +478,7 @@ class EnumApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return expression(languageTypes.deserializeEnum(name(), variableName))
     }
 
     override fun serialize(variableName: String): String {
@@ -467,7 +486,7 @@ class EnumApiType(
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        TODO("Not yet implemented")
+        return expression(languageTypes.serializeEnum(variableName))
     }
 }
 
