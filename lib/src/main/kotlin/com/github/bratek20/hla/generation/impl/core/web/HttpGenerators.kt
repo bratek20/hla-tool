@@ -8,6 +8,7 @@ import com.github.bratek20.codebuilder.builders.legacyConst
 import com.github.bratek20.codebuilder.builders.legacyReturn
 import com.github.bratek20.codebuilder.builders.legacyVariable
 import com.github.bratek20.codebuilder.core.AccessModifier
+import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -244,7 +245,8 @@ class WebCommonGenerator: PatternGenerator() {
                         }
                         classes.forEach(::addClass)
                     }
-                } else {
+                }
+                if (c.lang is Kotlin) {
                     classes.forEach(::legacyClassBlock)
                 }
             }

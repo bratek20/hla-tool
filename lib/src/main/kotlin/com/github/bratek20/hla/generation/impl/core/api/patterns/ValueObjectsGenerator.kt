@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -22,7 +23,29 @@ class ValueObjectsGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-
+        addClass {
+            name = "OtherId"
+            addField {
+                type = typeName("int")
+                name = "value"
+                fromConstructor = true
+                getter = true
+            }
+        }
+        addClass {
+            name = "OtherProperty"
+            addField {
+                type = typeName("int")
+                name = "id"
+                fromConstructor = true
+            }
+            addField {
+                type = typeName("string")
+                name = "name"
+                fromConstructor = true
+            }
+        }
+        addExtraEmptyLines(32)
     }
 
     override fun generateFileContent(): FileContent? {
