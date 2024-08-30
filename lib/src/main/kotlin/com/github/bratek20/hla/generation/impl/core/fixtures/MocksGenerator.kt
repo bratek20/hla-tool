@@ -109,8 +109,10 @@ class MocksGenerator: PatternGenerator() {
                             name = "response"
                             type = typeName(defOutputType)
                         }
-                        legacyBody = {
-                            listOp(responsesListName).add { newPair("args", "response") }
+                        setBody {
+                            add(listOp(responsesListName).add {
+                                newPair("args", "response")
+                            })
                         }
                     }
 
@@ -123,30 +125,30 @@ class MocksGenerator: PatternGenerator() {
                             name = inputArgName
                             type = typeName(inputTypeName)
                         }
-                        legacyBody = {
-                            listOp(callsListName).add {
-                                legacyVariable(inputArgName)
-                            }
-                            legacyAssign {
-                                variable = {
-                                    declare = true
-                                    name = "findResult"
-                                }
-                                value = {
-                                    listOp(responsesListName).find {
-                                        legacyIsEqualTo {
-                                            left = {
-                                                legacyFunctionCall {
-                                                    name = inputDiffMethodName
-                                                    addArgLegacy { legacyVariable(inputArgName) }
-                                                    addArgLegacy { pairOp(it.name).first() }
-                                                }
+                        setBody {
+                            add(listOp(callsListName).add {
+                                variable(inputArgName)
+                            })
+                            add(variableAssignment {
+                                declare = true
+                                name = "findResult"
+
+                                value = listOp(responsesListName).find {
+                                    isEqualTo {
+                                        left = functionCall {
+                                            name = inputDiffMethodName
+                                            addArg {
+                                                variable(inputArgName)
                                             }
-                                            right = { legacyString("") }
+                                            addArg {
+                                                pairOp("it").first()
+                                            }
                                         }
+
+                                        right = string("")
                                     }
                                 }
-                            }
+                            })
                             legacyReturn {
                                 //TODO support for ?., support for ?:
                                 linePart("$outputBuilderMethodName(findResult?.second ?: $emptyDef)")

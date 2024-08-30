@@ -86,9 +86,9 @@ open class ComplexStructureField(
     fun createConstructorPass(): String {
         //instance.$field.name = $field.type.serialize($field.name)
         if (type.languageTypes is TypeScriptTypes) {
-            return "instance.${privateName()} = ${type.legacySerialize(name)}"
+            return "instance.${privateName()} = ${type.serialize(name)}"
         }
-        return "${privateName()} = ${type.legacySerialize(name)}"
+        return "${privateName()} = ${type.serialize(name)}"
     }
 
     fun privateName(): String {

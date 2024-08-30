@@ -51,7 +51,7 @@ class ListOperations(
         }
     }
 
-    fun find(predicate: ExpressionBuilderProvider): StatementBuilder = object : StatementBuilder {
+    fun find(predicate: ExpressionBuilderProvider): ExpressionBuilder = object : ExpressionBuilder {
         override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
             lineSoftStart("${variableName}.${c.lang.listFindBegin()} it ${c.lang.lambdaArrow()} ")
             add(predicate())

@@ -57,7 +57,7 @@ class TypesTest {
                 lineEnd()
 
                 lineStart()
-                newPair("varA", "varB")
+                legacyNewPair("varA", "varB")
                 lineEnd()
             }
             langExpected {
@@ -89,11 +89,11 @@ class TypesTest {
         testOp {
             op = {
                 lineStart()
-                pairOp("pair").first()
+                legacyPairOp("pair").first()
                 lineEnd()
 
                 lineStart()
-                pairOp("pair").second()
+                legacyPairOp("pair").second()
                 lineEnd()
             }
             langExpected {

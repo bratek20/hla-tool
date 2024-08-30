@@ -66,7 +66,7 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     private val boxedType: BaseDefType
 ) : StructureDefType<T>(api) {
     override fun build(variableName: String): String {
-        return api.legacyDeserialize(variableName)
+        return api.deserialize(variableName)
     }
 
     override fun name(): String {
@@ -205,11 +205,11 @@ class EnumDefType(
     }
 
     override fun defaultValue(): String {
-        return api.legacySerialize(api.defaultValue())
+        return api.serialize(api.defaultValue())
     }
 
     override fun build(variableName: String): String {
-        return api.legacyDeserialize(variableName)
+        return api.deserialize(variableName)
     }
 }
 

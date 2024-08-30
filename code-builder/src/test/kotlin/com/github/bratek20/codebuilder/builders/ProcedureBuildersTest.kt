@@ -2,7 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.pairOp
+import com.github.bratek20.codebuilder.types.legacyPairOp
 import com.github.bratek20.codebuilder.types.pairType
 import org.junit.jupiter.api.Test
 
@@ -205,8 +205,8 @@ class ProcedureBuildersTest {
                     legacyBody = {
                         legacyReturn {
                             legacyPlus {
-                                left = { pairOp("p").first() }
-                                right = { pairOp("p").second() }
+                                left = { legacyPairOp("p").first() }
+                                right = { legacyPairOp("p").second() }
                             }
                         }
                     }

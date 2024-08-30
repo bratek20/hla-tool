@@ -1,5 +1,6 @@
 package com.github.bratek20.codebuilder.types
 
+import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.core.*
 
 fun pairType(first: TypeBuilder, second: TypeBuilder) = object: TypeBuilder {
@@ -8,23 +9,32 @@ fun pairType(first: TypeBuilder, second: TypeBuilder) = object: TypeBuilder {
     }
 }
 
-fun CodeBuilder.newPair(first: String, second: String): CodeBuilder {
+fun CodeBuilder.legacyNewPair(first: String, second: String): CodeBuilder {
     return linePart(c.lang.newPair(first, second))
 }
 
-class PairOperations(
-    private val b: CodeBuilder,
-    private val variableName: String
-) {
-    fun first() {
-        b.linePart(b.c.lang.pairFirst(variableName))
-    }
-
-    fun second() {
-        b.linePart(b.c.lang.pairSecond(variableName))
+fun newPair(first: String, second: String): ExpressionBuilder = object : ExpressionBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart(c.lang.newPair(first, second))
     }
 }
 
-fun CodeBuilder.pairOp(variableName: String): PairOperations {
-    return PairOperations(this, variableName)
+class PairOperations(
+    private val variableName: String
+) {
+    fun first(): ExpressionBuilder = object : ExpressionBuilder {
+        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+            linePart(c.lang.pairFirst(variableName))
+        }
+    }
+
+    fun second() = object : ExpressionBuilder {
+        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+            linePart(c.lang.pairSecond(variableName))
+        }
+    }
+}
+
+fun pairOp(variableName: String): PairOperations {
+    return PairOperations(variableName)
 }
