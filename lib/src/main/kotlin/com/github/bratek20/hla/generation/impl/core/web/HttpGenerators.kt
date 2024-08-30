@@ -4,7 +4,6 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.languages.typescript.namespace
-import com.github.bratek20.codebuilder.builders.legacyAssign
 import com.github.bratek20.codebuilder.builders.legacyConst
 import com.github.bratek20.codebuilder.builders.legacyReturn
 import com.github.bratek20.codebuilder.builders.legacyVariable
@@ -110,7 +109,7 @@ class WebCommonGenerator: PatternGenerator() {
                         accessor = FieldAccessor.PRIVATE
                         mutable = true
                         name = arg.name
-                        value = {
+                        legacyValue = {
                             legacyConst(objectCreationType(arg.apiType))
                         }
                     }
@@ -171,7 +170,7 @@ class WebCommonGenerator: PatternGenerator() {
                     accessor = FieldAccessor.PRIVATE
                     mutable = true
                     name = argName
-                    value = {
+                    legacyValue = {
                         legacyConst(objectCreationType(argApiType))
                     }
                 }

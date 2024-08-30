@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.builders.legacyConstructorCall
-import com.github.bratek20.codebuilder.builders.string
+import com.github.bratek20.codebuilder.builders.legacyString
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -33,10 +33,10 @@ class EnumsGenerator: PatternGenerator() {
                         addField {
                             name = it
                             static = true
-                            value = { legacyConstructorCall {
+                            legacyValue = { legacyConstructorCall {
                                 className = enumName
                                 addArgLegacy {
-                                    string(it)
+                                    legacyString(it)
                                 }
                             } }
                         }

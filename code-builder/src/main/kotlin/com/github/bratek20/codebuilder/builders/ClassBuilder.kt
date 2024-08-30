@@ -12,7 +12,9 @@ class FieldBuilder: CodeBlockBuilder {
 
     var type: TypeBuilder? = null
 
-    var value: CodeBuilderOps? = null
+    var legacyValue: CodeBuilderOps? = null
+    var value: ExpressionBuilder? = null
+
     var accessor: FieldAccessor? = null
     var mutable = false
     var static = false
@@ -34,6 +36,10 @@ class FieldBuilder: CodeBlockBuilder {
         linePart(name)
         type?.let {
             linePart(": ")
+            add(it)
+        }
+        legacyValue?.let {
+            linePart(" = ")
             add(it)
         }
         value?.let {

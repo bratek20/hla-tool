@@ -83,7 +83,10 @@ class ClassBuilderTest {
                     addField {
                         name = "someField"
                         static = true
-                        value = { legacyConstructorCall { className = "OtherClass"; addArgLegacy { string("SomeStr") } } }
+                        value = constructorCall {
+                            className = "OtherClass"
+                            addArg(string("SomeStr"))
+                        }
                     }
                 }
             }
@@ -179,7 +182,7 @@ class ClassBuilderTest {
                             accessor = FieldAccessor.PRIVATE
                             name = "a"
                             type = type("A")
-                            value = { legacyVariable("null") }
+                            legacyValue = { legacyVariable("null") }
                         }
                         field {
                             name = "b"
@@ -187,7 +190,7 @@ class ClassBuilderTest {
                         }
                         field {
                             name = "noType"
-                            value = { string("someString") }
+                            legacyValue = { legacyString("someString") }
                             mutable = true
                         }
                     }
@@ -233,7 +236,7 @@ class ClassBuilderTest {
                             type = baseType(BaseType.STRING)
                         }
                         body = {
-                            comment("some comment")
+                            legacyComment("some comment")
                         }
                     }
                 }

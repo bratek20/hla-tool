@@ -35,6 +35,10 @@ fun const(value: Int): ExpressionBuilder {
     return expression(value.toString())
 }
 
+fun string(value: String): ExpressionBuilder {
+    return expression("\"$value\"")
+}
+
 class VariableAssignmentBuilder: CodeBlockBuilder {
     lateinit var name: String
     lateinit var value: ExpressionBuilder

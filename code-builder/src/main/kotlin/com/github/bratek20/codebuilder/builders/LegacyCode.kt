@@ -11,11 +11,11 @@ fun CodeBuilder.legacyVariable(name: String): CodeBuilder {
     return linePart(name)
 }
 
-fun CodeBuilder.string(name: String): CodeBuilder {
+fun CodeBuilder.legacyString(name: String): CodeBuilder {
     return linePart("\"$name\"")
 }
 
-fun CodeBuilder.comment(value: String): CodeBuilder {
+fun CodeBuilder.legacyComment(value: String): CodeBuilder {
     return line("// $value")
 }
 

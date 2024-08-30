@@ -3,7 +3,7 @@ package com.github.bratek20.codebuilder.types
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.builders.legacyConst
 import com.github.bratek20.codebuilder.builders.legacyPlus
-import com.github.bratek20.codebuilder.builders.string
+import com.github.bratek20.codebuilder.builders.legacyString
 import com.github.bratek20.codebuilder.builders.legacyVariable
 import org.junit.jupiter.api.Test
 
@@ -182,7 +182,7 @@ class TypesTest {
                 }
 
                 listOp("list").add {
-                    string("someString")
+                    legacyString("someString")
                 }
 
                 lineStart()

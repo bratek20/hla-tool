@@ -9,10 +9,8 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceView
-import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
 import com.github.bratek20.utils.camelToPascalCase
-import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
 class MocksGenerator: PatternGenerator() {
@@ -82,12 +80,12 @@ class MocksGenerator: PatternGenerator() {
                     "{}"
 
             return {
-                    comment(def.name)
+                    legacyComment(def.name)
                     field {
                         accessor = FieldAccessor.PRIVATE
                         name = callsListName
                         type = mutableListType(type(inputTypeName))
-                        value = {
+                        legacyValue = {
                             add(emptyMutableList(type(inputTypeName)))
                         }
                     }
@@ -95,7 +93,7 @@ class MocksGenerator: PatternGenerator() {
                         accessor = FieldAccessor.PRIVATE
                         name = responsesListName
                         type = mutableListType(pairType(type(expectedInputType), type(defOutputType)))
-                        value = {
+                        legacyValue = {
                             add(emptyMutableList(type(expectedInputType)))
                         }
                     }
@@ -144,7 +142,7 @@ class MocksGenerator: PatternGenerator() {
                                                     addArgLegacy { pairOp(it.name).first() }
                                                 }
                                             }
-                                            right = { string("") }
+                                            right = { legacyString("") }
                                         }
                                     }
                                 }
