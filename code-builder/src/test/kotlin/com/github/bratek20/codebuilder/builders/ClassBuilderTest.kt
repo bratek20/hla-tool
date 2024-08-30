@@ -410,7 +410,7 @@ class ClassBuilderTest {
                 expected = """
                     class SomeInterfaceSomeCommandRequest(
                         private val id: String,
-                        private val amount: Int,
+                        private val amount: Int
                     ) {
                         fun getId(): SomeId {
                             return SomeId(id)
@@ -578,11 +578,12 @@ class ClassBuilderTest {
                 lang = CSharp()
                 expected = """
                     public class SomeClass {
-                        private readonly int someField;
-                        
-                        public SomeClass(int someField) {
+                        public SomeClass(
+                            int someField
+                        ) {
                             this.someField = someField;
                         }
+                        readonly int someField;
                     }
                 """
             }
@@ -604,14 +605,34 @@ class ClassBuilderTest {
                 })
             }
             langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SimpleValueObject(
+                        val value: Int
+                    ) {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SimpleValueObject {
+                        constructor(
+                            readonly value: number
+                        ) {}
+                    }
+                """
+            }
+            langExpected {
                 lang = CSharp()
                 expected = """
                     public class SimpleValueObject {
-                        public int Value { get; }
-                        
-                        public SomeClass(int value) {
+                        public SimpleValueObject(
+                            int value
+                        ) {
                             Value = value;
                         }
+                        public int Value { get; }
                     }
                 """
             }

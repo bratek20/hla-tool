@@ -62,6 +62,7 @@ interface CodeBuilderLanguage {
     fun defaultAccessModifierForClassMembers(): AccessModifier
 
     fun supportsFieldTypeDeductionFromAssignedValue(): Boolean
+    fun supportsFieldDeclarationInConstructor(): Boolean
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -195,6 +196,10 @@ class Kotlin: CodeBuilderLanguage {
     }
 
     override fun supportsFieldTypeDeductionFromAssignedValue(): Boolean {
+        return true
+    }
+
+    override fun supportsFieldDeclarationInConstructor(): Boolean {
         return true
     }
 }
@@ -332,6 +337,10 @@ class TypeScript: CodeBuilderLanguage {
     override fun supportsFieldTypeDeductionFromAssignedValue(): Boolean {
         return true
     }
+
+    override fun supportsFieldDeclarationInConstructor(): Boolean {
+        return true
+    }
 }
 
 class CSharp: CodeBuilderLanguage {
@@ -465,6 +474,10 @@ class CSharp: CodeBuilderLanguage {
     }
 
     override fun supportsFieldTypeDeductionFromAssignedValue(): Boolean {
+        return false
+    }
+
+    override fun supportsFieldDeclarationInConstructor(): Boolean {
         return false
     }
 }

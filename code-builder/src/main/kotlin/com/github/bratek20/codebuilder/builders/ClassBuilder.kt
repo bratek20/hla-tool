@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.utils.camelToPascalCase
 
 class FieldBuilder(
     private val endStatement: Boolean = true
@@ -32,50 +33,68 @@ class FieldBuilder(
         return ValidationResult.success()
     }
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart()
+    private fun getOperationsForCSharpGetter(): CodeBuilderOps = {
+        lineStart("public ")
+        add(type!!)
+        lineEnd(" ${camelToPascalCase(name)} { get; }")
+    }
 
-        if (modifier != c.lang.defaultAccessModifierForClassMembers()) {
-            linePart("${modifier.name.lowercase()} ")
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
+        if (getter && c.lang is CSharp) {
+            return getOperationsForCSharpGetter()
         }
+        return {
+            lineStart()
 
-        if (static) {
-            linePart("static ")
-        }
-        if (mutable) {
-            linePart(c.lang.mutableFieldDeclaration())
-        }
-        else {
-            linePart(c.lang.immutableFieldDeclaration())
-        }
-
-        when(c.lang.typeDeclarationStyle()) {
-            TypeDeclarationStyle.TYPE_FIRST -> {
-                type?.let {
-                    add(it)
-                    linePart(" ")
-                }
-                linePart(name)
+            val finalModifier = if (getter) {
+                AccessModifier.PUBLIC
             }
-            TypeDeclarationStyle.VARIABLE_FIRST -> {
-                linePart(name)
-                type?.let {
-                    linePart(": ")
-                    add(it)
+            else {
+                modifier
+            }
+
+            if (finalModifier != c.lang.defaultAccessModifierForClassMembers()) {
+                linePart("${finalModifier.name.lowercase()} ")
+            }
+
+            if (static) {
+                linePart("static ")
+            }
+            if (mutable) {
+                linePart(c.lang.mutableFieldDeclaration())
+            }
+            else {
+                linePart(c.lang.immutableFieldDeclaration())
+            }
+
+            when(c.lang.typeDeclarationStyle()) {
+                TypeDeclarationStyle.TYPE_FIRST -> {
+                    type?.let {
+                        add(it)
+                        linePart(" ")
+                    }
+                    linePart(name)
+                }
+                TypeDeclarationStyle.VARIABLE_FIRST -> {
+                    linePart(name)
+                    type?.let {
+                        linePart(": ")
+                        add(it)
+                    }
                 }
             }
-        }
-        legacyValue?.let {
-            linePart(" = ")
-            addOps(it)
-        }
-        value?.let {
-            linePart(" = ")
-            add(it)
-        }
+            legacyValue?.let {
+                linePart(" = ")
+                addOps(it)
+            }
+            value?.let {
+                linePart(" = ")
+                add(it)
+            }
 
-        if(endStatement) {
-            statementLineEnd()
+            if(endStatement) {
+                statementLineEnd()
+            }
         }
     }
 }
@@ -162,7 +181,7 @@ open class ClassBuilder: CodeBlockBuilder {
         addOps(classDeclarationWithConstructor(c))
         tab()
         fieldOps.forEach { ops ->
-            if (!field(ops).fromConstructor) {
+            if (!c.lang.supportsFieldDeclarationInConstructor() || !field(ops).fromConstructor) {
                 add(field(ops))
             }
         }
@@ -239,8 +258,23 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             addOps(getConstructorArgsOps())
             untab()
+
             if (passingArgs.isNotEmpty()) {
                 line("): base(${passingArgs.joinToString(", ")}) {")
+                line("}")
+            }
+            else if (constructorFields.isNotEmpty()) {
+                line(") {")
+                tab()
+                constructorFields.forEach { field ->
+                    if (field.getter) {
+                        line("${camelToPascalCase(field.name)} = ${field.name};")
+                    }
+                    else {
+                        line("this.${field.name} = ${field.name};")
+                    }
+                }
+                untab()
                 line("}")
             }
             else {
@@ -253,6 +287,9 @@ open class ClassBuilder: CodeBlockBuilder {
         }
     }
 
+    private val constructorFields
+        get() = fields.filter { it.fromConstructor }
+
     private fun getConstructorArgsOps(): CodeBuilderOps = {
         val constructorFields = fields.filter { it.fromConstructor }
         val finalArgs = constructorFields.map { field ->
@@ -260,7 +297,7 @@ open class ClassBuilder: CodeBlockBuilder {
                 name = field.name
                 type = field.type!!
             }
-        } + constructor!!.getArgs()
+        } + (constructor?.getArgs() ?: emptyList())
 
         finalArgs.forEachIndexed { idx, arg ->
             add(arg)
@@ -272,19 +309,24 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     private fun getFieldsAndArgsOps(): CodeBuilderOps = {
-        fieldOps.forEach { field ->
+        fieldOps.forEachIndexed { idx, field ->
             add(FieldBuilder(false).apply(field))
-            linePart(",")
+            if (idx != fieldOps.size - 1 || constructorArgs.isNotEmpty()) {
+                linePart(",")
+            }
             lineEnd()
         }
-        constructor?.getArgs()?.forEachIndexed { idx, arg ->
+        constructorArgs.forEachIndexed { idx, arg ->
             add(arg)
-            if (idx != constructor!!.getArgs().size - 1) {
+            if (idx != constructorArgs.size - 1) {
                 linePart(",")
             }
             lineEnd()
         }
     }
+
+    private val constructorArgs
+        get() = constructor?.getArgs() ?: emptyList()
 
     private fun shouldGenerateConstructor(): Boolean {
         if (constructor != null) {
