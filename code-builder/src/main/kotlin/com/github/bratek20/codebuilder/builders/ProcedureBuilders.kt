@@ -28,7 +28,7 @@ class ArgumentBuilder: CodeBlockBuilder {
     }
 }
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
-fun CodeBuilder.argument(block: ArgumentBuilderOps) = add(ArgumentBuilder().apply(block))
+fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
 class ArgumentListBuilder: CodeBlockBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()

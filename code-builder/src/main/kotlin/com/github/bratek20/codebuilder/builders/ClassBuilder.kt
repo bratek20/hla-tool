@@ -16,6 +16,9 @@ class FieldBuilder(
     var mutable = false
     var static = false
 
+    var getter = false
+    var fromConstructor = false
+
     override fun validate(c: CodeBuilderContext): ValidationResult {
         if (type == null) {
             if (!c.lang.supportsFieldTypeDeductionFromAssignedValue()) {
@@ -45,7 +48,6 @@ class FieldBuilder(
         else {
             linePart(c.lang.immutableFieldDeclaration())
         }
-
 
         when(c.lang.typeDeclarationStyle()) {
             TypeDeclarationStyle.TYPE_FIRST -> {
@@ -87,29 +89,9 @@ class StaticMethodBuilder: MethodBuilder() {
     }
 }
 class ClassConstructorBuilder {
-    val fields: MutableList<FieldBuilderOps> = mutableListOf()
-    fun addField(block: FieldBuilderOps) {
-        fields.add(block)
-    }
-
-    val args: MutableList<ArgumentBuilderOps> = mutableListOf()
+    private val args: MutableList<ArgumentBuilderOps> = mutableListOf()
     fun addArg(block: ArgumentBuilderOps) {
         args.add(block)
-    }
-
-    fun getFieldsAndArgsOps(): CodeBuilderOps = {
-        fields.forEach { fieldOps ->
-            add(FieldBuilder(false).apply(fieldOps))
-            linePart(",")
-            lineEnd()
-        }
-        args.forEachIndexed { idx, argOps ->
-            argument(argOps)
-            if (idx != args.size - 1) {
-                linePart(",")
-            }
-            lineEnd()
-        }
     }
 
     private var body: BodyBuilderOps? = null
@@ -118,6 +100,7 @@ class ClassConstructorBuilder {
     }
 
     fun getBody(): BodyBuilder? = body?.let { BodyBuilder().apply(it) }
+    fun getArgs(): List<ArgumentBuilder> = args.map { ArgumentBuilder().apply(it) }
 }
 typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
@@ -140,7 +123,9 @@ open class ClassBuilder: CodeBlockBuilder {
     var implements: String? = null
 
     private var constructor: ClassConstructorBuilder? = null
-    private val fields: MutableList<FieldBuilderOps> = mutableListOf()
+    private val fieldOps: MutableList<FieldBuilderOps> = mutableListOf()
+    private val fields: MutableList<FieldBuilder> = mutableListOf()
+
     var legacyBody: CodeBuilderOps? = null
     private val staticMethods: MutableList<MethodBuilderOps> = mutableListOf()
 
@@ -158,13 +143,14 @@ open class ClassBuilder: CodeBlockBuilder {
         staticMethods.add(block)
     }
 
-    private val methods: MutableList<MethodBuilderOps> = mutableListOf()
-    fun addMethod(block: MethodBuilderOps) {
-        methods.add(block)
+    private val methods: MutableList<MethodBuilder> = mutableListOf()
+    fun addMethod(ops: MethodBuilderOps) {
+        methods.add(method(ops))
     }
 
-    fun addField(block: FieldBuilderOps) {
-        fields.add(block)
+    fun addField(ops: FieldBuilderOps) {
+        fieldOps.add(ops)
+        fields.add(field(ops))
     }
 
     private val passingArgs: MutableList<String> = mutableListOf()
@@ -175,12 +161,14 @@ open class ClassBuilder: CodeBlockBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         addOps(classDeclarationWithConstructor(c))
         tab()
-        fields.forEach { fieldOps ->
-            legacyField(fieldOps)
+        fieldOps.forEach { ops ->
+            if (!field(ops).fromConstructor) {
+                add(field(ops))
+            }
         }
         legacyBody?.let { addOps(it) }
-        methods.forEach { methodOps ->
-            legacyMethod(methodOps)
+        methods.forEach { method ->
+            add(method)
         }
         if (staticMethods.isNotEmpty()) {
             addOps(staticMethodsSection(c))
@@ -199,7 +187,7 @@ open class ClassBuilder: CodeBlockBuilder {
         if (c.lang is Kotlin && constructor != null) {
             line("$beginningWithoutExtendOrImplements(")
             tab()
-            addOps(constructor!!.getFieldsAndArgsOps())
+            addOps(getFieldsAndArgsOps())
             untab()
             val passingArgsPart = if (passingArgs.isNotEmpty()) {
                 "(${passingArgs.joinToString(", ")})"
@@ -223,7 +211,7 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             line("constructor(")
             tab()
-            addOps(constructor!!.getFieldsAndArgsOps())
+            addOps(getFieldsAndArgsOps())
             untab()
             if (constructor!!.getBody() != null) {
                 line(") {")
@@ -249,7 +237,7 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             line("public $name(")
             tab()
-            addOps(constructor!!.getFieldsAndArgsOps())
+            addOps(getConstructorArgsOps())
             untab()
             if (passingArgs.isNotEmpty()) {
                 line("): base(${passingArgs.joinToString(", ")}) {")
@@ -262,6 +250,39 @@ open class ClassBuilder: CodeBlockBuilder {
         }
         else {
             line("$beginning {")
+        }
+    }
+
+    private fun getConstructorArgsOps(): CodeBuilderOps = {
+        val constructorFields = fields.filter { it.fromConstructor }
+        val finalArgs = constructorFields.map { field ->
+            argument {
+                name = field.name
+                type = field.type!!
+            }
+        } + constructor!!.getArgs()
+
+        finalArgs.forEachIndexed { idx, arg ->
+            add(arg)
+            if (idx != finalArgs.size - 1) {
+                linePart(", ")
+            }
+            lineEnd()
+        }
+    }
+
+    private fun getFieldsAndArgsOps(): CodeBuilderOps = {
+        fieldOps.forEach { field ->
+            add(FieldBuilder(false).apply(field))
+            linePart(",")
+            lineEnd()
+        }
+        constructor!!.getArgs().forEachIndexed { idx, arg ->
+            add(arg)
+            if (idx != constructor!!.getArgs().size - 1) {
+                linePart(",")
+            }
+            lineEnd()
         }
     }
 

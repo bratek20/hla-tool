@@ -228,12 +228,13 @@ class ClassBuilderTest {
             op = {
                 add(classBlock {
                     name = "SomeClass"
+                    addField {
+                        modifier = AccessModifier.PRIVATE
+                        name = "idField"
+                        type = baseType(BaseType.STRING)
+                        fromConstructor = true
+                    }
                     constructor {
-                        addField {
-                            modifier = AccessModifier.PRIVATE
-                            name = "idField"
-                            type = baseType(BaseType.STRING)
-                        }
                         addArg {
                             name = "idArg"
                             type = baseType(BaseType.STRING)
@@ -531,6 +532,87 @@ class ClassBuilderTest {
                 })
             }
             errorMessage = "Field `someField` - type deduction not supported in C#"
+        }
+    }
+
+    @Test
+    fun `class with field getter`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        type = baseType(BaseType.INT)
+                        getter = true
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        public int SomeField { get; }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `class with field set by constructor`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        type = baseType(BaseType.INT)
+                        fromConstructor = true
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        private readonly int someField;
+                        
+                        public SomeClass(int someField) {
+                            this.someField = someField;
+                        }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `simple value object`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SimpleValueObject"
+                    addField {
+                        name = "value"
+                        type = baseType(BaseType.INT)
+                        getter = true
+                        fromConstructor = true
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SimpleValueObject {
+                        public int Value { get; }
+                        
+                        public SomeClass(int value) {
+                            Value = value;
+                        }
+                    }
+                """
+            }
         }
     }
 }
