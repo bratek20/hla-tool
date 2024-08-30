@@ -60,6 +60,8 @@ interface CodeBuilderLanguage {
 
     fun defaultAccessModifierForTopLevelTypes(): AccessModifier
     fun defaultAccessModifierForClassMembers(): AccessModifier
+
+    fun supportsFieldTypeDeductionFromAssignedValue()
 }
 
 class Kotlin: CodeBuilderLanguage {
