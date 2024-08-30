@@ -13,7 +13,7 @@ class SomeModuleWebClientConfig(val value: HttpClientConfig)
 
 class SomeInterfaceSomeCommandRequest(
     private val id: String,
-    private val amount: Int,
+    private val amount: Int
 ) {
     fun getId(): SomeId {
         return SomeId(id)
@@ -28,7 +28,7 @@ class SomeInterfaceSomeCommandRequest(
     }
 }
 class SomeInterfaceSomeQueryRequest(
-    private val query: SomeQueryInput,
+    private val query: SomeQueryInput
 ) {
     fun getQuery(): SomeQueryInput {
         return query
@@ -40,11 +40,11 @@ class SomeInterfaceSomeQueryRequest(
     }
 }
 class SomeInterfaceSomeQueryResponse(
-    val value: SomeClass,
+    val value: SomeClass
 ) {
 }
 class SomeInterfaceOptMethodRequest(
-    private val optId: String?,
+    private val optId: String?
 ) {
     fun getOptId(): SomeId? {
         return optId?.let { it -> SomeId(it) }
@@ -56,11 +56,11 @@ class SomeInterfaceOptMethodRequest(
     }
 }
 class SomeInterfaceOptMethodResponse(
-    val value: SomeClass?,
+    val value: SomeClass?
 ) {
 }
 class SomeInterfaceMethodWithListOfSimpleVORequest(
-    private val list: List<String>,
+    private val list: List<String>
 ) {
     fun getList(): List<SomeId> {
         return list.map { it -> SomeId(it) }
@@ -72,11 +72,11 @@ class SomeInterfaceMethodWithListOfSimpleVORequest(
     }
 }
 class SomeInterfaceMethodWithListOfSimpleVOResponse(
-    val value: List<SomeId>,
+    val value: List<SomeId>
 ) {
 }
 class SomeInterface2ReferenceOtherClassRequest(
-    private val other: OtherClass,
+    private val other: OtherClass
 ) {
     fun getOther(): OtherClass {
         return other
@@ -88,11 +88,11 @@ class SomeInterface2ReferenceOtherClassRequest(
     }
 }
 class SomeInterface2ReferenceOtherClassResponse(
-    val value: OtherClass,
+    val value: OtherClass
 ) {
 }
 class SomeInterface2ReferenceLegacyTypeRequest(
-    private val legacyType: com.some.pkg.legacy.LegacyType,
+    private val legacyType: com.some.pkg.legacy.LegacyType
 ) {
     fun getLegacyType(): com.some.pkg.legacy.LegacyType {
         return legacyType
@@ -104,6 +104,6 @@ class SomeInterface2ReferenceLegacyTypeRequest(
     }
 }
 class SomeInterface2ReferenceLegacyTypeResponse(
-    val value: com.some.pkg.legacy.LegacyType,
+    val value: com.some.pkg.legacy.LegacyType
 ) {
 }
