@@ -27,7 +27,7 @@ fun CodeBuilder.legacyAssign(block: AssignArgs.()->Unit): CodeBuilder {
     val args = AssignArgs().apply(block)
     add(VariableAssignmentBuilder().apply(args.variable))
     linePart(" = ")
-    add(args.value)
+    addOps(args.value)
     statementLineEnd()
     return this
 }
@@ -38,9 +38,9 @@ class PlusArgs {
 }
 fun CodeBuilder.legacyPlus(block: PlusArgs.()->Unit): CodeBuilder {
     val args = PlusArgs().apply(block)
-    add(args.left)
+    addOps(args.left)
     linePart(" + ")
-    add(args.right)
+    addOps(args.right)
     return this
 }
 
@@ -50,15 +50,15 @@ class IsEqualToArgs {
 }
 fun CodeBuilder.isEqualTo(block: IsEqualToArgs.()->Unit): CodeBuilder {
     val args = IsEqualToArgs().apply(block)
-    add(args.left)
+    addOps(args.left)
     linePart(" == ")
-    add(args.right)
+    addOps(args.right)
     return this
 }
 
 fun CodeBuilder.legacyReturn(block: CodeBuilderOps): CodeBuilder {
     lineStart("return ")
-    add(block)
+    addOps(block)
     statementLineEnd()
     return this
 }

@@ -54,7 +54,7 @@ class WebContextGenerator: PatternGenerator() {
         val interfDefs = module.getInterfaces().filter { interfNames.contains(it.getName()) }
         val interfs = factory.create(interfDefs)
         return CodeBuilder(c.language.base())
-            .add {
+            .addOps {
                 namespace {
                     name = "${this@WebContextGenerator.c.module.getName()}.Api"
                     interfs.forEach { interf ->

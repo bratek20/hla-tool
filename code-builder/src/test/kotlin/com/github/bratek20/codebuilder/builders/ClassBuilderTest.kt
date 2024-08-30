@@ -85,7 +85,9 @@ class ClassBuilderTest {
                         static = true
                         value = constructorCall {
                             className = "OtherClass"
-                            addArg(string("SomeStr"))
+                            addArg {
+                                string("SomeStr")
+                            }
                         }
                     }
                 }
@@ -182,7 +184,7 @@ class ClassBuilderTest {
                             accessor = FieldAccessor.PRIVATE
                             name = "a"
                             type = type("A")
-                            legacyValue = { legacyVariable("null") }
+                            value = variable("null")
                         }
                         field {
                             name = "b"
@@ -190,7 +192,7 @@ class ClassBuilderTest {
                         }
                         field {
                             name = "noType"
-                            legacyValue = { legacyString("someString") }
+                            value = string("someString")
                             mutable = true
                         }
                     }
@@ -235,8 +237,10 @@ class ClassBuilderTest {
                             name = "idArg"
                             type = baseType(BaseType.STRING)
                         }
-                        body = {
-                            legacyComment("some comment")
+                        setBody {
+                            add(comment {
+                                "some comment"
+                            })
                         }
                     }
                 }
@@ -355,7 +359,9 @@ class ClassBuilderTest {
                                 legacyReturn {
                                     legacyConstructorCall {
                                         className = "SomeId"
-                                        addArg(variable("id"))
+                                        addArg {
+                                            variable("id")
+                                        }
                                     }
                                 }
                             }

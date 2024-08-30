@@ -36,7 +36,7 @@ class MethodAndFunctionBuilderTest {
     fun `empty function`() {
         testCodeBuilderOp {
             op = {
-                function { name = "someFunction" }
+                legacyFunction { name = "someFunction" }
             }
             langExpected {
                 lang = Kotlin()
@@ -59,19 +59,21 @@ class MethodAndFunctionBuilderTest {
     fun `function with body`() {
         testCodeBuilderOp {
             op = {
-                function {
+                add(function {
                     name = "someFunction"
                     body {
                         addFunctionCall {
                             name = "someOtherFunction"
                         }
-                        addVariableAssignment {
+                        add(variableAssignment {
                             name = "a"
                             value = variable("1")
-                        }
-                        addReturn(variable("a"))
+                        })
+                        add(returnStatement {
+                            variable("a")
+                        })
                     }
-                }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -113,12 +115,12 @@ class MethodAndFunctionBuilderTest {
                     }
                     returnType = baseType(BaseType.INT)
                     body {
-                        addReturn(
+                        add(returnStatement {
                             plus {
                                 left = variable("a")
                                 right = variable("b")
                             }
-                        )
+                        })
                     }
                 })
                 add(variableAssignment {
@@ -127,11 +129,11 @@ class MethodAndFunctionBuilderTest {
                         variableName = "this"
                         methodName = "sum"
 
-                        addArgLegacy {
-                            legacyConst("1")
+                        addArg {
+                            const(1)
                         }
-                        addArgLegacy {
-                            legacyConst("2")
+                        addArg {
+                            const(2)
                         }
                     }
                 })
@@ -143,15 +145,23 @@ class MethodAndFunctionBuilderTest {
                             methodName = "sum"
                             skipSoftEnd = true
 
-                            addArg(const(1))
-                            addArg(const(2))
+                            addArg {
+                                const(1)
+                            }
+                            addArg {
+                                const(2)
+                            }
                         }
                         right = methodCall {
                             variableName = "right"
                             methodName = "sum"
 
-                            addArg(const(3))
-                            addArg(const(4))
+                            addArg {
+                                const(3)
+                            }
+                            addArg {
+                                const(4)
+                            }
                         }
                     }
                 })

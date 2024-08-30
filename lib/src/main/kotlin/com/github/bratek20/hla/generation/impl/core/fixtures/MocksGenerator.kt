@@ -187,13 +187,13 @@ class MocksGenerator: PatternGenerator() {
 
         fun classes(indent: Int): String {
             return CodeBuilder(lang, indent)
-                .add {
+                .addOps {
                     classBlock {
                         name = "${interfaceName}Mock"
                         implements = interfaceName
                         body = {
                             interf.methods.map {
-                                add(mocksForMethod(it))
+                                addOps(mocksForMethod(it))
                             }
                         }
                     }
@@ -203,7 +203,7 @@ class MocksGenerator: PatternGenerator() {
 
         fun contextModule(): String {
             return CodeBuilder(lang)
-                .add {
+                .addOps {
                     classBlock {
                         name = "${moduleName}Mocks"
                         implements = "ContextModule"

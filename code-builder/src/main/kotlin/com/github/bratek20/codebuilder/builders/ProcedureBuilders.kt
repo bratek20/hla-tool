@@ -99,7 +99,7 @@ abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
         comment?.let {
             line("// $it")
         }
-        add(throwsOps())
+        addOps(throwsOps())
         if (c.lang is CSharp) {
             lineStart()
             returnType?.let {
@@ -126,7 +126,7 @@ class InterfaceMethodBuilder: ProcedureSignatureBuilder() {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        add(super.getOperations(c))
+        addOps(super.getOperations(c))
         statementLineEnd()
     }
 
@@ -149,11 +149,11 @@ abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        add(super.getOperations(c))
+        addOps(super.getOperations(c))
 
         linePart(" {")
         tab()
-        legacyBody?.let { add(it) }
+        legacyBody?.let { addOps(it) }
         body?.let { add(BodyBuilder().apply(it)) }
         untab()
         line("}")
@@ -178,4 +178,4 @@ open class FunctionBuilder: ProcedureBuilder() {
 }
 typealias FunctionBuilderOps = FunctionBuilder.() -> Unit
 fun function(block: FunctionBuilderOps) = FunctionBuilder().apply(block)
-fun CodeBuilder.function(block: FunctionBuilderOps) = add(FunctionBuilder().apply(block))
+fun CodeBuilder.legacyFunction(block: FunctionBuilderOps) = add(FunctionBuilder().apply(block))

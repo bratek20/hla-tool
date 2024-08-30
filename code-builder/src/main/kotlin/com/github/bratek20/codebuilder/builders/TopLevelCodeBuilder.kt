@@ -21,13 +21,13 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
     protected open fun afterOperations(): CodeBuilderOps = {}
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        add(beforeOperations())
+        addOps(beforeOperations())
 
         ops.forEach {
             add(it)
         }
 
-        add(afterOperations())
+        addOps(afterOperations())
     }
 
     open fun addInterface(ops: InterfaceBuilderOps) {

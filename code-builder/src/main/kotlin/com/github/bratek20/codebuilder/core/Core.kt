@@ -142,7 +142,7 @@ class CodeBuilder(
         return this
     }
 
-    fun add(ops: CodeBuilderOps): CodeBuilder {
+    fun addOps(ops: CodeBuilderOps): CodeBuilder {
         ops(this)
         return this
     }

@@ -107,12 +107,14 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                                 addFunctionCall(apiCall)
                             }
 
-                            addReturn(functionCall {
-                                name = "Utils.OK"
-                                if (hasResponse) {
-                                    addArg(variable("response"))
-                                } else {
-                                    addArg(expression("{}"))
+                            add(returnStatement {
+                                functionCall {
+                                    name = "Utils.OK"
+                                    if (hasResponse) {
+                                        addArg(variable("response"))
+                                    } else {
+                                        addArg(expression("{}"))
+                                    }
                                 }
                             })
                         }

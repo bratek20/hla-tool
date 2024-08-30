@@ -11,9 +11,15 @@ class CallBuilderTest {
             op = {
                 legacyFunctionCall {
                     name = "someFunction"
-                    addArg(variable("arg1"))
-                    addArg(variable("arg2"))
-                    addArg(variable("arg3"))
+                    addArg {
+                        variable("arg1")
+                    }
+                    addArg {
+                        variable("arg2")
+                    }
+                    addArg {
+                        variable("arg3")
+                    }
                 }
             }
             langExpected {

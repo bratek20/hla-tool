@@ -37,7 +37,7 @@ class ItBuilder(
 
     fun isEqualTo(other: CodeBuilderOps) {
         b.linePart("it == ")
-        b.add(other)
+        b.addOps(other)
     }
 }
 
@@ -54,7 +54,7 @@ class ListOperations(
     fun add(element: CodeBuilderOps) {
         b.lineStart("${variableName}." + lang.listAddCallName())
         b.linePart("(")
-        b.add(element)
+        b.addOps(element)
         b.lineSoftEnd(")")
     }
 

@@ -134,7 +134,7 @@ class CodeBuilderTest {
     fun `should support add addMany and context reading`() {
         testCodeBuilderOp {
             op = {
-                add {
+                addOps {
                     line("x")
                 }
                 add(codeBlockBuilderLangNamePrinter())

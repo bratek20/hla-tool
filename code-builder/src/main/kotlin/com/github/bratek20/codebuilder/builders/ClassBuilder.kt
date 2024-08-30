@@ -40,7 +40,7 @@ class FieldBuilder: CodeBlockBuilder {
         }
         legacyValue?.let {
             linePart(" = ")
-            add(it)
+            addOps(it)
         }
         value?.let {
             linePart(" = ")
@@ -82,7 +82,13 @@ class ClassConstructorBuilder {
             lineEnd()
         }
     }
-    var body: CodeBuilderOps? = null
+
+    private var body: BodyBuilderOps? = null
+    fun setBody(block: BodyBuilderOps) {
+        body = block
+    }
+
+    fun getBody(): BodyBuilder? = body?.let { BodyBuilder().apply(it) }
 }
 typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
@@ -138,17 +144,17 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        add(classDeclarationWithConstructor(c))
+        addOps(classDeclarationWithConstructor(c))
         tab()
         fields.forEach { fieldOps ->
             field(fieldOps)
         }
-        body?.let { add(it) }
+        body?.let { addOps(it) }
         methods.forEach { methodOps ->
             legacyMethod(methodOps)
         }
         if (staticMethods.isNotEmpty()) {
-            add(staticMethodsSection(c))
+            addOps(staticMethodsSection(c))
         }
         untab()
         line("}")
@@ -164,7 +170,7 @@ open class ClassBuilder: CodeBlockBuilder {
         if (c.lang is Kotlin && constructor != null) {
             line("$beginningWithoutExtendOrImplements(")
             tab()
-            add(constructor!!.getFieldsAndArgsOps())
+            addOps(constructor!!.getFieldsAndArgsOps())
             untab()
             val passingArgsPart = if (passingArgs.isNotEmpty()) {
                 "(${passingArgs.joinToString(", ")})"
@@ -173,11 +179,11 @@ open class ClassBuilder: CodeBlockBuilder {
                 ""
             }
             line(")$extendsOrImplementsPart$passingArgsPart {")
-            if (constructor!!.body != null) {
+            if (constructor!!.getBody() != null) {
                 tab()
                 line("init {")
                 tab()
-                add(constructor!!.body!!)
+                add(constructor!!.getBody()!!)
                 untab()
                 line("}")
                 untab()
@@ -188,12 +194,12 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             line("constructor(")
             tab()
-            add(constructor!!.getFieldsAndArgsOps())
+            addOps(constructor!!.getFieldsAndArgsOps())
             untab()
-            if (constructor!!.body != null) {
+            if (constructor!!.getBody() != null) {
                 line(") {")
                 tab()
-                add(constructor!!.body!!)
+                add(constructor!!.getBody()!!)
                 untab()
                 line("}")
             }
@@ -214,7 +220,7 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             line("public $name(")
             tab()
-            add(constructor!!.getFieldsAndArgsOps())
+            addOps(constructor!!.getFieldsAndArgsOps())
             untab()
             if (passingArgs.isNotEmpty()) {
                 line("): base(${passingArgs.joinToString(", ")}) {")

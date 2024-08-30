@@ -16,9 +16,9 @@ abstract class CallBuilder: ExpressionBuilder {
         args.add(ops)
     }
 
-    fun addArg(exp: ExpressionBuilder) {
+    fun addArg(exp: ExpressionBuilderProvider) {
         args.add {
-            add(exp)
+            add(exp())
         }
     }
 
@@ -27,7 +27,7 @@ abstract class CallBuilder: ExpressionBuilder {
 
         linePart("${getCallName(c)}(")
         args.forEachIndexed { index, arg ->
-            add(arg)
+            addOps(arg)
             if (index != args.size - 1) {
                 linePart(", ")
             }

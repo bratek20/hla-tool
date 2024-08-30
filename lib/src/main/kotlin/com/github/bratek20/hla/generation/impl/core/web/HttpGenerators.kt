@@ -230,7 +230,7 @@ class WebCommonGenerator: PatternGenerator() {
 
         val moduleName = c.module.getName().value
         val view = CodeBuilder(c.language.base())
-            .add {
+            .addOps {
                 if (c.lang is TypeScript) {
                     namespace {
                         name = "$moduleName.Web"
@@ -278,7 +278,7 @@ class WebClientGenerator: PatternGenerator() {
         val moduleName = c.module.getName().value
         val interfs = exposedInterfaces(c)
         return CodeBuilder(c.language.base())
-            .add {
+            .addOps {
                 namespace {
                     name = "${moduleName}.Web"
                     interfs.forEach { interf ->
