@@ -323,7 +323,7 @@ class WebClientGenerator: PatternGenerator() {
                                     add(method {
                                         apply(m.declarationCB())
                                         legacyBody = {
-                                            line(getBody(interf.name, m))
+                                            line(getBodyTS(interf.name, m))
                                         }
                                     })
                                 }

@@ -12,9 +12,16 @@ namespace SomeModule.Web {
         someEmptyMethod(): void {
             this.client.post("/some/prefix/someInterface/someEmptyMethod", Optional.empty())
         }
+        /**
+        * @throws { SomeException }
+        * @throws { Some2Exception }
+        */
         someCommand(id: SomeId, amount: number): void {
             this.client.post("/some/prefix/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)))
         }
+        /**
+        * @throws { SomeException }
+        */
         someQuery(query: SomeQueryInput): SomeClass {
             return this.client.post("/some/prefix/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().getValue()
         }
