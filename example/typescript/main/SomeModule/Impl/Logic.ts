@@ -34,6 +34,11 @@ namespace SomeModule.Impl {
             // TODO
             return undefined
         }
+
+        methodWithAny(i: any): any {
+            // TODO
+            return undefined
+        }
     }
 
     export class SomeInterface2Logic implements SomeInterface2 {

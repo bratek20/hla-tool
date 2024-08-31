@@ -113,11 +113,11 @@ class CSharpTypes(): LanguageTypes {
     }
 
     override fun deserializeEnum(enumName: String, variable: String): String {
-        return "$enumName.fromName($variable).get()"
+        return "(${enumName})Enum.Parse(typeof($enumName), $variable)"
     }
 
     override fun serializeEnum(variableName: String): String {
-        return "$variableName.getName()"
+        return "$variableName.ToString()"
     }
 
     override fun propertyClassConstructorCall(className: String): String {

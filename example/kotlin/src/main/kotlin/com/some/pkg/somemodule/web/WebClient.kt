@@ -34,6 +34,10 @@ class SomeInterfaceWebClient(
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
         return client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", SomeInterfaceMethodWithListOfSimpleVORequest.create(list)).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse::class.java).value
     }
+
+    override fun methodWithAny(i: Any): Any {
+        return client.post("/some/prefix/someInterface/methodWithAny", SomeInterfaceMethodWithAnyRequest.create(i)).getBody(SomeInterfaceMethodWithAnyResponse::class.java).value
+    }
 }
 
 class SomeInterface2WebClient(

@@ -102,7 +102,7 @@ class InterfaceApiType(
     }
 
     override fun builder(): TypeBuilder {
-        TODO("Not yet implemented")
+        return typeName(name)
     }
 
     override fun serializableBuilder(): TypeBuilder {

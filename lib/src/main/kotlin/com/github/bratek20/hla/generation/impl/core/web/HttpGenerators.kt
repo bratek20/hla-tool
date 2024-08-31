@@ -320,13 +320,12 @@ class WebClientGenerator: PatternGenerator() {
                                     type = typeName("HttpClient")
                                 }
                                 interf.methods.forEach { m ->
-                                    add(
-                                        m.declarationCB().apply {
-                                            legacyBody = {
-                                                line(getBodyTS(interf.name, m))
-                                            }
+                                    add(method {
+                                        apply(m.declarationCB())
+                                        legacyBody = {
+                                            line(getBodyTS(interf.name, m))
                                         }
-                                    )
+                                    })
                                 }
                             }
                         }

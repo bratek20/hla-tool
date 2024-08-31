@@ -75,6 +75,22 @@ class SomeInterfaceMethodWithListOfSimpleVOResponse(
     val value: List<SomeId>
 ) {
 }
+class SomeInterfaceMethodWithAnyRequest(
+    private val i: Any
+) {
+    fun getI(): Any {
+        return i
+    }
+    companion object {
+        fun create(i: Any): SomeInterfaceMethodWithAnyRequest {
+            return SomeInterfaceMethodWithAnyRequest(i)
+        }
+    }
+}
+class SomeInterfaceMethodWithAnyResponse(
+    val value: Any
+) {
+}
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass
 ) {

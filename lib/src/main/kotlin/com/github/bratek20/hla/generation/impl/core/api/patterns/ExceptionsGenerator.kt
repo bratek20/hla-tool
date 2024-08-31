@@ -82,7 +82,7 @@ class ExceptionsGenerator: PatternGenerator() {
     }
 
     override fun extraCSharpUsings(): List<String> {
-        return listOf("B20.Architecture.Exceptions.ApiException")
+        return listOf("B20.Architecture.Exceptions")
     }
 
     override fun doNotGenerateTypeScriptNamespace(): Boolean {
