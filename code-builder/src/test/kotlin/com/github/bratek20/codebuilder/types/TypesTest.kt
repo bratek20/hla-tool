@@ -227,7 +227,7 @@ class TypesTest {
     }
 
     @Test
-    fun optionalOps() {
+    fun optional() {
         testOp {
             op = {
                 lineStart()
@@ -244,22 +244,31 @@ class TypesTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                   optional!!
+                   val softOptional: string? = someVariable
+                   val hardOptional: string? = someVariable
+                   val unpacked: string = optional!!
+                   val unpackedToSoft: string? = optional ?: null
                    optional.map { it -> it + 1 }
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
-                   optional.get()
+                   const softOptional: string? = someVariable
+                   const hardOptional: Optional<string> = Optional.of(someVariable)
+                   const unpacked: string = optional.get()
+                   const unpackedToSoft: string? = optional.orElse(undefined)
                    optional.map( it => it + 1 )
                 """
             }
             langExpected {
                 lang = CSharp()
                 expected = """
-                   optional.get()
-                   optional.Select( it => it + 1 )
+                   string? softOptional = someVariable
+                   Optional<string> hardOptional = Optional.Of<string>(someVariable)
+                   string unpacked = optional.Get()
+                   string? unpackedToSoft = optional.OrElse(null)
+                   optional.Map( it => it + 1 )
                 """
             }
         }
