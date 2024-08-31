@@ -7,15 +7,27 @@ import com.github.bratek20.codebuilder.core.CodeBuilderOps
 import com.github.bratek20.utils.camelToPascalCase
 
 //part of line
-interface ExpressionBuilder: CodeBlockBuilder
+interface ExpressionBuilder: CodeBlockBuilder {
+    fun getValue(c: CodeBuilderContext): String {
+        TODO("not implemented")
+    }
+}
 typealias ExpressionBuilderProvider = () -> ExpressionBuilder
 
 fun expression(value: String) = object : ExpressionBuilder {
+    override fun getValue(c: CodeBuilderContext): String {
+        return value
+    }
+
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         linePart(value)
     }
 }
 fun expression(valueProvider: (CodeBuilderContext) -> String) = object : ExpressionBuilder {
+    override fun getValue(c: CodeBuilderContext): String {
+        return valueProvider(c)
+    }
+
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         linePart(valueProvider(c))
     }
@@ -50,6 +62,8 @@ fun instanceVariable(name: String): ExpressionBuilder = object : ExpressionBuild
 fun const(value: Int): ExpressionBuilder {
     return expression(value.toString())
 }
+
+fun nullValue() = expression { c -> c.lang.nullValue() }
 
 fun string(value: String): ExpressionBuilder {
     return expression("\"$value\"")

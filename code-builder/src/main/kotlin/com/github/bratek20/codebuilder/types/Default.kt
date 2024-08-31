@@ -10,3 +10,9 @@ fun typeName(value: String): TypeBuilder = object: TypeBuilder {
         return value
     }
 }
+
+fun typeName(valueProvider: (CodeBuilderContext) -> String): TypeBuilder = object: TypeBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        return valueProvider(c)
+    }
+}

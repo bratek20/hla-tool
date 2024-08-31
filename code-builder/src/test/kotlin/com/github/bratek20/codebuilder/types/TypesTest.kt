@@ -239,10 +239,36 @@ class TypesTest {
             op = {
                 add(assignment {
                     left = variableDeclaration {
-                        type = typeName("string")
-                        name = "someVariable"
+                        type = softOptionalType(baseType(BaseType.STRING))
+                        name = "softOptional"
                     }
-                    right = variable("someVariable")
+                    right = softOptional("someVariable")
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = hardOptionalType(baseType(BaseType.STRING))
+                        name = "hardOptional"
+                    }
+                    right = hardOptional(baseType(BaseType.STRING), "someVariable")
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = baseType(BaseType.STRING)
+                        name = "unpacked"
+                    }
+                    right = optionalOp("optional").get()
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = softOptionalType(baseType(BaseType.STRING))
+                        name = "unpackedToSoft"
+                    }
+                    right = optionalOp("optional").orElse {
+                        nullValue()
+                    }
                 })
 
                 add(optionalOp("optional").map {
@@ -255,11 +281,11 @@ class TypesTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                   val softOptional: string? = someVariable
-                   val hardOptional: string? = someVariable
-                   val unpacked: string = optional!!
-                   val unpackedToSoft: string? = optional ?: null
-                   optional.map { it -> it + 1 }
+                   val softOptional: String? = someVariable
+                   val hardOptional: String? = someVariable
+                   val unpacked: String = optional!!
+                   val unpackedToSoft: String? = optional ?: null
+                   optional.let { it -> it + 1 }
                 """
             }
             langExpected {
@@ -275,10 +301,10 @@ class TypesTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                   string? softOptional = someVariable
-                   Optional<string> hardOptional = Optional.Of<string>(someVariable)
-                   string unpacked = optional.Get()
-                   string? unpackedToSoft = optional.OrElse(null)
+                   string? softOptional = someVariable;
+                   Optional<string> hardOptional = Optional.Of<string>(someVariable);
+                   string unpacked = optional.Get();
+                   string? unpackedToSoft = optional.OrElse(null);
                    optional.Map( it => it + 1 )
                 """
             }

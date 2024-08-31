@@ -6,10 +6,19 @@ import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
-fun optionalType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder {
-    override fun build(c: CodeBuilderContext): String {
-        return c.lang.listType(elementType.build(c))
-    }
+fun softOptionalType(elementType: TypeBuilder) = typeName {
+    c -> c.lang.softOptionalType(elementType.build(c))
+}
+fun hardOptionalType(elementType: TypeBuilder) = typeName {
+    c -> c.lang.hardOptionalType(elementType.build(c))
+}
+
+fun softOptional(variableName: String) = expression {
+    variableName
+}
+
+fun hardOptional(elementType: TypeBuilder, variableName: String) = expression {
+    c -> c.lang.newHardOptional(elementType.build(c), variableName)
 }
 
 class OptionalOperations(
@@ -21,11 +30,15 @@ class OptionalOperations(
         }
     }
 
+    fun orElse(defaultValue: ExpressionBuilderProvider) = expression { c ->
+        c.lang.optionalOrElse(variableName, defaultValue().getValue(c))
+    }
+
     fun map(predicate: ExpressionBuilderProvider): ExpressionBuilder = object : ExpressionBuilder {
         override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-            lineSoftStart("${variableName}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
+            lineSoftStart("${variableName}.${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
             add(predicate())
-            lineSoftEnd(" " + c.lang.listMapEnd())
+            lineSoftEnd(" " + c.lang.optionalMapEnd())
         }
     }
 }
