@@ -8,7 +8,6 @@ import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -38,7 +37,7 @@ class WebClientGenerator: PatternGenerator() {
                             name = "${interf.name}WebClient"
                             implements = interf.name
 
-                            constructor {
+                            setConstructor {
                                 addArg {
                                     name = "config"
                                     type = typeName("${moduleName}WebClientConfig")
@@ -165,7 +164,11 @@ class WebClientGenerator: PatternGenerator() {
                     type = typeName("HttpClient")
                 }
 
-                constructor {
+                setConstructor {
+                    addArg {
+                        name = "factory"
+                        type = typeName("HttpClientFactory")
+                    }
                     addArg {
                         name = "config"
                         type = typeName("${moduleName}WebClientConfig")
@@ -194,6 +197,8 @@ class WebClientGenerator: PatternGenerator() {
                 }
             }
         }
+
+        addExtraEmptyLines(2)
     }
 
     private fun getDefaultBody(

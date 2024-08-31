@@ -60,7 +60,11 @@ fun plus(ops: PlusBuilderOps): PlusBuilder {
 }
 
 typealias StringProvider = () -> String
-fun comment(comment: StringProvider) = statement("// ${comment()}")
+fun comment(comment: StringProvider) = object : StatementBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        line("// ${comment()}")
+    }
+}
 
 class IsEqualToArgs {
     lateinit var left: ExpressionBuilder

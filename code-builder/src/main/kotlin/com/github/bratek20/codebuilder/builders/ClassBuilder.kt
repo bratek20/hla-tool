@@ -152,7 +152,7 @@ open class ClassBuilder: CodeBlockBuilder {
         extends = block
     }
 
-    fun constructor(block: ClassConstructorBuilderOps) {
+    fun setConstructor(block: ClassConstructorBuilderOps) {
         constructor = ClassConstructorBuilder().apply(block)
     }
 
@@ -267,6 +267,16 @@ open class ClassBuilder: CodeBlockBuilder {
                         line("this.${field.name} = ${field.name};")
                     }
                 }
+                constructor?.getBody()?.let {
+                    add(it)
+                }
+                untab()
+                line("}")
+            }
+            else if (constructor?.getBody() != null) {
+                line(") {")
+                tab()
+                add(constructor!!.getBody()!!)
                 untab()
                 line("}")
             }

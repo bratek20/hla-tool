@@ -30,7 +30,7 @@ class ExceptionsGenerator: PatternGenerator() {
                         className = "ApiException"
                         generic = typeName(it)
                     }
-                    constructor {
+                    setConstructor {
                         addArg {
                             name = "message"
                             type = baseType(BaseType.STRING)
@@ -64,7 +64,7 @@ class ExceptionsGenerator: PatternGenerator() {
                     extends {
                         className = "ApiException"
                     }
-                    constructor {
+                    setConstructor {
                         addArg {
                             name = "message"
                             type = baseType(BaseType.STRING)
