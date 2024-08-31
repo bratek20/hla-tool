@@ -28,6 +28,10 @@ class SomeInterfaceLogic: SomeInterface {
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
         TODO("Not yet implemented")
     }
+
+    override fun methodWithAny(i: Any): Any {
+        TODO("Not yet implemented")
+    }
 }
 
 class SomeInterface2Logic: SomeInterface2 {

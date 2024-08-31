@@ -118,6 +118,8 @@ Interfaces
 
         methodWithListOfSimpleVO(list: SomeId[]): SomeId[]
 
+        methodWithAny(i: any): any
+
     SomeInterface2
         referenceOtherClass(other: OtherClass): OtherClass
         referenceLegacyType(legacyType: LegacyType): LegacyType

@@ -20,6 +20,8 @@ interface SomeInterface {
     optMethod(optId: Optional<SomeId>): Optional<SomeClass>
 
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[]
+
+    methodWithAny(i: any): any
 }
 
 interface SomeInterface2 {

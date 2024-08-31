@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using B20.Ext;
-using B20.Architecture.Exceptions.ApiException;
+using B20.Architecture.Exceptions;
 using OtherModule.Api;
 using TypesModule.Api;
 

@@ -81,6 +81,25 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodWithAnyRequest {
+        private i = ANY
+        getI(): any {
+            return this.i
+        }
+        static create(i: any): SomeInterfaceMethodWithAnyRequest {
+            const instance = new SomeInterfaceMethodWithAnyRequest()
+            instance.i = i
+            return instance
+        }
+    }
+
+    export class SomeInterfaceMethodWithAnyResponse {
+        private value = ANY
+        getValue(): any {
+            return this.value
+        }
+    }
+
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = new OtherClass
         getOther(): OtherClass {
