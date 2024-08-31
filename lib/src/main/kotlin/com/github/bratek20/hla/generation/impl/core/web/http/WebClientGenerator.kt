@@ -154,6 +154,67 @@ class WebClientGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
+        exposedInterfaces(c).forEach { interf ->
+            addClass {
+                name = "${interf.name}WebClient"
+                implements = interf.name
 
+                addField {
+                    modifier = AccessModifier.PRIVATE
+                    name = "client"
+                    type = typeName("HttpClient")
+                }
+
+                constructor {
+                    addArg {
+                        name = "config"
+                        type = typeName("${moduleName}WebClientConfig")
+                    }
+                    setBody {
+                        add(assignment {
+                            left = expression("this.client")
+                            right = functionCall {
+                                name = "HttpClient.Api.create"
+                                addArg {
+                                    variable("config.value")
+                                }
+                                addArg {
+                                    variable("c")
+                                }
+                            }
+                        })
+                    }
+                }
+
+                interf.methods.forEach { m ->
+                    addMethod {
+                        apply(m.declarationCB())
+                        setBody(getDefaultBody(interf.name, m))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getDefaultBody(
+        interfaceName: String,
+        method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
+    ): BodyBuilderOps = {
+        val hasReturnValue = method.hasReturnValue()
+
+        val getBodyPart = if (hasReturnValue)
+            ".getBody(${responseName(interfaceName, method)}).get().getValue()"
+        else
+            ""
+
+        val postUrl = getPostUrl(interfaceName, method)
+        val postBody = if(method.hasArgs())
+            "Optional.of(${requestName(interfaceName, method)}.create(${method.argsPass()}))"
+        else
+            "Optional.empty()"
+
+        add(returnStatement {
+            expression("this.client.post($postUrl, $postBody)$getBodyPart")
+        })
     }
 }

@@ -8,4 +8,46 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Web {
+    public class SomeInterfaceWebClient: SomeInterface {
+        readonly HttpClient client;
+
+        public SomeInterfaceWebClient(
+            SomeModuleWebClientConfig config
+        ) {}
+        public void SomeEmptyMethod() {
+            return this.client.post("/some/prefix/someInterface/someEmptyMethod", Optional.empty());
+        }
+        /// <exception cref="SomeException"/>
+        /// <exception cref="Some2Exception"/>
+        public void SomeCommand(SomeId id, int amount) {
+            return this.client.post("/some/prefix/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)));
+        }
+        /// <exception cref="SomeException"/>
+        public SomeClass SomeQuery(SomeQueryInput query) {
+            return this.client.post("/some/prefix/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().getValue();
+        }
+        public Optional<SomeClass> OptMethod(Optional<SomeId> optId) {
+            return this.client.post("/some/prefix/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().getValue();
+        }
+        public List<SomeId> MethodWithListOfSimpleVO(List<SomeId> list) {
+            return this.client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional.of(SomeInterfaceMethodWithListOfSimpleVORequest.create(list))).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse).get().getValue();
+        }
+        public object MethodWithAny(object i) {
+            return this.client.post("/some/prefix/someInterface/methodWithAny", Optional.of(SomeInterfaceMethodWithAnyRequest.create(i))).getBody(SomeInterfaceMethodWithAnyResponse).get().getValue();
+        }
+    }
+
+    public class SomeInterface2WebClient: SomeInterface2 {
+        readonly HttpClient client;
+
+        public SomeInterface2WebClient(
+            SomeModuleWebClientConfig config
+        ) {}
+        public OtherClass ReferenceOtherClass(OtherClass other) {
+            return this.client.post("/some/prefix/someInterface2/referenceOtherClass", Optional.of(SomeInterface2ReferenceOtherClassRequest.create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).get().getValue();
+        }
+        public LegacyType ReferenceLegacyType(LegacyType legacyType) {
+            return this.client.post("/some/prefix/someInterface2/referenceLegacyType", Optional.of(SomeInterface2ReferenceLegacyTypeRequest.create(legacyType))).getBody(SomeInterface2ReferenceLegacyTypeResponse).get().getValue();
+        }
+    }
 }
