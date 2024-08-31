@@ -9,6 +9,4 @@ import ${packageName}.api.*
 import ${import}.api.*
 #end#end
 
-class ${moduleName}WebClientConfig(val value: HttpClientConfig)
-
 $view

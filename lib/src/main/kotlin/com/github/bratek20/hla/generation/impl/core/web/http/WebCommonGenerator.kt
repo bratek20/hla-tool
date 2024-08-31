@@ -201,6 +201,16 @@ class WebCommonGenerator: PatternGenerator() {
     private fun getClasses(): List<ClassBuilderOps> {
         val classes: MutableList<ClassBuilderOps> = mutableListOf()
 
+        classes.add {
+            name = "${c.module.getName().value}WebClientConfig"
+            addField {
+                name = "value"
+                type = typeName("HttpClientConfig")
+                fromConstructor = true
+                getter = true
+            }
+        }
+
         exposedInterfaces(c).forEach { interf ->
             interf.methods.forEach { method ->
                 if (method.hasArgs()) {
@@ -260,7 +270,7 @@ class WebCommonGenerator: PatternGenerator() {
     }
 
     override fun supportsCodeBuilder(): Boolean {
-        return lang is CSharp
+        return lang is CSharp// || lang is Kotlin
     }
 
     override fun shouldGenerate(): Boolean {
