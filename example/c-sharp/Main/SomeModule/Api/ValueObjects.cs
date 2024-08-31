@@ -143,13 +143,13 @@ namespace SomeModule.Api {
             return class2Object;
         }
         public SomeEnum GetSomeEnum() {
-            return SomeEnum.fromName(someEnum).get();
+            return (SomeEnum)Enum.Parse(typeof(SomeEnum), someEnum);
         }
         public List<SomeClass2> GetClass2List() {
             return class2List;
         }
         public static SomeClass3 Create(SomeClass2 class2Object, SomeEnum someEnum, List<SomeClass2> class2List) {
-            return new SomeClass3(class2Object, someEnum.getName(), class2List);
+            return new SomeClass3(class2Object, someEnum.ToString(), class2List);
         }
     }
 

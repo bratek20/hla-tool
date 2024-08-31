@@ -23,7 +23,7 @@ namespace SomeModule.Api {
 
         SomeId[] MethodWithListOfSimpleVO(SomeId[] list);
 
-        any MethodWithAny(any i);
+        object MethodWithAny(object i);
     }
 
     public interface SomeInterface2 {
