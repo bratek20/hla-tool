@@ -222,8 +222,10 @@ class SimpleValueObjectApiType(
 
     fun getClassOps(): ClassBuilderOps =  {
         name = name()
+        equalsAndHashCode = true
+
         addField {
-            type = typeName(boxedType.name())
+            type = serializableBuilder()
             name = "value"
             fromConstructor = true
             getter = true

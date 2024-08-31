@@ -669,6 +669,7 @@ class ClassBuilderTest {
             op = {
                 add(classBlock {
                     name = "SimpleValueObject"
+                    equalsAndHashCode = true
                     addField {
                         name = "value"
                         type = baseType(BaseType.INT)
@@ -680,7 +681,7 @@ class ClassBuilderTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                    class SimpleValueObject(
+                    data class SimpleValueObject(
                         val value: Int
                     ) {
                     }
@@ -706,6 +707,17 @@ class ClassBuilderTest {
                             int value
                         ) {
                             Value = value;
+                        }
+                        
+                        public override bool Equals(object? obj) {
+                            if (ReferenceEquals(null, obj)) return false;
+                            if (ReferenceEquals(this, obj)) return true;
+                            if (obj.GetType() != this.GetType()) return false;
+                            return Value == ((SimpleValueObject)obj).Value;
+                        }
+                    
+                        public override int GetHashCode() {
+                            return Value.GetHashCode();
                         }
                     }
                 """

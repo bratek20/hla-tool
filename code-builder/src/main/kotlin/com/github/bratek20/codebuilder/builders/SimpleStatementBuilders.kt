@@ -10,6 +10,13 @@ import com.github.bratek20.codebuilder.types.TypeBuilder
 interface StatementBuilder: CodeBlockBuilder
 typealias StatementBuilderProvider = () -> StatementBuilder
 
+fun statement(value: String) = object : StatementBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        lineStart(value)
+        statementLineEnd()
+    }
+}
+
 class ReturnBuilder(
     private val value: ExpressionBuilder
 ): StatementBuilder {
