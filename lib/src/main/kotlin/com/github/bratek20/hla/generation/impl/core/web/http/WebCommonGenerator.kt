@@ -13,7 +13,6 @@ import com.github.bratek20.hla.generation.impl.core.api.BaseApiType
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
-import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.destringify
@@ -44,7 +43,7 @@ class WebCommonGenerator: PatternGenerator() {
         return PatternName.WebCommon
     }
 
-    private fun kotlinRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
+    private fun defaultRequestClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = requestName(interfName, method)
 
@@ -52,24 +51,24 @@ class WebCommonGenerator: PatternGenerator() {
                 addField {
                     modifier = AccessModifier.PRIVATE
                     name = arg.name
-                    type = typeName(arg.apiType.serializableName())
+                    type = arg.apiType.serializableBuilder()
                     fromConstructor = true
                 }
             }
 
-            legacyBody = {
-                method.args.forEach { arg ->
-                    legacyMethod {
-                        name = "get${camelToPascalCase(arg.name)}"
-                        returnType = typeName(arg.type)
-                        legacyBody = {
-                            legacyReturn {
-                                legacyVariable(arg.apiType.deserialize(arg.name))
-                            }
-                        }
+
+            method.args.forEach { arg ->
+                addMethod {
+                    name = "get${camelToPascalCase(arg.name)}"
+                    returnType = typeName(arg.type)
+                    setBody {
+                        add(returnStatement {
+                            arg.apiType.modernDeserialize(arg.name)
+                        })
                     }
                 }
             }
+
             addMethod {
                 static = true
                 name = "create"
@@ -77,7 +76,7 @@ class WebCommonGenerator: PatternGenerator() {
                 method.args.map { arg ->
                     addArg {
                         name = arg.name
-                        type = typeName(arg.type)
+                        type = arg.apiType.builder()
                     }
                 }
                 setBody {
@@ -86,7 +85,7 @@ class WebCommonGenerator: PatternGenerator() {
                             className = requestName(interfName, method)
                             method.args.forEach {
                                 addArg {
-                                    variable(it.apiType.serialize(it.name))
+                                    it.apiType.modernSerialize(it.name)
                                 }
                             }
                         }
@@ -186,13 +185,13 @@ class WebCommonGenerator: PatternGenerator() {
         }
     }
 
-    private fun kotlinResponseClass(interfName: String, method: MethodView): ClassBuilderOps {
+    private fun defaultResponseClass(interfName: String, method: MethodView): ClassBuilderOps {
         return {
             name = responseName(interfName, method)
 
             addField {
                 modifier = AccessModifier.PUBLIC
-                type = typeName(method.returnType)
+                type = method.returnApiType.builder()
                 name = "value"
                 fromConstructor = true
             }
@@ -208,14 +207,14 @@ class WebCommonGenerator: PatternGenerator() {
                     if (lang is TypeScript) {
                         classes.add(typeScriptRequestClass(interf.name, method))
                     } else {
-                        classes.add(kotlinRequestClass(interf.name, method))
+                        classes.add(defaultRequestClass(interf.name, method))
                     }
                 }
                 if (method.returnApiType !is BaseApiType || method.returnApiType.name != BaseType.VOID) {
                     if (lang is TypeScript) {
                         classes.add(typeScriptResponseClass(interf.name, method))
                     } else {
-                        classes.add(kotlinResponseClass(interf.name, method))
+                        classes.add(defaultResponseClass(interf.name, method))
                     }
                 }
             }

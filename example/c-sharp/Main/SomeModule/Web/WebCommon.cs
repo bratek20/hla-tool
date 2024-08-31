@@ -25,7 +25,7 @@ namespace SomeModule.Web {
             return amount;
         }
         public static SomeInterfaceSomeCommandRequest Create(SomeId id, int amount) {
-            return new SomeInterfaceSomeCommandRequest(id.value, amount);
+            return new SomeInterfaceSomeCommandRequest(id.Value, amount);
         }
     }
 
@@ -56,18 +56,18 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceOptMethodRequest {
-        readonly Optional<string> optId;
+        readonly string? optId;
 
         public SomeInterfaceOptMethodRequest(
-            Optional<string> optId
+            string? optId
         ) {
             this.optId = optId;
         }
         public Optional<SomeId> GetOptId() {
-            return Optional.of(optId).map(it => new SomeId(it));
+            return Optional<SomeId>.Of(optId).Map( it => new SomeId(it) );
         }
         public static SomeInterfaceOptMethodRequest Create(Optional<SomeId> optId) {
-            return new SomeInterfaceOptMethodRequest(optId.map(it => it.value).orElse(undefined));
+            return new SomeInterfaceOptMethodRequest(optId.Map( it => it.Value ).OrElse(null));
         }
     }
 
@@ -82,52 +82,52 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceMethodWithListOfSimpleVORequest {
-        readonly string[] list;
+        readonly List<string> list;
 
         public SomeInterfaceMethodWithListOfSimpleVORequest(
-            string[] list
+            List<string> list
         ) {
             this.list = list;
         }
         public SomeId[] GetList() {
-            return list.map(it => new SomeId(it));
+            return list.Select( it => new SomeId(it) );
         }
-        public static SomeInterfaceMethodWithListOfSimpleVORequest Create(SomeId[] list) {
-            return new SomeInterfaceMethodWithListOfSimpleVORequest(list.map(it => it.value));
+        public static SomeInterfaceMethodWithListOfSimpleVORequest Create(List<SomeId> list) {
+            return new SomeInterfaceMethodWithListOfSimpleVORequest(list.Select( it => it.Value ));
         }
     }
 
     public class SomeInterfaceMethodWithListOfSimpleVOResponse {
-        public readonly SomeId[] value;
+        public readonly List<SomeId> value;
 
         public SomeInterfaceMethodWithListOfSimpleVOResponse(
-            SomeId[] value
+            List<SomeId> value
         ) {
             this.value = value;
         }
     }
 
     public class SomeInterfaceMethodWithAnyRequest {
-        readonly any i;
+        readonly object i;
 
         public SomeInterfaceMethodWithAnyRequest(
-            any i
+            object i
         ) {
             this.i = i;
         }
         public any GetI() {
             return i;
         }
-        public static SomeInterfaceMethodWithAnyRequest Create(any i) {
+        public static SomeInterfaceMethodWithAnyRequest Create(object i) {
             return new SomeInterfaceMethodWithAnyRequest(i);
         }
     }
 
     public class SomeInterfaceMethodWithAnyResponse {
-        public readonly any value;
+        public readonly object value;
 
         public SomeInterfaceMethodWithAnyResponse(
-            any value
+            object value
         ) {
             this.value = value;
         }
