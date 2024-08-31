@@ -292,8 +292,18 @@ class TypesTest {
 
                 add(assignment {
                     left = variableDeclaration {
-                        type = softOptionalType(baseType(BaseType.STRING))
+                        type = softOptionalType(baseType(BaseType.INT))
                         name = "unpackedToSoft"
+                    }
+                    right = optionalOp("optional").orElse {
+                        const(1)
+                    }
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = softOptionalType(baseType(BaseType.STRING))
+                        name = "unpackedToSoftDefaultNull"
                     }
                     right = optionalOp("optional").orElse {
                         nullValue()
@@ -319,8 +329,9 @@ class TypesTest {
                    val softOptional: String? = someVariable
                    val hardOptional: String? = someVariable
                    val unpacked: String = optional!!
-                   val unpackedToSoft: String? = optional ?: null
-                   val plusOne: Int = optional.let { it -> it + 1 }
+                   val unpackedToSoft: Int? = optional ?: 1
+                   val unpackedToSoftDefaultNull: String? = optional
+                   val plusOne: Int = optional?.let { it -> it + 1 }
                 """
             }
             langExpected {
@@ -329,7 +340,8 @@ class TypesTest {
                    const softOptional: string? = someVariable
                    const hardOptional: Optional<string> = Optional.of(someVariable)
                    const unpacked: string = optional.get()
-                   const unpackedToSoft: string? = optional.orElse(undefined)
+                   const unpackedToSoft: number? = optional.orElse(1)
+                   const unpackedToSoftDefaultNull: string? = optional.orElse(undefined)
                    const plusOne: number = optional.map( it => it + 1 )
                 """
             }
@@ -339,7 +351,8 @@ class TypesTest {
                    string? softOptional = someVariable;
                    Optional<string> hardOptional = Optional<string>.Of(someVariable);
                    string unpacked = optional.Get();
-                   string? unpackedToSoft = optional.OrElse(null);
+                   int? unpackedToSoft = optional.OrElse(1);
+                   string? unpackedToSoftDefaultNull = optional.OrElse(null);
                    int plusOne = optional.Map( it => it + 1 );
                 """
             }
