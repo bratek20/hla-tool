@@ -17,7 +17,6 @@ namespace SomeModule.Web {
         ) {
             this.client = factory.Create(config.Value);
         }
-
         public void SomeEmptyMethod() {
             this.client.post("/some/prefix/someInterface/someEmptyMethod", Optional.Empty());
         }
@@ -45,7 +44,10 @@ namespace SomeModule.Web {
         readonly HttpClient client;
 
         public SomeInterface2WebClient(
-            SomeModuleWebClientConfig config
+            SomeModuleWebClientConfig config,
+
+
+
         ) {}
         public OtherClass ReferenceOtherClass(OtherClass other) {
             return this.client.post("/some/prefix/someInterface2/referenceOtherClass", Optional.Of(SomeInterface2ReferenceOtherClassRequest.Create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).Get().Value;

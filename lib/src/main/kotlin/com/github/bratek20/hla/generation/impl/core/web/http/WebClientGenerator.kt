@@ -177,12 +177,9 @@ class WebClientGenerator: PatternGenerator() {
                         add(assignment {
                             left = expression("this.client")
                             right = functionCall {
-                                name = "HttpClient.Api.create"
+                                name = "factory.Create"
                                 addArg {
-                                    variable("config.value")
-                                }
-                                addArg {
-                                    variable("c")
+                                    variable("config.Value")
                                 }
                             }
                         })
@@ -197,8 +194,6 @@ class WebClientGenerator: PatternGenerator() {
                 }
             }
         }
-
-        addExtraEmptyLines(2)
     }
 
     private fun getDefaultBody(
@@ -218,8 +213,22 @@ class WebClientGenerator: PatternGenerator() {
         else
             "Optional.empty()"
 
-        add(returnStatement {
-            expression("this.client.post($postUrl, $postBody)$getBodyPart")
-        })
+        val finalExpression = methodCall {
+            methodName = "this.client.post"
+            addArg {
+                expression(postUrl)
+            }
+            addArg {
+                expression(postBody)
+            }
+            //$getBodyPart
+        }
+        if (hasReturnValue) {
+            add(returnStatement {
+                finalExpression
+            })
+        } else {
+            add(expressionToStatement(finalExpression))
+        }
     }
 }
