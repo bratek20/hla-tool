@@ -7,6 +7,16 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Web {
+    public class SomeModuleWebClientConfig {
+        public HttpClientConfig Value { get; }
+
+        public SomeModuleWebClientConfig(
+            HttpClientConfig value
+        ) {
+            Value = value;
+        }
+    }
+
     public class SomeInterfaceSomeCommandRequest {
         readonly string id;
         readonly int amount;
