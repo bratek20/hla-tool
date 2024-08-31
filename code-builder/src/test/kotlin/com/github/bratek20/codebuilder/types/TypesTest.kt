@@ -169,21 +169,17 @@ class TypesTest {
             op = {
                 add(assignment {
                     left = variableDeclaration {
-                        type = typeName("String")
+                        type = baseType(BaseType.STRING)
                         name = "firstElem"
                     }
                     right = listOp("list").get(0)
                 })
                 add(assignment {
                     left = variableDeclaration {
-                        type = mutableListType(typeName("String"))
+                        type = mutableListType(baseType(BaseType.STRING))
                         name = "list"
                     }
-                    right = emptyMutableList(typeName("String"))
-                })
-
-                add(listOp("list").add {
-                    variable("someVar")
+                    right = emptyMutableList(baseType(BaseType.STRING))
                 })
 
                 add(listOp("list").add {
@@ -218,7 +214,7 @@ class TypesTest {
                 lang = TypeScript()
                 expected = """
                    const firstElem: string = list[0]
-                   list.push(someVar)
+                   const list: string[] = []
                    list.push("someString")
                    list.find( it => it == other )
                    list.map( it => it + 1 )
@@ -227,8 +223,8 @@ class TypesTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                   List<string> firstElem = list[0]
-                   list.Add(someVar)
+                   string firstElem = list[0];
+                   List<string> list = new List<string>();
                    list.Add("someString")
                    list.Find( it => it == other )
                    list.Select( it => it + 1 )
