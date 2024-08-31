@@ -194,30 +194,30 @@ namespace SomeModule.Api {
     }
 
     public class SomeClass6 {
-        readonly Optional<SomeClass> someClassOpt;
-        readonly Optional<string> optString;
-        readonly SomeClass6[] sameClassList;
+        readonly SomeClass? someClassOpt;
+        readonly string? optString;
+        readonly List<SomeClass6> sameClassList;
 
         public SomeClass6(
-            Optional<SomeClass> someClassOpt,
-            Optional<string> optString,
-            SomeClass6[] sameClassList
+            SomeClass? someClassOpt,
+            string? optString,
+            List<SomeClass6> sameClassList
         ) {
             this.someClassOpt = someClassOpt;
             this.optString = optString;
             this.sameClassList = sameClassList;
         }
         public Optional<SomeClass> GetSomeClassOpt() {
-            return TODO OptionalApiType.modernDeserialize;
+            return Optional.of<SomeClass>(someClassOpt);
         }
         public Optional<string> GetOptString() {
-            return TODO OptionalApiType.modernDeserialize;
+            return Optional.of<string>(optString);
         }
-        public SomeClass6[] GetSameClassList() {
+        public List<SomeClass6> GetSameClassList() {
             return sameClassList;
         }
         public static SomeClass6 Create(Optional<SomeClass> someClassOpt, Optional<string> optString, SomeClass6[] sameClassList) {
-            return new SomeClass6(TODO OptionalApiType.modernSerialize, TODO OptionalApiType.modernSerialize, sameClassList);
+            return new SomeClass6(someClassOpt.orElse(null), optString.orElse(null), sameClassList);
         }
     }
 
