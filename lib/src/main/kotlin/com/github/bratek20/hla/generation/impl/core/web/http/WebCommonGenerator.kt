@@ -273,4 +273,10 @@ class WebCommonGenerator: PatternGenerator() {
             addClass(it)
         }
     }
+
+    override fun extraCSharpUsings(): List<String> {
+        return listOf(
+            "HttpClient.Api",
+        )
+    }
 }
