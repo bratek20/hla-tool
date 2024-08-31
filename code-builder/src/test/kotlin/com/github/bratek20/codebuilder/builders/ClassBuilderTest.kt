@@ -333,8 +333,8 @@ class ClassBuilderTest {
 
     @Test
     fun constructorCall() {
-        testOp {
-            op = {
+        testLinePartOps {
+            ops {
                 add(constructorCall {
                     className = "SomeClass"
                 })
@@ -728,8 +728,8 @@ class ClassBuilderTest {
 
     @Test
     fun `constructor call with opt map expressions`() {
-        testOp {
-            op = {
+        testLinePartOps {
+            ops {
                 add(constructorCall {
                     className = "SomeClass"
                     addArg {

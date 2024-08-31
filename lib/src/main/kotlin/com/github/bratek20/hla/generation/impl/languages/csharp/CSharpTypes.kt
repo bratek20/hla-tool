@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.languages.csharp
 
+import com.github.bratek20.codebuilder.core.CSharp
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
@@ -136,6 +138,10 @@ class CSharpTypes(): LanguageTypes {
 
     override fun customTypeGetterCall(className: String, fieldName: String): String {
         return "TODO"
+    }
+
+    override fun context(): CodeBuilderContext {
+        return CodeBuilderContext(CSharp())
     }
 }
 

@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.languages.kotlin
 
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.DomainContext
@@ -135,5 +137,9 @@ class KotlinTypes: LanguageTypes {
 
     override fun customTypeGetterCall(className: String, fieldName: String): String {
         return customTypeGetterName(className, fieldName)
+    }
+
+    override fun context(): CodeBuilderContext {
+        return CodeBuilderContext(Kotlin())
     }
 }

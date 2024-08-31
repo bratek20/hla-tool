@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.languages.typescript
 
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
@@ -136,6 +138,10 @@ class TypeScriptTypes(private val modules: ModuleGroupQueries): LanguageTypes {
 
     override fun customTypeGetterCall(className: String, fieldName: String): String {
         return addModuleNamePrefix(modules, className, "CustomTypesMapper.${customTypeGetterName(className, fieldName)}")
+    }
+
+    override fun context(): CodeBuilderContext {
+        return CodeBuilderContext(TypeScript())
     }
 }
 

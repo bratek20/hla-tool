@@ -87,8 +87,8 @@ class WebCommonGenerator: PatternGenerator() {
                         constructorCall {
                             className = requestName(interfName, method)
                             method.args.forEach {
-                                addArgLegacy {
-                                    legacyVariable(it.apiType.serialize(it.name))
+                                addArg {
+                                    variable(it.apiType.serialize(it.name))
                                 }
                             }
                         }

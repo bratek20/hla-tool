@@ -15,7 +15,7 @@ data class ValidationResult(
 
 class CodeBuilderValidationException(message: String): CodeBuilderException(message)
 
-interface CodeBlockBuilder {
+interface CodeBlockBuilder: CodeBuilderBuilder {
     fun getOperations(c: CodeBuilderContext): CodeBuilderOps
 
     fun validate(c: CodeBuilderContext): ValidationResult = ValidationResult.success()
@@ -35,7 +35,9 @@ fun noOpBlock() = object: CodeBlockBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {}
 }
 
-interface LinePartBuilder {
+interface CodeBuilderBuilder
+
+interface LinePartBuilder: CodeBuilderBuilder {
     fun build(c: CodeBuilderContext): String
 }
 fun linePartBlock(value: String) = object: LinePartBuilder {
@@ -151,7 +153,7 @@ class CodeBuilder(
         }
     }
 
-    fun add(block: CodeBlockBuilder): CodeBuilder {
+    private fun addBlock(block: CodeBlockBuilder): CodeBuilder {
         block.validate(c).let {
             if (it.errorMessage != null) {
                 throw CodeBuilderValidationException(it.errorMessage)
@@ -166,18 +168,22 @@ class CodeBuilder(
         return this
     }
 
-    fun add(linePartBuilder: LinePartBuilder): CodeBuilder {
-        return linePart(linePartBuilder.build(c))
+    fun add(something: CodeBuilderBuilder): CodeBuilder {
+        return when (something) {
+            is LinePartBuilder -> linePart(something.build(c))
+            is CodeBlockBuilder -> addBlock(something)
+            else -> throw CodeBuilderException("Unsupported type: ${something::class.simpleName}")
+        }
     }
 
-    fun addMany(builders: List<CodeBlockBuilder>): CodeBuilder {
+    fun addMany(builders: List<CodeBuilderBuilder>): CodeBuilder {
         builders.forEach { add(it) }
         return this
     }
 
     fun addManyWithEmptyLineBetween(builders: List<CodeBlockBuilder>): CodeBuilder {
         builders.forEachIndexed { index, builder ->
-            add(builder)
+            addBlock(builder)
             if (index < builders.size - 1) {
                 emptyLine()
             }

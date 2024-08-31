@@ -3,9 +3,9 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.*
 
 open class TopLevelCodeBuilder: CodeBlockBuilder {
-    private val ops: MutableList<CodeBlockBuilder> = mutableListOf()
+    private val ops: MutableList<CodeBuilderBuilder> = mutableListOf()
     private var noEmptyLineAfter = false
-    protected fun addOp(op: CodeBlockBuilder) {
+    protected fun addOp(op: CodeBuilderBuilder) {
         if (ops.isNotEmpty() && !noEmptyLineAfter) {
             ops.add(emptyLineBlock())
         }
@@ -46,8 +46,8 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
         addOp(EnumBuilder().apply(enumBlock))
     }
 
-    fun addFunctionCall(functionCall: FunctionCallBuilderOps) {
-        addOp(FunctionCallBuilder().apply(functionCall))
+    fun addFunctionCall(ops: FunctionCallBuilderOps) {
+        addOp(functionCallStatement(ops))
     }
 
     fun addExtraEmptyLines(amount: Int) {

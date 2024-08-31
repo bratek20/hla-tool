@@ -1,10 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.builders.legacyReturn
-import com.github.bratek20.codebuilder.builders.legacyString
-import com.github.bratek20.codebuilder.builders.legacyVariable
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -55,8 +52,8 @@ class ExceptionsGenerator: PatternGenerator() {
                 }
                 addFunctionCall {
                     name = "ExceptionsRegistry.register"
-                    addArgLegacy {
-                        legacyVariable(it)
+                    addArg {
+                        variable(it)
                     }
                 }
             }

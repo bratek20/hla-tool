@@ -3,10 +3,14 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.*
 
 class BodyBuilder: CodeBlockBuilder {
-    private val ops: MutableList<CodeBlockBuilder> = mutableListOf()
+    private val ops: MutableList<CodeBuilderBuilder> = mutableListOf()
 
     fun addFunctionCall(block: FunctionCallBuilderOps) {
-        ops.add(FunctionCallBuilder().apply(block))
+        add(statement {{
+            lineStart()
+            add(functionCall(block))
+            statementLineEnd()
+        }})
     }
 
     fun add(block: StatementBuilder) {

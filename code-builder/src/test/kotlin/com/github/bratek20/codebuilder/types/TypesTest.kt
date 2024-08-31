@@ -78,15 +78,11 @@ class TypesTest {
 
     @Test
     fun pairType() {
-        testOp {
-            op = {
-                lineStart()
+        testLinePartOps {
+            ops {
                 add(pairType(typeName("SomeType"), baseType(BaseType.STRING)))
-                lineEnd()
 
-                lineStart()
-                legacyNewPair("varA", "varB")
-                lineEnd()
+                add(newPair("varA", "varB"))
             }
             langExpected {
                 lang = Kotlin()
@@ -214,19 +210,24 @@ class TypesTest {
                     string("someString")
                 })
 
+
+                lineStart()
                 add(listOp("list").find {
                     isEqualTo {
                         left = variable("it")
                         right = variable("other")
                     }
                 })
+                lineEnd()
 
+                lineStart()
                 add(listOp("list").map {
                     plus {
                         left = variable("it")
                         right = const(1)
                     }
                 })
+                lineEnd()
             }
             langExpected {
                 lang = Kotlin()

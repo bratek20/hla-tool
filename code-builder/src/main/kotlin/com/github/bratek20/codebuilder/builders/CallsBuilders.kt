@@ -7,36 +7,25 @@ abstract class CallBuilder: ExpressionBuilder {
     protected abstract fun getCallName(c: CodeBuilderContext): String
     protected open fun beforeName(): String = ""
 
-    // hacky solution to make work methodCall() + methodCall() example
-    var skipSoftEnd: Boolean? = null
-
-    private val args: MutableList<CodeBuilderOps> = mutableListOf()
-
-    @Deprecated("Use addArg instead", ReplaceWith("addArg"))
-    fun addArgLegacy(ops: CodeBuilderOps) {
-        args.add(ops)
-    }
-
+    private val args: MutableList<ExpressionBuilder> = mutableListOf()
     fun addArg(exp: ExpressionBuilderProvider) {
-        args.add {
-            add(exp())
-        }
+        args.add(exp())
     }
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineSoftStart(beforeName())
+    override fun build(c: CodeBuilderContext): String {
+        val b = StringBuilder()
+        b.append(beforeName())
 
-        linePart("${getCallName(c)}(")
+        b.append("${getCallName(c)}(")
         args.forEachIndexed { index, arg ->
-            addOps(arg)
+            b.append(arg.build(c))
             if (index != args.size - 1) {
-                linePart(", ")
+                b.append(", ")
             }
         }
-        linePart(")")
-        if (skipSoftEnd != true) {
-            lineSoftEnd()
-        }
+        b.append(")")
+
+        return b.toString()
     }
 }
 
@@ -67,8 +56,11 @@ class FunctionCallBuilder: CallBuilder() {
     }
 }
 typealias FunctionCallBuilderOps = FunctionCallBuilder.() -> Unit
-fun CodeBuilder.legacyFunctionCall(block: FunctionCallBuilder.() -> Unit) = add(FunctionCallBuilder().apply(block))
 fun functionCall(block: FunctionCallBuilderOps) = FunctionCallBuilder().apply(block)
+
+fun functionCallStatement(block: FunctionCallBuilderOps) = expressionToStatement {
+    functionCall(block)
+}
 
 class ConstructorCallBuilder: CallBuilder() {
     lateinit var className: String

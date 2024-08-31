@@ -145,7 +145,6 @@ class ProcedureBuildersTest {
                         left = methodCall {
                             variableName = "left"
                             methodName = "sum"
-                            skipSoftEnd = true
 
                             addArg {
                                 const(1)

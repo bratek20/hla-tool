@@ -1,15 +1,16 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.TypeScript
+import com.github.bratek20.codebuilder.core.testLinePartOps
 import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class CallBuilderTest {
     @Test
     fun functionCallWithVarArgs() {
-        testOp {
-            op = {
-                legacyFunctionCall {
+        testLinePartOps {
+            ops {
+                add(functionCall {
                     name = "someFunction"
                     addArg {
                         variable("arg1")
@@ -20,7 +21,7 @@ class CallBuilderTest {
                     addArg {
                         variable("arg3")
                     }
-                }
+                })
             }
             langExpected {
                 lang = TypeScript()

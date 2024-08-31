@@ -50,6 +50,56 @@ fun testOp(init: CodeBuilderOpTester.() -> Unit) {
     CodeBuilderOpTester().apply(init).test()
 }
 
+
+class LinePartOpsTester {
+    inner class LinePartOpsCollector {
+        val parts = mutableListOf<LinePartBuilder>()
+
+        fun add(b: LinePartBuilder) {
+            parts.add(b)
+        }
+    }
+    private lateinit var ops: LinePartOpsCollector.() -> Unit
+    fun ops(o: LinePartOpsCollector.() -> Unit) {
+        ops = o
+    }
+
+    private val expectedLanguageStrings = mutableListOf<ExpectedLanguageString>()
+    fun langExpected(init: ExpectedLanguageString.() -> Unit) {
+        val expectedLanguageString = ExpectedLanguageString().apply(init)
+        expectedLanguageStrings.add(expectedLanguageString)
+    }
+
+    fun test() {
+        expectedLanguageStrings.forEach { testForLang(it) }
+    }
+
+    private fun testForLang(langExpected: ExpectedLanguageString) {
+        val result = CodeBuilder(langExpected.lang).apply {
+            val lineParts = LinePartOpsCollector().apply(ops)
+            lineParts.parts.forEach {
+                lineStart()
+                add(it)
+                lineEnd()
+            }
+        }.build()
+
+        val expected = langExpected.expected
+
+        val finalExpected = if (expected.contains("\n"))
+            alignMultilineStringIndent(expected)
+        else
+            expected
+
+        Assertions.assertThat(result)
+            .withFailMessage("Failed for language ${langExpected.lang.name()}\nExpected:\n$finalExpected\nActual:\n$result")
+            .isEqualTo(finalExpected)
+    }
+}
+fun testLinePartOps(init: LinePartOpsTester.() -> Unit) {
+    LinePartOpsTester().apply(init).test()
+}
+
 class CodeBuilderOpExceptionTester {
     lateinit var op: CodeBuilder.() -> Unit
     var expectedExceptionType: Class<out CodeBuilderException> = CodeBuilderException::class.java

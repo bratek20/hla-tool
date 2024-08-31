@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.language
 
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.hla.definitions.api.BaseType
 
 interface LanguageTypes {
@@ -45,5 +46,7 @@ interface LanguageTypes {
     fun customTypeConstructorCall(className: String): String
     fun customTypeGetterName(className: String, fieldName: String): String
     fun customTypeGetterCall(className: String, fieldName: String): String
+
+    fun context(): CodeBuilderContext
 }
 

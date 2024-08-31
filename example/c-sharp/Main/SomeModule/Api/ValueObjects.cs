@@ -423,7 +423,7 @@ namespace SomeModule.Api {
             return customData;
         }
         public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, any customData) {
-            return new SomeProperty(other, TODO, TODO, doubleExample, longExample, goodName, customData);
+            return new SomeProperty(other, id2.Map( it => it.Value ).OrElse(null), range.Map( it => it.fromCustomType() ).OrElse(null), doubleExample, longExample, goodName, customData);
         }
     }
 

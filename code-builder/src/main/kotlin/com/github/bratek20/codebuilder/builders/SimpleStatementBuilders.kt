@@ -16,6 +16,15 @@ fun statement(value: String) = object : StatementBuilder {
         statementLineEnd()
     }
 }
+fun statement(block: (CodeBuilderContext) -> CodeBuilderOps) = object : StatementBuilder {
+    override fun getOperations(c: CodeBuilderContext) = block(c)
+}
+
+fun expressionToStatement(value: ExpressionBuilderProvider) = statement {{
+    lineStart()
+    add(value.invoke())
+    statementLineEnd()
+}}
 
 class ReturnBuilder(
     private val value: ExpressionBuilder
@@ -34,31 +43,33 @@ class VariableDeclarationBuilder: ExpressionBuilder {
     var mutable: Boolean = false
     var type: TypeBuilder? = null
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+    override fun build(c: CodeBuilderContext): String {
+        val b = StringBuilder()
         if (type == null || c.lang.typeDeclarationStyle() == TypeDeclarationStyle.VARIABLE_FIRST) {
             if (mutable) {
-                linePart(c.lang.mutableVariableDeclaration())
+                b.append(c.lang.mutableVariableDeclaration())
             } else {
-                linePart(c.lang.immutableVariableDeclaration())
+                b.append(c.lang.immutableVariableDeclaration())
             }
         }
 
         when(c.lang.typeDeclarationStyle()) {
             TypeDeclarationStyle.TYPE_FIRST -> {
                 type?.let {
-                    add(it)
-                    linePart(" ")
+                    b.append(it.build(c))
+                    b.append(" ")
                 }
-                linePart(name)
+                b.append(name)
             }
             TypeDeclarationStyle.VARIABLE_FIRST -> {
-                linePart(name)
+                b.append(name)
                 type?.let {
-                    linePart(": ")
-                    add(it)
+                    b.append(": ")
+                    b.append(it.build(c))
                 }
             }
         }
+        return b.toString()
     }
 }
 fun variableDeclaration(block: VariableDeclarationBuilder.() -> Unit) = VariableDeclarationBuilder().apply(block)

@@ -13,6 +13,9 @@ import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiType {
+    protected val c
+        get() = languageTypes.context()
+
     lateinit var languageTypes: LanguageTypes
     var typeModule: ModuleDefinition? = null
 
@@ -523,15 +526,12 @@ class OptionalApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        //TODO-REF api type should have access to context
-        val c = CodeBuilderContext(CSharp())
-
         val mapping = wrappedType.modernDeserialize("it")
         val asOptional = hardOptional(wrappedType.builder(), variableName)
-        if (mapping.getValue(c) == "it") {
+        if (mapping.build(c) == "it") {
             return asOptional
         }
-        return optionalOp(asOptional.getValue(c)!!).map {
+        return optionalOp(asOptional.build(c)).map {
             mapping
         }
     }
@@ -545,12 +545,18 @@ class OptionalApiType(
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        val c = CodeBuilderContext(CSharp())
         val mapping = wrappedType.modernSerialize("it")
-        if (mapping.getValue(c) == "it") {
+        if (mapping.build(c) == "it") {
             return optionalOp(variableName).orElse { nullValue() }
         }
-        return expression("TODO")
+
+        //TODO-REF introduce chaining of operations
+        val tmp = optionalOp(variableName).map {
+            mapping
+        }.build(c)
+        return optionalOp(tmp).orElse {
+            nullValue()
+        }
     }
 }
 

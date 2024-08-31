@@ -7,31 +7,17 @@ import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
-fun listType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder {
-    override fun build(c: CodeBuilderContext): String {
-        return c.lang.listType(elementType.build(c))
-    }
+fun listType(elementType: TypeBuilder) = typeName { c ->
+    c.lang.listType(elementType.build(c))
 }
 
-fun mutableListType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder {
-    override fun build(c: CodeBuilderContext): String {
-        return c.lang.mutableListType(elementType.build(c))
-    }
+fun mutableListType(elementType: TypeBuilder) = typeName { c ->
+    c.lang.mutableListType(elementType.build(c))
 }
 
 fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
     c.lang.newEmptyMutableList(elementType.build(c))
 }
-
-class ItOpsBuilder: ExpressionBuilder {
-    val name = "it"
-
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-
-    }
-}
-typealias ItOpsBuilderOps = ItOpsBuilder.() -> Unit
-fun itOps(block: ItOpsBuilderOps) = ItOpsBuilder().apply(block)
 
 class ListOperations(
     private val variableName: String
@@ -47,20 +33,20 @@ class ListOperations(
         }
     }
 
-    fun find(predicate: ExpressionBuilderProvider): ExpressionBuilder = object : ExpressionBuilder {
-        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-            lineSoftStart("${variableName}.${c.lang.listFindBegin()} it ${c.lang.lambdaArrow()} ")
-            add(predicate())
-            lineSoftEnd(" " + c.lang.listFindEnd())
-        }
+    fun find(predicate: ExpressionBuilderProvider) = expression { c ->
+        StringBuilder().apply {
+            append("${variableName}.${c.lang.listFindBegin()} it ${c.lang.lambdaArrow()} ")
+            append(predicate().build(c))
+            append(" ${c.lang.listFindEnd()}")
+        }.toString()
     }
 
-    fun map(predicate: ExpressionBuilderProvider): ExpressionBuilder = object : ExpressionBuilder {
-        override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-            lineSoftStart("${variableName}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
-            add(predicate())
-            lineSoftEnd(" " + c.lang.listMapEnd())
-        }
+    fun map(predicate: ExpressionBuilderProvider) = expression { c ->
+        StringBuilder().apply {
+            append("${variableName}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
+            append(predicate().build(c))
+            append(" " + c.lang.listMapEnd())
+        }.toString()
     }
 }
 
