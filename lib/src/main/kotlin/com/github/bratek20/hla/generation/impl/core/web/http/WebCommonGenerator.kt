@@ -246,16 +246,7 @@ class WebCommonGenerator: PatternGenerator() {
                 if (c.lang is TypeScript) {
                     namespace {
                         name = "$moduleName.Web"
-                        addClass {
-                            name = "${moduleName}WebClientConfig"
 
-                            addField {
-                                modifier = AccessModifier.PUBLIC
-                                name = "value"
-                                type = typeName("HttpClientConfig")
-                                fromConstructor = true
-                            }
-                        }
                         classes.forEach(::addClass)
                     }
                 }
