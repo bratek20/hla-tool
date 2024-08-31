@@ -37,7 +37,7 @@ data class MethodView(
                 type = it.apiType.builder()
             }
         }
-        returnType = typeName(this@MethodView.returnType)
+        returnType = this@MethodView.returnApiType.builder()
         this@MethodView.throws.forEach {
             addThrows(it)
         }

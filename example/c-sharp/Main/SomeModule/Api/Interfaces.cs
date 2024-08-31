@@ -21,9 +21,9 @@ namespace SomeModule.Api {
 
         Optional<SomeClass> OptMethod(Optional<SomeId> optId);
 
-        SomeId[] MethodWithListOfSimpleVO(List<SomeId> list);
+        List<SomeId> MethodWithListOfSimpleVO(List<SomeId> list);
 
-        any MethodWithAny(object i);
+        object MethodWithAny(object i);
     }
 
     public interface SomeInterface2 {

@@ -112,7 +112,6 @@ class CSharpTypes(): LanguageTypes {
         return "$listName.forEach(($entry, $idx) => { $body })"
     }
 
-    //(SomeEnum)Enum.Parse(typeof(SomeEnum), someEnum)
     override fun deserializeEnum(enumName: String, variable: String): String {
         return "(${enumName})Enum.Parse(typeof($enumName), $variable)"
     }
