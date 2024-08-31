@@ -99,7 +99,7 @@ namespace SomeModule.Web {
         ) {
             this.list = list;
         }
-        public SomeId[] GetList() {
+        public List<SomeId> GetList() {
             return list.Select( it => new SomeId(it) );
         }
         public static SomeInterfaceMethodWithListOfSimpleVORequest Create(List<SomeId> list) {
@@ -125,7 +125,7 @@ namespace SomeModule.Web {
         ) {
             this.i = i;
         }
-        public any GetI() {
+        public object GetI() {
             return i;
         }
         public static SomeInterfaceMethodWithAnyRequest Create(object i) {

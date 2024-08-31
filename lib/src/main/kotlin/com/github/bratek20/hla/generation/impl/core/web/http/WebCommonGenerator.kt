@@ -60,7 +60,7 @@ class WebCommonGenerator: PatternGenerator() {
             method.args.forEach { arg ->
                 addMethod {
                     name = "get${camelToPascalCase(arg.name)}"
-                    returnType = typeName(arg.type)
+                    returnType = arg.apiType.builder()
                     setBody {
                         add(returnStatement {
                             arg.apiType.modernDeserialize(arg.name)
