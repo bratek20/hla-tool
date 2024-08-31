@@ -519,7 +519,9 @@ class OptionalApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        return expression("TODO OptionalApiType.modernDeserialize")
+        return optionalOp(variableName).map {
+            wrappedType.modernDeserialize("it")
+        }
     }
 
     override fun serialize(variableName: String): String {
@@ -531,7 +533,9 @@ class OptionalApiType(
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        return expression("TODO OptionalApiType.modernSerialize")
+        return optionalOp(variableName).map {
+            wrappedType.modernSerialize("it")
+        }
     }
 }
 

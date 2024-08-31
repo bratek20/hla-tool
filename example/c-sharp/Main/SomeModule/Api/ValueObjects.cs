@@ -208,16 +208,17 @@ namespace SomeModule.Api {
             this.sameClassList = sameClassList;
         }
         public Optional<SomeClass> GetSomeClassOpt() {
-            return Optional.of<SomeClass>(someClassOpt);
+            return someClassOpt.Map( it => it );
         }
         public Optional<string> GetOptString() {
-            return Optional.of<string>(optString);
+            return optString.Map( it => it );
         }
         public List<SomeClass6> GetSameClassList() {
             return sameClassList;
         }
-        public static SomeClass6 Create(Optional<SomeClass> someClassOpt, Optional<string> optString, SomeClass6[] sameClassList) {
-            return new SomeClass6(someClassOpt.orElse(null), optString.orElse(null), sameClassList);
+        public static SomeClass6 Create(Optional<SomeClass> someClassOpt, Optional<string> optString, List<SomeClass6> sameClassList) {
+            return new SomeClass6(someClassOpt.Map( it => it ), 
+            optString.Map( it => it ), sameClassList);
         }
     }
 
@@ -246,10 +247,10 @@ namespace SomeModule.Api {
             this.optList = optList;
         }
         public Optional<List<SomeClass>> GetOptList() {
-            return TODO OptionalApiType.modernDeserialize;
+            return optList.Map( it => it );
         }
         public static ClassHavingOptList Create(Optional<List<SomeClass>> optList) {
-            return new ClassHavingOptList(TODO OptionalApiType.modernSerialize);
+            return new ClassHavingOptList(optList.Map( it => it ));
         }
     }
 
@@ -371,10 +372,10 @@ namespace SomeModule.Api {
             return other;
         }
         public Optional<SomeId2> GetId2() {
-            return TODO OptionalApiType.modernDeserialize;
+            return id2.Map( it => new SomeId2(it) );
         }
         public Optional<DateRange> GetRange() {
-            return TODO OptionalApiType.modernDeserialize;
+            return range.Map( it => it.toCustomType() );
         }
         public double GetDoubleExample() {
             return doubleExample;
@@ -389,7 +390,8 @@ namespace SomeModule.Api {
             return customData;
         }
         public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, any customData) {
-            return new SomeProperty(other, TODO OptionalApiType.modernSerialize, TODO OptionalApiType.modernSerialize, doubleExample, longExample, goodName, customData);
+            return new SomeProperty(other, id2.Map( it => it.Value ), 
+            range.Map( it => it.fromCustomType() ), doubleExample, longExample, goodName, customData);
         }
     }
 
@@ -420,10 +422,10 @@ namespace SomeModule.Api {
             return SomeEnum.fromName(someEnum).get();
         }
         public Optional<object> GetCustomOpt() {
-            return TODO OptionalApiType.modernDeserialize;
+            return customOpt.Map( it => it );
         }
         public static SomeProperty2 Create(string value, object custom, SomeEnum someEnum, Optional<object> customOpt) {
-            return new SomeProperty2(value, custom, someEnum.getName(), TODO OptionalApiType.modernSerialize);
+            return new SomeProperty2(value, custom, someEnum.getName(), customOpt.Map( it => it ));
         }
     }
 }
