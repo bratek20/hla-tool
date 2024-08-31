@@ -7,4 +7,181 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Web {
+    public class SomeInterfaceSomeCommandRequest {
+        readonly string id;
+        readonly int amount;
+
+        public SomeInterfaceSomeCommandRequest(
+            string id,
+            int amount
+        ) {
+            this.id = id;
+            this.amount = amount;
+        }
+        public SomeId GetId() {
+            return new SomeId(id);
+        }
+        public int GetAmount() {
+            return amount;
+        }
+        public static SomeInterfaceSomeCommandRequest Create(SomeId id, int amount) {
+            return new SomeInterfaceSomeCommandRequest(id.value, amount);
+        }
+    }
+
+    public class SomeInterfaceSomeQueryRequest {
+        readonly SomeQueryInput query;
+
+        public SomeInterfaceSomeQueryRequest(
+            SomeQueryInput query
+        ) {
+            this.query = query;
+        }
+        public SomeQueryInput GetQuery() {
+            return query;
+        }
+        public static SomeInterfaceSomeQueryRequest Create(SomeQueryInput query) {
+            return new SomeInterfaceSomeQueryRequest(query);
+        }
+    }
+
+    public class SomeInterfaceSomeQueryResponse {
+        public readonly SomeClass value;
+
+        public SomeInterfaceSomeQueryResponse(
+            SomeClass value
+        ) {
+            this.value = value;
+        }
+    }
+
+    public class SomeInterfaceOptMethodRequest {
+        readonly Optional<string> optId;
+
+        public SomeInterfaceOptMethodRequest(
+            Optional<string> optId
+        ) {
+            this.optId = optId;
+        }
+        public Optional<SomeId> GetOptId() {
+            return Optional.of(optId).map(it => new SomeId(it));
+        }
+        public static SomeInterfaceOptMethodRequest Create(Optional<SomeId> optId) {
+            return new SomeInterfaceOptMethodRequest(optId.map(it => it.value).orElse(undefined));
+        }
+    }
+
+    public class SomeInterfaceOptMethodResponse {
+        public readonly Optional<SomeClass> value;
+
+        public SomeInterfaceOptMethodResponse(
+            Optional<SomeClass> value
+        ) {
+            this.value = value;
+        }
+    }
+
+    public class SomeInterfaceMethodWithListOfSimpleVORequest {
+        readonly string[] list;
+
+        public SomeInterfaceMethodWithListOfSimpleVORequest(
+            string[] list
+        ) {
+            this.list = list;
+        }
+        public SomeId[] GetList() {
+            return list.map(it => new SomeId(it));
+        }
+        public static SomeInterfaceMethodWithListOfSimpleVORequest Create(SomeId[] list) {
+            return new SomeInterfaceMethodWithListOfSimpleVORequest(list.map(it => it.value));
+        }
+    }
+
+    public class SomeInterfaceMethodWithListOfSimpleVOResponse {
+        public readonly SomeId[] value;
+
+        public SomeInterfaceMethodWithListOfSimpleVOResponse(
+            SomeId[] value
+        ) {
+            this.value = value;
+        }
+    }
+
+    public class SomeInterfaceMethodWithAnyRequest {
+        readonly any i;
+
+        public SomeInterfaceMethodWithAnyRequest(
+            any i
+        ) {
+            this.i = i;
+        }
+        public any GetI() {
+            return i;
+        }
+        public static SomeInterfaceMethodWithAnyRequest Create(any i) {
+            return new SomeInterfaceMethodWithAnyRequest(i);
+        }
+    }
+
+    public class SomeInterfaceMethodWithAnyResponse {
+        public readonly any value;
+
+        public SomeInterfaceMethodWithAnyResponse(
+            any value
+        ) {
+            this.value = value;
+        }
+    }
+
+    public class SomeInterface2ReferenceOtherClassRequest {
+        readonly OtherClass other;
+
+        public SomeInterface2ReferenceOtherClassRequest(
+            OtherClass other
+        ) {
+            this.other = other;
+        }
+        public OtherClass GetOther() {
+            return other;
+        }
+        public static SomeInterface2ReferenceOtherClassRequest Create(OtherClass other) {
+            return new SomeInterface2ReferenceOtherClassRequest(other);
+        }
+    }
+
+    public class SomeInterface2ReferenceOtherClassResponse {
+        public readonly OtherClass value;
+
+        public SomeInterface2ReferenceOtherClassResponse(
+            OtherClass value
+        ) {
+            this.value = value;
+        }
+    }
+
+    public class SomeInterface2ReferenceLegacyTypeRequest {
+        readonly LegacyType legacyType;
+
+        public SomeInterface2ReferenceLegacyTypeRequest(
+            LegacyType legacyType
+        ) {
+            this.legacyType = legacyType;
+        }
+        public LegacyType GetLegacyType() {
+            return legacyType;
+        }
+        public static SomeInterface2ReferenceLegacyTypeRequest Create(LegacyType legacyType) {
+            return new SomeInterface2ReferenceLegacyTypeRequest(legacyType);
+        }
+    }
+
+    public class SomeInterface2ReferenceLegacyTypeResponse {
+        public readonly LegacyType value;
+
+        public SomeInterface2ReferenceLegacyTypeResponse(
+            LegacyType value
+        ) {
+            this.value = value;
+        }
+    }
 }

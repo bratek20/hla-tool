@@ -4,10 +4,12 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ApiType
+import com.github.bratek20.hla.generation.impl.core.api.BaseApiType
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
@@ -197,33 +199,37 @@ class WebCommonGenerator: PatternGenerator() {
         }
     }
 
+    private fun getClasses(): List<ClassBuilderOps> {
+        val classes: MutableList<ClassBuilderOps> = mutableListOf()
+
+        exposedInterfaces(c).forEach { interf ->
+            interf.methods.forEach { method ->
+                if (method.hasArgs()) {
+                    if (lang is TypeScript) {
+                        classes.add(typeScriptRequestClass(interf.name, method))
+                    } else {
+                        classes.add(kotlinRequestClass(interf.name, method))
+                    }
+                }
+                if (method.returnApiType !is BaseApiType || method.returnApiType.name != BaseType.VOID) {
+                    if (lang is TypeScript) {
+                        classes.add(typeScriptResponseClass(interf.name, method))
+                    } else {
+                        classes.add(kotlinResponseClass(interf.name, method))
+                    }
+                }
+            }
+        }
+
+        return classes
+    }
+
     override fun generateFileContent(): FileContent? {
         if (c.module.getWebSubmodule()?.getHttp() == null) {
             return null
         }
 
-        val exposedInterfaces = exposedInterfaces(c)
-
-        val classes: MutableList<ClassBuilderOps> = mutableListOf()
-
-        exposedInterfaces.forEach { interf ->
-            interf.methods.forEach { method ->
-                if (method.hasArgs()) {
-                    if (c.language is KotlinSupport) {
-                        classes.add(kotlinRequestClass(interf.name, method))
-                    } else {
-                        classes.add(typeScriptRequestClass(interf.name, method))
-                    }
-                }
-                if (method.returnType != "Unit" && method.returnType != "void") {
-                    if (c.language is KotlinSupport) {
-                        classes.add(kotlinResponseClass(interf.name, method))
-                    } else {
-                        classes.add(typeScriptResponseClass(interf.name, method))
-                    }
-                }
-            }
-        }
+        val classes = getClasses()
 
         val moduleName = c.module.getName().value
         val view = CodeBuilder(c.language.base())
@@ -260,5 +266,11 @@ class WebCommonGenerator: PatternGenerator() {
 
     override fun shouldGenerate(): Boolean {
         return exposedInterfaces(c).isNotEmpty()
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        getClasses().forEach {
+            addClass(it)
+        }
     }
 }
