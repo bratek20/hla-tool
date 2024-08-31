@@ -541,7 +541,7 @@ class CSharp: CodeBuilderLanguage {
     }
 
     override fun newHardOptional(elementType: String, variableName: String): String {
-        return "Optional.Of<$elementType>($variableName)"
+        return "Optional<$elementType>.Of($variableName)"
     }
 
     override fun lambdaArrow(): String {

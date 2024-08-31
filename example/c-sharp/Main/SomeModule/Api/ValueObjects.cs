@@ -242,16 +242,16 @@ namespace SomeModule.Api {
             this.sameClassList = sameClassList;
         }
         public Optional<SomeClass> GetSomeClassOpt() {
-            return Optional.Of<SomeClass>(someClassOpt);
+            return Optional<SomeClass>.Of(someClassOpt);
         }
         public Optional<string> GetOptString() {
-            return Optional.Of<string>(optString);
+            return Optional<string>.Of(optString);
         }
         public List<SomeClass6> GetSameClassList() {
             return sameClassList;
         }
         public static SomeClass6 Create(Optional<SomeClass> someClassOpt, Optional<string> optString, List<SomeClass6> sameClassList) {
-            return new SomeClass6(someClassOpt.Map( it => it ), optString.Map( it => it ), sameClassList);
+            return new SomeClass6(someClassOpt.OrElse(null), optString.OrElse(null), sameClassList);
         }
     }
 
@@ -280,10 +280,10 @@ namespace SomeModule.Api {
             this.optList = optList;
         }
         public Optional<List<SomeClass>> GetOptList() {
-            return Optional.Of<List<SomeClass>>(optList);
+            return Optional<List<SomeClass>>.Of(optList);
         }
         public static ClassHavingOptList Create(Optional<List<SomeClass>> optList) {
-            return new ClassHavingOptList(optList.Map( it => it ));
+            return new ClassHavingOptList(optList.OrElse(null));
         }
     }
 
@@ -405,10 +405,10 @@ namespace SomeModule.Api {
             return other;
         }
         public Optional<SomeId2> GetId2() {
-            return Optional.Of<SomeId2>(id2).Map( it => new SomeId2(it) );
+            return Optional<SomeId2>.Of(id2).Map( it => new SomeId2(it) );
         }
         public Optional<DateRange> GetRange() {
-            return Optional.Of<DateRange>(range).Map( it => it.toCustomType() );
+            return Optional<DateRange>.Of(range).Map( it => it.toCustomType() );
         }
         public double GetDoubleExample() {
             return doubleExample;
@@ -423,7 +423,7 @@ namespace SomeModule.Api {
             return customData;
         }
         public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, any customData) {
-            return new SomeProperty(other, id2.Map( it => it.Value ), range.Map( it => it.fromCustomType() ), doubleExample, longExample, goodName, customData);
+            return new SomeProperty(other, TODO, TODO, doubleExample, longExample, goodName, customData);
         }
     }
 
@@ -454,10 +454,10 @@ namespace SomeModule.Api {
             return SomeEnum.fromName(someEnum).get();
         }
         public Optional<object> GetCustomOpt() {
-            return Optional.Of<object>(customOpt);
+            return Optional<object>.Of(customOpt);
         }
         public static SomeProperty2 Create(string value, object custom, SomeEnum someEnum, Optional<object> customOpt) {
-            return new SomeProperty2(value, custom, someEnum.getName(), customOpt.Map( it => it ));
+            return new SomeProperty2(value, custom, someEnum.getName(), customOpt.OrElse(null));
         }
     }
 }

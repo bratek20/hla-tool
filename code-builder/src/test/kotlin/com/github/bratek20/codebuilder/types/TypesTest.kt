@@ -336,7 +336,7 @@ class TypesTest {
                 lang = CSharp()
                 expected = """
                    string? softOptional = someVariable;
-                   Optional<string> hardOptional = Optional.Of<string>(someVariable);
+                   Optional<string> hardOptional = Optional<string>.Of(someVariable);
                    string unpacked = optional.Get();
                    string? unpackedToSoft = optional.OrElse(null);
                    int plusOne = optional.Map( it => it + 1 );

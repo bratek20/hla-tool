@@ -545,9 +545,12 @@ class OptionalApiType(
     }
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
-        return optionalOp(variableName).map {
-            wrappedType.modernSerialize("it")
+        val c = CodeBuilderContext(CSharp())
+        val mapping = wrappedType.modernSerialize("it")
+        if (mapping.getValue(c) == "it") {
+            return optionalOp(variableName).orElse { nullValue() }
         }
+        return expression("TODO")
     }
 }
 
