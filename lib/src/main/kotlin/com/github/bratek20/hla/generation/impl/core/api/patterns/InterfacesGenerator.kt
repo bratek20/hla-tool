@@ -29,24 +29,12 @@ data class MethodView(
         return "${name}(${argsDeclaration()})$returnSuffix"
     }
 
-    //TODO-REF remove duplication with declarationCBInterface
-    fun declarationCB(): MethodBuilder = method {
+    fun declarationCB(): ProcedureSignatureBuilderOps = {
         name = this@MethodView.name
         args.forEach {
             addArg {
                 name = it.name
-                type = typeName(it.type)
-            }
-        }
-        returnType = typeName(this@MethodView.returnType)
-    }
-
-    fun declarationCBInterface(): InterfaceMethodBuilderOps = {
-        name = this@MethodView.name
-        args.forEach {
-            addArg {
-                name = it.name
-                type = typeName(it.type)
+                type = it.apiType.builder()
             }
         }
         returnType = typeName(this@MethodView.returnType)
@@ -94,7 +82,7 @@ data class InterfaceView(
     fun declarationCB(): InterfaceBuilderOps = {
         name = this@InterfaceView.name
         methods.forEach {
-            addMethod(it.declarationCBInterface())
+            addMethod(it.declarationCB())
         }
     }
 }

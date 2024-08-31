@@ -451,13 +451,13 @@ namespace SomeModule.Api {
             return custom;
         }
         public SomeEnum GetSomeEnum() {
-            return SomeEnum.fromName(someEnum).get();
+            return (SomeEnum)Enum.Parse(typeof(SomeEnum), someEnum);
         }
         public Optional<object> GetCustomOpt() {
             return Optional<object>.Of(customOpt);
         }
         public static SomeProperty2 Create(string value, object custom, SomeEnum someEnum, Optional<object> customOpt) {
-            return new SomeProperty2(value, custom, someEnum.getName(), customOpt.OrElse(null));
+            return new SomeProperty2(value, custom, someEnum.ToString(), customOpt.OrElse(null));
         }
     }
 }

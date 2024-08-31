@@ -120,6 +120,7 @@ abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
         }
     }
 }
+typealias ProcedureSignatureBuilderOps = ProcedureSignatureBuilder.() -> Unit
 
 class InterfaceMethodBuilder: ProcedureSignatureBuilder() {
     override fun beforeName(c: CodeBuilderContext): String {

@@ -112,12 +112,13 @@ class CSharpTypes(): LanguageTypes {
         return "$listName.forEach(($entry, $idx) => { $body })"
     }
 
+    //(SomeEnum)Enum.Parse(typeof(SomeEnum), someEnum)
     override fun deserializeEnum(enumName: String, variable: String): String {
-        return "$enumName.fromName($variable).get()"
+        return "(${enumName})Enum.Parse(typeof($enumName), $variable)"
     }
 
     override fun serializeEnum(variableName: String): String {
-        return "$variableName.getName()"
+        return "$variableName.ToString()"
     }
 
     override fun propertyClassConstructorCall(className: String): String {
