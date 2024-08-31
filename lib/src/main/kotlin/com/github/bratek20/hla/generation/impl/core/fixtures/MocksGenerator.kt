@@ -130,8 +130,9 @@ class MocksGenerator: PatternGenerator() {
                                 variable(inputArgName)
                             })
                             add(assignment {
-                                declare = true
-                                left = "findResult"
+                                left = variableDeclaration {
+                                    name = "findResult"
+                                }
 
                                 right = listOp(responsesListName).find {
                                     isEqualTo {
