@@ -10,15 +10,15 @@ import com.github.bratek20.utils.camelToPascalCase
 interface ExpressionBuilder: CodeBlockBuilder
 typealias ExpressionBuilderProvider = () -> ExpressionBuilder
 
-class ExpressionLinePartBuilder(
-    val value: String,
-): ExpressionBuilder {
+fun expression(value: String) = object : ExpressionBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         linePart(value)
     }
 }
-fun expression(value: String): ExpressionBuilder {
-    return ExpressionLinePartBuilder(value)
+fun expression(valueProvider: (CodeBuilderContext) -> String) = object : ExpressionBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        linePart(valueProvider(c))
+    }
 }
 
 fun variable(name: String): ExpressionBuilder {

@@ -3,6 +3,8 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.CodeBlockBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.TypeDeclarationStyle
+import com.github.bratek20.codebuilder.types.TypeBuilder
 
 //full line
 interface StatementBuilder: CodeBlockBuilder
@@ -20,18 +22,13 @@ class ReturnBuilder(
 fun returnStatement(value: ExpressionBuilderProvider): ReturnBuilder {
     return ReturnBuilder(value.invoke())
 }
-
-class VariableAssignmentBuilder: StatementBuilder {
+class VariableDeclarationBuilder: ExpressionBuilder {
     lateinit var name: String
-    lateinit var value: ExpressionBuilder
-
-    var declare: Boolean = false
     var mutable: Boolean = false
+    var type: TypeBuilder? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart()
-
-        if (declare) {
+        if (type == null || c.lang.typeDeclarationStyle() == TypeDeclarationStyle.VARIABLE_FIRST) {
             if (mutable) {
                 linePart(c.lang.mutableVariableDeclaration())
             } else {
@@ -39,11 +36,37 @@ class VariableAssignmentBuilder: StatementBuilder {
             }
         }
 
-        linePart("$name = ")
-        add(value)
+        when(c.lang.typeDeclarationStyle()) {
+            TypeDeclarationStyle.TYPE_FIRST -> {
+                type?.let {
+                    add(it)
+                    linePart(" ")
+                }
+                linePart(name)
+            }
+            TypeDeclarationStyle.VARIABLE_FIRST -> {
+                linePart(name)
+                type?.let {
+                    linePart(": ")
+                    add(it)
+                }
+            }
+        }
+    }
+}
+fun variableDeclaration(block: VariableDeclarationBuilder.() -> Unit) = VariableDeclarationBuilder().apply(block)
 
+class AssignmentBuilder: StatementBuilder {
+    lateinit var left: ExpressionBuilder
+    lateinit var right: ExpressionBuilder
+
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        lineStart()
+        add(left)
+        linePart(" = ")
+        add(right)
         statementLineEnd()
     }
 }
-typealias VariableAssignmentBuilderOps = VariableAssignmentBuilder.() -> Unit
-fun variableAssignment(block: VariableAssignmentBuilderOps) = VariableAssignmentBuilder().apply(block)
+typealias AssignmentBuilderOps = AssignmentBuilder.() -> Unit
+fun assignment(block: AssignmentBuilderOps) = AssignmentBuilder().apply(block)

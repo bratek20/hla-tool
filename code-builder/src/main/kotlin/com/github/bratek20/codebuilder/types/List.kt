@@ -21,10 +21,8 @@ fun mutableListType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder
     }
 }
 
-fun emptyMutableList(elementType: TypeBuilder): LinePartBuilder = object : LinePartBuilder {
-    override fun build(c: CodeBuilderContext): String {
-        return c.lang.emptyMutableList(elementType.build(c))
-    }
+fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
+    c.lang.emptyMutableList(elementType.build(c))
 }
 
 class ItOpsBuilder: ExpressionBuilder {

@@ -167,9 +167,20 @@ class TypesTest {
     fun listOps() {
         testOp {
             op = {
-                lineStart()
-                add(listOp("list").get(0))
-                lineEnd()
+                add(assignment {
+                    left = variableDeclaration {
+                        type = typeName("String")
+                        name = "firstElem"
+                    }
+                    right = listOp("list").get(0)
+                })
+                add(assignment {
+                    left = variableDeclaration {
+                        type = mutableListType(typeName("String"))
+                        name = "list"
+                    }
+                    right = emptyMutableList(typeName("String"))
+                })
 
                 add(listOp("list").add {
                     variable("someVar")
@@ -196,8 +207,8 @@ class TypesTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                   list[0]
-                   list.add(someVar)
+                   val firstElem: String = list[0]
+                   val list: MutableList<String> = mutableListOf()
                    list.add("someString")
                    list.find { it -> it == other }
                    list.map { it -> it + 1 }
@@ -206,7 +217,7 @@ class TypesTest {
             langExpected {
                 lang = TypeScript()
                 expected = """
-                   list[0]
+                   const firstElem: string = list[0]
                    list.push(someVar)
                    list.push("someString")
                    list.find( it => it == other )
@@ -216,7 +227,7 @@ class TypesTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                   list[0]
+                   List<string> firstElem = list[0]
                    list.Add(someVar)
                    list.Add("someString")
                    list.Find( it => it == other )
@@ -230,9 +241,13 @@ class TypesTest {
     fun optional() {
         testOp {
             op = {
-                lineStart()
-                add(optionalOp("optional").get())
-                lineEnd()
+                add(assignment {
+                    left = variableDeclaration {
+                        type = typeName("string")
+                        name = "someVariable"
+                    }
+                    right = variable("someVariable")
+                })
 
                 add(optionalOp("optional").map {
                     plus {

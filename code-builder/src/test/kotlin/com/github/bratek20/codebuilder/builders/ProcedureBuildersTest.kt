@@ -67,9 +67,9 @@ class ProcedureBuildersTest {
                         addFunctionCall {
                             name = "someOtherFunction"
                         }
-                        add(variableAssignment {
-                            name = "a"
-                            value = variable("1")
+                        add(assignment {
+                            left = variable("a")
+                            right = variable("1")
                         })
                         add(returnStatement {
                             variable("a")
@@ -125,9 +125,9 @@ class ProcedureBuildersTest {
                         })
                     }
                 })
-                add(variableAssignment {
-                    name = "result"
-                    value = methodCall {
+                add(assignment {
+                    left = variable("result")
+                    right = methodCall {
                         variableName = "this"
                         methodName = "sum"
 
@@ -139,9 +139,9 @@ class ProcedureBuildersTest {
                         }
                     }
                 })
-                add(variableAssignment {
-                    name = "sumOfSum"
-                    value = plus {
+                add(assignment {
+                    left = variable("sumOfSum")
+                    right = plus {
                         left = methodCall {
                             variableName = "left"
                             methodName = "sum"

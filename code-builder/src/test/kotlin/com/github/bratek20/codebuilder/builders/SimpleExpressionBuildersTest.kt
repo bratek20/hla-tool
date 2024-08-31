@@ -1,8 +1,10 @@
 package com.github.bratek20.codebuilder.builders
 
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testOp
+import com.github.bratek20.codebuilder.types.typeName
 import org.junit.jupiter.api.Test
 
 class SimpleExpressionBuildersTest {
@@ -10,19 +12,21 @@ class SimpleExpressionBuildersTest {
     fun `variable assignment`() {
         testOp {
             op = {
-                add(variableAssignment {
-                    name = "someVariable"
-                    declare = true
-                    mutable = true
-                    value = variable("someOtherVariable")
+                add(assignment {
+                    left = variableDeclaration {
+                        mutable = true
+                        type = typeName("SomeType")
+                        name = "someVariable"
+                    }
+                    right = variable("someOtherVariable")
                 })
-                add(variableAssignment {
-                    name = "someVariable"
-                    value = variable("someOtherVariable")
+                add(assignment {
+                    left = variable("someVariable")
+                    right = variable("someOtherVariable")
                 })
-                add(variableAssignment {
-                    name = "someVariable"
-                    value = functionCall {
+                add(assignment {
+                    left = variable("someVariable")
+                    right = functionCall {
                         name = "someFunction"
                     }
                 })
@@ -30,7 +34,7 @@ class SimpleExpressionBuildersTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                    var someVariable = someOtherVariable
+                    var someVariable: SomeType = someOtherVariable
                     someVariable = someOtherVariable
                     someVariable = someFunction()
                 """
@@ -38,9 +42,17 @@ class SimpleExpressionBuildersTest {
             langExpected {
                 lang = TypeScript()
                 expected = """
-                    let someVariable = someOtherVariable
+                    let someVariable: SomeType = someOtherVariable
                     someVariable = someOtherVariable
                     someVariable = someFunction()
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    SomeType someVariable = someOtherVariable;
+                    someVariable = someOtherVariable;
+                    someVariable = someFunction();
                 """
             }
         }
