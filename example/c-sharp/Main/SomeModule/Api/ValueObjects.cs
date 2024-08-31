@@ -59,14 +59,14 @@ namespace SomeModule.Api {
 
     public class SomeClass2 {
         readonly string id;
-        readonly string[] names;
-        readonly string[] ids;
+        readonly List<string> names;
+        readonly List<string> ids;
         readonly bool enabled;
 
         public SomeClass2(
             string id,
-            string[] names,
-            string[] ids,
+            List<string> names,
+            List<string> ids,
             bool enabled
         ) {
             this.id = id;
@@ -77,16 +77,16 @@ namespace SomeModule.Api {
         public SomeId GetId() {
             return new SomeId(id);
         }
-        public string[] GetNames() {
+        public List<string> GetNames() {
             return names;
         }
-        public SomeId[] GetIds() {
+        public List<SomeId> GetIds() {
             return ids.Select( it => new SomeId(it) );
         }
         public bool GetEnabled() {
             return enabled;
         }
-        public static SomeClass2 Create(SomeId id, string[] names, SomeId[] ids, bool enabled) {
+        public static SomeClass2 Create(SomeId id, List<string> names, List<SomeId> ids, bool enabled) {
             return new SomeClass2(id.Value, names, ids.Select( it => it.Value ), enabled);
         }
     }
@@ -94,12 +94,12 @@ namespace SomeModule.Api {
     public class SomeClass3 {
         readonly SomeClass2 class2Object;
         readonly string someEnum;
-        readonly SomeClass2[] class2List;
+        readonly List<SomeClass2> class2List;
 
         public SomeClass3(
             SomeClass2 class2Object,
             string someEnum,
-            SomeClass2[] class2List
+            List<SomeClass2> class2List
         ) {
             this.class2Object = class2Object;
             this.someEnum = someEnum;
@@ -111,10 +111,10 @@ namespace SomeModule.Api {
         public SomeEnum GetSomeEnum() {
             return SomeEnum.fromName(someEnum).get();
         }
-        public SomeClass2[] GetClass2List() {
+        public List<SomeClass2> GetClass2List() {
             return class2List;
         }
-        public static SomeClass3 Create(SomeClass2 class2Object, SomeEnum someEnum, SomeClass2[] class2List) {
+        public static SomeClass3 Create(SomeClass2 class2Object, SomeEnum someEnum, List<SomeClass2> class2List) {
             return new SomeClass3(class2Object, someEnum.getName(), class2List);
         }
     }
@@ -122,14 +122,14 @@ namespace SomeModule.Api {
     public class SomeClass4 {
         readonly int otherId;
         readonly OtherClass otherClass;
-        readonly int[] otherIdList;
-        readonly OtherClass[] otherClassList;
+        readonly List<int> otherIdList;
+        readonly List<OtherClass> otherClassList;
 
         public SomeClass4(
             int otherId,
             OtherClass otherClass,
-            int[] otherIdList,
-            OtherClass[] otherClassList
+            List<int> otherIdList,
+            List<OtherClass> otherClassList
         ) {
             this.otherId = otherId;
             this.otherClass = otherClass;
@@ -142,13 +142,13 @@ namespace SomeModule.Api {
         public OtherClass GetOtherClass() {
             return otherClass;
         }
-        public OtherId[] GetOtherIdList() {
+        public List<OtherId> GetOtherIdList() {
             return otherIdList.Select( it => new OtherId(it) );
         }
-        public OtherClass[] GetOtherClassList() {
+        public List<OtherClass> GetOtherClassList() {
             return otherClassList;
         }
-        public static SomeClass4 Create(OtherId otherId, OtherClass otherClass, OtherId[] otherIdList, OtherClass[] otherClassList) {
+        public static SomeClass4 Create(OtherId otherId, OtherClass otherClass, List<OtherId> otherIdList, List<OtherClass> otherClassList) {
             return new SomeClass4(otherId.Value, otherClass, otherIdList.Select( it => it.Value ), otherClassList);
         }
     }
@@ -238,17 +238,17 @@ namespace SomeModule.Api {
     }
 
     public class ClassHavingOptList {
-        readonly Optional<SomeClass[]> optList;
+        readonly List<SomeClass>? optList;
 
         public ClassHavingOptList(
-            Optional<SomeClass[]> optList
+            List<SomeClass>? optList
         ) {
             this.optList = optList;
         }
-        public Optional<SomeClass[]> GetOptList() {
+        public Optional<List<SomeClass>> GetOptList() {
             return TODO OptionalApiType.modernDeserialize;
         }
-        public static ClassHavingOptList Create(Optional<SomeClass[]> optList) {
+        public static ClassHavingOptList Create(Optional<List<SomeClass>> optList) {
             return new ClassHavingOptList(TODO OptionalApiType.modernSerialize);
         }
     }
@@ -343,8 +343,8 @@ namespace SomeModule.Api {
 
     public class SomeProperty {
         readonly OtherProperty other;
-        readonly Optional<int> id2;
-        readonly Optional<SerializedDateRange> range;
+        readonly int? id2;
+        readonly SerializedDateRange? range;
         readonly double doubleExample;
         readonly long longExample;
         readonly string goodName;
@@ -352,8 +352,8 @@ namespace SomeModule.Api {
 
         public SomeProperty(
             OtherProperty other,
-            Optional<int> id2,
-            Optional<SerializedDateRange> range,
+            int? id2,
+            SerializedDateRange? range,
             double doubleExample,
             long longExample,
             string goodName,
@@ -395,15 +395,15 @@ namespace SomeModule.Api {
 
     public class SomeProperty2 {
         readonly string value;
-        readonly any custom;
+        readonly object custom;
         readonly string someEnum;
-        readonly Optional<any> customOpt;
+        readonly object? customOpt;
 
         public SomeProperty2(
             string value,
-            any custom,
+            object custom,
             string someEnum,
-            Optional<any> customOpt
+            object? customOpt
         ) {
             this.value = value;
             this.custom = custom;
@@ -413,16 +413,16 @@ namespace SomeModule.Api {
         public string GetValue() {
             return value;
         }
-        public any GetCustom() {
+        public object GetCustom() {
             return custom;
         }
         public SomeEnum GetSomeEnum() {
             return SomeEnum.fromName(someEnum).get();
         }
-        public Optional<any> GetCustomOpt() {
+        public Optional<object> GetCustomOpt() {
             return TODO OptionalApiType.modernDeserialize;
         }
-        public static SomeProperty2 Create(string value, any custom, SomeEnum someEnum, Optional<any> customOpt) {
+        public static SomeProperty2 Create(string value, object custom, SomeEnum someEnum, Optional<object> customOpt) {
             return new SomeProperty2(value, custom, someEnum.getName(), TODO OptionalApiType.modernSerialize);
         }
     }
