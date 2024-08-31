@@ -8,10 +8,10 @@ import com.github.bratek20.utils.camelToPascalCase
 
 //part of line
 interface ExpressionBuilder: CodeBlockBuilder {
-    fun getValue(c: CodeBuilderContext): String {
-        TODO("not implemented")
-    }
+    //TODO-REF not all implement it, better idea is needed, maybe different interface where string is returned?
+    fun getValue(c: CodeBuilderContext): String? = null
 }
+
 typealias ExpressionBuilderProvider = () -> ExpressionBuilder
 
 fun expression(value: String) = object : ExpressionBuilder {

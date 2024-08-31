@@ -1,6 +1,8 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.CSharp
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
@@ -521,8 +523,16 @@ class OptionalApiType(
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
-        return optionalOp(variableName).map {
-            wrappedType.modernDeserialize("it")
+        //TODO-REF api type should have access to context
+        val c = CodeBuilderContext(CSharp())
+
+        val mapping = wrappedType.modernDeserialize("it")
+        val asOptional = hardOptional(wrappedType.builder(), variableName)
+        if (mapping.getValue(c) == "it") {
+            return asOptional
+        }
+        return optionalOp(asOptional.getValue(c)!!).map {
+            mapping
         }
     }
 

@@ -162,6 +162,7 @@ abstract class PatternGenerator
             }
             ModuleLanguage.C_SHARP -> {
                 cb.cSharpFile {
+                    addUsing("System.Collections.Generic")
                     addUsing("B20.Ext")
 
                     extraCSharpUsings().forEach {

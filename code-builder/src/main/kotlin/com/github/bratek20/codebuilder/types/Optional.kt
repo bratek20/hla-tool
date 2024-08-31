@@ -31,7 +31,7 @@ class OptionalOperations(
     }
 
     fun orElse(defaultValue: ExpressionBuilderProvider) = expression { c ->
-        c.lang.optionalOrElse(variableName, defaultValue().getValue(c))
+        c.lang.optionalOrElse(variableName, defaultValue().getValue(c)!!)
     }
 
     fun map(predicate: ExpressionBuilderProvider): ExpressionBuilder = object : ExpressionBuilder {
@@ -43,5 +43,9 @@ class OptionalOperations(
     }
 }
 fun optionalOp(variableName: String): OptionalOperations {
+    return OptionalOperations(variableName)
+}
+
+fun wrappedOptionalOp(variableName: String): OptionalOperations {
     return OptionalOperations(variableName)
 }
