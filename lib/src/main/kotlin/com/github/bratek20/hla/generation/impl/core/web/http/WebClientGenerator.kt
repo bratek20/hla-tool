@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.web.http
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.codebuilder.types.typeName
@@ -142,5 +143,17 @@ class WebClientGenerator: PatternGenerator() {
             "Optional.empty()"
 
         return "${returnPart}this.client.post($postUrl, $postBody)$getBodyPart"
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return lang is CSharp
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return exposedInterfaces(c).isNotEmpty()
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+
     }
 }

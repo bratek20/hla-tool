@@ -261,7 +261,7 @@ class WebCommonGenerator: PatternGenerator() {
     }
 
     override fun supportsCodeBuilder(): Boolean {
-        return lang is CSharp// || lang is Kotlin
+        return lang is CSharp
     }
 
     override fun shouldGenerate(): Boolean {
