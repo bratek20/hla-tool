@@ -12,28 +12,32 @@ namespace SomeModule.Web {
         readonly HttpClient client;
 
         public SomeInterfaceWebClient(
+            HttpClientFactory factory,
             SomeModuleWebClientConfig config
-        ) {}
+        ) {
+            this.client = factory.Create(config.Value);
+        }
+
         public void SomeEmptyMethod() {
-            return this.client.post("/some/prefix/someInterface/someEmptyMethod", Optional.empty());
+            this.client.post("/some/prefix/someInterface/someEmptyMethod", Optional.Empty());
         }
         /// <exception cref="SomeException"/>
         /// <exception cref="Some2Exception"/>
         public void SomeCommand(SomeId id, int amount) {
-            return this.client.post("/some/prefix/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)));
+            this.client.post("/some/prefix/someInterface/someCommand", Optional<SomeInterfaceSomeCommandRequest>.Of(SomeInterfaceSomeCommandRequest.Create(id, amount)));
         }
         /// <exception cref="SomeException"/>
         public SomeClass SomeQuery(SomeQueryInput query) {
-            return this.client.post("/some/prefix/someInterface/someQuery", Optional.of(SomeInterfaceSomeQueryRequest.create(query))).getBody(SomeInterfaceSomeQueryResponse).get().getValue();
+            return this.client.post("/some/prefix/someInterface/someQuery", Optional.Of(SomeInterfaceSomeQueryRequest.Create(query))).getBody(SomeInterfaceSomeQueryResponse).Get().Value;
         }
         public Optional<SomeClass> OptMethod(Optional<SomeId> optId) {
-            return this.client.post("/some/prefix/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().getValue();
+            return this.client.post("/some/prefix/someInterface/optMethod", Optional.Of(SomeInterfaceOptMethodRequest.Create(optId))).getBody(SomeInterfaceOptMethodResponse).Get().Value;
         }
         public List<SomeId> MethodWithListOfSimpleVO(List<SomeId> list) {
-            return this.client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional.of(SomeInterfaceMethodWithListOfSimpleVORequest.create(list))).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse).get().getValue();
+            return this.client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional.Of(SomeInterfaceMethodWithListOfSimpleVORequest.Create(list))).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse).Get().Value;
         }
         public object MethodWithAny(object i) {
-            return this.client.post("/some/prefix/someInterface/methodWithAny", Optional.of(SomeInterfaceMethodWithAnyRequest.create(i))).getBody(SomeInterfaceMethodWithAnyResponse).get().getValue();
+            return this.client.post("/some/prefix/someInterface/methodWithAny", Optional.Of(SomeInterfaceMethodWithAnyRequest.Create(i))).getBody(SomeInterfaceMethodWithAnyResponse).Get().Value;
         }
     }
 
@@ -44,10 +48,10 @@ namespace SomeModule.Web {
             SomeModuleWebClientConfig config
         ) {}
         public OtherClass ReferenceOtherClass(OtherClass other) {
-            return this.client.post("/some/prefix/someInterface2/referenceOtherClass", Optional.of(SomeInterface2ReferenceOtherClassRequest.create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).get().getValue();
+            return this.client.post("/some/prefix/someInterface2/referenceOtherClass", Optional.Of(SomeInterface2ReferenceOtherClassRequest.Create(other))).getBody(SomeInterface2ReferenceOtherClassResponse).Get().Value;
         }
         public LegacyType ReferenceLegacyType(LegacyType legacyType) {
-            return this.client.post("/some/prefix/someInterface2/referenceLegacyType", Optional.of(SomeInterface2ReferenceLegacyTypeRequest.create(legacyType))).getBody(SomeInterface2ReferenceLegacyTypeResponse).get().getValue();
+            return this.client.post("/some/prefix/someInterface2/referenceLegacyType", Optional.Of(SomeInterface2ReferenceLegacyTypeRequest.Create(legacyType))).getBody(SomeInterface2ReferenceLegacyTypeResponse).Get().Value;
         }
     }
 }
