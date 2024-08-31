@@ -1,8 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.types.listOp
-import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
@@ -25,6 +24,9 @@ abstract class ApiType {
     open fun serializableName(): String {
         return name()
     }
+
+    abstract fun builder(): TypeBuilder
+    abstract fun serializableBuilder(): TypeBuilder
 
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernDeserialize(variableName)"))
     open fun deserialize(variableName: String): String {
@@ -52,6 +54,32 @@ class BaseApiType(
         return languageTypes.mapBaseType(name)
     }
 
+    override fun builder(): TypeBuilder {
+        val cb = codeBuilderBaseType()
+        return if (cb != null) {
+            baseType(cb)
+        } else {
+            typeName(name())
+        }
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return builder()
+    }
+
+    private fun codeBuilderBaseType(): com.github.bratek20.codebuilder.core.BaseType? {
+        return when(name) {
+            BaseType.STRING -> com.github.bratek20.codebuilder.core.BaseType.STRING
+            BaseType.INT -> com.github.bratek20.codebuilder.core.BaseType.INT
+            BaseType.BOOL -> com.github.bratek20.codebuilder.core.BaseType.BOOL
+            BaseType.VOID -> com.github.bratek20.codebuilder.core.BaseType.VOID
+            BaseType.ANY -> com.github.bratek20.codebuilder.core.BaseType.ANY
+            BaseType.DOUBLE -> com.github.bratek20.codebuilder.core.BaseType.DOUBLE
+            BaseType.LONG -> com.github.bratek20.codebuilder.core.BaseType.LONG
+            BaseType.STRUCT -> null
+        }
+    }
+
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
         return variable(variableName)
     }
@@ -66,6 +94,14 @@ class InterfaceApiType(
 ) : ApiType() {
     override fun name(): String {
         return name
+    }
+
+    override fun builder(): TypeBuilder {
+        TODO("Not yet implemented")
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        TODO("Not yet implemented")
     }
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
@@ -91,6 +127,14 @@ class ExternalApiType(
         return rawName
     }
 
+    override fun builder(): TypeBuilder {
+        return typeName(name())
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return builder()
+    }
+
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
         return variable(variableName)
     }
@@ -109,6 +153,11 @@ abstract class StructureApiType(
 
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
+    }
+
+
+    override fun builder(): TypeBuilder {
+        return typeName(name)
     }
 }
 
@@ -129,6 +178,10 @@ abstract class SimpleStructureApiType(
 
     override fun serialize(variableName: String): String {
         return unbox(variableName)
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return boxedType.builder()
     }
 
     fun exampleValue(): String? {
@@ -232,6 +285,10 @@ class ComplexCustomApiType(
         return "Serialized$name"
     }
 
+    override fun serializableBuilder(): TypeBuilder {
+        return typeName(serializableName())
+    }
+
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name())
     }
@@ -308,6 +365,10 @@ open class SerializableApiType(
     override fun modernSerialize(variableName: String): ExpressionBuilder {
         return variable(variableName)
     }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return typeName(name())
+    }
 }
 
 class ComplexValueObjectApiType(
@@ -318,7 +379,7 @@ class ComplexValueObjectApiType(
         name = name()
         fields.forEach {
             addField {
-                type = typeName(it.type.serializableName())
+                type = it.type.serializableBuilder()
                 name = it.name
                 fromConstructor = true
             }
@@ -327,7 +388,7 @@ class ComplexValueObjectApiType(
         fields.forEach {
             addMethod {
                 name = it.getterName()
-                returnType = typeName(it.type.name())
+                returnType = it.type.builder()
                 setBody {
                     add(returnStatement {
                         it.type.modernDeserialize(it.name)
@@ -338,11 +399,11 @@ class ComplexValueObjectApiType(
 
         addMethod {
             static = true
-            returnType = typeName(this@ComplexValueObjectApiType.name)
+            returnType = this@ComplexValueObjectApiType.builder()
             name = "create"
             fields.forEach {
                 addArg {
-                    type = typeName(it.type.name())
+                    type = it.type.builder()
                     name = it.name
                 }
             }
@@ -382,6 +443,14 @@ class ListApiType(
 
     override fun serializableName(): String {
         return languageTypes.wrapWithList(wrappedType.serializableName())
+    }
+
+    override fun builder(): TypeBuilder {
+        return listType(wrappedType.builder())
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return listType(wrappedType.serializableBuilder())
     }
 
     override fun deserialize(variableName: String): String {
@@ -428,6 +497,14 @@ class OptionalApiType(
         return languageTypes.wrapWithOptional(wrappedType.serializableName())
     }
 
+    override fun builder(): TypeBuilder {
+        return hardOptionalType(wrappedType.builder())
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return softOptionalType(wrappedType.serializableBuilder())
+    }
+
     fun unwrap(variableName: String): String {
         return languageTypes.unwrapOptional(variableName)
     }
@@ -467,6 +544,14 @@ class EnumApiType(
 
     override fun serializableName(): String {
         return languageTypes.mapBaseType(BaseType.STRING)
+    }
+
+    override fun builder(): TypeBuilder {
+        return typeName(name())
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return baseType(com.github.bratek20.codebuilder.core.BaseType.STRING)
     }
 
     fun defaultValue(): String {

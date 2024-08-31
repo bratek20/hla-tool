@@ -18,31 +18,59 @@ class TypesTest {
                 lineEnd()
 
                 lineStart()
-                add(baseType(BaseType.BOOLEAN))
+                add(baseType(BaseType.BOOL))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.ANY))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.VOID))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.DOUBLE))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.LONG))
                 lineEnd()
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
-                   Int
-                   String
-                   Boolean
+                    Int
+                    String
+                    Boolean
+                    Any
+                    Unit
+                    Double
+                    Long
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
-                   number
-                   string
-                   boolean
+                    number
+                    string
+                    boolean
+                    any
+                    void
+                    number
+                    number
                 """
             }
             langExpected {
                 lang = CSharp()
                 expected = """
-                   int
-                   string
-                   bool
+                    int
+                    string
+                    bool
+                    object
+                    void
+                    double
+                    long
                 """
             }
         }

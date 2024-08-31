@@ -1,7 +1,7 @@
 package com.github.bratek20.codebuilder.core
 
 enum class BaseType {
-    INT, STRING, BOOLEAN, ANY
+    INT, STRING, BOOL, ANY, VOID, DOUBLE, LONG
 }
 
 enum class TypeDeclarationStyle {
@@ -112,8 +112,11 @@ class Kotlin: CodeBuilderLanguage {
         return when (type) {
             BaseType.INT -> "Int"
             BaseType.STRING -> "String"
-            BaseType.BOOLEAN -> "Boolean"
+            BaseType.BOOL -> "Boolean"
             BaseType.ANY -> "Any"
+            BaseType.VOID -> "Unit"
+            BaseType.DOUBLE -> "Double"
+            BaseType.LONG -> "Long"
         }
     }
 
@@ -283,8 +286,11 @@ class TypeScript: CodeBuilderLanguage {
         return when (type) {
             BaseType.INT -> "number"
             BaseType.STRING -> "string"
-            BaseType.BOOLEAN -> "boolean"
+            BaseType.BOOL -> "boolean"
             BaseType.ANY -> "any"
+            BaseType.VOID -> "void"
+            BaseType.DOUBLE -> "number"
+            BaseType.LONG -> "number"
         }
     }
 
@@ -458,8 +464,11 @@ class CSharp: CodeBuilderLanguage {
         return when (type) {
             BaseType.INT -> "int"
             BaseType.STRING -> "string"
-            BaseType.BOOLEAN -> "bool"
+            BaseType.BOOL -> "bool"
             BaseType.ANY -> "object"
+            BaseType.VOID -> "void"
+            BaseType.DOUBLE -> "double"
+            BaseType.LONG -> "long"
         }
     }
 
