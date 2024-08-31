@@ -4,10 +4,8 @@ import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.ExpressionBuilderProvider
 import com.github.bratek20.codebuilder.builders.StatementBuilder
 import com.github.bratek20.codebuilder.builders.expression
-import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
-import com.github.bratek20.codebuilder.core.LinePartBuilder
 
 fun listType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder {
     override fun build(c: CodeBuilderContext): String {
@@ -21,10 +19,8 @@ fun mutableListType(elementType: TypeBuilder): TypeBuilder = object: TypeBuilder
     }
 }
 
-fun emptyMutableList(elementType: TypeBuilder): LinePartBuilder = object : LinePartBuilder {
-    override fun build(c: CodeBuilderContext): String {
-        return c.lang.emptyMutableList(elementType.build(c))
-    }
+fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
+    c.lang.newEmptyMutableList(elementType.build(c))
 }
 
 class ItOpsBuilder: ExpressionBuilder {

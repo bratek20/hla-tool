@@ -2,6 +2,8 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.codebuilder.types.softOptionalType
 import com.github.bratek20.utils.camelToPascalCase
 
 class FieldBuilder(
@@ -134,6 +136,8 @@ open class ClassBuilder: CodeBlockBuilder {
 
     lateinit var name: String
 
+    var equalsAndHashCode = false
+
     var implements: String? = null
 
     private var constructor: ClassConstructorBuilder? = null
@@ -185,6 +189,9 @@ open class ClassBuilder: CodeBlockBuilder {
         methods.forEach { method ->
             add(method)
         }
+        if(equalsAndHashCode) {
+            addOps(equalsAndHashCodeSection(c))
+        }
         if (staticMethods.isNotEmpty()) {
             addOps(staticMethodsSection(c))
         }
@@ -192,6 +199,48 @@ open class ClassBuilder: CodeBlockBuilder {
         line("}")
     }
 
+    private fun equalsAndHashCodeSection(c: CodeBuilderContext): CodeBuilderOps {
+        if (c.lang !is CSharp) {
+            return {}
+        }
+
+        //TODO-REF make it work not only for Value field
+        return {
+            emptyLine()
+            add(method {
+                name = "Equals"
+                override = true
+                returnType = baseType(BaseType.BOOL)
+
+                addArg {
+                    name = "obj"
+                    type = softOptionalType(baseType(BaseType.ANY))
+                }
+
+                setBody {
+                    add(statement("if (ReferenceEquals(null, obj)) return false"))
+                    add(statement("if (ReferenceEquals(this, obj)) return true"))
+                    add(statement("if (obj.GetType() != this.GetType()) return false"))
+                    add(returnStatement {
+                        expression("Value == ((${this@ClassBuilder.name})obj).Value")
+                    })
+                }
+            })
+
+            emptyLine()
+            add(method {
+                name = "GetHashCode"
+                override = true
+                returnType = baseType(BaseType.INT)
+
+                setBody {
+                    add(returnStatement {
+                        expression("Value.GetHashCode()")
+                    })
+                }
+            })
+        }
+    }
     private fun nonFieldConstructorOps(c: CodeBuilderContext): CodeBuilderOps = {
         if (c.lang is CSharp && shouldGenerateConstructor()) {
             if (fields.isNotEmpty()) {
@@ -228,7 +277,14 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     private fun classDeclarationWithFieldConstructor(c: CodeBuilderContext): CodeBuilderOps = {
-        val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + "class "
+        val finalClassKeyword = if(equalsAndHashCode && c.lang is Kotlin) {
+            "data class "
+        }
+        else {
+            "class "
+        }
+
+        val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + finalClassKeyword
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
         extendsOrImplementsPart = extends?.let { c.lang.extends() + ExtendsBuilder().apply(it).build(c) } ?: extendsOrImplementsPart
         val beginningWithoutExtendOrImplements = "$classPart$name"

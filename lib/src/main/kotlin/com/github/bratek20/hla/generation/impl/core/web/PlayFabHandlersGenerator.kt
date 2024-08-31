@@ -79,10 +79,11 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                             }
                             val hasRequest = method.getArgs().size == 1
                             if (hasRequest) {
-                                add(variableAssignment {
-                                    declare = true
-                                    name = "request"
-                                    value = functionCall {
+                                add(assignment {
+                                    left = variableDeclaration {
+                                        name = "request"
+                                    }
+                                    right = functionCall {
                                         name = "ObjectCreation.Api.FromInterface"
                                         addArg{
                                             variable(method.getArgs().first().getType().getName())
@@ -111,10 +112,11 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                             }
 
                             if (hasResponse) {
-                                add(variableAssignment {
-                                    declare = true
-                                    name = "response"
-                                    value = functionCall(apiCall)
+                                add(assignment {
+                                    left = variableDeclaration {
+                                        name = "response"
+                                    }
+                                    right = functionCall(apiCall)
                                 })
                             }
                             else {

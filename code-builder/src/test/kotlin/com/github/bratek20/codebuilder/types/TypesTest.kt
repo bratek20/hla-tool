@@ -18,31 +18,59 @@ class TypesTest {
                 lineEnd()
 
                 lineStart()
-                add(baseType(BaseType.BOOLEAN))
+                add(baseType(BaseType.BOOL))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.ANY))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.VOID))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.DOUBLE))
+                lineEnd()
+
+                lineStart()
+                add(baseType(BaseType.LONG))
                 lineEnd()
             }
             langExpected {
                 lang = Kotlin()
                 expected = """
-                   Int
-                   String
-                   Boolean
+                    Int
+                    String
+                    Boolean
+                    Any
+                    Unit
+                    Double
+                    Long
                 """
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
-                   number
-                   string
-                   boolean
+                    number
+                    string
+                    boolean
+                    any
+                    void
+                    number
+                    number
                 """
             }
             langExpected {
                 lang = CSharp()
                 expected = """
-                   int
-                   string
-                   bool
+                    int
+                    string
+                    bool
+                    object
+                    void
+                    double
+                    long
                 """
             }
         }
@@ -167,12 +195,19 @@ class TypesTest {
     fun listOps() {
         testOp {
             op = {
-                lineStart()
-                add(listOp("list").get(0))
-                lineEnd()
-
-                add(listOp("list").add {
-                    variable("someVar")
+                add(assignment {
+                    left = variableDeclaration {
+                        type = baseType(BaseType.STRING)
+                        name = "firstElem"
+                    }
+                    right = listOp("list").get(0)
+                })
+                add(assignment {
+                    left = variableDeclaration {
+                        type = mutableListType(baseType(BaseType.STRING))
+                        name = "list"
+                    }
+                    right = emptyMutableList(baseType(BaseType.STRING))
                 })
 
                 add(listOp("list").add {
@@ -196,8 +231,8 @@ class TypesTest {
             langExpected {
                 lang = Kotlin()
                 expected = """
-                   list[0]
-                   list.add(someVar)
+                   val firstElem: String = list[0]
+                   val list: MutableList<String> = mutableListOf()
                    list.add("someString")
                    list.find { it -> it == other }
                    list.map { it -> it + 1 }
@@ -206,8 +241,8 @@ class TypesTest {
             langExpected {
                 lang = TypeScript()
                 expected = """
-                   list[0]
-                   list.push(someVar)
+                   const firstElem: string = list[0]
+                   const list: string[] = []
                    list.push("someString")
                    list.find( it => it == other )
                    list.map( it => it + 1 )
@@ -216,11 +251,95 @@ class TypesTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                   list[0]
-                   list.Add(someVar)
+                   string firstElem = list[0];
+                   List<string> list = new List<string>();
                    list.Add("someString")
                    list.Find( it => it == other )
                    list.Select( it => it + 1 )
+                """
+            }
+        }
+    }
+
+    @Test
+    fun optional() {
+        testOp {
+            op = {
+                add(assignment {
+                    left = variableDeclaration {
+                        type = softOptionalType(baseType(BaseType.STRING))
+                        name = "softOptional"
+                    }
+                    right = softOptional("someVariable")
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = hardOptionalType(baseType(BaseType.STRING))
+                        name = "hardOptional"
+                    }
+                    right = hardOptional(baseType(BaseType.STRING), "someVariable")
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = baseType(BaseType.STRING)
+                        name = "unpacked"
+                    }
+                    right = optionalOp("optional").get()
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = softOptionalType(baseType(BaseType.STRING))
+                        name = "unpackedToSoft"
+                    }
+                    right = optionalOp("optional").orElse {
+                        nullValue()
+                    }
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = baseType(BaseType.INT)
+                        name = "plusOne"
+                    }
+                    right = optionalOp("optional").map {
+                        plus {
+                            left = variable("it")
+                            right = const(1)
+                        }
+                    }
+                })
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                   val softOptional: String? = someVariable
+                   val hardOptional: String? = someVariable
+                   val unpacked: String = optional!!
+                   val unpackedToSoft: String? = optional ?: null
+                   val plusOne: Int = optional.let { it -> it + 1 }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                   const softOptional: string? = someVariable
+                   const hardOptional: Optional<string> = Optional.of(someVariable)
+                   const unpacked: string = optional.get()
+                   const unpackedToSoft: string? = optional.orElse(undefined)
+                   const plusOne: number = optional.map( it => it + 1 )
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                   string? softOptional = someVariable;
+                   Optional<string> hardOptional = Optional.Of<string>(someVariable);
+                   string unpacked = optional.Get();
+                   string? unpackedToSoft = optional.OrElse(null);
+                   int plusOne = optional.Map( it => it + 1 );
                 """
             }
         }

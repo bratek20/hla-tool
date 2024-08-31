@@ -11,6 +11,17 @@ namespace SimpleModule.Api {
         ) {
             Value = value;
         }
+
+        public override bool Equals(object? obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Value == ((SimpleId)obj).Value;
+        }
+
+        public override int GetHashCode() {
+            return Value.GetHashCode();
+        }
     }
 
     public class SomeLongWrapper {
@@ -20,6 +31,17 @@ namespace SimpleModule.Api {
             long value
         ) {
             Value = value;
+        }
+
+        public override bool Equals(object? obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Value == ((SomeLongWrapper)obj).Value;
+        }
+
+        public override int GetHashCode() {
+            return Value.GetHashCode();
         }
     }
 }

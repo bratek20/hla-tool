@@ -129,11 +129,12 @@ class MocksGenerator: PatternGenerator() {
                             add(listOp(callsListName).add {
                                 variable(inputArgName)
                             })
-                            add(variableAssignment {
-                                declare = true
-                                name = "findResult"
+                            add(assignment {
+                                left = variableDeclaration {
+                                    name = "findResult"
+                                }
 
-                                value = listOp(responsesListName).find {
+                                right = listOp(responsesListName).find {
                                     isEqualTo {
                                         left = functionCall {
                                             name = inputDiffMethodName

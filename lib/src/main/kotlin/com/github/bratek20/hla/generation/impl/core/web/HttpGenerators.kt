@@ -139,17 +139,18 @@ class WebCommonGenerator: PatternGenerator() {
                     }
                 }
                 setBody {
-                    add(variableAssignment {
-                        declare = true
-                        name = "instance"
-                        value = constructorCall {
+                    add(assignment {
+                        left = variableDeclaration {
+                            name = "instance"
+                        }
+                        right = constructorCall {
                             className = requestName(interfName, method)
                         }
                     })
                     method.args.forEach {
-                        add(variableAssignment {
-                            name = "instance.${it.name}"
-                            value = variable(it.apiType.serialize(it.name))
+                        add(assignment {
+                            left = expression("instance.${it.name}")
+                            right = variable(it.apiType.serialize(it.name))
                         })
                     }
                     add(returnStatement {
@@ -298,9 +299,9 @@ class WebClientGenerator: PatternGenerator() {
                                     type = typeName("HandlerContext")
                                 }
                                 setBody {
-                                    add(variableAssignment {
-                                        name = "this.client"
-                                        value = functionCall {
+                                    add(assignment {
+                                        left = expression("this.client")
+                                        right = functionCall {
                                             name = "HttpClient.Api.create"
                                             addArg {
                                                 variable("config.value")

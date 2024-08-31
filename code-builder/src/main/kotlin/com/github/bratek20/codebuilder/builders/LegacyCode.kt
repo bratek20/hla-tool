@@ -20,12 +20,12 @@ fun CodeBuilder.legacyComment(value: String): CodeBuilder {
 }
 
 class AssignArgs {
-    lateinit var variable: VariableAssignmentBuilderOps
+    lateinit var variable: AssignmentBuilderOps
     lateinit var value: CodeBuilderOps
 }
 fun CodeBuilder.legacyAssign(block: AssignArgs.()->Unit): CodeBuilder {
     val args = AssignArgs().apply(block)
-    add(VariableAssignmentBuilder().apply(args.variable))
+    add(AssignmentBuilder().apply(args.variable))
     linePart(" = ")
     addOps(args.value)
     statementLineEnd()

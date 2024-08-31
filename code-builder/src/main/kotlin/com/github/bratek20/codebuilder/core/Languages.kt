@@ -1,7 +1,7 @@
 package com.github.bratek20.codebuilder.core
 
 enum class BaseType {
-    INT, STRING, BOOLEAN, ANY
+    INT, STRING, BOOL, ANY, VOID, DOUBLE, LONG
 }
 
 enum class TypeDeclarationStyle {
@@ -35,12 +35,20 @@ interface CodeBuilderLanguage {
 
     fun listType(elementType: String): String
     fun mutableListType(elementType: String): String
-    fun emptyMutableList(elementType: String): String
+    fun newEmptyMutableList(elementType: String): String
     fun listAddCallName(): String
     fun listFindBegin(): String
     fun listFindEnd(): String
     fun listMapBegin(): String
     fun listMapEnd(): String
+
+    fun softOptionalType(elementType: String): String
+    fun hardOptionalType(elementType: String): String
+    fun newHardOptional(elementType: String, variableName: String): String
+    fun optionalGet(variableName: String): String
+    fun optionalOrElse(variableName: String, defaultValue: String): String
+    fun optionalMapBegin(): String
+    fun optionalMapEnd(): String
 
     fun lambdaArrow(): String
 
@@ -67,6 +75,8 @@ interface CodeBuilderLanguage {
     fun softThis(): String
 
     fun areMethodsPascalCase(): Boolean = false
+
+    fun nullValue(): String = "null"
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -102,8 +112,11 @@ class Kotlin: CodeBuilderLanguage {
         return when (type) {
             BaseType.INT -> "Int"
             BaseType.STRING -> "String"
-            BaseType.BOOLEAN -> "Boolean"
+            BaseType.BOOL -> "Boolean"
             BaseType.ANY -> "Any"
+            BaseType.VOID -> "Unit"
+            BaseType.DOUBLE -> "Double"
+            BaseType.LONG -> "Long"
         }
     }
 
@@ -151,11 +164,39 @@ class Kotlin: CodeBuilderLanguage {
         return "}"
     }
 
+    override fun softOptionalType(elementType: String): String {
+        return "$elementType?"
+    }
+
+    override fun hardOptionalType(elementType: String): String {
+        return "$elementType?"
+    }
+
+    override fun newHardOptional(elementType: String, variableName: String): String {
+        return variableName
+    }
+
+    override fun optionalGet(variableName: String): String {
+        return "${variableName}!!"
+    }
+
+    override fun optionalOrElse(variableName: String, defaultValue: String): String {
+        return "$variableName ?: $defaultValue"
+    }
+
+    override fun optionalMapBegin(): String {
+        return "let {"
+    }
+
+    override fun optionalMapEnd(): String {
+        return "}"
+    }
+
     override fun lambdaArrow(): String {
         return "->"
     }
 
-    override fun emptyMutableList(elementType: String): String {
+    override fun newEmptyMutableList(elementType: String): String {
         return "mutableListOf()"
     }
 
@@ -245,8 +286,11 @@ class TypeScript: CodeBuilderLanguage {
         return when (type) {
             BaseType.INT -> "number"
             BaseType.STRING -> "string"
-            BaseType.BOOLEAN -> "boolean"
+            BaseType.BOOL -> "boolean"
             BaseType.ANY -> "any"
+            BaseType.VOID -> "void"
+            BaseType.DOUBLE -> "number"
+            BaseType.LONG -> "number"
         }
     }
 
@@ -294,11 +338,39 @@ class TypeScript: CodeBuilderLanguage {
         return ")"
     }
 
+    override fun softOptionalType(elementType: String): String {
+        return "$elementType?"
+    }
+
+    override fun hardOptionalType(elementType: String): String {
+        return "Optional<$elementType>"
+    }
+
+    override fun newHardOptional(elementType: String, variableName: String): String {
+        return "Optional.of($variableName)"
+    }
+
+    override fun optionalGet(variableName: String): String {
+        return "$variableName.get()"
+    }
+
+    override fun optionalOrElse(variableName: String, defaultValue: String): String {
+        return "$variableName.orElse($defaultValue)"
+    }
+
+    override fun optionalMapBegin(): String {
+        return "map("
+    }
+
+    override fun optionalMapEnd(): String {
+        return ")"
+    }
+
     override fun lambdaArrow(): String {
         return "=>"
     }
 
-    override fun emptyMutableList(elementType: String): String {
+    override fun newEmptyMutableList(elementType: String): String {
         return "[]"
     }
 
@@ -353,6 +425,10 @@ class TypeScript: CodeBuilderLanguage {
     override fun softThis(): String {
         return "this."
     }
+
+    override fun nullValue(): String {
+        return "undefined"
+    }
 }
 
 class CSharp: CodeBuilderLanguage {
@@ -388,8 +464,11 @@ class CSharp: CodeBuilderLanguage {
         return when (type) {
             BaseType.INT -> "int"
             BaseType.STRING -> "string"
-            BaseType.BOOLEAN -> "bool"
+            BaseType.BOOL -> "bool"
             BaseType.ANY -> "object"
+            BaseType.VOID -> "void"
+            BaseType.DOUBLE -> "double"
+            BaseType.LONG -> "long"
         }
     }
 
@@ -437,11 +516,39 @@ class CSharp: CodeBuilderLanguage {
         return ")"
     }
 
+    override fun optionalGet(variableName: String): String {
+        return "$variableName.Get()"
+    }
+
+    override fun optionalOrElse(variableName: String, defaultValue: String): String {
+        return "$variableName.OrElse($defaultValue)"
+    }
+
+    override fun optionalMapBegin(): String {
+        return "Map("
+    }
+
+    override fun optionalMapEnd(): String {
+        return ")"
+    }
+
+    override fun softOptionalType(elementType: String): String {
+        return "$elementType?"
+    }
+
+    override fun hardOptionalType(elementType: String): String {
+        return "Optional<$elementType>"
+    }
+
+    override fun newHardOptional(elementType: String, variableName: String): String {
+        return "Optional.Of<$elementType>($variableName)"
+    }
+
     override fun lambdaArrow(): String {
         return "=>"
     }
 
-    override fun emptyMutableList(elementType: String): String {
+    override fun newEmptyMutableList(elementType: String): String {
         return "new List<$elementType>()"
     }
 
