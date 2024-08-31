@@ -36,6 +36,10 @@ class TestSomeInterfaceLogic: SomeInterface {
         return list
     }
 
+    override fun methodWithAny(i: Any): Any {
+        TODO("Not yet implemented")
+    }
+
 }
 
 class TestSomeModuleImpl: ContextModule {
