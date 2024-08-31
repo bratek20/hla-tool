@@ -299,10 +299,16 @@ class TypesTest {
                     }
                 })
 
-                add(optionalOp("optional").map {
-                    plus {
-                        left = variable("it")
-                        right = const(1)
+                add(assignment {
+                    left = variableDeclaration {
+                        type = baseType(BaseType.INT)
+                        name = "plusOne"
+                    }
+                    right = optionalOp("optional").map {
+                        plus {
+                            left = variable("it")
+                            right = const(1)
+                        }
                     }
                 })
             }
@@ -313,7 +319,7 @@ class TypesTest {
                    val hardOptional: String? = someVariable
                    val unpacked: String = optional!!
                    val unpackedToSoft: String? = optional ?: null
-                   optional.let { it -> it + 1 }
+                   val plusOne: Int = optional.let { it -> it + 1 }
                 """
             }
             langExpected {
@@ -323,7 +329,7 @@ class TypesTest {
                    const hardOptional: Optional<string> = Optional.of(someVariable)
                    const unpacked: string = optional.get()
                    const unpackedToSoft: string? = optional.orElse(undefined)
-                   optional.map( it => it + 1 )
+                   const plusOne: number = optional.map( it => it + 1 )
                 """
             }
             langExpected {
@@ -333,7 +339,7 @@ class TypesTest {
                    Optional<string> hardOptional = Optional.Of<string>(someVariable);
                    string unpacked = optional.Get();
                    string? unpackedToSoft = optional.OrElse(null);
-                   optional.Map( it => it + 1 )
+                   int plusOne = optional.Map( it => it + 1 );
                 """
             }
         }

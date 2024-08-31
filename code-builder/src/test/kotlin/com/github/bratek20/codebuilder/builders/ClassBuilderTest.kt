@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.codebuilder.types.optionalOp
 import com.github.bratek20.codebuilder.types.typeName
 import org.junit.jupiter.api.Test
 
@@ -707,6 +708,40 @@ class ClassBuilderTest {
                             Value = value;
                         }
                     }
+                """
+            }
+        }
+    }
+
+
+    @Test
+    fun `constructor call with opt map expressions`() {
+        testOp {
+            op = {
+                add(constructorCall {
+                    className = "SomeClass"
+                    addArg {
+                        optionalOp("op1").map {
+                            plus {
+                                left = variable("it")
+                                right = const(1)
+                            }
+                        }
+                    }
+                    addArg {
+                        optionalOp("op2").map {
+                            plus {
+                                left = variable("it")
+                                right = const(2)
+                            }
+                        }
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    new SomeClass(op1.Map( it => it + 1 ), op2.Map( it => it + 2 ))
                 """
             }
         }

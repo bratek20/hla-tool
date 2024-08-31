@@ -36,9 +36,9 @@ class OptionalOperations(
 
     fun map(predicate: ExpressionBuilderProvider): ExpressionBuilder = object : ExpressionBuilder {
         override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-            lineSoftStart("${variableName}.${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
+            linePart("${variableName}.${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
             add(predicate())
-            lineSoftEnd(" " + c.lang.optionalMapEnd())
+            linePart(" " + c.lang.optionalMapEnd())
         }
     }
 }

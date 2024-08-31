@@ -217,8 +217,7 @@ namespace SomeModule.Api {
             return sameClassList;
         }
         public static SomeClass6 Create(Optional<SomeClass> someClassOpt, Optional<string> optString, List<SomeClass6> sameClassList) {
-            return new SomeClass6(someClassOpt.Map( it => it ), 
-            optString.Map( it => it ), sameClassList);
+            return new SomeClass6(someClassOpt.Map( it => it ), optString.Map( it => it ), sameClassList);
         }
     }
 
@@ -390,8 +389,7 @@ namespace SomeModule.Api {
             return customData;
         }
         public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, any customData) {
-            return new SomeProperty(other, id2.Map( it => it.Value ), 
-            range.Map( it => it.fromCustomType() ), doubleExample, longExample, goodName, customData);
+            return new SomeProperty(other, id2.Map( it => it.Value ), range.Map( it => it.fromCustomType() ), doubleExample, longExample, goodName, customData);
         }
     }
 
