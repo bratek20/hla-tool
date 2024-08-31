@@ -185,7 +185,7 @@ class Kotlin: CodeBuilderLanguage {
     }
 
     override fun optionalMapBegin(): String {
-        return "let {"
+        return "?.let {"
     }
 
     override fun optionalMapEnd(): String {
@@ -359,7 +359,7 @@ class TypeScript: CodeBuilderLanguage {
     }
 
     override fun optionalMapBegin(): String {
-        return "map("
+        return ".map("
     }
 
     override fun optionalMapEnd(): String {
@@ -525,7 +525,7 @@ class CSharp: CodeBuilderLanguage {
     }
 
     override fun optionalMapBegin(): String {
-        return "Map("
+        return ".Map("
     }
 
     override fun optionalMapEnd(): String {

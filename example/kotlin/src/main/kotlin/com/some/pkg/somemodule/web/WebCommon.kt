@@ -9,8 +9,10 @@ import com.some.pkg.somemodule.api.*
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
-class SomeModuleWebClientConfig(val value: HttpClientConfig)
-
+class SomeModuleWebClientConfig(
+    val value: HttpClientConfig
+) {
+}
 class SomeInterfaceSomeCommandRequest(
     private val id: String,
     private val amount: Int

@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.types
 
 import com.github.bratek20.codebuilder.builders.ExpressionBuilderProvider
 import com.github.bratek20.codebuilder.builders.expression
+import com.github.bratek20.codebuilder.core.Kotlin
 
 fun softOptionalType(elementType: TypeBuilder) = typeName {
     c -> c.lang.softOptionalType(elementType.build(c))
@@ -25,13 +26,20 @@ class OptionalOperations(
         c.lang.optionalGet(variableName)
     }
 
-    fun orElse(defaultValue: ExpressionBuilderProvider) = expression { c ->
-        c.lang.optionalOrElse(variableName, defaultValue().build(c))
+    fun orElse(defaultValueProvider: ExpressionBuilderProvider) = expression { c ->
+        val defaultValue = defaultValueProvider().build(c)
+
+        if (defaultValue == "null" && c.lang is Kotlin) {
+            variableName
+        }
+        else {
+            c.lang.optionalOrElse(variableName, defaultValue)
+        }
     }
 
     fun map(predicate: ExpressionBuilderProvider) = expression { c ->
        StringBuilder().apply {
-           append("${variableName}.${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
+           append("${variableName}${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
            append(predicate().build(c))
            append(" " + c.lang.optionalMapEnd())
        }.toString()
