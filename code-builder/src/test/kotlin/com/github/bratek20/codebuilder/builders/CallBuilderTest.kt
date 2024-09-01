@@ -1,5 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testLinePartOps
 import com.github.bratek20.codebuilder.core.testOp
@@ -27,6 +28,24 @@ class CallBuilderTest {
                 lang = TypeScript()
                 expected = """
                     someFunction(arg1, arg2, arg3)
+                """
+            }
+        }
+    }
+
+    @Test
+    fun methodCallWithGeneric() {
+        testLinePartOps {
+            ops {
+                add(methodCall {
+                    methodName = "someFunction"
+                    addGeneric("SomeType")
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    SomeFunction<SomeType>()
                 """
             }
         }

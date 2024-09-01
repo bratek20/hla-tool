@@ -205,9 +205,7 @@ class WebClientGenerator: PatternGenerator() {
             objectRef = optionalOp {
                 methodCall {
                     methodName = "getBody"
-                    addArg {
-                        variable(responseName(interfaceName, method))
-                    }
+                    addGeneric(responseName(interfaceName, method))
                 }
             }.get()
             fieldName = "value"

@@ -12,11 +12,27 @@ abstract class CallBuilder: ExpressionBuilder {
         args.add(exp())
     }
 
+    private val generics: MutableList<String> = mutableListOf()
+    fun addGeneric(name: String) {
+        generics.add(name)
+    }
+
     override fun build(c: CodeBuilderContext): String {
         val b = StringBuilder()
         b.append(beforeName(c))
 
-        b.append("${getCallName(c)}(")
+        b.append(getCallName(c))
+        if(generics.isNotEmpty()) {
+            b.append("<")
+            generics.forEachIndexed { index, generic ->
+                b.append(generic)
+                if (index != generics.size - 1) {
+                    b.append(", ")
+                }
+            }
+            b.append(">")
+        }
+        b.append("(")
         args.forEachIndexed { index, arg ->
             b.append(arg.build(c))
             if (index != args.size - 1) {
