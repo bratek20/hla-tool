@@ -243,17 +243,14 @@ class WebClientGenerator: PatternGenerator() {
                 addArg {
                     postBody
                 }
-
-                if (hasReturnValue) {
-                    addArg {
-                        getBodyPart
-                    }
-                }
             }
         }
+
         if (hasReturnValue) {
             add(returnStatement {
-                finalExpression
+                finalExpression.then {
+                    getBodyPart
+                }
             })
         } else {
             add(finalExpression.asStatement())
