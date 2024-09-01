@@ -90,3 +90,5 @@ class AssignmentBuilder: StatementBuilder {
 }
 typealias AssignmentBuilderOps = AssignmentBuilder.() -> Unit
 fun assignment(block: AssignmentBuilderOps) = AssignmentBuilder().apply(block)
+
+
