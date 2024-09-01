@@ -128,7 +128,6 @@ class ProcedureBuildersTest {
                 add(assignment {
                     left = variable("result")
                     right = methodCall {
-                        variableName = "this"
                         methodName = "sum"
 
                         addArg {
@@ -143,7 +142,7 @@ class ProcedureBuildersTest {
                     left = variable("sumOfSum")
                     right = plus {
                         left = methodCall {
-                            variableName = "left"
+                            target = variable("left")
                             methodName = "sum"
 
                             addArg {
@@ -154,7 +153,7 @@ class ProcedureBuildersTest {
                             }
                         }
                         right = methodCall {
-                            variableName = "right"
+                            target = variable("right")
                             methodName = "sum"
 
                             addArg {
@@ -173,7 +172,7 @@ class ProcedureBuildersTest {
                     fun sum(a: Int, b: Int): Int {
                         return a + b
                     }
-                    result = this.sum(1, 2)
+                    result = sum(1, 2)
                     sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }
@@ -183,7 +182,7 @@ class ProcedureBuildersTest {
                     sum(a: number, b: number): number {
                         return a + b
                     }
-                    result = this.sum(1, 2)
+                    result = sum(1, 2)
                     sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }

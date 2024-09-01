@@ -426,7 +426,7 @@ class ClassBuilderTest {
                                     className = "SomeInterfaceSomeCommandRequest"
                                     addArg {
                                         getterFieldAccess {
-                                            variableName = "id"
+                                            objectRef = variable("id")
                                             fieldName = "value"
                                         }
                                     }
@@ -749,7 +749,9 @@ class ClassBuilderTest {
                 add(constructorCall {
                     className = "SomeClass"
                     addArg {
-                        optionalOp("op1").map {
+                        optionalOp {
+                            variable("op1")
+                        }.map {
                             plus {
                                 left = variable("it")
                                 right = const(1)

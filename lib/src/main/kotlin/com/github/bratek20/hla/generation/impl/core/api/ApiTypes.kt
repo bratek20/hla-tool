@@ -216,7 +216,7 @@ class SimpleValueObjectApiType(
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
         return getterFieldAccess {
-            this.variableName = variableName
+            objectRef = variable(variableName)
             fieldName = "value"
         }
     }

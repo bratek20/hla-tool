@@ -203,28 +203,24 @@ class WebClientGenerator: PatternGenerator() {
     ): BodyBuilderOps = {
         val hasReturnValue = method.hasReturnValue()
 
-        val getBodyPart = expressionChain {
-            methodCall {
-                methodName = "getBody"
-                //TODO addGeneric
-                addArg {
-                    variable(responseName(interfaceName, method))
+        val getBodyPart = getterFieldAccess {
+            objectRef = optionalOp {
+                methodCall {
+                    methodName = "getBody"
+                    addArg {
+                        variable(responseName(interfaceName, method))
+                    }
                 }
-            }
-        }.then {
-            methodCall {
-                methodName = "get"
-            }
-        }.then {
-            expression("Value")
+            }.get()
+            fieldName = "value"
         }
 
         val postUrl = getPostUrl(interfaceName, method)
         val reqName = requestName(interfaceName, method)
-        val postBody: ExpressionBuilder = if(method.hasArgs())
+        val postBody = if(method.hasArgs())
             hardOptional(typeName(reqName)) {
                 methodCall {
-                    variableName = reqName
+                    target = variable(reqName)
                     methodName = "create"
                     apply(method.argsPassCB())
                 }
@@ -232,23 +228,23 @@ class WebClientGenerator: PatternGenerator() {
         else
             emptyHardOptional(baseType(BaseType.ANY))
 
-        val finalExpression = expressionChain {
-            instanceVariable("client")
-        }.then {
-            methodCall {
-                methodName = "post"
-                addArg {
-                    variable(postUrl)
-                }
-                addArg {
-                    postBody
-                }
+        val finalExpression = methodCall {
+            target = instanceVariable("client")
+            methodName = "post"
+            addArg {
+                variable(postUrl)
+            }
+            addArg {
+                postBody
             }
         }
 
         if (hasReturnValue) {
             add(returnStatement {
-                finalExpression.then {
+                expressionChain {
+                    finalExpression
+                }
+                .then {
                     getBodyPart
                 }
             })

@@ -28,7 +28,7 @@ class ExpressionChainBuilder(
         return b.toString()
     }
 
-    fun asStatement(): ExpressionChainStatementBuilder {
+    override fun asStatement(): ExpressionChainStatementBuilder {
         return ExpressionChainStatementBuilder(this)
     }
 }
