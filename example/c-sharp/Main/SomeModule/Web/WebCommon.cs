@@ -110,12 +110,12 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceMethodWithListOfSimpleVOResponse {
-        public readonly List<SomeId> value;
+        public List<SomeId> Value { get; }
 
         public SomeInterfaceMethodWithListOfSimpleVOResponse(
             List<SomeId> value
         ) {
-            this.value = value;
+            Value = value;
         }
     }
 
