@@ -6,7 +6,7 @@ import com.github.bratek20.utils.directory.api.Path
 import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 
 fun shouldHandleDebug(profile: HlaProfile, moduleName: String): Boolean {
-    return profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && moduleName.equals("SomeModule", ignoreCase = true)
+    return profile.getLanguage() == ModuleLanguage.C_SHARP && moduleName.equals("SomeModule", ignoreCase = true)
 }
 
 fun handleDebug(generateResult: GenerateResult) {

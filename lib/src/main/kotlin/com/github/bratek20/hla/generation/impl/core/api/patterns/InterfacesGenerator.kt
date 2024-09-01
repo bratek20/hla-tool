@@ -3,12 +3,14 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ApiType
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.generation.impl.core.api.BaseApiType
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.directory.api.FileContent
 
@@ -24,6 +26,10 @@ data class MethodView(
     val args: List<ArgumentView>,
     val throws: List<String>,
 ) {
+    fun hasReturnValue(): Boolean {
+        return returnApiType !is BaseApiType || returnApiType.name != BaseType.VOID
+    }
+
     fun declaration(): String {
         val returnSuffix = ": $returnType"
         return "${name}(${argsDeclaration()})$returnSuffix"
@@ -60,6 +66,14 @@ data class MethodView(
     // used by velocity
     fun argsPass(): String {
         return argsPassWithPrefix("")
+    }
+
+    fun argsPassCB(): MethodCallBuilderOps = {
+        args.forEach {
+            addArg {
+                variable(it.name)
+            }
+        }
     }
 
     fun argsPassWithPrefix(prefix: String): String {

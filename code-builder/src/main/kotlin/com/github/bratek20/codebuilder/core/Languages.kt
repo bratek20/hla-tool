@@ -45,6 +45,7 @@ interface CodeBuilderLanguage {
     fun softOptionalType(elementType: String): String
     fun hardOptionalType(elementType: String): String
     fun newHardOptional(elementType: String, variableName: String): String
+    fun emptyHardOptional(elementType: String): String
     fun optionalGet(variableName: String): String
     fun optionalOrElse(variableName: String, defaultValue: String): String
     fun optionalMapBegin(): String
@@ -174,6 +175,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun newHardOptional(elementType: String, variableName: String): String {
         return variableName
+    }
+
+    override fun emptyHardOptional(elementType: String): String {
+        return "null"
     }
 
     override fun optionalGet(variableName: String): String {
@@ -348,6 +353,10 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun newHardOptional(elementType: String, variableName: String): String {
         return "Optional.of($variableName)"
+    }
+
+    override fun emptyHardOptional(elementType: String): String {
+        return "Optional.empty()"
     }
 
     override fun optionalGet(variableName: String): String {
@@ -542,6 +551,10 @@ class CSharp: CodeBuilderLanguage {
 
     override fun newHardOptional(elementType: String, variableName: String): String {
         return "Optional<$elementType>.Of($variableName)"
+    }
+
+    override fun emptyHardOptional(elementType: String): String {
+        return "Optional<$elementType>.Empty()"
     }
 
     override fun lambdaArrow(): String {

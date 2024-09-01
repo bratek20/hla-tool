@@ -4,7 +4,9 @@ import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.utils.camelToPascalCase
 
 //part of line
-interface ExpressionBuilder: LinePartBuilder
+interface ExpressionBuilder: LinePartBuilder {
+    fun asStatement(): StatementBuilder = expressionToStatement(this)
+}
 
 typealias ExpressionBuilderProvider = () -> ExpressionBuilder
 fun expression(value: String) = object : ExpressionBuilder {
@@ -23,7 +25,7 @@ fun variable(name: String): ExpressionBuilder {
 }
 
 class GetterFieldAccessBuilder: ExpressionBuilder {
-    lateinit var variableName: String
+    lateinit var objectRef: ExpressionBuilder
     lateinit var fieldName: String
 
     override fun build(c: CodeBuilderContext): String {
@@ -32,7 +34,7 @@ class GetterFieldAccessBuilder: ExpressionBuilder {
         } else {
             fieldName
         }
-        return "$variableName.$finalFieldName"
+        return "${objectRef.build(c)}.$finalFieldName"
     }
 }
 typealias GetterFieldAccessBuilderOps = GetterFieldAccessBuilder.() -> Unit
@@ -60,7 +62,11 @@ fun plus(ops: PlusBuilderOps): PlusBuilder {
 }
 
 typealias StringProvider = () -> String
-fun comment(comment: StringProvider) = statement("// ${comment()}")
+fun comment(comment: StringProvider) = object : StatementBuilder {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+        line("// ${comment()}")
+    }
+}
 
 class IsEqualToArgs {
     lateinit var left: ExpressionBuilder

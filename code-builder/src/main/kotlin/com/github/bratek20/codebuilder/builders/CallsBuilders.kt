@@ -5,7 +5,7 @@ import com.github.bratek20.utils.camelToPascalCase
 
 abstract class CallBuilder: ExpressionBuilder {
     protected abstract fun getCallName(c: CodeBuilderContext): String
-    protected open fun beforeName(): String = ""
+    protected open fun beforeName(c: CodeBuilderContext): String = ""
 
     private val args: MutableList<ExpressionBuilder> = mutableListOf()
     fun addArg(exp: ExpressionBuilderProvider) {
@@ -14,7 +14,7 @@ abstract class CallBuilder: ExpressionBuilder {
 
     override fun build(c: CodeBuilderContext): String {
         val b = StringBuilder()
-        b.append(beforeName())
+        b.append(beforeName(c))
 
         b.append("${getCallName(c)}(")
         args.forEachIndexed { index, arg ->
@@ -32,7 +32,7 @@ abstract class CallBuilder: ExpressionBuilder {
 class MethodCallBuilder: CallBuilder() {
     lateinit var methodName: String
 
-    var variableName: String? = null
+    var target: ExpressionBuilder? = null
 
     override fun getCallName(c: CodeBuilderContext): String {
         return if (c.lang.areMethodsPascalCase()) {
@@ -42,10 +42,11 @@ class MethodCallBuilder: CallBuilder() {
         }
     }
 
-    override fun beforeName(): String {
-        return variableName?.let { "$it." } ?: ""
+    override fun beforeName(c: CodeBuilderContext): String {
+        return target?.let { "${it.build(c)}." } ?: ""
     }
 }
+typealias MethodCallBuilderOps = MethodCallBuilder.() -> Unit
 fun methodCall(block: MethodCallBuilder.() -> Unit) = MethodCallBuilder().apply(block)
 
 class FunctionCallBuilder: CallBuilder() {

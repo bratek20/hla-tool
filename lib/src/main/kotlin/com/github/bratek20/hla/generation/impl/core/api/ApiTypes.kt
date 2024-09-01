@@ -216,7 +216,7 @@ class SimpleValueObjectApiType(
 
     override fun modernSerialize(variableName: String): ExpressionBuilder {
         return getterFieldAccess {
-            this.variableName = variableName
+            objectRef = variable(variableName)
             fieldName = "value"
         }
     }
@@ -527,7 +527,10 @@ class OptionalApiType(
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
         val mapping = wrappedType.modernDeserialize("it")
-        val asOptional = hardOptional(wrappedType.builder(), variableName)
+        val asOptional = hardOptional(wrappedType.builder()) {
+            variable(variableName)
+        }
+
         if (mapping.build(c) == "it") {
             return asOptional
         }

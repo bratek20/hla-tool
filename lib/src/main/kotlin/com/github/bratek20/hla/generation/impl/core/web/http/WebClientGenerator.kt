@@ -2,12 +2,13 @@ package com.github.bratek20.hla.generation.impl.core.web.http
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
+import com.github.bratek20.codebuilder.core.BaseType
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.languages.typescript.namespace
-import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -37,7 +38,7 @@ class WebClientGenerator: PatternGenerator() {
                             name = "${interf.name}WebClient"
                             implements = interf.name
 
-                            constructor {
+                            setConstructor {
                                 addArg {
                                     name = "config"
                                     type = typeName("${moduleName}WebClientConfig")
@@ -142,5 +143,113 @@ class WebClientGenerator: PatternGenerator() {
             "Optional.empty()"
 
         return "${returnPart}this.client.post($postUrl, $postBody)$getBodyPart"
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return lang is CSharp
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return exposedInterfaces(c).isNotEmpty()
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        exposedInterfaces(c).forEach { interf ->
+            addClass {
+                name = "${interf.name}WebClient"
+                implements = interf.name
+
+                addField {
+                    modifier = AccessModifier.PRIVATE
+                    name = "client"
+                    type = typeName("HttpClient")
+                }
+
+                setConstructor {
+                    addArg {
+                        name = "factory"
+                        type = typeName("HttpClientFactory")
+                    }
+                    addArg {
+                        name = "config"
+                        type = typeName("${moduleName}WebClientConfig")
+                    }
+                    setBody {
+                        add(assignment {
+                            left = expression("this.client")
+                            right = functionCall {
+                                name = "factory.Create"
+                                addArg {
+                                    variable("config.Value")
+                                }
+                            }
+                        })
+                    }
+                }
+
+                interf.methods.forEach { m ->
+                    addMethod {
+                        apply(m.declarationCB())
+                        setBody(getDefaultBody(interf.name, m))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getDefaultBody(
+        interfaceName: String,
+        method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
+    ): BodyBuilderOps = {
+        val hasReturnValue = method.hasReturnValue()
+
+        val getBodyPart = getterFieldAccess {
+            objectRef = optionalOp {
+                methodCall {
+                    methodName = "getBody"
+                    addArg {
+                        variable(responseName(interfaceName, method))
+                    }
+                }
+            }.get()
+            fieldName = "value"
+        }
+
+        val postUrl = getPostUrl(interfaceName, method)
+        val reqName = requestName(interfaceName, method)
+        val postBody = if(method.hasArgs())
+            hardOptional(typeName(reqName)) {
+                methodCall {
+                    target = variable(reqName)
+                    methodName = "create"
+                    apply(method.argsPassCB())
+                }
+            }
+        else
+            emptyHardOptional(baseType(BaseType.ANY))
+
+        val finalExpression = methodCall {
+            target = instanceVariable("client")
+            methodName = "post"
+            addArg {
+                variable(postUrl)
+            }
+            addArg {
+                postBody
+            }
+        }
+
+        if (hasReturnValue) {
+            add(returnStatement {
+                expressionChain {
+                    finalExpression
+                }
+                .then {
+                    getBodyPart
+                }
+            })
+        } else {
+            add(finalExpression.asStatement())
+        }
     }
 }

@@ -20,11 +20,13 @@ fun statement(block: (CodeBuilderContext) -> CodeBuilderOps) = object : Statemen
     override fun getOperations(c: CodeBuilderContext) = block(c)
 }
 
-fun expressionToStatement(value: ExpressionBuilderProvider) = statement {{
+fun expressionToStatement(value: ExpressionBuilder) = statement {{
     lineStart()
-    add(value.invoke())
+    add(value)
     statementLineEnd()
 }}
+
+fun expressionToStatement(value: ExpressionBuilderProvider) = expressionToStatement(value.invoke())
 
 class ReturnBuilder(
     private val value: ExpressionBuilder
@@ -88,3 +90,5 @@ class AssignmentBuilder: StatementBuilder {
 }
 typealias AssignmentBuilderOps = AssignmentBuilder.() -> Unit
 fun assignment(block: AssignmentBuilderOps) = AssignmentBuilder().apply(block)
+
+

@@ -2,6 +2,8 @@ package com.github.bratek20.codebuilder.types
 
 import com.github.bratek20.codebuilder.builders.ExpressionBuilderProvider
 import com.github.bratek20.codebuilder.builders.expression
+import com.github.bratek20.codebuilder.builders.variable
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.Kotlin
 
 fun softOptionalType(elementType: TypeBuilder) = typeName {
@@ -15,36 +17,45 @@ fun softOptional(variableName: String) = expression {
     variableName
 }
 
-fun hardOptional(elementType: TypeBuilder, variableName: String) = expression {
-    c -> c.lang.newHardOptional(elementType.build(c), variableName)
+fun hardOptional(elementType: TypeBuilder, variable: ExpressionBuilderProvider) = expression {
+    c -> c.lang.newHardOptional(elementType.build(c), variable().build(c))
+}
+
+fun emptyHardOptional(elementType: TypeBuilder) = expression {
+    c -> c.lang.emptyHardOptional(elementType.build(c))
 }
 
 class OptionalOperations(
-    private val variableName: String
+    private val variable: ExpressionBuilderProvider
 ) {
+    private fun getVariableName(c: CodeBuilderContext) = variable().build(c)
+
     fun get() = expression { c ->
-        c.lang.optionalGet(variableName)
+        c.lang.optionalGet(getVariableName(c))
     }
 
     fun orElse(defaultValueProvider: ExpressionBuilderProvider) = expression { c ->
         val defaultValue = defaultValueProvider().build(c)
 
         if (defaultValue == "null" && c.lang is Kotlin) {
-            variableName
+            getVariableName(c)
         }
         else {
-            c.lang.optionalOrElse(variableName, defaultValue)
+            c.lang.optionalOrElse(getVariableName(c), defaultValue)
         }
     }
 
     fun map(predicate: ExpressionBuilderProvider) = expression { c ->
        StringBuilder().apply {
-           append("${variableName}${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
+           append("${getVariableName(c)}${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
            append(predicate().build(c))
            append(" " + c.lang.optionalMapEnd())
        }.toString()
     }
 }
-fun optionalOp(variableName: String): OptionalOperations {
-    return OptionalOperations(variableName)
+fun optionalOp(variable: ExpressionBuilderProvider): OptionalOperations {
+    return OptionalOperations(variable)
+}
+fun optionalOp(variableName: String) = optionalOp {
+    variable(variableName)
 }

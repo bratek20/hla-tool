@@ -1,9 +1,6 @@
 package com.github.bratek20.codebuilder.builders
 
-import com.github.bratek20.codebuilder.core.CSharp
-import com.github.bratek20.codebuilder.core.Kotlin
-import com.github.bratek20.codebuilder.core.TypeScript
-import com.github.bratek20.codebuilder.core.testOp
+import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.typeName
 import org.junit.jupiter.api.Test
 
@@ -53,6 +50,53 @@ class SimpleExpressionBuildersTest {
                     SomeType someVariable = someOtherVariable;
                     someVariable = someOtherVariable;
                     someVariable = someFunction();
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `chain expressions`() {
+        testOp {
+            op = {
+                val someChain = expressionChain {
+                    instanceVariable("client")
+                }.then {
+                    methodCall {
+                        methodName = "get"
+                    }
+                }
+
+                add(expressionChainStatement {
+                    instanceVariable("client")
+                }.then {
+                    methodCall {
+                        methodName = "post"
+                    }
+                }.then {
+                    methodCall {
+                        methodName = "getBody"
+                    }
+                }.then {
+                    methodCall {
+                        methodName = "Get"
+                    }
+                }.then {
+                    expression("Value")
+                })
+
+                add(someChain.asStatement())
+
+                add(returnStatement {
+                    someChain
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    client.Post().GetBody().Get().Value;
+                    client.Get();
+                    return client.Get();
                 """
             }
         }

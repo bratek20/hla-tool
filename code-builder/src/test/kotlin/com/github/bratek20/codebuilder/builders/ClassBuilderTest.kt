@@ -235,7 +235,7 @@ class ClassBuilderTest {
                         type = baseType(BaseType.STRING)
                         fromConstructor = true
                     }
-                    constructor {
+                    setConstructor {
                         addArg {
                             name = "idArg"
                             type = baseType(BaseType.STRING)
@@ -269,6 +269,22 @@ class ClassBuilderTest {
                             private readonly idField: string,
                             idArg: string
                         ) {
+                            // some comment
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        readonly string idField;
+                    
+                        public SomeClass(
+                            string idField,
+                            string idArg
+                        ) {
+                            this.idField = idField;
                             // some comment
                         }
                     }
@@ -410,7 +426,7 @@ class ClassBuilderTest {
                                     className = "SomeInterfaceSomeCommandRequest"
                                     addArg {
                                         getterFieldAccess {
-                                            variableName = "id"
+                                            objectRef = variable("id")
                                             fieldName = "value"
                                         }
                                     }
@@ -502,7 +518,7 @@ class ClassBuilderTest {
                     extends {
                         className = "SomeParent"
                     }
-                    constructor {
+                    setConstructor {
                         addArg {
                             name = "someArg"
                             type = typeName("SomeType")
@@ -733,7 +749,9 @@ class ClassBuilderTest {
                 add(constructorCall {
                     className = "SomeClass"
                     addArg {
-                        optionalOp("op1").map {
+                        optionalOp {
+                            variable("op1")
+                        }.map {
                             plus {
                                 left = variable("it")
                                 right = const(1)
