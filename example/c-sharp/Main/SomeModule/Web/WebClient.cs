@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using B20.Ext;
+using HttpClientModule.Api;
 using SomeModule.Api;
 using OtherModule.Api;
 using TypesModule.Api;

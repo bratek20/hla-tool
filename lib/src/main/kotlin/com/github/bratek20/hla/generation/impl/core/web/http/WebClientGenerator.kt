@@ -145,13 +145,11 @@ class WebClientGenerator: PatternGenerator() {
         return "${returnPart}this.client.post($postUrl, $postBody)$getBodyPart"
     }
 
-    override fun supportsCodeBuilder(): Boolean {
-        return lang is CSharp
-    }
-
-    override fun shouldGenerate(): Boolean {
-        return exposedInterfaces(c).isNotEmpty()
-    }
+    override fun supportsCodeBuilder() = lang is CSharp
+    override fun shouldGenerate() = exposedInterfaces(c).isNotEmpty()
+    override fun extraCSharpUsings() = listOf(
+        "HttpClientModule.Api"
+    )
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         exposedInterfaces(c).forEach { interf ->
