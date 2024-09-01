@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using B20.Ext;
-using HttpClient.Api;
+using HttpClientModule.Api;
 using SomeModule.Api;
 using OtherModule.Api;
 using TypesModule.Api;
@@ -58,12 +58,12 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceSomeQueryResponse {
-        public readonly SomeClass value;
+        public SomeClass Value { get; }
 
         public SomeInterfaceSomeQueryResponse(
             SomeClass value
         ) {
-            this.value = value;
+            Value = value;
         }
     }
 
@@ -84,12 +84,12 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceOptMethodResponse {
-        public readonly Optional<SomeClass> value;
+        public Optional<SomeClass> Value { get; }
 
         public SomeInterfaceOptMethodResponse(
             Optional<SomeClass> value
         ) {
-            this.value = value;
+            Value = value;
         }
     }
 
@@ -136,12 +136,12 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceMethodWithAnyResponse {
-        public readonly object value;
+        public object Value { get; }
 
         public SomeInterfaceMethodWithAnyResponse(
             object value
         ) {
-            this.value = value;
+            Value = value;
         }
     }
 
@@ -162,12 +162,12 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterface2ReferenceOtherClassResponse {
-        public readonly OtherClass value;
+        public OtherClass Value { get; }
 
         public SomeInterface2ReferenceOtherClassResponse(
             OtherClass value
         ) {
-            this.value = value;
+            Value = value;
         }
     }
 
@@ -188,12 +188,12 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterface2ReferenceLegacyTypeResponse {
-        public readonly LegacyType value;
+        public LegacyType Value { get; }
 
         public SomeInterface2ReferenceLegacyTypeResponse(
             LegacyType value
         ) {
-            this.value = value;
+            Value = value;
         }
     }
 }
