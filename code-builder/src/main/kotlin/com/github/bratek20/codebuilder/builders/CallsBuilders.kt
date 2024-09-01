@@ -46,6 +46,7 @@ class MethodCallBuilder: CallBuilder() {
         return variableName?.let { "$it." } ?: ""
     }
 }
+typealias MethodCallBuilderOps = MethodCallBuilder.() -> Unit
 fun methodCall(block: MethodCallBuilder.() -> Unit) = MethodCallBuilder().apply(block)
 
 class FunctionCallBuilder: CallBuilder() {

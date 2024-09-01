@@ -279,7 +279,17 @@ class TypesTest {
                         type = hardOptionalType(baseType(BaseType.STRING))
                         name = "hardOptional"
                     }
-                    right = hardOptional(baseType(BaseType.STRING), "someVariable")
+                    right = hardOptional(baseType(BaseType.STRING)) {
+                        variable("someVariable")
+                    }
+                })
+
+                add(assignment {
+                    left = variableDeclaration {
+                        type = hardOptionalType(baseType(BaseType.STRING))
+                        name = "emptyHardOptional"
+                    }
+                    right = emptyHardOptional(baseType(BaseType.STRING))
                 })
 
                 add(assignment {
@@ -328,6 +338,7 @@ class TypesTest {
                 expected = """
                    val softOptional: String? = someVariable
                    val hardOptional: String? = someVariable
+                   val emptyHardOptional: String? = null
                    val unpacked: String = optional!!
                    val unpackedToSoft: Int? = optional ?: 1
                    val unpackedToSoftDefaultNull: String? = optional
@@ -339,6 +350,7 @@ class TypesTest {
                 expected = """
                    const softOptional: string? = someVariable
                    const hardOptional: Optional<string> = Optional.of(someVariable)
+                   const emptyHardOptional: Optional<string> = Optional.empty()
                    const unpacked: string = optional.get()
                    const unpackedToSoft: number? = optional.orElse(1)
                    const unpackedToSoftDefaultNull: string? = optional.orElse(undefined)
@@ -350,6 +362,7 @@ class TypesTest {
                 expected = """
                    string? softOptional = someVariable;
                    Optional<string> hardOptional = Optional<string>.Of(someVariable);
+                   Optional<string> emptyHardOptional = Optional<string>.Empty();
                    string unpacked = optional.Get();
                    int? unpackedToSoft = optional.OrElse(1);
                    string? unpackedToSoftDefaultNull = optional.OrElse(null);

@@ -15,8 +15,12 @@ fun softOptional(variableName: String) = expression {
     variableName
 }
 
-fun hardOptional(elementType: TypeBuilder, variableName: String) = expression {
-    c -> c.lang.newHardOptional(elementType.build(c), variableName)
+fun hardOptional(elementType: TypeBuilder, variable: ExpressionBuilderProvider) = expression {
+    c -> c.lang.newHardOptional(elementType.build(c), variable().build(c))
+}
+
+fun emptyHardOptional(elementType: TypeBuilder) = expression {
+    c -> c.lang.emptyHardOptional(elementType.build(c))
 }
 
 class OptionalOperations(

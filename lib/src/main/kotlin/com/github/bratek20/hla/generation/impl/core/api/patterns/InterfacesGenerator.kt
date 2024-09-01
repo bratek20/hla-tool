@@ -68,6 +68,14 @@ data class MethodView(
         return argsPassWithPrefix("")
     }
 
+    fun argsPassCB(): MethodCallBuilderOps = {
+        args.forEach {
+            addArg {
+                variable(it.name)
+            }
+        }
+    }
+
     fun argsPassWithPrefix(prefix: String): String {
         return args.joinToString(", ") { prefix + it.name }
     }

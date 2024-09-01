@@ -2,10 +2,11 @@ package com.github.bratek20.hla.generation.impl.core.web.http
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
+import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.languages.typescript.namespace
-import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.utils.directory.api.FileContent
@@ -202,33 +203,60 @@ class WebClientGenerator: PatternGenerator() {
     ): BodyBuilderOps = {
         val hasReturnValue = method.hasReturnValue()
 
-        val getBodyPart = if (hasReturnValue)
-            ".getBody(${responseName(interfaceName, method)}).get().getValue()"
-        else
-            ""
+        val getBodyPart = expressionChain {
+            methodCall {
+                methodName = "getBody"
+                //TODO addGeneric
+                addArg {
+                    variable(responseName(interfaceName, method))
+                }
+            }
+        }.then {
+            methodCall {
+                methodName = "get"
+            }
+        }.then {
+            expression("Value")
+        }
 
         val postUrl = getPostUrl(interfaceName, method)
-        val postBody = if(method.hasArgs())
-            "Optional.of(${requestName(interfaceName, method)}.create(${method.argsPass()}))"
+        val reqName = requestName(interfaceName, method)
+        val postBody: ExpressionBuilder = if(method.hasArgs())
+            hardOptional(typeName(reqName)) {
+                methodCall {
+                    variableName = reqName
+                    methodName = "create"
+                    apply(method.argsPassCB())
+                }
+            }
         else
-            "Optional.empty()"
+            emptyHardOptional(baseType(BaseType.ANY))
 
-        val finalExpression = methodCall {
-            methodName = "this.client.post"
-            addArg {
-                expression(postUrl)
+        val finalExpression = expressionChain {
+            instanceVariable("client")
+        }.then {
+            methodCall {
+                methodName = "post"
+                addArg {
+                    variable(postUrl)
+                }
+                addArg {
+                    postBody
+                }
+
+                if (hasReturnValue) {
+                    addArg {
+                        getBodyPart
+                    }
+                }
             }
-            addArg {
-                expression(postBody)
-            }
-            //$getBodyPart
         }
         if (hasReturnValue) {
             add(returnStatement {
                 finalExpression
             })
         } else {
-            add(expressionToStatement(finalExpression))
+            add(finalExpression.asStatement())
         }
     }
 }
