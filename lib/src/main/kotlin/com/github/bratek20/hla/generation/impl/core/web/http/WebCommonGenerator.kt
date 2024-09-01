@@ -190,10 +190,10 @@ class WebCommonGenerator: PatternGenerator() {
             name = responseName(interfName, method)
 
             addField {
-                modifier = AccessModifier.PUBLIC
                 type = method.returnApiType.builder()
                 name = "value"
                 fromConstructor = true
+                getter = true
             }
         }
     }
@@ -276,7 +276,7 @@ class WebCommonGenerator: PatternGenerator() {
 
     override fun extraCSharpUsings(): List<String> {
         return listOf(
-            "HttpClient.Api",
+            "HttpClientModule.Api",
         )
     }
 }

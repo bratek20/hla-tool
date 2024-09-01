@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.codebuilder.types.TypeBuilderProvider
 import com.github.bratek20.utils.camelToPascalCase
 
 class ArgumentBuilder: CodeBlockBuilder {
@@ -61,6 +62,11 @@ abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
         args.add(ops)
     }
 
+    private val generics: MutableList<String> = mutableListOf()
+    fun addGeneric(typeName: String) {
+        generics.add(typeName)
+    }
+
     private val throws: MutableList<String> = mutableListOf()
     fun addThrows(exceptionName: String) {
         throws.add(exceptionName)
@@ -107,7 +113,13 @@ abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
                 add(it)
                 linePart(" ")
             } ?: linePart("void ")
+
             linePart(camelToPascalCase(name))
+
+            generics.forEach { generic ->
+                linePart("<$generic>")
+            }
+
             add(args)
         }
         else {
