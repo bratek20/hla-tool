@@ -288,6 +288,22 @@ namespace SomeModule.Api {
         }
     }
 
+    public class ClassHavingOptSimpleVo {
+        readonly string? optSimpleVo;
+
+        public ClassHavingOptSimpleVo(
+            string? optSimpleVo
+        ) {
+            this.optSimpleVo = optSimpleVo;
+        }
+        public Optional<SomeId> GetOptSimpleVo() {
+            return Optional<SomeId>.Of(optSimpleVo).Map( it => new SomeId(it) );
+        }
+        public static ClassHavingOptSimpleVo Create(Optional<SomeId> optSimpleVo) {
+            return new ClassHavingOptSimpleVo(optSimpleVo.Map( it => it.Value ).OrElse(null));
+        }
+    }
+
     public class RecordClass {
         readonly string id;
         readonly int amount;

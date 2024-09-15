@@ -146,6 +146,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassHavingOptSimpleVoDef {
+        optSimpleVo?: string,
+    }
+    export function classHavingOptSimpleVo(def?: ClassHavingOptSimpleVoDef): ClassHavingOptSimpleVo {
+        const final_optSimpleVo = def?.optSimpleVo ?? undefined
+
+        return ClassHavingOptSimpleVo.create(
+            Optional.of(final_optSimpleVo).map(it => new SomeId(it)),
+        )
+    }
+
     export interface RecordClassDef {
         id?: string,
         amount?: number,

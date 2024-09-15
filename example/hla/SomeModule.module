@@ -53,6 +53,9 @@ ValueObjects
     ClassHavingOptList
         optList: SomeClass[]?
 
+    ClassHavingOptSimpleVo
+        optSimpleVo: SomeId?
+
     RecordClass
         id: SomeId
         amount: int

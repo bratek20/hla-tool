@@ -222,6 +222,24 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassHavingOptSimpleVo {
+        optSimpleVoEmpty?: boolean,
+        optSimpleVo?: string,
+    }
+    export function diffClassHavingOptSimpleVo(given: ClassHavingOptSimpleVo, expected: ExpectedClassHavingOptSimpleVo, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optSimpleVoEmpty !== undefined) {
+            if (given.getOptSimpleVo().isEmpty() != expected.optSimpleVoEmpty) { result.push(`${path}optSimpleVo empty ${given.getOptSimpleVo().isEmpty()} != ${expected.optSimpleVoEmpty}`) }
+        }
+
+        if (expected.optSimpleVo !== undefined) {
+            if (diffSomeId(given.getOptSimpleVo().get(), expected.optSimpleVo) != "") { result.push(diffSomeId(given.getOptSimpleVo().get(), expected.optSimpleVo, `${path}optSimpleVo.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedRecordClass {
         id?: string,
         amount?: number,

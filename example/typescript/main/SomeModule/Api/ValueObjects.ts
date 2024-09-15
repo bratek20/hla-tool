@@ -299,6 +299,22 @@ class ClassHavingOptList {
     }
 }
 
+class ClassHavingOptSimpleVo {
+    private optSimpleVo? = STRING
+
+    static create(
+        optSimpleVo: Optional<SomeId>,
+    ): ClassHavingOptSimpleVo {
+        const instance = new ClassHavingOptSimpleVo()
+        instance.optSimpleVo = optSimpleVo.map(it => it.value).orElse(undefined)
+        return instance
+    }
+
+    getOptSimpleVo(): Optional<SomeId> {
+        return Optional.of(this.optSimpleVo).map(it => new SomeId(it))
+    }
+}
+
 class RecordClass {
     private id = STRING
     private amount = NUMBER
