@@ -527,7 +527,7 @@ class OptionalApiType(
 
     override fun modernDeserialize(variableName: String): ExpressionBuilder {
         val mapping = wrappedType.modernDeserialize("it")
-        val asOptional = hardOptional(wrappedType.builder()) {
+        val asOptional = hardOptional(wrappedType.serializableBuilder()) {
             variable(variableName)
         }
 

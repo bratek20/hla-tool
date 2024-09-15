@@ -68,6 +68,11 @@ fun assertClassHavingOptList(given: ClassHavingOptList, expectedInit: ExpectedCl
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertClassHavingOptSimpleVo(given: ClassHavingOptSimpleVo, expectedInit: ExpectedClassHavingOptSimpleVo.() -> Unit) {
+    val diff = diffClassHavingOptSimpleVo(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertRecordClass(given: RecordClass, expectedInit: ExpectedRecordClass.() -> Unit) {
     val diff = diffRecordClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

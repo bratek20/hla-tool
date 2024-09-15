@@ -56,6 +56,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function classHavingOptSimpleVo(given: ClassHavingOptSimpleVo, expected: ExpectedClassHavingOptSimpleVo) {
+        const diff = diffClassHavingOptSimpleVo(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function recordClass(given: RecordClass, expected: ExpectedRecordClass) {
         const diff = diffRecordClass(given, expected)
         AssertEquals(diff, "", diff)

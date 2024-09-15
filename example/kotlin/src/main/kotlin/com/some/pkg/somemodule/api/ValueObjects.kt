@@ -302,6 +302,24 @@ data class ClassHavingOptList(
     }
 }
 
+data class ClassHavingOptSimpleVo(
+    private val optSimpleVo: String?,
+) {
+    fun getOptSimpleVo(): SomeId? {
+        return this.optSimpleVo?.let { it -> SomeId(it) }
+    }
+
+    companion object {
+        fun create(
+            optSimpleVo: SomeId?,
+        ): ClassHavingOptSimpleVo {
+            return ClassHavingOptSimpleVo(
+                optSimpleVo = optSimpleVo?.let { it -> it.value },
+            )
+        }
+    }
+}
+
 data class RecordClass(
     private val id: String,
     private val amount: Int,

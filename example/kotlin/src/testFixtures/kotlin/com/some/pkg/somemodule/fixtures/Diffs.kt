@@ -238,6 +238,25 @@ fun diffClassHavingOptList(given: ClassHavingOptList, expectedInit: ExpectedClas
     return result.joinToString("\n")
 }
 
+data class ExpectedClassHavingOptSimpleVo(
+    var optSimpleVoEmpty: Boolean? = null,
+    var optSimpleVo: String? = null,
+)
+fun diffClassHavingOptSimpleVo(given: ClassHavingOptSimpleVo, expectedInit: ExpectedClassHavingOptSimpleVo.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassHavingOptSimpleVo().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optSimpleVoEmpty?.let {
+        if ((given.getOptSimpleVo() == null) != it) { result.add("${path}optSimpleVo empty ${(given.getOptSimpleVo() == null)} != ${it}") }
+    }
+
+    expected.optSimpleVo?.let {
+        if (diffSomeId(given.getOptSimpleVo()!!, it) != "") { result.add(diffSomeId(given.getOptSimpleVo()!!, it, "${path}optSimpleVo.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedRecordClass(
     var id: String? = null,
     var amount: Int? = null,

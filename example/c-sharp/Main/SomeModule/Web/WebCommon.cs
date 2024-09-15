@@ -76,7 +76,7 @@ namespace SomeModule.Web {
             this.optId = optId;
         }
         public Optional<SomeId> GetOptId() {
-            return Optional<SomeId>.Of(optId).Map( it => new SomeId(it) );
+            return Optional<string>.Of(optId).Map( it => new SomeId(it) );
         }
         public static SomeInterfaceOptMethodRequest Create(Optional<SomeId> optId) {
             return new SomeInterfaceOptMethodRequest(optId.Map( it => it.Value ).OrElse(null));

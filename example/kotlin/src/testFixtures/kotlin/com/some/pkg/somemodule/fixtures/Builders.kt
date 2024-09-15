@@ -131,6 +131,16 @@ fun classHavingOptList(init: ClassHavingOptListDef.() -> Unit = {}): ClassHaving
     )
 }
 
+data class ClassHavingOptSimpleVoDef(
+    var optSimpleVo: String? = null,
+)
+fun classHavingOptSimpleVo(init: ClassHavingOptSimpleVoDef.() -> Unit = {}): ClassHavingOptSimpleVo {
+    val def = ClassHavingOptSimpleVoDef().apply(init)
+    return ClassHavingOptSimpleVo.create(
+        optSimpleVo = def.optSimpleVo?.let { it -> SomeId(it) },
+    )
+}
+
 data class RecordClassDef(
     var id: String = "someValue",
     var amount: Int = 0,
