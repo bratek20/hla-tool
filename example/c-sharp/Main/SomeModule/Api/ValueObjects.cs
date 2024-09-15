@@ -297,7 +297,7 @@ namespace SomeModule.Api {
             this.optSimpleVo = optSimpleVo;
         }
         public Optional<SomeId> GetOptSimpleVo() {
-            return Optional<SomeId>.Of(optSimpleVo).Map( it => new SomeId(it) );
+            return Optional<string>.Of(optSimpleVo).Map( it => new SomeId(it) );
         }
         public static ClassHavingOptSimpleVo Create(Optional<SomeId> optSimpleVo) {
             return new ClassHavingOptSimpleVo(optSimpleVo.Map( it => it.Value ).OrElse(null));
@@ -422,10 +422,10 @@ namespace SomeModule.Api {
             return other;
         }
         public Optional<SomeId2> GetId2() {
-            return Optional<SomeId2>.Of(id2).Map( it => new SomeId2(it) );
+            return Optional<int>.Of(id2).Map( it => new SomeId2(it) );
         }
         public Optional<DateRange> GetRange() {
-            return Optional<DateRange>.Of(range).Map( it => it.toCustomType() );
+            return Optional<SerializedDateRange>.Of(range).Map( it => it.toCustomType() );
         }
         public double GetDoubleExample() {
             return doubleExample;
