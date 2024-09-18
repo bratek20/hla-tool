@@ -27,6 +27,8 @@ interface SomeInterface {
     fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId>
 
     fun methodWithAny(i: Any): Any
+
+    fun methodReturningOptSimpleVo(): SomeId?
 }
 
 interface SomeInterface2 {

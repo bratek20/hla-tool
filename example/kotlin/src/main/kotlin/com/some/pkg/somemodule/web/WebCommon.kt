@@ -93,6 +93,10 @@ class SomeInterfaceMethodWithAnyResponse(
     val value: Any
 ) {
 }
+class SomeInterfaceMethodReturningOptSimpleVoResponse(
+    val value: SomeId?
+) {
+}
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass
 ) {

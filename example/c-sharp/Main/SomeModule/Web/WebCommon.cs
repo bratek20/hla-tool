@@ -145,6 +145,16 @@ namespace SomeModule.Web {
         }
     }
 
+    public class SomeInterfaceMethodReturningOptSimpleVoResponse {
+        public Optional<SomeId> Value { get; }
+
+        public SomeInterfaceMethodReturningOptSimpleVoResponse(
+            Optional<SomeId> value
+        ) {
+            Value = value;
+        }
+    }
+
     public class SomeInterface2ReferenceOtherClassRequest {
         readonly OtherClass other;
 

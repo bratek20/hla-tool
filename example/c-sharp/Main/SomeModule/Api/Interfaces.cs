@@ -25,6 +25,8 @@ namespace SomeModule.Api {
         List<SomeId> MethodWithListOfSimpleVO(List<SomeId> list);
 
         object MethodWithAny(object i);
+
+        Optional<SomeId> MethodReturningOptSimpleVo();
     }
 
     public interface SomeInterface2 {

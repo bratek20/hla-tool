@@ -38,6 +38,10 @@ class SomeInterfaceWebClient(
     override fun methodWithAny(i: Any): Any {
         return client.post("/some/prefix/someInterface/methodWithAny", SomeInterfaceMethodWithAnyRequest.create(i)).getBody(SomeInterfaceMethodWithAnyResponse::class.java).value
     }
+
+    override fun methodReturningOptSimpleVo(): SomeId? {
+        return client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", null).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse::class.java).value
+    }
 }
 
 class SomeInterface2WebClient(
