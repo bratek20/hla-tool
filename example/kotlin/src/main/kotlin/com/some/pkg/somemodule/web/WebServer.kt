@@ -47,7 +47,7 @@ class SomeInterfaceController(
     @PostMapping("/methodWithListOfSimpleVO")
     fun methodWithListOfSimpleVO(@RequestBody rawRequest: Struct): Struct {
         val request = serializer.fromStruct(rawRequest, SomeInterfaceMethodWithListOfSimpleVORequest::class.java)
-        return serializer.asStruct(SomeInterfaceMethodWithListOfSimpleVOResponse(api.methodWithListOfSimpleVO(request.getList())))
+        return serializer.asStruct(SomeInterfaceMethodWithListOfSimpleVOResponse(api.methodWithListOfSimpleVO(request.getList()).map { it -> it.value }))
     }
 
     @PostMapping("/methodWithAny")
@@ -59,7 +59,7 @@ class SomeInterfaceController(
     @PostMapping("/methodReturningOptSimpleVo")
     fun methodReturningOptSimpleVo(): Struct {
         // no request needed
-        return serializer.asStruct(SomeInterfaceMethodReturningOptSimpleVoResponse(api.methodReturningOptSimpleVo()))
+        return serializer.asStruct(SomeInterfaceMethodReturningOptSimpleVoResponse(api.methodReturningOptSimpleVo()?.let { it -> it.value }))
     }
 }
 
