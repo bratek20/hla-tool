@@ -58,12 +58,15 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceSomeQueryResponse {
-        public SomeClass Value { get; }
+        readonly SomeClass value;
 
         public SomeInterfaceSomeQueryResponse(
             SomeClass value
         ) {
-            Value = value;
+            this.value = value;
+        }
+        public SomeClass GetValue() {
+            return value;
         }
     }
 
@@ -84,12 +87,15 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceOptMethodResponse {
-        public Optional<SomeClass> Value { get; }
+        readonly SomeClass? value;
 
         public SomeInterfaceOptMethodResponse(
-            Optional<SomeClass> value
+            SomeClass? value
         ) {
-            Value = value;
+            this.value = value;
+        }
+        public Optional<SomeClass> GetValue() {
+            return Optional<SomeClass>.Of(value);
         }
     }
 
@@ -110,12 +116,15 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceMethodWithListOfSimpleVOResponse {
-        public List<SomeId> Value { get; }
+        readonly List<string> value;
 
         public SomeInterfaceMethodWithListOfSimpleVOResponse(
-            List<SomeId> value
+            List<string> value
         ) {
-            Value = value;
+            this.value = value;
+        }
+        public List<SomeId> GetValue() {
+            return value.Select( it => new SomeId(it) );
         }
     }
 
@@ -136,22 +145,28 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterfaceMethodWithAnyResponse {
-        public object Value { get; }
+        readonly object value;
 
         public SomeInterfaceMethodWithAnyResponse(
             object value
         ) {
-            Value = value;
+            this.value = value;
+        }
+        public object GetValue() {
+            return value;
         }
     }
 
     public class SomeInterfaceMethodReturningOptSimpleVoResponse {
-        public Optional<SomeId> Value { get; }
+        readonly string? value;
 
         public SomeInterfaceMethodReturningOptSimpleVoResponse(
-            Optional<SomeId> value
+            string? value
         ) {
-            Value = value;
+            this.value = value;
+        }
+        public Optional<SomeId> GetValue() {
+            return Optional<string>.Of(value).Map( it => new SomeId(it) );
         }
     }
 
@@ -172,12 +187,15 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterface2ReferenceOtherClassResponse {
-        public OtherClass Value { get; }
+        readonly OtherClass value;
 
         public SomeInterface2ReferenceOtherClassResponse(
             OtherClass value
         ) {
-            Value = value;
+            this.value = value;
+        }
+        public OtherClass GetValue() {
+            return value;
         }
     }
 
@@ -198,12 +216,15 @@ namespace SomeModule.Web {
     }
 
     public class SomeInterface2ReferenceLegacyTypeResponse {
-        public LegacyType Value { get; }
+        readonly LegacyType value;
 
         public SomeInterface2ReferenceLegacyTypeResponse(
             LegacyType value
         ) {
-            Value = value;
+            this.value = value;
+        }
+        public LegacyType GetValue() {
+            return value;
         }
     }
 }
