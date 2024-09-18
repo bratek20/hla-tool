@@ -35,6 +35,10 @@ namespace SomeModule.Api {
         return new Web.SomeInterfaceWebClient(Web.config, c).methodWithAny(i)
     }
 
+    export function methodReturningOptSimpleVo(c: HandlerContext): Optional<SomeId> {
+        return new Web.SomeInterfaceWebClient(Web.config, c).methodReturningOptSimpleVo()
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Web.SomeInterface2WebClient(Web.config, c).referenceOtherClass(other)
     }

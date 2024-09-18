@@ -123,6 +123,8 @@ Interfaces
 
         methodWithAny(i: any): any
 
+        methodReturningOptSimpleVo(): SomeId?
+
     SomeInterface2
         referenceOtherClass(other: OtherClass): OtherClass
         referenceLegacyType(legacyType: LegacyType): LegacyType

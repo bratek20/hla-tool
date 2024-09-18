@@ -39,6 +39,9 @@ namespace SomeModule.Web {
         public object MethodWithAny(object i) {
             return client.Post("/some/prefix/someInterface/methodWithAny", Optional<SomeInterfaceMethodWithAnyRequest>.Of(SomeInterfaceMethodWithAnyRequest.Create(i))).GetBody<SomeInterfaceMethodWithAnyResponse>().Get().Value;
         }
+        public Optional<SomeId> MethodReturningOptSimpleVo() {
+            return client.Post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional<object>.Empty()).GetBody<SomeInterfaceMethodReturningOptSimpleVoResponse>().Get().Value;
+        }
     }
 
     public class SomeInterface2WebClient: SomeInterface2 {

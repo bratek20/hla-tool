@@ -24,6 +24,10 @@ namespace SomeModule.Api {
         return new Impl.SomeInterfaceLogic(c).methodWithAny(i)
     }
 
+    export function methodReturningOptSimpleVo(c: HandlerContext): Optional<SomeId> {
+        return new Impl.SomeInterfaceLogic(c).methodReturningOptSimpleVo()
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
     }

@@ -24,19 +24,23 @@ class SomeInterfaceWebClient(
     }
 
     override fun someQuery(query: SomeQueryInput): SomeClass {
-        return client.post("/some/prefix/someInterface/someQuery", SomeInterfaceSomeQueryRequest.create(query)).getBody(SomeInterfaceSomeQueryResponse::class.java).value
+        return client.post("/some/prefix/someInterface/someQuery", SomeInterfaceSomeQueryRequest.create(query)).getBody(SomeInterfaceSomeQueryResponse::class.java).getValue()
     }
 
     override fun optMethod(optId: SomeId?): SomeClass? {
-        return client.post("/some/prefix/someInterface/optMethod", SomeInterfaceOptMethodRequest.create(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).value
+        return client.post("/some/prefix/someInterface/optMethod", SomeInterfaceOptMethodRequest.create(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).getValue()
     }
 
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
-        return client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", SomeInterfaceMethodWithListOfSimpleVORequest.create(list)).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse::class.java).value
+        return client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", SomeInterfaceMethodWithListOfSimpleVORequest.create(list)).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse::class.java).getValue()
     }
 
     override fun methodWithAny(i: Any): Any {
-        return client.post("/some/prefix/someInterface/methodWithAny", SomeInterfaceMethodWithAnyRequest.create(i)).getBody(SomeInterfaceMethodWithAnyResponse::class.java).value
+        return client.post("/some/prefix/someInterface/methodWithAny", SomeInterfaceMethodWithAnyRequest.create(i)).getBody(SomeInterfaceMethodWithAnyResponse::class.java).getValue()
+    }
+
+    override fun methodReturningOptSimpleVo(): SomeId? {
+        return client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", null).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse::class.java).getValue()
     }
 }
 
@@ -47,11 +51,11 @@ class SomeInterface2WebClient(
     private val client = factory.create(config.value)
 
     override fun referenceOtherClass(other: OtherClass): OtherClass {
-        return client.post("/some/prefix/someInterface2/referenceOtherClass", SomeInterface2ReferenceOtherClassRequest.create(other)).getBody(SomeInterface2ReferenceOtherClassResponse::class.java).value
+        return client.post("/some/prefix/someInterface2/referenceOtherClass", SomeInterface2ReferenceOtherClassRequest.create(other)).getBody(SomeInterface2ReferenceOtherClassResponse::class.java).getValue()
     }
 
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
-        return client.post("/some/prefix/someInterface2/referenceLegacyType", SomeInterface2ReferenceLegacyTypeRequest.create(legacyType)).getBody(SomeInterface2ReferenceLegacyTypeResponse::class.java).value
+        return client.post("/some/prefix/someInterface2/referenceLegacyType", SomeInterface2ReferenceLegacyTypeRequest.create(legacyType)).getBody(SomeInterface2ReferenceLegacyTypeResponse::class.java).getValue()
     }
 }
 

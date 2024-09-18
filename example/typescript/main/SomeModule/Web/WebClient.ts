@@ -34,6 +34,9 @@ namespace SomeModule.Web {
         methodWithAny(i: any): any {
             return this.client.post("/some/prefix/someInterface/methodWithAny", Optional.of(SomeInterfaceMethodWithAnyRequest.create(i))).getBody(SomeInterfaceMethodWithAnyResponse).get().getValue()
         }
+        methodReturningOptSimpleVo(): Optional<SomeId> {
+            return this.client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional.empty()).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse).get().getValue()
+        }
     }
 
     export class SomeInterface2WebClient implements SomeInterface2 {

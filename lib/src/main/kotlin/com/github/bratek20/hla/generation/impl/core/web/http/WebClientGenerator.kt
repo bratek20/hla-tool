@@ -116,7 +116,7 @@ class WebClientGenerator: PatternGenerator() {
     private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
         val returnPart = if (method.returnType != "Unit") "return " else ""
         val getBodyPart = if (method.returnType != "Unit")
-            ".getBody(${responseName(interfaceName, method)}::class.java).value"
+            ".getBody(${responseName(interfaceName, method)}::class.java).getValue()"
         else
             ""
 
