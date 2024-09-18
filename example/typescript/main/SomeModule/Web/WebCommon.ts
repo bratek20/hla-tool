@@ -100,6 +100,13 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodReturningOptSimpleVoResponse {
+        private value = STRING
+        getValue(): Optional<SomeId> {
+            return Optional.of(this.value).map(it => new SomeId(it))
+        }
+    }
+
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = new OtherClass
         getOther(): OtherClass {

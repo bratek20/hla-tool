@@ -39,6 +39,11 @@ namespace SomeModule.Impl {
             // TODO
             return undefined
         }
+
+        methodReturningOptSimpleVo(): Optional<SomeId> {
+            // TODO
+            return undefined
+        }
     }
 
     export class SomeInterface2Logic implements SomeInterface2 {
