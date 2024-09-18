@@ -94,8 +94,11 @@ class SomeInterfaceMethodWithAnyResponse(
 ) {
 }
 class SomeInterfaceMethodReturningOptSimpleVoResponse(
-    val value: SomeId?
+    private val value: String?
 ) {
+    fun getValue(): SomeId? {
+        return value?.let { it -> SomeId(it) }
+    }
 }
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass
