@@ -42,7 +42,7 @@ class SomeInterfaceSomeQueryRequest(
     }
 }
 class SomeInterfaceSomeQueryResponse(
-    val value: SomeClass
+    private val value: SomeClass
 ) {
 }
 class SomeInterfaceOptMethodRequest(
@@ -58,7 +58,7 @@ class SomeInterfaceOptMethodRequest(
     }
 }
 class SomeInterfaceOptMethodResponse(
-    val value: SomeClass?
+    private val value: SomeClass?
 ) {
 }
 class SomeInterfaceMethodWithListOfSimpleVORequest(
@@ -74,7 +74,7 @@ class SomeInterfaceMethodWithListOfSimpleVORequest(
     }
 }
 class SomeInterfaceMethodWithListOfSimpleVOResponse(
-    val value: List<SomeId>
+    private val value: List<String>
 ) {
 }
 class SomeInterfaceMethodWithAnyRequest(
@@ -90,15 +90,12 @@ class SomeInterfaceMethodWithAnyRequest(
     }
 }
 class SomeInterfaceMethodWithAnyResponse(
-    val value: Any
+    private val value: Any
 ) {
 }
 class SomeInterfaceMethodReturningOptSimpleVoResponse(
     private val value: String?
 ) {
-    fun getValue(): SomeId? {
-        return value?.let { it -> SomeId(it) }
-    }
 }
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass
@@ -113,7 +110,7 @@ class SomeInterface2ReferenceOtherClassRequest(
     }
 }
 class SomeInterface2ReferenceOtherClassResponse(
-    val value: OtherClass
+    private val value: OtherClass
 ) {
 }
 class SomeInterface2ReferenceLegacyTypeRequest(
@@ -129,6 +126,6 @@ class SomeInterface2ReferenceLegacyTypeRequest(
     }
 }
 class SomeInterface2ReferenceLegacyTypeResponse(
-    val value: com.some.pkg.legacy.LegacyType
+    private val value: com.some.pkg.legacy.LegacyType
 ) {
 }

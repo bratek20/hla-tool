@@ -190,10 +190,10 @@ class WebCommonGenerator: PatternGenerator() {
             name = responseName(interfName, method)
 
             addField {
-                type = method.returnApiType.builder()
+                modifier = AccessModifier.PRIVATE
+                type = method.returnApiType.serializableBuilder()
                 name = "value"
                 fromConstructor = true
-                getter = true
             }
         }
     }
