@@ -66,7 +66,10 @@ class WebServerGenerator: PatternGenerator() {
         }::class.java)" else "// no request needed"
 
         val prefix = if (method.returnType != "Unit") "return serializer.asStruct(${responseName(interfaceName, method)}(" else ""
-        val apiCall = "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
+
+        val initApiCall = "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
+
+        val apiCall = method.returnApiType.modernSerialize(initApiCall).build(c.language.types().context());
         val suffix = if (method.returnType != "Unit") "))" else ""
         val secondLine = "${prefix}${apiCall}${suffix}"
 
