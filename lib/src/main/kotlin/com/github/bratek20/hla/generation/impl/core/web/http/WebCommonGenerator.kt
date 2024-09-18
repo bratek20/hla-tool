@@ -195,6 +195,16 @@ class WebCommonGenerator: PatternGenerator() {
                 name = "value"
                 fromConstructor = true
             }
+
+            addMethod {
+                name = "getValue"
+                returnType = method.returnApiType.builder()
+                setBody {
+                    add(returnStatement {
+                        method.returnApiType.modernDeserialize("value")
+                    })
+                }
+            }
         }
     }
 

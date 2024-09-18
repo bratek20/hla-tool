@@ -44,6 +44,9 @@ class SomeInterfaceSomeQueryRequest(
 class SomeInterfaceSomeQueryResponse(
     private val value: SomeClass
 ) {
+    fun getValue(): SomeClass {
+        return value
+    }
 }
 class SomeInterfaceOptMethodRequest(
     private val optId: String?
@@ -60,6 +63,9 @@ class SomeInterfaceOptMethodRequest(
 class SomeInterfaceOptMethodResponse(
     private val value: SomeClass?
 ) {
+    fun getValue(): SomeClass? {
+        return value
+    }
 }
 class SomeInterfaceMethodWithListOfSimpleVORequest(
     private val list: List<String>
@@ -76,6 +82,9 @@ class SomeInterfaceMethodWithListOfSimpleVORequest(
 class SomeInterfaceMethodWithListOfSimpleVOResponse(
     private val value: List<String>
 ) {
+    fun getValue(): List<SomeId> {
+        return value.map { it -> SomeId(it) }
+    }
 }
 class SomeInterfaceMethodWithAnyRequest(
     private val i: Any
@@ -92,10 +101,16 @@ class SomeInterfaceMethodWithAnyRequest(
 class SomeInterfaceMethodWithAnyResponse(
     private val value: Any
 ) {
+    fun getValue(): Any {
+        return value
+    }
 }
 class SomeInterfaceMethodReturningOptSimpleVoResponse(
     private val value: String?
 ) {
+    fun getValue(): SomeId? {
+        return value?.let { it -> SomeId(it) }
+    }
 }
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass
@@ -112,6 +127,9 @@ class SomeInterface2ReferenceOtherClassRequest(
 class SomeInterface2ReferenceOtherClassResponse(
     private val value: OtherClass
 ) {
+    fun getValue(): OtherClass {
+        return value
+    }
 }
 class SomeInterface2ReferenceLegacyTypeRequest(
     private val legacyType: com.some.pkg.legacy.LegacyType
@@ -128,4 +146,7 @@ class SomeInterface2ReferenceLegacyTypeRequest(
 class SomeInterface2ReferenceLegacyTypeResponse(
     private val value: com.some.pkg.legacy.LegacyType
 ) {
+    fun getValue(): com.some.pkg.legacy.LegacyType {
+        return value
+    }
 }
