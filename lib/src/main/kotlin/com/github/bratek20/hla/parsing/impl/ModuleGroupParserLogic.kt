@@ -34,7 +34,8 @@ class ModuleGroupParserLogic(
         "Kotlin",
         "Data",
         "Properties",
-        "Web"
+        "Web",
+        "ViewModel"
     )
 
     private val directories = DirectoriesLogic()

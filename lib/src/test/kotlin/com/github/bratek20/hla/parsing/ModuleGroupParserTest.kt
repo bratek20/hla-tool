@@ -761,6 +761,15 @@ class ModuleGroupParserTest {
     }
 
     @Test
+    fun `should parse view model submodule`() {
+        val modules = parseSingleGroup("view-model-submodule")
+
+        assertModules(modules, listOf {
+            name = "SomeModule"
+        })
+    }
+
+    @Test
     fun `should parse inlined simple vos`() {
         val module = parseSingleModule("inlined-vos")
 

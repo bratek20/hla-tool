@@ -27,3 +27,9 @@ Web
     PlayFabHandlers
         ExposedInterfaces
             OtherInterface
+
+ViewModel
+    Elements
+        OtherClassVm
+            id
+            amount
