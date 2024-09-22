@@ -10,4 +10,6 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.ViewModel {
+    public partial class SomeWindow {
+    }
 }

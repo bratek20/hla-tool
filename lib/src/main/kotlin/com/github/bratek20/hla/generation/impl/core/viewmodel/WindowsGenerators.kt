@@ -83,5 +83,11 @@ class WindowsLogicGenerator: BaseWindowsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
+        viewModelWindows()?.forEach { def ->
+            addClass {
+                name = def.getName()
+                partial = true
+            }
+        }
     }
 }
