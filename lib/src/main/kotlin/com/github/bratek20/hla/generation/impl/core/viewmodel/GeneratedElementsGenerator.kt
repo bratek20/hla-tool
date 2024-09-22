@@ -18,6 +18,13 @@ class GeneratedElementsGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
+        addExtraEmptyLines(11)
+    }
 
+    override fun extraCSharpUsings(): List<String> {
+        return listOf(
+            "B20.Frontend.Traits",
+            "B20.Frontend.UiElements"
+        )
     }
 }
