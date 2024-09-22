@@ -11,9 +11,7 @@ namespace OtherModule.ViewModel {
     public partial class OtherClassVm: UiElement<OtherClass> {
         public Label Id { get; set; }
         public Label Amount { get; set; }
-
-        protected override void OnUpdate()
-        {
+        protected override void OnUpdate() {
             Id.Update(Model.GetId().Value);
             Amount.Update(Model.GetAmount());
         }

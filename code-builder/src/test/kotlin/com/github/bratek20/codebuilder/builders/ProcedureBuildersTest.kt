@@ -279,4 +279,37 @@ class ProcedureBuildersTest {
             }
         }
     }
+
+    @Test
+    fun protectedMethod() {
+        testOp {
+            op = {
+                add(method {
+                    name = "someFun"
+                    modifier = AccessModifier.PROTECTED
+                })
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    protected fun someFun() {
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    protected someFun() {
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    protected void SomeFun() {
+                    }
+                """
+            }
+        }
+    }
 }

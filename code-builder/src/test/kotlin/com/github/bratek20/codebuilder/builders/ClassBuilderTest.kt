@@ -618,15 +618,26 @@ class ClassBuilderTest {
     }
 
     @Test
-    fun `class with field getter`() {
+    fun `class with field getter and setter`() {
         testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
                     addField {
-                        name = "someField"
+                        name = "fieldWithGetter"
                         type = baseType(BaseType.INT)
                         getter = true
+                    }
+                    addField {
+                        name = "fieldWithSetter"
+                        type = baseType(BaseType.INT)
+                        setter = true
+                    }
+                    addField {
+                        name = "fieldWithGetterAndSetter"
+                        type = baseType(BaseType.INT)
+                        getter = true
+                        setter = true
                     }
                 })
             }
@@ -634,7 +645,9 @@ class ClassBuilderTest {
                 lang = CSharp()
                 expected = """
                     public class SomeClass {
-                        public int SomeField { get; }
+                        public int FieldWithGetter { get; }
+                        public int FieldWithSetter { set; }
+                        public int FieldWithGetterAndSetter { get; set; }
                     }
                 """
             }

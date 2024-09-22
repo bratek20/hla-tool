@@ -20,6 +20,7 @@ class FieldBuilder(
     var static = false
 
     var getter = false
+    var setter = false
     var fromConstructor = false
 
     override fun validate(c: CodeBuilderContext): ValidationResult {
@@ -35,15 +36,17 @@ class FieldBuilder(
         return ValidationResult.success()
     }
 
-    private fun getOperationsForCSharpGetter(): CodeBuilderOps = {
+    private fun getOperationsForCSharpGetterAndSetter(): CodeBuilderOps = {
         lineStart("public ")
         add(type!!)
-        lineEnd(" ${camelToPascalCase(name)} { get; }")
+        val getPart = if (getter) "get; " else ""
+        val setPart = if (setter) "set; " else ""
+        lineEnd(" ${camelToPascalCase(name)} { $getPart$setPart}")
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
-        if (getter && c.lang is CSharp) {
-            return getOperationsForCSharpGetter()
+        if ((getter || setter) && c.lang is CSharp) {
+            return getOperationsForCSharpGetterAndSetter()
         }
         return {
             lineStart()
@@ -135,6 +138,8 @@ open class ClassBuilder: CodeBlockBuilder {
     open fun beforeClassKeyword(): String = ""
 
     lateinit var name: String
+
+    var partial = false
 
     var equalsAndHashCode = false
 
@@ -294,7 +299,8 @@ open class ClassBuilder: CodeBlockBuilder {
             "class "
         }
 
-        val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + finalClassKeyword
+        val partialPart = if (partial) "partial " else ""
+        val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + partialPart + finalClassKeyword
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
         extendsOrImplementsPart = extends?.let { c.lang.extends() + ExtendsBuilder().apply(it).build(c) } ?: extendsOrImplementsPart
         val beginningWithoutExtendOrImplements = "$classPart$name"

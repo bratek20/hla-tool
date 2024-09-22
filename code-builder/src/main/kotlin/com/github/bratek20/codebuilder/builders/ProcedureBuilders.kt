@@ -175,11 +175,13 @@ abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
 class MethodBuilder: ProcedureBuilder() {
     var override: Boolean = false
     var static: Boolean = false
+    var modifier: AccessModifier? = null
 
     override fun beforeName(c: CodeBuilderContext): String {
         val overridePart = if (override) "override " else ""
         val staticPart = if (static && c.lang.supportsStaticKeyword()) "static " else ""
-        return "${c.lang.defaultTopLevelAccessor()}${staticPart}${overridePart}${c.lang.methodDeclarationKeyword()}"
+        val modifierPart = modifier?.let { "${it.name.lowercase()} " } ?: c.lang.defaultTopLevelAccessor()
+        return "${modifierPart}${staticPart}${overridePart}${c.lang.methodDeclarationKeyword()}"
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit

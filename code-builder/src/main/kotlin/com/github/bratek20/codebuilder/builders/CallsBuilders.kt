@@ -65,6 +65,10 @@ class MethodCallBuilder: CallBuilder() {
 typealias MethodCallBuilderOps = MethodCallBuilder.() -> Unit
 fun methodCall(block: MethodCallBuilder.() -> Unit) = MethodCallBuilder().apply(block)
 
+fun methodCallStatement(block: MethodCallBuilderOps) = expressionToStatement {
+    methodCall(block)
+}
+
 class FunctionCallBuilder: CallBuilder() {
     lateinit var name: String
 

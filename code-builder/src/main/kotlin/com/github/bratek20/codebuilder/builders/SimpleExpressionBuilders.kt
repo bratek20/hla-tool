@@ -24,6 +24,14 @@ fun variable(name: String): ExpressionBuilder {
     return expression(name)
 }
 
+fun getterField(name: String) = expression { c ->
+    if (c.lang.areMethodsPascalCase()) {
+        camelToPascalCase(name)
+    } else {
+        name
+    }
+}
+
 class GetterFieldAccessBuilder: ExpressionBuilder {
     lateinit var objectRef: ExpressionBuilder
     lateinit var fieldName: String

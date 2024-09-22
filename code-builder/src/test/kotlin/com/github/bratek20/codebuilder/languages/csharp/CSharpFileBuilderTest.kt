@@ -47,4 +47,25 @@ class CSharpFileBuilderTest {
             }
         }
     }
+
+    @Test
+    fun partial() {
+        testOp {
+            op = {
+                cSharpFile {
+                    addClass {
+                        name = "SomeClass"
+                        partial = true
+                    }
+                }
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public partial class SomeClass {
+                    }
+                """
+            }
+        }
+    }
 }
