@@ -3,34 +3,43 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 
-class GeneratedWindowLogic() {
+class GeneratedWindowLogic(
+    private val def: ViewModelWindowDefinition,
+    private val apiTypeFactory: ApiTypeFactory
+) {
     fun getState(): ClassBuilderOps = {
-        name = "SomeWindowState"
+        name = def.getName() + "State"
 
-        addField {
-            type = typeName("SomeId")
-            name = "someId"
-            getter = true
-            fromConstructor = true
+        def.getState()!!.getFields().forEach { field ->
+            addField {
+                type = apiTypeFactory.create(field.getType()).builder()
+                name = field.getName()
+                getter = true
+                fromConstructor = true
+            }
         }
     }
 
     fun getWindowClass(): ClassBuilderOps = {
-        name = "SomeWindow"
+        name = def.getName()
         partial = true
         extends {
             className = "Window"
             generic = typeName("SomeWindowState")
         }
 
-        addField {
-            type = typeName("SomeClassVm")
-            name = "someClassVm"
-            getter = true
-            setter = true
+        def.getFields().forEach { field ->
+            addField {
+                type = typeName(field.getType().getName())
+                name = field.getName()
+                getter = true
+                setter = true
+            }
         }
     }
 }
@@ -50,8 +59,8 @@ class GeneratedWindowsGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        viewModelWindows()?.forEach { window ->
-            val logic = GeneratedWindowLogic()
+        viewModelWindows()?.forEach { def ->
+            val logic = GeneratedWindowLogic(def, apiTypeFactory)
             addClass(logic.getState())
             addClass(logic.getWindowClass())
         }
