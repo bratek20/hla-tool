@@ -180,3 +180,8 @@ ViewModel
         SomeClassVm
             SomeClass
                 id
+    Windows
+        SomeWindow
+            State
+                someId: SomeId
+            someClassVm: SomeClassVm

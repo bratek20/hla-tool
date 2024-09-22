@@ -34,6 +34,9 @@ Enums
 
         //view model
         GeneratedElements
+        ElementsLogic
+        GeneratedWindows
+        WindowsLogic
 
         //context
         Impl
