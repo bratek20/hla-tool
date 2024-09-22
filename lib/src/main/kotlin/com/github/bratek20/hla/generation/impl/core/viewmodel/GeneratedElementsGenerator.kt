@@ -54,30 +54,29 @@ class ViewModelElementLogic(
             name = "onUpdate"
 
             setBody {
-                add(methodCallStatement {
-                    target = getterField("id")
-                    methodName = "update"
-                    addArg {
-                        getterFieldAccess {
-                            objectRef = methodCall {
-                                target = getterField("model")
-                                methodName = "getId"
+                getMappedFields().forEach { field ->
+                    add(methodCallStatement {
+                        target = getterField(field.name)
+                        methodName = "update"
+                        addArg {
+                            if (field.type is SimpleValueObjectApiType) {
+                                getterFieldAccess {
+                                    objectRef = methodCall {
+                                        target = getterField("model")
+                                        methodName = field.getterName()
+                                    }
+                                    fieldName = "value"
+                                }
                             }
-                            fieldName = "value"
+                            else {
+                                methodCall {
+                                    target = getterField("model")
+                                    methodName = field.getterName()
+                                }
+                            }
                         }
-                    }
-                })
-
-                add(methodCallStatement {
-                    target = getterField("amount")
-                    methodName = "update"
-                    addArg {
-                        methodCall {
-                            target = getterField("model")
-                            methodName = "getAmount"
-                        }
-                    }
-                })
+                    })
+                }
             }
         }
     }
