@@ -48,6 +48,15 @@ class ViewModelElementLogic(
             }
         }
 
+        def.getFields().forEach { field ->
+            addField {
+                type = typeName(field.getType().getName())
+                name = field.getName()
+                getter = true
+                setter = true
+            }
+        }
+
         addMethod {
             modifier = AccessModifier.PROTECTED
             override = true

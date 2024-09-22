@@ -180,6 +180,7 @@ ViewModel
         SomeClassVm
             SomeClass
                 id
+            button: Button
     Windows
         SomeWindow
             State

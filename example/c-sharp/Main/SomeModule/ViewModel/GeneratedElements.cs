@@ -12,6 +12,7 @@ using TypesModule.Api;
 namespace SomeModule.ViewModel {
     public partial class SomeClassVm: UiElement<SomeClass> {
         public Label Id { get; set; }
+        public Button Button { get; set; }
         protected override void OnUpdate() {
             Id.Update(Model.GetId().Value);
         }
