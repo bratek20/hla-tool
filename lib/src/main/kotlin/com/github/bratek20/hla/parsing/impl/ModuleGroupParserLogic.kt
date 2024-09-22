@@ -105,7 +105,8 @@ class ModuleGroupParserLogic(
             implSubmodule = parseImplSubmodule(elements),
             externalTypes = parseExternalTypes(elements),
             kotlinConfig = parseKotlinConfig(elements),
-            webSubmodule = parseWebSubmodule(elements)
+            webSubmodule = parseWebSubmodule(elements),
+            viewModelSubmodule = parseViewModelSubmodule(elements)
         )
     }
 
@@ -141,6 +142,10 @@ class ModuleGroupParserLogic(
                 playFabHandlers = playFabHandlers
             )
         }
+    }
+
+    private fun parseViewModelSubmodule(elements: List<ParsedElement>): ViewModelSubmoduleDefinition? {
+        return null
     }
 
     private fun parseExposedInterfaces(elements: List<ParsedElement>): List<ExposedInterface> {
@@ -242,19 +247,19 @@ class ModuleGroupParserLogic(
 
     private fun parseType(typeValue: String): TypeDefinition {
         if (typeValue.contains("[]?")) {
-            return TypeDefinition(
+            return TypeDefinition.create(
                 name = typeValue.replace("[]?", ""),
                 wrappers = listOf(TypeWrapper.OPTIONAL, TypeWrapper.LIST)
             )
         }
         if (typeValue.contains("?")) {
-            return TypeDefinition(
+            return TypeDefinition.create(
                 name = typeValue.replace("?", ""),
                 wrappers = listOf(TypeWrapper.OPTIONAL)
             )
         }
         if (typeValue.contains("[]")) {
-            return TypeDefinition(
+            return TypeDefinition.create(
                 name = typeValue.replace("[]", ""),
                 wrappers = listOf(TypeWrapper.LIST)
             )

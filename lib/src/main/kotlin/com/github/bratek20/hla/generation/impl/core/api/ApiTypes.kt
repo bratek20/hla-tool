@@ -631,8 +631,8 @@ class ApiTypeFactory(
         val externalTypeName = modules.findExternalType(type)
 
         val apiType = when {
-            isOptional -> OptionalApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.OPTIONAL)))
-            isList -> ListApiType(create(type.copy(wrappers = type.getWrappers() - TypeWrapper.LIST)))
+            isOptional -> OptionalApiType(create(withoutTypeWrapper(type, TypeWrapper.OPTIONAL)))
+            isList -> ListApiType(create(withoutTypeWrapper(type, TypeWrapper.LIST)))
             simpleVO != null -> SimpleValueObjectApiType(simpleVO, createBaseApiType(ofBaseType(simpleVO.getTypeName())))
             simpleCustomType != null -> SimpleCustomApiType(simpleCustomType, createBaseApiType(ofBaseType(simpleCustomType.getTypeName())))
             complexVO != null -> ComplexValueObjectApiType(type.getName(), createComplexStructureFields(complexVO))
@@ -652,6 +652,14 @@ class ApiTypeFactory(
         }
 
         return apiType
+    }
+
+    private fun withoutTypeWrapper(type: TypeDefinition, wrapper: TypeWrapper): TypeDefinition {
+        val finalWrappers = type.getWrappers() - wrapper
+        return TypeDefinition.create(
+            type.getName(),
+            finalWrappers
+        )
     }
 
     inline fun <reified T: SimpleStructureApiType> create(def: SimpleStructureDefinition): T {

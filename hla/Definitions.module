@@ -49,6 +49,26 @@ ValueObjects
         http: HttpDefinition?
         playFabHandlers: PlayFabHandlersDefinition?
 
+    // ViewModel start
+
+    ElementModelDefinition
+        mappedFields: string[]
+
+    ViewModelElementDefinition
+        model: ElementModelDefinition
+        fields: FieldDefinition[]
+
+    ViewModelWindowDefinition
+        state: ComplexStructureDefinition?
+        fields: FieldDefinition[]
+
+    ViewModelSubmoduleDefinition
+        elements: ViewModelElementDefinition[]
+        windows: ViewModelWindowDefinition[]
+
+    // ViewModel end
+
+
     ExternalTypePackageMapping
         name: string
         packageName: string
@@ -71,6 +91,7 @@ ValueObjects
         externalTypes: string[]
         implSubmodule: ImplSubmoduleDefinition?
         webSubmodule: WebSubmoduleDefinition?
+        viewModelSubmodule: ViewModelSubmoduleDefinition?
         kotlinConfig: KotlinConfig?
 
     TypeDefinition

@@ -4,4 +4,7 @@ package com.github.bratek20.hla.generation.api
 
 import com.github.bratek20.architecture.exceptions.ApiException
 
-class UnknownTypeException(message: String = "") : ApiException(message)
+class UnknownTypeException(
+    message: String = ""
+): ApiException(message) {
+}

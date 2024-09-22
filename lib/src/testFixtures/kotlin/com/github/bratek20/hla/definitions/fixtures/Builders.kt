@@ -109,6 +109,52 @@ fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): Web
     )
 }
 
+data class ElementModelDefinitionDef(
+    var mappedFields: List<String> = emptyList(),
+)
+fun elementModelDefinition(init: ElementModelDefinitionDef.() -> Unit = {}): ElementModelDefinition {
+    val def = ElementModelDefinitionDef().apply(init)
+    return ElementModelDefinition.create(
+        mappedFields = def.mappedFields,
+    )
+}
+
+data class ViewModelElementDefinitionDef(
+    var model: (ElementModelDefinitionDef.() -> Unit) = {},
+    var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
+)
+fun viewModelElementDefinition(init: ViewModelElementDefinitionDef.() -> Unit = {}): ViewModelElementDefinition {
+    val def = ViewModelElementDefinitionDef().apply(init)
+    return ViewModelElementDefinition.create(
+        model = elementModelDefinition(def.model),
+        fields = def.fields.map { it -> fieldDefinition(it) },
+    )
+}
+
+data class ViewModelWindowDefinitionDef(
+    var state: (ComplexStructureDefinitionDef.() -> Unit)? = null,
+    var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
+)
+fun viewModelWindowDefinition(init: ViewModelWindowDefinitionDef.() -> Unit = {}): ViewModelWindowDefinition {
+    val def = ViewModelWindowDefinitionDef().apply(init)
+    return ViewModelWindowDefinition.create(
+        state = def.state?.let { it -> complexStructureDefinition(it) },
+        fields = def.fields.map { it -> fieldDefinition(it) },
+    )
+}
+
+data class ViewModelSubmoduleDefinitionDef(
+    var elements: List<(ViewModelElementDefinitionDef.() -> Unit)> = emptyList(),
+    var windows: List<(ViewModelWindowDefinitionDef.() -> Unit)> = emptyList(),
+)
+fun viewModelSubmoduleDefinition(init: ViewModelSubmoduleDefinitionDef.() -> Unit = {}): ViewModelSubmoduleDefinition {
+    val def = ViewModelSubmoduleDefinitionDef().apply(init)
+    return ViewModelSubmoduleDefinition.create(
+        elements = def.elements.map { it -> viewModelElementDefinition(it) },
+        windows = def.windows.map { it -> viewModelWindowDefinition(it) },
+    )
+}
+
 data class ExternalTypePackageMappingDef(
     var name: String = "someValue",
     var packageName: String = "someValue",
@@ -147,6 +193,7 @@ data class ModuleDefinitionDef(
     var externalTypes: List<String> = emptyList(),
     var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit)? = null,
     var webSubmodule: (WebSubmoduleDefinitionDef.() -> Unit)? = null,
+    var viewModelSubmodule: (ViewModelSubmoduleDefinitionDef.() -> Unit)? = null,
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
@@ -165,6 +212,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         externalTypes = def.externalTypes,
         implSubmodule = def.implSubmodule?.let { it -> implSubmoduleDefinition(it) },
         webSubmodule = def.webSubmodule?.let { it -> webSubmoduleDefinition(it) },
+        viewModelSubmodule = def.viewModelSubmodule?.let { it -> viewModelSubmoduleDefinition(it) },
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
     )
 }

@@ -4,4 +4,7 @@ package com.github.bratek20.hla.facade.api
 
 import com.github.bratek20.architecture.exceptions.ApiException
 
-class ProfileNotFoundException(message: String = "") : ApiException(message)
+class ProfileNotFoundException(
+    message: String = ""
+): ApiException(message) {
+}

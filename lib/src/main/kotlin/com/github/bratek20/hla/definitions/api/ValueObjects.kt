@@ -225,6 +225,99 @@ data class WebSubmoduleDefinition(
     }
 }
 
+data class ElementModelDefinition(
+    private val mappedFields: List<String>,
+) {
+    fun getMappedFields(): List<String> {
+        return this.mappedFields
+    }
+
+    companion object {
+        fun create(
+            mappedFields: List<String>,
+        ): ElementModelDefinition {
+            return ElementModelDefinition(
+                mappedFields = mappedFields,
+            )
+        }
+    }
+}
+
+data class ViewModelElementDefinition(
+    private val model: ElementModelDefinition,
+    private val fields: List<FieldDefinition>,
+) {
+    fun getModel(): ElementModelDefinition {
+        return this.model
+    }
+
+    fun getFields(): List<FieldDefinition> {
+        return this.fields
+    }
+
+    companion object {
+        fun create(
+            model: ElementModelDefinition,
+            fields: List<FieldDefinition>,
+        ): ViewModelElementDefinition {
+            return ViewModelElementDefinition(
+                model = model,
+                fields = fields,
+            )
+        }
+    }
+}
+
+data class ViewModelWindowDefinition(
+    private val state: ComplexStructureDefinition?,
+    private val fields: List<FieldDefinition>,
+) {
+    fun getState(): ComplexStructureDefinition? {
+        return this.state
+    }
+
+    fun getFields(): List<FieldDefinition> {
+        return this.fields
+    }
+
+    companion object {
+        fun create(
+            state: ComplexStructureDefinition?,
+            fields: List<FieldDefinition>,
+        ): ViewModelWindowDefinition {
+            return ViewModelWindowDefinition(
+                state = state,
+                fields = fields,
+            )
+        }
+    }
+}
+
+data class ViewModelSubmoduleDefinition(
+    private val elements: List<ViewModelElementDefinition>,
+    private val windows: List<ViewModelWindowDefinition>,
+) {
+    fun getElements(): List<ViewModelElementDefinition> {
+        return this.elements
+    }
+
+    fun getWindows(): List<ViewModelWindowDefinition> {
+        return this.windows
+    }
+
+    companion object {
+        fun create(
+            elements: List<ViewModelElementDefinition>,
+            windows: List<ViewModelWindowDefinition>,
+        ): ViewModelSubmoduleDefinition {
+            return ViewModelSubmoduleDefinition(
+                elements = elements,
+                windows = windows,
+            )
+        }
+    }
+}
+
 data class ExternalTypePackageMapping(
     private val name: String,
     private val packageName: String,
@@ -289,6 +382,7 @@ data class ModuleDefinition(
     private val externalTypes: List<String>,
     private val implSubmodule: ImplSubmoduleDefinition?,
     private val webSubmodule: WebSubmoduleDefinition?,
+    private val viewModelSubmodule: ViewModelSubmoduleDefinition?,
     private val kotlinConfig: KotlinConfig?,
 ) {
     fun getName(): ModuleName {
@@ -343,6 +437,10 @@ data class ModuleDefinition(
         return this.webSubmodule
     }
 
+    fun getViewModelSubmodule(): ViewModelSubmoduleDefinition? {
+        return this.viewModelSubmodule
+    }
+
     fun getKotlinConfig(): KotlinConfig? {
         return this.kotlinConfig
     }
@@ -362,6 +460,7 @@ data class ModuleDefinition(
             externalTypes: List<String>,
             implSubmodule: ImplSubmoduleDefinition?,
             webSubmodule: WebSubmoduleDefinition?,
+            viewModelSubmodule: ViewModelSubmoduleDefinition?,
             kotlinConfig: KotlinConfig?,
         ): ModuleDefinition {
             return ModuleDefinition(
@@ -378,6 +477,7 @@ data class ModuleDefinition(
                 externalTypes = externalTypes,
                 implSubmodule = implSubmodule,
                 webSubmodule = webSubmodule,
+                viewModelSubmodule = viewModelSubmodule,
                 kotlinConfig = kotlinConfig,
             )
         }
@@ -386,14 +486,14 @@ data class ModuleDefinition(
 
 data class TypeDefinition(
     private val name: String,
-    private val wrappers: List<TypeWrapper>,
+    private val wrappers: List<String>,
 ) {
     fun getName(): String {
         return this.name
     }
 
     fun getWrappers(): List<TypeWrapper> {
-        return this.wrappers
+        return this.wrappers.map { it -> TypeWrapper.valueOf(it) }
     }
 
     companion object {
@@ -403,7 +503,7 @@ data class TypeDefinition(
         ): TypeDefinition {
             return TypeDefinition(
                 name = name,
-                wrappers = wrappers,
+                wrappers = wrappers.map { it -> it.name },
             )
         }
     }
