@@ -174,3 +174,9 @@ Web
         ErrorCodesMapping
             SomeException -> "EC1"
             Some2Exception -> "EC2"
+
+ViewModel
+    Elements
+        SomeClassVm
+            SomeClass
+                id
