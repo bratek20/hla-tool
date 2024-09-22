@@ -8,4 +8,6 @@ using B20.Frontend.UiElements;
 using OtherModule.Api;
 
 namespace OtherModule.ViewModel {
+    public partial class OtherClassVm {
+    }
 }

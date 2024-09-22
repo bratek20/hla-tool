@@ -130,4 +130,13 @@ class ElementsLogicGenerator: BaseElementsGenerator() {
     override fun patternName(): PatternName {
         return PatternName.ElementsLogic
     }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        viewModelElements()?.forEach { element ->
+            addClass {
+                name = element.getName()
+                partial = true
+            }
+        }
+    }
 }
