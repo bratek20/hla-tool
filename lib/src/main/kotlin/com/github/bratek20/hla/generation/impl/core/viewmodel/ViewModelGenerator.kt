@@ -18,7 +18,8 @@ class ViewModelGenerator: SubmoduleGenerator() {
         return listOf(
             GeneratedElementsGenerator(),
             ElementsLogicGenerator(),
-            GeneratedWindowsGenerator()
+            GeneratedWindowsGenerator(),
+            WindowsLogicGenerator()
         )
     }
 }

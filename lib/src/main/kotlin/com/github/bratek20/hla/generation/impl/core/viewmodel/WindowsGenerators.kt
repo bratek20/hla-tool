@@ -43,19 +43,29 @@ class GeneratedWindowLogic(
         }
     }
 }
-class GeneratedWindowsGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.GeneratedWindows
-    }
 
+abstract class BaseWindowsGenerator: PatternGenerator() {
     override fun supportsCodeBuilder(): Boolean {
         return true
     }
 
-    private fun viewModelWindows() = module.getViewModelSubmodule()?.getWindows()
+    protected fun viewModelWindows() = module.getViewModelSubmodule()?.getWindows()
 
     override fun shouldGenerate(): Boolean {
         return viewModelWindows()?.isNotEmpty() ?: false
+    }
+
+    override fun extraCSharpUsings(): List<String> {
+        return listOf(
+            "B20.Frontend.Windows.Api",
+            "B20.Frontend.UiElements"
+        )
+    }
+}
+
+class GeneratedWindowsGenerator: BaseWindowsGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.GeneratedWindows
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
@@ -65,11 +75,13 @@ class GeneratedWindowsGenerator: PatternGenerator() {
             addClass(logic.getWindowClass())
         }
     }
+}
 
-    override fun extraCSharpUsings(): List<String> {
-        return listOf(
-            "B20.Frontend.Windows.Api",
-            "B20.Frontend.UiElements"
-        )
+class WindowsLogicGenerator: BaseWindowsGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.WindowsLogic
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
     }
 }
