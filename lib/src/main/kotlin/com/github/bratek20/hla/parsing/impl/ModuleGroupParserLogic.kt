@@ -145,7 +145,41 @@ class ModuleGroupParserLogic(
     }
 
     private fun parseViewModelSubmodule(elements: List<ParsedElement>): ViewModelSubmoduleDefinition? {
-        return null
+        return findSection(elements, "ViewModel")?.let { viewModel ->
+            val vmElements = findSection(viewModel.elements, "Elements")?.elements
+                ?.filterIsInstance<Section>()?.map { vm ->
+                    val model = vm.elements.filterIsInstance<Section>().map { m ->
+                        val mappedFields = m.elements.filterIsInstance<Section>().map {
+                            it.name
+                        }
+                        ElementModelDefinition(
+                            name = m.name,
+                            mappedFields = mappedFields
+                        )
+                    }
+                    ViewModelElementDefinition(
+                        name = vm.name,
+                        model = model[0],
+                        fields = parseFields(vm.elements)
+                    )
+                } ?: emptyList()
+
+            val windows = findSection(viewModel.elements, "Windows")?.elements
+                ?.filterIsInstance<Section>()?.map { w ->
+                    val state = findSection(w.elements, "State")?.let {
+                        parseComplexStructureDefinition(it).definition
+                    }
+                    ViewModelWindowDefinition(
+                        name = w.name,
+                        state = state,
+                        fields = parseFields(w.elements)
+                    )
+                } ?: emptyList()
+            return ViewModelSubmoduleDefinition(
+                elements = vmElements,
+                windows = windows,
+            )
+        }
     }
 
     private fun parseExposedInterfaces(elements: List<ParsedElement>): List<ExposedInterface> {
@@ -276,25 +310,32 @@ class ModuleGroupParserLogic(
     )
     private fun parseComplexStructureDefinition(section: Section): ParseComplexStructureResult {
         val inlineSimpleVOs = mutableListOf<SimpleStructureDefinition>()
+        section.elements.filterIsInstance<ColonAssignment>().map {
+            if (it.value2 != null) {
+                inlineSimpleVOs.add(SimpleStructureDefinition(parseType(it.value).getName(), it.value2, emptyList()))
+            }
+        }
+
         val def = ComplexStructureDefinition(
             name = section.name,
-            fields = section.elements.filterIsInstance<ColonAssignment>().map {
-                if (it.value2 != null) {
-                    inlineSimpleVOs.add(SimpleStructureDefinition(parseType(it.value).getName(), it.value2, emptyList()))
-                }
-                FieldDefinition(
-                    name = it.name,
-                    type = parseType(it.value),
-                    attributes = it.attributes,
-                    defaultValue = it.defaultValue
-                )
-            }
+            fields = parseFields(section.elements),
         )
 
         return ParseComplexStructureResult(
             definition = def,
             inlineSimpleVOs = inlineSimpleVOs
         )
+    }
+
+    private fun parseFields(elements: List<ParsedElement>): List<FieldDefinition> {
+        return elements.filterIsInstance<ColonAssignment>().map {
+            FieldDefinition(
+                name = it.name,
+                type = parseType(it.value),
+                attributes = it.attributes,
+                defaultValue = it.defaultValue
+            )
+        }
     }
 
     private fun parseMethod(method: ParsedMethod): MethodDefinition {

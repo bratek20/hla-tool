@@ -1,8 +1,9 @@
 ViewModel
     Elements
         SomeModelVm
-            id
-        someButton: Button
+            SomeModel
+                id
+            someButton: Button
     Windows
         SomeWindow
             State

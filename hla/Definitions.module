@@ -52,13 +52,16 @@ ValueObjects
     // ViewModel start
 
     ElementModelDefinition
+        name: string
         mappedFields: string[]
 
     ViewModelElementDefinition
+        name: string
         model: ElementModelDefinition
         fields: FieldDefinition[]
 
     ViewModelWindowDefinition
+        name: string
         state: ComplexStructureDefinition?
         fields: FieldDefinition[]
 

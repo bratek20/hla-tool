@@ -222,11 +222,16 @@ fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Expe
 }
 
 data class ExpectedElementModelDefinition(
+    var name: String? = null,
     var mappedFields: List<String>? = null,
 )
 fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: ExpectedElementModelDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedElementModelDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
 
     expected.mappedFields?.let {
         if (given.getMappedFields().size != it.size) { result.add("${path}mappedFields size ${given.getMappedFields().size} != ${it.size}"); return@let }
@@ -237,12 +242,17 @@ fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: Expe
 }
 
 data class ExpectedViewModelElementDefinition(
+    var name: String? = null,
     var model: (ExpectedElementModelDefinition.() -> Unit)? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
 )
 fun diffViewModelElementDefinition(given: ViewModelElementDefinition, expectedInit: ExpectedViewModelElementDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedViewModelElementDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
 
     expected.model?.let {
         if (diffElementModelDefinition(given.getModel(), it) != "") { result.add(diffElementModelDefinition(given.getModel(), it, "${path}model.")) }
@@ -257,6 +267,7 @@ fun diffViewModelElementDefinition(given: ViewModelElementDefinition, expectedIn
 }
 
 data class ExpectedViewModelWindowDefinition(
+    var name: String? = null,
     var stateEmpty: Boolean? = null,
     var state: (ExpectedComplexStructureDefinition.() -> Unit)? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
@@ -264,6 +275,10 @@ data class ExpectedViewModelWindowDefinition(
 fun diffViewModelWindowDefinition(given: ViewModelWindowDefinition, expectedInit: ExpectedViewModelWindowDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedViewModelWindowDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
 
     expected.stateEmpty?.let {
         if ((given.getState() == null) != it) { result.add("${path}state empty ${(given.getState() == null)} != ${it}") }

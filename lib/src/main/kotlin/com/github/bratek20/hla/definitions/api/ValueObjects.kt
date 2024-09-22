@@ -226,17 +226,24 @@ data class WebSubmoduleDefinition(
 }
 
 data class ElementModelDefinition(
+    private val name: String,
     private val mappedFields: List<String>,
 ) {
+    fun getName(): String {
+        return this.name
+    }
+
     fun getMappedFields(): List<String> {
         return this.mappedFields
     }
 
     companion object {
         fun create(
+            name: String,
             mappedFields: List<String>,
         ): ElementModelDefinition {
             return ElementModelDefinition(
+                name = name,
                 mappedFields = mappedFields,
             )
         }
@@ -244,9 +251,14 @@ data class ElementModelDefinition(
 }
 
 data class ViewModelElementDefinition(
+    private val name: String,
     private val model: ElementModelDefinition,
     private val fields: List<FieldDefinition>,
 ) {
+    fun getName(): String {
+        return this.name
+    }
+
     fun getModel(): ElementModelDefinition {
         return this.model
     }
@@ -257,10 +269,12 @@ data class ViewModelElementDefinition(
 
     companion object {
         fun create(
+            name: String,
             model: ElementModelDefinition,
             fields: List<FieldDefinition>,
         ): ViewModelElementDefinition {
             return ViewModelElementDefinition(
+                name = name,
                 model = model,
                 fields = fields,
             )
@@ -269,9 +283,14 @@ data class ViewModelElementDefinition(
 }
 
 data class ViewModelWindowDefinition(
+    private val name: String,
     private val state: ComplexStructureDefinition?,
     private val fields: List<FieldDefinition>,
 ) {
+    fun getName(): String {
+        return this.name
+    }
+
     fun getState(): ComplexStructureDefinition? {
         return this.state
     }
@@ -282,10 +301,12 @@ data class ViewModelWindowDefinition(
 
     companion object {
         fun create(
+            name: String,
             state: ComplexStructureDefinition?,
             fields: List<FieldDefinition>,
         ): ViewModelWindowDefinition {
             return ViewModelWindowDefinition(
+                name = name,
                 state = state,
                 fields = fields,
             )

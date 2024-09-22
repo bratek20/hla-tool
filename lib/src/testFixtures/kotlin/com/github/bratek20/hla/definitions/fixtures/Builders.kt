@@ -110,34 +110,40 @@ fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): Web
 }
 
 data class ElementModelDefinitionDef(
+    var name: String = "someValue",
     var mappedFields: List<String> = emptyList(),
 )
 fun elementModelDefinition(init: ElementModelDefinitionDef.() -> Unit = {}): ElementModelDefinition {
     val def = ElementModelDefinitionDef().apply(init)
     return ElementModelDefinition.create(
+        name = def.name,
         mappedFields = def.mappedFields,
     )
 }
 
 data class ViewModelElementDefinitionDef(
+    var name: String = "someValue",
     var model: (ElementModelDefinitionDef.() -> Unit) = {},
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun viewModelElementDefinition(init: ViewModelElementDefinitionDef.() -> Unit = {}): ViewModelElementDefinition {
     val def = ViewModelElementDefinitionDef().apply(init)
     return ViewModelElementDefinition.create(
+        name = def.name,
         model = elementModelDefinition(def.model),
         fields = def.fields.map { it -> fieldDefinition(it) },
     )
 }
 
 data class ViewModelWindowDefinitionDef(
+    var name: String = "someValue",
     var state: (ComplexStructureDefinitionDef.() -> Unit)? = null,
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun viewModelWindowDefinition(init: ViewModelWindowDefinitionDef.() -> Unit = {}): ViewModelWindowDefinition {
     val def = ViewModelWindowDefinitionDef().apply(init)
     return ViewModelWindowDefinition.create(
+        name = def.name,
         state = def.state?.let { it -> complexStructureDefinition(it) },
         fields = def.fields.map { it -> fieldDefinition(it) },
     )
