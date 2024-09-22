@@ -17,6 +17,7 @@ class ViewModelGenerator: SubmoduleGenerator() {
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             GeneratedElementsGenerator(),
+            ElementsLogicGenerator(),
             GeneratedWindowsGenerator()
         )
     }

@@ -91,19 +91,28 @@ class ViewModelElementLogic(
     }
 }
 
-class GeneratedElementsGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.GeneratedElements
-    }
-
+abstract class BaseElementsGenerator: PatternGenerator() {
     override fun supportsCodeBuilder(): Boolean {
         return true
     }
 
-    private fun viewModelElements() = module.getViewModelSubmodule()?.getElements()
+    protected fun viewModelElements() = module.getViewModelSubmodule()?.getElements()
 
     override fun shouldGenerate(): Boolean {
         return viewModelElements()?.isNotEmpty() ?: false
+    }
+
+    override fun extraCSharpUsings(): List<String> {
+        return listOf(
+            "B20.Frontend.Traits",
+            "B20.Frontend.UiElements"
+        )
+    }
+}
+
+class GeneratedElementsGenerator: BaseElementsGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.GeneratedElements
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
@@ -115,11 +124,10 @@ class GeneratedElementsGenerator: PatternGenerator() {
             addClass(logic.getClass())
         }
     }
+}
 
-    override fun extraCSharpUsings(): List<String> {
-        return listOf(
-            "B20.Frontend.Traits",
-            "B20.Frontend.UiElements"
-        )
+class ElementsLogicGenerator: BaseElementsGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.ElementsLogic
     }
 }
