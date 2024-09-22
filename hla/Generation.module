@@ -1,4 +1,13 @@
 Enums
+    SubmoduleName
+        Api
+        Impl
+        Web
+        ViewModel
+        Context
+        Fixtures
+        Tests
+
     PatternName
         //api
         Enums
@@ -23,6 +32,9 @@ Enums
         WebClient
         PlayFabHandlers
 
+        //view model
+        GeneratedElements
+
         //context
         Impl
         Web
@@ -35,14 +47,6 @@ Enums
 
         //tests
         ImplTest
-
-    SubmoduleName
-        Api
-        Impl
-        Web
-        Context
-        Fixtures
-        Tests
 
 ValueObjects
     GeneratedPattern

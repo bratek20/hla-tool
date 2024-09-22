@@ -58,6 +58,7 @@ class ModuleWriterLogic(
                 submoduleToDirectory(SubmoduleName.Api, module.getSubmodules(), profile),
                 submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules(), profile),
                 submoduleToDirectory(SubmoduleName.Web, module.getSubmodules(), profile),
+                submoduleToDirectory(SubmoduleName.ViewModel, module.getSubmodules(), profile),
                 submoduleToDirectory(SubmoduleName.Context, module.getSubmodules(), profile),
             )
         );

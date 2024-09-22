@@ -9,6 +9,7 @@ import com.github.bratek20.hla.generation.impl.core.context.ContextGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
 import com.github.bratek20.hla.generation.impl.core.tests.TestsGenerator
+import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelGenerator
 import com.github.bratek20.hla.generation.impl.core.web.WebGenerator
 import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
@@ -34,6 +35,7 @@ class ModuleGeneratorLogic(
                 ApiGenerator(),
                 ImplGenerator(),
                 WebGenerator(),
+                ViewModelGenerator(),
                 ContextGenerator(),
                 FixturesGenerator(),
                 TestsGenerator(),
