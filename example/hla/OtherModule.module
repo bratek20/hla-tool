@@ -31,5 +31,6 @@ Web
 ViewModel
     Elements
         OtherClassVm
-            id
-            amount
+            OtherClass
+                id
+                amount
