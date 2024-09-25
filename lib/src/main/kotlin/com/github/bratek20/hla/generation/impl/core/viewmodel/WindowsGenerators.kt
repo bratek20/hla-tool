@@ -5,6 +5,7 @@ import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 
@@ -80,6 +81,10 @@ class GeneratedWindowsGenerator: BaseWindowsGenerator() {
 class WindowsLogicGenerator: BaseWindowsGenerator() {
     override fun patternName(): PatternName {
         return PatternName.WindowsLogic
+    }
+
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
