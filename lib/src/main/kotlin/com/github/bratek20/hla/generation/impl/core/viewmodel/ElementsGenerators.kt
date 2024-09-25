@@ -2,8 +2,8 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
-import com.github.bratek20.codebuilder.types.TypeBuilder
-import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.codebuilder.types.*
+import com.github.bratek20.hla.definitions.api.Attribute
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
 import com.github.bratek20.hla.generation.api.PatternName
@@ -32,6 +32,61 @@ class ViewModelElementLogic(
         throw IllegalArgumentException("No view model mapping implemented: $modelType")
     }
 
+    private fun getTraitTypesMethod(): MethodBuilderOps = {
+        val traitTypes = def.getAttributes().map { mapAttributeToTraitType(it) }
+
+        modifier = AccessModifier.PROTECTED
+        override = true
+        name = "getTraitTypes"
+        returnType = listType(classType())
+
+        setBody {
+            add(returnStatement {
+                newListOf(classType(), *traitTypes.toTypedArray())
+            })
+        }
+    }
+
+    private fun mapAttributeToTraitType(att: Attribute): ExpressionBuilder {
+        return when (att.getName()) {
+            "clickable" -> typeOf(typeName("Clickable"))
+            "draggable" -> typeOf(typeName("Draggable"))
+            else -> throw IllegalArgumentException("No trait mapping implemented: ${att.getName()}")
+        }
+    }
+
+    private fun onUpdatedMethod(): MethodBuilderOps = {
+        modifier = AccessModifier.PROTECTED
+        override = true
+        name = "onUpdate"
+
+        setBody {
+            getMappedFields().forEach { field ->
+                add(methodCallStatement {
+                    target = getterField(field.name)
+                    methodName = "update"
+                    addArg {
+                        if (field.type is SimpleValueObjectApiType) {
+                            getterFieldAccess {
+                                objectRef = methodCall {
+                                    target = getterField("model")
+                                    methodName = field.getterName()
+                                }
+                                fieldName = "value"
+                            }
+                        }
+                        else {
+                            methodCall {
+                                target = getterField("model")
+                                methodName = field.getterName()
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+
     fun getClass(): ClassBuilderOps = {
         name = def.getName()
         partial = true
@@ -58,37 +113,10 @@ class ViewModelElementLogic(
             }
         }
 
-        addMethod {
-            modifier = AccessModifier.PROTECTED
-            override = true
-            name = "onUpdate"
-
-            setBody {
-                getMappedFields().forEach { field ->
-                    add(methodCallStatement {
-                        target = getterField(field.name)
-                        methodName = "update"
-                        addArg {
-                            if (field.type is SimpleValueObjectApiType) {
-                                getterFieldAccess {
-                                    objectRef = methodCall {
-                                        target = getterField("model")
-                                        methodName = field.getterName()
-                                    }
-                                    fieldName = "value"
-                                }
-                            }
-                            else {
-                                methodCall {
-                                    target = getterField("model")
-                                    methodName = field.getterName()
-                                }
-                            }
-                        }
-                    })
-                }
-            }
+        if (def.getAttributes().isNotEmpty()) {
+            addMethod(getTraitTypesMethod())
         }
+        addMethod(onUpdatedMethod())
     }
 }
 
