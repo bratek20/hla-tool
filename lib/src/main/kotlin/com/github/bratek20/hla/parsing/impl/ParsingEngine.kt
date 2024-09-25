@@ -192,7 +192,7 @@ class ParsingEngine {
         val attributes = line.substringAfter("(").substringBefore(")").split(",")
             .filter { it.isNotBlank() }
             .map {
-                var attName = it
+                var attName = it.trim()
                 var attValue = "true"
                 if(it.contains(":")) {
                     attName = it.substringBefore(":").trim()

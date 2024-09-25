@@ -123,6 +123,7 @@ fun elementModelDefinition(init: ElementModelDefinitionDef.() -> Unit = {}): Ele
 
 data class ViewModelElementDefinitionDef(
     var name: String = "someValue",
+    var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
     var model: (ElementModelDefinitionDef.() -> Unit) = {},
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
 )
@@ -130,6 +131,7 @@ fun viewModelElementDefinition(init: ViewModelElementDefinitionDef.() -> Unit = 
     val def = ViewModelElementDefinitionDef().apply(init)
     return ViewModelElementDefinition.create(
         name = def.name,
+        attributes = def.attributes.map { it -> attribute(it) },
         model = elementModelDefinition(def.model),
         fields = def.fields.map { it -> fieldDefinition(it) },
     )

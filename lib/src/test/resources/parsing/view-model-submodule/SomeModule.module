@@ -1,6 +1,6 @@
 ViewModel
     Elements
-        SomeModelVm
+        SomeModelVm (att1, att2)
             SomeModel
                 id
             someButton: Button

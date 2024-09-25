@@ -243,6 +243,7 @@ fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: Expe
 
 data class ExpectedViewModelElementDefinition(
     var name: String? = null,
+    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
     var model: (ExpectedElementModelDefinition.() -> Unit)? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
 )
@@ -252,6 +253,11 @@ fun diffViewModelElementDefinition(given: ViewModelElementDefinition, expectedIn
 
     expected.name?.let {
         if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.attributes?.let {
+        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
+        given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
     }
 
     expected.model?.let {

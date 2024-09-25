@@ -769,6 +769,14 @@ class ModuleGroupParserTest {
             viewModelSubmodule = {
                 elements = listOf {
                     name = "SomeModelVm"
+                    attributes = listOf(
+                        {
+                            name = "att1"
+                        },
+                        {
+                            name = "att2"
+                        }
+                    )
                     model = {
                         name = "SomeModel"
                         mappedFields = listOf(

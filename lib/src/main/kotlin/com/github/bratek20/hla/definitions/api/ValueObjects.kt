@@ -252,11 +252,16 @@ data class ElementModelDefinition(
 
 data class ViewModelElementDefinition(
     private val name: String,
+    private val attributes: List<Attribute>,
     private val model: ElementModelDefinition,
     private val fields: List<FieldDefinition>,
 ) {
     fun getName(): String {
         return this.name
+    }
+
+    fun getAttributes(): List<Attribute> {
+        return this.attributes
     }
 
     fun getModel(): ElementModelDefinition {
@@ -270,11 +275,13 @@ data class ViewModelElementDefinition(
     companion object {
         fun create(
             name: String,
+            attributes: List<Attribute>,
             model: ElementModelDefinition,
             fields: List<FieldDefinition>,
         ): ViewModelElementDefinition {
             return ViewModelElementDefinition(
                 name = name,
+                attributes = attributes,
                 model = model,
                 fields = fields,
             )

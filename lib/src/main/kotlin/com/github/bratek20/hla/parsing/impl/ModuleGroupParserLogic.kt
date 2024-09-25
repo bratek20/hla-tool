@@ -159,6 +159,7 @@ class ModuleGroupParserLogic(
                     }
                     ViewModelElementDefinition(
                         name = vm.name,
+                        attributes = vm.attributes,
                         model = model[0],
                         fields = parseFields(vm.elements)
                     )

@@ -13,6 +13,9 @@ namespace SomeModule.ViewModel {
     public partial class SomeClassVm: UiElement<SomeClass> {
         public Label Id { get; set; }
         public Button Button { get; set; }
+        protected override List<Type> GetTraitTypes() {
+            return new List<Type>() { typeof(Clickable), typeof(Draggable) };
+        }
         protected override void OnUpdate() {
             Id.Update(Model.GetId().Value);
         }
