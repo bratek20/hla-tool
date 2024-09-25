@@ -20,4 +20,11 @@ namespace SomeModule.ViewModel {
             Id.Update(Model.GetId().Value);
         }
     }
+
+    public partial class SomeClassVm2: UiElement<SomeClass2> {
+        public BoolSwitch Enabled { get; set; }
+        protected override void OnUpdate() {
+            Enabled.Update(Model.GetEnabled());
+        }
+    }
 }

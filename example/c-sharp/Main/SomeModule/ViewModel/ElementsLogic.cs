@@ -10,4 +10,7 @@ using TypesModule.Api;
 namespace SomeModule.ViewModel {
     public partial class SomeClassVm {
     }
+
+    public partial class SomeClassVm2 {
+    }
 }

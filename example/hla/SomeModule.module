@@ -181,6 +181,10 @@ ViewModel
             SomeClass
                 id
             button: Button
+
+        SomeClassVm2
+            SomeClass2
+                enabled
     Windows
         SomeWindow
             State
