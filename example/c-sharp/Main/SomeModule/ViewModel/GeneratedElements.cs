@@ -40,7 +40,7 @@ namespace SomeModule.ViewModel {
     }
 
     public partial class SomeClass6Vm: UiElement<SomeClass6> {
-        public TODO SomeClassOpt { get; set; }
+        public OptionalSomeClassVm SomeClassOpt { get; set; }
         protected override void OnUpdate() {
             SomeClassOpt.Update(Model.GetSomeClassOpt());
         }
@@ -50,6 +50,13 @@ namespace SomeModule.ViewModel {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<SomeClass2Vm>()) {
+        }
+    }
+
+    public class OptionalSomeClassVm: OptionalUiElement<SomeClassVm, SomeClass> {
+        public OptionalSomeClassVm(
+            SomeClassVm element
+        ): base(element) {
         }
     }
 }
