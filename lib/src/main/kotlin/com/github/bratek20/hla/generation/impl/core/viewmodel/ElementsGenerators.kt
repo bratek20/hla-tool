@@ -15,7 +15,7 @@ class ViewModelElementLogic(
     private val def: ViewModelElementDefinition,
     val modelType: ComplexStructureApiType<*>
 ) {
-    fun getType(): TypeBuilder = typeName(def.getName())
+    fun getTypeName(): String = def.getName()
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel().getMappedFields().map { fieldName ->
@@ -100,7 +100,7 @@ class ViewModelElementLogic(
 
         getMappedFields().forEach { field ->
             addField {
-                type = mapper.map(field.type)
+                type = typeName(mapper.mapModelToViewModelTypeName(field.type))
                 name = field.name
                 getter = true
                 setter = true
@@ -165,20 +165,23 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
         }
 
         listTypes.forEach {
-            addClass(getClassForListType(it))
+            addClass(getClassForListType(mapper, it))
         }
     }
 
-    //TODO-GENERALIZE
-    private fun getClassForListType(listType: ListApiType): ClassBuilderOps = {
-        name = "SomeClass2VmGroup"
+    private fun getClassForListType(mapper: ModelToViewModelTypeMapper, listType: ListApiType): ClassBuilderOps = {
+        val listTypeName = mapper.mapModelToViewModelTypeName(listType)
+        val elementTypeName = mapper.mapModelToViewModelTypeName(listType.wrappedType)
+        val elementModelTypeName = listType.wrappedType.name()
+
+        name = listTypeName
         extends {
             className = "UiElementGroup"
             addGeneric {
-                typeName("SomeClass2Vm")
+                typeName(elementTypeName)
             }
             addGeneric {
-                typeName("SomeClass2")
+                typeName(elementModelTypeName)
             }
         }
 
@@ -188,7 +191,8 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
                 name = "c"
             }
             addPassingArg {
-                hardcodedExpression("() => c.Get<CreatedGameVm>()")
+                //TODO-REF
+                hardcodedExpression("() => c.Get<$elementTypeName>()")
             }
         }
     }

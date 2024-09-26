@@ -42,7 +42,7 @@ namespace SomeModule.ViewModel {
     public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
-        ): base(() => c.Get<CreatedGameVm>()) {
+        ): base(() => c.Get<SomeClass2Vm>()) {
         }
     }
 }

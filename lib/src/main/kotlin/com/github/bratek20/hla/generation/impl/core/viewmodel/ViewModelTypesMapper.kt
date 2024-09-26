@@ -9,7 +9,7 @@ import com.github.bratek20.hla.generation.impl.core.api.*
 class ModelToViewModelTypeMapper(
     private val viewModelElements: List<ViewModelElementLogic>
 ) {
-    fun map(modelType: ApiType): TypeBuilder {
+    fun mapModelToViewModelTypeName(modelType: ApiType): String {
         if (modelType is BaseApiType) {
             return mapBaseType(modelType)
         }
@@ -20,37 +20,37 @@ class ModelToViewModelTypeMapper(
             return mapComplexStructureType(modelType)
         }
         if (modelType is EnumApiType) {
-            return typeName("EnumSwitch")
+            return "EnumSwitch"
         }
         if (modelType is ListApiType) {
             return mapListType(modelType)
         }
-        return typeName("TODO")
+        return "TODO"
     }
 
     private fun getViewModelElementForType(modelType: ComplexStructureApiType<*>): ViewModelElementLogic {
         return viewModelElements.first { it.modelType.name == modelType.name }
     }
 
-    private fun mapComplexStructureType(modelType: ComplexStructureApiType<*>): TypeBuilder {
-        return getViewModelElementForType(modelType).getType()
+    private fun mapComplexStructureType(modelType: ComplexStructureApiType<*>): String {
+        return getViewModelElementForType(modelType).getTypeName()
     }
 
-    private fun mapListType(modelType: ListApiType): TypeBuilder {
+    private fun mapListType(modelType: ListApiType): String {
         if(modelType.wrappedType is ComplexStructureApiType<*>) {
             val x = mapComplexStructureType(modelType.wrappedType)
-            return typeMapping(x) { "${it}Group" }
+            return x + "Group"
         }
-        return typeName("TODO")
+        return "TODO"
     }
 
-    private fun mapBaseType(type: BaseApiType): TypeBuilder {
+    private fun mapBaseType(type: BaseApiType): String {
         return when (type.name) {
-            BaseType.STRING -> typeName("Label")
-            BaseType.INT -> typeName("Label")
-            BaseType.BOOL -> typeName("BoolSwitch")
-            BaseType.DOUBLE -> typeName("Label")
-            BaseType.LONG -> typeName("Label")
+            BaseType.STRING -> "Label"
+            BaseType.INT -> "Label"
+            BaseType.BOOL -> "BoolSwitch"
+            BaseType.DOUBLE -> "Label"
+            BaseType.LONG -> "Label"
             BaseType.STRUCT -> throw IllegalArgumentException("Structs are not supported in view models")
             BaseType.VOID -> throw IllegalArgumentException("Void is not supported in view models")
             BaseType.ANY -> throw IllegalArgumentException("Any is not supported in view models")
