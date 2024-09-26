@@ -11,6 +11,6 @@ namespace SomeModule.ViewModel {
     public partial class SomeClassVm {
     }
 
-    public partial class SomeClassVm2 {
+    public partial class SomeClass2Vm {
     }
 }
