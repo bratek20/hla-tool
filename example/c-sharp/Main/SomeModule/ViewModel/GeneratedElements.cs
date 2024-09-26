@@ -29,13 +29,18 @@ namespace SomeModule.ViewModel {
     }
 
     public partial class SomeClass3Vm: UiElement<SomeClass3> {
-        public TODO Class2Object { get; set; }
-        public TODO SomeEnum { get; set; }
-        public TODO Class2List { get; set; }
+        public SomeClass2Vm Class2Object { get; set; }
+        public EnumSwitch SomeEnum { get; set; }
+        public SomeClass2VmGroup Class2List { get; set; }
         protected override void OnUpdate() {
             Class2Object.Update(Model.GetClass2Object());
             SomeEnum.Update(Model.GetSomeEnum());
             Class2List.Update(Model.GetClass2List());
+        }
+    }
+
+    public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
+        public SomeClass2VmGroup(B20.Architecture.Contexts.Api.Context c) : base(() => c.Get<CreatedGameVm>()) {
         }
     }
 }
