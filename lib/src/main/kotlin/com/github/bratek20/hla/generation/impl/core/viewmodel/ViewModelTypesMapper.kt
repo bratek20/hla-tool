@@ -1,8 +1,5 @@
 package com.github.bratek20.hla.generation.impl.core.viewmodel
 
-import com.github.bratek20.codebuilder.types.TypeBuilder
-import com.github.bratek20.codebuilder.types.typeMapping
-import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.api.*
 
@@ -25,6 +22,9 @@ class ModelToViewModelTypeMapper(
         if (modelType is ListApiType) {
             return mapListType(modelType)
         }
+        if (modelType is OptionalApiType) {
+            return mapOptionalType(modelType)
+        }
         return "TODO"
     }
 
@@ -40,6 +40,14 @@ class ModelToViewModelTypeMapper(
         if(modelType.wrappedType is ComplexStructureApiType<*>) {
             val x = mapComplexStructureType(modelType.wrappedType)
             return x + "Group"
+        }
+        return "TODO"
+    }
+
+    private fun mapOptionalType(modelType: OptionalApiType): String {
+        if(modelType.wrappedType is ComplexStructureApiType<*>) {
+            val x = mapComplexStructureType(modelType.wrappedType)
+            return "Optional" + x
         }
         return "TODO"
     }

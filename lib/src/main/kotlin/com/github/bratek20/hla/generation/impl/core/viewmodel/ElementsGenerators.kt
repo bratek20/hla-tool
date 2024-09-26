@@ -79,9 +79,17 @@ class ViewModelElementLogic(
     }
 
     fun getMappedFieldOfListType(): List<ListApiType> {
+        return getMappedFieldOfType<ListApiType>()
+    }
+
+    fun getMappedFieldOfOptionalType(): List<OptionalApiType> {
+        return getMappedFieldOfType<OptionalApiType>()
+    }
+
+    private inline fun <reified T: ApiType> getMappedFieldOfType(): List<T> {
         return getMappedFields().mapNotNull { field ->
-            if (field.type is ListApiType) {
-                field.type as ListApiType
+            if (field.type is T) {
+                field.type as T
             } else {
                 null
             }
@@ -149,6 +157,7 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val listTypes: MutableList<ListApiType> = mutableListOf();
+        val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
 
         val elementsLogic = viewModelElements()!!.map { element ->
             val modelTypeName = element.getModel().getName()
@@ -162,11 +171,17 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
             addClass(element.getClass(mapper))
 
             listTypes.addAll(element.getMappedFieldOfListType())
+            optionalTypes.addAll(element.getMappedFieldOfOptionalType())
         }
 
         listTypes.forEach {
             addClass(getClassForListType(mapper, it))
         }
+
+        optionalTypes.forEach {
+            addClass(getClassForOptionalType(mapper, it))
+        }
+
     }
 
     private fun getClassForListType(mapper: ModelToViewModelTypeMapper, listType: ListApiType): ClassBuilderOps = {
@@ -193,6 +208,33 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
             addPassingArg {
                 //TODO-REF
                 hardcodedExpression("() => c.Get<$elementTypeName>()")
+            }
+        }
+    }
+
+    private fun getClassForOptionalType(mapper: ModelToViewModelTypeMapper, optionalType: OptionalApiType): ClassBuilderOps = {
+        val optionalTypeName = mapper.mapModelToViewModelTypeName(optionalType)
+        val elementTypeName = mapper.mapModelToViewModelTypeName(optionalType.wrappedType)
+        val elementModelTypeName = optionalType.wrappedType.name()
+
+        name = optionalTypeName
+        extends {
+            className = "OptionalUiElement"
+            addGeneric {
+                typeName(elementTypeName)
+            }
+            addGeneric {
+                typeName(elementModelTypeName)
+            }
+        }
+
+        setConstructor {
+            addArg {
+                type = typeName(elementTypeName)
+                name = "element"
+            }
+            addPassingArg {
+                variable("element")
             }
         }
     }
