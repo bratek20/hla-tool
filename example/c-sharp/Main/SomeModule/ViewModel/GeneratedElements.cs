@@ -39,6 +39,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class SomeClass6Vm: UiElement<SomeClass6> {
+        public TODO SomeClassOpt { get; set; }
+        protected override void OnUpdate() {
+            SomeClassOpt.Update(Model.GetSomeClassOpt());
+        }
+    }
+
     public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c

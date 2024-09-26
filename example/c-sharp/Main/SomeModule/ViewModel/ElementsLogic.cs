@@ -16,4 +16,7 @@ namespace SomeModule.ViewModel {
 
     public partial class SomeClass3Vm {
     }
+
+    public partial class SomeClass6Vm {
+    }
 }
