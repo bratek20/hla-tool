@@ -186,10 +186,14 @@ open class ClassBuilder: CodeBlockBuilder {
         fields.add(field(ops))
     }
 
-    private val passingArgs: MutableList<String> = mutableListOf()
-    fun addPassingArg(argName: String) {
-        passingArgs.add(argName)
+    private val passingArgs2: MutableList<ExpressionBuilder> = mutableListOf()
+    fun addPassingArg(arg: ExpressionBuilderProvider) {
+        passingArgs2.add(arg())
     }
+
+    private fun hasPassingArgs() = passingArgs2.isNotEmpty()
+    private fun allPassingArgs(c: CodeBuilderContext) =
+        passingArgs2.joinToString(", ") { it.build(c) }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         addOps(classDeclarationWithFieldConstructor(c))
@@ -267,8 +271,8 @@ open class ClassBuilder: CodeBlockBuilder {
             addOps(getConstructorArgsOps())
             untab()
 
-            if (passingArgs.isNotEmpty()) {
-                line("): base(${passingArgs.joinToString(", ")}) {")
+            if (hasPassingArgs()) {
+                line("): base(${allPassingArgs(c)}) {")
                 line("}")
             }
             else if (constructorFields.isNotEmpty()) {
@@ -321,8 +325,8 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             addOps(getFieldsAndArgsOps())
             untab()
-            val passingArgsPart = if (passingArgs.isNotEmpty()) {
-                "(${passingArgs.joinToString(", ")})"
+            val passingArgsPart = if (hasPassingArgs()) {
+                "(${allPassingArgs(c)})"
             }
             else {
                 ""
@@ -352,10 +356,10 @@ open class ClassBuilder: CodeBlockBuilder {
                 untab()
                 line("}")
             }
-            else if (passingArgs.isNotEmpty()) {
+            else if (hasPassingArgs()) {
                 line(") {")
                 tab()
-                line("super(${passingArgs.joinToString(", ")})")
+                line("super(${allPassingArgs(c)})")
                 untab()
                 line("}")
             }

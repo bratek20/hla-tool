@@ -24,6 +24,9 @@ fun variable(name: String): ExpressionBuilder {
     return expression(name)
 }
 
+//if you are lazy, in the end all usages should be refactored to proper builders
+fun hardcodedExpression(value: String) = expression(value)
+
 fun getterField(name: String) = expression { c ->
     if (c.lang.areMethodsPascalCase()) {
         camelToPascalCase(name)

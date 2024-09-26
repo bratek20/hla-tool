@@ -39,8 +39,12 @@ class ExceptionsGenerator: PatternGenerator() {
                             defaultValue = "\"\""
                         }
                     }
-                    addPassingArg(it)
-                    addPassingArg("message")
+                    addPassingArg {
+                        variable(it)
+                    }
+                    addPassingArg {
+                        variable("message")
+                    }
 
                     addMethod {
                         name = "getTypeName"
@@ -73,7 +77,9 @@ class ExceptionsGenerator: PatternGenerator() {
                             defaultValue = "\"\""
                         }
                     }
-                    addPassingArg("message")
+                    addPassingArg {
+                        variable("message")
+                    }
                 }
             }
         }

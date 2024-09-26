@@ -182,7 +182,9 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
                 type = typeName("B20.Architecture.Contexts.Api.Context")
                 name = "c"
             }
-            addPassingArg("() => c.Get<CreatedGameVm>()")
+            addPassingArg {
+                hardcodedExpression("() => c.Get<CreatedGameVm>()")
+            }
         }
     }
 }

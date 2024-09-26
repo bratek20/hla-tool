@@ -524,7 +524,9 @@ class ClassBuilderTest {
                             type = typeName("SomeType")
                         }
                     }
-                    addPassingArg("someArg")
+                    addPassingArg {
+                        variable("someArg")
+                    }
                 })
             }
             langExpected {
