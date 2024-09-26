@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.codebuilder.types.TypeBuilderProvider
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.softOptionalType
 import com.github.bratek20.utils.camelToPascalCase
@@ -125,10 +126,19 @@ typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
 class ExtendsBuilder: LinePartBuilder {
     lateinit var className: String
-    var generic: TypeBuilder? = null
+    private var generics: MutableList<TypeBuilder> = mutableListOf()
+
+    fun addGeneric(block: TypeBuilderProvider) {
+        generics.add(block())
+    }
 
     override fun build(c: CodeBuilderContext): String {
-        val genericPart = generic?.let { "<${it.build(c)}>" } ?: ""
+        val genericPart = if (generics.isNotEmpty()) {
+            "<${generics.joinToString(", ") { it.build(c) }}>"
+        }
+        else {
+            ""
+        }
         return "$className$genericPart"
     }
 }

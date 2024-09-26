@@ -31,7 +31,9 @@ class GeneratedWindowLogic(
         partial = true
         extends {
             className = "Window"
-            generic = typeName("SomeWindowState")
+            addGeneric {
+                typeName("SomeWindowState")
+            }
         }
 
         def.getFields().forEach { field ->

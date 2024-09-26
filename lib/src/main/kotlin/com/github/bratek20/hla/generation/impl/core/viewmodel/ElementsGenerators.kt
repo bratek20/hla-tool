@@ -77,12 +77,24 @@ class ViewModelElementLogic(
         }
     }
 
+    fun getMappedFieldOfListType(): List<ListApiType> {
+        return getMappedFields().mapNotNull { field ->
+            if (field.type is ListApiType) {
+                field.type as ListApiType
+            } else {
+                null
+            }
+        }
+    }
+
     fun getClass(): ClassBuilderOps = {
         name = def.getName()
         partial = true
         extends {
             className = "UiElement"
-            generic = modelType.builder()
+            addGeneric {
+                modelType.builder()
+            }
         }
 
         getMappedFields().forEach { field ->
@@ -135,12 +147,42 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
+        val listTypes: MutableList<ListApiType> = mutableListOf();
+
         viewModelElements()?.forEach { element ->
             val modelTypeName = element.getModel().getName()
             val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
 
             val logic = ViewModelElementLogic(element, modelType)
             addClass(logic.getClass())
+
+            listTypes.addAll(logic.getMappedFieldOfListType())
+        }
+
+        listTypes.forEach {
+            addClass(getClassForListType(it))
+        }
+    }
+
+    //TODO-GENERALIZE
+    private fun getClassForListType(listType: ListApiType): ClassBuilderOps = {
+        name = "SomeClass2VmGroup"
+        extends {
+            className = "UiElementGroup"
+            addGeneric {
+                typeName("SomeClass2Vm")
+            }
+            addGeneric {
+                typeName("SomeClass2")
+            }
+        }
+
+        setConstructor {
+            addArg {
+                type = typeName("B20.Architecture.Contexts.Api.Context")
+                name = "c"
+            }
+            addPassingArg("() => c.Get<CreatedGameVm>()")
         }
     }
 }

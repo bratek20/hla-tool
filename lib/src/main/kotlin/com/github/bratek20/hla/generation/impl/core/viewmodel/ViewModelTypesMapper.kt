@@ -3,9 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.BaseType
-import com.github.bratek20.hla.generation.impl.core.api.ApiType
-import com.github.bratek20.hla.generation.impl.core.api.BaseApiType
-import com.github.bratek20.hla.generation.impl.core.api.SimpleStructureApiType
+import com.github.bratek20.hla.generation.impl.core.api.*
 
 fun mapModelTypeToViewModelType(modelType: ApiType): TypeBuilder {
     if (modelType is BaseApiType) {
@@ -13,6 +11,15 @@ fun mapModelTypeToViewModelType(modelType: ApiType): TypeBuilder {
     }
     if (modelType is SimpleStructureApiType) {
         return mapBaseApiType(modelType.boxedType)
+    }
+    if (modelType is ComplexStructureApiType<*>) {
+        return typeName("SomeClass2Vm") //TODO-GENERALIZE
+    }
+    if (modelType is EnumApiType) {
+        return typeName("EnumSwitch")
+    }
+    if (modelType is ListApiType) {
+        return typeName("SomeClass2VmGroup") //TODO-GENERALIZE
     }
     return typeName("TODO")
 }

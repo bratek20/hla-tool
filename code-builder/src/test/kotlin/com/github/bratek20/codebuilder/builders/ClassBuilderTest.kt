@@ -570,14 +570,19 @@ class ClassBuilderTest {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
-                        generic = typeName("SomeType")
+                        addGeneric {
+                            typeName("SomeType")
+                        }
+                        addGeneric {
+                            typeName("SomeOtherType")
+                        }
                     }
                 })
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
-                    class SomeClass extends SomeParent<SomeType> {
+                    class SomeClass extends SomeParent<SomeType, SomeOtherType> {
                     }
                 """
             }
