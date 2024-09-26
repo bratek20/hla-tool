@@ -19,7 +19,8 @@ class ViewModelElementLogic(
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel().getMappedFields().map { fieldName ->
-            modelType.fields.first { it.name == fieldName }
+            modelType.fields.firstOrNull { it.name == fieldName }
+                ?: throw IllegalArgumentException("Field not found: $fieldName in ${modelType.name} for ${def.getName()}")
         }
     }
 
