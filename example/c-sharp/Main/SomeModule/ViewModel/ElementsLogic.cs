@@ -19,4 +19,7 @@ namespace SomeModule.ViewModel {
 
     public partial class SomeClass6Vm {
     }
+
+    public partial class ClassHavingOptSimpleVoVm {
+    }
 }
