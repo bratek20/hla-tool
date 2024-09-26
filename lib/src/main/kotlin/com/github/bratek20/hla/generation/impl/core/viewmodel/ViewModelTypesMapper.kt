@@ -14,7 +14,7 @@ fun mapModelTypeToViewModelType(modelType: ApiType): TypeBuilder {
     if (modelType is SimpleStructureApiType) {
         return mapBaseApiType(modelType.boxedType)
     }
-    throw IllegalArgumentException("No view model mapping implemented: $modelType")
+    return typeName("TODO")
 }
 
 private fun mapBaseApiType(type: BaseApiType): TypeBuilder {
@@ -22,10 +22,10 @@ private fun mapBaseApiType(type: BaseApiType): TypeBuilder {
         BaseType.STRING -> typeName("Label")
         BaseType.INT -> typeName("Label")
         BaseType.BOOL -> typeName("BoolSwitch")
-        BaseType.VOID -> TODO()
-        BaseType.ANY -> TODO()
-        BaseType.DOUBLE -> TODO()
-        BaseType.LONG -> TODO()
-        BaseType.STRUCT -> TODO()
+        BaseType.DOUBLE -> typeName("Label")
+        BaseType.LONG -> typeName("Label")
+        BaseType.STRUCT -> throw IllegalArgumentException("Structs are not supported in view models")
+        BaseType.VOID -> throw IllegalArgumentException("Void is not supported in view models")
+        BaseType.ANY -> throw IllegalArgumentException("Any is not supported in view models")
     }
 }

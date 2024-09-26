@@ -186,11 +186,11 @@ ViewModel
             SomeClass2
                 enabled
 
-        //SomeClass3Vm
-          //  SomeClass3
-            //    class2Object
-              //  someEnum
-                //class2List
+        SomeClass3Vm
+            SomeClass3
+                class2Object
+                someEnum
+                class2List
 
     Windows
         SomeWindow

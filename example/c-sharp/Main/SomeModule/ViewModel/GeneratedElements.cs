@@ -27,4 +27,15 @@ namespace SomeModule.ViewModel {
             Enabled.Update(Model.GetEnabled());
         }
     }
+
+    public partial class SomeClass3Vm: UiElement<SomeClass3> {
+        public TODO Class2Object { get; set; }
+        public TODO SomeEnum { get; set; }
+        public TODO Class2List { get; set; }
+        protected override void OnUpdate() {
+            Class2Object.Update(Model.GetClass2Object());
+            SomeEnum.Update(Model.GetSomeEnum());
+            Class2List.Update(Model.GetClass2List());
+        }
+    }
 }
