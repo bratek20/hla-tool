@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.types
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class TypesTest {
@@ -144,124 +145,179 @@ class TypesTest {
         }
     }
 
-    @Test
-    fun listType() {
-        testOp {
-            op = {
-                lineStart()
-                add(listType(typeName("SomeType")))
-                lineEnd()
 
-                lineStart()
-                add(mutableListType(typeName("SomeType")))
-                lineEnd()
 
-                lineStart()
-                add(emptyMutableList(typeName("SomeType")))
-                lineEnd()
-            }
-            langExpected {
-                lang = Kotlin()
-                expected = """
+    @Nested
+    inner class ListScope {
+        @Test
+        fun listType() {
+            testOp {
+                op = {
+                    lineStart()
+                    add(listType(typeName("SomeType")))
+                    lineEnd()
+
+                    lineStart()
+                    add(mutableListType(typeName("SomeType")))
+                    lineEnd()
+
+                    lineStart()
+                    add(emptyMutableList(typeName("SomeType")))
+                    lineEnd()
+                }
+                langExpected {
+                    lang = Kotlin()
+                    expected = """
                    List<SomeType>
                    MutableList<SomeType>
                    mutableListOf()
                 """
-            }
-            langExpected {
-                lang = TypeScript()
-                expected = """
+                }
+                langExpected {
+                    lang = TypeScript()
+                    expected = """
                    SomeType[]
                    SomeType[]
                    []
                 """
-            }
-            langExpected {
-                lang = CSharp()
-                expected = """
+                }
+                langExpected {
+                    lang = CSharp()
+                    expected = """
                    List<SomeType>
                    List<SomeType>
                    new List<SomeType>()
                 """
+                }
             }
         }
-    }
 
-    @Test
-    fun listOps() {
-        testOp {
-            op = {
-                add(assignment {
-                    left = variableDeclaration {
-                        type = baseType(BaseType.STRING)
-                        name = "firstElem"
-                    }
-                    right = listOp("list").get(0)
-                })
-                add(assignment {
-                    left = variableDeclaration {
-                        type = mutableListType(baseType(BaseType.STRING))
-                        name = "list"
-                    }
-                    right = emptyMutableList(baseType(BaseType.STRING))
-                })
+        @Test
+        fun allLanguagesOps() {
+            testOp {
+                op = {
+                    add(assignment {
+                        left = variableDeclaration {
+                            type = baseType(BaseType.STRING)
+                            name = "firstElem"
+                        }
+                        right = listOp("list").get(0)
+                    })
+                    add(assignment {
+                        left = variableDeclaration {
+                            type = mutableListType(baseType(BaseType.STRING))
+                            name = "list"
+                        }
+                        right = emptyMutableList(baseType(BaseType.STRING))
+                    })
 
-                add(listOp("list").add {
-                    string("someString")
-                })
+                    add(listOp("list").add {
+                        string("someString")
+                    })
 
 
-                lineStart()
-                add(listOp("list").find {
-                    isEqualTo {
-                        left = variable("it")
-                        right = variable("other")
-                    }
-                })
-                lineEnd()
+                    lineStart()
+                    add(listOp("list").find {
+                        isEqualTo {
+                            left = variable("it")
+                            right = variable("other")
+                        }
+                    })
+                    lineEnd()
 
-                lineStart()
-                add(listOp("list").map {
-                    plus {
-                        left = variable("it")
-                        right = const(1)
-                    }
-                })
-                lineEnd()
-            }
-            langExpected {
-                lang = Kotlin()
-                expected = """
+                    lineStart()
+                    add(listOp("list").map {
+                        plus {
+                            left = variable("it")
+                            right = const(1)
+                        }
+                    })
+                    lineEnd()
+                }
+                langExpected {
+                    lang = Kotlin()
+                    expected = """
                    val firstElem: String = list[0]
                    val list: MutableList<String> = mutableListOf()
                    list.add("someString")
                    list.find { it -> it == other }
                    list.map { it -> it + 1 }
                 """
-            }
-            langExpected {
-                lang = TypeScript()
-                expected = """
+                }
+                langExpected {
+                    lang = TypeScript()
+                    expected = """
                    const firstElem: string = list[0]
                    const list: string[] = []
                    list.push("someString")
                    list.find( it => it == other )
                    list.map( it => it + 1 )
                 """
-            }
-            langExpected {
-                lang = CSharp()
-                expected = """
+                }
+                langExpected {
+                    lang = CSharp()
+                    expected = """
                    string firstElem = list[0];
                    List<string> list = new List<string>();
                    list.Add("someString")
                    list.Find( it => it == other )
                    list.Select( it => it + 1 )
                 """
+                }
+            }
+        }
+
+        @Test
+        fun onlyCSharp() {
+            testOp {
+                op = {
+                    add(assignment {
+                        left = variableDeclaration {
+                            type = listType(baseType(BaseType.STRING))
+                            name = "list"
+                        }
+                        right = newListOf(
+                            baseType(BaseType.STRING),
+                            string("str1"),
+                            string("str2")
+                        )
+                    })
+                }
+                langExpected {
+                    lang = CSharp()
+                    expected =
+                    """
+                    List<string> list = new List<string>() { "str1", "str2" };
+                    """
+                }
             }
         }
     }
 
+    @Nested
+    inner class ClassTypeScope {
+        @Test
+        fun onlyCSharp() {
+            testOp {
+                op = {
+                    add(assignment {
+                        left = variableDeclaration {
+                            type = classType()
+                            name = "someClassType"
+                        }
+                        right = typeOf(typeName("SomeClass"))
+                    })
+                }
+                langExpected {
+                    lang = CSharp()
+                    expected =
+                    """
+                    Type someClassType = typeof(SomeClass);
+                    """
+                }
+            }
+        }
+    }
     @Test
     fun optional() {
         testOp {

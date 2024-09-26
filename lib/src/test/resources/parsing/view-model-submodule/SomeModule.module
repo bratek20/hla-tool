@@ -1,0 +1,11 @@
+ViewModel
+    Elements
+        SomeModelVm (att1, att2)
+            SomeModel
+                id
+            someButton: Button
+    Windows
+        SomeWindow
+            State
+                name: string
+            someVm: SomeModelVm

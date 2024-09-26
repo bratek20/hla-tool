@@ -49,6 +49,26 @@ fun assertWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Ex
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertElementModelDefinition(given: ElementModelDefinition, expectedInit: ExpectedElementModelDefinition.() -> Unit) {
+    val diff = diffElementModelDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertViewModelElementDefinition(given: ViewModelElementDefinition, expectedInit: ExpectedViewModelElementDefinition.() -> Unit) {
+    val diff = diffViewModelElementDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertViewModelWindowDefinition(given: ViewModelWindowDefinition, expectedInit: ExpectedViewModelWindowDefinition.() -> Unit) {
+    val diff = diffViewModelWindowDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertViewModelSubmoduleDefinition(given: ViewModelSubmoduleDefinition, expectedInit: ExpectedViewModelSubmoduleDefinition.() -> Unit) {
+    val diff = diffViewModelSubmoduleDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertExternalTypePackageMapping(given: ExternalTypePackageMapping, expectedInit: ExpectedExternalTypePackageMapping.() -> Unit) {
     val diff = diffExternalTypePackageMapping(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

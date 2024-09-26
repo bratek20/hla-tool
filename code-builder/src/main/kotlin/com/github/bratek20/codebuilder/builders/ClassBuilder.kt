@@ -2,6 +2,7 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.codebuilder.types.TypeBuilderProvider
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.softOptionalType
 import com.github.bratek20.utils.camelToPascalCase
@@ -20,6 +21,7 @@ class FieldBuilder(
     var static = false
 
     var getter = false
+    var setter = false
     var fromConstructor = false
 
     override fun validate(c: CodeBuilderContext): ValidationResult {
@@ -35,15 +37,17 @@ class FieldBuilder(
         return ValidationResult.success()
     }
 
-    private fun getOperationsForCSharpGetter(): CodeBuilderOps = {
+    private fun getOperationsForCSharpGetterAndSetter(): CodeBuilderOps = {
         lineStart("public ")
         add(type!!)
-        lineEnd(" ${camelToPascalCase(name)} { get; }")
+        val getPart = if (getter) "get; " else ""
+        val setPart = if (setter) "set; " else ""
+        lineEnd(" ${camelToPascalCase(name)} { $getPart$setPart}")
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
-        if (getter && c.lang is CSharp) {
-            return getOperationsForCSharpGetter()
+        if ((getter || setter) && c.lang is CSharp) {
+            return getOperationsForCSharpGetterAndSetter()
         }
         return {
             lineStart()
@@ -122,10 +126,19 @@ typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
 class ExtendsBuilder: LinePartBuilder {
     lateinit var className: String
-    var generic: TypeBuilder? = null
+    private var generics: MutableList<TypeBuilder> = mutableListOf()
+
+    fun addGeneric(block: TypeBuilderProvider) {
+        generics.add(block())
+    }
 
     override fun build(c: CodeBuilderContext): String {
-        val genericPart = generic?.let { "<${it.build(c)}>" } ?: ""
+        val genericPart = if (generics.isNotEmpty()) {
+            "<${generics.joinToString(", ") { it.build(c) }}>"
+        }
+        else {
+            ""
+        }
         return "$className$genericPart"
     }
 }
@@ -135,6 +148,8 @@ open class ClassBuilder: CodeBlockBuilder {
     open fun beforeClassKeyword(): String = ""
 
     lateinit var name: String
+
+    var partial = false
 
     var equalsAndHashCode = false
 
@@ -171,10 +186,14 @@ open class ClassBuilder: CodeBlockBuilder {
         fields.add(field(ops))
     }
 
-    private val passingArgs: MutableList<String> = mutableListOf()
-    fun addPassingArg(argName: String) {
-        passingArgs.add(argName)
+    private val passingArgs2: MutableList<ExpressionBuilder> = mutableListOf()
+    fun addPassingArg(arg: ExpressionBuilderProvider) {
+        passingArgs2.add(arg())
     }
+
+    private fun hasPassingArgs() = passingArgs2.isNotEmpty()
+    private fun allPassingArgs(c: CodeBuilderContext) =
+        passingArgs2.joinToString(", ") { it.build(c) }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         addOps(classDeclarationWithFieldConstructor(c))
@@ -252,8 +271,8 @@ open class ClassBuilder: CodeBlockBuilder {
             addOps(getConstructorArgsOps())
             untab()
 
-            if (passingArgs.isNotEmpty()) {
-                line("): base(${passingArgs.joinToString(", ")}) {")
+            if (hasPassingArgs()) {
+                line("): base(${allPassingArgs(c)}) {")
                 line("}")
             }
             else if (constructorFields.isNotEmpty()) {
@@ -294,7 +313,8 @@ open class ClassBuilder: CodeBlockBuilder {
             "class "
         }
 
-        val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + finalClassKeyword
+        val partialPart = if (partial) "partial " else ""
+        val classPart = beforeClassKeyword() + c.lang.defaultTopLevelAccessor() + partialPart + finalClassKeyword
         var extendsOrImplementsPart = implements?.let { c.lang.implements() + it } ?: ""
         extendsOrImplementsPart = extends?.let { c.lang.extends() + ExtendsBuilder().apply(it).build(c) } ?: extendsOrImplementsPart
         val beginningWithoutExtendOrImplements = "$classPart$name"
@@ -305,8 +325,8 @@ open class ClassBuilder: CodeBlockBuilder {
             tab()
             addOps(getFieldsAndArgsOps())
             untab()
-            val passingArgsPart = if (passingArgs.isNotEmpty()) {
-                "(${passingArgs.joinToString(", ")})"
+            val passingArgsPart = if (hasPassingArgs()) {
+                "(${allPassingArgs(c)})"
             }
             else {
                 ""
@@ -336,10 +356,10 @@ open class ClassBuilder: CodeBlockBuilder {
                 untab()
                 line("}")
             }
-            else if (passingArgs.isNotEmpty()) {
+            else if (hasPassingArgs()) {
                 line(") {")
                 tab()
-                line("super(${passingArgs.joinToString(", ")})")
+                line("super(${allPassingArgs(c)})")
                 untab()
                 line("}")
             }

@@ -761,6 +761,51 @@ class ModuleGroupParserTest {
     }
 
     @Test
+    fun `should parse view model submodule`() {
+        val modules = parseSingleGroup("view-model-submodule")
+
+        assertModules(modules, listOf {
+            name = "SomeModule"
+            viewModelSubmodule = {
+                elements = listOf {
+                    name = "SomeModelVm"
+                    attributes = listOf(
+                        {
+                            name = "att1"
+                        },
+                        {
+                            name = "att2"
+                        }
+                    )
+                    model = {
+                        name = "SomeModel"
+                        mappedFields = listOf(
+                            "id"
+                        )
+                    }
+                }
+                windows = listOf {
+                    name = "SomeWindow"
+                    state = {
+                        fields = listOf {
+                            name = "name"
+                            type = {
+                                name = "string"
+                            }
+                        }
+                    }
+                    fields = listOf {
+                        name = "someVm"
+                        type = {
+                            name = "SomeModelVm"
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    @Test
     fun `should parse inlined simple vos`() {
         val module = parseSingleModule("inlined-vos")
 

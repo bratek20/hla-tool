@@ -28,7 +28,9 @@ class ExceptionsGenerator: PatternGenerator() {
                     name = it
                     extends {
                         className = "ApiException"
-                        generic = typeName(it)
+                        addGeneric {
+                            typeName(it)
+                        }
                     }
                     setConstructor {
                         addArg {
@@ -37,8 +39,12 @@ class ExceptionsGenerator: PatternGenerator() {
                             defaultValue = "\"\""
                         }
                     }
-                    addPassingArg(it)
-                    addPassingArg("message")
+                    addPassingArg {
+                        variable(it)
+                    }
+                    addPassingArg {
+                        variable("message")
+                    }
 
                     addMethod {
                         name = "getTypeName"
@@ -71,7 +77,9 @@ class ExceptionsGenerator: PatternGenerator() {
                             defaultValue = "\"\""
                         }
                     }
-                    addPassingArg("message")
+                    addPassingArg {
+                        variable("message")
+                    }
                 }
             }
         }

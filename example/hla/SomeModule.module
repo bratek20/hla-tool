@@ -174,3 +174,30 @@ Web
         ErrorCodesMapping
             SomeException -> "EC1"
             Some2Exception -> "EC2"
+
+ViewModel
+    Elements
+        SomeClassVm (clickable, draggable)
+            SomeClass
+                id
+            button: Button
+
+        SomeClass2Vm
+            SomeClass2
+                enabled
+
+        SomeClass3Vm
+            SomeClass3
+                class2Object
+                someEnum
+                class2List
+
+        SomeClass6Vm
+            SomeClass6
+                someClassOpt
+
+    Windows
+        SomeWindow
+            State
+                someId: SomeId
+            someClassVm: SomeClassVm

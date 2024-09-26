@@ -19,6 +19,12 @@ fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
     c.lang.newEmptyMutableList(elementType.build(c))
 }
 
+fun newListOf(elementType: TypeBuilder, vararg elements: ExpressionBuilder) = expression { c ->
+    val creation = emptyMutableList(elementType).build(c)
+    val args = elements.joinToString(", ") { it.build(c) }
+    "$creation { $args }"
+}
+
 class ListOperations(
     private val variableName: String
 ) {

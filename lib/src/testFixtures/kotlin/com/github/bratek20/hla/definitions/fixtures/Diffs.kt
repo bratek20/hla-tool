@@ -221,6 +221,108 @@ fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Expe
     return result.joinToString("\n")
 }
 
+data class ExpectedElementModelDefinition(
+    var name: String? = null,
+    var mappedFields: List<String>? = null,
+)
+fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: ExpectedElementModelDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedElementModelDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.mappedFields?.let {
+        if (given.getMappedFields().size != it.size) { result.add("${path}mappedFields size ${given.getMappedFields().size} != ${it.size}"); return@let }
+        given.getMappedFields().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}mappedFields[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedViewModelElementDefinition(
+    var name: String? = null,
+    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
+    var model: (ExpectedElementModelDefinition.() -> Unit)? = null,
+    var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
+)
+fun diffViewModelElementDefinition(given: ViewModelElementDefinition, expectedInit: ExpectedViewModelElementDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedViewModelElementDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.attributes?.let {
+        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
+        given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
+    }
+
+    expected.model?.let {
+        if (diffElementModelDefinition(given.getModel(), it) != "") { result.add(diffElementModelDefinition(given.getModel(), it, "${path}model.")) }
+    }
+
+    expected.fields?.let {
+        if (given.getFields().size != it.size) { result.add("${path}fields size ${given.getFields().size} != ${it.size}"); return@let }
+        given.getFields().forEachIndexed { idx, entry -> if (diffFieldDefinition(entry, it[idx]) != "") { result.add(diffFieldDefinition(entry, it[idx], "${path}fields[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedViewModelWindowDefinition(
+    var name: String? = null,
+    var stateEmpty: Boolean? = null,
+    var state: (ExpectedComplexStructureDefinition.() -> Unit)? = null,
+    var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
+)
+fun diffViewModelWindowDefinition(given: ViewModelWindowDefinition, expectedInit: ExpectedViewModelWindowDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedViewModelWindowDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.stateEmpty?.let {
+        if ((given.getState() == null) != it) { result.add("${path}state empty ${(given.getState() == null)} != ${it}") }
+    }
+
+    expected.state?.let {
+        if (diffComplexStructureDefinition(given.getState()!!, it) != "") { result.add(diffComplexStructureDefinition(given.getState()!!, it, "${path}state.")) }
+    }
+
+    expected.fields?.let {
+        if (given.getFields().size != it.size) { result.add("${path}fields size ${given.getFields().size} != ${it.size}"); return@let }
+        given.getFields().forEachIndexed { idx, entry -> if (diffFieldDefinition(entry, it[idx]) != "") { result.add(diffFieldDefinition(entry, it[idx], "${path}fields[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedViewModelSubmoduleDefinition(
+    var elements: List<(ExpectedViewModelElementDefinition.() -> Unit)>? = null,
+    var windows: List<(ExpectedViewModelWindowDefinition.() -> Unit)>? = null,
+)
+fun diffViewModelSubmoduleDefinition(given: ViewModelSubmoduleDefinition, expectedInit: ExpectedViewModelSubmoduleDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedViewModelSubmoduleDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.elements?.let {
+        if (given.getElements().size != it.size) { result.add("${path}elements size ${given.getElements().size} != ${it.size}"); return@let }
+        given.getElements().forEachIndexed { idx, entry -> if (diffViewModelElementDefinition(entry, it[idx]) != "") { result.add(diffViewModelElementDefinition(entry, it[idx], "${path}elements[${idx}].")) } }
+    }
+
+    expected.windows?.let {
+        if (given.getWindows().size != it.size) { result.add("${path}windows size ${given.getWindows().size} != ${it.size}"); return@let }
+        given.getWindows().forEachIndexed { idx, entry -> if (diffViewModelWindowDefinition(entry, it[idx]) != "") { result.add(diffViewModelWindowDefinition(entry, it[idx], "${path}windows[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedExternalTypePackageMapping(
     var name: String? = null,
     var packageName: String? = null,
@@ -277,6 +379,8 @@ data class ExpectedModuleDefinition(
     var implSubmodule: (ExpectedImplSubmoduleDefinition.() -> Unit)? = null,
     var webSubmoduleEmpty: Boolean? = null,
     var webSubmodule: (ExpectedWebSubmoduleDefinition.() -> Unit)? = null,
+    var viewModelSubmoduleEmpty: Boolean? = null,
+    var viewModelSubmodule: (ExpectedViewModelSubmoduleDefinition.() -> Unit)? = null,
     var kotlinConfigEmpty: Boolean? = null,
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
 )
@@ -352,6 +456,14 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
     expected.webSubmodule?.let {
         if (diffWebSubmoduleDefinition(given.getWebSubmodule()!!, it) != "") { result.add(diffWebSubmoduleDefinition(given.getWebSubmodule()!!, it, "${path}webSubmodule.")) }
+    }
+
+    expected.viewModelSubmoduleEmpty?.let {
+        if ((given.getViewModelSubmodule() == null) != it) { result.add("${path}viewModelSubmodule empty ${(given.getViewModelSubmodule() == null)} != ${it}") }
+    }
+
+    expected.viewModelSubmodule?.let {
+        if (diffViewModelSubmoduleDefinition(given.getViewModelSubmodule()!!, it) != "") { result.add(diffViewModelSubmoduleDefinition(given.getViewModelSubmodule()!!, it, "${path}viewModelSubmodule.")) }
     }
 
     expected.kotlinConfigEmpty?.let {

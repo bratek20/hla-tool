@@ -17,3 +17,9 @@ fun typeName(valueProvider: (CodeBuilderContext) -> String): TypeBuilder = objec
         return valueProvider(c)
     }
 }
+
+fun typeMapping(builder: TypeBuilder, op: (initValue: String) -> String): TypeBuilder = object: TypeBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        return op(builder.build(c))
+    }
+}

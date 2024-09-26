@@ -524,7 +524,9 @@ class ClassBuilderTest {
                             type = typeName("SomeType")
                         }
                     }
-                    addPassingArg("someArg")
+                    addPassingArg {
+                        variable("someArg")
+                    }
                 })
             }
             langExpected {
@@ -570,14 +572,19 @@ class ClassBuilderTest {
                     name = "SomeClass"
                     extends {
                         className = "SomeParent"
-                        generic = typeName("SomeType")
+                        addGeneric {
+                            typeName("SomeType")
+                        }
+                        addGeneric {
+                            typeName("SomeOtherType")
+                        }
                     }
                 })
             }
             langExpected {
                 lang = TypeScript()
                 expected = """
-                    class SomeClass extends SomeParent<SomeType> {
+                    class SomeClass extends SomeParent<SomeType, SomeOtherType> {
                     }
                 """
             }
@@ -618,15 +625,26 @@ class ClassBuilderTest {
     }
 
     @Test
-    fun `class with field getter`() {
+    fun `class with field getter and setter`() {
         testOp {
             op = {
                 add(classBlock {
                     name = "SomeClass"
                     addField {
-                        name = "someField"
+                        name = "fieldWithGetter"
                         type = baseType(BaseType.INT)
                         getter = true
+                    }
+                    addField {
+                        name = "fieldWithSetter"
+                        type = baseType(BaseType.INT)
+                        setter = true
+                    }
+                    addField {
+                        name = "fieldWithGetterAndSetter"
+                        type = baseType(BaseType.INT)
+                        getter = true
+                        setter = true
                     }
                 })
             }
@@ -634,7 +652,9 @@ class ClassBuilderTest {
                 lang = CSharp()
                 expected = """
                     public class SomeClass {
-                        public int SomeField { get; }
+                        public int FieldWithGetter { get; }
+                        public int FieldWithSetter { set; }
+                        public int FieldWithGetterAndSetter { get; set; }
                     }
                 """
             }

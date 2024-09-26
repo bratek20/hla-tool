@@ -11,13 +11,13 @@ import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.generation.api.*
 
-fun diffPatternName(given: PatternName, expected: String, path: String = ""): String {
-    if (given != PatternName.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+fun diffSubmoduleName(given: SubmoduleName, expected: String, path: String = ""): String {
+    if (given != SubmoduleName.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
     return ""
 }
 
-fun diffSubmoduleName(given: SubmoduleName, expected: String, path: String = ""): String {
-    if (given != SubmoduleName.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+fun diffPatternName(given: PatternName, expected: String, path: String = ""): String {
+    if (given != PatternName.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
     return ""
 }
 
