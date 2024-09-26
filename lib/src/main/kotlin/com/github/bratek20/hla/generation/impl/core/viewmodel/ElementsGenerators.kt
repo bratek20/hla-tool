@@ -22,16 +22,6 @@ class ViewModelElementLogic(
         }
     }
 
-    private fun mapModelTypeToViewModelType(modelType: ApiType): TypeBuilder {
-        if (modelType is BaseApiType) {
-            return typeName("Label")
-        }
-        if (modelType is SimpleStructureApiType) {
-            return typeName("Label")
-        }
-        throw IllegalArgumentException("No view model mapping implemented: $modelType")
-    }
-
     private fun getTraitTypesMethod(): MethodBuilderOps = {
         val traitTypes = def.getAttributes().map { mapAttributeToTraitType(it) }
 
