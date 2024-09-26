@@ -13,8 +13,9 @@ import com.github.bratek20.hla.generation.impl.core.api.*
 
 class ViewModelElementLogic(
     private val def: ViewModelElementDefinition,
-    private val modelType: ComplexStructureApiType<*>
+    val modelType: ComplexStructureApiType<*>
 ) {
+    fun getType(): TypeBuilder = typeName(def.getName())
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel().getMappedFields().map { fieldName ->
@@ -87,7 +88,7 @@ class ViewModelElementLogic(
         }
     }
 
-    fun getClass(): ClassBuilderOps = {
+    fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps = {
         name = def.getName()
         partial = true
         extends {
@@ -96,8 +97,6 @@ class ViewModelElementLogic(
                 modelType.builder()
             }
         }
-
-        val mapper = ModelToViewModelTypeMapper()
 
         getMappedFields().forEach { field ->
             addField {
@@ -151,14 +150,18 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val listTypes: MutableList<ListApiType> = mutableListOf();
 
-        viewModelElements()?.forEach { element ->
+        val elementsLogic = viewModelElements()!!.map { element ->
             val modelTypeName = element.getModel().getName()
             val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
 
-            val logic = ViewModelElementLogic(element, modelType)
-            addClass(logic.getClass())
+            ViewModelElementLogic(element, modelType)
+        }
+        val mapper = ModelToViewModelTypeMapper(elementsLogic)
 
-            listTypes.addAll(logic.getMappedFieldOfListType())
+        elementsLogic.forEach { element ->
+            addClass(element.getClass(mapper))
+
+            listTypes.addAll(element.getMappedFieldOfListType())
         }
 
         listTypes.forEach {

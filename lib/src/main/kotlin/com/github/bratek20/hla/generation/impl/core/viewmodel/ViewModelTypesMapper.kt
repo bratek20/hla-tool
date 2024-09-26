@@ -6,7 +6,9 @@ import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.api.*
 
-class ModelToViewModelTypeMapper {
+class ModelToViewModelTypeMapper(
+    private val viewModelElements: List<ViewModelElementLogic>
+) {
     fun map(modelType: ApiType): TypeBuilder {
         if (modelType is BaseApiType) {
             return mapBaseType(modelType)
@@ -26,8 +28,12 @@ class ModelToViewModelTypeMapper {
         return typeName("TODO")
     }
 
+    private fun getViewModelElementForType(modelType: ComplexStructureApiType<*>): ViewModelElementLogic {
+        return viewModelElements.first { it.modelType.name == modelType.name }
+    }
+
     private fun mapComplexStructureType(modelType: ComplexStructureApiType<*>): TypeBuilder {
-        return typeName("SomeClass2Vm") //TODO-GENERALIZE
+        return getViewModelElementForType(modelType).getType()
     }
 
     private fun mapListType(modelType: ListApiType): TypeBuilder {
