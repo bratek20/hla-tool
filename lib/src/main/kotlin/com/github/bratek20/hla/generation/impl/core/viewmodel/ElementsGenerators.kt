@@ -97,9 +97,11 @@ class ViewModelElementLogic(
             }
         }
 
+        val mapper = ModelToViewModelTypeMapper()
+
         getMappedFields().forEach { field ->
             addField {
-                type = mapModelTypeToViewModelType(field.type)
+                type = mapper.map(field.type)
                 name = field.name
                 getter = true
                 setter = true
