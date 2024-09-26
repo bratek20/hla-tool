@@ -47,9 +47,9 @@ namespace SomeModule.ViewModel {
     }
 
     public partial class ClassHavingOptSimpleVoVm: UiElement<ClassHavingOptSimpleVo> {
-        public TODO OptSimpleVo { get; set; }
+        public OptionalLabel OptSimpleVo { get; set; }
         protected override void OnUpdate() {
-            OptSimpleVo.Update(Model.GetOptSimpleVo());
+            OptSimpleVo.Update(Model.GetOptSimpleVo().Map(it => it.Value));
         }
     }
 
@@ -63,13 +63,6 @@ namespace SomeModule.ViewModel {
     public class OptionalSomeClassVm: OptionalUiElement<SomeClassVm, SomeClass> {
         public OptionalSomeClassVm(
             SomeClassVm element
-        ): base(element) {
-        }
-    }
-
-    public class TODO: OptionalUiElement<Label, SomeId> {
-        public TODO(
-            Label element
         ): base(element) {
         }
     }
