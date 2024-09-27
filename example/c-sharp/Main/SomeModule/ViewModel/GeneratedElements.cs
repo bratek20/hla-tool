@@ -46,6 +46,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class ClassHavingOptSimpleVoVm: UiElement<ClassHavingOptSimpleVo> {
+        public OptionalLabel OptSimpleVo { get; set; }
+        protected override void OnUpdate() {
+            OptSimpleVo.Update(Model.GetOptSimpleVo().Map( it => it.Value ));
+        }
+    }
+
     public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c

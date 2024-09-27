@@ -19,7 +19,8 @@ class ViewModelElementLogic(
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel().getMappedFields().map { fieldName ->
-            modelType.fields.first { it.name == fieldName }
+            modelType.fields.firstOrNull { it.name == fieldName }
+                ?: throw IllegalArgumentException("Field not found: $fieldName in ${modelType.name} for ${def.getName()}")
         }
     }
 
@@ -57,6 +58,7 @@ class ViewModelElementLogic(
                     target = getterField(field.name)
                     methodName = "update"
                     addArg {
+                        //TODO-REF
                         if (field.type is SimpleValueObjectApiType) {
                             getterFieldAccess {
                                 objectRef = methodCall {
@@ -64,6 +66,19 @@ class ViewModelElementLogic(
                                     methodName = field.getterName()
                                 }
                                 fieldName = "value"
+                            }
+                        }
+                        else if (field.type is OptionalApiType && (field.type as OptionalApiType).wrappedType is SimpleValueObjectApiType) {
+                            optionalOp {
+                                methodCall {
+                                    target = getterField("model")
+                                    methodName = field.getterName()
+                                }
+                            }.map {
+                                getterFieldAccess {
+                                    objectRef = variable("it")
+                                    fieldName = "value"
+                                }
                             }
                         }
                         else {
@@ -179,7 +194,9 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
         }
 
         optionalTypes.forEach {
-            addClass(getClassForOptionalType(mapper, it))
+            if (it.wrappedType is ComplexStructureApiType<*>) {
+                addClass(getClassForOptionalType(mapper, it))
+            }
         }
 
     }
