@@ -35,7 +35,7 @@ class GeneratedWindowLogic(
         extends {
             className = "Window"
             addGeneric {
-                typeName("SomeWindowState")
+                typeName(def.getName() + "State")
             }
         }
 

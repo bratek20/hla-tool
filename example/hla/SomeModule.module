@@ -177,7 +177,7 @@ Web
 
 ViewModel
     Elements
-        SomeClassVm (clickable, draggable)
+        SomeClassVm (clickable, draggable, withRect)
             SomeClass
                 id
             button: Button

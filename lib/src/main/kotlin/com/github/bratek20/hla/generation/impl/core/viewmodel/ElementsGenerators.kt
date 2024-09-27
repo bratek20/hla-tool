@@ -10,6 +10,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.*
+import com.github.bratek20.utils.camelToPascalCase
 
 class ViewModelElementLogic(
     private val def: ViewModelElementDefinition,
@@ -40,11 +41,7 @@ class ViewModelElementLogic(
     }
 
     private fun mapAttributeToTraitType(att: Attribute): ExpressionBuilder {
-        return when (att.getName()) {
-            "clickable" -> typeOf(typeName("Clickable"))
-            "draggable" -> typeOf(typeName("Draggable"))
-            else -> throw IllegalArgumentException("No trait mapping implemented: ${att.getName()}")
-        }
+        return typeOf(typeName(camelToPascalCase(att.getName())))
     }
 
     private fun onUpdatedMethod(): MethodBuilderOps = {
