@@ -45,11 +45,7 @@ class ModelToViewModelTypeMapper(
     }
 
     private fun mapOptionalType(modelType: OptionalApiType): String {
-        if(modelType.wrappedType is ComplexStructureApiType<*>) {
-            val x = mapComplexStructureType(modelType.wrappedType)
-            return "Optional" + x
-        }
-        return "TODO"
+        return "Optional" + mapModelToViewModelTypeName(modelType.wrappedType)
     }
 
     private fun mapBaseType(type: BaseApiType): String {
