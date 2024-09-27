@@ -146,7 +146,7 @@ class ViewModelElementLogic(
     }
 }
 
-abstract class BaseElementsGenerator: PatternGenerator() {
+abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
     override fun supportsCodeBuilder(): Boolean {
         return true
     }
@@ -187,6 +187,12 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
 
             listTypes.addAll(element.getMappedFieldOfListType())
             optionalTypes.addAll(element.getMappedFieldOfOptionalType())
+        }
+
+        viewModelWindowsLogic().forEach { window ->
+            window.getElementTypesWrappedInList().forEach {
+                listTypes.add(ListApiType(mapper.getModelForViewModelType(it)))
+            }
         }
 
         listTypes.forEach {
