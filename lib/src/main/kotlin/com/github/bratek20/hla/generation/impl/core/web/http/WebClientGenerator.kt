@@ -201,14 +201,14 @@ class WebClientGenerator: PatternGenerator() {
     ): BodyBuilderOps = {
         val hasReturnValue = method.hasReturnValue()
 
-        val getBodyPart = getterFieldAccess {
-            objectRef = optionalOp {
+        val getBodyPart = methodCall {
+            target = optionalOp {
                 methodCall {
                     methodName = "getBody"
                     addGeneric(responseName(interfaceName, method))
                 }
             }.get()
-            fieldName = "value"
+            methodName = "getValue"
         }
 
         val postUrl = getPostUrl(interfaceName, method)

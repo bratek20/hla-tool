@@ -28,19 +28,19 @@ namespace SomeModule.Web {
         }
         /// <exception cref="SomeException"/>
         public SomeClass SomeQuery(SomeQueryInput query) {
-            return client.Post("/some/prefix/someInterface/someQuery", Optional<SomeInterfaceSomeQueryRequest>.Of(SomeInterfaceSomeQueryRequest.Create(query))).GetBody<SomeInterfaceSomeQueryResponse>().Get().Value;
+            return client.Post("/some/prefix/someInterface/someQuery", Optional<SomeInterfaceSomeQueryRequest>.Of(SomeInterfaceSomeQueryRequest.Create(query))).GetBody<SomeInterfaceSomeQueryResponse>().Get().GetValue();
         }
         public Optional<SomeClass> OptMethod(Optional<SomeId> optId) {
-            return client.Post("/some/prefix/someInterface/optMethod", Optional<SomeInterfaceOptMethodRequest>.Of(SomeInterfaceOptMethodRequest.Create(optId))).GetBody<SomeInterfaceOptMethodResponse>().Get().Value;
+            return client.Post("/some/prefix/someInterface/optMethod", Optional<SomeInterfaceOptMethodRequest>.Of(SomeInterfaceOptMethodRequest.Create(optId))).GetBody<SomeInterfaceOptMethodResponse>().Get().GetValue();
         }
         public List<SomeId> MethodWithListOfSimpleVO(List<SomeId> list) {
-            return client.Post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional<SomeInterfaceMethodWithListOfSimpleVORequest>.Of(SomeInterfaceMethodWithListOfSimpleVORequest.Create(list))).GetBody<SomeInterfaceMethodWithListOfSimpleVOResponse>().Get().Value;
+            return client.Post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional<SomeInterfaceMethodWithListOfSimpleVORequest>.Of(SomeInterfaceMethodWithListOfSimpleVORequest.Create(list))).GetBody<SomeInterfaceMethodWithListOfSimpleVOResponse>().Get().GetValue();
         }
         public object MethodWithAny(object i) {
-            return client.Post("/some/prefix/someInterface/methodWithAny", Optional<SomeInterfaceMethodWithAnyRequest>.Of(SomeInterfaceMethodWithAnyRequest.Create(i))).GetBody<SomeInterfaceMethodWithAnyResponse>().Get().Value;
+            return client.Post("/some/prefix/someInterface/methodWithAny", Optional<SomeInterfaceMethodWithAnyRequest>.Of(SomeInterfaceMethodWithAnyRequest.Create(i))).GetBody<SomeInterfaceMethodWithAnyResponse>().Get().GetValue();
         }
         public Optional<SomeId> MethodReturningOptSimpleVo() {
-            return client.Post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional<object>.Empty()).GetBody<SomeInterfaceMethodReturningOptSimpleVoResponse>().Get().Value;
+            return client.Post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional<object>.Empty()).GetBody<SomeInterfaceMethodReturningOptSimpleVoResponse>().Get().GetValue();
         }
     }
 
@@ -54,10 +54,10 @@ namespace SomeModule.Web {
             this.client = factory.Create(config.Value);
         }
         public OtherClass ReferenceOtherClass(OtherClass other) {
-            return client.Post("/some/prefix/someInterface2/referenceOtherClass", Optional<SomeInterface2ReferenceOtherClassRequest>.Of(SomeInterface2ReferenceOtherClassRequest.Create(other))).GetBody<SomeInterface2ReferenceOtherClassResponse>().Get().Value;
+            return client.Post("/some/prefix/someInterface2/referenceOtherClass", Optional<SomeInterface2ReferenceOtherClassRequest>.Of(SomeInterface2ReferenceOtherClassRequest.Create(other))).GetBody<SomeInterface2ReferenceOtherClassResponse>().Get().GetValue();
         }
         public LegacyType ReferenceLegacyType(LegacyType legacyType) {
-            return client.Post("/some/prefix/someInterface2/referenceLegacyType", Optional<SomeInterface2ReferenceLegacyTypeRequest>.Of(SomeInterface2ReferenceLegacyTypeRequest.Create(legacyType))).GetBody<SomeInterface2ReferenceLegacyTypeResponse>().Get().Value;
+            return client.Post("/some/prefix/someInterface2/referenceLegacyType", Optional<SomeInterface2ReferenceLegacyTypeRequest>.Of(SomeInterface2ReferenceLegacyTypeRequest.Create(legacyType))).GetBody<SomeInterface2ReferenceLegacyTypeResponse>().Get().GetValue();
         }
     }
 }
