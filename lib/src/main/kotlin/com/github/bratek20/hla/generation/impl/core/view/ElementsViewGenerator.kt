@@ -17,6 +17,10 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     }
 
     override fun getOperationsPerFile(): List<PerFileOperations> {
+        if(viewModelElementsDef()[0].getName() != "OtherClassVm") {
+            return emptyList()
+        }
+
         return listOf(PerFileOperations("OtherClassView") {
             addClass {
                 name = "OtherClassView"
@@ -50,9 +54,8 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
                     name = "onBind"
 
                     setBody {
-                        //TODO-REF
                         add(methodCallStatement {
-                            target = variable("base")
+                            target = parent()
                             methodName = "onBind"
                         })
 
