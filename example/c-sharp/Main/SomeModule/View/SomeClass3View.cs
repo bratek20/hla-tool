@@ -12,7 +12,7 @@ using TypesModule.Api;
 namespace SomeModule.View {
     public class SomeClass3View: ElementView<SomeClass3Vm> {
         [SerializeField]
-        SomeClass2VmView class2Object;
+        SomeClass2View class2Object;
         [SerializeField]
         EnumSwitchView someEnum;
         [SerializeField]
