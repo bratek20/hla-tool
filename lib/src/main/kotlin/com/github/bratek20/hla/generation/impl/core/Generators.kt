@@ -170,8 +170,11 @@ abstract class PatternGenerator
                         addUsing(it)
                     }
 
-                    if (submodule != SubmoduleName.Api) {
+                    if (submodule != SubmoduleName.Api && submodule != SubmoduleName.View) {
                         addUsing("$moduleName.Api")
+                    }
+                    if (submodule == SubmoduleName.View) {
+                        addUsing("$moduleName.ViewModel")
                     }
                     modules.getCurrentDependencies().forEach {
                         addUsing(it.getModule().getName().value + ".Api")
