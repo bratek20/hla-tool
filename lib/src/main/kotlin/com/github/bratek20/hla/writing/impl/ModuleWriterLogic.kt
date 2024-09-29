@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.writing.impl
 
 import com.github.bratek20.hla.facade.api.HlaProfile
+import com.github.bratek20.hla.facade.api.HlaSrcPaths
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.GeneratedModule
@@ -112,8 +113,47 @@ class ModuleWriterLogic(
             test = rootPath.add(getSubmodulePath(profile, SubmoduleName.Tests))
         )
 
-        writeDirectories(paths, generateResult)
+        //writeDirectories(paths, generateResult)
+        modernWriteDirectories(args.getModule(), rootPath, args.getProfile())
 
+        handleFilesModifiersAndDebug(profile, rootPath, generateResult, args.getOnlyUpdate(), args)
+    }
+
+    private fun modernWriteDirectories(
+        module: GeneratedModule,
+        rootPath: Path,
+        profile: HlaProfile
+    ) {
+        val paths = profile.getPaths().getSrc()
+        val toWrite: MutableMap<Path, Directory> = mutableMapOf()
+
+        module.getSubmodules().forEach { sub ->
+            val path = paths.getOverrides()
+                .firstOrNull { it.getSubmodule() == sub.getName() }
+                ?.let { it.getPath() }
+                ?: paths.getDefault()
+
+            if(!toWrite.contains(path)) {
+                toWrite[path] = Directory.create(
+                    name = calcModuleDirectoryName(module.getName(), profile)
+                )
+            }
+
+            val currentDir = toWrite[path]!!
+            val updatedDir = currentDir.copy(
+                directories = currentDir.getDirectories() + Directory.create(
+                    name = calcSubmoduleDirectoryName(sub.getName(), profile),
+                    files = sub.getPatterns().map { it.getFile() }
+                )
+            )
+            toWrite[path] = updatedDir
+        }
+
+        toWrite.forEach { (path, dir) -> directories.write(rootPath.add(path), dir) }
+    }
+
+    //TODO-REF
+    private fun handleFilesModifiersAndDebug(profile: HlaProfile, rootPath: Path, generateResult: GenerateResult, onlyUpdate: Boolean, args: WriteArgs) {
         filesModifiers.modify(profile, rootPath, generateResult, args.getOnlyUpdate())
 
         if (shouldHandleDebug(profile, generateResult.getMain().getName().value)) {
