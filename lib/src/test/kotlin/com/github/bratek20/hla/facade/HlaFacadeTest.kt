@@ -155,10 +155,10 @@ class HlaFacadeTest {
     class ShouldStartCSharpModuleArgsProvider : ArgumentsProvider {
         fun cSharpTestPaths(moduleName: String): TestPaths {
             return TestPaths(
-                exampleMainPath = "../example/c-sharp/Main/$moduleName",
+                exampleMainPath = "../example/c-sharp/$moduleName",
                 exampleFixturesPath = "../example/c-sharp/Tests/Fixtures/$moduleName",
                 exampleTestsPath = "../example/c-sharp/Tests/Test/$moduleName",
-                expectedMainPath = "../example/hla/../c-sharp/Main",
+                expectedMainPath = "../example/hla/../c-sharp",
                 expectedFixturesPath = "../example/hla/../c-sharp/Tests/Fixtures",
                 expectedTestsPath = "../example/hla/../c-sharp/Tests/Test",
             )
