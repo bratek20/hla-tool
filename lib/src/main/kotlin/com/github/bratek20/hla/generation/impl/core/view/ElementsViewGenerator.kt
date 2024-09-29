@@ -5,14 +5,17 @@ import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PerFileOperations
+import com.github.bratek20.hla.generation.impl.core.api.ListApiType
+import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelElementLogic
 
 class ElementViewLogic(
-    private val elem: ViewModelElementLogic
+    private val elem: ViewModelElementLogic,
+    private val mapper: ModelToViewModelTypeMapper
 ) {
-    fun getOps(mapper: ModelToViewModelTypeMapper): PerFileOperations {
+    fun getOps(): PerFileOperations {
         val def = elem.def
         val viewClassName = def.getModel().getName() + "View"
         return PerFileOperations(viewClassName) {
@@ -63,8 +66,64 @@ class ElementViewLogic(
             }
         }
     }
-
 }
+
+class ElementGroupViewLogic(
+    private val modelType: ListApiType,
+    private val mapper: ModelToViewModelTypeMapper
+) {
+    fun getOps(): PerFileOperations {
+        val viewClassName = mapper.mapModelToViewTypeName(modelType)
+
+        return PerFileOperations(viewClassName) {
+            addClass {
+                name = viewClassName
+                extends {
+                    className = "UiElementGroupView"
+
+                    addGeneric {
+                        typeName("SomeClassView")
+                    }
+                    addGeneric {
+                        typeName("SomeClassVm")
+                    }
+                    addGeneric {
+                        typeName("SomeClass")
+                    }
+                }
+            }
+        }
+    }
+}
+
+class OptionalElementViewLogic(
+    private val modelType: OptionalApiType,
+    private val mapper: ModelToViewModelTypeMapper
+) {
+    fun getOps(): PerFileOperations {
+        val viewClassName = mapper.mapModelToViewTypeName(modelType)
+
+        return PerFileOperations(viewClassName) {
+            addClass {
+                name = viewClassName
+                extends {
+                    className = "UiOptionalElementView"
+
+                    addGeneric {
+                        typeName("SomeClassView")
+                    }
+                    addGeneric {
+                        typeName("SomeClassVm")
+                    }
+                    addGeneric {
+                        typeName("SomeClass")
+                    }
+                }
+            }
+        }
+    }
+}
+
 class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.ElementsView
@@ -75,7 +134,10 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     }
 
     override fun getOperationsPerFile(): List<PerFileOperations> {
-        return logic.elementsLogic().map { ElementViewLogic(it).getOps(logic.mapper()) }
+        val mapper = logic.mapper()
+        return logic.elementsLogic().map { ElementViewLogic(it, mapper).getOps() } +
+                logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper).getOps() } +
+                logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper).getOps() }
     }
 
     override fun extraCSharpUsings(): List<String> {
