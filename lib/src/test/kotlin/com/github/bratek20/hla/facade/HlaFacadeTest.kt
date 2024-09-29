@@ -336,8 +336,8 @@ class HlaFacadeTest {
         val expectedMainDirectoriesToSkipUpdate = setOf<String>(
         )
 
-        val expectedFixturesFilesToSkipUpdate = setOf(
-            "fixtures/Mocks",
+        val expectedFixturesFilesToSkipUpdate = setOf<String>(
+            //"fixtures/Mocks",
         )
 
         //tests directory is not updated
@@ -444,7 +444,6 @@ class HlaFacadeTest {
                 "SomeModule/Fixtures/Builders.kt generated",
                 "SomeModule/Fixtures/Diffs.kt generated",
                 "SomeModule/Fixtures/Asserts.kt generated",
-                "SomeModule/Fixtures/Mocks.kt generated",
                 "SomeModule/Tests/ImplTest.kt generated",
             )
         }
