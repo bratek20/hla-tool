@@ -2,6 +2,8 @@
 
 package com.github.bratek20.hla.facade.fixtures
 
+import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.hla.generation.fixtures.*
 import com.github.bratek20.utils.directory.api.*
 import com.github.bratek20.utils.directory.fixtures.*
 
@@ -57,17 +59,27 @@ fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfi
     )
 }
 
+data class SubmodulePathDef(
+    var submodule: String = SubmoduleName.Api.name,
+    var path: String = "someValue",
+)
+fun submodulePath(init: SubmodulePathDef.() -> Unit = {}): SubmodulePath {
+    val def = SubmodulePathDef().apply(init)
+    return SubmodulePath.create(
+        submodule = SubmoduleName.valueOf(def.submodule),
+        path = pathCreate(def.path),
+    )
+}
+
 data class HlaSrcPathsDef(
-    var main: String = "someValue",
-    var test: String = "someValue",
-    var fixtures: String = "someValue",
+    var default: String = "someValue",
+    var overrides: List<(SubmodulePathDef.() -> Unit)> = emptyList(),
 )
 fun hlaSrcPaths(init: HlaSrcPathsDef.() -> Unit = {}): HlaSrcPaths {
     val def = HlaSrcPathsDef().apply(init)
     return HlaSrcPaths.create(
-        main = pathCreate(def.main),
-        test = pathCreate(def.test),
-        fixtures = pathCreate(def.fixtures),
+        default = pathCreate(def.default),
+        overrides = def.overrides.map { it -> submodulePath(it) },
     )
 }
 

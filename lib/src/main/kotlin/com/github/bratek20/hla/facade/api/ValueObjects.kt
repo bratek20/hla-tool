@@ -2,6 +2,7 @@
 
 package com.github.bratek20.hla.facade.api
 
+import com.github.bratek20.hla.generation.api.*
 import com.github.bratek20.utils.directory.api.*
 
 data class ModuleName(
@@ -116,33 +117,51 @@ data class TypeScriptConfig(
     }
 }
 
-data class HlaSrcPaths(
-    private val main: String,
-    private val test: String,
-    private val fixtures: String,
+data class SubmodulePath(
+    private val submodule: String,
+    private val path: String,
 ) {
-    fun getMain(): Path {
-        return pathCreate(this.main)
+    fun getSubmodule(): SubmoduleName {
+        return SubmoduleName.valueOf(this.submodule)
     }
 
-    fun getTest(): Path {
-        return pathCreate(this.test)
-    }
-
-    fun getFixtures(): Path {
-        return pathCreate(this.fixtures)
+    fun getPath(): Path {
+        return pathCreate(this.path)
     }
 
     companion object {
         fun create(
-            main: Path,
-            test: Path,
-            fixtures: Path,
+            submodule: SubmoduleName,
+            path: Path,
+        ): SubmodulePath {
+            return SubmodulePath(
+                submodule = submodule.name,
+                path = pathGetValue(path),
+            )
+        }
+    }
+}
+
+data class HlaSrcPaths(
+    private val default: String,
+    private val overrides: List<SubmodulePath> = emptyList(),
+) {
+    fun getDefault(): Path {
+        return pathCreate(this.default)
+    }
+
+    fun getOverrides(): List<SubmodulePath> {
+        return this.overrides
+    }
+
+    companion object {
+        fun create(
+            default: Path,
+            overrides: List<SubmodulePath> = emptyList(),
         ): HlaSrcPaths {
             return HlaSrcPaths(
-                main = pathGetValue(main),
-                test = pathGetValue(test),
-                fixtures = pathGetValue(fixtures),
+                default = pathGetValue(default),
+                overrides = overrides,
             )
         }
     }
