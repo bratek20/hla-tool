@@ -4,9 +4,7 @@ profiles:
     paths:
       project: ""
       src:
-        main: ""
-        test: ""
-        fixtures: ""
+        default: ""
     imports:
       - hlaFolderPath: "../group1"
         profileName: "group1Profile"

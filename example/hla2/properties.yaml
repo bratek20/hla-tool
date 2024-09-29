@@ -4,9 +4,12 @@ profiles:
     paths:
       project: "../kotlin2"
       src:
-        main: "src/main/kotlin/com/other/pkg"
-        test: "src/test/kotlin/com/other/pkg"
-        fixtures: "src/testFixtures/kotlin/com/other/pkg"
+        default: "src/main/kotlin/com/other/pkg"
+        overrides:
+            - submodule: "Tests"
+              path: "src/test/kotlin/com/other/pkg"
+            - submodule: "Fixtures"
+              path: "src/testFixtures/kotlin/com/other/pkg"
     imports:
       - hlaFolderPath: "../hla"
         profileName: "kotlin"
@@ -15,9 +18,12 @@ profiles:
     paths:
       project: "../typescript2"
       src:
-        main: "main"
-        test: "Tests/test"
-        fixtures: "Tests/fixtures"
+        default: "main"
+        overrides:
+            - submodule: "Tests"
+              path: "Tests/test"
+            - submodule: "Fixtures"
+              path: "Tests/fixtures"
     imports:
       - hlaFolderPath: "../hla"
         profileName: "typeScript"

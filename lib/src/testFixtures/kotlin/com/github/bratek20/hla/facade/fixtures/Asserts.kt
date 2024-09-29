@@ -4,6 +4,8 @@ package com.github.bratek20.hla.facade.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.hla.generation.fixtures.*
 import com.github.bratek20.utils.directory.api.*
 import com.github.bratek20.utils.directory.fixtures.*
 
@@ -32,6 +34,11 @@ fun assertAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: 
 
 fun assertTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScriptConfig.() -> Unit) {
     val diff = diffTypeScriptConfig(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSubmodulePath(given: SubmodulePath, expectedInit: ExpectedSubmodulePath.() -> Unit) {
+    val diff = diffSubmodulePath(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

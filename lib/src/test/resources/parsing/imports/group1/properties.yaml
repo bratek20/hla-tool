@@ -4,6 +4,4 @@ profiles:
     paths:
       project: ""
       src:
-        main: ""
-        test: ""
-        fixtures: ""
+        default: ""
