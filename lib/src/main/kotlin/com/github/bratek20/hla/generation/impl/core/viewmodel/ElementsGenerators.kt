@@ -8,7 +8,6 @@ import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.utils.camelToPascalCase
 
@@ -144,14 +143,8 @@ class ViewModelElementLogic(
 }
 
 abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
-    override fun supportsCodeBuilder(): Boolean {
-        return true
-    }
-
-    protected fun viewModelElements() = module.getViewModelSubmodule()?.getElements()
-
     override fun shouldGenerate(): Boolean {
-        return viewModelElements()?.isNotEmpty() ?: false
+        return viewModelElementsDef()?.isNotEmpty() ?: false
     }
 
     override fun extraCSharpUsings(): List<String> {
@@ -171,7 +164,7 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
         val listTypes: MutableList<ListApiType> = mutableListOf();
         val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
 
-        val elementsLogic = viewModelElements()!!.map { element ->
+        val elementsLogic = viewModelElementsDef()!!.map { element ->
             val modelTypeName = element.getModel().getName()
             val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
 
@@ -270,7 +263,7 @@ class ElementsLogicGenerator: BaseElementsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        viewModelElements()?.forEach { element ->
+        viewModelElementsDef()?.forEach { element ->
             addClass {
                 name = element.getName()
                 partial = true

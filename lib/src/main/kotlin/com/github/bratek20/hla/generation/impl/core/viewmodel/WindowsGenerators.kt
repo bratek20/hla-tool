@@ -5,12 +5,12 @@ import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
 import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
-import com.github.bratek20.hla.generation.impl.core.api.ListApiType
 
 class GeneratedWindowLogic(
     private val def: ViewModelWindowDefinition,
@@ -64,20 +64,25 @@ class GeneratedWindowLogic(
 }
 
 abstract class BaseViewModelPatternGenerator: PatternGenerator() {
-    protected fun viewModelWindows() = module.getViewModelSubmodule()?.getWindows()
+    protected fun viewModelWindowsDef(): List<ViewModelWindowDefinition> =
+        module.getViewModelSubmodule()?.getWindows() ?: emptyList()
+
+    protected fun viewModelElementsDef(): List<ViewModelElementDefinition> =
+        module.getViewModelSubmodule()?.getElements() ?: emptyList()
 
     protected fun viewModelWindowsLogic(): List<GeneratedWindowLogic> {
-        return viewModelWindows()?.map { GeneratedWindowLogic(it, apiTypeFactory) } ?: emptyList()
+        return viewModelWindowsDef().map { GeneratedWindowLogic(it, apiTypeFactory) }
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return true
     }
 }
 
 abstract class BaseWindowsGenerator: BaseViewModelPatternGenerator() {
-    override fun supportsCodeBuilder(): Boolean {
-        return true
-    }
 
     override fun shouldGenerate(): Boolean {
-        return viewModelWindows()?.isNotEmpty() ?: false
+        return viewModelWindowsDef()?.isNotEmpty() ?: false
     }
 
     override fun extraCSharpUsings(): List<String> {
@@ -111,7 +116,7 @@ class WindowsLogicGenerator: BaseWindowsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        viewModelWindows()?.forEach { def ->
+        viewModelWindowsDef()?.forEach { def ->
             addClass {
                 name = def.getName()
                 partial = true

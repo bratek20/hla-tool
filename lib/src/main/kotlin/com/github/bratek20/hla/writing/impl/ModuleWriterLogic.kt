@@ -51,6 +51,7 @@ class ModuleWriterLogic(
         return DirectoryName(name.name)
     }
 
+    //TODO-REF generic logic where each submodule should be written
     private fun calcGenerateResult(module: GeneratedModule, profile: HlaProfile): GenerateResult {
         val main = Directory.create(
             calcModuleDirectoryName(module.getName(), profile),
@@ -59,6 +60,7 @@ class ModuleWriterLogic(
                 submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules(), profile),
                 submoduleToDirectory(SubmoduleName.Web, module.getSubmodules(), profile),
                 submoduleToDirectory(SubmoduleName.ViewModel, module.getSubmodules(), profile),
+                submoduleToDirectory(SubmoduleName.View, module.getSubmodules(), profile),
                 submoduleToDirectory(SubmoduleName.Context, module.getSubmodules(), profile),
             )
         );

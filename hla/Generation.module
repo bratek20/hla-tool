@@ -4,6 +4,7 @@ Enums
         Impl
         Web
         ViewModel
+        View
         Context
         Fixtures
         Tests
@@ -37,6 +38,9 @@ Enums
         ElementsLogic
         GeneratedWindows
         WindowsLogic
+
+        //view
+        ElementsView
 
         //context
         Impl
