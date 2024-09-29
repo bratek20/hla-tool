@@ -3,7 +3,6 @@ package com.github.bratek20.hla.generation.impl.core.view
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.types.typeName
-import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PerFileOperations
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
@@ -76,10 +75,6 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     }
 
     override fun getOperationsPerFile(): List<PerFileOperations> {
-        if(viewModelElementsDef()[0].getName() != "OtherClassVm") {
-            return emptyList()
-        }
-
         val elementsLogic = viewModelElementsLogic()
         val mapper = ModelToViewModelTypeMapper(elementsLogic)
 
