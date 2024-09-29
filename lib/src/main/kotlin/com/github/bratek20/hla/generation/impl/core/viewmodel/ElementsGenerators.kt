@@ -11,11 +11,23 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.utils.camelToPascalCase
 
+class ViewModelElementField(
+    val name: String,
+    val typeName: String,
+)
+
 class ViewModelElementLogic(
     val def: ViewModelElementDefinition,
     val modelType: ComplexStructureApiType<*>
 ) {
     fun getTypeName(): String = def.getName()
+
+    //TODO-REF it should be mapped fields + extra fields
+    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelElementField> {
+        return getMappedFields().map {
+            ViewModelElementField(it.name, mapper.mapModelToViewModelTypeName(it.type))
+        }
+    }
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel().getMappedFields().map { fieldName ->

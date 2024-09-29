@@ -7,12 +7,13 @@ import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PerFileOperations
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
+import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelElementLogic
 
 class ElementViewLogic(
     private val elem: ViewModelElementLogic
 ) {
-    fun getOps(): PerFileOperations {
+    fun getOps(mapper: ModelToViewModelTypeMapper): PerFileOperations {
         val def = elem.def
         val viewClassName = def.getModel().getName() + "View"
         return PerFileOperations(viewClassName) {
@@ -25,21 +26,14 @@ class ElementViewLogic(
                     }
                 }
 
+                elem.getFields(mapper).forEach {
+                    addField {
+                        mutable = true
+                        type = typeName(it.typeName + "View")
+                        name = it.name
 
-                addField {
-                    mutable = true
-                    type = typeName("LabelView")
-                    name = "id"
-
-                    addAnnotation("SerializeField")
-                }
-
-                addField {
-                    mutable = true
-                    type = typeName("LabelView")
-                    name = "amount"
-
-                    addAnnotation("SerializeField")
+                        addAnnotation("SerializeField")
+                    }
                 }
 
                 addMethod {
@@ -53,27 +47,18 @@ class ElementViewLogic(
                             methodName = "onBind"
                         })
 
-                        add(methodCallStatement {
-                            target = variable("id")
-                            methodName = "bind"
-                            addArg {
-                                getterFieldAccess {
-                                    objectRef = getterField("viewModel")
-                                    fieldName = "id"
+                        elem.getFields(mapper).forEach {
+                            add(methodCallStatement {
+                                target = variable(it.name)
+                                methodName = "bind"
+                                addArg {
+                                    getterFieldAccess {
+                                        objectRef = getterField("viewModel")
+                                        fieldName = it.name
+                                    }
                                 }
-                            }
-                        })
-
-                        add(methodCallStatement {
-                            target = variable("amount")
-                            methodName = "bind"
-                            addArg {
-                                getterFieldAccess {
-                                    objectRef = getterField("viewModel")
-                                    fieldName = "amount"
-                                }
-                            }
-                        })
+                            })
+                        }
                     }
                 }
             }
@@ -95,7 +80,10 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
             return emptyList()
         }
 
-        return viewModelElementsLogic().map { ElementViewLogic(it).getOps() }
+        val elementsLogic = viewModelElementsLogic()
+        val mapper = ModelToViewModelTypeMapper(elementsLogic)
+
+        return elementsLogic.map { ElementViewLogic(it).getOps(mapper) }
     }
 
     override fun extraCSharpUsings(): List<String> {
