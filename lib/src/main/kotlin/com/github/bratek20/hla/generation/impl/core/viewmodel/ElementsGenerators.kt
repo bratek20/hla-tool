@@ -61,7 +61,7 @@ class ViewModelSharedLogic(
         }
 
         windowsLogic().forEach { window ->
-            window.getElementTypesWrappedIn(TypeWrapper.LIST).forEach {
+            window.getElementTypesWrappedIn(TypeWrapper.OPTIONAL).forEach {
                 optionalTypes.add(OptionalApiType(mapper.getModelForViewModelType(it)))
             }
         }
