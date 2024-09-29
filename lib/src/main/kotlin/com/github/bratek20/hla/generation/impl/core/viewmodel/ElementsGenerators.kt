@@ -69,15 +69,29 @@ class ViewModelSharedLogic(
         return optionalTypes.filter { it.wrappedType is ComplexStructureApiType<*> }
     }
 }
+
+class ViewModelElementField(
+    val typeName: String,
+    val name: String
+)
+
 class ViewModelElementLogic(
     val def: ViewModelElementDefinition,
-    val modelType: ComplexStructureApiType<*>
+    val modelType: ComplexStructureApiType<*>,
+    val apiTypeFactory: ApiTypeFactory
 ) {
     fun getTypeName(): String = def.getName()
 
-    //TODO-REF it should be mapped fields + extra fields
-    fun getFields(): List<ComplexStructureField> {
-        return getMappedFields()
+    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelElementField> {
+        val result = mutableListOf<ViewModelElementField>()
+        def.getFields().forEach { field ->
+            result.add(ViewModelElementField(field.getType().getName(), field.getName()))
+        }
+        getMappedFields().forEach { field ->
+            result.add(ViewModelElementField(mapper.mapModelToViewModelTypeName(field.type), field.name))
+        }
+
+        return result
     }
 
     private fun getMappedFields(): List<ComplexStructureField> {
@@ -218,7 +232,7 @@ class ViewModelLogicFactory(
             val modelTypeName = element.getModel().getName()
             val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
 
-            ViewModelElementLogic(element, modelType)
+            ViewModelElementLogic(element, modelType, apiTypeFactory)
         }
     }
 }

@@ -14,9 +14,12 @@ namespace SomeModule.View {
     public class SomeClassView: ElementView<SomeClassVm> {
         [SerializeField]
         LabelView id;
+        [SerializeField]
+        ButtonView button;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
+            button.Bind(ViewModel.Button);
         }
     }
 }

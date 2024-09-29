@@ -6,6 +6,14 @@ import com.github.bratek20.hla.generation.impl.core.api.*
 class ModelToViewModelTypeMapper(
     private val viewModelElements: List<ViewModelElementLogic>
 ) {
+    fun mapViewModelToViewTypeName(viewModelType: String): String {
+        val knownViewModel = viewModelElements.firstOrNull { it.getTypeName() == viewModelType }
+        if (knownViewModel != null) {
+            return mapModelToViewTypeName(knownViewModel.modelType)
+        }
+        return viewModelType + "View"
+    }
+
     fun mapModelToViewTypeName(modelType: ApiType): String {
         if (modelType is ListApiType) {
             return mapModelToViewTypeName(modelType.wrappedType).replace("View", "GroupView")
