@@ -12,7 +12,7 @@ import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.utils.camelToPascalCase
 
 class ViewModelElementLogic(
-    private val def: ViewModelElementDefinition,
+    val def: ViewModelElementDefinition,
     val modelType: ComplexStructureApiType<*>
 ) {
     fun getTypeName(): String = def.getName()
@@ -155,6 +155,18 @@ abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
     }
 }
 
+class ViewModelLogicFactory(
+    private val apiTypeFactory: ApiTypeFactory
+) {
+    fun createElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelElementLogic> {
+        return defs.map { element ->
+            val modelTypeName = element.getModel().getName()
+            val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
+
+            ViewModelElementLogic(element, modelType)
+        }
+    }
+}
 class GeneratedElementsGenerator: BaseElementsGenerator() {
     override fun patternName(): PatternName {
         return PatternName.GeneratedElements
@@ -164,12 +176,7 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
         val listTypes: MutableList<ListApiType> = mutableListOf();
         val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
 
-        val elementsLogic = viewModelElementsDef()!!.map { element ->
-            val modelTypeName = element.getModel().getName()
-            val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
-
-            ViewModelElementLogic(element, modelType)
-        }
+        val elementsLogic = viewModelElementsLogic()
         val mapper = ModelToViewModelTypeMapper(elementsLogic)
 
         elementsLogic.forEach { element ->

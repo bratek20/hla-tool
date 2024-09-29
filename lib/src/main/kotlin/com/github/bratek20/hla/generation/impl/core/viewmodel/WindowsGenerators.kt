@@ -70,6 +70,10 @@ abstract class BaseViewModelPatternGenerator: PatternGenerator() {
     protected fun viewModelElementsDef(): List<ViewModelElementDefinition> =
         module.getViewModelSubmodule()?.getElements() ?: emptyList()
 
+    protected fun viewModelElementsLogic(): List<ViewModelElementLogic> {
+        return ViewModelLogicFactory(apiTypeFactory).createElementsLogic(viewModelElementsDef())
+    }
+
     protected fun viewModelWindowsLogic(): List<GeneratedWindowLogic> {
         return viewModelWindowsDef().map { GeneratedWindowLogic(it, apiTypeFactory) }
     }
