@@ -175,7 +175,7 @@ abstract class PatternGenerator
                         addUsing(it)
                     }
 
-                    if (submodule != SubmoduleName.Api && submodule != SubmoduleName.View) {
+                    if (submodule != SubmoduleName.Api) {
                         addUsing("$moduleName.Api")
                     }
                     if (submodule == SubmoduleName.View) {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using B20.Ext;
 using B20.Frontend.Elements.View;
 using UnityEngine;
+using SomeModule.Api;
 using SomeModule.ViewModel;
 using OtherModule.Api;
 using TypesModule.Api;
