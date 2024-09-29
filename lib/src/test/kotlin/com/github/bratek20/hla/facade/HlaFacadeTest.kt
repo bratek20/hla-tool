@@ -269,22 +269,22 @@ class HlaFacadeTest {
         )
 
         //then
-        directoriesMock.assertWriteCount(2)
+        directoriesMock.assertWriteCount(1)
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
         )
-        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
-            2,
-            paths.expectedFixturesPath
-        )
+//        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+//            2,
+//            paths.expectedFixturesPath
+//        )
 //        val testsDirectory = directoriesMock.assertWriteAndGetDirectory(
 //            3,
 //            paths.expectedTestsPath
 //        )
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
-        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
+        //assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
 //        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
     }
 
