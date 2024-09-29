@@ -3,10 +3,14 @@ package com.github.bratek20.hla.writing.impl
 import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.TypeScriptConfig
-import com.github.bratek20.hla.generation.api.GeneratedModule
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.utils.directory.api.*
 
 
+
+fun getSubmodulePath(profile: HlaProfile, submodule: SubmoduleName): Path {
+    return profile.getPaths().getSrc().getOverrides().first { it.getSubmodule() == submodule }.getPath()
+}
 
 class FilesModifiers(
     private val files: Files,
@@ -80,12 +84,12 @@ class FilesModifiers(
         )
 
         val moduleName = generateResult.getMain().getName().value
-        updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getMain())}${moduleName}/")
+        updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getDefault())}${moduleName}/")
 
         val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(FileName("tsconfig.json")))
-        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures()!!, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getFixtures())}${moduleName}/")
+        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures()!!, "${calculateFilePrefix(info.getTestTsconfigPath(), getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
         generateResult.getTests()?.let {
-            testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(info.getTestTsconfigPath(), profile.getPaths().getSrc().getTest())}${moduleName}/")
+            testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(info.getTestTsconfigPath(), getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
         }
         if (testFile != initialTestFile) {
             files.write(typeScriptPaths.testTsconfig, testFile!!)

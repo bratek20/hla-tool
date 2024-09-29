@@ -4,36 +4,48 @@ profiles:
     paths:
       project: "../kotlin"
       src:
-        main: "src/main/kotlin/com/some/pkg"
-        test: "src/test/kotlin/com/some/pkg"
-        fixtures: "src/testFixtures/kotlin/com/some/pkg"
+        default: "src/main/kotlin/com/some/pkg"
+        overrides:
+            - submodule: "Tests"
+              path: "src/test/kotlin/com/some/pkg"
+            - submodule: "Fixtures"
+              path: "src/testFixtures/kotlin/com/some/pkg"
 
   - name: "typeScript"
     language: "TYPE_SCRIPT"
     paths:
       project: "../typescript"
       src:
-        main: "main"
-        test: "Tests/test"
-        fixtures: "Tests/fixtures"
+        default: "main"
+        overrides:
+            - submodule: "Tests"
+              path: "Tests/test"
+            - submodule: "Fixtures"
+              path: "Tests/fixtures"
 
   - name: "cSharp"
     language: "C_SHARP"
     paths:
       project: "../c-sharp"
       src:
-        main: "Main"
-        test: "Tests/Test"
-        fixtures: "Tests/Fixtures"
+        default: "Main"
+        overrides:
+            - submodule: "Tests"
+              path: "Tests/Test"
+            - submodule: "Fixtures"
+              path: "Tests/Fixtures"
 
   - name: "kotlinOnlyPatterns"
     language: "KOTLIN"
     paths:
       project: "../kotlin"
       src:
-        main: "src/main/kotlin/com/some/pkg"
-        test: "src/test/kotlin/com/some/pkg"
-        fixtures: "src/testFixtures/kotlin/com/some/pkg"
+        default: "src/main/kotlin/com/some/pkg"
+        overrides:
+            - submodule: "Tests"
+              path: "src/test/kotlin/com/some/pkg"
+            - submodule: "Fixtures"
+              path: "src/testFixtures/kotlin/com/some/pkg"
     onlyPatterns:
       - "ValueObjects"
       - "Builders"
@@ -43,9 +55,12 @@ profiles:
     paths:
       project: "../typescriptFileModifiers/beforeStart"
       src:
-        main: "main"
-        test: "Tests/test"
-        fixtures: "Tests/fixtures"
+        default: "main"
+        overrides:
+          - submodule: "Tests"
+            path: "Tests/test"
+          - submodule: "Fixtures"
+            path: "Tests/fixtures"
     typeScript:
       mainTsconfigPath: ""
       testTsconfigPath: "Tests"
@@ -57,9 +72,12 @@ profiles:
     paths:
       project: "../typescriptFileModifiers/afterStart"
       src:
-        main: "main"
-        test: "Tests/test"
-        fixtures: "Tests/fixtures"
+        default: "main"
+        overrides:
+          - submodule: "Tests"
+            path: "Tests/test"
+          - submodule: "Fixtures"
+            path: "Tests/fixtures"
     typeScript:
       mainTsconfigPath: ""
       testTsconfigPath: "Tests"

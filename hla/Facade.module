@@ -14,10 +14,13 @@ Properties
         launchJsonPath: Path
         packageJsonPath: Path
 
+    SubmodulePath
+        submodule: SubmoduleName
+        path: Path
+
     HlaSrcPaths
-        main: Path
-        test: Path
-        fixtures: Path
+        default: Path
+        overrides: SubmodulePath[] = []
 
     HlaPaths
        project: Path

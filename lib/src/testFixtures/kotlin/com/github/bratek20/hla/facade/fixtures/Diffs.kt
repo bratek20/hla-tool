@@ -2,6 +2,8 @@
 
 package com.github.bratek20.hla.facade.fixtures
 
+import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.hla.generation.fixtures.*
 import com.github.bratek20.utils.directory.api.*
 import com.github.bratek20.utils.directory.fixtures.*
 
@@ -94,25 +96,40 @@ fun diffTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScri
     return result.joinToString("\n")
 }
 
+data class ExpectedSubmodulePath(
+    var submodule: String? = null,
+    var path: String? = null,
+)
+fun diffSubmodulePath(given: SubmodulePath, expectedInit: ExpectedSubmodulePath.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSubmodulePath().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.submodule?.let {
+        if (diffSubmoduleName(given.getSubmodule(), it) != "") { result.add(diffSubmoduleName(given.getSubmodule(), it, "${path}submodule.")) }
+    }
+
+    expected.path?.let {
+        if (diffPath(given.getPath(), it) != "") { result.add(diffPath(given.getPath(), it, "${path}path.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedHlaSrcPaths(
-    var main: String? = null,
-    var test: String? = null,
-    var fixtures: String? = null,
+    var default: String? = null,
+    var overrides: List<(ExpectedSubmodulePath.() -> Unit)>? = null,
 )
 fun diffHlaSrcPaths(given: HlaSrcPaths, expectedInit: ExpectedHlaSrcPaths.() -> Unit, path: String = ""): String {
     val expected = ExpectedHlaSrcPaths().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.main?.let {
-        if (diffPath(given.getMain(), it) != "") { result.add(diffPath(given.getMain(), it, "${path}main.")) }
+    expected.default?.let {
+        if (diffPath(given.getDefault(), it) != "") { result.add(diffPath(given.getDefault(), it, "${path}default.")) }
     }
 
-    expected.test?.let {
-        if (diffPath(given.getTest(), it) != "") { result.add(diffPath(given.getTest(), it, "${path}test.")) }
-    }
-
-    expected.fixtures?.let {
-        if (diffPath(given.getFixtures(), it) != "") { result.add(diffPath(given.getFixtures(), it, "${path}fixtures.")) }
+    expected.overrides?.let {
+        if (given.getOverrides().size != it.size) { result.add("${path}overrides size ${given.getOverrides().size} != ${it.size}"); return@let }
+        given.getOverrides().forEachIndexed { idx, entry -> if (diffSubmodulePath(entry, it[idx]) != "") { result.add(diffSubmodulePath(entry, it[idx], "${path}overrides[${idx}].")) } }
     }
 
     return result.joinToString("\n")

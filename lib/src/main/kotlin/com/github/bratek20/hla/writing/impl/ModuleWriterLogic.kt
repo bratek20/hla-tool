@@ -107,9 +107,9 @@ class ModuleWriterLogic(
 
         val src = profile.getPaths().getSrc()
         val paths = Paths(
-            main = rootPath.add(src.getMain()),
-            fixtures = rootPath.add(src.getFixtures()),
-            test = rootPath.add(src.getTest())
+            main = rootPath.add(src.getDefault()),
+            fixtures = rootPath.add(getSubmodulePath(profile, SubmoduleName.Fixtures)),
+            test = rootPath.add(getSubmodulePath(profile, SubmoduleName.Tests))
         )
 
         writeDirectories(paths, generateResult)
