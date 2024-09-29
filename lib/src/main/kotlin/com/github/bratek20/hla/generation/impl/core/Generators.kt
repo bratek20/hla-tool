@@ -211,7 +211,9 @@ abstract class PatternGenerator
             return emptyList()
         }
 
-
+        if (patternName() == PatternName.ElementsView) {
+            return listOf(generatePatternFile(content, "OtherClassView"))
+        }
         return listOf(generatePatternFile(content))
     }
 
