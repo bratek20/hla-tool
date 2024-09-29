@@ -154,7 +154,7 @@ class ViewModelElementLogic(
 
     fun <T : ApiType> getMappedFieldsOfType(type: KClass<T>): List<T> {
         return getMappedFields().mapNotNull { field ->
-            if (type.isInstance(field.type::class.java)) {
+            if (type.isInstance(field.type)) {
                 type.cast(field.type)
             } else {
                 null
