@@ -7,10 +7,18 @@ class ModelToViewModelTypeMapper(
     private val viewModelElements: List<ViewModelElementLogic>
 ) {
     fun mapModelToViewTypeName(modelType: ApiType): String {
-        if (modelType is ComplexStructureApiType<*>) {
-            return modelType.name + "View"
+        if (modelType is ListApiType) {
+            return mapModelToViewTypeName(modelType.wrappedType).replace("View", "GroupView")
         }
-        return mapModelToViewModelTypeName(modelType) + "View"
+        if (modelType is OptionalApiType) {
+            return "Optional" + mapModelToViewTypeName(modelType.wrappedType)
+        }
+
+        var baseName = mapModelToViewModelTypeName(modelType)
+        if (modelType is ComplexStructureApiType<*>) {
+            baseName = modelType.name
+        }
+        return baseName + "View"
     }
 
     fun mapModelToViewModelTypeName(modelType: ApiType): String {

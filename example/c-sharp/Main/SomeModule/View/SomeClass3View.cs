@@ -16,7 +16,7 @@ namespace SomeModule.View {
         [SerializeField]
         EnumSwitchView someEnum;
         [SerializeField]
-        SomeClass2VmGroupView class2List;
+        SomeClass2GroupView class2List;
         protected override void OnBind() {
             base.OnBind();
             class2Object.Bind(ViewModel.Class2Object);
