@@ -95,6 +95,10 @@ private fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationCont
     return c.module.getName().value + "." + submodule.name
 }
 
+class PerFileOperations(
+    val fileName: String,
+    val ops: TopLevelCodeBuilderOps,
+)
 abstract class PatternGenerator
     : ModulePartGenerator()
 {
@@ -118,7 +122,8 @@ abstract class PatternGenerator
         return true
     }
 
-    open fun getOperations(): TopLevelCodeBuilderOps = {}
+    open fun getOperations(): TopLevelCodeBuilderOps? = null
+    open fun getOperationsPerFile(): List<PerFileOperations> = emptyList()
 
     open fun extraKotlinImports(): List<String> {
         return emptyList()
@@ -132,7 +137,7 @@ abstract class PatternGenerator
         return false
     }
 
-    private fun populatedCodeBuilder(): CodeBuilder {
+    private fun generateFileContent(ops: TopLevelCodeBuilderOps): FileContent {
         val cb = CodeBuilder(c.language.base())
         when (c.language.name()) {
             ModuleLanguage.KOTLIN -> {
@@ -143,19 +148,19 @@ abstract class PatternGenerator
                         addImport(it)
                     }
 
-                    apply(getOperations())
+                    apply(ops)
                 }
             }
             ModuleLanguage.TYPE_SCRIPT -> {
                 cb.typeScriptFile {
                     if (doNotGenerateTypeScriptNamespace()) {
-                        apply(getOperations())
+                        apply(ops)
                     }
                     else {
                         namespace {
                             name = submoduleNamespace(submodule, c)
 
-                            apply(getOperations())
+                            apply(ops)
                         }
                     }
                 }
@@ -182,11 +187,11 @@ abstract class PatternGenerator
 
                     namespace(submoduleNamespace(submodule, c))
 
-                    apply(getOperations())
+                    apply(ops)
                 }
             }
         }
-        return cb
+        return FileContent.fromString(cb.build())
     }
 
     fun generatePatterns(): List<GeneratedPattern> {
@@ -202,22 +207,22 @@ abstract class PatternGenerator
             }
         }
 
-        var content: FileContent?
-        if (shouldGenerate()) {
-            val cb = populatedCodeBuilder()
-            content = FileContent.fromString(cb.build())
-        } else {
-            content = null
-        }
-
-        if (content == null) {
+        if (!shouldGenerate()) {
             return emptyList()
         }
 
-        if (patternName() == PatternName.ElementsView) {
-            return listOf(generatePatternFile(content, "OtherClassView"))
+        val generatedPatterns: MutableList<GeneratedPattern> = mutableListOf()
+        val content = getOperations()?.let { generateFileContent(it) }
+        if (content != null) {
+            generatedPatterns.add(generatePatternFile(content))
         }
-        return listOf(generatePatternFile(content))
+
+        getOperationsPerFile().forEach {
+            val c = generateFileContent(it.ops)
+            generatedPatterns.add(generatePatternFile(c, it.fileName))
+        }
+
+        return generatedPatterns
     }
 
     private fun generatePatternFile(initContent: FileContent, fileName: String = patternName().name): GeneratedPattern {
