@@ -3,14 +3,72 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.types.*
-import com.github.bratek20.hla.definitions.api.Attribute
-import com.github.bratek20.hla.definitions.api.TypeDefinition
-import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
+import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.utils.camelToPascalCase
+import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
+class ViewModelSharedLogic(
+    private val def: ViewModelSubmoduleDefinition?,
+    private val apiTypeFactory: ApiTypeFactory
+) {
+    fun windowsDef(): List<ViewModelWindowDefinition> =
+        def?.getWindows() ?: emptyList()
+
+    fun elementsDef(): List<ViewModelElementDefinition> =
+        def?.getElements() ?: emptyList()
+
+    fun elementsLogic(): List<ViewModelElementLogic> {
+        return ViewModelLogicFactory(apiTypeFactory).createElementsLogic(elementsDef())
+    }
+
+    fun mapper(): ModelToViewModelTypeMapper {
+        return ModelToViewModelTypeMapper(elementsLogic())
+    }
+
+    fun windowsLogic(): List<GeneratedWindowLogic> {
+        return windowsDef().map { GeneratedWindowLogic(it, apiTypeFactory) }
+    }
+
+    fun elementListTypesToGenerate(): List<ListApiType> {
+        val elementsLogic = elementsLogic()
+        val mapper = ModelToViewModelTypeMapper(elementsLogic)
+        val listTypes: MutableList<ListApiType> = mutableListOf();
+
+        elementsLogic.forEach { element ->
+            listTypes.addAll(element.getMappedFieldsOfType(ListApiType::class))
+        }
+
+        windowsLogic().forEach { window ->
+            window.getElementTypesWrappedIn(TypeWrapper.LIST).forEach {
+                listTypes.add(ListApiType(mapper.getModelForViewModelType(it)))
+            }
+        }
+
+        return listTypes.filter { it.wrappedType is ComplexStructureApiType<*> }
+    }
+
+    fun elementOptionalTypesToGenerate(): List<OptionalApiType> {
+        val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
+        val elementsLogic = elementsLogic()
+        val mapper = ModelToViewModelTypeMapper(elementsLogic)
+
+        elementsLogic.forEach { element ->
+            optionalTypes.addAll(element.getMappedFieldsOfType(OptionalApiType::class))
+        }
+
+        windowsLogic().forEach { window ->
+            window.getElementTypesWrappedIn(TypeWrapper.LIST).forEach {
+                optionalTypes.add(OptionalApiType(mapper.getModelForViewModelType(it)))
+            }
+        }
+
+        return optionalTypes.filter { it.wrappedType is ComplexStructureApiType<*> }
+    }
+}
 class ViewModelElementLogic(
     val def: ViewModelElementDefinition,
     val modelType: ComplexStructureApiType<*>
@@ -94,18 +152,10 @@ class ViewModelElementLogic(
         }
     }
 
-    fun getMappedFieldOfListType(): List<ListApiType> {
-        return getMappedFieldOfType<ListApiType>()
-    }
-
-    fun getMappedFieldOfOptionalType(): List<OptionalApiType> {
-        return getMappedFieldOfType<OptionalApiType>()
-    }
-
-    private inline fun <reified T: ApiType> getMappedFieldOfType(): List<T> {
+    fun <T : ApiType> getMappedFieldsOfType(type: KClass<T>): List<T> {
         return getMappedFields().mapNotNull { field ->
-            if (field.type is T) {
-                field.type as T
+            if (type.isInstance(field.type::class.java)) {
+                type.cast(field.type)
             } else {
                 null
             }
@@ -149,7 +199,7 @@ class ViewModelElementLogic(
 
 abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
     override fun shouldGenerate(): Boolean {
-        return viewModelElementsDef()?.isNotEmpty() ?: false
+        return logic.elementsDef().isNotEmpty()
     }
 
     override fun extraCSharpUsings(): List<String> {
@@ -178,33 +228,19 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val listTypes: MutableList<ListApiType> = mutableListOf();
-        val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
-
-        val elementsLogic = viewModelElementsLogic()
+        val elementsLogic = logic.elementsLogic()
         val mapper = ModelToViewModelTypeMapper(elementsLogic)
 
         elementsLogic.forEach { element ->
             addClass(element.getClass(mapper))
-
-            listTypes.addAll(element.getMappedFieldOfListType())
-            optionalTypes.addAll(element.getMappedFieldOfOptionalType())
         }
 
-        viewModelWindowsLogic().forEach { window ->
-            window.getElementTypesWrappedInList().forEach {
-                listTypes.add(ListApiType(mapper.getModelForViewModelType(it)))
-            }
-        }
-
-        listTypes.forEach {
+        logic.elementListTypesToGenerate().forEach {
             addClass(getClassForListType(mapper, it))
         }
 
-        optionalTypes.forEach {
-            if (it.wrappedType is ComplexStructureApiType<*>) {
-                addClass(getClassForOptionalType(mapper, it))
-            }
+        logic.elementOptionalTypesToGenerate().forEach {
+            addClass(getClassForOptionalType(mapper, it))
         }
 
     }
@@ -275,7 +311,7 @@ class ElementsLogicGenerator: BaseElementsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        viewModelElementsDef()?.forEach { element ->
+        logic.elementsDef().forEach { element ->
             addClass {
                 name = element.getName()
                 partial = true

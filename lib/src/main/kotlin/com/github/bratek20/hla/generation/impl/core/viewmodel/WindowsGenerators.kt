@@ -5,7 +5,6 @@ import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
-import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
 import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
@@ -56,26 +55,16 @@ class GeneratedWindowLogic(
         return field.getType().getName()
     }
 
-    fun getElementTypesWrappedInList(): List<String> {
+    fun getElementTypesWrappedIn(type: TypeWrapper): List<String> {
         return def.getFields()
-            .filter { it.getType().getWrappers().contains(TypeWrapper.LIST) }
+            .filter { it.getType().getWrappers().contains(type) }
             .map { it.getType().getName() }
     }
 }
 
 abstract class BaseViewModelPatternGenerator: PatternGenerator() {
-    protected fun viewModelWindowsDef(): List<ViewModelWindowDefinition> =
-        module.getViewModelSubmodule()?.getWindows() ?: emptyList()
-
-    protected fun viewModelElementsDef(): List<ViewModelElementDefinition> =
-        module.getViewModelSubmodule()?.getElements() ?: emptyList()
-
-    protected fun viewModelElementsLogic(): List<ViewModelElementLogic> {
-        return ViewModelLogicFactory(apiTypeFactory).createElementsLogic(viewModelElementsDef())
-    }
-
-    protected fun viewModelWindowsLogic(): List<GeneratedWindowLogic> {
-        return viewModelWindowsDef().map { GeneratedWindowLogic(it, apiTypeFactory) }
+    protected val logic by lazy {
+        ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory)
     }
 
     override fun supportsCodeBuilder(): Boolean {
@@ -86,7 +75,7 @@ abstract class BaseViewModelPatternGenerator: PatternGenerator() {
 abstract class BaseWindowsGenerator: BaseViewModelPatternGenerator() {
 
     override fun shouldGenerate(): Boolean {
-        return viewModelWindowsDef()?.isNotEmpty() ?: false
+        return logic.windowsDef().isNotEmpty()
     }
 
     override fun extraCSharpUsings(): List<String> {
@@ -103,7 +92,7 @@ class GeneratedWindowsGenerator: BaseWindowsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        viewModelWindowsLogic().forEach { logic ->
+        logic.windowsLogic().forEach { logic ->
             addClass(logic.getState())
             addClass(logic.getWindowClass())
         }
@@ -120,7 +109,7 @@ class WindowsLogicGenerator: BaseWindowsGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        viewModelWindowsDef()?.forEach { def ->
+        logic.windowsDef().forEach { def ->
             addClass {
                 name = def.getName()
                 partial = true

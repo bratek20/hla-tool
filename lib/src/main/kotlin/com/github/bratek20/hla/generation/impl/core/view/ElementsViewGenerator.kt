@@ -71,14 +71,11 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return viewModelElementsDef().isNotEmpty()
+        return logic.elementsDef().isNotEmpty()
     }
 
     override fun getOperationsPerFile(): List<PerFileOperations> {
-        val elementsLogic = viewModelElementsLogic()
-        val mapper = ModelToViewModelTypeMapper(elementsLogic)
-
-        return elementsLogic.map { ElementViewLogic(it).getOps(mapper) }
+        return logic.elementsLogic().map { ElementViewLogic(it).getOps(logic.mapper()) }
     }
 
     override fun extraCSharpUsings(): List<String> {
