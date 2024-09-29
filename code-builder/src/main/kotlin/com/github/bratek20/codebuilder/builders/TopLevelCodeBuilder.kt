@@ -56,8 +56,8 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
         }
     }
 
-    fun addComment(comment: String) {
-        addOpNoEmptyLineAfter(lineBlock("// $comment"))
+    fun addComment(comment: StringProvider) {
+        addOpNoEmptyLineAfter(lineBlock("// ${comment()}"))
     }
 }
 typealias TopLevelCodeBuilderOps = TopLevelCodeBuilder.() -> Unit

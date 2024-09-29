@@ -28,12 +28,7 @@ profiles:
     paths:
       project: "../c-sharp"
       src:
-        default: "Main"
-        overrides:
-            - submodule: "Tests"
-              path: "Tests/Test"
-            - submodule: "Fixtures"
-              path: "Tests/Fixtures"
+        default: ""
 
   - name: "kotlinOnlyPatterns"
     language: "KOTLIN"

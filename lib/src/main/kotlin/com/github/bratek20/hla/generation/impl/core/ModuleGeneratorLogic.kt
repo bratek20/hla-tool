@@ -9,6 +9,7 @@ import com.github.bratek20.hla.generation.impl.core.context.ContextGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
 import com.github.bratek20.hla.generation.impl.core.tests.TestsGenerator
+import com.github.bratek20.hla.generation.impl.core.view.ViewGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelGenerator
 import com.github.bratek20.hla.generation.impl.core.web.WebGenerator
 import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpSupport
@@ -36,6 +37,7 @@ class ModuleGeneratorLogic(
                 ImplGenerator(),
                 WebGenerator(),
                 ViewModelGenerator(),
+                ViewGenerator(),
                 ContextGenerator(),
                 FixturesGenerator(),
                 TestsGenerator(),

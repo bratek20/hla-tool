@@ -18,7 +18,9 @@ class TopLevelCodeBuilderTest {
                         name = "SomeClass"
                     }
 
-                    addComment("Some comment")
+                    addComment{
+                        "Some comment"
+                    }
                     addFunction {
                         name = "someFun"
                     }

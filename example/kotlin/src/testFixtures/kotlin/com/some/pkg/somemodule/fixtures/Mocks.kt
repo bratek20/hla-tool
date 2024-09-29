@@ -1,1 +1,0 @@
-package com.some.pkg.somemodule.fixtures

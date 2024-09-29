@@ -24,6 +24,10 @@ fun variable(name: String): ExpressionBuilder {
     return expression(name)
 }
 
+fun parent(): ExpressionBuilder {
+    return expression("base")
+}
+
 //if you are lazy, in the end all usages should be refactored to proper builders
 fun hardcodedExpression(value: String) = expression(value)
 

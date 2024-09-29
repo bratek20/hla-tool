@@ -6,7 +6,6 @@
         "fixtures/OtherModule/Fixtures/Builders.ts",
         "fixtures/OtherModule/Fixtures/Diffs.ts",
         "fixtures/OtherModule/Fixtures/Asserts.ts",
-        "fixtures/OtherModule/Fixtures/Mocks.ts",
 
         "test/OtherModule/Tests/ImplTest.ts",
         //OtherModule end

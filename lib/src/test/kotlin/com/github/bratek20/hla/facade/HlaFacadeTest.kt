@@ -155,10 +155,10 @@ class HlaFacadeTest {
     class ShouldStartCSharpModuleArgsProvider : ArgumentsProvider {
         fun cSharpTestPaths(moduleName: String): TestPaths {
             return TestPaths(
-                exampleMainPath = "../example/c-sharp/Main/$moduleName",
+                exampleMainPath = "../example/c-sharp/$moduleName",
                 exampleFixturesPath = "../example/c-sharp/Tests/Fixtures/$moduleName",
                 exampleTestsPath = "../example/c-sharp/Tests/Test/$moduleName",
-                expectedMainPath = "../example/hla/../c-sharp/Main",
+                expectedMainPath = "../example/hla/../c-sharp",
                 expectedFixturesPath = "../example/hla/../c-sharp/Tests/Fixtures",
                 expectedTestsPath = "../example/hla/../c-sharp/Tests/Test",
             )
@@ -269,22 +269,22 @@ class HlaFacadeTest {
         )
 
         //then
-        directoriesMock.assertWriteCount(2)
+        directoriesMock.assertWriteCount(1)
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
         )
-        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
-            2,
-            paths.expectedFixturesPath
-        )
+//        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+//            2,
+//            paths.expectedFixturesPath
+//        )
 //        val testsDirectory = directoriesMock.assertWriteAndGetDirectory(
 //            3,
 //            paths.expectedTestsPath
 //        )
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
-        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
+        //assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
 //        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
     }
 
@@ -336,8 +336,8 @@ class HlaFacadeTest {
         val expectedMainDirectoriesToSkipUpdate = setOf<String>(
         )
 
-        val expectedFixturesFilesToSkipUpdate = setOf(
-            "fixtures/Mocks",
+        val expectedFixturesFilesToSkipUpdate = setOf<String>(
+            //"fixtures/Mocks",
         )
 
         //tests directory is not updated
@@ -444,7 +444,6 @@ class HlaFacadeTest {
                 "SomeModule/Fixtures/Builders.kt generated",
                 "SomeModule/Fixtures/Diffs.kt generated",
                 "SomeModule/Fixtures/Asserts.kt generated",
-                "SomeModule/Fixtures/Mocks.kt generated",
                 "SomeModule/Tests/ImplTest.kt generated",
             )
         }
