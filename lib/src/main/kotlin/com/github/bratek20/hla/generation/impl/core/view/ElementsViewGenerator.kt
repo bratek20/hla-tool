@@ -25,10 +25,10 @@ class ElementViewLogic(
                     }
                 }
 
-                elem.getFields(mapper).forEach {
+                elem.getFields().forEach {
                     addField {
                         mutable = true
-                        type = typeName(it.typeName + "View")
+                        type = typeName(mapper.mapModelToViewTypeName(it.type))
                         name = it.name
 
                         addAnnotation("SerializeField")
@@ -46,7 +46,7 @@ class ElementViewLogic(
                             methodName = "onBind"
                         })
 
-                        elem.getFields(mapper).forEach {
+                        elem.getFields().forEach {
                             add(methodCallStatement {
                                 target = variable(it.name)
                                 methodName = "bind"

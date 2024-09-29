@@ -6,6 +6,13 @@ import com.github.bratek20.hla.generation.impl.core.api.*
 class ModelToViewModelTypeMapper(
     private val viewModelElements: List<ViewModelElementLogic>
 ) {
+    fun mapModelToViewTypeName(modelType: ApiType): String {
+        if (modelType is ComplexStructureApiType<*>) {
+            return modelType.name + "View"
+        }
+        return mapModelToViewModelTypeName(modelType) + "View"
+    }
+
     fun mapModelToViewModelTypeName(modelType: ApiType): String {
         if (modelType is BaseApiType) {
             return mapBaseType(modelType)

@@ -12,7 +12,7 @@ using TypesModule.Api;
 namespace SomeModule.View {
     public class SomeClass6View: ElementView<SomeClass6Vm> {
         [SerializeField]
-        OptionalSomeClassView someClassOpt;
+        OptionalSomeClassVmView someClassOpt;
         protected override void OnBind() {
             base.OnBind();
             someClassOpt.Bind(ViewModel.SomeClassOpt);
