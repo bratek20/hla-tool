@@ -3,19 +3,92 @@ package com.github.bratek20.hla.writing.impl
 import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.TypeScriptConfig
+import com.github.bratek20.hla.generation.api.GeneratedModule
+import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.writing.api.WriteArgs
 import com.github.bratek20.utils.directory.api.*
 
-
-
-fun getSubmodulePath(profile: HlaProfile, submodule: SubmoduleName): Path {
+private fun getSubmodulePath(profile: HlaProfile, submodule: SubmoduleName): Path {
     return profile.getPaths().getSrc().getOverrides().first { it.getSubmodule() == submodule }.getPath()
+}
+
+//TODO-REF GenerateResult is legacy structure, should be removed and use new concept of GeneratedModule
+private fun calcGenerateResult(module: GeneratedModule, profile: HlaProfile): GenerateResult {
+    val main = Directory.create(
+        calcModuleDirectoryName(module.getName(), profile),
+        directories = listOfNotNull(
+            submoduleToDirectory(SubmoduleName.Api, module.getSubmodules(), profile),
+            submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules(), profile),
+            submoduleToDirectory(SubmoduleName.Web, module.getSubmodules(), profile),
+            submoduleToDirectory(SubmoduleName.Context, module.getSubmodules(), profile),
+        )
+    );
+    val fixtures = Directory.create(
+        calcModuleDirectoryName(module.getName(), profile),
+        directories = listOfNotNull(
+            submoduleToDirectory(SubmoduleName.Fixtures, module.getSubmodules(), profile),
+        )
+    );
+    val tests = Directory.create(
+        calcModuleDirectoryName(module.getName(), profile),
+        directories = listOfNotNull(
+            submoduleToDirectory(SubmoduleName.Tests, module.getSubmodules(), profile),
+        )
+    );
+    return GenerateResult(
+        main,
+        toNullIfEmpty(fixtures),
+        toNullIfEmpty(tests)
+    )
+}
+
+private class GenerateResult(
+    private val main: Directory,
+    private val fixtures: Directory?,
+    private val tests: Directory?,
+) {
+    fun getMain(): Directory {
+        return main
+    }
+
+    fun getFixtures(): Directory? {
+        return fixtures
+    }
+
+    fun getTests(): Directory? {
+        return tests
+    }
+}
+
+private fun toNullIfEmpty(directory: Directory): Directory? {
+    return if (directory.getDirectories().isEmpty() && directory.getFiles().isEmpty()) {
+        null
+    } else {
+        directory
+    }
+}
+
+private fun submoduleToDirectory(name: SubmoduleName, subs: List<GeneratedSubmodule>, profile: HlaProfile): Directory? {
+    val sub = subs.find { it.getName() == name }
+    if (sub == null || sub.getPatterns().isEmpty()) {
+        return null
+    }
+
+    return Directory.create(
+        name = calcSubmoduleDirectoryName(name, profile),
+        files = sub.getPatterns().map { it.getFile() }
+    )
 }
 
 class FilesModifiers(
     private val files: Files,
 ) {
-    fun modify(profile: HlaProfile, rootPath: Path, generateResult: GenerateResult, onlyUpdate: Boolean) {
+    fun modify(args: WriteArgs, rootPath: Path) {
+        val generateResult = calcGenerateResult(args.getModule(), args.getProfile())
+        val profile = args.getProfile()
+        val onlyUpdate = args.getOnlyUpdate()
+
         if (profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && profile.getTypeScript() != null && !onlyUpdate) {
             val moduleName = generateResult.getMain().getName().value
             updateTsConfigFiles(rootPath, profile.getTypeScript()!!, generateResult, profile)
