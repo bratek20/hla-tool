@@ -10,12 +10,10 @@ using OtherModule.ViewModel;
 namespace OtherModule.View {
     public class OtherClassView: ElementView<OtherClassVm> {
         [SerializeField]
-        private LabelView id;
+        LabelView id;
         [SerializeField]
-        private LabelView amount;
-
-        protected override void OnBind()
-        {
+        LabelView amount;
+        protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
             amount.Bind(ViewModel.Amount);

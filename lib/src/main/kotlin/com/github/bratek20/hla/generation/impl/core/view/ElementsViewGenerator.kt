@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.view
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
-import com.github.bratek20.codebuilder.builders.comment
+import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
@@ -27,6 +27,7 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
 
 
             addField {
+                mutable = true
                 type = typeName("LabelView")
                 name = "id"
 
@@ -34,13 +35,49 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
             }
 
             addField {
+                mutable = true
                 type = typeName("LabelView")
                 name = "amount"
 
                 addAnnotation("SerializeField")
             }
+
+            addMethod {
+                modifier = AccessModifier.PROTECTED
+                override = true
+                name = "onBind"
+
+                setBody {
+                    //TODO-REF
+                    add(methodCallStatement {
+                        target = variable("base")
+                        methodName = "onBind"
+                    })
+
+                    add(methodCallStatement {
+                        target = variable("id")
+                        methodName = "bind"
+                        addArg {
+                            getterFieldAccess {
+                                objectRef = getterField("viewModel")
+                                fieldName = "id"
+                            }
+                        }
+                    })
+
+                    add(methodCallStatement {
+                        target = variable("amount")
+                        methodName = "bind"
+                        addArg {
+                            getterFieldAccess {
+                                objectRef = getterField("viewModel")
+                                fieldName = "amount"
+                            }
+                        }
+                    })
+                }
+            }
         }
-        addExtraEmptyLines(7)
     }
 
     override fun extraCSharpUsings(): List<String> {
