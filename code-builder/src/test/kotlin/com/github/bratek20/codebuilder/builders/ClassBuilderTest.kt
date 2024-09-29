@@ -662,6 +662,31 @@ class ClassBuilderTest {
     }
 
     @Test
+    fun `annotating fields`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        type = baseType(BaseType.INT)
+                        addAnnotation("SomeAnnotation")
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        [SomeAnnotation]
+                        readonly int someField;
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
     fun `class with field set by constructor`() {
         testOp {
             op = {

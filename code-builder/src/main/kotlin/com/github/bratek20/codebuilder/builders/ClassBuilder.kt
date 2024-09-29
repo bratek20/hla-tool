@@ -24,6 +24,11 @@ class FieldBuilder(
     var setter = false
     var fromConstructor = false
 
+    private val annotations: MutableList<String> = mutableListOf()
+    fun addAnnotation(name: String) {
+        annotations.add(name)
+    }
+
     override fun validate(c: CodeBuilderContext): ValidationResult {
         if (type == null) {
             if (!c.lang.supportsFieldTypeDeductionFromAssignedValue()) {
@@ -50,6 +55,9 @@ class FieldBuilder(
             return getOperationsForCSharpGetterAndSetter()
         }
         return {
+            if (annotations.isNotEmpty()) {
+                line("[${annotations[0]}]")
+            }
             lineStart()
 
             val finalModifier = if (getter) {

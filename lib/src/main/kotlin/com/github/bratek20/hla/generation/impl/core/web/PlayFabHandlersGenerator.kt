@@ -144,7 +144,9 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         }
 
         if (playFabHandlers.getErrorCodesMapping().isNotEmpty()) {
-            addComment("Error Codes Mapping")
+            addComment {
+                "Error Codes Mapping"
+            }
             playFabHandlers.getErrorCodesMapping().forEach {
                 addFunctionCall {
                     name = "Handlers.Api.AddExceptionMapper"
