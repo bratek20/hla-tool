@@ -10,6 +10,6 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class OptionalSomeClassView: UiOptionalElementView<SomeClassView, SomeClassVm, SomeClass> {
+    public class OptionalSomeClassView: OptionalUiElementView<SomeClassView, SomeClassVm, SomeClass> {
     }
 }

@@ -10,6 +10,6 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class SomeClass2GroupView: UiElementGroupView<SomeClassView, SomeClassVm, SomeClass> {
+    public class SomeClass2GroupView: UiElementGroupView<SomeClass2View, SomeClass2Vm, SomeClass2> {
     }
 }

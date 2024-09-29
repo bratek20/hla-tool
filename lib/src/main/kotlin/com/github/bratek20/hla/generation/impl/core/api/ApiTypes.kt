@@ -442,8 +442,8 @@ class DataClassApiType(
 
 
 class ListApiType(
-    val wrappedType: ApiType,
-) : ApiType() {
+    wrappedType: ApiType,
+) : WrappedApiType(wrappedType) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
     }
@@ -493,9 +493,13 @@ class ListApiType(
     }
 }
 
+abstract class WrappedApiType(
+    val wrappedType: ApiType
+): ApiType()
+
 class OptionalApiType(
-    val wrappedType: ApiType,
-) : ApiType() {
+    wrappedType: ApiType,
+) : WrappedApiType(wrappedType) {
     override fun name(): String {
         return languageTypes.wrapWithOptional(wrappedType.name())
     }
