@@ -62,34 +62,8 @@ class HlaFacadeTest {
             )
         }
 
-        fun typescriptTestPaths(moduleName: String): TestPaths {
-            return TestPaths(
-                exampleMainPath = "../example/typescript/main/$moduleName",
-                exampleFixturesPath = "../example/typescript/Tests/fixtures/$moduleName",
-                exampleTestsPath = "../example/typescript/Tests/test/$moduleName",
-                expectedMainPath = "../example/hla/../typescript/main",
-                expectedFixturesPath = "../example/hla/../typescript/Tests/fixtures",
-                expectedTestsPath = "../example/hla/../typescript/Tests/test",
-            )
-        }
-
-        fun typescript2TestPaths(moduleName: String): TestPaths {
-            return TestPaths(
-                exampleMainPath = "../example/typescript2/main/$moduleName",
-                exampleFixturesPath = "../example/typescript2/Tests/fixtures/$moduleName",
-                exampleTestsPath = "../example/typescript2/Tests/test/$moduleName",
-                expectedMainPath = "../example/hla2/../typescript2/main",
-                expectedFixturesPath = "../example/hla2/../typescript2/Tests/fixtures",
-                expectedTestsPath = "../example/hla2/../typescript2/Tests/test",
-                hlaFolderPath = "../example/hla2"
-            )
-        }
-
         private val KOTLIN_PROFILE = "kotlin"
-        private val TYPE_SCRIPT_PROFILE = "typeScript"
-
         private val KOTLIN_2_PROFILE = "kotlin2"
-        private val TYPE_SCRIPT_2_PROFILE = "typeScript2"
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
@@ -99,53 +73,24 @@ class HlaFacadeTest {
                     kotlinTestPaths("othermodule")
                 ),
                 Arguments.of(
-                    "OtherModule",
-                    TYPE_SCRIPT_PROFILE,
-                    typescriptTestPaths("OtherModule")
-                ),
-
-                Arguments.of(
                     "SomeModule",
                     KOTLIN_PROFILE,
                     kotlinTestPaths("somemodule")
                 ),
-                Arguments.of(
-                    "SomeModule",
-                    TYPE_SCRIPT_PROFILE,
-                    typescriptTestPaths("SomeModule")
-                ),
-
                 Arguments.of(
                     "TypesModule",
                     KOTLIN_PROFILE,
                     kotlinTestPaths("typesmodule")
                 ),
                 Arguments.of(
-                    "TypesModule",
-                    TYPE_SCRIPT_PROFILE,
-                    typescriptTestPaths("TypesModule")
-                ),
-
-                Arguments.of(
                     "SimpleModule",
                     KOTLIN_PROFILE,
                     kotlinTestPaths("simplemodule")
                 ),
                 Arguments.of(
-                    "SimpleModule",
-                    TYPE_SCRIPT_PROFILE,
-                    typescriptTestPaths("SimpleModule")
-                ),
-
-                Arguments.of(
                     "ImportingModule",
                     KOTLIN_2_PROFILE,
                     kotlin2TestPaths("importingmodule")
-                ),
-                Arguments.of(
-                    "ImportingModule",
-                    TYPE_SCRIPT_2_PROFILE,
-                    typescript2TestPaths("ImportingModule")
                 ),
             )
         }
@@ -155,22 +100,22 @@ class HlaFacadeTest {
         fun typescriptTestPaths(moduleName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/typescript/main/$moduleName",
-                exampleFixturesPath = "../example/typescript/Tests/fixtures/$moduleName",
-                exampleTestsPath = "../example/typescript/Tests/test/$moduleName",
+                exampleFixturesPath = "../example/typescript/Tests/$moduleName",
+                exampleTestsPath = "../example/typescript/Tests/$moduleName",
                 expectedMainPath = "../example/hla/../typescript/main",
-                expectedFixturesPath = "../example/hla/../typescript/Tests/fixtures",
-                expectedTestsPath = "../example/hla/../typescript/Tests/test",
+                expectedFixturesPath = "../example/hla/../typescript/Tests",
+                expectedTestsPath = "../example/hla/../typescript/Tests",
             )
         }
 
         fun typescript2TestPaths(moduleName: String): TestPaths {
             return TestPaths(
                 exampleMainPath = "../example/typescript2/main/$moduleName",
-                exampleFixturesPath = "../example/typescript2/Tests/fixtures/$moduleName",
-                exampleTestsPath = "../example/typescript2/Tests/test/$moduleName",
+                exampleFixturesPath = "../example/typescript2/Tests/$moduleName",
+                exampleTestsPath = "../example/typescript2/Tests/$moduleName",
                 expectedMainPath = "../example/hla2/../typescript2/main",
-                expectedFixturesPath = "../example/hla2/../typescript2/Tests/fixtures",
-                expectedTestsPath = "../example/hla2/../typescript2/Tests/test",
+                expectedFixturesPath = "../example/hla2/../typescript2/Tests",
+                expectedTestsPath = "../example/hla2/../typescript2/Tests",
                 hlaFolderPath = "../example/hla2"
             )
         }
@@ -327,22 +272,17 @@ class HlaFacadeTest {
         )
 
         //then
-        directoriesMock.assertWriteCount(3)
+        directoriesMock.assertWriteCount(2)
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
         )
-        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
-            2,
-            paths.expectedFixturesPath
-        )
         val testsDirectory = directoriesMock.assertWriteAndGetDirectory(
-            3,
+            2,
             paths.expectedTestsPath
         )
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
-        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
         assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
     }
 
