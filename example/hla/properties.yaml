@@ -18,10 +18,10 @@ profiles:
       src:
         default: "main"
         overrides:
-            - submodule: "Tests"
-              path: "Tests/test"
-            - submodule: "Fixtures"
-              path: "Tests/fixtures"
+          - submodules:
+              - "Tests"
+              - "Fixtures"
+            path: "Tests"
 
   - name: "cSharp"
     language: "C_SHARP"

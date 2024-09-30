@@ -151,6 +151,64 @@ class HlaFacadeTest {
         }
     }
 
+    class ShouldStartTypeScriptModuleArgsProvider: ArgumentsProvider {
+        fun typescriptTestPaths(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/typescript/main/$moduleName",
+                exampleFixturesPath = "../example/typescript/Tests/fixtures/$moduleName",
+                exampleTestsPath = "../example/typescript/Tests/test/$moduleName",
+                expectedMainPath = "../example/hla/../typescript/main",
+                expectedFixturesPath = "../example/hla/../typescript/Tests/fixtures",
+                expectedTestsPath = "../example/hla/../typescript/Tests/test",
+            )
+        }
+
+        fun typescript2TestPaths(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/typescript2/main/$moduleName",
+                exampleFixturesPath = "../example/typescript2/Tests/fixtures/$moduleName",
+                exampleTestsPath = "../example/typescript2/Tests/test/$moduleName",
+                expectedMainPath = "../example/hla2/../typescript2/main",
+                expectedFixturesPath = "../example/hla2/../typescript2/Tests/fixtures",
+                expectedTestsPath = "../example/hla2/../typescript2/Tests/test",
+                hlaFolderPath = "../example/hla2"
+            )
+        }
+
+        private val TYPE_SCRIPT_PROFILE = "typeScript"
+        private val TYPE_SCRIPT_2_PROFILE = "typeScript2"
+
+        override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
+            return Stream.of(
+                Arguments.of(
+                    "OtherModule",
+                    TYPE_SCRIPT_PROFILE,
+                    typescriptTestPaths("OtherModule")
+                ),
+                Arguments.of(
+                    "SomeModule",
+                    TYPE_SCRIPT_PROFILE,
+                    typescriptTestPaths("SomeModule")
+                ),
+                Arguments.of(
+                    "TypesModule",
+                    TYPE_SCRIPT_PROFILE,
+                    typescriptTestPaths("TypesModule")
+                ),
+                Arguments.of(
+                    "SimpleModule",
+                    TYPE_SCRIPT_PROFILE,
+                    typescriptTestPaths("SimpleModule")
+                ),
+                Arguments.of(
+                    "ImportingModule",
+                    TYPE_SCRIPT_2_PROFILE,
+                    typescript2TestPaths("ImportingModule")
+                ),
+            )
+        }
+    }
+
     //TODO-REF merge with ShouldStartModuleArgsProvider when cSharp will be fully integrated
     class ShouldStartCSharpModuleArgsProvider : ArgumentsProvider {
         fun cSharpTestPaths(moduleName: String): TestPaths {
@@ -250,8 +308,47 @@ class HlaFacadeTest {
     }
 
     @ParameterizedTest(name = "{0} ({1})")
+    @ArgumentsSource(ShouldStartTypeScriptModuleArgsProvider::class)
+    fun `should start TypeScript module`(
+        moduleName: String,
+        profileName: String,
+        paths: TestPaths
+    ) {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        //when
+        facade.startModule(
+            ModuleOperationArgs.create(
+                moduleName = ModuleName(moduleName),
+                profileName = ProfileName(profileName),
+                hlaFolderPath = Path(paths.hlaFolderPath),
+            )
+        )
+
+        //then
+        directoriesMock.assertWriteCount(3)
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            paths.expectedMainPath
+        )
+        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+            2,
+            paths.expectedFixturesPath
+        )
+        val testsDirectory = directoriesMock.assertWriteAndGetDirectory(
+            3,
+            paths.expectedTestsPath
+        )
+
+        assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
+        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
+        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
+    }
+
+    @ParameterizedTest(name = "{0} ({1})")
     @ArgumentsSource(ShouldStartCSharpModuleArgsProvider::class)
-    fun `should start c sharp module`(
+    fun `should start C# module`(
         moduleName: String,
         profileName: String,
         paths: TestPaths

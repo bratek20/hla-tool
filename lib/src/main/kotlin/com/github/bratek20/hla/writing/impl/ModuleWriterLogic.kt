@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.writing.impl
 
 import com.github.bratek20.hla.facade.api.HlaProfile
+import com.github.bratek20.hla.facade.api.HlaSrcPaths
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -23,6 +24,13 @@ fun calcSubmoduleDirectoryName(name: SubmoduleName, profile: HlaProfile): Direct
         return DirectoryName(name.name.lowercase())
     }
     return DirectoryName(name.name)
+}
+
+
+fun HlaSrcPaths.getPathForSubmodule(submodule: SubmoduleName): Path {
+    return getOverrides().firstOrNull {
+        it.getSubmodule() == submodule || it.getSubmodules().contains(submodule)
+    }?.getPath() ?: getDefault()
 }
 
 class ModuleWriterLogic(
@@ -52,10 +60,7 @@ class ModuleWriterLogic(
         val toWrite: MutableMap<Path, Directory> = mutableMapOf()
 
         module.getSubmodules().forEach { sub ->
-            val path = paths.getOverrides()
-                .firstOrNull { it.getSubmodule() == sub.getName() }
-                ?.getPath()
-                ?: paths.getDefault()
+            val path = paths.getPathForSubmodule(sub.getName())
 
             val currentDir = toWrite.computeIfAbsent(path) {
                 Directory.create(name = calcModuleDirectoryName(module.getName(), profile))
