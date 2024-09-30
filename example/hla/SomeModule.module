@@ -4,6 +4,12 @@ Enums
         VALUE_B
 
 CustomTypes
+    CustomAmount: int
+
+    CustomAmountRange
+        min: CustomAmount
+        max: CustomAmount
+
     DateRangeWrapper
         range: DateRange
 
@@ -132,6 +138,10 @@ Interfaces
     SomeInterface3
         referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
         referenceOtherInterface(other: OtherInterface): OtherInterface
+
+    TestCustomTypesInterface
+        testSimpleCustomType(t: CustomAmount): CustomAmount
+        testComplexCustomType(t: CustomAmountRange): CustomAmountRange
 
     SomeModuleHandlers
         SomeHandlerInput
