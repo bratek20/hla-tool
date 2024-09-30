@@ -15,8 +15,9 @@ Properties
         packageJsonPath: Path
 
     SubmodulePath
-        submodule: SubmoduleName
         path: Path
+        submodule: SubmoduleName? = empty
+        submodules: SubmoduleName[] = []
 
     HlaSrcPaths
         default: Path
