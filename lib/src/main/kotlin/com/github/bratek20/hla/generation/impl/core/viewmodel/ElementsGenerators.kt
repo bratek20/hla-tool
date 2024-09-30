@@ -75,8 +75,19 @@ class ViewModelField(
     val name: String
 ) {
     companion object {
-        fun fromDefs(defs: List<FieldDefinition>): List<ViewModelField> {
-            return defs.map { ViewModelField(it.getType().getName(), it.getName()) }
+        fun fromDefs(defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
+            return defs.map {
+                val baseTypeName = it.getType().getName()
+                val finalTypeName = if (it.getType().getWrappers().contains(TypeWrapper.LIST)) {
+                    mapper.mapViewModelWrappedTypeToListType(baseTypeName)
+                } else if (it.getType().getWrappers().contains(TypeWrapper.OPTIONAL)) {
+                    mapper.mapViewModelWrappedTypeToOptionalType(baseTypeName)
+                } else {
+                    baseTypeName
+                }
+
+                ViewModelField(finalTypeName, it.getName())
+            }
         }
     }
 }
@@ -94,7 +105,7 @@ class ViewModelElementLogic(
             result.add(ViewModelField(mapper.mapModelToViewModelTypeName(field.type), field.name))
         }
 
-        result.addAll(ViewModelField.fromDefs(def.getFields()))
+        result.addAll(ViewModelField.fromDefs(def.getFields(), mapper))
 
         return result
     }

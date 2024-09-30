@@ -32,8 +32,8 @@ class GeneratedWindowLogic(
         }
     }
 
-    fun getFields(): List<ViewModelField> {
-        return ViewModelField.fromDefs(def.getFields())
+    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
+        return ViewModelField.fromDefs(def.getFields(), mapper)
     }
 
     fun getWindowClass(): ClassBuilderOps = {
