@@ -11,15 +11,15 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class SomeClassView: ElementView<SomeClassVm> {
+    public class SomeWindowView: WindowView<SomeWindow> {
         [SerializeField]
-        LabelView id;
+        SomeClassView someClassVm;
         [SerializeField]
-        ButtonView button;
+        SomeClassView someClassVmList;
         protected override void OnBind() {
             base.OnBind();
-            id.Bind(ViewModel.Id);
-            button.Bind(ViewModel.Button);
+            someClassVm.Bind(ViewModel.SomeClassVm);
+            someClassVmList.Bind(ViewModel.SomeClassVmList);
         }
     }
 }

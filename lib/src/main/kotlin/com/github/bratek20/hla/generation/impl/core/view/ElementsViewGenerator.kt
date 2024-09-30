@@ -8,31 +8,32 @@ import com.github.bratek20.hla.generation.impl.core.PerFileOperations
 import com.github.bratek20.hla.generation.impl.core.api.ListApiType
 import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
-import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelElementLogic
+import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 
-class ElementViewLogic(
-    private val elem: ViewModelElementLogic,
-    private val mapper: ModelToViewModelTypeMapper
+abstract class BaseViewLogic(
+    protected val mapper: ModelToViewModelTypeMapper
 ) {
+    protected abstract fun getViewClassName(): String
+    protected abstract fun getViewModelTypeName(): String
+    protected abstract fun getFields(): List<ViewModelField>
+    protected abstract fun getExtendedClassName(): String
+
     fun getOps(): PerFileOperations {
-        val def = elem.def
-        val viewClassName = def.getModel().getName() + "View"
+        val viewClassName = getViewClassName()
         return PerFileOperations(viewClassName) {
             addClass {
                 name = viewClassName
                 extends {
-                    className = "ElementView"
+                    className = getExtendedClassName()
                     addGeneric {
-                        typeName(def.getName())
+                        typeName(getViewModelTypeName())
                     }
                 }
 
-                elem.getFields().forEach {
+                getFields().forEach {
                     addField {
                         mutable = true
-                        type = typeName(mapper.mapModelToViewTypeName(it.type))
+                        type = typeName(mapper.mapViewModelToViewTypeName(it.typeName))
                         name = it.name
 
                         addAnnotation("SerializeField")
@@ -50,7 +51,7 @@ class ElementViewLogic(
                             methodName = "onBind"
                         })
 
-                        elem.getFields().forEach {
+                        getFields().forEach {
                             add(methodCallStatement {
                                 target = variable(it.name)
                                 methodName = "bind"
@@ -66,6 +67,49 @@ class ElementViewLogic(
                 }
             }
         }
+    }
+}
+
+class ElementViewLogic(
+    val elem: ViewModelElementLogic,
+    mapper: ModelToViewModelTypeMapper
+): BaseViewLogic(mapper) {
+    override fun getViewClassName(): String {
+        return mapper.mapViewModelToViewTypeName(elem.getTypeName())
+    }
+
+    override fun getViewModelTypeName(): String {
+        return elem.getTypeName()
+    }
+
+    override fun getFields(): List<ViewModelField> {
+        return elem.getFields(mapper)
+    }
+
+    override fun getExtendedClassName(): String {
+        return "ElementView"
+    }
+
+}
+
+class WindowViewLogic(
+    val window: GeneratedWindowLogic,
+    mapper: ModelToViewModelTypeMapper
+): BaseViewLogic(mapper) {
+    override fun getViewClassName(): String {
+        return window.getClassName() + "View"
+    }
+
+    override fun getViewModelTypeName(): String {
+        return window.getClassName()
+    }
+
+    override fun getFields(): List<ViewModelField> {
+        return window.getFields()
+    }
+
+    override fun getExtendedClassName(): String {
+        return "WindowView"
     }
 }
 
@@ -133,7 +177,8 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
         val mapper = logic.mapper()
         return logic.elementsLogic().map { ElementViewLogic(it, mapper).getOps() } +
                 logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper).getOps() } +
-                logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper).getOps() }
+                logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper).getOps() } +
+                logic.windowsLogic().map { WindowViewLogic(it, mapper).getOps() }
     }
 
     override fun extraCSharpUsings(): List<String> {
