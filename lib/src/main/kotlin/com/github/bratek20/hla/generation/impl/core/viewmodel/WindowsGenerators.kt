@@ -15,6 +15,10 @@ class GeneratedWindowLogic(
     private val def: ViewModelWindowDefinition,
     private val apiTypeFactory: ApiTypeFactory
 ) {
+    fun getClassName(): String {
+        return def.getName()
+    }
+
     fun getState(): ClassBuilderOps = {
         name = def.getName() + "State"
 
@@ -26,6 +30,10 @@ class GeneratedWindowLogic(
                 fromConstructor = true
             }
         }
+    }
+
+    fun getFields(): List<ViewModelField> {
+        return ViewModelField.fromDefs(def.getFields())
     }
 
     fun getWindowClass(): ClassBuilderOps = {

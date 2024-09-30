@@ -70,10 +70,16 @@ class ViewModelSharedLogic(
     }
 }
 
-class ViewModelElementField(
+class ViewModelField(
     val typeName: String,
     val name: String
-)
+) {
+    companion object {
+        fun fromDefs(defs: List<FieldDefinition>): List<ViewModelField> {
+            return defs.map { ViewModelField(it.getType().getName(), it.getName()) }
+        }
+    }
+}
 
 class ViewModelElementLogic(
     val def: ViewModelElementDefinition,
@@ -82,14 +88,14 @@ class ViewModelElementLogic(
 ) {
     fun getTypeName(): String = def.getName()
 
-    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelElementField> {
-        val result = mutableListOf<ViewModelElementField>()
+    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
+        val result = mutableListOf<ViewModelField>()
         getMappedFields().forEach { field ->
-            result.add(ViewModelElementField(mapper.mapModelToViewModelTypeName(field.type), field.name))
+            result.add(ViewModelField(mapper.mapModelToViewModelTypeName(field.type), field.name))
         }
-        def.getFields().forEach { field ->
-            result.add(ViewModelElementField(field.getType().getName(), field.getName()))
-        }
+
+        result.addAll(ViewModelField.fromDefs(def.getFields()))
+
         return result
     }
 
