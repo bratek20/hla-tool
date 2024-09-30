@@ -5,6 +5,27 @@ package com.some.pkg.somemodule.api
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
+data class SerializedCustomAmountRange(
+    private val min: Int,
+    private val max: Int,
+) {
+    fun toCustomType(): CustomAmountRange {
+        return customAmountRangeCreate(
+            min = customAmountCreate(min),
+            max = customAmountCreate(max),
+        )
+    }
+
+    companion object {
+        fun fromCustomType(customType: CustomAmountRange): SerializedCustomAmountRange {
+            return SerializedCustomAmountRange(
+                min = customAmountGetValue(customAmountRangeGetMin(customType)),
+                max = customAmountGetValue(customAmountRangeGetMax(customType)),
+            )
+        }
+    }
+}
+
 data class SerializedDateRangeWrapper(
     private val range: SerializedDateRange,
 ) {

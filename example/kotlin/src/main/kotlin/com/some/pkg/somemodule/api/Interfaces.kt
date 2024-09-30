@@ -43,6 +43,12 @@ interface SomeInterface3 {
     fun referenceOtherInterface(other: OtherInterface): OtherInterface
 }
 
+interface TestCustomTypesInterface {
+    fun testSimpleCustomType(t: CustomAmount): CustomAmount
+
+    fun testComplexCustomType(t: CustomAmountRange): CustomAmountRange
+}
+
 interface SomeModuleHandlers {
     @Throws(
         SomeException::class,

@@ -24,6 +24,11 @@ fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
     return ""
 }
 
+fun diffCustomAmount(given: CustomAmount, expected: Int, path: String = ""): String {
+    if (customAmountGetValue(given) != expected) { return "${path}value ${customAmountGetValue(given)} != ${expected}" }
+    return ""
+}
+
 fun diffSomeEnum(given: SomeEnum, expected: String, path: String = ""): String {
     if (given != SomeEnum.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
     return ""
@@ -416,6 +421,25 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
     expected.customOpt?.let {
         if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedCustomAmountRange(
+    var min: Int? = null,
+    var max: Int? = null,
+)
+fun diffCustomAmountRange(given: CustomAmountRange, expectedInit: ExpectedCustomAmountRange.() -> Unit, path: String = ""): String {
+    val expected = ExpectedCustomAmountRange().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.min?.let {
+        if (diffCustomAmount(customAmountRangeGetMin(given), it) != "") { result.add(diffCustomAmount(customAmountRangeGetMin(given), it, "${path}min.")) }
+    }
+
+    expected.max?.let {
+        if (diffCustomAmount(customAmountRangeGetMax(given), it) != "") { result.add(diffCustomAmount(customAmountRangeGetMax(given), it, "${path}max.")) }
     }
 
     return result.joinToString("\n")

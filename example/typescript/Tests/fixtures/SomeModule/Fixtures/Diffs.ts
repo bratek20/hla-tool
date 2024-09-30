@@ -16,6 +16,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffCustomAmount(given: CustomAmount, expected: number, path: string = ""): string {
+        if (SomeModule.CustomTypesMapper.customAmountGetValue(given) != expected) { return `${path}value ${SomeModule.CustomTypesMapper.customAmountGetValue(given)} != ${expected}` }
+        return ""
+    }
+
     export function diffSomeEnum(given: SomeEnum, expected: string, path: string = ""): string {
         if (given != SomeEnum.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
         return ""
@@ -393,6 +398,24 @@ namespace SomeModule {
 
         if (expected.customOpt !== undefined) {
             if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedCustomAmountRange {
+        min?: number,
+        max?: number,
+    }
+    export function diffCustomAmountRange(given: CustomAmountRange, expected: ExpectedCustomAmountRange, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.min !== undefined) {
+            if (diffCustomAmount(SomeModule.CustomTypesMapper.customAmountRangeGetMin(given), expected.min) != "") { result.push(diffCustomAmount(SomeModule.CustomTypesMapper.customAmountRangeGetMin(given), expected.min, `${path}min.`)) }
+        }
+
+        if (expected.max !== undefined) {
+            if (diffCustomAmount(SomeModule.CustomTypesMapper.customAmountRangeGetMax(given), expected.max) != "") { result.push(diffCustomAmount(SomeModule.CustomTypesMapper.customAmountRangeGetMax(given), expected.max, `${path}max.`)) }
         }
 
         return result.join("\n")

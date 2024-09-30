@@ -41,6 +41,12 @@ namespace SomeModule.Api {
         OtherInterface ReferenceOtherInterface(OtherInterface other);
     }
 
+    public interface TestCustomTypesInterface {
+        CustomAmount TestSimpleCustomType(CustomAmount t);
+
+        CustomAmountRange TestComplexCustomType(CustomAmountRange t);
+    }
+
     public interface SomeModuleHandlers {
         /// <exception cref="SomeException"/>
         /// <exception cref="Some2Exception"/>

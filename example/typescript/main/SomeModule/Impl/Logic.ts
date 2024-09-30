@@ -78,6 +78,22 @@ namespace SomeModule.Impl {
         }
     }
 
+    export class TestCustomTypesInterfaceLogic implements TestCustomTypesInterface {
+        constructor(
+            private readonly c: HandlerContext,
+        ) {}
+
+        testSimpleCustomType(t: CustomAmount): CustomAmount {
+            // TODO
+            return undefined
+        }
+
+        testComplexCustomType(t: CustomAmountRange): CustomAmountRange {
+            // TODO
+            return undefined
+        }
+    }
+
     export class SomeModuleHandlersLogic implements SomeModuleHandlers {
         constructor(
             private readonly c: HandlerContext,

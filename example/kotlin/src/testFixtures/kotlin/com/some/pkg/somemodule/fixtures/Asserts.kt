@@ -28,6 +28,12 @@ fun assertSomeId2(given: SomeId2, expected: Int) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+
+fun assertCustomAmount(given: CustomAmount, expected: Int) {
+    val diff = diffCustomAmount(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit) {
     val diff = diffSomeClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -100,6 +106,11 @@ fun assertSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.(
 
 fun assertSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit) {
     val diff = diffSomeProperty2(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertCustomAmountRange(given: CustomAmountRange, expectedInit: ExpectedCustomAmountRange.() -> Unit) {
+    val diff = diffCustomAmountRange(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

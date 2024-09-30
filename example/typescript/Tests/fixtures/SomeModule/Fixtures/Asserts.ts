@@ -16,6 +16,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function customAmount(given: CustomAmount, expected: number) {
+        const diff = diffCustomAmount(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someClass(given: SomeClass, expected: ExpectedSomeClass) {
         const diff = diffSomeClass(given, expected)
         AssertEquals(diff, "", diff)
@@ -88,6 +93,11 @@ namespace SomeModule.Assert {
 
     export function someProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2) {
         const diff = diffSomeProperty2(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function customAmountRange(given: CustomAmountRange, expected: ExpectedCustomAmountRange) {
+        const diff = diffCustomAmountRange(given, expected)
         AssertEquals(diff, "", diff)
     }
 

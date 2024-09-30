@@ -58,6 +58,16 @@ class SomeInterface3Logic: SomeInterface3 {
     }
 }
 
+class TestCustomTypesInterfaceLogic: TestCustomTypesInterface {
+    override fun testSimpleCustomType(t: CustomAmount): CustomAmount {
+        TODO("Not yet implemented")
+    }
+
+    override fun testComplexCustomType(t: CustomAmountRange): CustomAmountRange {
+        TODO("Not yet implemented")
+    }
+}
+
 class SomeModuleHandlersLogic: SomeModuleHandlers {
     override fun someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         TODO("Not yet implemented")

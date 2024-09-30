@@ -38,6 +38,12 @@ interface SomeInterface3 {
     referenceOtherInterface(other: OtherInterface): OtherInterface
 }
 
+interface TestCustomTypesInterface {
+    testSimpleCustomType(t: CustomAmount): CustomAmount
+
+    testComplexCustomType(t: CustomAmountRange): CustomAmountRange
+}
+
 interface SomeModuleHandlers {
     /**
      * @throws { SomeException }

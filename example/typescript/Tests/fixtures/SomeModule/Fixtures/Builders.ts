@@ -13,6 +13,10 @@ namespace SomeModule.Builder {
         return new SomeId2(value)
     }
 
+    export function customAmount(value: number = 0): CustomAmount {
+        return SomeModule.CustomTypesMapper.customAmountCreate(value)
+    }
+
     export interface SomeClassDef {
         id?: string,
         amount?: number,
@@ -259,6 +263,20 @@ namespace SomeModule.Builder {
             final_custom,
             SomeEnum.fromName(final_someEnum).get(),
             Optional.of(final_customOpt),
+        )
+    }
+
+    export interface CustomAmountRangeDef {
+        min?: number,
+        max?: number,
+    }
+    export function customAmountRange(def?: CustomAmountRangeDef): CustomAmountRange {
+        const final_min = def?.min ?? 0
+        const final_max = def?.max ?? 0
+
+        return SomeModule.CustomTypesMapper.customAmountRangeCreate(
+            SomeModule.CustomTypesMapper.customAmountCreate(final_min),
+            SomeModule.CustomTypesMapper.customAmountCreate(final_max),
         )
     }
 

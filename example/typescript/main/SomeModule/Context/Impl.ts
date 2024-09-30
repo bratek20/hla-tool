@@ -44,6 +44,14 @@ namespace SomeModule.Api {
         return new Impl.SomeInterface3Logic(c).referenceOtherInterface(other)
     }
 
+    export function testSimpleCustomType(t: CustomAmount, c: HandlerContext): CustomAmount {
+        return new Impl.TestCustomTypesInterfaceLogic(c).testSimpleCustomType(t)
+    }
+
+    export function testComplexCustomType(t: CustomAmountRange, c: HandlerContext): CustomAmountRange {
+        return new Impl.TestCustomTypesInterfaceLogic(c).testComplexCustomType(t)
+    }
+
     export function someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
         return new Impl.SomeModuleHandlersLogic(c).someHandler(i)
     }

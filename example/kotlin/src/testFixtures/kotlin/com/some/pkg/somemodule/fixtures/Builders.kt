@@ -21,6 +21,10 @@ fun someId2(value: Int = 0): SomeId2 {
     return SomeId2(value)
 }
 
+fun customAmount(value: Int = 0): CustomAmount {
+    return customAmountCreate(value)
+}
+
 data class SomeClassDef(
     var id: String = "someValue",
     var amount: Int = 10,
@@ -224,6 +228,18 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
         custom = def.custom,
         someEnum = SomeEnum.valueOf(def.someEnum),
         customOpt = def.customOpt,
+    )
+}
+
+data class CustomAmountRangeDef(
+    var min: Int = 0,
+    var max: Int = 0,
+)
+fun customAmountRange(init: CustomAmountRangeDef.() -> Unit = {}): CustomAmountRange {
+    val def = CustomAmountRangeDef().apply(init)
+    return customAmountRangeCreate(
+        min = customAmountCreate(def.min),
+        max = customAmountCreate(def.max),
     )
 }
 
