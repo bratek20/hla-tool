@@ -15,7 +15,7 @@ namespace SomeModule.View {
         [SerializeField]
         SomeClassView someClassVm;
         [SerializeField]
-        SomeClassView someClassVmList;
+        SomeClassGroupView someClassVmList;
         protected override void OnBind() {
             base.OnBind();
             someClassVm.Bind(ViewModel.SomeClassVm);

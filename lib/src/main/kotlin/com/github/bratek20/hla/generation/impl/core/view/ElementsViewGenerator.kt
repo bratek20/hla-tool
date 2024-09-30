@@ -105,7 +105,7 @@ class WindowViewLogic(
     }
 
     override fun getFields(): List<ViewModelField> {
-        return window.getFields()
+        return window.getFields(mapper)
     }
 
     override fun getExtendedClassName(): String {

@@ -22,6 +22,16 @@ class ModelToViewModelTypeMapper(
         return viewModelType + "View"
     }
 
+    fun mapViewModelWrappedTypeToListType(viewModelType: String): String {
+        val modelType = mapViewModelToModelType(viewModelType)
+        return mapModelToViewModelTypeName(ListApiType(modelType))
+    }
+
+    fun mapViewModelWrappedTypeToOptionalType(viewModelType: String): String {
+        val modelType = mapViewModelToModelType(viewModelType)
+        return mapModelToViewModelTypeName(OptionalApiType(modelType))
+    }
+
     fun mapViewModelToModelType(viewModelType: String): ApiType {
         return viewModelElements.first { it.getTypeName() == viewModelType }.modelType
     }
