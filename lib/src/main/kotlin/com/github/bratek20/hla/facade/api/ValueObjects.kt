@@ -118,25 +118,32 @@ data class TypeScriptConfig(
 }
 
 data class SubmodulePath(
-    private val submodule: String,
     private val path: String,
+    private val submodule: String? = null,
+    private val submodules: List<String> = emptyList(),
 ) {
-    fun getSubmodule(): SubmoduleName {
-        return SubmoduleName.valueOf(this.submodule)
-    }
-
     fun getPath(): Path {
         return pathCreate(this.path)
     }
 
+    fun getSubmodule(): SubmoduleName? {
+        return this.submodule?.let { it -> SubmoduleName.valueOf(it) }
+    }
+
+    fun getSubmodules(): List<SubmoduleName> {
+        return this.submodules.map { it -> SubmoduleName.valueOf(it) }
+    }
+
     companion object {
         fun create(
-            submodule: SubmoduleName,
             path: Path,
+            submodule: SubmoduleName? = null,
+            submodules: List<SubmoduleName> = emptyList(),
         ): SubmodulePath {
             return SubmodulePath(
-                submodule = submodule.name,
                 path = pathGetValue(path),
+                submodule = submodule?.let { it -> it.name },
+                submodules = submodules.map { it -> it.name },
             )
         }
     }

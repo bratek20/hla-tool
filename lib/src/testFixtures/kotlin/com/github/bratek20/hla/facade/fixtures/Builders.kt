@@ -60,14 +60,16 @@ fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfi
 }
 
 data class SubmodulePathDef(
-    var submodule: String = SubmoduleName.Api.name,
     var path: String = "someValue",
+    var submodule: String? = null,
+    var submodules: List<String> = emptyList(),
 )
 fun submodulePath(init: SubmodulePathDef.() -> Unit = {}): SubmodulePath {
     val def = SubmodulePathDef().apply(init)
     return SubmodulePath.create(
-        submodule = SubmoduleName.valueOf(def.submodule),
         path = pathCreate(def.path),
+        submodule = def.submodule?.let { it -> SubmoduleName.valueOf(it) },
+        submodules = def.submodules.map { it -> SubmoduleName.valueOf(it) },
     )
 }
 

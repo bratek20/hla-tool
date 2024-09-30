@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.writing.impl
 
 import com.github.bratek20.hla.facade.api.HlaProfile
+import com.github.bratek20.hla.facade.api.HlaSrcPaths
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.TypeScriptConfig
 import com.github.bratek20.hla.generation.api.GeneratedModule
@@ -10,7 +11,7 @@ import com.github.bratek20.hla.writing.api.WriteArgs
 import com.github.bratek20.utils.directory.api.*
 
 private fun getSubmodulePath(profile: HlaProfile, submodule: SubmoduleName): Path {
-    return profile.getPaths().getSrc().getOverrides().first { it.getSubmodule() == submodule }.getPath()
+    return profile.getPaths().getSrc().getPathForSubmodule(submodule)
 }
 
 //TODO-REF GenerateResult is legacy structure, should be removed and use new concept of GeneratedModule

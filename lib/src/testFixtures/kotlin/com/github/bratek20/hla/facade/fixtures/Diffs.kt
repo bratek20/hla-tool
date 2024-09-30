@@ -97,19 +97,30 @@ fun diffTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScri
 }
 
 data class ExpectedSubmodulePath(
-    var submodule: String? = null,
     var path: String? = null,
+    var submoduleEmpty: Boolean? = null,
+    var submodule: String? = null,
+    var submodules: List<String>? = null,
 )
 fun diffSubmodulePath(given: SubmodulePath, expectedInit: ExpectedSubmodulePath.() -> Unit, path: String = ""): String {
     val expected = ExpectedSubmodulePath().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.submodule?.let {
-        if (diffSubmoduleName(given.getSubmodule(), it) != "") { result.add(diffSubmoduleName(given.getSubmodule(), it, "${path}submodule.")) }
-    }
-
     expected.path?.let {
         if (diffPath(given.getPath(), it) != "") { result.add(diffPath(given.getPath(), it, "${path}path.")) }
+    }
+
+    expected.submoduleEmpty?.let {
+        if ((given.getSubmodule() == null) != it) { result.add("${path}submodule empty ${(given.getSubmodule() == null)} != ${it}") }
+    }
+
+    expected.submodule?.let {
+        if (diffSubmoduleName(given.getSubmodule()!!, it) != "") { result.add(diffSubmoduleName(given.getSubmodule()!!, it, "${path}submodule.")) }
+    }
+
+    expected.submodules?.let {
+        if (given.getSubmodules().size != it.size) { result.add("${path}submodules size ${given.getSubmodules().size} != ${it.size}"); return@let }
+        given.getSubmodules().forEachIndexed { idx, entry -> if (diffSubmoduleName(entry, it[idx]) != "") { result.add(diffSubmoduleName(entry, it[idx], "${path}submodules[${idx}].")) } }
     }
 
     return result.joinToString("\n")
