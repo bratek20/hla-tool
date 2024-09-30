@@ -11,7 +11,19 @@ class ModelToViewModelTypeMapper(
         if (knownViewModel != null) {
             return mapModelToViewTypeName(knownViewModel.modelType)
         }
+        if (viewModelType.endsWith("Group")) {
+            val wrappedTypeName = viewModelType.replace("Group", "")
+            return mapViewModelToModelType(wrappedTypeName).name() + "GroupView"
+        }
+        if (viewModelType.startsWith("Optional")) {
+            val wrappedTypeName = viewModelType.replace("Optional", "")
+            return "Optional" + mapViewModelToViewTypeName(wrappedTypeName)
+        }
         return viewModelType + "View"
+    }
+
+    fun mapViewModelToModelType(viewModelType: String): ApiType {
+        return viewModelElements.first { it.getTypeName() == viewModelType }.modelType
     }
 
     fun mapModelToViewTypeName(modelType: ApiType): String {

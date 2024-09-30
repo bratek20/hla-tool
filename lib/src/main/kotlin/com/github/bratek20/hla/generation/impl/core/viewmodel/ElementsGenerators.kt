@@ -84,13 +84,12 @@ class ViewModelElementLogic(
 
     fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelElementField> {
         val result = mutableListOf<ViewModelElementField>()
-        def.getFields().forEach { field ->
-            result.add(ViewModelElementField(field.getType().getName(), field.getName()))
-        }
         getMappedFields().forEach { field ->
             result.add(ViewModelElementField(mapper.mapModelToViewModelTypeName(field.type), field.name))
         }
-
+        def.getFields().forEach { field ->
+            result.add(ViewModelElementField(field.getType().getName(), field.getName()))
+        }
         return result
     }
 
