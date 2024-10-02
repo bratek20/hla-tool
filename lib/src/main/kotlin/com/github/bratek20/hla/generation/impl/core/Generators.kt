@@ -137,6 +137,10 @@ abstract class PatternGenerator
         return false
     }
 
+    open fun generateFiles(): List<File> {
+        return emptyList()
+    }
+
     private fun generateFileContent(ops: TopLevelCodeBuilderOps): FileContent {
         val cb = CodeBuilder(c.language.base())
         when (c.language.name()) {
@@ -195,6 +199,16 @@ abstract class PatternGenerator
     }
 
     fun generatePatterns(): List<GeneratedPattern> {
+        val files = generateFiles()
+        if (files.isNotEmpty()) {
+            return files.map {
+                GeneratedPattern.create(
+                    name = patternName(),
+                    file = it
+                )
+            }
+        }
+
         // legacy support
         if (!supportsCodeBuilder()) {
             try {

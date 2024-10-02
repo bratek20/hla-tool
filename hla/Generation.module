@@ -5,6 +5,7 @@ Enums
         Web
         ViewModel
         View
+        Prefabs
         Context
         Fixtures
         Tests
@@ -41,6 +42,9 @@ Enums
 
         //view
         ElementsView
+
+        //prefabs
+        PrefabJson
 
         //context
         Impl
