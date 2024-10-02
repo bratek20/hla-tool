@@ -1,0 +1,11 @@
+ValueObjects
+    PrefabChildBlueprint
+
+    PrefabBlueprint
+        prefabName: string
+        viewType: string
+        children: PrefabChildBlueprint[]
+
+Interfaces
+    PrefabCreatorApi
+        startModule()
