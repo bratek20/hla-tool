@@ -16,7 +16,7 @@ class PrefabsGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            PrefabJsonGenerator(),
+            PrefabBlueprintsGenerator(),
         )
     }
 }

@@ -5,28 +5,26 @@ package com.github.bratek20.hla.prefabcreator.fixtures
 import com.github.bratek20.hla.prefabcreator.api.*
 
 data class PrefabChildBlueprintDef(
-    var prefabPath: String = "someValue",
-    var viewType: String = "someValue",
     var name: String = "someValue",
+    var viewType: String = "someValue",
 )
 fun prefabChildBlueprint(init: PrefabChildBlueprintDef.() -> Unit = {}): PrefabChildBlueprint {
     val def = PrefabChildBlueprintDef().apply(init)
     return PrefabChildBlueprint.create(
-        prefabPath = def.prefabPath,
-        viewType = def.viewType,
         name = def.name,
+        viewType = def.viewType,
     )
 }
 
 data class PrefabBlueprintDef(
-    var prefabName: String = "someValue",
+    var name: String = "someValue",
     var viewType: String = "someValue",
     var children: List<(PrefabChildBlueprintDef.() -> Unit)> = emptyList(),
 )
 fun prefabBlueprint(init: PrefabBlueprintDef.() -> Unit = {}): PrefabBlueprint {
     val def = PrefabBlueprintDef().apply(init)
     return PrefabBlueprint.create(
-        prefabName = def.prefabName,
+        name = def.name,
         viewType = def.viewType,
         children = def.children.map { it -> prefabChildBlueprint(it) },
     )

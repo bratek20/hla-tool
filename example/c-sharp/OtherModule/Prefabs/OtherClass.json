@@ -1,15 +1,14 @@
 {
-  "prefabName": "OtherClass",
+  "name": "OtherClass",
   "viewType": "OtherModule.View.OtherClassView",
   "children": [
     {
       "name": "id",
-      "viewType": "OtherModule.View.OtherClassIdView",
-      "prefabPath": "OtherModule.Prefabs.OtherClassId"
+      "viewType": "B20.Frontend.Elements.View.LabelView"
     },
     {
       "name": "amount",
-      "prefabPath": "OtherModule.Prefabs.OtherClassId"
+      "viewType": "B20.Frontend.Elements.View.LabelView"
     }
   ]
 }

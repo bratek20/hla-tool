@@ -44,7 +44,7 @@ Enums
         ElementsView
 
         //prefabs
-        PrefabJson
+        PrefabBlueprints
 
         //context
         Impl

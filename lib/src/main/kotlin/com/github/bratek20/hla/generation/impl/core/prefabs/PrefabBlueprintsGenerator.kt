@@ -6,9 +6,9 @@ import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
 
-class PrefabJsonGenerator: PatternGenerator() {
+class PrefabBlueprintsGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
-        return PatternName.PrefabJson
+        return PatternName.PrefabBlueprints
     }
 
     override fun generateFiles(): List<File> {
@@ -17,16 +17,16 @@ class PrefabJsonGenerator: PatternGenerator() {
                 name = FileName("OtherClass.json"),
                 content = FileContent.fromString("""
                     {
-                      "prefabName": "OtherClass",
-                      "viewTypeName": "OtherModule.View.OtherClassView",
+                      "name": "OtherClass",
+                      "viewType": "OtherModule.View.OtherClassView",
                       "children": [
                         {
                           "name": "id",
-                          "prefabPath": "OtherModule.Prefabs.OtherClassId"
+                          "viewType": "B20.Frontend.Elements.View.LabelView"
                         },
                         {
                           "name": "amount",
-                          "prefabPath": "OtherModule.Prefabs.OtherClassId"
+                          "viewType": "B20.Frontend.Elements.View.LabelView"
                         }
                       ]
                     }

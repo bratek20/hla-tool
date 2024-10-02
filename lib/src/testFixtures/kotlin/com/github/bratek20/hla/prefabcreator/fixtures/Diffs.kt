@@ -5,31 +5,26 @@ package com.github.bratek20.hla.prefabcreator.fixtures
 import com.github.bratek20.hla.prefabcreator.api.*
 
 data class ExpectedPrefabChildBlueprint(
-    var prefabPath: String? = null,
-    var viewType: String? = null,
     var name: String? = null,
+    var viewType: String? = null,
 )
 fun diffPrefabChildBlueprint(given: PrefabChildBlueprint, expectedInit: ExpectedPrefabChildBlueprint.() -> Unit, path: String = ""): String {
     val expected = ExpectedPrefabChildBlueprint().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.prefabPath?.let {
-        if (given.getPrefabPath() != it) { result.add("${path}prefabPath ${given.getPrefabPath()} != ${it}") }
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
     }
 
     expected.viewType?.let {
         if (given.getViewType() != it) { result.add("${path}viewType ${given.getViewType()} != ${it}") }
     }
 
-    expected.name?.let {
-        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
-    }
-
     return result.joinToString("\n")
 }
 
 data class ExpectedPrefabBlueprint(
-    var prefabName: String? = null,
+    var name: String? = null,
     var viewType: String? = null,
     var children: List<(ExpectedPrefabChildBlueprint.() -> Unit)>? = null,
 )
@@ -37,8 +32,8 @@ fun diffPrefabBlueprint(given: PrefabBlueprint, expectedInit: ExpectedPrefabBlue
     val expected = ExpectedPrefabBlueprint().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.prefabName?.let {
-        if (given.getPrefabName() != it) { result.add("${path}prefabName ${given.getPrefabName()} != ${it}") }
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
     }
 
     expected.viewType?.let {

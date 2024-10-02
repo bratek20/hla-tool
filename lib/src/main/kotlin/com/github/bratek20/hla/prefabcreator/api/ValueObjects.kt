@@ -3,44 +3,37 @@
 package com.github.bratek20.hla.prefabcreator.api
 
 data class PrefabChildBlueprint(
-    private val prefabPath: String,
-    private val viewType: String,
     private val name: String,
+    private val viewType: String,
 ) {
-    fun getPrefabPath(): String {
-        return this.prefabPath
+    fun getName(): String {
+        return this.name
     }
 
     fun getViewType(): String {
         return this.viewType
     }
 
-    fun getName(): String {
-        return this.name
-    }
-
     companion object {
         fun create(
-            prefabPath: String,
-            viewType: String,
             name: String,
+            viewType: String,
         ): PrefabChildBlueprint {
             return PrefabChildBlueprint(
-                prefabPath = prefabPath,
-                viewType = viewType,
                 name = name,
+                viewType = viewType,
             )
         }
     }
 }
 
 data class PrefabBlueprint(
-    private val prefabName: String,
+    private val name: String,
     private val viewType: String,
     private val children: List<PrefabChildBlueprint>,
 ) {
-    fun getPrefabName(): String {
-        return this.prefabName
+    fun getName(): String {
+        return this.name
     }
 
     fun getViewType(): String {
@@ -53,12 +46,12 @@ data class PrefabBlueprint(
 
     companion object {
         fun create(
-            prefabName: String,
+            name: String,
             viewType: String,
             children: List<PrefabChildBlueprint>,
         ): PrefabBlueprint {
             return PrefabBlueprint(
-                prefabName = prefabName,
+                name = name,
                 viewType = viewType,
                 children = children,
             )

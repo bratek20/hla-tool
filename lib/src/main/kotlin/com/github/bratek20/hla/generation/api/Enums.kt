@@ -34,7 +34,7 @@ enum class PatternName {
     GeneratedWindows,
     WindowsLogic,
     ElementsView,
-    PrefabJson,
+    PrefabBlueprints,
     Impl,
     Web,
     Builders,
