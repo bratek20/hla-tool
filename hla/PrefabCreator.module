@@ -1,11 +1,10 @@
 ValueObjects
     PrefabChildBlueprint
-        prefabPath: string
-        viewType: string
         name: string
+        viewType: string
 
     PrefabBlueprint
-        prefabName: string
+        name: string
         viewType: string
         children: PrefabChildBlueprint[]
 

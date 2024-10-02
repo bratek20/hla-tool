@@ -1,9 +1,10 @@
 {
   "prefabName": "OtherClass",
-  "viewTypeName": "OtherModule.View.OtherClassView",
+  "viewType": "OtherModule.View.OtherClassView",
   "children": [
     {
       "name": "id",
+      "viewType": "OtherModule.View.OtherClassIdView",
       "prefabPath": "OtherModule.Prefabs.OtherClassId"
     },
     {
