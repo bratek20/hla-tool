@@ -6,7 +6,7 @@ import com.some.pkg.othermodule.fixtures.otherClass
 import com.some.pkg.somemodule.api.SomeInterface2
 import graveyard.SomeInterface2Mock
 import graveyard.SomeModuleMocks
-import io.kotest.matchers.shouldBe
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -42,7 +42,7 @@ class MocksTest {
 
     @Test
     fun setResult() {
-        someInterface2.referenceOtherClass(otherClass()) shouldBe otherClass()
+        assertThat(someInterface2.referenceOtherClass(otherClass())).isEqualTo(otherClass())
 
         someInterface2Mock.setReferenceOtherClassResponse({ id = 1 }, { id = 2 })
         someInterface2Mock.setReferenceOtherClassResponse({ id = 2; amount = 2 }, { id = 3 })

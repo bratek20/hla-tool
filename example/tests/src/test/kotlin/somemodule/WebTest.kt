@@ -1,5 +1,6 @@
 package somemodule
 
+import com.github.bratek20.architecture.context.api.ContextBuilder
 import com.github.bratek20.architecture.context.api.ContextModule
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.infrastructure.httpclient.context.HttpClientImpl
@@ -11,8 +12,8 @@ import com.some.pkg.somemodule.context.SomeModuleWebClient
 import com.some.pkg.somemodule.web.SomeInterfaceController
 
 class TestSomeModuleWebServer: WebServerModule {
-    override fun getImpl(): ContextModule {
-        return TestSomeModuleImpl()
+    override fun apply(builder: ContextBuilder) {
+        builder.withModule(TestSomeModuleImpl())
     }
 
     override fun getControllers(): List<Class<*>> {
