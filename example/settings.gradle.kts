@@ -4,7 +4,7 @@ include("kotlin")
 include("kotlin2")
 include("tests")
 
-val catalogVersion = "1.0.41"
+val b20Version = "1.0.66"
 
 pluginManagement {
     repositories {
@@ -31,7 +31,7 @@ pluginManagement {
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            from("com.github.bratek20:version-catalog:$catalogVersion")
+            from("com.github.bratek20:version-catalog:$b20Version")
         }
     }
 
