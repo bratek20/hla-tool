@@ -2,7 +2,7 @@ rootProject.name = "hla"
 
 includeBuild("example")
 
-val catalogVersion = "1.0.42"
+val b20Version = "1.0.66"
 
 pluginManagement {
     repositories {
@@ -29,7 +29,7 @@ pluginManagement {
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            from("com.github.bratek20:version-catalog:$catalogVersion")
+            from("com.github.bratek20:version-catalog:$b20Version")
         }
     }
 
