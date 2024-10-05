@@ -21,8 +21,8 @@ class ${moduleName}WebClient(
 }
 
 class ${moduleName}WebServer: WebServerModule {
-    override fun getImpl(): ContextModule {
-        return ${moduleName}Impl()
+    override fun apply(builder: ContextBuilder) {
+        builder.withModule(${moduleName}Impl())
     }
 
     override fun getControllers(): List<Class<*>> {
