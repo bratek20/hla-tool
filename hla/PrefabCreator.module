@@ -1,13 +1,24 @@
+Enums
+    BlueprintType
+        UiElement
+        Window
+        ElementGroup
+        OptionalElement
+
 ValueObjects
     PrefabChildBlueprint
         name: string
         viewType: string
 
     PrefabBlueprint
+        blueprintType: BlueprintType
         name: string
         viewType: string
-        children: PrefabChildBlueprint[]
+        creationOrder: int
+        children: PrefabChildBlueprint[] = [] // only used for UiElement and Window
+        elementViewType: string? = empty // only set for ElementGroup and OptionalElement
 
 Interfaces
     PrefabCreatorApi
-        startModule(modulesPath: string, moduleName: string)
+        startModulePrefabs(modulesPath: string, moduleName: string)
+        deleteModulePrefabs(modulesPath: string, moduleName: string)

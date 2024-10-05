@@ -17,15 +17,21 @@ fun prefabChildBlueprint(init: PrefabChildBlueprintDef.() -> Unit = {}): PrefabC
 }
 
 data class PrefabBlueprintDef(
+    var blueprintType: String = BlueprintType.UiElement.name,
     var name: String = "someValue",
     var viewType: String = "someValue",
+    var creationOrder: Int = 0,
     var children: List<(PrefabChildBlueprintDef.() -> Unit)> = emptyList(),
+    var elementViewType: String? = null,
 )
 fun prefabBlueprint(init: PrefabBlueprintDef.() -> Unit = {}): PrefabBlueprint {
     val def = PrefabBlueprintDef().apply(init)
     return PrefabBlueprint.create(
+        blueprintType = BlueprintType.valueOf(def.blueprintType),
         name = def.name,
         viewType = def.viewType,
+        creationOrder = def.creationOrder,
         children = def.children.map { it -> prefabChildBlueprint(it) },
+        elementViewType = def.elementViewType,
     )
 }

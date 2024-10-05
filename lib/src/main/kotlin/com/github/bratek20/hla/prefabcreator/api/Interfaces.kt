@@ -3,5 +3,7 @@
 package com.github.bratek20.hla.prefabcreator.api
 
 interface PrefabCreatorApi {
-    fun startModule(modulesPath: String, moduleName: String): Unit
+    fun startModulePrefabs(modulesPath: String, moduleName: String): Unit
+
+    fun deleteModulePrefabs(modulesPath: String, moduleName: String): Unit
 }

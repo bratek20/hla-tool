@@ -28,10 +28,17 @@ data class PrefabChildBlueprint(
 }
 
 data class PrefabBlueprint(
+    private val blueprintType: String,
     private val name: String,
     private val viewType: String,
-    private val children: List<PrefabChildBlueprint>,
+    private val creationOrder: Int,
+    private val children: List<PrefabChildBlueprint> = emptyList(),
+    private val elementViewType: String? = null,
 ) {
+    fun getBlueprintType(): BlueprintType {
+        return BlueprintType.valueOf(this.blueprintType)
+    }
+
     fun getName(): String {
         return this.name
     }
@@ -40,20 +47,34 @@ data class PrefabBlueprint(
         return this.viewType
     }
 
+    fun getCreationOrder(): Int {
+        return this.creationOrder
+    }
+
     fun getChildren(): List<PrefabChildBlueprint> {
         return this.children
     }
 
+    fun getElementViewType(): String? {
+        return this.elementViewType
+    }
+
     companion object {
         fun create(
+            blueprintType: BlueprintType,
             name: String,
             viewType: String,
-            children: List<PrefabChildBlueprint>,
+            creationOrder: Int,
+            children: List<PrefabChildBlueprint> = emptyList(),
+            elementViewType: String? = null,
         ): PrefabBlueprint {
             return PrefabBlueprint(
+                blueprintType = blueprintType.name,
                 name = name,
                 viewType = viewType,
+                creationOrder = creationOrder,
                 children = children,
+                elementViewType = elementViewType,
             )
         }
     }
