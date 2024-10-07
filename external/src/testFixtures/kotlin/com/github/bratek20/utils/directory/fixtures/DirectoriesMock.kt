@@ -1,6 +1,7 @@
 package com.github.bratek20.utils.directory.fixtures
 
 import com.github.bratek20.utils.directory.api.*
+import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.utils.directory.impl.FilesLogic
 import org.assertj.core.api.Assertions.assertThat
 
@@ -22,7 +23,7 @@ class DirectoriesMock: Directories {
     }
 
     override fun read(path: Path): Directory {
-        TODO("Not yet implemented")
+        return DirectoriesLogic().read(path)
     }
 
     override fun delete(path: Path) {
