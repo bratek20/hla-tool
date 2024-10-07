@@ -13,9 +13,9 @@ dependencies {
     implementation(libs.bratek20.logs.logback)
     testImplementation(testFixtures(libs.bratek20.logs.logback))
 
-    api(project(":external"))
-    testFixturesImplementation(testFixtures(project(":external")))
-    testImplementation(testFixtures(project(":external")))
+    api(libs.bratek20.utils)
+    testFixturesImplementation(testFixtures(libs.bratek20.utils))
+    testImplementation(testFixtures(libs.bratek20.utils))
 
     implementation(project(":code-builder"))
 }
