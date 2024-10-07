@@ -1,9 +1,0 @@
-profiles:
-  - name: "utils"
-    language: "KOTLIN"
-    paths:
-      project: ".."
-      src:
-        main: "src/main/kotlin/com/github/bratek20/utils"
-        test: "src/test/kotlin/com/github/bratek20/utils"
-        fixtures: "src/testFixtures/kotlin/com/github/bratek20/utils"
