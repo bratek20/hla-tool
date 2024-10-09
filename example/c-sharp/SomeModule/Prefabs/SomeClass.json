@@ -1,7 +1,7 @@
 {
   "blueprintType": "UiElement",
   "name": "SomeClass",
-  "viewType": "OtherModule.View.SomeClassView",
+  "viewType": "SomeModule.View.SomeClassView",
   "creationOrder": 1,
   "children": [
     {
@@ -10,7 +10,7 @@
     },
     {
       "name": "button",
-      "viewType": "OtherModule.View.ButtonView"
+      "viewType": "B20.Frontend.Elements.View.ButtonView"
     }
   ],
   "elementViewType": null
