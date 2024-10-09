@@ -1,4 +1,0 @@
-package directory
-
-class SomeFile {
-}

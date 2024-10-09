@@ -1,5 +1,0 @@
-ValueObjects
-    OtherId: string
-    OtherClass
-        id: OtherId
-        amount: int

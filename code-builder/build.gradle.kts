@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":external"))
+    implementation(libs.bratek20.utils)
 }
