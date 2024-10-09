@@ -1,0 +1,17 @@
+{
+  "blueprintType": "UiElement",
+  "name": "SomeClass",
+  "viewType": "OtherModule.View.SomeClassView",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "id",
+      "viewType": "B20.Frontend.Elements.View.LabelView"
+    },
+    {
+      "name": "button",
+      "viewType": "OtherModule.View.ButtonView"
+    }
+  ],
+  "elementViewType": null
+}
