@@ -109,4 +109,12 @@ class ModelToViewModelTypeMapper(
             BaseType.ANY -> throw IllegalArgumentException("Any is not supported in view models")
         }
     }
+
+    fun mapViewModelToFullViewTypeName(viewModelTypeName: String): String {
+        val viewType = mapViewModelToViewTypeName(viewModelTypeName)
+        if (viewType == "LabelView") {
+            return "B20.Frontend.Elements.View.LabelView"
+        }
+        return "OtherModule.View.$viewType"
+    }
 }
