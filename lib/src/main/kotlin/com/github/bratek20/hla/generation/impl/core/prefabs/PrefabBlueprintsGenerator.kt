@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.prefabs
 
+import com.github.bratek20.architecture.serialization.api.SerializerConfig
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -33,7 +34,10 @@ class PrefabBlueprintsGenerator: PatternGenerator() {
             )
         )
 
-        val serializer = SerializationFactory.createSerializer()
+        val serializer = SerializationFactory.createSerializer(SerializerConfig.create(
+            readable = true,
+        ))
+
         val serialized = serializer.serialize(blueprint)
         return listOf(
             File.create(

@@ -12,5 +12,6 @@
       "name": "amount",
       "viewType": "B20.Frontend.Elements.View.LabelView"
     }
-  ]
+  ],
+  "elementViewType": null
 }
