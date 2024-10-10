@@ -15,6 +15,10 @@ class GeneratedWindowLogic(
     private val def: ViewModelWindowDefinition,
     private val apiTypeFactory: ApiTypeFactory
 ) {
+    fun getModuleName(): String {
+        return apiTypeFactory.modules.currentModule.getName().value
+    }
+
     fun getClassName(): String {
         return def.getName()
     }

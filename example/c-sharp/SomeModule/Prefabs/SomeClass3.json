@@ -1,0 +1,21 @@
+{
+  "blueprintType": "UiElement",
+  "name": "SomeClass3",
+  "viewType": "SomeModule.View.SomeClass3View",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "class2Object",
+      "viewType": "SomeModule.View.SomeClass2View"
+    },
+    {
+      "name": "someEnum",
+      "viewType": "B20.Frontend.Elements.View.EnumSwitchView"
+    },
+    {
+      "name": "class2List",
+      "viewType": "SomeModule.View.SomeClass2GroupView"
+    }
+  ],
+  "elementViewType": null
+}

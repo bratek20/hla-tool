@@ -1,9 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core.viewmodel
 
 import com.github.bratek20.hla.definitions.api.BaseType
+import com.github.bratek20.hla.definitions.api.TypeDefinition
+import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.impl.core.api.*
 
 class ModelToViewModelTypeMapper(
+    private val apiTypeFactory: ApiTypeFactory,
     private val viewModelElements: List<ViewModelElementLogic>
 ) {
     fun mapViewModelToViewTypeName(viewModelType: String): String {
@@ -23,17 +26,36 @@ class ModelToViewModelTypeMapper(
     }
 
     fun mapViewModelWrappedTypeToListType(viewModelType: String): String {
+        val listApiType = mapViewModelWrappedTypeToListApiType(viewModelType)
+        return mapModelToViewModelTypeName(listApiType)
+    }
+
+    fun mapViewModelWrappedTypeToListApiType(viewModelType: String): ListApiType {
         val modelType = mapViewModelToModelType(viewModelType)
-        return mapModelToViewModelTypeName(ListApiType(modelType))
+        val listApiType = apiTypeFactory.create(TypeDefinition.create(
+            name = modelType.name(),
+            wrappers = listOf(TypeWrapper.LIST)
+        ))
+        return listApiType as ListApiType
     }
 
     fun mapViewModelWrappedTypeToOptionalType(viewModelType: String): String {
+        val optionalApiType = mapViewModelWrappedTypeToOptionalApiType(viewModelType)
+        return mapModelToViewModelTypeName(optionalApiType)
+    }
+
+    fun mapViewModelWrappedTypeToOptionalApiType(viewModelType: String): OptionalApiType {
         val modelType = mapViewModelToModelType(viewModelType)
-        return mapModelToViewModelTypeName(OptionalApiType(modelType))
+        val optionalApiType = apiTypeFactory.create(TypeDefinition.create(
+            name = modelType.name(),
+            wrappers = listOf(TypeWrapper.OPTIONAL)
+        ))
+        return optionalApiType as OptionalApiType
     }
 
     fun mapViewModelToModelType(viewModelType: String): ApiType {
-        return viewModelElements.first { it.getTypeName() == viewModelType }.modelType
+        return viewModelElements.firstOrNull() { it.getTypeName() == viewModelType }?.modelType
+            ?: throw IllegalArgumentException("Unknown view model type: $viewModelType")
     }
 
     fun mapModelToViewTypeName(modelType: ApiType): String {
@@ -108,5 +130,37 @@ class ModelToViewModelTypeMapper(
             BaseType.VOID -> throw IllegalArgumentException("Void is not supported in view models")
             BaseType.ANY -> throw IllegalArgumentException("Any is not supported in view models")
         }
+    }
+
+    fun mapViewModelToFullViewTypeName(viewModelTypeName: String): String {
+        val viewType = mapViewModelToViewTypeName(viewModelTypeName)
+        if (b20ViewTypes.contains(viewType)) {
+            return "B20.Frontend.Elements.View.$viewType"
+        }
+        return "${getViewModelModuleName(viewModelTypeName)}.View.$viewType"
+    }
+
+    private fun getViewModelModuleName(viewModelType: String): String {
+        if (viewModelType.endsWith("Group")) {
+            val wrappedTypeName = viewModelType.replace("Group", "")
+            return getViewModelModuleName(wrappedTypeName)
+        }
+        if (viewModelType.startsWith("Optional")) {
+            val wrappedTypeName = viewModelType.replace("Optional", "")
+            return getViewModelModuleName(wrappedTypeName)
+        }
+        val apiType = mapViewModelToModelType(viewModelType)
+        return apiType.moduleName()
+    }
+
+    companion object {
+        val b20ViewTypes = listOf(
+            "LabelView",
+            "LabelGroupView",
+            "OptionalLabelView",
+            "ButtonView",
+            "BoolSwitchView",
+            "EnumSwitchView",
+        )
     }
 }

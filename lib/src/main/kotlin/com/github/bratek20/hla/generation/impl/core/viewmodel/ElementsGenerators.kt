@@ -26,7 +26,7 @@ class ViewModelSharedLogic(
     }
 
     fun mapper(): ModelToViewModelTypeMapper {
-        return ModelToViewModelTypeMapper(elementsLogic())
+        return ModelToViewModelTypeMapper(apiTypeFactory, elementsLogic())
     }
 
     fun windowsLogic(): List<GeneratedWindowLogic> {
@@ -35,7 +35,7 @@ class ViewModelSharedLogic(
 
     fun elementListTypesToGenerate(): List<ListApiType> {
         val elementsLogic = elementsLogic()
-        val mapper = ModelToViewModelTypeMapper(elementsLogic)
+        val mapper = mapper()
         val listTypes: MutableList<ListApiType> = mutableListOf();
 
         elementsLogic.forEach { element ->
@@ -44,7 +44,7 @@ class ViewModelSharedLogic(
 
         windowsLogic().forEach { window ->
             window.getElementTypesWrappedIn(TypeWrapper.LIST).forEach {
-                listTypes.add(ListApiType(mapper.getModelForViewModelType(it)))
+                listTypes.add(mapper.mapViewModelWrappedTypeToListApiType(it))
             }
         }
 
@@ -54,7 +54,7 @@ class ViewModelSharedLogic(
     fun elementOptionalTypesToGenerate(): List<OptionalApiType> {
         val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
         val elementsLogic = elementsLogic()
-        val mapper = ModelToViewModelTypeMapper(elementsLogic)
+        val mapper = mapper()
 
         elementsLogic.forEach { element ->
             optionalTypes.addAll(element.getMappedFieldsOfType(OptionalApiType::class))
@@ -62,10 +62,9 @@ class ViewModelSharedLogic(
 
         windowsLogic().forEach { window ->
             window.getElementTypesWrappedIn(TypeWrapper.OPTIONAL).forEach {
-                optionalTypes.add(OptionalApiType(mapper.getModelForViewModelType(it)))
+                optionalTypes.add(mapper.mapViewModelWrappedTypeToOptionalApiType(it))
             }
         }
-
         return optionalTypes.filter { it.wrappedType is ComplexStructureApiType<*> }
     }
 }
@@ -259,7 +258,7 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val elementsLogic = logic.elementsLogic()
-        val mapper = ModelToViewModelTypeMapper(elementsLogic)
+        val mapper = logic.mapper()
 
         elementsLogic.forEach { element ->
             addClass(element.getClass(mapper))

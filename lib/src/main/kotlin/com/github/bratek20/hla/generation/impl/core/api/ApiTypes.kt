@@ -24,6 +24,10 @@ abstract class ApiType {
         this.typeModule = typeModule
     }
 
+    fun moduleName(): String {
+        return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
+    }
+
     abstract fun name(): String
 
     open fun serializableName(): String {
@@ -613,10 +617,9 @@ data class ApiCustomTypes(
 )
 
 class ApiTypeFactory(
-    private val modules: ModuleGroupQueries,
+    val modules: ModuleGroupQueries,
     private val languageTypes: LanguageTypes
 ) {
-
     fun create(type: TypeDefinition?): ApiType {
         if (type == null) {
             return createBaseApiType(BaseType.VOID)

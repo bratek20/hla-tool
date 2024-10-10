@@ -1,0 +1,14 @@
+{
+  "prefabName": "OtherClass",
+  "viewTypeName": "OtherModule.View.OtherClassView",
+  "children": [
+    {
+      "name": "id",
+      "prefabPath": "OtherModule.Prefabs.OtherClassId"
+    },
+    {
+      "name": "amount",
+      "prefabPath": "OtherModule.Prefabs.OtherClassId"
+    }
+  ]
+}

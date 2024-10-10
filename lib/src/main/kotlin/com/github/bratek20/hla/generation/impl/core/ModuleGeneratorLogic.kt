@@ -8,6 +8,7 @@ import com.github.bratek20.hla.generation.impl.core.api.ApiGenerator
 import com.github.bratek20.hla.generation.impl.core.context.ContextGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
+import com.github.bratek20.hla.generation.impl.core.prefabs.PrefabsGenerator
 import com.github.bratek20.hla.generation.impl.core.tests.TestsGenerator
 import com.github.bratek20.hla.generation.impl.core.view.ViewGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelGenerator
@@ -38,6 +39,7 @@ class ModuleGeneratorLogic(
                 WebGenerator(),
                 ViewModelGenerator(),
                 ViewGenerator(),
+                PrefabsGenerator(),
                 ContextGenerator(),
                 FixturesGenerator(),
                 TestsGenerator(),

@@ -1,0 +1,17 @@
+{
+  "blueprintType": "Window",
+  "name": "SomeWindow",
+  "viewType": "SomeModule.View.SomeWindowView",
+  "creationOrder": 20,
+  "children": [
+    {
+      "name": "someClassVm",
+      "viewType": "SomeModule.View.SomeClassView"
+    },
+    {
+      "name": "someClassVmList",
+      "viewType": "SomeModule.View.SomeClassGroupView"
+    }
+  ],
+  "elementViewType": null
+}

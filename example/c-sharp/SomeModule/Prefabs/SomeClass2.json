@@ -1,0 +1,13 @@
+{
+  "blueprintType": "UiElement",
+  "name": "SomeClass2",
+  "viewType": "SomeModule.View.SomeClass2View",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "enabled",
+      "viewType": "B20.Frontend.Elements.View.BoolSwitchView"
+    }
+  ],
+  "elementViewType": null
+}

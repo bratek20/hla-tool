@@ -10,12 +10,12 @@ import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 
-abstract class BaseViewLogic(
-    protected val mapper: ModelToViewModelTypeMapper
+abstract class ContainerViewLogic(
+    val mapper: ModelToViewModelTypeMapper
 ) {
     protected abstract fun getViewClassName(): String
-    protected abstract fun getViewModelTypeName(): String
-    protected abstract fun getFields(): List<ViewModelField>
+    abstract fun getViewModelTypeName(): String
+    abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
 
     fun getOps(): PerFileOperations {
@@ -73,16 +73,16 @@ abstract class BaseViewLogic(
 class ElementViewLogic(
     val elem: ViewModelElementLogic,
     mapper: ModelToViewModelTypeMapper
-): BaseViewLogic(mapper) {
-    override fun getViewClassName(): String {
+): ContainerViewLogic(mapper) {
+    public override fun getViewClassName(): String {
         return mapper.mapViewModelToViewTypeName(elem.getTypeName())
     }
 
-    override fun getViewModelTypeName(): String {
+    public override fun getViewModelTypeName(): String {
         return elem.getTypeName()
     }
 
-    override fun getFields(): List<ViewModelField> {
+    public override fun getFields(): List<ViewModelField> {
         return elem.getFields(mapper)
     }
 
@@ -95,8 +95,8 @@ class ElementViewLogic(
 class WindowViewLogic(
     val window: GeneratedWindowLogic,
     mapper: ModelToViewModelTypeMapper
-): BaseViewLogic(mapper) {
-    override fun getViewClassName(): String {
+): ContainerViewLogic(mapper) {
+    public override fun getViewClassName(): String {
         return window.getClassName() + "View"
     }
 
@@ -113,16 +113,24 @@ class WindowViewLogic(
     }
 }
 
-private abstract class WrappedElementViewLogic(
-    private val modelType: WrappedApiType,
-    private val mapper: ModelToViewModelTypeMapper
+abstract class WrappedElementViewLogic(
+    val modelType: WrappedApiType,
+    val mapper: ModelToViewModelTypeMapper
 ) {
     protected abstract fun extendedClassName(): String
 
+    fun getViewClassName(): String {
+        return mapper.mapModelToViewTypeName(modelType)
+    }
+
+    fun getElementViewModelTypeName(): String {
+        return mapper.mapModelToViewModelTypeName(modelType.wrappedType)
+    }
+
     fun getOps(): PerFileOperations {
-        val viewClassName = mapper.mapModelToViewTypeName(modelType)
+        val viewClassName = getViewClassName()
         val elementViewTypeName = mapper.mapModelToViewTypeName(modelType.wrappedType)
-        val elementViewModelTypeName = mapper.mapModelToViewModelTypeName(modelType.wrappedType)
+        val elementViewModelTypeName = getElementViewModelTypeName()
         val elementModelTypeName = modelType.wrappedType.name()
 
         return PerFileOperations(viewClassName) {
@@ -146,7 +154,7 @@ private abstract class WrappedElementViewLogic(
     }
 }
 
-private class ElementGroupViewLogic(
+class ElementGroupViewLogic(
     modelType: ListApiType,
     mapper: ModelToViewModelTypeMapper
 ): WrappedElementViewLogic(modelType, mapper) {
@@ -155,7 +163,7 @@ private class ElementGroupViewLogic(
     }
 }
 
-private class OptionalElementViewLogic(
+class OptionalElementViewLogic(
     modelType: OptionalApiType,
     mapper: ModelToViewModelTypeMapper
 ): WrappedElementViewLogic(modelType, mapper) {

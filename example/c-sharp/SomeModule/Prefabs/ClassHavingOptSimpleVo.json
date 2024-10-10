@@ -1,0 +1,13 @@
+{
+  "blueprintType": "UiElement",
+  "name": "ClassHavingOptSimpleVo",
+  "viewType": "SomeModule.View.ClassHavingOptSimpleVoView",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "optSimpleVo",
+      "viewType": "B20.Frontend.Elements.View.OptionalLabelView"
+    }
+  ],
+  "elementViewType": null
+}
