@@ -3,10 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.prefabs
 import com.github.bratek20.architecture.serialization.api.SerializerConfig
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.impl.core.view.ContainerViewLogic
-import com.github.bratek20.hla.generation.impl.core.view.ElementGroupViewLogic
-import com.github.bratek20.hla.generation.impl.core.view.ElementViewLogic
-import com.github.bratek20.hla.generation.impl.core.view.WindowViewLogic
+import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
@@ -43,8 +40,8 @@ abstract class PrefabBaseBlueprintLogic(
     }
 }
 
-class PrefabGroupBlueprintLogic(
-    private val view: ElementGroupViewLogic,
+class PrefabWrappedElementBlueprintLogic(
+    private val view: WrappedElementViewLogic,
 ): PrefabBaseBlueprintLogic(view.mapper) {
     override fun getName(): String {
         return view.getViewClassName().replace("View", "")
@@ -131,13 +128,16 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
         val viewElementLogic = logic.elementsLogic().map { ElementViewLogic(it, mapper) }
         val viewWindowLogic = logic.windowsLogic().map { WindowViewLogic(it, mapper) }
         val viewElementGroupLogic = logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) }
+        val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) }
 
         val elementBlueprintLogic = viewElementLogic.map { PrefabElementBlueprintLogic(it) }
         val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it) }
-        val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabGroupBlueprintLogic(it) }
+        val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabWrappedElementBlueprintLogic(it) }
+        val elementOptionalBlueprintLogic = viewElementOptionalLogic.map { PrefabWrappedElementBlueprintLogic(it) }
 
         return elementBlueprintLogic.map { it.getFile() } +
                 windowBlueprintLogic.map { it.getFile() } +
-                elementGroupBlueprintLogic.map { it.getFile() }
+                elementGroupBlueprintLogic.map { it.getFile() } +
+                elementOptionalBlueprintLogic.map { it.getFile() }
     }
 }
