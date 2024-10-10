@@ -19,14 +19,24 @@ abstract class PrefabBaseBlueprintLogic(
     abstract fun getName(): String
     abstract fun getMyFullType(): String
     abstract fun blueprintType(): BlueprintType
-    abstract fun getBlueprint(): PrefabBlueprint
+    abstract fun creationOrder(): Int
+
+    open fun children(): List<PrefabChildBlueprint>? = null
+    open fun elementViewType(): String? = null
 
     protected fun getFullType(viewModelTypeName: String): String {
         return mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
     }
 
     fun getFile(): File {
-        val blueprint = getBlueprint()
+        val blueprint = PrefabBlueprint.create(
+            blueprintType = blueprintType(),
+            name = getName(),
+            viewType = getMyFullType(),
+            creationOrder = creationOrder(),
+            children = children() ?: emptyList(),
+            elementViewType = elementViewType()
+        )
 
         val serializer = SerializationFactory.createSerializer(SerializerConfig.create(
             readable = true,
@@ -59,14 +69,12 @@ class PrefabWrappedElementBlueprintLogic(
         }
     }
 
-    override fun getBlueprint(): PrefabBlueprint {
-        return PrefabBlueprint.create(
-            blueprintType = blueprintType(),
-            name = getName(),
-            viewType = getMyFullType(),
-            creationOrder = 1,
-            elementViewType = getFullType(view.getElementViewModelTypeName())
-        )
+    override fun creationOrder(): Int {
+        return 10
+    }
+
+    override fun elementViewType(): String {
+        return getFullType(view.getElementViewModelTypeName())
     }
 }
 
@@ -74,19 +82,13 @@ abstract class PrefabContainerBlueprintLogic(
     private val view: ContainerViewLogic,
 ): PrefabBaseBlueprintLogic(view.mapper) {
 
-    override fun getBlueprint(): PrefabBlueprint {
-        return PrefabBlueprint.create(
-            blueprintType = blueprintType(),
-            name = getName(),
-            viewType = getMyFullType(),
-            creationOrder = 1,
-            children = view.getFields().map {
-                PrefabChildBlueprint.create(
-                    name = it.name,
-                    viewType = getFullType(it.typeName)
-                )
-            }
-        )
+    override fun children(): List<PrefabChildBlueprint>? {
+        return view.getFields().map {
+            PrefabChildBlueprint.create(
+                name = it.name,
+                viewType = getFullType(it.typeName)
+            )
+        }
     }
 }
 
@@ -104,6 +106,10 @@ class PrefabElementBlueprintLogic(
     override fun blueprintType(): BlueprintType {
         return BlueprintType.UiElement
     }
+
+    override fun creationOrder(): Int {
+        return 1
+    }
 }
 
 class PrefabWindowBlueprintLogic(
@@ -119,6 +125,10 @@ class PrefabWindowBlueprintLogic(
 
     override fun blueprintType(): BlueprintType {
         return BlueprintType.Window
+    }
+
+    override fun creationOrder(): Int {
+        return 20
     }
 }
 
