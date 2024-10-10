@@ -24,6 +24,10 @@ abstract class ApiType {
         this.typeModule = typeModule
     }
 
+    fun moduleName(): String {
+        return typeModule!!.getName().value
+    }
+
     abstract fun name(): String
 
     open fun serializableName(): String {

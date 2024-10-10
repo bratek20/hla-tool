@@ -10,6 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
+          <option value=":lib:clean" />
           <option value=":lib:test" />
           <option value="--tests" />
           <option value="&quot;com.github.bratek20.hla.facade.HlaFacadeTest.should start C# module&quot;" />

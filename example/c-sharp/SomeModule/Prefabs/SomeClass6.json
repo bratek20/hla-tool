@@ -1,12 +1,12 @@
 {
   "blueprintType": "UiElement",
   "name": "SomeClass6",
-  "viewType": "OtherModule.View.SomeClass6View",
+  "viewType": "SomeModule.View.SomeClass6View",
   "creationOrder": 1,
   "children": [
     {
       "name": "someClassOpt",
-      "viewType": "OtherModule.View.OptionalSomeClassView"
+      "viewType": "SomeModule.View.OptionalSomeClassView"
     }
   ],
   "elementViewType": null

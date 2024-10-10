@@ -33,7 +33,8 @@ class ModelToViewModelTypeMapper(
     }
 
     fun mapViewModelToModelType(viewModelType: String): ApiType {
-        return viewModelElements.first { it.getTypeName() == viewModelType }.modelType
+        return viewModelElements.firstOrNull() { it.getTypeName() == viewModelType }?.modelType
+            ?: throw IllegalArgumentException("Unknown view model type: $viewModelType")
     }
 
     fun mapModelToViewTypeName(modelType: ApiType): String {
@@ -112,9 +113,33 @@ class ModelToViewModelTypeMapper(
 
     fun mapViewModelToFullViewTypeName(viewModelTypeName: String): String {
         val viewType = mapViewModelToViewTypeName(viewModelTypeName)
-        if (viewType == "LabelView") {
-            return "B20.Frontend.Elements.View.LabelView"
+        if (b20ViewTypes.contains(viewType)) {
+            return "B20.Frontend.Elements.View.$viewType"
         }
-        return "OtherModule.View.$viewType"
+        return "${getViewModelModuleName(viewModelTypeName)}.View.$viewType"
+    }
+
+    private fun getViewModelModuleName(viewModelType: String): String {
+        if (viewModelType.endsWith("Group")) {
+            val wrappedTypeName = viewModelType.replace("Group", "")
+            return getViewModelModuleName(wrappedTypeName)
+        }
+        if (viewModelType.startsWith("Optional")) {
+            val wrappedTypeName = viewModelType.replace("Optional", "")
+            return getViewModelModuleName(wrappedTypeName)
+        }
+        val apiType = mapViewModelToModelType(viewModelType)
+        return apiType.moduleName()
+    }
+
+    companion object {
+        val b20ViewTypes = listOf(
+            "LabelView",
+            "LabelGroupView",
+            "OptionalLabelView",
+            "ButtonView",
+            "BoolSwitchView",
+            "EnumSwitchView",
+        )
     }
 }
