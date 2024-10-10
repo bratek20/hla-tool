@@ -1,5 +1,5 @@
 {
-  "blueprintType": "ElementGroup",
+  "blueprintType": "OptionalElement",
   "name": "OptionalSomeClass",
   "viewType": "SomeModule.View.OptionalSomeClassView",
   "creationOrder": 1,

@@ -52,7 +52,11 @@ class PrefabWrappedElementBlueprintLogic(
     }
 
     override fun blueprintType(): BlueprintType {
-        return BlueprintType.ElementGroup
+        return if (view is ElementGroupViewLogic) {
+            BlueprintType.ElementGroup
+        } else {
+            BlueprintType.OptionalElement
+        }
     }
 
     override fun getBlueprint(): PrefabBlueprint {
