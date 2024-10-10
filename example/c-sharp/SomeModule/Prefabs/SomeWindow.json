@@ -1,0 +1,17 @@
+{
+  "blueprintType": "UiElement",
+  "name": "SomeWindow",
+  "viewType": "TODO.View.SomeWindowView",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "someClassVm",
+      "viewType": "SomeModule.View.SomeClassView"
+    },
+    {
+      "name": "someClassVmList",
+      "viewType": "SomeModule.View.SomeClassGroupView"
+    }
+  ],
+  "elementViewType": null
+}

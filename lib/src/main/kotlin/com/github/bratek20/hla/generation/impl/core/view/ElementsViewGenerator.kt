@@ -10,12 +10,12 @@ import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 
-abstract class BaseViewLogic(
+abstract class ContainerViewLogic(
     val mapper: ModelToViewModelTypeMapper
 ) {
     protected abstract fun getViewClassName(): String
-    protected abstract fun getViewModelTypeName(): String
-    protected abstract fun getFields(): List<ViewModelField>
+    abstract fun getViewModelTypeName(): String
+    abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
 
     fun getOps(): PerFileOperations {
@@ -73,7 +73,7 @@ abstract class BaseViewLogic(
 class ElementViewLogic(
     val elem: ViewModelElementLogic,
     mapper: ModelToViewModelTypeMapper
-): BaseViewLogic(mapper) {
+): ContainerViewLogic(mapper) {
     public override fun getViewClassName(): String {
         return mapper.mapViewModelToViewTypeName(elem.getTypeName())
     }
@@ -95,8 +95,8 @@ class ElementViewLogic(
 class WindowViewLogic(
     val window: GeneratedWindowLogic,
     mapper: ModelToViewModelTypeMapper
-): BaseViewLogic(mapper) {
-    override fun getViewClassName(): String {
+): ContainerViewLogic(mapper) {
+    public override fun getViewClassName(): String {
         return window.getClassName() + "View"
     }
 
