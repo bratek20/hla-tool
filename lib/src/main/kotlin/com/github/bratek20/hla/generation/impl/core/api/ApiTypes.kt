@@ -617,7 +617,7 @@ data class ApiCustomTypes(
 )
 
 class ApiTypeFactory(
-    private val modules: ModuleGroupQueries,
+    val modules: ModuleGroupQueries,
     private val languageTypes: LanguageTypes
 ) {
 

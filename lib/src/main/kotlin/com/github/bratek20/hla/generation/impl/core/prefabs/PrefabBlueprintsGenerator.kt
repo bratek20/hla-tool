@@ -19,6 +19,7 @@ abstract class PrefabContainerBlueprintLogic(
 ) {
     abstract fun getName(): String
     abstract fun getMyFullType(): String
+    abstract fun blueprintType(): BlueprintType
 
     protected fun getFullType(viewModelTypeName: String): String {
         return view.mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
@@ -26,7 +27,7 @@ abstract class PrefabContainerBlueprintLogic(
 
     fun getFile(): File {
         val blueprint = PrefabBlueprint.create(
-            blueprintType = BlueprintType.UiElement,
+            blueprintType = blueprintType(),
             name = getName(),
             viewType = getMyFullType(),
             creationOrder = 1,
@@ -60,6 +61,10 @@ class PrefabElementBlueprintLogic(
     override fun getMyFullType(): String {
         return getFullType(view.getViewModelTypeName())
     }
+
+    override fun blueprintType(): BlueprintType {
+        return BlueprintType.UiElement
+    }
 }
 
 class PrefabWindowBlueprintLogic(
@@ -70,7 +75,11 @@ class PrefabWindowBlueprintLogic(
     }
 
     override fun getMyFullType(): String {
-        return "TODO.View." + view.getViewClassName()
+        return view.window.getModuleName() + ".View." + view.getViewClassName()
+    }
+
+    override fun blueprintType(): BlueprintType {
+        return BlueprintType.Window
     }
 }
 

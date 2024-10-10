@@ -1,7 +1,7 @@
 {
-  "blueprintType": "UiElement",
+  "blueprintType": "Window",
   "name": "SomeWindow",
-  "viewType": "TODO.View.SomeWindowView",
+  "viewType": "SomeModule.View.SomeWindowView",
   "creationOrder": 1,
   "children": [
     {
