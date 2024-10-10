@@ -30,7 +30,7 @@ class ModuleGroupQueries(
         get() = getModulesRecursive(group)
 
     fun get(moduleName: ModuleName): ModuleDefinition {
-        return modules.first { it.getName() == moduleName }
+        return modules.firstOrNull { it.getName() == moduleName } ?: throw IllegalStateException("Module $moduleName not found")
     }
 
     fun findSimpleValueObject(type: TypeDefinition): SimpleStructureDefinition? {
