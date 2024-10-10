@@ -1,9 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core.viewmodel
 
 import com.github.bratek20.hla.definitions.api.BaseType
+import com.github.bratek20.hla.definitions.api.TypeDefinition
+import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.impl.core.api.*
 
 class ModelToViewModelTypeMapper(
+    private val apiTypeFactory: ApiTypeFactory,
     private val viewModelElements: List<ViewModelElementLogic>
 ) {
     fun mapViewModelToViewTypeName(viewModelType: String): String {
@@ -23,13 +26,31 @@ class ModelToViewModelTypeMapper(
     }
 
     fun mapViewModelWrappedTypeToListType(viewModelType: String): String {
+        val listApiType = mapViewModelWrappedTypeToListApiType(viewModelType)
+        return mapModelToViewModelTypeName(listApiType)
+    }
+
+    fun mapViewModelWrappedTypeToListApiType(viewModelType: String): ListApiType {
         val modelType = mapViewModelToModelType(viewModelType)
-        return mapModelToViewModelTypeName(ListApiType(modelType))
+        val listApiType = apiTypeFactory.create(TypeDefinition.create(
+            name = modelType.name(),
+            wrappers = listOf(TypeWrapper.LIST)
+        ))
+        return listApiType as ListApiType
     }
 
     fun mapViewModelWrappedTypeToOptionalType(viewModelType: String): String {
+        val optionalApiType = mapViewModelWrappedTypeToOptionalApiType(viewModelType)
+        return mapModelToViewModelTypeName(optionalApiType)
+    }
+
+    fun mapViewModelWrappedTypeToOptionalApiType(viewModelType: String): OptionalApiType {
         val modelType = mapViewModelToModelType(viewModelType)
-        return mapModelToViewModelTypeName(OptionalApiType(modelType))
+        val optionalApiType = apiTypeFactory.create(TypeDefinition.create(
+            name = modelType.name(),
+            wrappers = listOf(TypeWrapper.OPTIONAL)
+        ))
+        return optionalApiType as OptionalApiType
     }
 
     fun mapViewModelToModelType(viewModelType: String): ApiType {

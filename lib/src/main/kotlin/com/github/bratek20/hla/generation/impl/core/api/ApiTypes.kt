@@ -25,7 +25,7 @@ abstract class ApiType {
     }
 
     fun moduleName(): String {
-        return typeModule!!.getName().value
+        return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
     }
 
     abstract fun name(): String
@@ -620,7 +620,6 @@ class ApiTypeFactory(
     val modules: ModuleGroupQueries,
     private val languageTypes: LanguageTypes
 ) {
-
     fun create(type: TypeDefinition?): ApiType {
         if (type == null) {
             return createBaseApiType(BaseType.VOID)

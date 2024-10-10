@@ -4,9 +4,11 @@ import com.github.bratek20.architecture.serialization.api.SerializerConfig
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.view.ContainerViewLogic
+import com.github.bratek20.hla.generation.impl.core.view.ElementGroupViewLogic
 import com.github.bratek20.hla.generation.impl.core.view.ElementViewLogic
 import com.github.bratek20.hla.generation.impl.core.view.WindowViewLogic
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
+import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
@@ -14,19 +16,65 @@ import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
 
-abstract class PrefabContainerBlueprintLogic(
-    private val view: ContainerViewLogic,
+abstract class PrefabBaseBlueprintLogic(
+    private val mapper: ModelToViewModelTypeMapper,
 ) {
     abstract fun getName(): String
     abstract fun getMyFullType(): String
     abstract fun blueprintType(): BlueprintType
+    abstract fun getBlueprint(): PrefabBlueprint
 
     protected fun getFullType(viewModelTypeName: String): String {
-        return view.mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
+        return mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
     }
 
     fun getFile(): File {
-        val blueprint = PrefabBlueprint.create(
+        val blueprint = getBlueprint()
+
+        val serializer = SerializationFactory.createSerializer(SerializerConfig.create(
+            readable = true,
+        ))
+
+        val serialized = serializer.serialize(blueprint)
+        return File.create(
+            name = FileName("${getName()}.json"),
+            content = FileContent.fromString(serialized.getValue())
+        )
+    }
+}
+
+class PrefabGroupBlueprintLogic(
+    private val view: ElementGroupViewLogic,
+): PrefabBaseBlueprintLogic(view.mapper) {
+    override fun getName(): String {
+        return view.getViewClassName().replace("View", "")
+    }
+
+    override fun getMyFullType(): String {
+        return view.modelType.moduleName() + ".View." + view.getViewClassName()
+    }
+
+    override fun blueprintType(): BlueprintType {
+        return BlueprintType.ElementGroup
+    }
+
+    override fun getBlueprint(): PrefabBlueprint {
+        return PrefabBlueprint.create(
+            blueprintType = blueprintType(),
+            name = getName(),
+            viewType = getMyFullType(),
+            creationOrder = 1,
+            elementViewType = getFullType(view.getElementViewModelTypeName())
+        )
+    }
+}
+
+abstract class PrefabContainerBlueprintLogic(
+    private val view: ContainerViewLogic,
+): PrefabBaseBlueprintLogic(view.mapper) {
+
+    override fun getBlueprint(): PrefabBlueprint {
+        return PrefabBlueprint.create(
             blueprintType = blueprintType(),
             name = getName(),
             viewType = getMyFullType(),
@@ -37,16 +85,6 @@ abstract class PrefabContainerBlueprintLogic(
                     viewType = getFullType(it.typeName)
                 )
             }
-        )
-
-        val serializer = SerializationFactory.createSerializer(SerializerConfig.create(
-            readable = true,
-        ))
-
-        val serialized = serializer.serialize(blueprint)
-        return File.create(
-            name = FileName("${getName()}.json"),
-            content = FileContent.fromString(serialized.getValue())
         )
     }
 }
@@ -92,11 +130,14 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
         val mapper = logic.mapper()
         val viewElementLogic = logic.elementsLogic().map { ElementViewLogic(it, mapper) }
         val viewWindowLogic = logic.windowsLogic().map { WindowViewLogic(it, mapper) }
+        val viewElementGroupLogic = logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) }
 
         val elementBlueprintLogic = viewElementLogic.map { PrefabElementBlueprintLogic(it) }
         val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it) }
+        val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabGroupBlueprintLogic(it) }
 
         return elementBlueprintLogic.map { it.getFile() } +
-                windowBlueprintLogic.map { it.getFile() }
+                windowBlueprintLogic.map { it.getFile() } +
+                elementGroupBlueprintLogic.map { it.getFile() }
     }
 }
