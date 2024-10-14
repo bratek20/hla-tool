@@ -100,6 +100,7 @@ fun someClass5(init: SomeClass5Def.() -> Unit = {}): SomeClass5 {
 data class SomeClass6Def(
     var someClassOpt: (SomeClassDef.() -> Unit)? = null,
     var optString: String? = null,
+    var class2List: List<(SomeClass2Def.() -> Unit)> = emptyList(),
     var sameClassList: List<(SomeClass6Def.() -> Unit)> = emptyList(),
 )
 fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
@@ -107,6 +108,7 @@ fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
     return SomeClass6.create(
         someClassOpt = def.someClassOpt?.let { it -> someClass(it) },
         optString = def.optString,
+        class2List = def.class2List.map { it -> someClass2(it) },
         sameClassList = def.sameClassList.map { it -> someClass6(it) },
     )
 }

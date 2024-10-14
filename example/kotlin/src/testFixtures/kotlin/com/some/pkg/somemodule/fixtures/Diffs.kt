@@ -174,6 +174,7 @@ data class ExpectedSomeClass6(
     var someClassOpt: (ExpectedSomeClass.() -> Unit)? = null,
     var optStringEmpty: Boolean? = null,
     var optString: String? = null,
+    var class2List: List<(ExpectedSomeClass2.() -> Unit)>? = null,
     var sameClassList: List<(ExpectedSomeClass6.() -> Unit)>? = null,
 )
 fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Unit, path: String = ""): String {
@@ -194,6 +195,11 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
 
     expected.optString?.let {
         if (given.getOptString()!! != it) { result.add("${path}optString ${given.getOptString()!!} != ${it}") }
+    }
+
+    expected.class2List?.let {
+        if (given.getClass2List().size != it.size) { result.add("${path}class2List size ${given.getClass2List().size} != ${it.size}"); return@let }
+        given.getClass2List().forEachIndexed { idx, entry -> if (diffSomeClass2(entry, it[idx]) != "") { result.add(diffSomeClass2(entry, it[idx], "${path}class2List[${idx}].")) } }
     }
 
     expected.sameClassList?.let {

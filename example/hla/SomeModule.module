@@ -45,6 +45,7 @@ ValueObjects
     SomeClass6
         someClassOpt: SomeClass?
         optString: string?
+        class2List: SomeClass2[]
         sameClassList: SomeClass6[] = []
 
     ClassUsingExternalType
@@ -195,6 +196,7 @@ ViewModel
         SomeClass6Vm
             SomeClass6
                 someClassOpt
+                class2List
 
         ClassHavingOptSimpleVoVm
             ClassHavingOptSimpleVo

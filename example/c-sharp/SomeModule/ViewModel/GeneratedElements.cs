@@ -41,8 +41,10 @@ namespace SomeModule.ViewModel {
 
     public partial class SomeClass6Vm: UiElement<SomeClass6> {
         public OptionalSomeClassVm SomeClassOpt { get; set; }
+        public SomeClass2VmGroup Class2List { get; set; }
         protected override void OnUpdate() {
             SomeClassOpt.Update(Model.GetSomeClassOpt());
+            Class2List.Update(Model.GetClass2List());
         }
     }
 
@@ -50,6 +52,13 @@ namespace SomeModule.ViewModel {
         public OptionalLabel OptSimpleVo { get; set; }
         protected override void OnUpdate() {
             OptSimpleVo.Update(Model.GetOptSimpleVo().Map( it => it.Value ));
+        }
+    }
+
+    public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
+        public SomeClass2VmGroup(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<SomeClass2Vm>()) {
         }
     }
 

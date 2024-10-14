@@ -161,6 +161,7 @@ namespace SomeModule {
         someClassOpt?: ExpectedSomeClass,
         optStringEmpty?: boolean,
         optString?: string,
+        class2List?: ExpectedSomeClass2[],
         sameClassList?: ExpectedSomeClass6[],
     }
     export function diffSomeClass6(given: SomeClass6, expected: ExpectedSomeClass6, path: string = ""): string {
@@ -180,6 +181,11 @@ namespace SomeModule {
 
         if (expected.optString !== undefined) {
             if (given.getOptString().get() != expected.optString) { result.push(`${path}optString ${given.getOptString().get()} != ${expected.optString}`) }
+        }
+
+        if (expected.class2List !== undefined) {
+            if (given.getClass2List().length != expected.class2List.length) { result.push(`${path}class2List size ${given.getClass2List().length} != ${expected.class2List.length}`) }
+            given.getClass2List().forEach((entry, idx) => { if (diffSomeClass2(entry, expected.class2List[idx]) != "") { result.push(diffSomeClass2(entry, expected.class2List[idx], `${path}class2List[${idx}].`)) } })
         }
 
         if (expected.sameClassList !== undefined) {

@@ -237,6 +237,7 @@ data class SomeClass5(
 data class SomeClass6(
     private val someClassOpt: SomeClass?,
     private val optString: String?,
+    private val class2List: List<SomeClass2>,
     private val sameClassList: List<SomeClass6> = emptyList(),
 ) {
     fun getSomeClassOpt(): SomeClass? {
@@ -247,6 +248,10 @@ data class SomeClass6(
         return this.optString
     }
 
+    fun getClass2List(): List<SomeClass2> {
+        return this.class2List
+    }
+
     fun getSameClassList(): List<SomeClass6> {
         return this.sameClassList
     }
@@ -255,11 +260,13 @@ data class SomeClass6(
         fun create(
             someClassOpt: SomeClass?,
             optString: String?,
+            class2List: List<SomeClass2>,
             sameClassList: List<SomeClass6> = emptyList(),
         ): SomeClass6 {
             return SomeClass6(
                 someClassOpt = someClassOpt,
                 optString = optString,
+                class2List = class2List,
                 sameClassList = sameClassList,
             )
         }

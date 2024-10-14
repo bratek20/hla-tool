@@ -7,6 +7,10 @@
     {
       "name": "someClassOpt",
       "viewType": "SomeModule.View.OptionalSomeClassView"
+    },
+    {
+      "name": "class2List",
+      "viewType": "SomeModule.View.SomeClass2GroupView"
     }
   ],
   "elementViewType": null
