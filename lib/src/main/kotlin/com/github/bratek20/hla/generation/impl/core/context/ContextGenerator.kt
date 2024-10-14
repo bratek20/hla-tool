@@ -114,34 +114,34 @@ class WebContextGenerator: PatternGenerator() {
                 }
 
                 setBody {
-                    add(expressionChainStatement {
+                    val builderOperations = expressionChainStatement {
                         instanceVariable("builder")
                     }.then {
                         methodCall {
                             methodName = "setImplObject"
-                            addGeneric("SomeModuleWebClientConfig")
+                            addGeneric("${module.getName()}WebClientConfig")
                             addArg {
                                 constructorCall {
-                                    className = "SomeModuleWebClientConfig"
+                                    className = "${module.getName()}WebClientConfig"
                                     addArg {
                                         variable("config")
                                     }
                                 }
                             }
                         }
-                    }.then {
-                        methodCall {
-                            methodName = "setImpl"
-                            addGeneric("SomeInterface")
-                            addGeneric("SomeInterfaceWebClient")
+                    }
+
+                    module.getWebSubmodule()!!.getHttp()!!.getExposedInterfaces().forEach { interf ->
+                        builderOperations.then {
+                            methodCall {
+                                methodName = "setImpl"
+                                addGeneric(interf)
+                                addGeneric("${interf}WebClient")
+                            }
                         }
-                    }.then {
-                        methodCall {
-                            methodName = "setImpl"
-                            addGeneric("SomeInterface2")
-                            addGeneric("SomeInterface2WebClient")
-                        }
-                    })
+                    }
+
+                    add(builderOperations)
                 }
             }
         }
