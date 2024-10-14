@@ -1,8 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.context
 
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.codebuilder.languages.typescript.namespace
+import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
@@ -83,6 +85,68 @@ class WebContextGenerator: PatternGenerator() {
             }
             .build()
     }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return language.name() == ModuleLanguage.C_SHARP
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return module.getWebSubmodule()?.getHttp() != null
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        addClass {
+            name = "${module.getName()}WebClient"
+            implements = "ContextModule"
+
+            addField {
+                name = "config"
+                type = typeName("HttpClientConfig")
+                fromConstructor = true
+            }
+
+            addMethod {
+                name = "apply"
+                //override = true TODO support for interface override that does not generate override keyword for C#
+                addArg {
+                    name = "builder"
+                    type = typeName("ContextBuilder")
+                }
+
+                setBody {
+                    val builderOperations = expressionChainStatement {
+                        instanceVariable("builder")
+                    }.then {
+                        methodCall {
+                            methodName = "setImplObject"
+                            addGeneric("${module.getName()}WebClientConfig")
+                            addArg {
+                                constructorCall {
+                                    className = "${module.getName()}WebClientConfig"
+                                    addArg {
+                                        variable("config")
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    module.getWebSubmodule()!!.getHttp()!!.getExposedInterfaces().forEach { interf ->
+                        builderOperations.then {
+                            methodCall {
+                                methodName = "setImpl"
+                                addGeneric(interf)
+                                addGeneric("${interf}WebClient")
+                            }
+                        }
+                    }
+
+                    add(builderOperations)
+                }
+            }
+        }
+    }
+
 }
 
 class ContextGenerator: SubmoduleGenerator() {

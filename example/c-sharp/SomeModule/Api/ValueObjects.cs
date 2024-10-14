@@ -231,15 +231,18 @@ namespace SomeModule.Api {
     public class SomeClass6 {
         readonly SomeClass? someClassOpt;
         readonly string? optString;
+        readonly List<SomeClass2> class2List;
         readonly List<SomeClass6> sameClassList;
 
         public SomeClass6(
             SomeClass? someClassOpt,
             string? optString,
+            List<SomeClass2> class2List,
             List<SomeClass6> sameClassList
         ) {
             this.someClassOpt = someClassOpt;
             this.optString = optString;
+            this.class2List = class2List;
             this.sameClassList = sameClassList;
         }
         public Optional<SomeClass> GetSomeClassOpt() {
@@ -248,11 +251,14 @@ namespace SomeModule.Api {
         public Optional<string> GetOptString() {
             return Optional<string>.Of(optString);
         }
+        public List<SomeClass2> GetClass2List() {
+            return class2List;
+        }
         public List<SomeClass6> GetSameClassList() {
             return sameClassList;
         }
-        public static SomeClass6 Create(Optional<SomeClass> someClassOpt, Optional<string> optString, List<SomeClass6> sameClassList) {
-            return new SomeClass6(someClassOpt.OrElse(null), optString.OrElse(null), sameClassList);
+        public static SomeClass6 Create(Optional<SomeClass> someClassOpt, Optional<string> optString, List<SomeClass2> class2List, List<SomeClass6> sameClassList) {
+            return new SomeClass6(someClassOpt.OrElse(null), optString.OrElse(null), class2List, sameClassList);
         }
     }
 

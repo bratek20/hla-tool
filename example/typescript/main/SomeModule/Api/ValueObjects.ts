@@ -240,16 +240,19 @@ class SomeClass5 {
 class SomeClass6 {
     private someClassOpt? = new SomeClass
     private optString? = STRING
+    private class2List = [new SomeClass2]
     private sameClassList = [new SomeClass6]
 
     static create(
         someClassOpt: Optional<SomeClass>,
         optString: Optional<string>,
+        class2List: SomeClass2[],
         sameClassList: SomeClass6[] = [],
     ): SomeClass6 {
         const instance = new SomeClass6()
         instance.someClassOpt = someClassOpt.orElse(undefined)
         instance.optString = optString.orElse(undefined)
+        instance.class2List = class2List
         instance.sameClassList = sameClassList
         return instance
     }
@@ -260,6 +263,10 @@ class SomeClass6 {
 
     getOptString(): Optional<string> {
         return Optional.of(this.optString)
+    }
+
+    getClass2List(): SomeClass2[] {
+        return this.class2List
     }
 
     getSameClassList(): SomeClass6[] {

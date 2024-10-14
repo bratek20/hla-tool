@@ -41,8 +41,10 @@ namespace SomeModule.ViewModel {
 
     public partial class SomeClass6Vm: UiElement<SomeClass6> {
         public OptionalSomeClassVm SomeClassOpt { get; set; }
+        public SomeClass2VmGroup Class2List { get; set; }
         protected override void OnUpdate() {
             SomeClassOpt.Update(Model.GetSomeClassOpt());
+            Class2List.Update(Model.GetClass2List());
         }
     }
 

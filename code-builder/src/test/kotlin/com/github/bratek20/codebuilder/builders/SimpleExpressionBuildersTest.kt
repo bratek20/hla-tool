@@ -94,7 +94,11 @@ class SimpleExpressionBuildersTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                    client.Post().GetBody().Get().Value;
+                    client
+                        .Post()
+                        .GetBody()
+                        .Get()
+                        .Value;
                     client.Get();
                     return client.Get();
                 """

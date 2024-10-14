@@ -35,23 +35,40 @@ class ExpressionChainBuilder(
 
 fun expressionChain(e: ExpressionBuilderProvider) = ExpressionChainBuilder(e.invoke())
 class ExpressionChainStatementBuilder: StatementBuilder {
-    private val chain: ExpressionChainBuilder
+    private val expressions: MutableList<ExpressionBuilder> = mutableListOf()
     constructor(firstExpression: ExpressionBuilder) {
-        chain = ExpressionChainBuilder(firstExpression)
-    }
-    constructor(chain: ExpressionChainBuilder) {
-        this.chain = chain
+        expressions.add(firstExpression)
     }
 
     fun then(block: ExpressionBuilderProvider): ExpressionChainStatementBuilder {
-        chain.then(block)
+        expressions.add(block())
         return this
     }
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart()
-        add(chain)
-        statementLineEnd()
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
+        if (expressions.size == 1) {
+            return {
+                lineStart(expressions.first().build(c))
+                statementLineEnd()
+            }
+        }
+
+        return {
+            line(expressions.first().build(c))
+            tab()
+            expressions.drop(1).forEachIndexed { idx, expression  ->
+                lineStart(".")
+                linePart(expression.build(c))
+
+                if (idx == expressions.size - 2) {
+                    statementLineEnd()
+                }
+                else {
+                    lineEnd()
+                }
+            }
+            untab()
+        }
     }
 }
 fun expressionChainStatement(e: ExpressionBuilderProvider) = ExpressionChainStatementBuilder(e.invoke())

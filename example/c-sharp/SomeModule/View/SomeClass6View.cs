@@ -14,9 +14,12 @@ namespace SomeModule.View {
     public class SomeClass6View: ElementView<SomeClass6Vm> {
         [SerializeField]
         OptionalSomeClassView someClassOpt;
+        [SerializeField]
+        SomeClass2GroupView class2List;
         protected override void OnBind() {
             base.OnBind();
             someClassOpt.Bind(ViewModel.SomeClassOpt);
+            class2List.Bind(ViewModel.Class2List);
         }
     }
 }
