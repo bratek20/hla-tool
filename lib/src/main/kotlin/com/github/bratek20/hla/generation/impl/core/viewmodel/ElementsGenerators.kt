@@ -48,7 +48,9 @@ class ViewModelSharedLogic(
             }
         }
 
-        return listTypes.filter { it.wrappedType is ComplexStructureApiType<*> }
+        return listTypes
+            .filter { it.wrappedType is ComplexStructureApiType<*> }
+            .distinctBy { it.wrappedType.name() }
     }
 
     fun elementOptionalTypesToGenerate(): List<OptionalApiType> {
@@ -65,7 +67,9 @@ class ViewModelSharedLogic(
                 optionalTypes.add(mapper.mapViewModelWrappedTypeToOptionalApiType(it))
             }
         }
-        return optionalTypes.filter { it.wrappedType is ComplexStructureApiType<*> }
+        return optionalTypes
+            .filter { it.wrappedType is ComplexStructureApiType<*> }
+            .distinctBy { it.wrappedType.name() }
     }
 }
 
