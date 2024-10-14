@@ -1,6 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.context
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.codebuilder.languages.typescript.namespace
@@ -112,10 +112,39 @@ class WebContextGenerator: PatternGenerator() {
                     name = "builder"
                     type = typeName("ContextBuilder")
                 }
+
+                setBody {
+                    add(expressionChainStatement {
+                        instanceVariable("builder")
+                    }.then {
+                        methodCall {
+                            methodName = "setImplObject"
+                            addGeneric("SomeModuleWebClientConfig")
+                            addArg {
+                                constructorCall {
+                                    className = "SomeModuleWebClientConfig"
+                                    addArg {
+                                        variable("config")
+                                    }
+                                }
+                            }
+                        }
+                    }.then {
+                        methodCall {
+                            methodName = "setImpl"
+                            addGeneric("SomeInterface")
+                            addGeneric("SomeInterfaceWebClient")
+                        }
+                    }.then {
+                        methodCall {
+                            methodName = "setImpl"
+                            addGeneric("SomeInterface2")
+                            addGeneric("SomeInterface2WebClient")
+                        }
+                    })
+                }
             }
         }
-
-        addExtraEmptyLines(4)
     }
 
 }

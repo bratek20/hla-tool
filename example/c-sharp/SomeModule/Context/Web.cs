@@ -18,7 +18,7 @@ namespace SomeModule.Context {
         }
         public void Apply(ContextBuilder builder) {
             builder
-                .SetImplObject<SomeModuleWebClientConfig>(new SomeModuleWebClientConfig(_config))
+                .SetImplObject<SomeModuleWebClientConfig>(new SomeModuleWebClientConfig(config))
                 .SetImpl<SomeInterface, SomeInterfaceWebClient>()
                 .SetImpl<SomeInterface2, SomeInterface2WebClient>();
         }
