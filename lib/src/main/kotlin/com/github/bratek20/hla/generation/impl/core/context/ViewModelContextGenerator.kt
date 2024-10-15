@@ -8,6 +8,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
+import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelSharedLogic
 import com.github.bratek20.utils.directory.api.FileContent
 
 class ViewModelContextGenerator: PatternGenerator() {
@@ -24,6 +25,8 @@ class ViewModelContextGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
+        val logic = ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory)
+
         addClass {
             name = "${module.getName()}ViewModel"
             implements = "ContextModule"
@@ -41,18 +44,18 @@ class ViewModelContextGenerator: PatternGenerator() {
                         instanceVariable("builder")
                     }
 
-                    module.getViewModelSubmodule()!!.getElements().forEach { element ->
+                    logic.allElementTypeNames().forEach { elementTypeName ->
                         builderOperations.then {
                             methodCall {
                                 methodName = "setClass"
-                                addGeneric(element.getName())
+                                addGeneric(elementTypeName)
                                 addArg {
                                     hardcodedExpression("InjectionMode.Prototype")
                                 }
                             }
                         }
                     }
-                    module.getViewModelSubmodule()!!.getWindows().forEach { window ->
+                    logic.windowsDef().forEach { window ->
                         builderOperations.then {
                             methodCall {
                                 methodName = "addImpl"

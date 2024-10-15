@@ -19,6 +19,9 @@ namespace SomeModule.Context {
                 .SetClass<SomeClass3Vm>(InjectionMode.Prototype)
                 .SetClass<SomeClass6Vm>(InjectionMode.Prototype)
                 .SetClass<ClassHavingOptSimpleVoVm>(InjectionMode.Prototype)
+                .SetClass<SomeClass2VmGroup>(InjectionMode.Prototype)
+                .SetClass<SomeClassVmGroup>(InjectionMode.Prototype)
+                .SetClass<OptionalSomeClassVm>(InjectionMode.Prototype)
                 .AddImpl<Window, SomeWindow>();
         }
     }
