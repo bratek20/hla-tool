@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using B20.Ext;
 using B20.Architecture.Contexts.Api;
 using B20.Frontend.Windows.Api;
+using OtherModule.Api;
 using OtherModule.ViewModel;
 
 namespace OtherModule.Context {

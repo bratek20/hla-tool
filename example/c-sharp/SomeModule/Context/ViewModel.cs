@@ -5,18 +5,21 @@ using System.Collections.Generic;
 using B20.Ext;
 using B20.Architecture.Contexts.Api;
 using B20.Frontend.Windows.Api;
+using SomeModule.Api;
 using SomeModule.ViewModel;
+using OtherModule.Api;
+using TypesModule.Api;
 
-namespace SomeModule.Context
-{
-    public class SomeModuleViewModel: ContextModule
-    {
-        public void Apply(ContextBuilder builder)
-        {
+namespace SomeModule.Context {
+    public class SomeModuleViewModel: ContextModule {
+        public void Apply(ContextBuilder builder) {
             builder
-                .AddImpl<Window, GamesManagementWindow>()
-                .SetClass<CreatedGameVmGroup>(InjectionMode.Prototype)
-                .SetClass<CreatedGameVm>(InjectionMode.Prototype);
+                .SetClass<SomeClassVm>(InjectionMode.Prototype)
+                .SetClass<SomeClass2Vm>(InjectionMode.Prototype)
+                .SetClass<SomeClass3Vm>(InjectionMode.Prototype)
+                .SetClass<SomeClass6Vm>(InjectionMode.Prototype)
+                .SetClass<ClassHavingOptSimpleVoVm>(InjectionMode.Prototype)
+                .AddImpl<Window, SomeWindow>();
         }
     }
 }
