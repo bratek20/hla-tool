@@ -20,7 +20,8 @@ class ContextGenerator: SubmoduleGenerator() {
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplContextGenerator(),
-            WebContextGenerator()
+            WebContextGenerator(),
+            ViewModelContextGenerator()
         )
     }
 }
