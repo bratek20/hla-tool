@@ -33,6 +33,12 @@ class ViewModelSharedLogic(
         return windowsDef().map { GeneratedWindowLogic(it, apiTypeFactory) }
     }
 
+    fun allElementTypeNames(): List<String> {
+        return elementsDef().map { it.getName() } +
+            elementListTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) } +
+            elementOptionalTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
+    }
+
     fun elementListTypesToGenerate(): List<ListApiType> {
         val elementsLogic = elementsLogic()
         val mapper = mapper()

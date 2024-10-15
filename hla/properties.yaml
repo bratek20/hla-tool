@@ -4,9 +4,12 @@ profiles:
     paths:
       project: "../lib"
       src:
-        main: "src/main/kotlin/com/github/bratek20/hla"
-        test: "src/test/kotlin/com/github/bratek20/hla"
-        fixtures: "src/testFixtures/kotlin/com/github/bratek20/hla"
+        default: "src/main/kotlin/com/github/bratek20/hla"
+        overrides:
+          - submodule: "Fixtures"
+            path: "src/testFixtures/kotlin/com/github/bratek20/hla"
+          - submodule: "Tests"
+            path: "src/test/kotlin/com/github/bratek20/hla"
     imports:
-      - hlaFolderPath: "../external/hla"
+      - hlaFolderPath: "../external/utils"
         profileName: "utils"

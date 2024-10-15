@@ -49,6 +49,7 @@ Enums
         //context
         Impl
         Web
+        ViewModel
 
         //fixtures
         Builders
