@@ -147,6 +147,11 @@ class WebContextGenerator: PatternGenerator() {
         }
     }
 
+    override fun extraCSharpUsings(): List<String> = listOf(
+        "B20.Architecture.Contexts.Api",
+        "HttpClientModule.Api"
+    )
+
 }
 
 class ContextGenerator: SubmoduleGenerator() {

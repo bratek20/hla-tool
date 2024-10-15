@@ -3,7 +3,10 @@
 using System;
 using System.Collections.Generic;
 using B20.Ext;
+using B20.Architecture.Contexts.Api;
+using HttpClientModule.Api;
 using SomeModule.Api;
+using SomeModule.Web;
 using OtherModule.Api;
 using TypesModule.Api;
 
