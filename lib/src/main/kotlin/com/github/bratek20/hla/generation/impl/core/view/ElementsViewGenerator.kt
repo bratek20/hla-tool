@@ -42,7 +42,7 @@ abstract class ContainerViewLogic(
 
                 addMethod {
                     modifier = AccessModifier.PROTECTED
-                    override = true
+                    overridesClassMethod = true
                     name = "onBind"
 
                     setBody {

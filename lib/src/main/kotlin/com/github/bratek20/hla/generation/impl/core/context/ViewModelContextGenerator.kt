@@ -33,7 +33,7 @@ class ViewModelContextGenerator: PatternGenerator() {
 
             addMethod {
                 name = "apply"
-                //override = true TODO support for interface override that does not generate override keyword for C#
+                overridesInterfaceMethod = true
                 addArg {
                     name = "builder"
                     type = typeName("ContextBuilder")

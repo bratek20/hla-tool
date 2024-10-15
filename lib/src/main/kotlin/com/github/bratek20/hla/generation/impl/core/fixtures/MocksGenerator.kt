@@ -118,7 +118,7 @@ class MocksGenerator: PatternGenerator() {
 
                     emptyLine()
                     legacyMethod {
-                        override = true
+                        overridesClassMethod = true
                         name = def.name
                         returnType = typeName(outputTypeName)
                         addArg {
@@ -212,7 +212,7 @@ class MocksGenerator: PatternGenerator() {
                         implements = "ContextModule"
                         legacyBody = {
                             legacyMethod {
-                                override = true
+                                overridesClassMethod = true
                                 name = "apply"
                                 addArg {
                                     name = "builder"

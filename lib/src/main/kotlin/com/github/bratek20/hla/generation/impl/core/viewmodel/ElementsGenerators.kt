@@ -130,7 +130,7 @@ class ViewModelElementLogic(
         val traitTypes = def.getAttributes().map { mapAttributeToTraitType(it) }
 
         modifier = AccessModifier.PROTECTED
-        override = true
+        overridesClassMethod = true
         name = "getTraitTypes"
         returnType = listType(classType())
 
@@ -147,7 +147,7 @@ class ViewModelElementLogic(
 
     private fun onUpdatedMethod(): MethodBuilderOps = {
         modifier = AccessModifier.PROTECTED
-        override = true
+        overridesClassMethod = true
         name = "onUpdate"
 
         setBody {

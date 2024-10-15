@@ -2,7 +2,6 @@ package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
-import com.github.bratek20.codebuilder.types.TypeBuilderProvider
 import com.github.bratek20.utils.camelToPascalCase
 
 class ArgumentBuilder: CodeBlockBuilder {
@@ -173,12 +172,13 @@ abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
 }
 
 class MethodBuilder: ProcedureBuilder() {
-    var override: Boolean = false
+    var overridesClassMethod: Boolean = false
+    var overridesInterfaceMethod: Boolean = false
     var static: Boolean = false
     var modifier: AccessModifier? = null
 
     override fun beforeName(c: CodeBuilderContext): String {
-        val overridePart = if (override) "override " else ""
+        val overridePart = if (overridesClassMethod) "override " else ""
         val staticPart = if (static && c.lang.supportsStaticKeyword()) "static " else ""
         val modifierPart = modifier?.let { "${it.name.lowercase()} " } ?: c.lang.defaultTopLevelAccessor()
         return "${modifierPart}${staticPart}${overridePart}${c.lang.methodDeclarationKeyword()}"

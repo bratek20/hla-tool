@@ -236,7 +236,7 @@ open class ClassBuilder: CodeBlockBuilder {
             emptyLine()
             add(method {
                 name = "Equals"
-                override = true
+                overridesClassMethod = true
                 returnType = baseType(BaseType.BOOL)
 
                 addArg {
@@ -257,7 +257,7 @@ open class ClassBuilder: CodeBlockBuilder {
             emptyLine()
             add(method {
                 name = "GetHashCode"
-                override = true
+                overridesClassMethod = true
                 returnType = baseType(BaseType.INT)
 
                 setBody {
