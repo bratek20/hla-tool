@@ -10,3 +10,6 @@ profiles:
             path: "src/testFixtures/kotlin/com/github/bratek20/hla"
           - submodule: "Tests"
             path: "src/test/kotlin/com/github/bratek20/hla"
+    imports:
+      - hlaFolderPath: "../external/utils"
+        profileName: "utils"

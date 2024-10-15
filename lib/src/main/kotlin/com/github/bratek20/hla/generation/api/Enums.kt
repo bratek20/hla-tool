@@ -37,6 +37,7 @@ enum class PatternName {
     PrefabBlueprints,
     Impl,
     Web,
+    ViewModel,
     Builders,
     Diffs,
     Asserts,

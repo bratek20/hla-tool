@@ -1,0 +1,47 @@
+CustomTypes
+    Path: string
+    FileContent: string
+
+ValueObjects
+    FileName: string
+    DirectoryName: string
+
+    File
+        name: FileName
+        content: FileContent
+
+    Directory
+        name: DirectoryName
+        files: File[] = []
+        directories: Directory[] = []
+
+    CompareResult
+        same: bool
+        differences: string[]
+
+Interfaces
+    Files
+        write(path: Path, file: File)
+
+        read(path: Path): File
+            throws
+                FileNotFoundException
+
+        delete(path: Path)
+            throws
+                FileNotFoundException
+
+        compare(file1: File, file2: File): CompareResult
+
+    Directories
+        write(path: Path, dir: Directory)
+
+        read(path: Path): Directory
+            throws
+                DirectoryNotFoundException
+
+        delete(path: Path)
+            throws
+                DirectoryNotFoundException
+
+        compare(dir1: Directory, dir2: Directory): CompareResult
