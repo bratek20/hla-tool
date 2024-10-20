@@ -77,6 +77,18 @@ class ViewModelSharedLogic(
             .filter { it.wrappedType is ComplexStructureApiType<*> }
             .distinctBy { it.wrappedType.name() }
     }
+
+    fun elementEnumTypesToGenerate(): List<EnumApiType> {
+        val enumTypes: MutableList<EnumApiType> = mutableListOf();
+        val elementsLogic = elementsLogic()
+
+        elementsLogic.forEach { element ->
+            enumTypes.addAll(element.getMappedFieldsOfType(EnumApiType::class))
+        }
+
+        return enumTypes
+            .distinctBy { it.name() }
+    }
 }
 
 class ViewModelField(
@@ -282,6 +294,18 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
             addClass(getClassForOptionalType(mapper, it))
         }
 
+        logic.elementEnumTypesToGenerate().forEach {
+            addClass {
+                name = it.name() + "Switch"
+
+                extends {
+                    className = "EnumSwitch"
+                    addGeneric {
+                        typeName(it.name())
+                    }
+                }
+            }
+        }
     }
 
     private fun getClassForListType(mapper: ModelToViewModelTypeMapper, listType: ListApiType): ClassBuilderOps = {
