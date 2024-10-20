@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     tags:
-      - 'v*.*.*'  # This triggers the workflow on version tags like v1.0.0
+      - '*.*.*'
 
 jobs:
   release:
