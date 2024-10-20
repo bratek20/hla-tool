@@ -10,15 +10,19 @@ import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 
+abstract class ViewLogic {
+    abstract fun getOps(): PerFileOperations
+}
+
 abstract class ContainerViewLogic(
     val mapper: ModelToViewModelTypeMapper
-) {
+): ViewLogic() {
     protected abstract fun getViewClassName(): String
     abstract fun getViewModelTypeName(): String
     abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
 
-    fun getOps(): PerFileOperations {
+    override fun getOps(): PerFileOperations {
         val viewClassName = getViewClassName()
         return PerFileOperations(viewClassName) {
             addClass {
@@ -70,19 +74,19 @@ abstract class ContainerViewLogic(
     }
 }
 
-class ElementViewLogic(
-    val elem: ViewModelElementLogic,
+class ComplexElementViewLogic(
+    val elem: ViewModelComplexElementLogic,
     mapper: ModelToViewModelTypeMapper
 ): ContainerViewLogic(mapper) {
     public override fun getViewClassName(): String {
         return mapper.mapViewModelToViewTypeName(elem.getTypeName())
     }
 
-    public override fun getViewModelTypeName(): String {
+    override fun getViewModelTypeName(): String {
         return elem.getTypeName()
     }
 
-    public override fun getFields(): List<ViewModelField> {
+    override fun getFields(): List<ViewModelField> {
         return elem.getFields(mapper)
     }
 
@@ -116,7 +120,7 @@ class WindowViewLogic(
 abstract class WrappedElementViewLogic(
     val modelType: WrappedApiType,
     val mapper: ModelToViewModelTypeMapper
-) {
+): ViewLogic() {
     protected abstract fun extendedClassName(): String
 
     fun getViewClassName(): String {
@@ -127,7 +131,7 @@ abstract class WrappedElementViewLogic(
         return mapper.mapModelToViewModelTypeName(modelType.wrappedType)
     }
 
-    fun getOps(): PerFileOperations {
+    override fun getOps(): PerFileOperations {
         val viewClassName = getViewClassName()
         val elementViewTypeName = mapper.mapModelToViewTypeName(modelType.wrappedType)
         val elementViewModelTypeName = getElementViewModelTypeName()
@@ -172,6 +176,24 @@ class OptionalElementViewLogic(
     }
 }
 
+class EnumElementViewLogic(
+    private val vmLogic: ViewModelEnumElementLogic
+) : ViewLogic() {
+    override fun getOps(): PerFileOperations {
+        return PerFileOperations(vmLogic.getTypeName() + "View") {
+            addClass {
+                name = vmLogic.getTypeName() + "View"
+                extends {
+                    className = "EnumSwitchView"
+                    addGeneric {
+                        typeName(vmLogic.modelType.name())
+                    }
+                }
+            }
+        }
+    }
+}
+
 class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.ElementsView
@@ -183,10 +205,12 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
 
     override fun getOperationsPerFile(): List<PerFileOperations> {
         val mapper = logic.mapper()
-        return logic.elementsLogic().map { ElementViewLogic(it, mapper).getOps() } +
-                logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper).getOps() } +
-                logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper).getOps() } +
-                logic.windowsLogic().map { WindowViewLogic(it, mapper).getOps() }
+        return (logic.complexElementsLogic().map { ComplexElementViewLogic(it, mapper) } +
+                logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) } +
+                logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) } +
+                logic.windowsLogic().map { WindowViewLogic(it, mapper) } +
+                logic.enumElementsLogic().map { EnumElementViewLogic(it) })
+            .map { it.getOps() }
     }
 
     override fun extraCSharpUsings(): List<String> {

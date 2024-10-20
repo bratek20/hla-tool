@@ -55,6 +55,9 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
+    }
+
     public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
@@ -74,8 +77,5 @@ namespace SomeModule.ViewModel {
             SomeClassVm element
         ): base(element) {
         }
-    }
-
-    public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
     }
 }

@@ -7,6 +7,7 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
+import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelComplexElementLogic
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
@@ -94,7 +95,7 @@ abstract class PrefabContainerBlueprintLogic(
 }
 
 class PrefabElementBlueprintLogic(
-    private val view: ElementViewLogic,
+    private val view: ComplexElementViewLogic,
 ): PrefabContainerBlueprintLogic(view) {
     override fun getName(): String {
         return view.elem.modelType.name()
@@ -144,7 +145,7 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
 
     override fun generateFiles(): List<File> {
         val mapper = logic.mapper()
-        val viewElementLogic = logic.elementsLogic().map { ElementViewLogic(it, mapper) }
+        val viewElementLogic = logic.complexElementsLogic().map { ComplexElementViewLogic(it, mapper) }
         val viewWindowLogic = logic.windowsLogic().map { WindowViewLogic(it, mapper) }
         val viewElementGroupLogic = logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) }
         val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) }

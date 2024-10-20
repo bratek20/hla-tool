@@ -95,12 +95,12 @@ class ModelToViewModelTypeMapper(
         return "TODO"
     }
 
-    fun getModelForViewModelType(viewModelType: String): ComplexStructureApiType<*> {
+    fun getModelForViewModelType(viewModelType: String): ApiType {
         return viewModelElements.first { it.getTypeName() == viewModelType }.modelType
     }
 
-    private fun getViewModelElementForType(modelType: ComplexStructureApiType<*>): ViewModelElementLogic {
-        return viewModelElements.first { it.modelType.name == modelType.name }
+    private fun getViewModelElementForType(modelType: ApiType): ViewModelElementLogic {
+        return viewModelElements.first { it.modelType.name() == modelType.name() }
     }
 
     private fun mapComplexStructureType(modelType: ComplexStructureApiType<*>): String {
