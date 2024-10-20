@@ -22,7 +22,15 @@ class ViewModelSharedLogic(
         def?.getElements() ?: emptyList()
 
     fun elementsLogic(): List<ViewModelElementLogic> {
-        return ViewModelLogicFactory(apiTypeFactory).createElementsLogic(elementsDef())
+        return complexElementsLogic() + enumElementsLogic()
+    }
+
+    fun complexElementsLogic(): List<ViewModelComplexElementLogic> {
+        return ViewModelLogicFactory(apiTypeFactory).createComplexElementsLogic(elementsDef())
+    }
+
+    fun enumElementsLogic(): List<ViewModelEnumElementLogic> {
+        return ViewModelLogicFactory(apiTypeFactory).createEnumElementsLogic(elementEnumTypesToGenerate())
     }
 
     fun mapper(): ModelToViewModelTypeMapper {
@@ -36,11 +44,12 @@ class ViewModelSharedLogic(
     fun allElementTypeNames(): List<String> {
         return elementsDef().map { it.getName() } +
             elementListTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) } +
-            elementOptionalTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
+            elementOptionalTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) } +
+            elementEnumTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
     }
 
     fun elementListTypesToGenerate(): List<ListApiType> {
-        val elementsLogic = elementsLogic()
+        val elementsLogic = complexElementsLogic()
         val mapper = mapper()
         val listTypes: MutableList<ListApiType> = mutableListOf();
 
@@ -61,7 +70,7 @@ class ViewModelSharedLogic(
 
     fun elementOptionalTypesToGenerate(): List<OptionalApiType> {
         val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
-        val elementsLogic = elementsLogic()
+        val elementsLogic = complexElementsLogic()
         val mapper = mapper()
 
         elementsLogic.forEach { element ->
@@ -76,6 +85,17 @@ class ViewModelSharedLogic(
         return optionalTypes
             .filter { it.wrappedType is ComplexStructureApiType<*> }
             .distinctBy { it.wrappedType.name() }
+    }
+
+    fun elementEnumTypesToGenerate(): List<EnumApiType> {
+        val enumTypes: MutableList<EnumApiType> = mutableListOf();
+
+        complexElementsLogic().forEach { element ->
+            enumTypes.addAll(element.getMappedFieldsOfType(EnumApiType::class))
+        }
+
+        return enumTypes
+            .distinctBy { it.name() }
     }
 }
 
@@ -101,12 +121,38 @@ class ViewModelField(
     }
 }
 
-class ViewModelElementLogic(
-    val def: ViewModelElementDefinition,
-    val modelType: ComplexStructureApiType<*>,
-    val apiTypeFactory: ApiTypeFactory
+abstract class ViewModelElementLogic(
+    val modelType: ApiType
 ) {
-    fun getTypeName(): String = def.getName()
+    abstract fun getTypeName(): String
+
+    abstract fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps
+}
+
+class ViewModelEnumElementLogic(
+    modelType: EnumApiType
+): ViewModelElementLogic(modelType) {
+    override fun getTypeName(): String {
+        return modelType.name() + "Switch"
+    }
+
+    override fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps = {
+        name = getTypeName()
+        extends {
+            className = "EnumSwitch"
+            addGeneric {
+                typeName(modelType.name())
+            }
+        }
+    }
+}
+
+class ViewModelComplexElementLogic(
+    val def: ViewModelElementDefinition,
+    modelType: ComplexStructureApiType<*>,
+    val apiTypeFactory: ApiTypeFactory
+): ViewModelElementLogic(modelType) {
+    override fun getTypeName(): String = def.getName()
 
     fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
         val result = mutableListOf<ViewModelField>()
@@ -121,7 +167,7 @@ class ViewModelElementLogic(
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel().getMappedFields().map { fieldName ->
-            modelType.fields.firstOrNull { it.name == fieldName }
+            (modelType as ComplexStructureApiType<*>).fields.firstOrNull { it.name == fieldName }
                 ?: throw IllegalArgumentException("Field not found: $fieldName in ${modelType.name} for ${def.getName()}")
         }
     }
@@ -201,7 +247,7 @@ class ViewModelElementLogic(
         }
     }
 
-    fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps = {
+    override fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps = {
         name = def.getName()
         partial = true
         extends {
@@ -252,13 +298,17 @@ abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
 class ViewModelLogicFactory(
     private val apiTypeFactory: ApiTypeFactory
 ) {
-    fun createElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelElementLogic> {
+    fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
             val modelTypeName = element.getModel().getName()
             val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
 
-            ViewModelElementLogic(element, modelType, apiTypeFactory)
+            ViewModelComplexElementLogic(element, modelType, apiTypeFactory)
         }
+    }
+
+    fun createEnumElementsLogic(defs: List<EnumApiType>): List<ViewModelEnumElementLogic> {
+        return defs.map { ViewModelEnumElementLogic(it) }
     }
 }
 class GeneratedElementsGenerator: BaseElementsGenerator() {
@@ -281,7 +331,6 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
         logic.elementOptionalTypesToGenerate().forEach {
             addClass(getClassForOptionalType(mapper, it))
         }
-
     }
 
     private fun getClassForListType(mapper: ModelToViewModelTypeMapper, listType: ListApiType): ClassBuilderOps = {

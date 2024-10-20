@@ -15,7 +15,7 @@ namespace SomeModule.View {
         [SerializeField]
         SomeClass2View class2Object;
         [SerializeField]
-        EnumSwitchView someEnum;
+        SomeEnumSwitchView someEnum;
         [SerializeField]
         SomeClass2GroupView class2List;
         protected override void OnBind() {

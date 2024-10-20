@@ -1,5 +1,5 @@
 {
-  "blueprintType": "UiElement",
+  "blueprintType": "ComplexElement",
   "name": "ClassHavingOptSimpleVo",
   "viewType": "SomeModule.View.ClassHavingOptSimpleVoView",
   "creationOrder": 1,

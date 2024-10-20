@@ -1,5 +1,5 @@
 {
-  "blueprintType": "UiElement",
+  "blueprintType": "ComplexElement",
   "name": "SomeClass3",
   "viewType": "SomeModule.View.SomeClass3View",
   "creationOrder": 1,
@@ -10,7 +10,7 @@
     },
     {
       "name": "someEnum",
-      "viewType": "B20.Frontend.Elements.View.EnumSwitchView"
+      "viewType": "SomeModule.View.SomeEnumSwitchView"
     },
     {
       "name": "class2List",

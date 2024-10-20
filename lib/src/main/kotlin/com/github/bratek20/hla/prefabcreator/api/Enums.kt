@@ -2,8 +2,9 @@
 
 package com.github.bratek20.hla.prefabcreator.api
 enum class BlueprintType {
-    UiElement,
+    ComplexElement,
     Window,
     ElementGroup,
     OptionalElement,
+    EnumElement,
 }
