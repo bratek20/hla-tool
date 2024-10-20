@@ -1,5 +1,5 @@
 {
-  "blueprintType": "UiElement",
+  "blueprintType": "ComplexElement",
   "name": "SomeClass3",
   "viewType": "SomeModule.View.SomeClass3View",
   "creationOrder": 1,

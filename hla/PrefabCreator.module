@@ -1,9 +1,10 @@
 Enums
     BlueprintType
-        UiElement
+        ComplexElement
         Window
         ElementGroup
         OptionalElement
+        EnumElement
 
 ValueObjects
     PrefabChildBlueprint

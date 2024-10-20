@@ -7,7 +7,6 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelComplexElementLogic
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
@@ -94,7 +93,7 @@ abstract class PrefabContainerBlueprintLogic(
     }
 }
 
-class PrefabElementBlueprintLogic(
+class PrefabComplexElementBlueprintLogic(
     private val view: ComplexElementViewLogic,
 ): PrefabContainerBlueprintLogic(view) {
     override fun getName(): String {
@@ -106,7 +105,7 @@ class PrefabElementBlueprintLogic(
     }
 
     override fun blueprintType(): BlueprintType {
-        return BlueprintType.UiElement
+        return BlueprintType.ComplexElement
     }
 
     override fun creationOrder(): Int {
@@ -134,6 +133,26 @@ class PrefabWindowBlueprintLogic(
     }
 }
 
+class PrefabEnumElementBlueprintLogic(
+    private val view: EnumElementViewLogic,
+): PrefabBaseBlueprintLogic(view.mapper) {
+    override fun getName(): String {
+        return view.vmLogic.modelType.name()
+    }
+
+    override fun getMyFullType(): String {
+        return view.vmLogic.modelType.moduleName() + ".View." + view.getViewClassName()
+    }
+
+    override fun blueprintType(): BlueprintType {
+        return BlueprintType.EnumElement
+    }
+
+    override fun creationOrder(): Int {
+        return 1
+    }
+}
+
 class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.PrefabBlueprints
@@ -145,19 +164,23 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
 
     override fun generateFiles(): List<File> {
         val mapper = logic.mapper()
-        val viewElementLogic = logic.complexElementsLogic().map { ComplexElementViewLogic(it, mapper) }
+        val viewComplexElementLogic = logic.complexElementsLogic().map { ComplexElementViewLogic(it, mapper) }
         val viewWindowLogic = logic.windowsLogic().map { WindowViewLogic(it, mapper) }
         val viewElementGroupLogic = logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) }
         val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) }
+        val viewEnumElementLogic = logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) }
 
-        val elementBlueprintLogic = viewElementLogic.map { PrefabElementBlueprintLogic(it) }
+        val elementBlueprintLogic = viewComplexElementLogic.map { PrefabComplexElementBlueprintLogic(it) }
         val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it) }
         val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabWrappedElementBlueprintLogic(it) }
         val elementOptionalBlueprintLogic = viewElementOptionalLogic.map { PrefabWrappedElementBlueprintLogic(it) }
+        val enumElementBlueprintLogic = viewEnumElementLogic.map { PrefabEnumElementBlueprintLogic(it) }
 
-        return elementBlueprintLogic.map { it.getFile() } +
-                windowBlueprintLogic.map { it.getFile() } +
-                elementGroupBlueprintLogic.map { it.getFile() } +
-                elementOptionalBlueprintLogic.map { it.getFile() }
+        return (elementBlueprintLogic +
+                windowBlueprintLogic +
+                elementGroupBlueprintLogic +
+                elementOptionalBlueprintLogic +
+                enumElementBlueprintLogic)
+            .map { it.getFile() }
     }
 }

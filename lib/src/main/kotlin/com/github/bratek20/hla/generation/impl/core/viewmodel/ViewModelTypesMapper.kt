@@ -150,11 +150,6 @@ class ModelToViewModelTypeMapper(
             return getViewModelModuleName(wrappedTypeName)
         }
 
-        //TODO-REF
-        if (viewModelType.endsWith("Switch")) {
-            return "SomeModule"
-        }
-
         val apiType = mapViewModelToModelType(viewModelType)
         return apiType.moduleName()
     }

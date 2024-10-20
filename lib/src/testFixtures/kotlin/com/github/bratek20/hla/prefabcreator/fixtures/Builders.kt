@@ -17,7 +17,7 @@ fun prefabChildBlueprint(init: PrefabChildBlueprintDef.() -> Unit = {}): PrefabC
 }
 
 data class PrefabBlueprintDef(
-    var blueprintType: String = BlueprintType.UiElement.name,
+    var blueprintType: String = BlueprintType.ComplexElement.name,
     var name: String = "someValue",
     var viewType: String = "someValue",
     var creationOrder: Int = 0,

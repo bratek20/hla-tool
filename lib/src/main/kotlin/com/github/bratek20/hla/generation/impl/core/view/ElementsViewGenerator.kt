@@ -10,13 +10,15 @@ import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 
-abstract class ViewLogic {
+abstract class ViewLogic(
+    val mapper: ModelToViewModelTypeMapper
+) {
     abstract fun getOps(): PerFileOperations
 }
 
 abstract class ContainerViewLogic(
-    val mapper: ModelToViewModelTypeMapper
-): ViewLogic() {
+    mapper: ModelToViewModelTypeMapper
+): ViewLogic(mapper) {
     protected abstract fun getViewClassName(): String
     abstract fun getViewModelTypeName(): String
     abstract fun getFields(): List<ViewModelField>
@@ -119,8 +121,8 @@ class WindowViewLogic(
 
 abstract class WrappedElementViewLogic(
     val modelType: WrappedApiType,
-    val mapper: ModelToViewModelTypeMapper
-): ViewLogic() {
+    mapper: ModelToViewModelTypeMapper
+): ViewLogic(mapper) {
     protected abstract fun extendedClassName(): String
 
     fun getViewClassName(): String {
@@ -177,12 +179,17 @@ class OptionalElementViewLogic(
 }
 
 class EnumElementViewLogic(
-    private val vmLogic: ViewModelEnumElementLogic
-) : ViewLogic() {
+    val vmLogic: ViewModelEnumElementLogic,
+    mapper: ModelToViewModelTypeMapper
+) : ViewLogic(mapper) {
+    fun getViewClassName(): String {
+        return mapper.mapModelToViewTypeName(vmLogic.modelType)
+    }
+
     override fun getOps(): PerFileOperations {
-        return PerFileOperations(vmLogic.getTypeName() + "View") {
+        return PerFileOperations(getViewClassName()) {
             addClass {
-                name = vmLogic.getTypeName() + "View"
+                name = getViewClassName()
                 extends {
                     className = "EnumSwitchView"
                     addGeneric {
@@ -209,7 +216,7 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
                 logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) } +
                 logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) } +
                 logic.windowsLogic().map { WindowViewLogic(it, mapper) } +
-                logic.enumElementsLogic().map { EnumElementViewLogic(it) })
+                logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) })
             .map { it.getOps() }
     }
 
