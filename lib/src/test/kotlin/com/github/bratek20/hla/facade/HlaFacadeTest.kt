@@ -167,8 +167,6 @@ class HlaFacadeTest {
             )
         }
 
-        private val C_SHARP_PROFILE = "cSharp"
-
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
                 Arguments.of(
@@ -182,6 +180,10 @@ class HlaFacadeTest {
                     cSharpTestPaths("SomeModule")
                 ),
             )
+        }
+
+        companion object {
+            val C_SHARP_PROFILE = "cSharp"
         }
     }
 
@@ -323,6 +325,30 @@ class HlaFacadeTest {
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
         //assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
 //        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
+    }
+
+    @Test
+    fun `should not update Prefabs submodule`() {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        val args = ModuleOperationArgs.create(
+            moduleName = ModuleName("SomeModule"),
+            profileName = ProfileName(ShouldStartCSharpModuleArgsProvider.C_SHARP_PROFILE),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.updateModule(args)
+
+        //then
+        val dir = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            "../example/hla/../c-sharp"
+        )
+
+        assertThat(dir.getDirectories().map { it.getName().value })
+            .doesNotContain("Prefabs")
     }
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {

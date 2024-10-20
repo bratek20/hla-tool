@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.prefabs
 import com.github.bratek20.architecture.serialization.api.SerializerConfig
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
@@ -135,6 +136,10 @@ class PrefabWindowBlueprintLogic(
 class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.PrefabBlueprints
+    }
+
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
     }
 
     override fun generateFiles(): List<File> {
