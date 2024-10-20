@@ -36,7 +36,8 @@ class ViewModelSharedLogic(
     fun allElementTypeNames(): List<String> {
         return elementsDef().map { it.getName() } +
             elementListTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) } +
-            elementOptionalTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
+            elementOptionalTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) } +
+            elementEnumTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
     }
 
     fun elementListTypesToGenerate(): List<ListApiType> {

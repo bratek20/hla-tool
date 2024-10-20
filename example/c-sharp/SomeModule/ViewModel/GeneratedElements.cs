@@ -30,7 +30,7 @@ namespace SomeModule.ViewModel {
 
     public partial class SomeClass3Vm: UiElement<SomeClass3> {
         public SomeClass2Vm Class2Object { get; set; }
-        public EnumSwitch SomeEnum { get; set; }
+        public SomeEnumSwitch SomeEnum { get; set; }
         public SomeClass2VmGroup Class2List { get; set; }
         protected override void OnUpdate() {
             Class2Object.Update(Model.GetClass2Object());

@@ -84,7 +84,7 @@ class ModelToViewModelTypeMapper(
             return mapComplexStructureType(modelType)
         }
         if (modelType is EnumApiType) {
-            return "EnumSwitch"
+            return modelType.name() + "Switch"
         }
         if (modelType is ListApiType) {
             return mapListType(modelType)
@@ -149,6 +149,12 @@ class ModelToViewModelTypeMapper(
             val wrappedTypeName = viewModelType.replace("Optional", "")
             return getViewModelModuleName(wrappedTypeName)
         }
+
+        //TODO-REF
+        if (viewModelType.endsWith("Switch")) {
+            return "SomeModule"
+        }
+
         val apiType = mapViewModelToModelType(viewModelType)
         return apiType.moduleName()
     }
@@ -160,7 +166,6 @@ class ModelToViewModelTypeMapper(
             "OptionalLabelView",
             "ButtonView",
             "BoolSwitchView",
-            "EnumSwitchView",
         )
     }
 }
