@@ -1,0 +1,8 @@
+{
+  "blueprintType": "Enum",
+  "name": "SomeEnum",
+  "viewType": "SomeModule.View.SomeEnumSwitchView",
+  "creationOrder": 1,
+  "children": null,
+  "elementViewType": null
+}

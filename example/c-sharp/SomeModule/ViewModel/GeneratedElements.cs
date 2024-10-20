@@ -75,4 +75,7 @@ namespace SomeModule.ViewModel {
         ): base(element) {
         }
     }
+
+    public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
+    }
 }

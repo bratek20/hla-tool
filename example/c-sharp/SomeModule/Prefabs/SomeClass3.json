@@ -10,7 +10,7 @@
     },
     {
       "name": "someEnum",
-      "viewType": "B20.Frontend.Elements.View.EnumSwitchView"
+      "viewType": "SomeModule.View.SomeEnumSwitchView"
     },
     {
       "name": "class2List",
