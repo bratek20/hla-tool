@@ -179,8 +179,8 @@ namespace SomeModule.Builder {
         optIntWrapper?: number,
     }
     export function classWithOptExamples(def?: ClassWithOptExamplesDef): ClassWithOptExamples {
-        const final_optInt = def?.optInt ?? undefined
-        const final_optIntWrapper = def?.optIntWrapper ?? undefined
+        const final_optInt = def?.optInt ?? 1
+        const final_optIntWrapper = def?.optIntWrapper ?? 2
 
         return ClassWithOptExamples.create(
             Optional.of(final_optInt),
