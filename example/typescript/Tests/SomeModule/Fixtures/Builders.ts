@@ -174,6 +174,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassWithOptExamplesDef {
+        optInt?: number,
+        optIntWrapper?: number,
+    }
+    export function classWithOptExamples(def?: ClassWithOptExamplesDef): ClassWithOptExamples {
+        const final_optInt = def?.optInt ?? 1
+        const final_optIntWrapper = def?.optIntWrapper ?? 2
+
+        return ClassWithOptExamples.create(
+            Optional.of(final_optInt),
+            Optional.of(final_optIntWrapper).map(it => new SomeIntWrapper(it)),
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,

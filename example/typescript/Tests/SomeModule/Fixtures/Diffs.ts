@@ -264,6 +264,34 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassWithOptExamples {
+        optIntEmpty?: boolean,
+        optInt?: number,
+        optIntWrapperEmpty?: boolean,
+        optIntWrapper?: number,
+    }
+    export function diffClassWithOptExamples(given: ClassWithOptExamples, expected: ExpectedClassWithOptExamples, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optIntEmpty !== undefined) {
+            if (given.getOptInt().isEmpty() != expected.optIntEmpty) { result.push(`${path}optInt empty ${given.getOptInt().isEmpty()} != ${expected.optIntEmpty}`) }
+        }
+
+        if (expected.optInt !== undefined) {
+            if (given.getOptInt().get() != expected.optInt) { result.push(`${path}optInt ${given.getOptInt().get()} != ${expected.optInt}`) }
+        }
+
+        if (expected.optIntWrapperEmpty !== undefined) {
+            if (given.getOptIntWrapper().isEmpty() != expected.optIntWrapperEmpty) { result.push(`${path}optIntWrapper empty ${given.getOptIntWrapper().isEmpty()} != ${expected.optIntWrapperEmpty}`) }
+        }
+
+        if (expected.optIntWrapper !== undefined) {
+            if (diffSomeIntWrapper(given.getOptIntWrapper().get(), expected.optIntWrapper) != "") { result.push(diffSomeIntWrapper(given.getOptIntWrapper().get(), expected.optIntWrapper, `${path}optIntWrapper.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeQueryInput {
         id?: string,
         amount?: number,

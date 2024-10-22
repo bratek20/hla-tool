@@ -332,6 +332,28 @@ namespace SomeModule.Api {
         }
     }
 
+    public class ClassWithOptExamples {
+        readonly int? optInt;
+        readonly int? optIntWrapper;
+
+        public ClassWithOptExamples(
+            int? optInt,
+            int? optIntWrapper
+        ) {
+            this.optInt = optInt;
+            this.optIntWrapper = optIntWrapper;
+        }
+        public Optional<int> GetOptInt() {
+            return Optional<int>.Of(optInt);
+        }
+        public Optional<SomeIntWrapper> GetOptIntWrapper() {
+            return Optional<int>.Of(optIntWrapper).Map( it => new SomeIntWrapper(it) );
+        }
+        public static ClassWithOptExamples Create(Optional<int> optInt, Optional<SomeIntWrapper> optIntWrapper) {
+            return new ClassWithOptExamples(optInt.OrElse(null), optIntWrapper.Map( it => it.Value ).OrElse(null));
+        }
+    }
+
     public class SomeQueryInput {
         readonly string id;
         readonly int amount;

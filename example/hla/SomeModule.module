@@ -61,6 +61,10 @@ ValueObjects
         id: SomeId
         amount: int
 
+    ClassWithOptExamples
+        optInt: int? (example: 1)
+        optIntWrapper: SomeIntWrapper? (example: 2)
+
 Properties
     SomeProperty
         other: OtherProperty

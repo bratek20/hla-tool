@@ -282,6 +282,35 @@ fun diffRecordClass(given: RecordClass, expectedInit: ExpectedRecordClass.() -> 
     return result.joinToString("\n")
 }
 
+data class ExpectedClassWithOptExamples(
+    var optIntEmpty: Boolean? = null,
+    var optInt: Int? = null,
+    var optIntWrapperEmpty: Boolean? = null,
+    var optIntWrapper: Int? = null,
+)
+fun diffClassWithOptExamples(given: ClassWithOptExamples, expectedInit: ExpectedClassWithOptExamples.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithOptExamples().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optIntEmpty?.let {
+        if ((given.getOptInt() == null) != it) { result.add("${path}optInt empty ${(given.getOptInt() == null)} != ${it}") }
+    }
+
+    expected.optInt?.let {
+        if (given.getOptInt()!! != it) { result.add("${path}optInt ${given.getOptInt()!!} != ${it}") }
+    }
+
+    expected.optIntWrapperEmpty?.let {
+        if ((given.getOptIntWrapper() == null) != it) { result.add("${path}optIntWrapper empty ${(given.getOptIntWrapper() == null)} != ${it}") }
+    }
+
+    expected.optIntWrapper?.let {
+        if (diffSomeIntWrapper(given.getOptIntWrapper()!!, it) != "") { result.add(diffSomeIntWrapper(given.getOptIntWrapper()!!, it, "${path}optIntWrapper.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,

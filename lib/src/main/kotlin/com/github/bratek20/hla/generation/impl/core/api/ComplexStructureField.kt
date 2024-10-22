@@ -51,6 +51,13 @@ open class ComplexStructureField(
         return null
     }
 
+    fun defaultSerializedValue(): String? {
+        def.getDefaultValue()?.let {
+            return mapDefaultSerializedValue(it)
+        }
+        return null
+    }
+
     // used by velocity
     fun accessor(): String {
         val isPublic = def.getAttributes().any { it.getName() == "public" }
@@ -104,6 +111,16 @@ open class ComplexStructureField(
         }
         if (value == "empty") {
             return type.languageTypes.emptyOptional()
+        }
+        return value
+    }
+
+    private fun mapDefaultSerializedValue(value: String): String {
+        if (value == "[]") {
+            return type.languageTypes.defaultValueForList()
+        }
+        if (value == "empty") {
+            return type.languageTypes.undefinedValue()
         }
         return value
     }

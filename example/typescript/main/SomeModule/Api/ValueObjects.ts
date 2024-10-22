@@ -345,6 +345,29 @@ class RecordClass {
     }
 }
 
+class ClassWithOptExamples {
+    private optInt? = NUMBER
+    private optIntWrapper? = NUMBER
+
+    static create(
+        optInt: Optional<number>,
+        optIntWrapper: Optional<SomeIntWrapper>,
+    ): ClassWithOptExamples {
+        const instance = new ClassWithOptExamples()
+        instance.optInt = optInt.orElse(undefined)
+        instance.optIntWrapper = optIntWrapper.map(it => it.value).orElse(undefined)
+        return instance
+    }
+
+    getOptInt(): Optional<number> {
+        return Optional.of(this.optInt)
+    }
+
+    getOptIntWrapper(): Optional<SomeIntWrapper> {
+        return Optional.of(this.optIntWrapper).map(it => new SomeIntWrapper(it))
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

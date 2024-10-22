@@ -78,6 +78,11 @@ fun assertRecordClass(given: RecordClass, expectedInit: ExpectedRecordClass.() -
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertClassWithOptExamples(given: ClassWithOptExamples, expectedInit: ExpectedClassWithOptExamples.() -> Unit) {
+    val diff = diffClassWithOptExamples(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
     val diff = diffSomeQueryInput(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
