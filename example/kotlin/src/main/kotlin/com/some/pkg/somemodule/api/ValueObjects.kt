@@ -352,6 +352,31 @@ data class RecordClass(
     }
 }
 
+data class ClassWithOptExamples(
+    private val optInt: Int?,
+    private val optIntWrapper: Int?,
+) {
+    fun getOptInt(): Int? {
+        return this.optInt
+    }
+
+    fun getOptIntWrapper(): SomeIntWrapper? {
+        return this.optIntWrapper?.let { it -> SomeIntWrapper(it) }
+    }
+
+    companion object {
+        fun create(
+            optInt: Int?,
+            optIntWrapper: SomeIntWrapper?,
+        ): ClassWithOptExamples {
+            return ClassWithOptExamples(
+                optInt = optInt,
+                optIntWrapper = optIntWrapper?.let { it -> it.value },
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,
