@@ -156,8 +156,8 @@ fun recordClass(init: RecordClassDef.() -> Unit = {}): RecordClass {
 }
 
 data class ClassWithOptExamplesDef(
-    var optInt: Int? = null,
-    var optIntWrapper: Int? = null,
+    var optInt: Int? = 1,
+    var optIntWrapper: Int? = 2,
 )
 fun classWithOptExamples(init: ClassWithOptExamplesDef.() -> Unit = {}): ClassWithOptExamples {
     val def = ClassWithOptExamplesDef().apply(init)
