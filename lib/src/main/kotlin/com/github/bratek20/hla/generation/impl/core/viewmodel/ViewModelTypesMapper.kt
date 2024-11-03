@@ -88,7 +88,7 @@ class ModelToViewModelTypeMapper(
         val viewTypeName = mapModelToViewTypeName(modelType)
         return HlaType.create(
             name = viewTypeName,
-            path = HlaTypePath("")
+            path = modelType.asHlaType().getPath()
         )
     }
 

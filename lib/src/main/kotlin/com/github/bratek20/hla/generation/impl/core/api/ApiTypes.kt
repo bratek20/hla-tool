@@ -10,6 +10,8 @@ import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
+import com.github.bratek20.hla.type.api.HlaType
+import com.github.bratek20.hla.type.api.HlaTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -26,6 +28,13 @@ abstract class ApiType {
 
     fun moduleName(): String {
         return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
+    }
+
+    fun asHlaType(): HlaType {
+        return HlaType.create(
+            name(),
+            HlaTypePath(moduleName() + "/api")
+        )
     }
 
     abstract fun name(): String

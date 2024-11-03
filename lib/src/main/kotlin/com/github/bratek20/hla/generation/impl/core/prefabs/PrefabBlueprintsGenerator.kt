@@ -30,16 +30,19 @@ abstract class PrefabBaseBlueprintLogic(
         return mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
     }
 
+    private fun asFullViewType(type: HlaType): String {
+        return type.getPath().value.replace("/", ".") + "." + type.getName()
+    }
+
     fun getFile(): File {
         val typeApi = TypeApiLogic()
         val calculator = CreationOrderCalculator(typeApi)
         val type = getMyType()
-        val viewType = getMyType().getName()
 
         val blueprint = PrefabBlueprint.create(
             blueprintType = blueprintType(),
             name = getName(),
-            viewType = viewType,
+            viewType = asFullViewType(type),
             creationOrder = calculator.calculateCreationOrder(type),
             children = children() ?: emptyList(),
             elementViewType = elementViewType()
