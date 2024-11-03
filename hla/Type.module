@@ -3,9 +3,10 @@ Enums
         BaseType
         WrapperType
 
-ValueObjects
+CustomTypes
     HlaTypePath: string (example: "someGroup/someModule/api")
 
+ValueObjects
     HlaType
         name: string
         path: HlaTypePath

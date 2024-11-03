@@ -2,14 +2,6 @@
 
 package com.github.bratek20.hla.type.api
 
-data class HlaTypePath(
-    val value: String
-) {
-    override fun toString(): String {
-        return value.toString()
-    }
-}
-
 data class HlaType(
     private val name: String,
     private val path: String,
@@ -19,7 +11,7 @@ data class HlaType(
     }
 
     fun getPath(): HlaTypePath {
-        return HlaTypePath(this.path)
+        return hlaTypePathCreate(this.path)
     }
 
     companion object {
@@ -29,7 +21,7 @@ data class HlaType(
         ): HlaType {
             return HlaType(
                 name = name,
-                path = path.value,
+                path = hlaTypePathGetValue(path),
             )
         }
     }

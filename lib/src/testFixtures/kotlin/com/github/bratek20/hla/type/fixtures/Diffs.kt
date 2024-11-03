@@ -5,7 +5,7 @@ package com.github.bratek20.hla.type.fixtures
 import com.github.bratek20.hla.type.api.*
 
 fun diffHlaTypePath(given: HlaTypePath, expected: String, path: String = ""): String {
-    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    if (hlaTypePathGetValue(given) != expected) { return "${path}value ${hlaTypePathGetValue(given)} != ${expected}" }
     return ""
 }
 

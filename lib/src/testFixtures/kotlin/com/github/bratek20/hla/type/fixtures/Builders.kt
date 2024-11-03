@@ -5,7 +5,7 @@ package com.github.bratek20.hla.type.fixtures
 import com.github.bratek20.hla.type.api.*
 
 fun hlaTypePath(value: String = "someGroup/someModule/api"): HlaTypePath {
-    return HlaTypePath(value)
+    return hlaTypePathCreate(value)
 }
 
 data class HlaTypeDef(
@@ -16,6 +16,6 @@ fun hlaType(init: HlaTypeDef.() -> Unit = {}): HlaType {
     val def = HlaTypeDef().apply(init)
     return HlaType.create(
         name = def.name,
-        path = HlaTypePath(def.path),
+        path = hlaTypePathCreate(def.path),
     )
 }

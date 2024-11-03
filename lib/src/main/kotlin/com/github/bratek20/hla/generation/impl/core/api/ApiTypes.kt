@@ -5,6 +5,8 @@ import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
@@ -32,8 +34,11 @@ abstract class ApiType {
 
     fun asHlaType(): HlaType {
         return HlaType.create(
-            name(),
-            HlaTypePath(moduleName() + "/api")
+            name = name(),
+            path = HlaTypePath.create(
+                ModuleName(moduleName()),
+                SubmoduleName.Api
+            )
         )
     }
 

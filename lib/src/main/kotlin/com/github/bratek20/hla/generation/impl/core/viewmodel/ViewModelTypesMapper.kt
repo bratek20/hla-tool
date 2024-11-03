@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.type.api.HlaType
 import com.github.bratek20.hla.type.api.HlaTypePath
@@ -89,6 +90,7 @@ class ModelToViewModelTypeMapper(
         return HlaType.create(
             name = viewTypeName,
             path = modelType.asHlaType().getPath()
+                .replaceSubmodule(SubmoduleName.View)
         )
     }
 
