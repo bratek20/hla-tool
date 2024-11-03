@@ -3,6 +3,7 @@ package com.github.bratek20.hla.type.impl
 import com.github.bratek20.hla.type.api.*
 
 class TypeApiLogic: TypeApi {
+    //TODO-GENERALIZE
     override fun getTypeDependencies(type: HlaType): List<HlaType> {
         if (type.getName() == "SomeClass2GroupView") {
             return listOf(

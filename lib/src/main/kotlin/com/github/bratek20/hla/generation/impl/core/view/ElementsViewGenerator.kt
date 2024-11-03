@@ -119,6 +119,7 @@ class WindowViewLogic(
     override fun getViewClassType(): HlaType {
         return HlaType.create(
             getViewClassName(),
+            //TODO-GENERALIZE
             HlaTypePath.create(ModuleName("SomeModule"), SubmoduleName.View)
         )
     }
