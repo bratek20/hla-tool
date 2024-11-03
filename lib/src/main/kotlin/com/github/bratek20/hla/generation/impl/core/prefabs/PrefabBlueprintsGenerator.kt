@@ -43,23 +43,26 @@ abstract class PrefabBaseBlueprintLogic(
             ModuleName("SomeModule"),
             SubmoduleName.View
         )
-        val typeApi = TypesApiLogic(
-            wrappers = listOf(
-                Wrapper.create(
-                    type = HlaType.create("SomeClass2GroupView", path),
-                    wrappedType = HlaType.create("SomeClass2View", path)
-                ),
-                Wrapper.create(
-                    type = HlaType.create("OptionalSomeClassView", path),
-                    wrappedType = HlaType.create("SomeClassView", path)
-                ),
-                Wrapper.create(
-                    type = HlaType.create("SomeClassGroupView", path),
-                    wrappedType = HlaType.create("SomeClassView", path)
-                )
-            ),
-            structures = emptyList()
-        )
+        val typeApi = TypesApiLogic()
+        typeApi.addWrapper(
+            Wrapper.create(
+                type = HlaType.create("SomeClass2GroupView", path),
+                wrappedType = HlaType.create("SomeClass2View", path)
+            )
+        );
+        typeApi.addWrapper(
+            Wrapper.create(
+                type = HlaType.create("OptionalSomeClassView", path),
+                wrappedType = HlaType.create("SomeClassView", path)
+            )
+        );
+        typeApi.addWrapper(
+            Wrapper.create(
+                type = HlaType.create("SomeClassGroupView", path),
+                wrappedType = HlaType.create("SomeClassView", path)
+            )
+        );
+
         val calculator = CreationOrderCalculator(typeApi)
         val type = getMyType()
 
