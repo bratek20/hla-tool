@@ -25,5 +25,8 @@ ValueObjects
         wrappedType: HlaType
 
 Interfaces
-    TypeApi
+    TypesApi
+        addStructure(structure: Structure)
+        addWrapper(wrapper: Wrapper)
+
         getTypeDependencies(type: HlaType): HlaType[]

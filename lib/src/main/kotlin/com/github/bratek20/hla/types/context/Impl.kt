@@ -9,6 +9,6 @@ import com.github.bratek20.hla.types.impl.*
 class TypeImpl: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
-            .setImpl(TypeApi::class.java, TypeApiLogic::class.java)
+            .setImpl(TypesApi::class.java, TypesApiLogic::class.java)
     }
 }

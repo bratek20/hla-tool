@@ -15,7 +15,7 @@ import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
 import com.github.bratek20.hla.types.api.HlaType
 import com.github.bratek20.hla.types.api.HlaTypePath
 import com.github.bratek20.hla.types.api.Wrapper
-import com.github.bratek20.hla.types.impl.TypeApiLogic
+import com.github.bratek20.hla.types.impl.TypesApiLogic
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
@@ -43,7 +43,7 @@ abstract class PrefabBaseBlueprintLogic(
             ModuleName("SomeModule"),
             SubmoduleName.View
         )
-        val typeApi = TypeApiLogic(
+        val typeApi = TypesApiLogic(
             wrappers = listOf(
                 Wrapper.create(
                     type = HlaType.create("SomeClass2GroupView", path),

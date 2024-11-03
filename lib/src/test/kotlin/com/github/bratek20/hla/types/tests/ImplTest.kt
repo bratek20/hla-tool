@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.types.tests
 
 import com.github.bratek20.architecture.context.someContextBuilder
-import com.github.bratek20.hla.types.api.TypeApi
+import com.github.bratek20.hla.types.api.TypesApi
 import com.github.bratek20.hla.types.context.TypeImpl
 import com.github.bratek20.hla.types.fixtures.hlaType
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +14,7 @@ class TypeImplTest {
             .withModules(
                 TypeImpl()
             )
-            .get(TypeApi::class.java)
+            .get(TypesApi::class.java)
 
         api.getTypeDependencies(
             hlaType {  }

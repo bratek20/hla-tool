@@ -1,10 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.prefabs
 
 import com.github.bratek20.hla.types.api.HlaType
-import com.github.bratek20.hla.types.api.TypeApi
+import com.github.bratek20.hla.types.api.TypesApi
 
 class CreationOrderCalculator(
-    private val typeApi: TypeApi,
+    private val typeApi: TypesApi,
 ) {
     private val cache = mutableMapOf<HlaType, Int>()
 

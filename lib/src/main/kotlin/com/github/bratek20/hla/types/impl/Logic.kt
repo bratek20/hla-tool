@@ -2,10 +2,10 @@ package com.github.bratek20.hla.types.impl
 
 import com.github.bratek20.hla.types.api.*
 
-class TypeApiLogic(
+class TypesApiLogic(
     private val wrappers: List<Wrapper>,
     private val structures: List<Structure>
-): TypeApi {
+): TypesApi {
 
     override fun getTypeDependencies(type: HlaType): List<HlaType> {
         wrappers.firstOrNull {
