@@ -9,3 +9,7 @@ ValueObjects
     HlaType
         name: string
         path: HlaTypePath
+
+Interfaces
+    TypeApi
+        getTypeDependencies(type: HlaType): HlaType[]
