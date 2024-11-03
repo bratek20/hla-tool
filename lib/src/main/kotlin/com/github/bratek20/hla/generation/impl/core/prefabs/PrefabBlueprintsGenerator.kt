@@ -10,6 +10,9 @@ import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTy
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
+import com.github.bratek20.hla.type.api.HlaType
+import com.github.bratek20.hla.type.api.HlaTypePath
+import com.github.bratek20.hla.type.impl.TypeApiLogic
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
@@ -20,7 +23,6 @@ abstract class PrefabBaseBlueprintLogic(
     abstract fun getName(): String
     abstract fun getMyFullType(): String
     abstract fun blueprintType(): BlueprintType
-    abstract fun creationOrder(): Int
 
     open fun children(): List<PrefabChildBlueprint>? = null
     open fun elementViewType(): String? = null
@@ -30,11 +32,18 @@ abstract class PrefabBaseBlueprintLogic(
     }
 
     fun getFile(): File {
+        val typeApi = TypeApiLogic()
+        val calculator = CreationOrderCalculator(typeApi)
+        val type = HlaType.create(
+            name = getName(),
+            path = HlaTypePath("")
+        )
+
         val blueprint = PrefabBlueprint.create(
             blueprintType = blueprintType(),
             name = getName(),
             viewType = getMyFullType(),
-            creationOrder = creationOrder(),
+            creationOrder = calculator.calculateCreationOrder(type),
             children = children() ?: emptyList(),
             elementViewType = elementViewType()
         )
@@ -70,10 +79,6 @@ class PrefabWrappedElementBlueprintLogic(
         }
     }
 
-    override fun creationOrder(): Int {
-        return 10
-    }
-
     override fun elementViewType(): String {
         return getFullType(view.getElementViewModelTypeName())
     }
@@ -107,10 +112,6 @@ class PrefabComplexElementBlueprintLogic(
     override fun blueprintType(): BlueprintType {
         return BlueprintType.ComplexElement
     }
-
-    override fun creationOrder(): Int {
-        return 1
-    }
 }
 
 class PrefabWindowBlueprintLogic(
@@ -127,10 +128,6 @@ class PrefabWindowBlueprintLogic(
     override fun blueprintType(): BlueprintType {
         return BlueprintType.Window
     }
-
-    override fun creationOrder(): Int {
-        return 20
-    }
 }
 
 class PrefabEnumElementBlueprintLogic(
@@ -146,10 +143,6 @@ class PrefabEnumElementBlueprintLogic(
 
     override fun blueprintType(): BlueprintType {
         return BlueprintType.EnumElement
-    }
-
-    override fun creationOrder(): Int {
-        return 1
     }
 }
 
