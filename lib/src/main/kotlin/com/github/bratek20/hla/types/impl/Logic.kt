@@ -1,6 +1,6 @@
-package com.github.bratek20.hla.type.impl
+package com.github.bratek20.hla.types.impl
 
-import com.github.bratek20.hla.type.api.*
+import com.github.bratek20.hla.types.api.*
 
 class TypeApiLogic(
     private val wrappers: List<Wrapper>,

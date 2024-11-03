@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.prefabs
 
-import com.github.bratek20.hla.type.api.HlaType
-import com.github.bratek20.hla.type.api.TypeApi
+import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.types.api.TypeApi
 
 class CreationOrderCalculator(
     private val typeApi: TypeApi,

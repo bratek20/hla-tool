@@ -5,8 +5,7 @@ import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
-import com.github.bratek20.hla.type.api.HlaType
-import com.github.bratek20.hla.type.api.HlaTypePath
+import com.github.bratek20.hla.types.api.HlaType
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,

@@ -1,9 +1,9 @@
-package com.github.bratek20.hla.type.tests
+package com.github.bratek20.hla.types.tests
 
 import com.github.bratek20.architecture.context.someContextBuilder
-import com.github.bratek20.hla.type.api.TypeApi
-import com.github.bratek20.hla.type.context.TypeImpl
-import com.github.bratek20.hla.type.fixtures.hlaType
+import com.github.bratek20.hla.types.api.TypeApi
+import com.github.bratek20.hla.types.context.TypeImpl
+import com.github.bratek20.hla.types.fixtures.hlaType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

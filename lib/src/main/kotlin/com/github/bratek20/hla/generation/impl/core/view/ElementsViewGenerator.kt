@@ -11,9 +11,8 @@ import com.github.bratek20.hla.generation.impl.core.api.ListApiType
 import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
-import com.github.bratek20.hla.type.api.HlaType
-import com.github.bratek20.hla.type.api.HlaTypePath
-import com.github.bratek20.hla.type.api.emptyHlaTypePath
+import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.types.api.HlaTypePath
 
 abstract class ViewLogic(
     val mapper: ModelToViewModelTypeMapper

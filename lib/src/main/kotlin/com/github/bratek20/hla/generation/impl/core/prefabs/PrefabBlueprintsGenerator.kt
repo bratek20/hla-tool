@@ -12,11 +12,10 @@ import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTy
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
-import com.github.bratek20.hla.type.api.HlaType
-import com.github.bratek20.hla.type.api.HlaTypePath
-import com.github.bratek20.hla.type.api.Wrapper
-import com.github.bratek20.hla.type.api.emptyHlaTypePath
-import com.github.bratek20.hla.type.impl.TypeApiLogic
+import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.types.api.HlaTypePath
+import com.github.bratek20.hla.types.api.Wrapper
+import com.github.bratek20.hla.types.impl.TypeApiLogic
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
