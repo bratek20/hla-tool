@@ -32,3 +32,61 @@ fun diffHlaType(given: HlaType, expectedInit: ExpectedHlaType.() -> Unit, path: 
 
     return result.joinToString("\n")
 }
+
+data class ExpectedStructureField(
+    var name: String? = null,
+    var type: (ExpectedHlaType.() -> Unit)? = null,
+)
+fun diffStructureField(given: StructureField, expectedInit: ExpectedStructureField.() -> Unit, path: String = ""): String {
+    val expected = ExpectedStructureField().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.type?.let {
+        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedStructure(
+    var type: (ExpectedHlaType.() -> Unit)? = null,
+    var fields: List<(ExpectedStructureField.() -> Unit)>? = null,
+)
+fun diffStructure(given: Structure, expectedInit: ExpectedStructure.() -> Unit, path: String = ""): String {
+    val expected = ExpectedStructure().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.type?.let {
+        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+    }
+
+    expected.fields?.let {
+        if (given.getFields().size != it.size) { result.add("${path}fields size ${given.getFields().size} != ${it.size}"); return@let }
+        given.getFields().forEachIndexed { idx, entry -> if (diffStructureField(entry, it[idx]) != "") { result.add(diffStructureField(entry, it[idx], "${path}fields[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedWrapper(
+    var type: (ExpectedHlaType.() -> Unit)? = null,
+    var wrappedType: (ExpectedHlaType.() -> Unit)? = null,
+)
+fun diffWrapper(given: Wrapper, expectedInit: ExpectedWrapper.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWrapper().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.type?.let {
+        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+    }
+
+    expected.wrappedType?.let {
+        if (diffHlaType(given.getWrappedType(), it) != "") { result.add(diffHlaType(given.getWrappedType(), it, "${path}wrappedType.")) }
+    }
+
+    return result.joinToString("\n")
+}

@@ -15,3 +15,18 @@ fun assertHlaType(given: HlaType, expectedInit: ExpectedHlaType.() -> Unit) {
     val diff = diffHlaType(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertStructureField(given: StructureField, expectedInit: ExpectedStructureField.() -> Unit) {
+    val diff = diffStructureField(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertStructure(given: Structure, expectedInit: ExpectedStructure.() -> Unit) {
+    val diff = diffStructure(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertWrapper(given: Wrapper, expectedInit: ExpectedWrapper.() -> Unit) {
+    val diff = diffWrapper(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

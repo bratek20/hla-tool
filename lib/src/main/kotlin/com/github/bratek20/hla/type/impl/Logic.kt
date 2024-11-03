@@ -2,33 +2,29 @@ package com.github.bratek20.hla.type.impl
 
 import com.github.bratek20.hla.type.api.*
 
-class TypeApiLogic: TypeApi {
-    //TODO-GENERALIZE
+class TypeApiLogic(
+    private val wrappers: List<Wrapper>,
+    private val structures: List<Structure>
+): TypeApi {
+
     override fun getTypeDependencies(type: HlaType): List<HlaType> {
-        if (type.getName() == "SomeClass2GroupView") {
+        wrappers.firstOrNull {
+            it.getType() == type
+        }?.let {
             return listOf(
-                HlaType.create(
-                    "SomeClass2View",
-                    type.getPath()
-                )
+                it.getWrappedType()
             )
         }
-        if (type.getName() == "SomeClassGroupView") {
-            return listOf(
-                HlaType.create(
-                    "SomeClassView",
-                    type.getPath()
-                )
-            )
+
+        structures.firstOrNull {
+            it.getType() == type
+        }?.let { structure ->
+            return structure.getFields().map {
+                it.getType()
+            }
         }
-        if (type.getName() == "OptionalSomeClassView") {
-            return listOf(
-                HlaType.create(
-                    "SomeClassView",
-                    type.getPath()
-                )
-            )
-        }
+
+        //TODO-GENERALIZE
         if (type.getName() == "SomeClass3View") {
             return listOf(
                 HlaType.create(

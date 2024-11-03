@@ -26,3 +26,78 @@ data class HlaType(
         }
     }
 }
+
+data class StructureField(
+    private val name: String,
+    private val type: HlaType,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getType(): HlaType {
+        return this.type
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            type: HlaType,
+        ): StructureField {
+            return StructureField(
+                name = name,
+                type = type,
+            )
+        }
+    }
+}
+
+data class Structure(
+    private val type: HlaType,
+    private val fields: List<StructureField>,
+) {
+    fun getType(): HlaType {
+        return this.type
+    }
+
+    fun getFields(): List<StructureField> {
+        return this.fields
+    }
+
+    companion object {
+        fun create(
+            type: HlaType,
+            fields: List<StructureField>,
+        ): Structure {
+            return Structure(
+                type = type,
+                fields = fields,
+            )
+        }
+    }
+}
+
+data class Wrapper(
+    private val type: HlaType,
+    private val wrappedType: HlaType,
+) {
+    fun getType(): HlaType {
+        return this.type
+    }
+
+    fun getWrappedType(): HlaType {
+        return this.wrappedType
+    }
+
+    companion object {
+        fun create(
+            type: HlaType,
+            wrappedType: HlaType,
+        ): Wrapper {
+            return Wrapper(
+                type = type,
+                wrappedType = wrappedType,
+            )
+        }
+    }
+}

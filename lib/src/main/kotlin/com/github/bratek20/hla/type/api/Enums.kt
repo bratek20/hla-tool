@@ -2,6 +2,7 @@
 
 package com.github.bratek20.hla.type.api
 enum class TypeKind {
-    BaseType,
-    WrapperType,
+    Base,
+    Wrapper,
+    Structure,
 }

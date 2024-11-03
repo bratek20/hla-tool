@@ -2,7 +2,9 @@ package com.github.bratek20.hla.generation.impl.core.prefabs
 
 import com.github.bratek20.architecture.serialization.api.SerializerConfig
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
@@ -11,6 +13,9 @@ import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
 import com.github.bratek20.hla.type.api.HlaType
+import com.github.bratek20.hla.type.api.HlaTypePath
+import com.github.bratek20.hla.type.api.Wrapper
+import com.github.bratek20.hla.type.api.emptyHlaTypePath
 import com.github.bratek20.hla.type.impl.TypeApiLogic
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
@@ -35,7 +40,27 @@ abstract class PrefabBaseBlueprintLogic(
     }
 
     fun getFile(): File {
-        val typeApi = TypeApiLogic()
+        val path = HlaTypePath.create(
+            ModuleName("SomeModule"),
+            SubmoduleName.View
+        )
+        val typeApi = TypeApiLogic(
+            wrappers = listOf(
+                Wrapper.create(
+                    type = HlaType.create("SomeClass2GroupView", path),
+                    wrappedType = HlaType.create("SomeClass2View", path)
+                ),
+                Wrapper.create(
+                    type = HlaType.create("OptionalSomeClassView", path),
+                    wrappedType = HlaType.create("SomeClassView", path)
+                ),
+                Wrapper.create(
+                    type = HlaType.create("SomeClassGroupView", path),
+                    wrappedType = HlaType.create("SomeClassView", path)
+                )
+            ),
+            structures = emptyList()
+        )
         val calculator = CreationOrderCalculator(typeApi)
         val type = getMyType()
 

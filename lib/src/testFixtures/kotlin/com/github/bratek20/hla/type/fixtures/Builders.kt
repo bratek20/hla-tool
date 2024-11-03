@@ -19,3 +19,39 @@ fun hlaType(init: HlaTypeDef.() -> Unit = {}): HlaType {
         path = hlaTypePathCreate(def.path),
     )
 }
+
+data class StructureFieldDef(
+    var name: String = "someValue",
+    var type: (HlaTypeDef.() -> Unit) = {},
+)
+fun structureField(init: StructureFieldDef.() -> Unit = {}): StructureField {
+    val def = StructureFieldDef().apply(init)
+    return StructureField.create(
+        name = def.name,
+        type = hlaType(def.type),
+    )
+}
+
+data class StructureDef(
+    var type: (HlaTypeDef.() -> Unit) = {},
+    var fields: List<(StructureFieldDef.() -> Unit)> = emptyList(),
+)
+fun structure(init: StructureDef.() -> Unit = {}): Structure {
+    val def = StructureDef().apply(init)
+    return Structure.create(
+        type = hlaType(def.type),
+        fields = def.fields.map { it -> structureField(it) },
+    )
+}
+
+data class WrapperDef(
+    var type: (HlaTypeDef.() -> Unit) = {},
+    var wrappedType: (HlaTypeDef.() -> Unit) = {},
+)
+fun wrapper(init: WrapperDef.() -> Unit = {}): Wrapper {
+    val def = WrapperDef().apply(init)
+    return Wrapper.create(
+        type = hlaType(def.type),
+        wrappedType = hlaType(def.wrappedType),
+    )
+}
