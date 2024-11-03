@@ -4,6 +4,8 @@ import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.impl.core.api.*
+import com.github.bratek20.hla.type.api.HlaType
+import com.github.bratek20.hla.type.api.HlaTypePath
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
@@ -23,6 +25,15 @@ class ModelToViewModelTypeMapper(
             return "Optional" + mapViewModelToViewTypeName(wrappedTypeName)
         }
         return viewModelType + "View"
+    }
+
+    fun mapViewModelToViewType(viewModelType: HlaType): HlaType {
+        val viewModelTypeName = viewModelType.getName()
+        val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
+        return HlaType.create(
+            name = viewTypeName,
+            path = viewModelType.getPath()
+        )
     }
 
     fun mapViewModelWrappedTypeToListType(viewModelType: String): String {
@@ -71,6 +82,14 @@ class ModelToViewModelTypeMapper(
             baseName = modelType.name
         }
         return baseName + "View"
+    }
+
+    fun mapModelToViewType(modelType: ApiType): HlaType {
+        val viewTypeName = mapModelToViewTypeName(modelType)
+        return HlaType.create(
+            name = viewTypeName,
+            path = HlaTypePath("")
+        )
     }
 
     fun mapModelToViewModelTypeName(modelType: ApiType): String {

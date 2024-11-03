@@ -11,7 +11,6 @@ import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
 import com.github.bratek20.hla.type.api.HlaType
-import com.github.bratek20.hla.type.api.HlaTypePath
 import com.github.bratek20.hla.type.impl.TypeApiLogic
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
@@ -21,7 +20,7 @@ abstract class PrefabBaseBlueprintLogic(
     private val mapper: ModelToViewModelTypeMapper,
 ) {
     abstract fun getName(): String
-    abstract fun getMyFullType(): String
+    abstract fun getMyType(): HlaType
     abstract fun blueprintType(): BlueprintType
 
     open fun children(): List<PrefabChildBlueprint>? = null
@@ -34,15 +33,13 @@ abstract class PrefabBaseBlueprintLogic(
     fun getFile(): File {
         val typeApi = TypeApiLogic()
         val calculator = CreationOrderCalculator(typeApi)
-        val type = HlaType.create(
-            name = getName(),
-            path = HlaTypePath("")
-        )
+        val type = getMyType()
+        val viewType = getMyType().getName()
 
         val blueprint = PrefabBlueprint.create(
             blueprintType = blueprintType(),
             name = getName(),
-            viewType = getMyFullType(),
+            viewType = viewType,
             creationOrder = calculator.calculateCreationOrder(type),
             children = children() ?: emptyList(),
             elementViewType = elementViewType()
@@ -67,8 +64,8 @@ class PrefabWrappedElementBlueprintLogic(
         return view.getViewClassName().replace("View", "")
     }
 
-    override fun getMyFullType(): String {
-        return view.modelType.moduleName() + ".View." + view.getViewClassName()
+    override fun getMyType(): HlaType {
+        return view.getViewClassType()
     }
 
     override fun blueprintType(): BlueprintType {
@@ -105,8 +102,8 @@ class PrefabComplexElementBlueprintLogic(
         return view.elem.modelType.name()
     }
 
-    override fun getMyFullType(): String {
-        return getFullType(view.getViewModelTypeName())
+    override fun getMyType(): HlaType {
+        return view.getViewClassType()
     }
 
     override fun blueprintType(): BlueprintType {
@@ -121,8 +118,8 @@ class PrefabWindowBlueprintLogic(
         return view.window.getClassName()
     }
 
-    override fun getMyFullType(): String {
-        return view.window.getModuleName() + ".View." + view.getViewClassName()
+    override fun getMyType(): HlaType {
+        return view.getViewClassType()
     }
 
     override fun blueprintType(): BlueprintType {
@@ -137,8 +134,8 @@ class PrefabEnumElementBlueprintLogic(
         return view.vmLogic.modelType.name()
     }
 
-    override fun getMyFullType(): String {
-        return view.vmLogic.modelType.moduleName() + ".View." + view.getViewClassName()
+    override fun getMyType(): HlaType {
+        return view.getViewClassType()
     }
 
     override fun blueprintType(): BlueprintType {

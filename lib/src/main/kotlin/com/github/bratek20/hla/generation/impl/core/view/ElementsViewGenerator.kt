@@ -9,6 +9,9 @@ import com.github.bratek20.hla.generation.impl.core.api.ListApiType
 import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
+import com.github.bratek20.hla.type.api.HlaType
+import com.github.bratek20.hla.type.api.HlaTypePath
+import com.github.bratek20.hla.type.api.emptyHlaTypePath
 
 abstract class ViewLogic(
     val mapper: ModelToViewModelTypeMapper
@@ -20,6 +23,7 @@ abstract class ContainerViewLogic(
     mapper: ModelToViewModelTypeMapper
 ): ViewLogic(mapper) {
     protected abstract fun getViewClassName(): String
+    abstract fun getViewClassType(): HlaType
     abstract fun getViewModelTypeName(): String
     abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
@@ -84,6 +88,10 @@ class ComplexElementViewLogic(
         return mapper.mapViewModelToViewTypeName(elem.getTypeName())
     }
 
+    override fun getViewClassType(): HlaType {
+        return mapper.mapModelToViewType(elem.modelType)
+    }
+
     override fun getViewModelTypeName(): String {
         return elem.getTypeName()
     }
@@ -104,6 +112,13 @@ class WindowViewLogic(
 ): ContainerViewLogic(mapper) {
     public override fun getViewClassName(): String {
         return window.getClassName() + "View"
+    }
+
+    override fun getViewClassType(): HlaType {
+        return HlaType.create(
+            getViewClassName(),
+            emptyHlaTypePath()
+        )
     }
 
     override fun getViewModelTypeName(): String {
@@ -127,6 +142,10 @@ abstract class WrappedElementViewLogic(
 
     fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(modelType)
+    }
+
+    fun getViewClassType(): HlaType {
+        return mapper.mapModelToViewType(modelType)
     }
 
     fun getElementViewModelTypeName(): String {
@@ -184,6 +203,10 @@ class EnumElementViewLogic(
 ) : ViewLogic(mapper) {
     fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(vmLogic.modelType)
+    }
+
+    fun getViewClassType(): HlaType {
+        return mapper.mapModelToViewType(vmLogic.modelType)
     }
 
     override fun getOps(): PerFileOperations {
