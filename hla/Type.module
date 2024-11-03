@@ -1,0 +1,11 @@
+Enums
+    TypeKind
+        BaseType
+        WrapperType
+
+ValueObjects
+    HlaTypePath: string (example: "someGroup/someModule/api")
+
+    HlaType
+        name: string
+        path: HlaTypePath
