@@ -2,7 +2,7 @@
   "blueprintType": "ElementGroup",
   "name": "SomeClassGroup",
   "viewType": "SomeModule.View.SomeClassGroupView",
-  "creationOrder": 10,
+  "creationOrder": 2,
   "children": [ ],
   "elementViewType": "SomeModule.View.SomeClassView"
 }
