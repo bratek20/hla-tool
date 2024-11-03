@@ -3,7 +3,9 @@ package com.github.bratek20.hla.generation.impl.core.view
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PerFileOperations
 import com.github.bratek20.hla.generation.impl.core.api.ListApiType
 import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
@@ -117,7 +119,7 @@ class WindowViewLogic(
     override fun getViewClassType(): HlaType {
         return HlaType.create(
             getViewClassName(),
-            emptyHlaTypePath()
+            HlaTypePath.create(ModuleName("SomeModule"), SubmoduleName.View)
         )
     }
 
