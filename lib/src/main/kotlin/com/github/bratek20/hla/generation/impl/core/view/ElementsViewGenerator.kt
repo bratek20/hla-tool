@@ -13,11 +13,15 @@ import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 import com.github.bratek20.hla.types.api.HlaType
 import com.github.bratek20.hla.types.api.HlaTypePath
+import com.github.bratek20.hla.types.api.TypesApi
+import com.github.bratek20.hla.types.api.Wrapper
 
 abstract class ViewLogic(
     val mapper: ModelToViewModelTypeMapper
 ) {
     abstract fun getOps(): PerFileOperations
+
+    abstract fun populateType(typesApi: TypesApi)
 }
 
 abstract class ContainerViewLogic(
@@ -28,6 +32,10 @@ abstract class ContainerViewLogic(
     abstract fun getViewModelTypeName(): String
     abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
+
+    override fun populateType(typesApi: TypesApi) {
+        TODO("Not yet implemented")
+    }
 
     override fun getOps(): PerFileOperations {
         val viewClassName = getViewClassName()
@@ -104,7 +112,6 @@ class ComplexElementViewLogic(
     override fun getExtendedClassName(): String {
         return "ElementView"
     }
-
 }
 
 class WindowViewLogic(
@@ -141,6 +148,13 @@ abstract class WrappedElementViewLogic(
     mapper: ModelToViewModelTypeMapper
 ): ViewLogic(mapper) {
     protected abstract fun extendedClassName(): String
+
+    override fun populateType(typesApi: TypesApi) {
+        typesApi.addWrapper(Wrapper.create(
+            getViewClassType(),
+            mapper.mapModelToViewType(modelType.wrappedType)
+        ))
+    }
 
     fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(modelType)
@@ -223,6 +237,10 @@ class EnumElementViewLogic(
                 }
             }
         }
+    }
+
+    override fun populateType(typesApi: TypesApi) {
+
     }
 }
 
