@@ -4,10 +4,13 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.types.api.HlaTypePath
 import com.github.bratek20.utils.camelToPascalCase
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
@@ -106,7 +109,7 @@ class ViewModelField(
     val hlaType: HlaType?
 ) {
     companion object {
-        fun fromDefs(defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
+        fun fromDefs(moduleName: ModuleName, defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
             return defs.map {
                 val baseTypeName = it.getType().getName()
                 val finalTypeName = if (it.getType().getWrappers().contains(TypeWrapper.LIST)) {
@@ -117,7 +120,8 @@ class ViewModelField(
                     baseTypeName
                 }
 
-                ViewModelField(finalTypeName, it.getName(), null)
+                val finalType = HlaType.create(finalTypeName, HlaTypePath.create(moduleName, SubmoduleName.View))
+                ViewModelField(finalTypeName, it.getName(), finalType)
             }
         }
     }
@@ -162,11 +166,11 @@ class ViewModelComplexElementLogic(
             result.add(ViewModelField(
                 mapper.mapModelToViewModelTypeName(field.type),
                 field.name,
-                if (field.type.asOptHlaType() != null) mapper.mapModelToViewType(field.type) else null
+                if (field.type !is BaseApiType && field.type !is SimpleStructureApiType) mapper.mapModelToViewModelType(field.type) else null
             ))
         }
 
-        result.addAll(ViewModelField.fromDefs(def.getFields(), mapper))
+        result.addAll(ViewModelField.fromDefs(apiTypeFactory.modules.currentModule.getName(), def.getFields(), mapper))
 
         return result
     }

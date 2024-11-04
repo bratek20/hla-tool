@@ -32,7 +32,7 @@ class ModelToViewModelTypeMapper(
         val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
         return HlaType.create(
             name = viewTypeName,
-            path = viewModelType.getPath()
+            path = viewModelType.getPath().replaceSubmodule(SubmoduleName.View)
         )
     }
 
@@ -84,6 +84,7 @@ class ModelToViewModelTypeMapper(
         return baseName + "View"
     }
 
+
     fun mapModelToViewType(modelType: ApiType): HlaType {
         val viewTypeName = mapModelToViewTypeName(modelType)
         return HlaType.create(
@@ -113,6 +114,15 @@ class ModelToViewModelTypeMapper(
             return mapOptionalType(modelType)
         }
         return "TODO"
+    }
+
+    fun mapModelToViewModelType(modelType: ApiType): HlaType {
+        val viewModelTypeName = mapModelToViewModelTypeName(modelType)
+        return HlaType.create(
+            name = viewModelTypeName,
+            path = modelType.asHlaType().getPath()
+                .replaceSubmodule(SubmoduleName.ViewModel)
+        )
     }
 
     fun getModelForViewModelType(viewModelType: String): ApiType {

@@ -38,7 +38,7 @@ abstract class ContainerViewLogic(
             }.map {
                 StructureField.create(
                     it.name,
-                    it.hlaType!!
+                    mapper.mapViewModelToViewType(it.hlaType!!)
                 )
             }
         ))
