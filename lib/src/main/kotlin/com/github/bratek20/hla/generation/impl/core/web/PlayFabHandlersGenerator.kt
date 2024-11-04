@@ -22,11 +22,11 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getWebSubmodule()?.getPlayFabHandlers() != null
     }
 
-    private fun registerModuleHandlersCall(
+    private fun registerCall(
         exposedInterfaces: List<ExposedInterface>,
         addDebugToHandlerName: Boolean = false
     ): FunctionCallBuilderOps = {
-        name = "Handlers.Api.RegisterModuleHandlers"
+        name = "Handlers.Api.Register"
         addArg{
             variable("DependencyName.$moduleName")
         }
@@ -47,13 +47,13 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         val normalExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } == null}
         val debugExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } != null }
 
-        addFunctionCall(registerModuleHandlersCall(normalExposedInterfaces))
+        addFunctionCall(registerCall(normalExposedInterfaces))
 
         if (debugExposedInterfaces.isNotEmpty()) {
             addFunction {
                 name = "RegisterDebugHandlers"
                 setBody {
-                    addFunctionCall(registerModuleHandlersCall(debugExposedInterfaces, true))
+                    addFunctionCall(registerCall(debugExposedInterfaces, true))
                 }
             }
         }
