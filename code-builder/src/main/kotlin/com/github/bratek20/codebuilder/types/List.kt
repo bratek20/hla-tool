@@ -4,6 +4,7 @@ import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.ExpressionBuilderProvider
 import com.github.bratek20.codebuilder.builders.StatementBuilder
 import com.github.bratek20.codebuilder.builders.expression
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
@@ -20,9 +21,15 @@ fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
 }
 
 fun newListOf(elementType: TypeBuilder, vararg elements: ExpressionBuilder) = expression { c ->
-    val creation = emptyMutableList(elementType).build(c)
-    val args = elements.joinToString(", ") { it.build(c) }
-    "$creation { $args }"
+    if (c.lang is CSharp) {
+        val creation = emptyMutableList(elementType).build(c)
+        val args = elements.joinToString(", ") { it.build(c) }
+        "$creation { $args }"
+    }
+    else {
+        val args = elements.joinToString(", ") { it.build(c) }
+        "[ $args ]"
+    }
 }
 
 class ListOperations(

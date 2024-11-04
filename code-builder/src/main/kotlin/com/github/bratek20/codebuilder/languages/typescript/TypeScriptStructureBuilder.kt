@@ -1,14 +1,36 @@
 package com.github.bratek20.codebuilder.languages.typescript
 
-import com.github.bratek20.codebuilder.core.CodeBlockBuilder
+import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
+class TypeScriptPropertyBuilder: ExpressionBuilder {
+    var key: String? = null
+    var value: ExpressionBuilder? = null
 
-class TypeScriptStructureBuilder: CodeBlockBuilder {
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        line("{")
-        line("}")
+    override fun build(c: CodeBuilderContext): String {
+        return "${key!!}: ${value!!.build(c)}"
+    }
+}
+
+typealias TypeScriptPropertyBuilderOps = TypeScriptPropertyBuilder.() -> Unit
+class TypeScriptStructureBuilder: ExpressionBuilder {
+    private val properties = mutableListOf<TypeScriptPropertyBuilder>()
+
+    fun addProperty(block: TypeScriptPropertyBuilderOps) {
+        properties.add(TypeScriptPropertyBuilder().apply(block))
+    }
+
+    override fun build(c: CodeBuilderContext): String {
+        val b = StringBuilder()
+        b.append("{ ")
+        properties.forEachIndexed { index, prop ->
+            b.append(prop.build(c))
+            if (index != properties.size - 1) {
+                b.append(", ")
+            }
+        }
+        b.append(" }")
+        return b.toString()
     }
 }
 typealias TypeScriptStructureBuilderOps = TypeScriptStructureBuilder.() -> Unit
