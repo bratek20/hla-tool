@@ -2,7 +2,7 @@
   "blueprintType": "Window",
   "name": "SomeWindow",
   "viewType": "SomeModule.View.SomeWindowView",
-  "creationOrder": 20,
+  "creationOrder": 4,
   "children": [
     {
       "name": "someClassVm",

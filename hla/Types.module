@@ -1,0 +1,32 @@
+Enums
+    TypeKind
+        Base
+        Wrapper
+        Structure
+
+CustomTypes
+    HlaTypePath: string (example: "someGroup/someModule/api")
+
+ValueObjects
+    HlaType
+        name: string
+        path: HlaTypePath
+
+    StructureField
+        name: string
+        type: HlaType
+
+    Structure
+        type: HlaType
+        fields: StructureField[]
+
+    Wrapper
+        type: HlaType
+        wrappedType: HlaType
+
+Interfaces
+    TypesApi
+        addStructure(structure: Structure)
+        addWrapper(wrapper: Wrapper)
+
+        getTypeDependencies(type: HlaType): HlaType[]
