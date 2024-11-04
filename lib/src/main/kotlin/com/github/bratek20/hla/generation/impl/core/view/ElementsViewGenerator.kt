@@ -11,10 +11,7 @@ import com.github.bratek20.hla.generation.impl.core.api.ListApiType
 import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
-import com.github.bratek20.hla.types.api.HlaType
-import com.github.bratek20.hla.types.api.HlaTypePath
-import com.github.bratek20.hla.types.api.TypesApi
-import com.github.bratek20.hla.types.api.Wrapper
+import com.github.bratek20.hla.types.api.*
 
 abstract class ViewLogic(
     val mapper: ModelToViewModelTypeMapper
@@ -34,7 +31,17 @@ abstract class ContainerViewLogic(
     protected abstract fun getExtendedClassName(): String
 
     override fun populateType(typesApi: TypesApi) {
-        TODO("Not yet implemented")
+        typesApi.addStructure(Structure.create(
+            getViewClassType(),
+            getFields().filter {
+                it.hlaType != null
+            }.map {
+                StructureField.create(
+                    it.name,
+                    it.hlaType!!
+                )
+            }
+        ))
     }
 
     override fun getOps(): PerFileOperations {
@@ -125,8 +132,7 @@ class WindowViewLogic(
     override fun getViewClassType(): HlaType {
         return HlaType.create(
             getViewClassName(),
-            //TODO-GENERALIZE
-            HlaTypePath.create(ModuleName("SomeModule"), SubmoduleName.View)
+            HlaTypePath.create(ModuleName(window.getModuleName()), SubmoduleName.View)
         )
     }
 

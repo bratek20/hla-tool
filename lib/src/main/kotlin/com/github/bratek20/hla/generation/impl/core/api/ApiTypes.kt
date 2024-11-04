@@ -31,13 +31,19 @@ abstract class ApiType {
     }
 
     fun asHlaType(): HlaType {
-        return HlaType.create(
-            name = name(),
-            path = HlaTypePath.create(
-                ModuleName(moduleName()),
-                SubmoduleName.Api
+        return asOptHlaType() ?: throw IllegalStateException("No HlaType for type $this")
+    }
+
+    fun asOptHlaType(): HlaType? {
+        return typeModule?.let {
+            HlaType.create(
+                name = name(),
+                path = HlaTypePath.create(
+                    ModuleName(moduleName()),
+                    SubmoduleName.Api
+                )
             )
-        )
+        }
     }
 
     abstract fun name(): String

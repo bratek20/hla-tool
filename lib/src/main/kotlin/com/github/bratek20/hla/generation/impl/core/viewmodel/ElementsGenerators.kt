@@ -103,7 +103,7 @@ class ViewModelSharedLogic(
 class ViewModelField(
     val typeName: String,
     val name: String,
-    val hlaType: HlaType? = null
+    val hlaType: HlaType?
 ) {
     companion object {
         fun fromDefs(defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
@@ -117,7 +117,7 @@ class ViewModelField(
                     baseTypeName
                 }
 
-                ViewModelField(finalTypeName, it.getName())
+                ViewModelField(finalTypeName, it.getName(), null)
             }
         }
     }
@@ -159,7 +159,11 @@ class ViewModelComplexElementLogic(
     fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
         val result = mutableListOf<ViewModelField>()
         getMappedFields().forEach { field ->
-            result.add(ViewModelField(mapper.mapModelToViewModelTypeName(field.type), field.name))
+            result.add(ViewModelField(
+                mapper.mapModelToViewModelTypeName(field.type),
+                field.name,
+                if (field.type.asOptHlaType() != null) mapper.mapModelToViewType(field.type) else null
+            ))
         }
 
         result.addAll(ViewModelField.fromDefs(def.getFields(), mapper))
