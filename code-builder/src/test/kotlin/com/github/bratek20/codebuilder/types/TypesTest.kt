@@ -268,7 +268,7 @@ class TypesTest {
         }
 
         @Test
-        fun onlyCSharp() {
+        fun newListOf() {
             testOp {
                 op = {
                     add(assignment {
@@ -288,6 +288,13 @@ class TypesTest {
                     expected =
                     """
                     List<string> list = new List<string>() { "str1", "str2" };
+                    """
+                }
+                langExpected {
+                    lang = TypeScript()
+                    expected =
+                    """
+                    const list: string[] = [ "str1", "str2" ]
                     """
                 }
             }

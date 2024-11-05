@@ -2,7 +2,10 @@ package com.github.bratek20.hla.generation.impl.core.web
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
+import com.github.bratek20.codebuilder.languages.typescript.TypeScriptStructureBuilder
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptStructure
 import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.codebuilder.types.newListOf
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.ExposedInterface
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -22,20 +25,46 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getWebSubmodule()?.getPlayFabHandlers() != null
     }
 
-    private fun registerModuleHandlersCall(
+    private fun registerCall(
         exposedInterfaces: List<ExposedInterface>,
         addDebugToHandlerName: Boolean = false
     ): FunctionCallBuilderOps = {
-        name = "Handlers.Api.RegisterModuleHandlers"
-        addArg{
-            variable("DependencyName.$moduleName")
-        }
-        exposedInterfaces.forEach {
-            module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
-                interf.getMethods().forEach { method ->
+        val handlers: List<TypeScriptStructureBuilder> = exposedInterfaces.flatMap {
+            module.getInterfaces().first { interf -> it.getName() == interf.getName() }.let { interf ->
+                interf.getMethods().map { method ->
                     val debugPart = if (addDebugToHandlerName) ".Debug" else ""
-                    addArg{
-                        variable("[\"$moduleName$debugPart.${method.getName()}\", ${method.getName()}]")
+                    typeScriptStructure {
+                        addProperty {
+                            key = "name"
+                            value = string("$moduleName$debugPart.${method.getName()}")
+                        }
+                        addProperty {
+                            key = "handler"
+                            value = variable(method.getName())
+                        }
+                    }
+                }
+            }
+        }
+
+        val behindFeatureFlag = exposedInterfaces.any { it.getAttributes().any { att -> att.getName() == "behindFeatureFlag" } }
+        name = "Handlers.Api.Register"
+        addArg {
+            typeScriptStructure {
+                addProperty {
+                    key = "dependencyName"
+                    value = variable("DependencyName.$moduleName")
+                }
+
+                addProperty {
+                    key = "handlers"
+                    value = newListOf(baseType(BaseType.ANY), *handlers.toTypedArray())
+                }
+
+                if (behindFeatureFlag) {
+                    addProperty {
+                        key = "featureFlag"
+                        value = variable("FeatureName.$moduleName")
                     }
                 }
             }
@@ -47,13 +76,13 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         val normalExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } == null}
         val debugExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } != null }
 
-        addFunctionCall(registerModuleHandlersCall(normalExposedInterfaces))
+        addFunctionCall(registerCall(normalExposedInterfaces))
 
         if (debugExposedInterfaces.isNotEmpty()) {
             addFunction {
                 name = "RegisterDebugHandlers"
                 setBody {
-                    addFunctionCall(registerModuleHandlersCall(debugExposedInterfaces, true))
+                    addFunctionCall(registerCall(debugExposedInterfaces, true))
                 }
             }
         }
