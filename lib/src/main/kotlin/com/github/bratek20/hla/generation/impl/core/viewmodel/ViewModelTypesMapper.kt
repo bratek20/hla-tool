@@ -3,7 +3,9 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
+import com.github.bratek20.hla.types.api.HlaType
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
@@ -23,6 +25,15 @@ class ModelToViewModelTypeMapper(
             return "Optional" + mapViewModelToViewTypeName(wrappedTypeName)
         }
         return viewModelType + "View"
+    }
+
+    fun mapViewModelToViewType(viewModelType: HlaType): HlaType {
+        val viewModelTypeName = viewModelType.getName()
+        val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
+        return HlaType.create(
+            name = viewTypeName,
+            path = viewModelType.getPath().replaceSubmodule(SubmoduleName.View)
+        )
     }
 
     fun mapViewModelWrappedTypeToListType(viewModelType: String): String {
@@ -73,6 +84,16 @@ class ModelToViewModelTypeMapper(
         return baseName + "View"
     }
 
+
+    fun mapModelToViewType(modelType: ApiType): HlaType {
+        val viewTypeName = mapModelToViewTypeName(modelType)
+        return HlaType.create(
+            name = viewTypeName,
+            path = modelType.asHlaType().getPath()
+                .replaceSubmodule(SubmoduleName.View)
+        )
+    }
+
     fun mapModelToViewModelTypeName(modelType: ApiType): String {
         if (modelType is BaseApiType) {
             return mapBaseType(modelType)
@@ -93,6 +114,15 @@ class ModelToViewModelTypeMapper(
             return mapOptionalType(modelType)
         }
         return "TODO"
+    }
+
+    fun mapModelToViewModelType(modelType: ApiType): HlaType {
+        val viewModelTypeName = mapModelToViewModelTypeName(modelType)
+        return HlaType.create(
+            name = viewModelTypeName,
+            path = modelType.asHlaType().getPath()
+                .replaceSubmodule(SubmoduleName.ViewModel)
+        )
     }
 
     fun getModelForViewModelType(viewModelType: String): ApiType {

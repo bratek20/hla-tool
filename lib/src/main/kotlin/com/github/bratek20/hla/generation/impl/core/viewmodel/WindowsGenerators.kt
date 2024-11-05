@@ -6,6 +6,7 @@ import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -37,7 +38,7 @@ class GeneratedWindowLogic(
     }
 
     fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
-        return ViewModelField.fromDefs(def.getFields(), mapper)
+        return ViewModelField.fromDefs(ModuleName(getModuleName()), def.getFields(), mapper)
     }
 
     fun getWindowClass(): ClassBuilderOps = {

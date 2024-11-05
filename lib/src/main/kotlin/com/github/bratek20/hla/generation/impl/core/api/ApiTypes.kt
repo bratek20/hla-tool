@@ -1,15 +1,17 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.core.CSharp
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
+import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.types.api.HlaTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -26,6 +28,22 @@ abstract class ApiType {
 
     fun moduleName(): String {
         return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
+    }
+
+    fun asHlaType(): HlaType {
+        return asOptHlaType() ?: throw IllegalStateException("No HlaType for type $this")
+    }
+
+    fun asOptHlaType(): HlaType? {
+        return typeModule?.let {
+            HlaType.create(
+                name = name(),
+                path = HlaTypePath.create(
+                    ModuleName(moduleName()),
+                    SubmoduleName.Api
+                )
+            )
+        }
     }
 
     abstract fun name(): String
