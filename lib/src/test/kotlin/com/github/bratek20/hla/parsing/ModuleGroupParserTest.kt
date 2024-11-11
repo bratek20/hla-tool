@@ -368,6 +368,18 @@ class ModuleGroupParserTest {
                         "VALUE_B"
                     )
                 }
+                exceptions = listOf {
+                    name = "SomeExtraException"
+                }
+                events = listOf {
+                    name = "SomeEvent"
+                    fields = listOf {
+                        name = "someField"
+                        type = {
+                            name = "string"
+                        }
+                    }
+                }
             }
         ))
 

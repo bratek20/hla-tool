@@ -30,6 +30,13 @@ ValueObjects
         otherId: OtherId?
         optOtherIds: OtherId[]?
 
+Exceptions
+    SomeExtraException
+
+Events
+    SomeEvent
+        someField: string
+
 Interfaces
     SomeInterface
         someCommand(id: SomeId, amount: int)

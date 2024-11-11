@@ -106,7 +106,9 @@ class ModuleGroupParserLogic(
             externalTypes = parseExternalTypes(elements),
             kotlinConfig = parseKotlinConfig(elements),
             webSubmodule = parseWebSubmodule(elements),
-            viewModelSubmodule = parseViewModelSubmodule(elements)
+            viewModelSubmodule = parseViewModelSubmodule(elements),
+            exceptions = emptyList(),
+            events = emptyList()
         )
     }
 
