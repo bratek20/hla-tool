@@ -13,3 +13,8 @@ class Some2Exception(
     message: String = ""
 ): ApiException(message) {
 }
+
+class SomeExtraException(
+    message: String = ""
+): ApiException(message) {
+}

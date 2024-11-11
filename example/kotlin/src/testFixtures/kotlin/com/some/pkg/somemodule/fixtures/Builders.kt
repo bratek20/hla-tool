@@ -167,6 +167,16 @@ fun classWithOptExamples(init: ClassWithOptExamplesDef.() -> Unit = {}): ClassWi
     )
 }
 
+data class SomeEventDef(
+    var someField: String = "someValue",
+)
+fun someEvent(init: SomeEventDef.() -> Unit = {}): SomeEvent {
+    val def = SomeEventDef().apply(init)
+    return SomeEvent.create(
+        someField = def.someField,
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,
