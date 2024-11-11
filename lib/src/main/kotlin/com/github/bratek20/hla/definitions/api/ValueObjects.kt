@@ -403,6 +403,8 @@ data class ModuleDefinition(
     private val simpleValueObjects: List<SimpleStructureDefinition>,
     private val complexValueObjects: List<ComplexStructureDefinition>,
     private val dataClasses: List<ComplexStructureDefinition>,
+    private val exceptions: List<ExceptionDefinition>,
+    private val events: List<ComplexStructureDefinition>,
     private val interfaces: List<InterfaceDefinition>,
     private val propertyKeys: List<KeyDefinition>,
     private val dataKeys: List<KeyDefinition>,
@@ -435,6 +437,14 @@ data class ModuleDefinition(
 
     fun getDataClasses(): List<ComplexStructureDefinition> {
         return this.dataClasses
+    }
+
+    fun getExceptions(): List<ExceptionDefinition> {
+        return this.exceptions
+    }
+
+    fun getEvents(): List<ComplexStructureDefinition> {
+        return this.events
     }
 
     fun getInterfaces(): List<InterfaceDefinition> {
@@ -481,6 +491,8 @@ data class ModuleDefinition(
             simpleValueObjects: List<SimpleStructureDefinition>,
             complexValueObjects: List<ComplexStructureDefinition>,
             dataClasses: List<ComplexStructureDefinition>,
+            exceptions: List<ExceptionDefinition>,
+            events: List<ComplexStructureDefinition>,
             interfaces: List<InterfaceDefinition>,
             propertyKeys: List<KeyDefinition>,
             dataKeys: List<KeyDefinition>,
@@ -498,6 +510,8 @@ data class ModuleDefinition(
                 simpleValueObjects = simpleValueObjects,
                 complexValueObjects = complexValueObjects,
                 dataClasses = dataClasses,
+                exceptions = exceptions,
+                events = events,
                 interfaces = interfaces,
                 propertyKeys = propertyKeys,
                 dataKeys = dataKeys,
