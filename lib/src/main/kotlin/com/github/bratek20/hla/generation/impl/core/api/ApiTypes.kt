@@ -400,11 +400,11 @@ open class SerializableApiType(
     }
 }
 
-class ComplexValueObjectApiType(
+open class ComplexValueObjectApiType(
     name: String,
     fields: List<ComplexStructureField>
 ) : SerializableApiType(name, fields) {
-    fun getClassOps(): ClassBuilderOps = {
+    open fun getClassOps(): ClassBuilderOps = {
         name = name()
         fields.forEach {
             addField {
@@ -448,6 +448,19 @@ class ComplexValueObjectApiType(
                     }
                 })
             }
+        }
+    }
+}
+
+class EventApiType(
+    name: String,
+    fields: List<ComplexStructureField>
+) : ComplexValueObjectApiType(name, fields) {
+    override fun getClassOps(): ClassBuilderOps {
+        val ops: ClassBuilderOps = super.getClassOps()
+        return {
+            this.apply(ops)
+            implements = "Event"
         }
     }
 }
@@ -654,6 +667,7 @@ class ApiTypeFactory(
         val dataVO = modules.findDataClass(type)
         val interf = modules.findInterface(type)
         val externalTypeName = modules.findExternalType(type)
+        val event = modules.findEvent(type)
 
         val apiType = when {
             isOptional -> OptionalApiType(create(withoutTypeWrapper(type, TypeWrapper.OPTIONAL)))
@@ -667,6 +681,7 @@ class ApiTypeFactory(
             enum != null -> EnumApiType(enum)
             interf != null -> InterfaceApiType(type.getName())
             externalTypeName != null -> ExternalApiType(externalTypeName)
+            event != null -> EventApiType(type.getName(), createComplexStructureFields(event))
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

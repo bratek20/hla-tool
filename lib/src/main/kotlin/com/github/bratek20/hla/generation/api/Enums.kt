@@ -21,6 +21,7 @@ enum class PatternName {
     PropertyKeys,
     Interfaces,
     Exceptions,
+    Events,
     CustomTypes,
     CustomTypesMapper,
     SerializedCustomTypes,

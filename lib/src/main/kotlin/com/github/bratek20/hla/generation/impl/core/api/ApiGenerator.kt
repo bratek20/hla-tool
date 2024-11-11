@@ -7,10 +7,7 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.generation.impl.core.api.patterns.EnumsGenerator
-import com.github.bratek20.hla.generation.impl.core.api.patterns.ExceptionsGenerator
-import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfacesGenerator
-import com.github.bratek20.hla.generation.impl.core.api.patterns.ValueObjectsGenerator
+import com.github.bratek20.hla.generation.impl.core.api.patterns.*
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class MacrosBuilder: PatternGenerator() {
@@ -195,6 +192,7 @@ class ApiGenerator: SubmoduleGenerator() {
             PropertyOrDataKeysGenerator(false),
             PropertyOrDataKeysGenerator(true),
             ExceptionsGenerator(),
+            EventsGenerator(),
             InterfacesGenerator(),
         )
     }
