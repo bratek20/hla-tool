@@ -24,6 +24,8 @@ class ModuleGroupParserLogic(
     private val knownRootSections = setOf(
         "ValueObjects",
         "DataClasses",
+        "Exceptions",
+        "Events",
         "Interfaces",
         "PropertyKeys",
         "Enums",
@@ -107,8 +109,8 @@ class ModuleGroupParserLogic(
             kotlinConfig = parseKotlinConfig(elements),
             webSubmodule = parseWebSubmodule(elements),
             viewModelSubmodule = parseViewModelSubmodule(elements),
-            exceptions = emptyList(),
-            events = emptyList()
+            exceptions = parseExceptions("Exceptions", elements),
+            events = parseStructures("Events", elements).complex
         )
     }
 
@@ -351,12 +353,12 @@ class ModuleGroupParserLogic(
                     type = parseType(it.value)
                 )
             },
-            throws = parseExceptions(method.elements)
+            throws = parseExceptions("throws", method.elements)
         )
     }
 
-    private fun parseExceptions(elements: List<ParsedElement>): List<ExceptionDefinition> {
-        val exceptionsSection = elements.find { it is Section && it.name == "throws" } as Section?
+    private fun parseExceptions(sectionName: String, elements: List<ParsedElement>): List<ExceptionDefinition> {
+        val exceptionsSection = elements.find { it is Section && it.name == sectionName } as Section?
         return exceptionsSection?.elements?.filterIsInstance<Section>()?.map {
             ExceptionDefinition(
                 name = it.name
