@@ -185,11 +185,15 @@ class ModuleGroupQueries(
     }
 
     fun allExceptionNamesForCurrent(): List<String> {
-        return currentModule.getInterfaces()
+        val interfaceExceptions = currentModule.getInterfaces()
             .flatMap { it.getMethods() }
             .flatMap { it.getThrows() }
             .map { it.getName() }
             .distinct()
+
+        val extraExceptions = currentModule.getExceptions().map { it.getName() }
+
+        return interfaceExceptions + extraExceptions
     }
 
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {

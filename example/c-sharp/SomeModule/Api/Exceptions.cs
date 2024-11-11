@@ -21,4 +21,11 @@ namespace SomeModule.Api {
         ): base(message) {
         }
     }
+
+    public class SomeExtraException: ApiException {
+        public SomeExtraException(
+            string message = ""
+        ): base(message) {
+        }
+    }
 }
