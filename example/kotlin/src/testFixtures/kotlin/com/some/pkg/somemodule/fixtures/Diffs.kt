@@ -311,20 +311,6 @@ fun diffClassWithOptExamples(given: ClassWithOptExamples, expectedInit: Expected
     return result.joinToString("\n")
 }
 
-data class ExpectedSomeEvent(
-    var someField: String? = null,
-)
-fun diffSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit, path: String = ""): String {
-    val expected = ExpectedSomeEvent().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.someField?.let {
-        if (given.getSomeField() != it) { result.add("${path}someField ${given.getSomeField()} != ${it}") }
-    }
-
-    return result.joinToString("\n")
-}
-
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,
@@ -542,6 +528,20 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
 
     expected.optCustomType?.let {
         if (diffDate(given.getOptCustomType()!!, it) != "") { result.add(diffDate(given.getOptCustomType()!!, it, "${path}optCustomType.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeEvent(
+    var someField: String? = null,
+)
+fun diffSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeEvent().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.someField?.let {
+        if (given.getSomeField() != it) { result.add("${path}someField ${given.getSomeField()} != ${it}") }
     }
 
     return result.joinToString("\n")

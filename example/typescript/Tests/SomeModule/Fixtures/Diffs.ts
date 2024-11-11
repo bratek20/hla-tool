@@ -505,4 +505,17 @@ namespace SomeModule {
 
         return result.join("\n")
     }
+
+    export interface ExpectedSomeEvent {
+        someField?: string,
+    }
+    export function diffSomeEvent(given: SomeEvent, expected: ExpectedSomeEvent, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.someField !== undefined) {
+            if (given.getSomeField() != expected.someField) { result.push(`${path}someField ${given.getSomeField()} != ${expected.someField}`) }
+        }
+
+        return result.join("\n")
+    }
 }

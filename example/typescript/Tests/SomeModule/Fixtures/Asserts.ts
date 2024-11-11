@@ -110,4 +110,9 @@ namespace SomeModule.Assert {
         const diff = diffSomeData2(given, expected)
         AssertEquals(diff, "", diff)
     }
+
+    export function someEvent(given: SomeEvent, expected: ExpectedSomeEvent) {
+        const diff = diffSomeEvent(given, expected)
+        AssertEquals(diff, "", diff)
+    }
 }
