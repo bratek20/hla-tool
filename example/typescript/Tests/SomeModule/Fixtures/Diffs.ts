@@ -508,12 +508,17 @@ namespace SomeModule {
 
     export interface ExpectedSomeEvent {
         someField?: string,
+        otherClass?: OtherModule.ExpectedOtherClass,
     }
     export function diffSomeEvent(given: SomeEvent, expected: ExpectedSomeEvent, path: string = ""): string {
         const result: string[] = []
 
         if (expected.someField !== undefined) {
             if (given.getSomeField() != expected.someField) { result.push(`${path}someField ${given.getSomeField()} != ${expected.someField}`) }
+        }
+
+        if (expected.otherClass !== undefined) {
+            if (OtherModule.diffOtherClass(given.getOtherClass(), expected.otherClass) != "") { result.push(OtherModule.diffOtherClass(given.getOtherClass(), expected.otherClass, `${path}otherClass.`)) }
         }
 
         return result.join("\n")

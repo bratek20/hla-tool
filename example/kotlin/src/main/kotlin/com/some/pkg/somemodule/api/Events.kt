@@ -4,15 +4,21 @@ package com.some.pkg.somemodule.api
 
 import com.github.bratek20.architecture.events.api.Event
 
+import com.some.pkg.othermodule.api.*
+
 class SomeEvent(
-    private val someField: String
+    private val someField: String,
+    private val otherClass: OtherClass
 ): Event {
     fun getSomeField(): String {
         return someField
     }
+    fun getOtherClass(): OtherClass {
+        return otherClass
+    }
     companion object {
-        fun create(someField: String): SomeEvent {
-            return SomeEvent(someField)
+        fun create(someField: String, otherClass: OtherClass): SomeEvent {
+            return SomeEvent(someField, otherClass)
         }
     }
 }

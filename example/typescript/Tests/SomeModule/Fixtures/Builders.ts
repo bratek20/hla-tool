@@ -326,12 +326,15 @@ namespace SomeModule.Builder {
 
     export interface SomeEventDef {
         someField?: string,
+        otherClass?: OtherModule.Builder.OtherClassDef,
     }
     export function someEvent(def?: SomeEventDef): SomeEvent {
         const final_someField = def?.someField ?? "someValue"
+        const final_otherClass = def?.otherClass ?? {}
 
         return SomeEvent.create(
             final_someField,
+            OtherModule.Builder.otherClass(final_otherClass),
         )
     }
 }
