@@ -25,3 +25,16 @@ class Some2Exception extends ApiException<Some2Exception> {
 }
 
 ExceptionsRegistry.register(Some2Exception)
+
+class SomeExtraException extends ApiException<SomeExtraException> {
+    constructor(
+        message: string = ""
+    ) {
+        super(SomeExtraException, message)
+    }
+    getTypeName(): string {
+        return "SomeExtraException"
+    }
+}
+
+ExceptionsRegistry.register(SomeExtraException)

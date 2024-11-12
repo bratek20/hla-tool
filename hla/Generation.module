@@ -19,6 +19,7 @@ Enums
         PropertyKeys
         Interfaces
         Exceptions
+        Events
         CustomTypes
         CustomTypesMapper
         SerializedCustomTypes

@@ -370,6 +370,8 @@ data class ExpectedModuleDefinition(
     var simpleValueObjects: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
     var complexValueObjects: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var dataClasses: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
+    var exceptions: List<(ExpectedExceptionDefinition.() -> Unit)>? = null,
+    var events: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var interfaces: List<(ExpectedInterfaceDefinition.() -> Unit)>? = null,
     var propertyKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
     var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
@@ -415,6 +417,16 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
     expected.dataClasses?.let {
         if (given.getDataClasses().size != it.size) { result.add("${path}dataClasses size ${given.getDataClasses().size} != ${it.size}"); return@let }
         given.getDataClasses().forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}dataClasses[${idx}].")) } }
+    }
+
+    expected.exceptions?.let {
+        if (given.getExceptions().size != it.size) { result.add("${path}exceptions size ${given.getExceptions().size} != ${it.size}"); return@let }
+        given.getExceptions().forEachIndexed { idx, entry -> if (diffExceptionDefinition(entry, it[idx]) != "") { result.add(diffExceptionDefinition(entry, it[idx], "${path}exceptions[${idx}].")) } }
+    }
+
+    expected.events?.let {
+        if (given.getEvents().size != it.size) { result.add("${path}events size ${given.getEvents().size} != ${it.size}"); return@let }
+        given.getEvents().forEachIndexed { idx, entry -> if (diffComplexStructureDefinition(entry, it[idx]) != "") { result.add(diffComplexStructureDefinition(entry, it[idx], "${path}events[${idx}].")) } }
     }
 
     expected.interfaces?.let {

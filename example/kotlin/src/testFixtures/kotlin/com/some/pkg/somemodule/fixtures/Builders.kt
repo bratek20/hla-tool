@@ -278,6 +278,16 @@ fun someData2(init: SomeData2Def.() -> Unit = {}): SomeData2 {
         optCustomType = def.optCustomType?.let { it -> dateCreate(it) },
     )
 }
+
+data class SomeEventDef(
+    var someField: String = "someValue",
+)
+fun someEvent(init: SomeEventDef.() -> Unit = {}): SomeEvent {
+    val def = SomeEventDef().apply(init)
+    return SomeEvent.create(
+        someField = def.someField,
+    )
+}
 fun legacyType(value: com.some.pkg.legacy.LegacyType?): com.some.pkg.legacy.LegacyType {
     return value!!
 }

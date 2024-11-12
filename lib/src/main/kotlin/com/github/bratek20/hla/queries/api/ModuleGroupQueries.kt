@@ -61,6 +61,14 @@ class ModuleGroupQueries(
         return modules.firstNotNullOfOrNull { findInterface(type, it) }
     }
 
+    fun findEvent(type: TypeDefinition): ComplexStructureDefinition? {
+        return modules.firstNotNullOfOrNull { findEvent(type, it) }
+    }
+
+    private fun findEvent(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
+        return module.getEvents().find { it.getName() == type.getName() }
+    }
+
     private fun findEnum(type: TypeDefinition, module: ModuleDefinition): EnumDefinition? {
         return module.getEnums().find { it.getName() == type.getName() }
     }
@@ -181,15 +189,19 @@ class ModuleGroupQueries(
     }
 
     fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return module.getComplexValueObjects() + module.getComplexCustomTypes() + module.getDataClasses()
+        return module.getComplexValueObjects() + module.getComplexCustomTypes() + module.getDataClasses() + module.getEvents()
     }
 
     fun allExceptionNamesForCurrent(): List<String> {
-        return currentModule.getInterfaces()
+        val interfaceExceptions = currentModule.getInterfaces()
             .flatMap { it.getMethods() }
             .flatMap { it.getThrows() }
             .map { it.getName() }
             .distinct()
+
+        val extraExceptions = currentModule.getExceptions().map { it.getName() }
+
+        return interfaceExceptions + extraExceptions
     }
 
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {

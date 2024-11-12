@@ -65,6 +65,13 @@ ValueObjects
         optInt: int? (example: 1)
         optIntWrapper: SomeIntWrapper? (example: 2)
 
+Exceptions
+    SomeExtraException
+
+Events
+    SomeEvent
+        someField: string
+
 Properties
     SomeProperty
         other: OtherProperty

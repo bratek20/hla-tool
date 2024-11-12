@@ -323,4 +323,15 @@ namespace SomeModule.Builder {
             Optional.of(final_optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it)),
         )
     }
+
+    export interface SomeEventDef {
+        someField?: string,
+    }
+    export function someEvent(def?: SomeEventDef): SomeEvent {
+        const final_someField = def?.someField ?? "someValue"
+
+        return SomeEvent.create(
+            final_someField,
+        )
+    }
 }

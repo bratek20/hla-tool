@@ -88,6 +88,8 @@ ValueObjects
         simpleValueObjects: SimpleStructureDefinition[]
         complexValueObjects: ComplexStructureDefinition[]
         dataClasses: ComplexStructureDefinition[]
+        exceptions: ExceptionDefinition[]
+        events: ComplexStructureDefinition[]
         interfaces: InterfaceDefinition[]
         propertyKeys: KeyDefinition[]
         dataKeys: KeyDefinition[]
