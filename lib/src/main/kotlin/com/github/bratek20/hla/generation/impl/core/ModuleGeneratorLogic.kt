@@ -28,9 +28,11 @@ data class DomainContext(
 
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
+    private val prefabsGenerator: PrefabsGenerator
 ) : ModuleGenerator {
     class SubmodulesGenerator(
         private val context: ModuleGenerationContext,
+        private val prefabsGenerator: PrefabsGenerator
     ) {
         fun generate(): List<GeneratedSubmodule> {
             return listOf(
@@ -39,7 +41,7 @@ class ModuleGeneratorLogic(
                 WebGenerator(),
                 ViewModelGenerator(),
                 ViewGenerator(),
-                PrefabsGenerator(),
+                prefabsGenerator,
                 ContextGenerator(),
                 FixturesGenerator(),
                 TestsGenerator(),
@@ -75,7 +77,7 @@ class ModuleGeneratorLogic(
 
         return GeneratedModule.create(
             name = moduleName,
-            submodules = SubmodulesGenerator(context).generate()
+            submodules = SubmodulesGenerator(context, prefabsGenerator).generate()
         )
     }
 }

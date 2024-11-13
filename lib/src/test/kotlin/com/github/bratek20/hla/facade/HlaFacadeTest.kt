@@ -23,6 +23,8 @@ import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.utils.directory.impl.FilesLogic
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.context.FacadeImpl
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.fixtures.hlaType
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -191,7 +193,8 @@ class HlaFacadeTest {
         val directoriesMock: DirectoriesMock,
         val facade: HlaFacade,
         val filesMock: FilesMock,
-        val loggerMock: LoggerMock
+        val loggerMock: LoggerMock,
+        val typesWorldApi: TypesWorldApi
     )
 
     private fun setup(): SetupResult {
@@ -212,7 +215,13 @@ class HlaFacadeTest {
 
         val facade = context.get(HlaFacade::class.java)
 
-        return SetupResult(directoriesMock, facade, filesMock, loggerMock)
+        return SetupResult(
+            directoriesMock,
+            facade,
+            filesMock,
+            loggerMock,
+            typesWorldApi = context.get(TypesWorldApi::class.java)
+        )
     }
 
     @ParameterizedTest(name = "{0} ({1})")
@@ -325,6 +334,30 @@ class HlaFacadeTest {
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
         //assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
 //        assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
+    }
+
+    @Test
+    fun `should populate types world`() {
+        //given
+        val moduleName: String = "OtherModule"
+        val profileName: String = ShouldStartCSharpModuleArgsProvider.C_SHARP_PROFILE
+        val paths: TestPaths = ShouldStartCSharpModuleArgsProvider().cSharpTestPaths("OtherModule")
+        val sr = setup()
+
+        //when
+        sr.facade.startModule(
+            ModuleOperationArgs.create(
+                moduleName = ModuleName(moduleName),
+                profileName = ProfileName(profileName),
+                hlaFolderPath = Path(paths.hlaFolderPath),
+            )
+        )
+
+        //then
+        sr.typesWorldApi.getClassType(hlaType {
+            name = "OtherClassView"
+            path = "OtherModule/View"
+        })
     }
 
     @Test
