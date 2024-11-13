@@ -142,7 +142,10 @@ class ModelToViewModelTypeMapper(
             val x = mapComplexStructureType(modelType.wrappedType)
             return x + "Group"
         }
-        return "TODO"
+        if(modelType.wrappedType is EnumApiType) {
+            return mapModelToViewModelTypeName(modelType.wrappedType) + "Group"
+        }
+        throw IllegalArgumentException("Unsupported mapListType for: ${modelType.wrappedType}")
     }
 
     private fun mapOptionalType(modelType: OptionalApiType): String {

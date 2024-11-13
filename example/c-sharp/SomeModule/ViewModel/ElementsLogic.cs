@@ -22,4 +22,7 @@ namespace SomeModule.ViewModel {
 
     public partial class ClassHavingOptSimpleVoVm {
     }
+
+    public partial class ClassWithEnumListVm {
+    }
 }

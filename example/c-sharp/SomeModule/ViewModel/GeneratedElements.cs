@@ -55,6 +55,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class ClassWithEnumListVm: UiElement<ClassWithEnumList> {
+        public SomeEnumSwitchGroup EnumList { get; set; }
+        protected override void OnUpdate() {
+            EnumList.Update(Model.GetEnumList());
+        }
+    }
+
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
     }
 
