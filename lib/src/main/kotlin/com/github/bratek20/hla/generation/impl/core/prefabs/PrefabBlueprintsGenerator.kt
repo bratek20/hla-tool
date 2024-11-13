@@ -13,7 +13,7 @@ import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
 import com.github.bratek20.hla.types.api.HlaType
-import com.github.bratek20.hla.types.api.HlaTypePath
+import com.github.bratek20.hla.typesworld.api.HlaTypePath
 import com.github.bratek20.hla.types.api.TypesApi
 import com.github.bratek20.hla.types.api.Wrapper
 import com.github.bratek20.hla.types.impl.TypesApiLogic

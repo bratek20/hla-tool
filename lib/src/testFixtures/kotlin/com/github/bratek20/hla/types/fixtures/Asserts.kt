@@ -6,11 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.github.bratek20.hla.types.api.*
 
-fun assertHlaTypePath(given: HlaTypePath, expected: String) {
-    val diff = diffHlaTypePath(given, expected)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
 fun assertHlaType(given: HlaType, expectedInit: ExpectedHlaType.() -> Unit) {
     val diff = diffHlaType(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

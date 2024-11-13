@@ -2,6 +2,10 @@
 
 package com.github.bratek20.hla.types.api
 
+import com.github.bratek20.hla.typesworld.api.HlaTypePath
+import com.github.bratek20.hla.typesworld.api.hlaTypePathCreate
+import com.github.bratek20.hla.typesworld.api.hlaTypePathGetValue
+
 data class HlaType(
     private val name: String,
     private val path: String,

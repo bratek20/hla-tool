@@ -11,7 +11,7 @@ import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.types.api.HlaType
-import com.github.bratek20.hla.types.api.HlaTypePath
+import com.github.bratek20.hla.typesworld.api.HlaTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiType {

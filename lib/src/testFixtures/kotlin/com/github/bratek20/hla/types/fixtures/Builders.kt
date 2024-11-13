@@ -3,10 +3,8 @@
 package com.github.bratek20.hla.types.fixtures
 
 import com.github.bratek20.hla.types.api.*
+import com.github.bratek20.hla.typesworld.api.hlaTypePathCreate
 
-fun hlaTypePath(value: String = "someGroup/someModule/api"): HlaTypePath {
-    return hlaTypePathCreate(value)
-}
 
 data class HlaTypeDef(
     var name: String = "someValue",

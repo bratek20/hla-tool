@@ -48,3 +48,7 @@ Interfaces
         addClassType(type: ClassType)
         addConcreteWrapper(type: ConcreteWrapper)
         addConcreteParametrizedClass(type: ConcreteParametrizedClass)
+
+        getClassType(type: HlaType): ClassType
+            throws
+                TypeNotFoundException

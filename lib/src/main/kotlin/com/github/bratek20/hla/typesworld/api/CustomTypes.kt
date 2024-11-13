@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.types.api
+package com.github.bratek20.hla.typesworld.api
 
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.SubmoduleName

@@ -3,11 +3,8 @@
 package com.github.bratek20.hla.types.fixtures
 
 import com.github.bratek20.hla.types.api.*
+import com.github.bratek20.hla.typesworld.fixtures.diffHlaTypePath
 
-fun diffHlaTypePath(given: HlaTypePath, expected: String, path: String = ""): String {
-    if (hlaTypePathGetValue(given) != expected) { return "${path}value ${hlaTypePathGetValue(given)} != ${expected}" }
-    return ""
-}
 
 fun diffTypeKind(given: TypeKind, expected: String, path: String = ""): String {
     if (given != TypeKind.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }

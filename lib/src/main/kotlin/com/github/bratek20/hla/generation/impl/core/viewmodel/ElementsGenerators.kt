@@ -10,7 +10,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.types.api.HlaType
-import com.github.bratek20.hla.types.api.HlaTypePath
+import com.github.bratek20.hla.typesworld.api.HlaTypePath
 import com.github.bratek20.utils.camelToPascalCase
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
