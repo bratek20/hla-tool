@@ -2,22 +2,6 @@ package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.hla.typesworld.api.*
 
-fun ClassType.getType(): HlaType {
-    return HlaType.create(
-        kind = HlaTypeKind.ClassType,
-        name = getName(),
-        path = getPath()
-    )
-}
-
-fun ConcreteWrapper.getType(): HlaType {
-    return HlaType.create(
-        kind = HlaTypeKind.ConcreteWrapper,
-        name = getName(),
-        path = getPath()
-    )
-}
-
 class TypesWorldApiLogic(
     populators: Set<TypesWorldPopulator>
 ): TypesWorldApi {

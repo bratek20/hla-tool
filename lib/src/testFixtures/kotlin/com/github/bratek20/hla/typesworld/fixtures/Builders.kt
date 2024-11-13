@@ -13,14 +13,12 @@ fun hlaTypePath(value: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/Va
 }
 
 data class HlaTypeDef(
-    var kind: String = HlaTypeKind.Primitive.name,
     var name: String = "someValue",
     var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
 )
 fun hlaType(init: HlaTypeDef.() -> Unit = {}): HlaType {
     val def = HlaTypeDef().apply(init)
     return HlaType.create(
-        kind = HlaTypeKind.valueOf(def.kind),
         name = HlaTypeName(def.name),
         path = hlaTypePathCreate(def.path),
     )
@@ -39,31 +37,27 @@ fun classField(init: ClassFieldDef.() -> Unit = {}): ClassField {
 }
 
 data class ClassTypeDef(
-    var name: String = "someValue",
-    var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
+    var type: (HlaTypeDef.() -> Unit) = {},
     var fields: List<(ClassFieldDef.() -> Unit)> = emptyList(),
     var extends: (HlaTypeDef.() -> Unit)? = null,
 )
 fun classType(init: ClassTypeDef.() -> Unit = {}): ClassType {
     val def = ClassTypeDef().apply(init)
     return ClassType.create(
-        name = HlaTypeName(def.name),
-        path = hlaTypePathCreate(def.path),
+        type = hlaType(def.type),
         fields = def.fields.map { it -> classField(it) },
         extends = def.extends?.let { it -> hlaType(it) },
     )
 }
 
 data class ConcreteWrapperDef(
-    var name: String = "someValue",
-    var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
+    var type: (HlaTypeDef.() -> Unit) = {},
     var wrappedType: (HlaTypeDef.() -> Unit) = {},
 )
 fun concreteWrapper(init: ConcreteWrapperDef.() -> Unit = {}): ConcreteWrapper {
     val def = ConcreteWrapperDef().apply(init)
     return ConcreteWrapper.create(
-        name = HlaTypeName(def.name),
-        path = hlaTypePathCreate(def.path),
+        type = hlaType(def.type),
         wrappedType = hlaType(def.wrappedType),
     )
 }

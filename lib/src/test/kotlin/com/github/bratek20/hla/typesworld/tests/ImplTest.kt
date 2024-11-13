@@ -16,12 +16,15 @@ class Order0Populator : TypesWorldPopulator {
 
     override fun populate(api: TypesWorldApi) {
         api.addClassType(classType {
-            name = "SomeClass"
+            type = {
+                name = "SomeClass"
+            }
         })
         api.addConcreteWrapper(concreteWrapper {
-            name = "List<SomeClass>"
+            type = {
+                name = "List<SomeClass>"
+            }
             wrappedType = {
-                kind = "ClassType"
                 name = "SomeClass"
             }
         })
@@ -35,21 +38,18 @@ class Order1Populator : TypesWorldPopulator {
 
     override fun populate(api: TypesWorldApi) {
         val classType = api.getClassType(hlaType {
-            kind = "ClassType"
             name = "SomeClass"
         })
 
         api.addClassType(ClassType.create(
-            name = HlaTypeName("OtherClass"),
-            path = classType.getPath(),
+            HlaType.create(
+                name = HlaTypeName("OtherClass"),
+                path = classType.getType().getPath(),
+            ),
             fields = listOf(
                 ClassField.create(
                     name = "someField",
-                    type = HlaType.create(
-                        kind = HlaTypeKind.ClassType,
-                        name = classType.getName(),
-                        path = classType.getPath()
-                    )
+                    type = classType.getType()
                 )
             )
         ))
@@ -71,12 +71,13 @@ class TypesWorldImplTest {
     @Test
     fun `should get class populated`() {
         val classType = api.getClassType(hlaType {
-            kind = "ClassType"
             name = "OtherClass"
         })
 
         assertClassType(classType) {
-            name = "OtherClass"
+            type = {
+                name = "OtherClass"
+            }
         }
     }
 
@@ -94,7 +95,6 @@ class TypesWorldImplTest {
     @Test
     fun `should get type dependencies - class type`() {
         val type = hlaType {
-            kind = "ClassType"
             name = "OtherClass"
         }
 
@@ -109,7 +109,6 @@ class TypesWorldImplTest {
     @Test
     fun `should get type dependencies - concrete wrapper`() {
         val type = hlaType {
-            kind = "ConcreteWrapper"
             name = "List<SomeClass>"
         }
 

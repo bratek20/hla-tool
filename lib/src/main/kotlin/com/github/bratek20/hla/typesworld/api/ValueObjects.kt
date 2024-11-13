@@ -11,14 +11,9 @@ data class HlaTypeName(
 }
 
 data class HlaType(
-    private val kind: String,
     private val name: String,
     private val path: String,
 ) {
-    fun getKind(): HlaTypeKind {
-        return HlaTypeKind.valueOf(this.kind)
-    }
-
     fun getName(): HlaTypeName {
         return HlaTypeName(this.name)
     }
@@ -29,12 +24,10 @@ data class HlaType(
 
     companion object {
         fun create(
-            kind: HlaTypeKind,
             name: HlaTypeName,
             path: HlaTypePath,
         ): HlaType {
             return HlaType(
-                kind = kind.name,
                 name = name.value,
                 path = hlaTypePathGetValue(path),
             )
@@ -68,17 +61,12 @@ data class ClassField(
 }
 
 data class ClassType(
-    private val name: String,
-    private val path: String,
+    private val type: HlaType,
     private val fields: List<ClassField>,
     private val extends: HlaType? = null,
 ) {
-    fun getName(): HlaTypeName {
-        return HlaTypeName(this.name)
-    }
-
-    fun getPath(): HlaTypePath {
-        return hlaTypePathCreate(this.path)
+    fun getType(): HlaType {
+        return this.type
     }
 
     fun getFields(): List<ClassField> {
@@ -91,14 +79,12 @@ data class ClassType(
 
     companion object {
         fun create(
-            name: HlaTypeName,
-            path: HlaTypePath,
+            type: HlaType,
             fields: List<ClassField>,
             extends: HlaType? = null,
         ): ClassType {
             return ClassType(
-                name = name.value,
-                path = hlaTypePathGetValue(path),
+                type = type,
                 fields = fields,
                 extends = extends,
             )
@@ -107,16 +93,11 @@ data class ClassType(
 }
 
 data class ConcreteWrapper(
-    private val name: String,
-    private val path: String,
+    private val type: HlaType,
     private val wrappedType: HlaType,
 ) {
-    fun getName(): HlaTypeName {
-        return HlaTypeName(this.name)
-    }
-
-    fun getPath(): HlaTypePath {
-        return hlaTypePathCreate(this.path)
+    fun getType(): HlaType {
+        return this.type
     }
 
     fun getWrappedType(): HlaType {
@@ -125,13 +106,11 @@ data class ConcreteWrapper(
 
     companion object {
         fun create(
-            name: HlaTypeName,
-            path: HlaTypePath,
+            type: HlaType,
             wrappedType: HlaType,
         ): ConcreteWrapper {
             return ConcreteWrapper(
-                name = name.value,
-                path = hlaTypePathGetValue(path),
+                type = type,
                 wrappedType = wrappedType,
             )
         }

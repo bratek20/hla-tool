@@ -39,7 +39,6 @@ abstract class ApiType {
     fun asOptHlaType(): HlaType? {
         return typeModule?.let {
             HlaType.create(
-                kind = HlaTypeKind.ClassType,
                 name = HlaTypeName(name()),
                 path = HlaTypePath.create(
                     ModuleName(moduleName()),

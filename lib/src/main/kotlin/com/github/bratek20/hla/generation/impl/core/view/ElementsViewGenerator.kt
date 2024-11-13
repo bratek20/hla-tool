@@ -33,8 +33,10 @@ abstract class ContainerViewLogic(
 
     override fun populateType(typesWorldApi: TypesWorldApi) {
         typesWorldApi.addClassType(ClassType.create(
-            name = getViewClassType().getName(),
-            path = getViewClassType().getPath(),
+            type = HlaType.create(
+                name = getViewClassType().getName(),
+                path = getViewClassType().getPath(),
+            ),
             getFields().filter {
                 it.hlaType != null
             }.map {
@@ -133,7 +135,6 @@ class WindowViewLogic(
 
     override fun getViewClassType(): HlaType {
         return HlaType.create(
-            kind = HlaTypeKind.ClassType,
             HlaTypeName(getViewClassName()),
             HlaTypePath.create(ModuleName(window.getModuleName()), SubmoduleName.View)
         )
@@ -160,8 +161,10 @@ abstract class WrappedElementViewLogic(
 
     override fun populateType(typesWorldApi: TypesWorldApi) {
         typesWorldApi.addConcreteWrapper(ConcreteWrapper.create(
-            name = HlaTypeName(getViewClassName()),
-            path = getViewClassType().getPath(),
+            HlaType.create(
+                name = HlaTypeName(getViewClassName()),
+                path = getViewClassType().getPath()
+            ),
             wrappedType = mapper.mapModelToViewType(modelType.wrappedType)
         ))
     }

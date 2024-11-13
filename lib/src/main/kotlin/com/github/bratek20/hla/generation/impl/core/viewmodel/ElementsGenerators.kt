@@ -123,7 +123,6 @@ class ViewModelField(
                 }
 
                 val finalType = HlaType.create(
-                    HlaTypeKind.ClassType,
                     HlaTypeName(finalTypeName),
                     HlaTypePath.create(moduleName, SubmoduleName.View)
                 )

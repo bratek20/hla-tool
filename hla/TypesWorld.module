@@ -15,7 +15,6 @@ ValueObjects
     HlaTypeName: string
 
     HlaType
-        kind: HlaTypeKind
         name: HlaTypeName
         path: HlaTypePath
 
@@ -24,15 +23,13 @@ ValueObjects
         type: HlaType
 
     ClassType
-        name: HlaTypeName
-        path: HlaTypePath
+        type: HlaType
         fields: ClassField[]
         extends: HlaType? = empty
         //implements: HlaType[] = [] - not needed for now
 
     ConcreteWrapper
-        name: HlaTypeName
-        path: HlaTypePath
+        type: HlaType
         wrappedType: HlaType
 
     ConcreteParametrizedClass

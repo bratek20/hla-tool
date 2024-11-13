@@ -33,7 +33,6 @@ class ModelToViewModelTypeMapper(
         val viewModelTypeName = viewModelType.getName().value
         val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
         return HlaType.create(
-            kind = HlaTypeKind.ClassType,
             name = HlaTypeName(viewTypeName),
             path = viewModelType.getPath().replaceSubmodule(SubmoduleName.View)
         )
@@ -91,7 +90,6 @@ class ModelToViewModelTypeMapper(
     fun mapModelToViewType(modelType: ApiType): HlaType {
         val viewTypeName = mapModelToViewTypeName(modelType)
         return HlaType.create(
-            kind = HlaTypeKind.ClassType,
             name = HlaTypeName(viewTypeName),
             path = modelType.asHlaType().getPath()
                 .replaceSubmodule(SubmoduleName.View)
@@ -123,7 +121,6 @@ class ModelToViewModelTypeMapper(
     fun mapModelToViewModelType(modelType: ApiType): HlaType {
         val viewModelTypeName = mapModelToViewModelTypeName(modelType)
         return HlaType.create(
-            kind = HlaTypeKind.ClassType,
             name = HlaTypeName(viewModelTypeName),
             path = modelType.asHlaType().getPath()
                 .replaceSubmodule(SubmoduleName.ViewModel)
