@@ -12,6 +12,7 @@ Enums
 
     PatternName
         //api
+        Primitives
         Enums
         ValueObjects
         DataClasses

@@ -43,8 +43,13 @@ Interfaces
         populate(api: TypesWorldApi)
 
     TypesWorldApi
+        populate(populator: TypesWorldPopulator)
+
+        hasType(type: HlaType): bool
+
         getTypeDependencies(type: HlaType): HlaType[]
 
+        addPrimitiveType(type: HlaType)
         addClassType(type: ClassType)
         addConcreteWrapper(type: ConcreteWrapper)
         addConcreteParametrizedClass(type: ConcreteParametrizedClass)

@@ -5,13 +5,28 @@ import com.github.bratek20.hla.typesworld.api.*
 class TypesWorldApiLogic(
     populators: Set<TypesWorldPopulator>
 ): TypesWorldApi {
+    private val primitives: MutableList<HlaType> = mutableListOf()
     private val classTypes: MutableList<ClassType> = mutableListOf()
     private val concreteWrappers: MutableList<ConcreteWrapper> = mutableListOf()
 
     init {
         populators.sortedBy { it.getOrder() }.forEach {
-            it.populate(this)
+            populate(it)
         }
+    }
+
+    override fun populate(populator: TypesWorldPopulator) {
+        populator.populate(this)
+    }
+
+    override fun hasType(type: HlaType): Boolean {
+        return getAllTypes().any { it == type }
+    }
+
+    private fun getAllTypes(): List<HlaType> {
+        return primitives +
+            classTypes.map { it.getType() } +
+            concreteWrappers.map { it.getType() }
     }
 
     override fun getTypeDependencies(type: HlaType): List<HlaType> {
@@ -32,6 +47,10 @@ class TypesWorldApiLogic(
         }
 
         return emptyList()
+    }
+
+    override fun addPrimitiveType(type: HlaType) {
+        primitives.add(type)
     }
 
     override fun addClassType(type: ClassType): Unit {

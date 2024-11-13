@@ -354,10 +354,20 @@ class HlaFacadeTest {
         )
 
         //then
-        sr.typesWorldApi.getClassType(hlaType {
-            name = "OtherClassView"
-            path = "OtherModule/View"
-        })
+        val assertHasType = { typeName: String, typePath: String ->
+            assertThat(sr.typesWorldApi.hasType(hlaType {
+                name = typeName
+                path = typePath
+            }))
+            .withFailMessage("Type $typeName not found")
+            .isTrue()
+        }
+
+        assertHasType("int", "Language/Types/Api/Primitives")
+        assertHasType("string", "Language/Types/Api/Primitives")
+
+        assertHasType("OtherClassView", "OtherModule/View")
+        //assertHasType("OtherClassVm", "OtherModule/ViewModel")
     }
 
     @Test

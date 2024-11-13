@@ -2,7 +2,11 @@ package com.github.bratek20.hla.queries.api
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
+import com.github.bratek20.hla.typesworld.api.*
 
 fun ofBaseType(value: String): BaseType {
     return BaseType.valueOf(value.uppercase())
@@ -12,10 +16,36 @@ fun isBaseType(value: String): Boolean {
     return BaseType.entries.any { it.name == value.uppercase() }
 }
 
+class PrimitiveTypesPopulator: TypesWorldPopulator {
+    override fun getOrder(): Int {
+        return 0
+    }
+
+    override fun populate(api: TypesWorldApi) {
+        BaseType.entries.forEach {
+            api.addPrimitiveType(
+                HlaType.create(
+                    name = HlaTypeName(it.name.lowercase()),
+                    path = HlaTypePath.create(
+                        GroupName("Language"),
+                        ModuleName("Types"),
+                        SubmoduleName.Api,
+                        PatternName.Primitives
+                    )
+                )
+            )
+        }
+    }
+}
+
 class ModuleGroupQueries(
     private val currentModuleName: ModuleName,
     private val group: ModuleGroup
 ) {
+    fun populateTypes(typesWorldApi: TypesWorldApi) {
+        typesWorldApi.populate(PrimitiveTypesPopulator())
+    }
+
     val currentModule: ModuleDefinition
         get() = get(currentModuleName)
 

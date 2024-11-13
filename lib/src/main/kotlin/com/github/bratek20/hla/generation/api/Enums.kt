@@ -14,6 +14,7 @@ enum class SubmoduleName {
 }
 
 enum class PatternName {
+    Primitives,
     Enums,
     ValueObjects,
     DataClasses,

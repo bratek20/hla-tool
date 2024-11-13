@@ -9,7 +9,13 @@ interface TypesWorldPopulator {
 }
 
 interface TypesWorldApi {
+    fun populate(populator: TypesWorldPopulator): Unit
+
+    fun hasType(type: HlaType): Boolean
+
     fun getTypeDependencies(type: HlaType): List<HlaType>
+
+    fun addPrimitiveType(type: HlaType): Unit
 
     fun addClassType(type: ClassType): Unit
 
