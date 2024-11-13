@@ -71,6 +71,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function classWithEnumList(given: ClassWithEnumList, expected: ExpectedClassWithEnumList) {
+        const diff = diffClassWithEnumList(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
         const diff = diffSomeQueryInput(given, expected)
         AssertEquals(diff, "", diff)

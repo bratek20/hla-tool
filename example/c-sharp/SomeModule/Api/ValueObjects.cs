@@ -354,6 +354,22 @@ namespace SomeModule.Api {
         }
     }
 
+    public class ClassWithEnumList {
+        readonly List<string> enumList;
+
+        public ClassWithEnumList(
+            List<string> enumList
+        ) {
+            this.enumList = enumList;
+        }
+        public List<SomeEnum> GetEnumList() {
+            return enumList.Select( it => (SomeEnum)Enum.Parse(typeof(SomeEnum), it) );
+        }
+        public static ClassWithEnumList Create(List<SomeEnum> enumList) {
+            return new ClassWithEnumList(enumList.Select( it => it.ToString() ));
+        }
+    }
+
     public class SomeQueryInput {
         readonly string id;
         readonly int amount;

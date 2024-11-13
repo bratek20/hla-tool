@@ -55,6 +55,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class ClassWithEnumListVm: UiElement<ClassWithEnumList> {
+        public SomeEnumSwitchGroup EnumList { get; set; }
+        protected override void OnUpdate() {
+            EnumList.Update(Model.GetEnumList());
+        }
+    }
+
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
     }
 
@@ -62,6 +69,13 @@ namespace SomeModule.ViewModel {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<SomeClass2Vm>()) {
+        }
+    }
+
+    public class SomeEnumSwitchGroup: UiElementGroup<SomeEnumSwitch, SomeEnum> {
+        public SomeEnumSwitchGroup(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<SomeEnumSwitch>()) {
         }
     }
 

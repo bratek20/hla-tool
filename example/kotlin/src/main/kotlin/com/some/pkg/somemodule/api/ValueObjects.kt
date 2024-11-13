@@ -377,6 +377,24 @@ data class ClassWithOptExamples(
     }
 }
 
+data class ClassWithEnumList(
+    private val enumList: List<String>,
+) {
+    fun getEnumList(): List<SomeEnum> {
+        return this.enumList.map { it -> SomeEnum.valueOf(it) }
+    }
+
+    companion object {
+        fun create(
+            enumList: List<SomeEnum>,
+        ): ClassWithEnumList {
+            return ClassWithEnumList(
+                enumList = enumList.map { it -> it.name },
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,
