@@ -311,6 +311,21 @@ fun diffClassWithOptExamples(given: ClassWithOptExamples, expectedInit: Expected
     return result.joinToString("\n")
 }
 
+data class ExpectedClassWithEnumList(
+    var enumList: List<String>? = null,
+)
+fun diffClassWithEnumList(given: ClassWithEnumList, expectedInit: ExpectedClassWithEnumList.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithEnumList().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.enumList?.let {
+        if (given.getEnumList().size != it.size) { result.add("${path}enumList size ${given.getEnumList().size} != ${it.size}"); return@let }
+        given.getEnumList().forEachIndexed { idx, entry -> if (diffSomeEnum(entry, it[idx]) != "") { result.add(diffSomeEnum(entry, it[idx], "${path}enumList[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,

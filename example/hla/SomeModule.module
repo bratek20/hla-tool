@@ -65,6 +65,9 @@ ValueObjects
         optInt: int? (example: 1)
         optIntWrapper: SomeIntWrapper? (example: 2)
 
+    ClassWithEnumList
+        enumList: SomeEnum[]
+
 Exceptions
     SomeExtraException
 
@@ -212,6 +215,10 @@ ViewModel
         ClassHavingOptSimpleVoVm
             ClassHavingOptSimpleVo
                 optSimpleVo
+
+        ClassWithEnumListVm
+            ClassWithEnumList
+                enumList
 
     Windows
         SomeWindow
