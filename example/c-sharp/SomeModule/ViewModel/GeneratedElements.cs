@@ -72,6 +72,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public class SomeEnumSwitchGroup: UiElementGroup<SomeEnumSwitch, SomeEnum> {
+        public SomeEnumSwitchGroup(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<SomeEnumSwitch>()) {
+        }
+    }
+
     public class SomeClassVmGroup: UiElementGroup<SomeClassVm, SomeClass> {
         public SomeClassVmGroup(
             B20.Architecture.Contexts.Api.Context c

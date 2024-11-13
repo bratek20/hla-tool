@@ -68,7 +68,7 @@ class ViewModelSharedLogic(
         }
 
         return listTypes
-            .filter { it.wrappedType is ComplexStructureApiType<*> }
+            .filter { it.wrappedType is ComplexStructureApiType<*> || it.wrappedType is EnumApiType }
             .distinctBy { it.wrappedType.name() }
     }
 
