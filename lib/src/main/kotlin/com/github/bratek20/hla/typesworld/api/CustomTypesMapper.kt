@@ -1,4 +1,6 @@
-package com.github.bratek20.hla.types.api
+package com.github.bratek20.hla.typesworld.api
+
+import com.github.bratek20.hla.typesworld.api.HlaTypePath
 
 fun hlaTypePathCreate(value: String): HlaTypePath {
     return HlaTypePath(value)
