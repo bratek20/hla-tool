@@ -24,17 +24,20 @@ ValueObjects
         type: HlaType
 
     ClassType
-        type: HlaType
+        name: HlaTypeName
+        path: HlaTypePath
         fields: ClassField[]
         extends: HlaType? = empty
         //implements: HlaType[] = [] - not needed for now
 
     ConcreteWrapper
-        type: HlaType
+        name: HlaTypeName
+        path: HlaTypePath
         wrappedType: HlaType
 
     ConcreteParametrizedClass
-        type: HlaType
+        name: HlaTypeName
+        path: HlaTypePath
         typeArguments: HlaType[]
 
 Interfaces

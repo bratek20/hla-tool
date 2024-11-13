@@ -2,10 +2,27 @@ package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.hla.typesworld.api.*
 
+fun ClassType.getType(): HlaType {
+    return HlaType.create(
+        kind = HlaTypeKind.ClassType,
+        name = getName(),
+        path = getPath()
+    )
+}
+
+fun ConcreteWrapper.getType(): HlaType {
+    return HlaType.create(
+        kind = HlaTypeKind.ConcreteWrapper,
+        name = getName(),
+        path = getPath()
+    )
+}
+
 class TypesWorldApiLogic(
     populators: Set<TypesWorldPopulator>
 ): TypesWorldApi {
     private val classTypes: MutableList<ClassType> = mutableListOf()
+    private val concreteWrappers: MutableList<ConcreteWrapper> = mutableListOf()
 
     init {
         populators.sortedBy { it.getOrder() }.forEach {
@@ -14,7 +31,23 @@ class TypesWorldApiLogic(
     }
 
     override fun getTypeDependencies(type: HlaType): List<HlaType> {
-        TODO("Not yet implemented")
+        classTypes.firstOrNull {
+            it.getType() == type
+        }?.let { classType ->
+            return classType.getFields().map {
+                it.getType()
+            }
+        }
+
+        concreteWrappers.firstOrNull {
+            it.getType() == type
+        }?.let {
+            return listOf(
+                it.getWrappedType()
+            )
+        }
+
+        return emptyList()
     }
 
     override fun addClassType(type: ClassType): Unit {
@@ -22,7 +55,7 @@ class TypesWorldApiLogic(
     }
 
     override fun addConcreteWrapper(type: ConcreteWrapper): Unit {
-        TODO("Not yet implemented")
+        concreteWrappers.add(type)
     }
 
     override fun addConcreteParametrizedClass(type: ConcreteParametrizedClass): Unit {
@@ -30,6 +63,7 @@ class TypesWorldApiLogic(
     }
 
     override fun getClassType(type: HlaType): ClassType {
-        return classTypes.first { it.getType() == type }
+        return classTypes.firstOrNull { it.getType() == type }
+            ?: throw TypeNotFoundException("Class type '${type.getName()}' not found")
     }
 }

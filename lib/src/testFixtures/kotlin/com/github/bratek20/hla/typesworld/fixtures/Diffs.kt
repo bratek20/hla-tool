@@ -63,7 +63,8 @@ fun diffClassField(given: ClassField, expectedInit: ExpectedClassField.() -> Uni
 }
 
 data class ExpectedClassType(
-    var type: (ExpectedHlaType.() -> Unit)? = null,
+    var name: String? = null,
+    var path: String? = null,
     var fields: List<(ExpectedClassField.() -> Unit)>? = null,
     var extendsEmpty: Boolean? = null,
     var extends: (ExpectedHlaType.() -> Unit)? = null,
@@ -72,8 +73,12 @@ fun diffClassType(given: ClassType, expectedInit: ExpectedClassType.() -> Unit, 
     val expected = ExpectedClassType().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.type?.let {
-        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+    expected.name?.let {
+        if (diffHlaTypeName(given.getName(), it) != "") { result.add(diffHlaTypeName(given.getName(), it, "${path}name.")) }
+    }
+
+    expected.path?.let {
+        if (diffHlaTypePath(given.getPath(), it) != "") { result.add(diffHlaTypePath(given.getPath(), it, "${path}path.")) }
     }
 
     expected.fields?.let {
@@ -93,15 +98,20 @@ fun diffClassType(given: ClassType, expectedInit: ExpectedClassType.() -> Unit, 
 }
 
 data class ExpectedConcreteWrapper(
-    var type: (ExpectedHlaType.() -> Unit)? = null,
+    var name: String? = null,
+    var path: String? = null,
     var wrappedType: (ExpectedHlaType.() -> Unit)? = null,
 )
 fun diffConcreteWrapper(given: ConcreteWrapper, expectedInit: ExpectedConcreteWrapper.() -> Unit, path: String = ""): String {
     val expected = ExpectedConcreteWrapper().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.type?.let {
-        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+    expected.name?.let {
+        if (diffHlaTypeName(given.getName(), it) != "") { result.add(diffHlaTypeName(given.getName(), it, "${path}name.")) }
+    }
+
+    expected.path?.let {
+        if (diffHlaTypePath(given.getPath(), it) != "") { result.add(diffHlaTypePath(given.getPath(), it, "${path}path.")) }
     }
 
     expected.wrappedType?.let {
@@ -112,15 +122,20 @@ fun diffConcreteWrapper(given: ConcreteWrapper, expectedInit: ExpectedConcreteWr
 }
 
 data class ExpectedConcreteParametrizedClass(
-    var type: (ExpectedHlaType.() -> Unit)? = null,
+    var name: String? = null,
+    var path: String? = null,
     var typeArguments: List<(ExpectedHlaType.() -> Unit)>? = null,
 )
 fun diffConcreteParametrizedClass(given: ConcreteParametrizedClass, expectedInit: ExpectedConcreteParametrizedClass.() -> Unit, path: String = ""): String {
     val expected = ExpectedConcreteParametrizedClass().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.type?.let {
-        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+    expected.name?.let {
+        if (diffHlaTypeName(given.getName(), it) != "") { result.add(diffHlaTypeName(given.getName(), it, "${path}name.")) }
+    }
+
+    expected.path?.let {
+        if (diffHlaTypePath(given.getPath(), it) != "") { result.add(diffHlaTypePath(given.getPath(), it, "${path}path.")) }
     }
 
     expected.typeArguments?.let {

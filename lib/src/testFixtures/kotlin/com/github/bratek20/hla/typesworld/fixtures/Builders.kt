@@ -39,39 +39,45 @@ fun classField(init: ClassFieldDef.() -> Unit = {}): ClassField {
 }
 
 data class ClassTypeDef(
-    var type: (HlaTypeDef.() -> Unit) = {},
+    var name: String = "someValue",
+    var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
     var fields: List<(ClassFieldDef.() -> Unit)> = emptyList(),
     var extends: (HlaTypeDef.() -> Unit)? = null,
 )
 fun classType(init: ClassTypeDef.() -> Unit = {}): ClassType {
     val def = ClassTypeDef().apply(init)
     return ClassType.create(
-        type = hlaType(def.type),
+        name = HlaTypeName(def.name),
+        path = hlaTypePathCreate(def.path),
         fields = def.fields.map { it -> classField(it) },
         extends = def.extends?.let { it -> hlaType(it) },
     )
 }
 
 data class ConcreteWrapperDef(
-    var type: (HlaTypeDef.() -> Unit) = {},
+    var name: String = "someValue",
+    var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
     var wrappedType: (HlaTypeDef.() -> Unit) = {},
 )
 fun concreteWrapper(init: ConcreteWrapperDef.() -> Unit = {}): ConcreteWrapper {
     val def = ConcreteWrapperDef().apply(init)
     return ConcreteWrapper.create(
-        type = hlaType(def.type),
+        name = HlaTypeName(def.name),
+        path = hlaTypePathCreate(def.path),
         wrappedType = hlaType(def.wrappedType),
     )
 }
 
 data class ConcreteParametrizedClassDef(
-    var type: (HlaTypeDef.() -> Unit) = {},
+    var name: String = "someValue",
+    var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
     var typeArguments: List<(HlaTypeDef.() -> Unit)> = emptyList(),
 )
 fun concreteParametrizedClass(init: ConcreteParametrizedClassDef.() -> Unit = {}): ConcreteParametrizedClass {
     val def = ConcreteParametrizedClassDef().apply(init)
     return ConcreteParametrizedClass.create(
-        type = hlaType(def.type),
+        name = HlaTypeName(def.name),
+        path = hlaTypePathCreate(def.path),
         typeArguments = def.typeArguments.map { it -> hlaType(it) },
     )
 }

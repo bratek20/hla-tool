@@ -68,12 +68,17 @@ data class ClassField(
 }
 
 data class ClassType(
-    private val type: HlaType,
+    private val name: String,
+    private val path: String,
     private val fields: List<ClassField>,
     private val extends: HlaType? = null,
 ) {
-    fun getType(): HlaType {
-        return this.type
+    fun getName(): HlaTypeName {
+        return HlaTypeName(this.name)
+    }
+
+    fun getPath(): HlaTypePath {
+        return hlaTypePathCreate(this.path)
     }
 
     fun getFields(): List<ClassField> {
@@ -86,12 +91,14 @@ data class ClassType(
 
     companion object {
         fun create(
-            type: HlaType,
+            name: HlaTypeName,
+            path: HlaTypePath,
             fields: List<ClassField>,
             extends: HlaType? = null,
         ): ClassType {
             return ClassType(
-                type = type,
+                name = name.value,
+                path = hlaTypePathGetValue(path),
                 fields = fields,
                 extends = extends,
             )
@@ -100,11 +107,16 @@ data class ClassType(
 }
 
 data class ConcreteWrapper(
-    private val type: HlaType,
+    private val name: String,
+    private val path: String,
     private val wrappedType: HlaType,
 ) {
-    fun getType(): HlaType {
-        return this.type
+    fun getName(): HlaTypeName {
+        return HlaTypeName(this.name)
+    }
+
+    fun getPath(): HlaTypePath {
+        return hlaTypePathCreate(this.path)
     }
 
     fun getWrappedType(): HlaType {
@@ -113,11 +125,13 @@ data class ConcreteWrapper(
 
     companion object {
         fun create(
-            type: HlaType,
+            name: HlaTypeName,
+            path: HlaTypePath,
             wrappedType: HlaType,
         ): ConcreteWrapper {
             return ConcreteWrapper(
-                type = type,
+                name = name.value,
+                path = hlaTypePathGetValue(path),
                 wrappedType = wrappedType,
             )
         }
@@ -125,11 +139,16 @@ data class ConcreteWrapper(
 }
 
 data class ConcreteParametrizedClass(
-    private val type: HlaType,
+    private val name: String,
+    private val path: String,
     private val typeArguments: List<HlaType>,
 ) {
-    fun getType(): HlaType {
-        return this.type
+    fun getName(): HlaTypeName {
+        return HlaTypeName(this.name)
+    }
+
+    fun getPath(): HlaTypePath {
+        return hlaTypePathCreate(this.path)
     }
 
     fun getTypeArguments(): List<HlaType> {
@@ -138,11 +157,13 @@ data class ConcreteParametrizedClass(
 
     companion object {
         fun create(
-            type: HlaType,
+            name: HlaTypeName,
+            path: HlaTypePath,
             typeArguments: List<HlaType>,
         ): ConcreteParametrizedClass {
             return ConcreteParametrizedClass(
-                type = type,
+                name = name.value,
+                path = hlaTypePathGetValue(path),
                 typeArguments = typeArguments,
             )
         }
