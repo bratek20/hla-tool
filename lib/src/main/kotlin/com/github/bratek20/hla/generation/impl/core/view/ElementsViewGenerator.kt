@@ -11,15 +11,15 @@ import com.github.bratek20.hla.generation.impl.core.api.ListApiType
 import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
 import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
-import com.github.bratek20.hla.types.api.*
-import com.github.bratek20.hla.typesworld.api.HlaTypePath
+import com.github.bratek20.hla.typesworld.api.HlaType
+import com.github.bratek20.hla.typesworld.api.*
 
 abstract class ViewLogic(
     val mapper: ModelToViewModelTypeMapper
 ) {
     abstract fun getOps(): PerFileOperations
 
-    abstract fun populateType(typesApi: TypesApi)
+    abstract fun populateType(typesWorldApi: TypesWorldApi)
 }
 
 abstract class ContainerViewLogic(
@@ -31,13 +31,14 @@ abstract class ContainerViewLogic(
     abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
 
-    override fun populateType(typesApi: TypesApi) {
-        typesApi.addStructure(Structure.create(
-            getViewClassType(),
+    override fun populateType(typesWorldApi: TypesWorldApi) {
+        typesWorldApi.addClassType(ClassType.create(
+            name = getViewClassType().getName(),
+            path = getViewClassType().getPath(),
             getFields().filter {
                 it.hlaType != null
             }.map {
-                StructureField.create(
+                ClassField.create(
                     it.name,
                     mapper.mapViewModelToViewType(it.hlaType!!)
                 )
@@ -132,7 +133,8 @@ class WindowViewLogic(
 
     override fun getViewClassType(): HlaType {
         return HlaType.create(
-            getViewClassName(),
+            kind = HlaTypeKind.ClassType,
+            HlaTypeName(getViewClassName()),
             HlaTypePath.create(ModuleName(window.getModuleName()), SubmoduleName.View)
         )
     }
@@ -156,10 +158,11 @@ abstract class WrappedElementViewLogic(
 ): ViewLogic(mapper) {
     protected abstract fun extendedClassName(): String
 
-    override fun populateType(typesApi: TypesApi) {
-        typesApi.addWrapper(Wrapper.create(
-            getViewClassType(),
-            mapper.mapModelToViewType(modelType.wrappedType)
+    override fun populateType(typesWorldApi: TypesWorldApi) {
+        typesWorldApi.addConcreteWrapper(ConcreteWrapper.create(
+            name = HlaTypeName(getViewClassName()),
+            path = getViewClassType().getPath(),
+            wrappedType = mapper.mapModelToViewType(modelType.wrappedType)
         ))
     }
 
@@ -246,7 +249,7 @@ class EnumElementViewLogic(
         }
     }
 
-    override fun populateType(typesApi: TypesApi) {
+    override fun populateType(typesWorldApi: TypesWorldApi) {
 
     }
 }

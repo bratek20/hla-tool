@@ -5,7 +5,9 @@ import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
-import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.typesworld.api.HlaType
+import com.github.bratek20.hla.typesworld.api.HlaTypeKind
+import com.github.bratek20.hla.typesworld.api.HlaTypeName
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
@@ -28,10 +30,11 @@ class ModelToViewModelTypeMapper(
     }
 
     fun mapViewModelToViewType(viewModelType: HlaType): HlaType {
-        val viewModelTypeName = viewModelType.getName()
+        val viewModelTypeName = viewModelType.getName().value
         val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
         return HlaType.create(
-            name = viewTypeName,
+            kind = HlaTypeKind.ClassType,
+            name = HlaTypeName(viewTypeName),
             path = viewModelType.getPath().replaceSubmodule(SubmoduleName.View)
         )
     }
@@ -88,7 +91,8 @@ class ModelToViewModelTypeMapper(
     fun mapModelToViewType(modelType: ApiType): HlaType {
         val viewTypeName = mapModelToViewTypeName(modelType)
         return HlaType.create(
-            name = viewTypeName,
+            kind = HlaTypeKind.ClassType,
+            name = HlaTypeName(viewTypeName),
             path = modelType.asHlaType().getPath()
                 .replaceSubmodule(SubmoduleName.View)
         )
@@ -119,7 +123,8 @@ class ModelToViewModelTypeMapper(
     fun mapModelToViewModelType(modelType: ApiType): HlaType {
         val viewModelTypeName = mapModelToViewModelTypeName(modelType)
         return HlaType.create(
-            name = viewModelTypeName,
+            kind = HlaTypeKind.ClassType,
+            name = HlaTypeName(viewModelTypeName),
             path = modelType.asHlaType().getPath()
                 .replaceSubmodule(SubmoduleName.ViewModel)
         )

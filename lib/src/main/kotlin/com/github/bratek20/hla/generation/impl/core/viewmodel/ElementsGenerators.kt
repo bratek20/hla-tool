@@ -9,7 +9,9 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
-import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.typesworld.api.HlaType
+import com.github.bratek20.hla.typesworld.api.HlaTypeKind
+import com.github.bratek20.hla.typesworld.api.HlaTypeName
 import com.github.bratek20.hla.typesworld.api.HlaTypePath
 import com.github.bratek20.utils.camelToPascalCase
 import kotlin.reflect.KClass
@@ -120,7 +122,11 @@ class ViewModelField(
                     baseTypeName
                 }
 
-                val finalType = HlaType.create(finalTypeName, HlaTypePath.create(moduleName, SubmoduleName.View))
+                val finalType = HlaType.create(
+                    HlaTypeKind.ClassType,
+                    HlaTypeName(finalTypeName),
+                    HlaTypePath.create(moduleName, SubmoduleName.View)
+                )
                 ViewModelField(finalTypeName, it.getName(), finalType)
             }
         }

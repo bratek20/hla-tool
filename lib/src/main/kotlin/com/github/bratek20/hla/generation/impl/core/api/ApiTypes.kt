@@ -10,7 +10,9 @@ import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
-import com.github.bratek20.hla.types.api.HlaType
+import com.github.bratek20.hla.typesworld.api.HlaType
+import com.github.bratek20.hla.typesworld.api.HlaTypeKind
+import com.github.bratek20.hla.typesworld.api.HlaTypeName
 import com.github.bratek20.hla.typesworld.api.HlaTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -37,7 +39,8 @@ abstract class ApiType {
     fun asOptHlaType(): HlaType? {
         return typeModule?.let {
             HlaType.create(
-                name = name(),
+                kind = HlaTypeKind.ClassType,
+                name = HlaTypeName(name()),
                 path = HlaTypePath.create(
                     ModuleName(moduleName()),
                     SubmoduleName.Api
