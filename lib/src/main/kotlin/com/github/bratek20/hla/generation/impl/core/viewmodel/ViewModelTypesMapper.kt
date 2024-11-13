@@ -113,7 +113,7 @@ class ModelToViewModelTypeMapper(
         if (modelType is OptionalApiType) {
             return mapOptionalType(modelType)
         }
-        return "TODO"
+        return "TODO-mapModelToViewModelTypeName-${modelType.name()}"
     }
 
     fun mapModelToViewModelType(modelType: ApiType): HlaType {
