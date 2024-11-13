@@ -1,0 +1,50 @@
+Enums
+    HlaTypeKind
+        Primitive
+        ClassType
+        GenericWrapper
+        ConcreteWrapper
+        GenericParametrizedClass
+        ConcreteParametrizedClass
+        //InterfaceType - not needed for now, model for methods will be needed
+
+CustomTypes
+    HlaTypePath: string (example: "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects")
+
+ValueObjects
+    HlaTypeName: string
+
+    HlaType
+        kind: HlaTypeKind
+        name: HlaTypeName
+        path: HlaTypePath
+
+    ClassField
+        name: string
+        type: HlaType
+
+    ClassType
+        type: HlaType
+        fields: ClassField[]
+        extends: HlaType? = empty
+        //implements: HlaType[] = [] - not needed for now
+
+    ConcreteWrapper
+        type: HlaType
+        wrappedType: HlaType
+
+    ConcreteParametrizedClass
+        type: HlaType
+        typeArguments: HlaType[]
+
+Interfaces
+    TypesWorldPopulator
+        getOrder(): int // needed as some types are populated from others
+        populate(api: TypesWorldApi)
+
+    TypesWorldApi
+        getTypeDependencies(type: HlaType): HlaType[]
+
+        addClassType(type: ClassType)
+        addConcreteWrapper(type: ConcreteWrapper)
+        addConcreteParametrizedClass(type: ConcreteParametrizedClass)
