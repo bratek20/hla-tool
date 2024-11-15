@@ -8,13 +8,24 @@ import com.github.bratek20.hla.parsing.api.GroupName
 class HlaTypePath(
     val value: String
 ){
-    fun replaceSubmodule(submodule: SubmoduleName): HlaTypePath {
-        return HlaTypePath(value.replaceAfterLast("/", submodule.name))
+    fun replaceSubmoduleAndPattern(submodule: SubmoduleName, pattern: PatternName): HlaTypePath {
+        val parts = value.split("/").toMutableList()
+        parts[parts.size - 2] = submodule.name
+        parts[parts.size - 1] = pattern.name
+        return HlaTypePath(parts.joinToString("/"))
+    }
+
+    fun dropPatternPart(): String {
+        return value.replaceAfterLast("/", "").dropLast(1)
     }
 
     companion object {
-        fun create(module: ModuleName, submodule: SubmoduleName): HlaTypePath {
-            return HlaTypePath("${module.value}/${submodule.name}")
+        fun create(
+            module: ModuleName,
+            submodule: SubmoduleName,
+            pattern: PatternName
+        ): HlaTypePath {
+            return HlaTypePath("${module.value}/${submodule.name}/${pattern.name}");
         }
 
         fun create(

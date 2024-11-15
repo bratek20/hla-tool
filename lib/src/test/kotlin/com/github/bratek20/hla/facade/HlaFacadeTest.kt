@@ -363,11 +363,19 @@ class HlaFacadeTest {
             .isTrue()
         }
 
+        //special types
         assertHasType("int", "Language/Types/Api/Primitives")
         assertHasType("string", "Language/Types/Api/Primitives")
 
-        assertHasType("OtherClassView", "OtherModule/View")
+        //api types
+        assertHasType("OtherClass", "OtherModule/Api/ValueObjects")
+
+        //view model types
         //assertHasType("OtherClassVm", "OtherModule/ViewModel")
+
+        //view types
+        assertHasType("OtherClassView", "OtherModule/View/ElementsView")
+
     }
 
     @Test

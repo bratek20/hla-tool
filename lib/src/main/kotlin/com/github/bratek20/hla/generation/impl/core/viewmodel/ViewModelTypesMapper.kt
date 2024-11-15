@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.typesworld.api.HlaType
@@ -34,7 +35,8 @@ class ModelToViewModelTypeMapper(
         val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
         return HlaType.create(
             name = HlaTypeName(viewTypeName),
-            path = viewModelType.getPath().replaceSubmodule(SubmoduleName.View)
+            path = viewModelType.getPath()
+                .replaceSubmoduleAndPattern(SubmoduleName.View, PatternName.ElementsView)
         )
     }
 
@@ -92,7 +94,7 @@ class ModelToViewModelTypeMapper(
         return HlaType.create(
             name = HlaTypeName(viewTypeName),
             path = modelType.asHlaType().getPath()
-                .replaceSubmodule(SubmoduleName.View)
+                .replaceSubmoduleAndPattern(SubmoduleName.View, PatternName.ElementsView)
         )
     }
 
@@ -123,7 +125,7 @@ class ModelToViewModelTypeMapper(
         return HlaType.create(
             name = HlaTypeName(viewModelTypeName),
             path = modelType.asHlaType().getPath()
-                .replaceSubmodule(SubmoduleName.ViewModel)
+                .replaceSubmoduleAndPattern(SubmoduleName.ViewModel, PatternName.ElementsView)
         )
     }
 

@@ -4,6 +4,7 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
@@ -42,7 +43,8 @@ abstract class ApiType {
                 name = HlaTypeName(name()),
                 path = HlaTypePath.create(
                     ModuleName(moduleName()),
-                    SubmoduleName.Api
+                    SubmoduleName.Api,
+                    PatternName.ValueObjects
                 )
             )
         }

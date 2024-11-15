@@ -32,7 +32,7 @@ abstract class PrefabBaseBlueprintLogic(
     }
 
     private fun asFullViewType(type: HlaType): String {
-        return type.getPath().value.replace("/", ".") + "." + type.getName()
+        return type.getPath().dropPatternPart().replace("/", ".") + "." + type.getName()
     }
 
     fun getFile(): File {

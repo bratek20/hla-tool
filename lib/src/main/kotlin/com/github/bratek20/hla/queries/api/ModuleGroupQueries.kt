@@ -38,12 +38,50 @@ class PrimitiveTypesPopulator: TypesWorldPopulator {
     }
 }
 
+class ApiTypesPopulator(
+    private val modules: List<ModuleDefinition>
+): TypesWorldPopulator {
+    override fun getOrder(): Int {
+        return 0
+    }
+
+    private lateinit var api: TypesWorldApi
+    override fun populate(api: TypesWorldApi) {
+        this.api = api
+        modules.forEach(this::populateModuleTypes)
+    }
+
+    private fun populateModuleTypes(module: ModuleDefinition) {
+        module.getComplexValueObjects().forEach { populateComplexValueObject(module, it) }
+    }
+
+    private fun populateComplexValueObject(
+        module: ModuleDefinition,
+        def: ComplexStructureDefinition
+    ) {
+        val type = HlaType.create(
+            name = HlaTypeName(def.getName()),
+            path = HlaTypePath.create(
+                module.getName(),
+                SubmoduleName.Api,
+                PatternName.ValueObjects
+            )
+        )
+
+        api.addClassType(ClassType.create(
+            type = type,
+            fields = emptyList()
+        ))
+    }
+}
+
 class ModuleGroupQueries(
     private val currentModuleName: ModuleName,
     private val group: ModuleGroup
 ) {
     fun populateTypes(typesWorldApi: TypesWorldApi) {
         typesWorldApi.populate(PrimitiveTypesPopulator())
+        typesWorldApi.populate(ApiTypesPopulator(getModulesRecursive(group)))
     }
 
     val currentModule: ModuleDefinition
