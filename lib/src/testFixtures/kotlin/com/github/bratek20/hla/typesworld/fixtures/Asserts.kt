@@ -6,38 +6,38 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.github.bratek20.hla.typesworld.api.*
 
-fun assertHlaTypeName(given: HlaTypeName, expected: String) {
-    val diff = diffHlaTypeName(given, expected)
+fun assertWorldTypeName(given: WorldTypeName, expected: String) {
+    val diff = diffWorldTypeName(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
 
-fun assertHlaTypePath(given: HlaTypePath, expected: String) {
-    val diff = diffHlaTypePath(given, expected)
+fun assertWorldTypePath(given: WorldTypePath, expected: String) {
+    val diff = diffWorldTypePath(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertHlaType(given: HlaType, expectedInit: ExpectedHlaType.() -> Unit) {
-    val diff = diffHlaType(given, expectedInit)
+fun assertWorldType(given: WorldType, expectedInit: ExpectedWorldType.() -> Unit) {
+    val diff = diffWorldType(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertClassField(given: ClassField, expectedInit: ExpectedClassField.() -> Unit) {
-    val diff = diffClassField(given, expectedInit)
+fun assertWorldClassField(given: WorldClassField, expectedInit: ExpectedWorldClassField.() -> Unit) {
+    val diff = diffWorldClassField(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertClassType(given: ClassType, expectedInit: ExpectedClassType.() -> Unit) {
-    val diff = diffClassType(given, expectedInit)
+fun assertWorldClassType(given: WorldClassType, expectedInit: ExpectedWorldClassType.() -> Unit) {
+    val diff = diffWorldClassType(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertConcreteWrapper(given: ConcreteWrapper, expectedInit: ExpectedConcreteWrapper.() -> Unit) {
-    val diff = diffConcreteWrapper(given, expectedInit)
+fun assertWorldConcreteWrapper(given: WorldConcreteWrapper, expectedInit: ExpectedWorldConcreteWrapper.() -> Unit) {
+    val diff = diffWorldConcreteWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertConcreteParametrizedClass(given: ConcreteParametrizedClass, expectedInit: ExpectedConcreteParametrizedClass.() -> Unit) {
-    val diff = diffConcreteParametrizedClass(given, expectedInit)
+fun assertWorldConcreteParametrizedClass(given: WorldConcreteParametrizedClass, expectedInit: ExpectedWorldConcreteParametrizedClass.() -> Unit) {
+    val diff = diffWorldConcreteParametrizedClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

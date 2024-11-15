@@ -2,36 +2,28 @@
 
 package com.github.bratek20.hla.typesworld.api
 
-interface TypesWorldPopulator {
-    fun getOrder(): Int
-
-    fun populate(api: TypesWorldApi): Unit
-}
-
 interface TypesWorldApi {
-    fun populate(populator: TypesWorldPopulator): Unit
+    fun ensureType(type: WorldType): Unit
 
-    fun ensureType(type: HlaType): Unit
-
-    fun hasType(type: HlaType): Boolean
+    fun hasType(type: WorldType): Boolean
 
     @Throws(
-        TypeNotFoundException::class,
+        WorldTypeNotFoundException::class,
     )
-    fun getTypeByName(name: HlaTypeName): HlaType
+    fun getTypeByName(name: WorldTypeName): WorldType
 
-    fun addPrimitiveType(type: HlaType): Unit
+    fun addPrimitiveType(type: WorldType): Unit
 
-    fun addClassType(type: ClassType): Unit
+    fun addClassType(type: WorldClassType): Unit
 
-    fun addConcreteWrapper(type: ConcreteWrapper): Unit
+    fun addConcreteWrapper(type: WorldConcreteWrapper): Unit
 
-    fun addConcreteParametrizedClass(type: ConcreteParametrizedClass): Unit
+    fun addConcreteParametrizedClass(type: WorldConcreteParametrizedClass): Unit
 
     @Throws(
-        TypeNotFoundException::class,
+        WorldTypeNotFoundException::class,
     )
-    fun getClassType(type: HlaType): ClassType
+    fun getClassType(type: WorldType): WorldClassType
 
-    fun getTypeDependencies(type: HlaType): List<HlaType>
+    fun getTypeDependencies(type: WorldType): List<WorldType>
 }

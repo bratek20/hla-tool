@@ -11,10 +11,10 @@ import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
-import com.github.bratek20.hla.typesworld.api.HlaType
-import com.github.bratek20.hla.typesworld.api.HlaTypeKind
-import com.github.bratek20.hla.typesworld.api.HlaTypeName
-import com.github.bratek20.hla.typesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -33,19 +33,19 @@ abstract class ApiType {
         return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
     }
 
-    fun asHlaType(): HlaType {
+    fun asWorldType(): WorldType {
         return asOptHlaType() ?: throw IllegalStateException("No HlaType for type $this")
     }
 
-    fun asOptHlaType(): HlaType? {
+    fun asOptHlaType(): WorldType? {
         return typeModule?.let {
-            HlaType.create(
-                name = HlaTypeName(name()),
+            WorldType.create(
+                name = WorldTypeName(name()),
                 path = HlaTypePath.create(
                     ModuleName(moduleName()),
                     SubmoduleName.Api,
                     PatternName.ValueObjects
-                )
+                ).asWorld()
             )
         }
     }

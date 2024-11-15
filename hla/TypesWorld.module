@@ -1,5 +1,5 @@
 Enums
-    HlaTypeKind
+    WorldTypeKind
         Primitive
         ClassType
         GenericWrapper
@@ -9,62 +9,56 @@ Enums
         //InterfaceType - not needed for now, model for methods will be needed
 
 CustomTypes
-    HlaTypePath: string (example: "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects")
+    WorldTypePath: string (example: "Some/Path/To/Type")
 
 ValueObjects
-    HlaTypeName: string
+    WorldTypeName: string
 
-    HlaType
-        name: HlaTypeName
-        path: HlaTypePath
+    WorldType
+        name: WorldTypeName
+        path: WorldTypePath
 
-    ClassField
+    WorldClassField
         name: string
-        type: HlaType
+        type: WorldType
 
-    ClassType
-        type: HlaType
-        fields: ClassField[]
-        extends: HlaType? = empty
-        //implements: HlaType[] = [] - not needed for now
+    WorldClassType
+        type: WorldType
+        fields: WorldClassField[]
+        extends: WorldType? = empty
+        //implements: WorldType[] = [] - not needed for now
 
-    ConcreteWrapper
-        type: HlaType
-        wrappedType: HlaType
+    WorldConcreteWrapper
+        type: WorldType
+        wrappedType: WorldType
 
-    ConcreteParametrizedClass
-        name: HlaTypeName
-        path: HlaTypePath
-        typeArguments: HlaType[]
+    WorldConcreteParametrizedClass
+        name: WorldTypeName
+        path: WorldTypePath
+        typeArguments: WorldType[]
 
 Interfaces
-    TypesWorldPopulator
-        getOrder(): int // needed as some types are populated from others
-        populate(api: TypesWorldApi)
-
     TypesWorldApi
-        populate(populator: TypesWorldPopulator)
-
         // to populate information that such type exits
         // can be called multiple types for the same type
-        ensureType(type: HlaType)
+        ensureType(type: WorldType)
 
-        hasType(type: HlaType): bool
+        hasType(type: WorldType): bool
 
-        getTypeByName(name: HlaTypeName): HlaType
+        getTypeByName(name: WorldTypeName): WorldType
             throws
-                TypeNotFoundException
+                WorldTypeNotFoundException
 
         // to populate more detailed information about type that is used for dependencies calculation
         // type is also ensured
-        addPrimitiveType(type: HlaType)
-        addClassType(type: ClassType)
-        addConcreteWrapper(type: ConcreteWrapper)
-        addConcreteParametrizedClass(type: ConcreteParametrizedClass)
+        addPrimitiveType(type: WorldType)
+        addClassType(type: WorldClassType)
+        addConcreteWrapper(type: WorldConcreteWrapper)
+        addConcreteParametrizedClass(type: WorldConcreteParametrizedClass)
 
-        getClassType(type: HlaType): ClassType
+        getClassType(type: WorldType): WorldClassType
             throws
-                TypeNotFoundException
+                WorldTypeNotFoundException
 
-        getTypeDependencies(type: HlaType): HlaType[]
+        getTypeDependencies(type: WorldType): WorldType[]
 

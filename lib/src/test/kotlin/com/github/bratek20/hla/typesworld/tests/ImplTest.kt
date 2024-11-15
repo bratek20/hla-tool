@@ -10,55 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class Order0Populator : TypesWorldPopulator {
-    override fun getOrder(): Int {
-        return 0
-    }
-
-    override fun populate(api: TypesWorldApi) {
-        api.addClassType(classType {
-            type = {
-                name = "SomeClass"
-                path = "SomePath"
-            }
-        })
-        api.addConcreteWrapper(concreteWrapper {
-            type = {
-                name = "List<SomeClass>"
-            }
-            wrappedType = {
-                name = "SomeClass"
-            }
-        })
-    }
-}
-
-class Order1Populator : TypesWorldPopulator {
-    override fun getOrder(): Int {
-        return 1
-    }
-
-    override fun populate(api: TypesWorldApi) {
-        val classType = api.getClassType(hlaType {
-            name = "SomeClass"
-            path = "SomePath"
-        })
-
-        api.addClassType(ClassType.create(
-            HlaType.create(
-                name = HlaTypeName("OtherClass"),
-                path = classType.getType().getPath(),
-            ),
-            fields = listOf(
-                ClassField.create(
-                    name = "someField",
-                    type = classType.getType()
-                )
-            )
-        ))
-    }
-}
-
 class TypesWorldImplTest {
     private lateinit var api: TypesWorldApi
 
@@ -66,46 +17,76 @@ class TypesWorldImplTest {
     fun setUp() {
         api = someContextBuilder()
             .withModule(TypesWorldImpl())
-            .addImpl(TypesWorldPopulator::class.java, Order0Populator::class.java)
-            .addImpl(TypesWorldPopulator::class.java, Order1Populator::class.java)
             .get(TypesWorldApi::class.java)
     }
 
     @Nested
-    inner class AddType {
+    inner class AddTypeAndGetTypeByName {
         @Test
         fun `should add`() {
-            api.ensureType(hlaType {
+            api.ensureType(worldType {
                 name = "MyType"
                 path = "MyPath"
             })
 
-            api.hasType(hlaType {
+            api.hasType(worldType {
                 name = "MyType"
                 path = "MyPath"
             }).let {
                 assertThat(it).isTrue()
             }
 
-            api.getTypeByName(hlaTypeName("MyType")).let {
-                assertHlaType(it) {
+            api.getTypeByName(worldTypeName("MyType")).let {
+                assertWorldType(it) {
                     path = "MyPath"
                 }
             }
         }
+
+        @Test
+        fun `should get populated type by name`() {
+            api.ensureType(worldType {
+                name = "SomeClass"
+                path = "SomePath"
+            })
+
+            api.getTypeByName(worldTypeName("SomeClass")).let {
+                assertWorldType(it) {
+                    name = "SomeClass"
+                    path = "SomePath"
+                }
+            }
+        }
+
+        @Test
+        fun `should throw exception when type not found`() {
+            assertApiExceptionThrown(
+                { api.getTypeByName(worldTypeName("NotExisting")) },
+                {
+                    type = WorldTypeNotFoundException::class
+                    message = "Hla type with name 'NotExisting' not found"
+                }
+            )
+        }
     }
+
     @Nested
     inner class GetClassType {
         @Test
         fun `should get populated class`() {
-            val classType = api.getClassType(hlaType {
-                name = "OtherClass"
-                path = "SomePath"
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SomeClass"
+                }
             })
 
-            assertClassType(classType) {
+            val worldClassType = api.getClassType(worldType {
+                name = "SomeClass"
+            })
+
+            assertWorldClassType(worldClassType) {
                 type = {
-                    name = "OtherClass"
+                    name = "SomeClass"
                 }
             }
         }
@@ -113,12 +94,12 @@ class TypesWorldImplTest {
         @Test
         fun `should throw exception when class not found`() {
             assertApiExceptionThrown(
-                { api.getClassType(hlaType {
+                { api.getClassType(worldType {
                     name = "NotExisting"
                     path = "SomePath"
                 }) },
                 {
-                    type = TypeNotFoundException::class
+                    type = WorldTypeNotFoundException::class
                     message = "Class type 'SomePath/NotExisting' not found"
                 }
             )
@@ -129,55 +110,47 @@ class TypesWorldImplTest {
     inner class GetTypeDependencies {
         @Test
         fun `should get type dependencies - class type`() {
-            val type = hlaType {
-                name = "OtherClass"
-                path = "SomePath"
-            }
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SomeClass"
+                }
+                fields = listOf {
+                    name = "field"
+                    type = {
+                        name = "OtherClass"
+                    }
+                }
+            })
 
-            val dependencies = api.getTypeDependencies(type)
+            val dependencies = api.getTypeDependencies(worldType {
+                name = "SomeClass"
+            })
 
             assertThat(dependencies).hasSize(1)
-            assertHlaType(dependencies[0]) {
-                name = "SomeClass"
+            assertWorldType(dependencies[0]) {
+                name = "OtherClass"
             }
         }
 
         @Test
         fun `should get type dependencies - concrete wrapper`() {
-            val type = hlaType {
-                name = "List<SomeClass>"
-            }
+            api.addConcreteWrapper(worldConcreteWrapper {
+                type = {
+                    name = "List<SomeClass>"
+                }
+                wrappedType = {
+                    name = "SomeClass"
+                }
+            })
 
-            val dependencies = api.getTypeDependencies(type)
+            val dependencies = api.getTypeDependencies(worldType {
+                name = "List<SomeClass>"
+            })
 
             assertThat(dependencies).hasSize(1)
-            assertHlaType(dependencies[0]) {
+            assertWorldType(dependencies[0]) {
                 name = "SomeClass"
             }
-        }
-    }
-
-    @Nested
-    inner class GetTypeByName {
-        @Test
-        fun `should get populated type by name`() {
-            api.getTypeByName(hlaTypeName("SomeClass")).let {
-                assertHlaType(it) {
-                    name = "SomeClass"
-                    path = "SomePath"
-                }
-            }
-        }
-
-        @Test
-        fun `should throw exception when type not found`() {
-            assertApiExceptionThrown(
-                { api.getTypeByName(hlaTypeName("NotExisting")) },
-                {
-                    type = TypeNotFoundException::class
-                    message = "Hla type with name 'NotExisting' not found"
-                }
-            )
         }
     }
 }

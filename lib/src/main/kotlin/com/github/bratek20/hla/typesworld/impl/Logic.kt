@@ -2,37 +2,25 @@ package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.hla.typesworld.api.*
 
-fun HlaType.getFullName(): String {
+fun WorldType.getFullName(): String {
     return "${getPath().value}/${getName()}"
 }
 
-class TypesWorldApiLogic(
-    populators: Set<TypesWorldPopulator>
-): TypesWorldApi {
-    private val allTypes: MutableSet<HlaType> = mutableSetOf()
-    private val primitives: MutableList<HlaType> = mutableListOf()
-    private val classTypes: MutableList<ClassType> = mutableListOf()
-    private val concreteWrappers: MutableList<ConcreteWrapper> = mutableListOf()
+class TypesWorldApiLogic: TypesWorldApi {
+    private val allTypes: MutableSet<WorldType> = mutableSetOf()
+    private val primitives: MutableList<WorldType> = mutableListOf()
+    private val classTypes: MutableList<WorldClassType> = mutableListOf()
+    private val concreteWrappers: MutableList<WorldConcreteWrapper> = mutableListOf()
 
-    init {
-        populators.sortedBy { it.getOrder() }.forEach {
-            populate(it)
-        }
-    }
-
-    override fun populate(populator: TypesWorldPopulator) {
-        populator.populate(this)
-    }
-
-    override fun ensureType(type: HlaType) {
+    override fun ensureType(type: WorldType) {
         allTypes.add(type)
     }
 
-    override fun hasType(type: HlaType): Boolean {
+    override fun hasType(type: WorldType): Boolean {
         return allTypes.contains(type)
     }
 
-    override fun getTypeDependencies(type: HlaType): List<HlaType> {
+    override fun getTypeDependencies(type: WorldType): List<WorldType> {
         classTypes.firstOrNull {
             it.getType() == type
         }?.let { classType ->
@@ -52,32 +40,32 @@ class TypesWorldApiLogic(
         return emptyList()
     }
 
-    override fun addPrimitiveType(type: HlaType) {
+    override fun addPrimitiveType(type: WorldType) {
         primitives.add(type)
         ensureType(type)
     }
 
-    override fun addClassType(type: ClassType): Unit {
+    override fun addClassType(type: WorldClassType): Unit {
         classTypes.add(type)
         ensureType(type.getType())
     }
 
-    override fun addConcreteWrapper(type: ConcreteWrapper): Unit {
+    override fun addConcreteWrapper(type: WorldConcreteWrapper): Unit {
         concreteWrappers.add(type)
         ensureType(type.getType())
     }
 
-    override fun addConcreteParametrizedClass(type: ConcreteParametrizedClass): Unit {
+    override fun addConcreteParametrizedClass(type: WorldConcreteParametrizedClass): Unit {
         TODO("Not yet implemented")
     }
 
-    override fun getClassType(type: HlaType): ClassType {
+    override fun getClassType(type: WorldType): WorldClassType {
         return classTypes.firstOrNull { it.getType() == type }
-            ?: throw TypeNotFoundException("Class type '${type.getFullName()}' not found")
+            ?: throw WorldTypeNotFoundException("Class type '${type.getFullName()}' not found")
     }
 
-    override fun getTypeByName(name: HlaTypeName): HlaType {
+    override fun getTypeByName(name: WorldTypeName): WorldType {
         return allTypes.firstOrNull { it.getName() == name }
-            ?: throw TypeNotFoundException("Hla type with name '${name}' not found")
+            ?: throw WorldTypeNotFoundException("Hla type with name '${name}' not found")
     }
 }

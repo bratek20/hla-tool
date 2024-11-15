@@ -4,6 +4,8 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.typesworld.api.*
@@ -16,37 +18,34 @@ fun isBaseType(value: String): Boolean {
     return BaseType.entries.any { it.name == value.uppercase() }
 }
 
-class PrimitiveTypesPopulator: TypesWorldPopulator {
-    override fun getOrder(): Int {
-        return 0
-    }
+class PrimitiveTypesPopulator {
 
-    override fun populate(api: TypesWorldApi) {
+    fun populate(api: TypesWorldApi) {
         BaseType.entries.forEach {
             api.addPrimitiveType(
-                HlaType.create(
-                    name = HlaTypeName(it.name.lowercase()),
+                WorldType.create(
+                    name = WorldTypeName(it.name.lowercase()),
                     path = HlaTypePath.create(
                         GroupName("Language"),
                         ModuleName("Types"),
                         SubmoduleName.Api,
                         PatternName.Primitives
-                    )
+                    ).asWorld()
                 )
             )
         }
     }
 }
 
-fun TypeDefinition.asHlaTypeName(): HlaTypeName {
+fun TypeDefinition.asWorldTypeName(): WorldTypeName {
     //TODO-FIX support for wrappers
-    return HlaTypeName(this.getName())
+    return WorldTypeName(this.getName())
 }
 
-fun FieldDefinition.asClassField(world: TypesWorldApi): ClassField {
-    return ClassField.create(
+fun FieldDefinition.asClassField(world: TypesWorldApi): WorldClassField {
+    return WorldClassField.create(
         this.getName(),
-        world.getTypeByName(this.getType().asHlaTypeName())
+        world.getTypeByName(this.getType().asWorldTypeName())
     )
 }
 
@@ -81,14 +80,14 @@ abstract class ApiPatternPopulator {
         }
     }
 
-    protected fun getMyPatternType(typeName: String): HlaType {
+    protected fun getMyPatternType(typeName: String): WorldType {
         val path = HlaTypePath.create(
             module.getName(),
             SubmoduleName.Api,
             getPatternName()
-        )
-        return HlaType.create(
-            name = HlaTypeName(typeName),
+        ).asWorld()
+        return WorldType.create(
+            name = WorldTypeName(typeName),
             path = path
         )
     }
@@ -107,7 +106,7 @@ abstract class SimpleStructurePopulator(
 
     override fun addPatternTypes() {
         defs.forEach { def ->
-            world.addClassType(ClassType.create(
+            world.addClassType(WorldClassType.create(
                 type = getMyPatternType(def.getName()),
                 fields = listOf(
                     createFieldDefinition("value", def.getTypeName())
@@ -139,7 +138,7 @@ abstract class ComplexStructuresPopulator(
 
     override fun addPatternTypes() {
         defs.forEach { def ->
-            world.addClassType(ClassType.create(
+            world.addClassType(WorldClassType.create(
                 type = getMyPatternType(def.getName()),
                 fields = def.getFields().map { it.asClassField(world) }
             ))
@@ -189,14 +188,10 @@ class ExternalTypesPopulator(
 
 class ApiTypesPopulator(
     private val modules: List<ModuleDefinition>
-): TypesWorldPopulator {
-    override fun getOrder(): Int {
-        return 0
-    }
-
+) {
     private lateinit var world: TypesWorldApi
 
-    override fun populate(api: TypesWorldApi) {
+    fun populate(api: TypesWorldApi) {
         this.world = api
         val populators = modules.flatMap { createPatternPopulators(it) }
 
@@ -232,8 +227,8 @@ class ModuleGroupQueries(
     private val group: ModuleGroup
 ) {
     fun populateTypes(typesWorldApi: TypesWorldApi) {
-        typesWorldApi.populate(PrimitiveTypesPopulator())
-        typesWorldApi.populate(ApiTypesPopulator(getModulesRecursive(group)))
+        PrimitiveTypesPopulator().populate(typesWorldApi)
+        ApiTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi)
     }
 
     val currentModule: ModuleDefinition

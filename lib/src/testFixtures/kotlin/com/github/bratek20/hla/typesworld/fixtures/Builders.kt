@@ -4,74 +4,74 @@ package com.github.bratek20.hla.typesworld.fixtures
 
 import com.github.bratek20.hla.typesworld.api.*
 
-fun hlaTypeName(value: String = "someValue"): HlaTypeName {
-    return HlaTypeName(value)
+fun worldTypeName(value: String = "someValue"): WorldTypeName {
+    return WorldTypeName(value)
 }
 
-fun hlaTypePath(value: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects"): HlaTypePath {
-    return hlaTypePathCreate(value)
+fun worldTypePath(value: String = "Some/Path/To/Type"): WorldTypePath {
+    return worldTypePathCreate(value)
 }
 
-data class HlaTypeDef(
+data class WorldTypeDef(
     var name: String = "someValue",
-    var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
+    var path: String = "Some/Path/To/Type",
 )
-fun hlaType(init: HlaTypeDef.() -> Unit = {}): HlaType {
-    val def = HlaTypeDef().apply(init)
-    return HlaType.create(
-        name = HlaTypeName(def.name),
-        path = hlaTypePathCreate(def.path),
+fun worldType(init: WorldTypeDef.() -> Unit = {}): WorldType {
+    val def = WorldTypeDef().apply(init)
+    return WorldType.create(
+        name = WorldTypeName(def.name),
+        path = worldTypePathCreate(def.path),
     )
 }
 
-data class ClassFieldDef(
+data class WorldClassFieldDef(
     var name: String = "someValue",
-    var type: (HlaTypeDef.() -> Unit) = {},
+    var type: (WorldTypeDef.() -> Unit) = {},
 )
-fun classField(init: ClassFieldDef.() -> Unit = {}): ClassField {
-    val def = ClassFieldDef().apply(init)
-    return ClassField.create(
+fun worldClassField(init: WorldClassFieldDef.() -> Unit = {}): WorldClassField {
+    val def = WorldClassFieldDef().apply(init)
+    return WorldClassField.create(
         name = def.name,
-        type = hlaType(def.type),
+        type = worldType(def.type),
     )
 }
 
-data class ClassTypeDef(
-    var type: (HlaTypeDef.() -> Unit) = {},
-    var fields: List<(ClassFieldDef.() -> Unit)> = emptyList(),
-    var extends: (HlaTypeDef.() -> Unit)? = null,
+data class WorldClassTypeDef(
+    var type: (WorldTypeDef.() -> Unit) = {},
+    var fields: List<(WorldClassFieldDef.() -> Unit)> = emptyList(),
+    var extends: (WorldTypeDef.() -> Unit)? = null,
 )
-fun classType(init: ClassTypeDef.() -> Unit = {}): ClassType {
-    val def = ClassTypeDef().apply(init)
-    return ClassType.create(
-        type = hlaType(def.type),
-        fields = def.fields.map { it -> classField(it) },
-        extends = def.extends?.let { it -> hlaType(it) },
+fun worldClassType(init: WorldClassTypeDef.() -> Unit = {}): WorldClassType {
+    val def = WorldClassTypeDef().apply(init)
+    return WorldClassType.create(
+        type = worldType(def.type),
+        fields = def.fields.map { it -> worldClassField(it) },
+        extends = def.extends?.let { it -> worldType(it) },
     )
 }
 
-data class ConcreteWrapperDef(
-    var type: (HlaTypeDef.() -> Unit) = {},
-    var wrappedType: (HlaTypeDef.() -> Unit) = {},
+data class WorldConcreteWrapperDef(
+    var type: (WorldTypeDef.() -> Unit) = {},
+    var wrappedType: (WorldTypeDef.() -> Unit) = {},
 )
-fun concreteWrapper(init: ConcreteWrapperDef.() -> Unit = {}): ConcreteWrapper {
-    val def = ConcreteWrapperDef().apply(init)
-    return ConcreteWrapper.create(
-        type = hlaType(def.type),
-        wrappedType = hlaType(def.wrappedType),
+fun worldConcreteWrapper(init: WorldConcreteWrapperDef.() -> Unit = {}): WorldConcreteWrapper {
+    val def = WorldConcreteWrapperDef().apply(init)
+    return WorldConcreteWrapper.create(
+        type = worldType(def.type),
+        wrappedType = worldType(def.wrappedType),
     )
 }
 
-data class ConcreteParametrizedClassDef(
+data class WorldConcreteParametrizedClassDef(
     var name: String = "someValue",
-    var path: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects",
-    var typeArguments: List<(HlaTypeDef.() -> Unit)> = emptyList(),
+    var path: String = "Some/Path/To/Type",
+    var typeArguments: List<(WorldTypeDef.() -> Unit)> = emptyList(),
 )
-fun concreteParametrizedClass(init: ConcreteParametrizedClassDef.() -> Unit = {}): ConcreteParametrizedClass {
-    val def = ConcreteParametrizedClassDef().apply(init)
-    return ConcreteParametrizedClass.create(
-        name = HlaTypeName(def.name),
-        path = hlaTypePathCreate(def.path),
-        typeArguments = def.typeArguments.map { it -> hlaType(it) },
+fun worldConcreteParametrizedClass(init: WorldConcreteParametrizedClassDef.() -> Unit = {}): WorldConcreteParametrizedClass {
+    val def = WorldConcreteParametrizedClassDef().apply(init)
+    return WorldConcreteParametrizedClass.create(
+        name = WorldTypeName(def.name),
+        path = worldTypePathCreate(def.path),
+        typeArguments = def.typeArguments.map { it -> worldType(it) },
     )
 }

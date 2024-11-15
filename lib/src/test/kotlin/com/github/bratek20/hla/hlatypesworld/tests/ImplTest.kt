@@ -1,18 +1,16 @@
-package com.github.bratek20.hla.typesworld.api
+package com.github.bratek20.hla.hlatypesworld.tests
 
-import ch.qos.logback.classic.PatternLayout
 import com.github.bratek20.hla.facade.api.ModuleName
-import com.github.bratek20.hla.facade.fixtures.assertHlaPaths
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.typesworld.fixtures.assertHlaTypePath
-import com.github.bratek20.hla.typesworld.fixtures.hlaTypePath
-import org.junit.jupiter.api.Assertions.*
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.fixtures.assertHlaTypePath
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class HlaTypePathTest {
+class HlaTypesWorldImplTest {
     @Test
-    fun shouldWork() {
+    fun replaceSubmoduleAndPattern() {
         val path = HlaTypePath.create(
             ModuleName("Module"),
             SubmoduleName.Api,

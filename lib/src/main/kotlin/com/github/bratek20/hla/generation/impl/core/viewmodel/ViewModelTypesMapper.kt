@@ -6,9 +6,10 @@ import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
-import com.github.bratek20.hla.typesworld.api.HlaType
-import com.github.bratek20.hla.typesworld.api.HlaTypeKind
-import com.github.bratek20.hla.typesworld.api.HlaTypeName
+import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
@@ -30,13 +31,14 @@ class ModelToViewModelTypeMapper(
         return viewModelType + "View"
     }
 
-    fun mapViewModelToViewType(viewModelType: HlaType): HlaType {
+    fun mapViewModelToViewType(viewModelType: WorldType): WorldType {
         val viewModelTypeName = viewModelType.getName().value
         val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
-        return HlaType.create(
-            name = HlaTypeName(viewTypeName),
-            path = viewModelType.getPath()
+        return WorldType.create(
+            name = WorldTypeName(viewTypeName),
+            path = viewModelType.getPath().asHla()
                 .replaceSubmoduleAndPattern(SubmoduleName.View, PatternName.ElementsView)
+                .asWorld()
         )
     }
 
@@ -89,12 +91,13 @@ class ModelToViewModelTypeMapper(
     }
 
 
-    fun mapModelToViewType(modelType: ApiType): HlaType {
+    fun mapModelToViewType(modelType: ApiType): WorldType {
         val viewTypeName = mapModelToViewTypeName(modelType)
-        return HlaType.create(
-            name = HlaTypeName(viewTypeName),
-            path = modelType.asHlaType().getPath()
+        return WorldType.create(
+            name = WorldTypeName(viewTypeName),
+            path = modelType.asWorldType().getPath().asHla()
                 .replaceSubmoduleAndPattern(SubmoduleName.View, PatternName.ElementsView)
+                .asWorld()
         )
     }
 
@@ -120,12 +123,13 @@ class ModelToViewModelTypeMapper(
         return "TODO-mapModelToViewModelTypeName-${modelType.name()}"
     }
 
-    fun mapModelToViewModelType(modelType: ApiType): HlaType {
+    fun mapModelToViewModelType(modelType: ApiType): WorldType {
         val viewModelTypeName = mapModelToViewModelTypeName(modelType)
-        return HlaType.create(
-            name = HlaTypeName(viewModelTypeName),
-            path = modelType.asHlaType().getPath()
+        return WorldType.create(
+            name = WorldTypeName(viewModelTypeName),
+            path = modelType.asWorldType().getPath().asHla()
                 .replaceSubmoduleAndPattern(SubmoduleName.ViewModel, PatternName.ElementsView)
+                .asWorld()
         )
     }
 

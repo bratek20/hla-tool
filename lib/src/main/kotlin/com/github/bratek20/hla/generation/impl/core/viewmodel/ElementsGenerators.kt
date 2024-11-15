@@ -9,10 +9,10 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
-import com.github.bratek20.hla.typesworld.api.HlaType
-import com.github.bratek20.hla.typesworld.api.HlaTypeKind
-import com.github.bratek20.hla.typesworld.api.HlaTypeName
-import com.github.bratek20.hla.typesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.camelToPascalCase
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
@@ -108,7 +108,7 @@ class ViewModelSharedLogic(
 class ViewModelField(
     val typeName: String,
     val name: String,
-    val hlaType: HlaType?
+    val worldType: WorldType?
 ) {
     companion object {
         fun fromDefs(moduleName: ModuleName, defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
@@ -122,13 +122,13 @@ class ViewModelField(
                     baseTypeName
                 }
 
-                val finalType = HlaType.create(
-                    HlaTypeName(finalTypeName),
+                val finalType = WorldType.create(
+                    WorldTypeName(finalTypeName),
                     HlaTypePath.create(
                         moduleName,
                         SubmoduleName.View,
                         PatternName.ElementsView
-                    )
+                    ).asWorld()
                 )
                 ViewModelField(finalTypeName, it.getName(), finalType)
             }

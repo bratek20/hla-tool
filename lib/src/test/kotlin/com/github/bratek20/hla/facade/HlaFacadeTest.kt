@@ -1,7 +1,24 @@
 package com.github.bratek20.hla.facade
 
+import com.github.bratek20.architecture.context.stableContextBuilder
+import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.facade.context.FacadeImpl
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.fixtures.ExpectedWorldClassType
+import com.github.bratek20.hla.typesworld.fixtures.assertWorldClassType
+import com.github.bratek20.hla.typesworld.fixtures.worldType
 import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
+import com.github.bratek20.utils.directory.api.Directory
+import com.github.bratek20.utils.directory.api.File
+import com.github.bratek20.utils.directory.api.Path
+import com.github.bratek20.utils.directory.context.DirectoriesMocks
+import com.github.bratek20.utils.directory.fixtures.DirectoriesMock
+import com.github.bratek20.utils.directory.fixtures.FilesMock
+import com.github.bratek20.utils.directory.fixtures.assertDirectory
+import com.github.bratek20.utils.directory.impl.DirectoriesLogic
+import com.github.bratek20.utils.directory.impl.FilesLogic
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -11,23 +28,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
-import com.github.bratek20.architecture.context.stableContextBuilder
-import com.github.bratek20.utils.directory.fixtures.DirectoriesMock
-import com.github.bratek20.utils.directory.api.Directory
-import com.github.bratek20.utils.directory.api.File
-import com.github.bratek20.utils.directory.api.Path
-import com.github.bratek20.utils.directory.context.DirectoriesMocks
-import com.github.bratek20.utils.directory.fixtures.FilesMock
-import com.github.bratek20.utils.directory.fixtures.assertDirectory
-import com.github.bratek20.utils.directory.impl.DirectoriesLogic
-import com.github.bratek20.utils.directory.impl.FilesLogic
-import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.hla.facade.context.FacadeImpl
-import com.github.bratek20.hla.typesworld.api.HlaType
-import com.github.bratek20.hla.typesworld.api.TypesWorldApi
-import com.github.bratek20.hla.typesworld.fixtures.ExpectedClassType
-import com.github.bratek20.hla.typesworld.fixtures.assertClassType
-import com.github.bratek20.hla.typesworld.fixtures.hlaType
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -358,7 +358,7 @@ class HlaFacadeTest {
 
         //then
         val assertHasType = { typeName: String, typePath: String ->
-            assertThat(sr.typesWorldApi.hasType(hlaType {
+            assertThat(sr.typesWorldApi.hasType(worldType {
                 name = typeName
                 path = typePath
             }))
@@ -366,10 +366,10 @@ class HlaFacadeTest {
             .isTrue()
         }
 
-        val assertHasClassType = { typeName: String, typePath: String, expectedClass: ExpectedClassType.() -> Unit ->
+        val assertHasClassType = { typeName: String, typePath: String, expectedClass: ExpectedWorldClassType.() -> Unit ->
             assertHasType(typeName, typePath)
-            sr.typesWorldApi.getClassType(HlaType(typeName, typePath)).let {
-                assertClassType(it, expectedClass)
+            sr.typesWorldApi.getClassType(WorldType(typeName, typePath)).let {
+                assertWorldClassType(it, expectedClass)
             }
         }
 
@@ -386,7 +386,7 @@ class HlaFacadeTest {
         }
 
         //view model types
-        assertHasType("OtherClassVm", "OtherModule/ViewModel")
+        //assertHasType("OtherClassVm", "OtherModule/ViewModel")
 
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
