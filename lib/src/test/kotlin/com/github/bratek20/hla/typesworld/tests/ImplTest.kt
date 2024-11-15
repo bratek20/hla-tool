@@ -71,7 +71,7 @@ class TypesWorldImplTest {
     }
 
     @Nested
-    inner class GetClassType {
+    inner class AddAndGetClassType {
         @Test
         fun `should get populated class`() {
             api.addClassType(worldClassType {
@@ -109,7 +109,7 @@ class TypesWorldImplTest {
     @Nested
     inner class GetTypeDependencies {
         @Test
-        fun `should get type dependencies - class type`() {
+        fun `should get type dependencies and ensure types - class type`() {
             api.addClassType(worldClassType {
                 type = {
                     name = "SomeClass"
@@ -130,10 +130,18 @@ class TypesWorldImplTest {
             assertWorldType(dependencies[0]) {
                 name = "OtherClass"
             }
+
+
+            assertHasType(worldType {
+                name = "SomeClass"
+            })
+            assertHasType(worldType {
+                name = "OtherClass"
+            })
         }
 
         @Test
-        fun `should get type dependencies - concrete wrapper`() {
+        fun `should get type dependencies and ensure types - concrete wrapper`() {
             api.addConcreteWrapper(worldConcreteWrapper {
                 type = {
                     name = "List<SomeClass>"
@@ -151,6 +159,21 @@ class TypesWorldImplTest {
             assertWorldType(dependencies[0]) {
                 name = "SomeClass"
             }
+
+            assertHasType(worldType {
+                name = "List<SomeClass>"
+            })
+            assertHasType(worldType {
+                name = "SomeClass"
+            })
         }
+    }
+
+    fun assertHasType(type: WorldType) {
+        assertThat(api.hasType(type))
+            .withFailMessage {
+                "Does not have ${type.getName()}"
+            }
+            .isTrue()
     }
 }

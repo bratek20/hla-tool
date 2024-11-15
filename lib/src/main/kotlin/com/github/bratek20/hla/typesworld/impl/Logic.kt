@@ -47,12 +47,18 @@ class TypesWorldApiLogic: TypesWorldApi {
 
     override fun addClassType(type: WorldClassType): Unit {
         classTypes.add(type)
+
         ensureType(type.getType())
+        type.getFields().forEach {
+            ensureType(it.getType())
+        }
     }
 
     override fun addConcreteWrapper(type: WorldConcreteWrapper): Unit {
         concreteWrappers.add(type)
+
         ensureType(type.getType())
+        ensureType(type.getWrappedType())
     }
 
     override fun addConcreteParametrizedClass(type: WorldConcreteParametrizedClass): Unit {
