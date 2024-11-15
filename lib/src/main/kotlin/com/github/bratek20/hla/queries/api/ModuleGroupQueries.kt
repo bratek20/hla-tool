@@ -63,6 +63,43 @@ fun createFieldDefinition(fieldName: String, typeName: String): FieldDefinition 
     )
 }
 
+abstract class ApiPatternPopulator {
+    private lateinit var module: ModuleDefinition
+    protected lateinit var world: TypesWorldApi
+
+    fun init(module: ModuleDefinition, world: TypesWorldApi) {
+        this.module = module
+        this.world = world
+    }
+
+    protected abstract fun getTypeNames(): List<String>
+    protected abstract fun getPatternName(): PatternName
+
+    fun ensureTypes() {
+        getTypeNames().forEach { typeName ->
+            val path = HlaTypePath.create(
+                module.getName(),
+                SubmoduleName.Api,
+                getPatternName()
+            )
+        }
+    }
+    abstract fun addTypes()
+}
+
+class ComplexValueObjectsPopulator(
+    private val defs: List<ComplexStructureDefinition>
+): ApiPatternPopulator {
+    override fun ensureTypes() {
+        TODO("Not yet implemented")
+    }
+
+    override fun addTypes() {
+        TODO("Not yet implemented")
+    }
+
+}
+
 class ApiTypesPopulator(
     private val modules: List<ModuleDefinition>
 ): TypesWorldPopulator {
