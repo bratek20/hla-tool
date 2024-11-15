@@ -50,7 +50,7 @@ Interfaces
                 WorldTypeNotFoundException
 
         // to populate more detailed information about type that is used for dependencies calculation
-        // type is also ensured
+        // all used types are ensured
         addPrimitiveType(type: WorldType)
         addClassType(type: WorldClassType)
         addConcreteWrapper(type: WorldConcreteWrapper)
