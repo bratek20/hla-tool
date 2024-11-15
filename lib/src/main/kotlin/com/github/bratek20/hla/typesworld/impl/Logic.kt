@@ -9,6 +9,7 @@ fun HlaType.getFullName(): String {
 class TypesWorldApiLogic(
     populators: Set<TypesWorldPopulator>
 ): TypesWorldApi {
+    private val allTypes: MutableSet<HlaType> = mutableSetOf()
     private val primitives: MutableList<HlaType> = mutableListOf()
     private val classTypes: MutableList<ClassType> = mutableListOf()
     private val concreteWrappers: MutableList<ConcreteWrapper> = mutableListOf()
@@ -23,14 +24,12 @@ class TypesWorldApiLogic(
         populator.populate(this)
     }
 
-    override fun hasType(type: HlaType): Boolean {
-        return getAllTypes().any { it == type }
+    override fun addType(type: HlaType) {
+        allTypes.add(type)
     }
 
-    private fun getAllTypes(): List<HlaType> {
-        return primitives +
-            classTypes.map { it.getType() } +
-            concreteWrappers.map { it.getType() }
+    override fun hasType(type: HlaType): Boolean {
+        return allTypes.contains(type)
     }
 
     override fun getTypeDependencies(type: HlaType): List<HlaType> {
@@ -55,14 +54,17 @@ class TypesWorldApiLogic(
 
     override fun addPrimitiveType(type: HlaType) {
         primitives.add(type)
+        addType(type)
     }
 
     override fun addClassType(type: ClassType): Unit {
         classTypes.add(type)
+        addType(type.getType())
     }
 
     override fun addConcreteWrapper(type: ConcreteWrapper): Unit {
         concreteWrappers.add(type)
+        addType(type.getType())
     }
 
     override fun addConcreteParametrizedClass(type: ConcreteParametrizedClass): Unit {
@@ -75,7 +77,7 @@ class TypesWorldApiLogic(
     }
 
     override fun getTypeByName(name: HlaTypeName): HlaType {
-        return getAllTypes().firstOrNull { it.getName() == name }
+        return allTypes.firstOrNull { it.getName() == name }
             ?: throw TypeNotFoundException("Hla type with name '${name}' not found")
     }
 }

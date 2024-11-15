@@ -50,6 +50,19 @@ fun FieldDefinition.asClassField(world: TypesWorldApi): ClassField {
     )
 }
 
+fun createTypeDefinition(name: String): TypeDefinition {
+    return TypeDefinition.create(name, emptyList())
+}
+
+fun createFieldDefinition(fieldName: String, typeName: String): FieldDefinition {
+    return FieldDefinition.create(
+        name = fieldName,
+        type = createTypeDefinition(typeName),
+        attributes = emptyList(),
+        defaultValue = null
+    )
+}
+
 class ApiTypesPopulator(
     private val modules: List<ModuleDefinition>
 ): TypesWorldPopulator {
@@ -64,9 +77,31 @@ class ApiTypesPopulator(
     }
 
     private fun populateModuleTypes(module: ModuleDefinition) {
+        module.getSimpleValueObjects().forEach { populateSimpleValueObject(module, it) }
         module.getComplexValueObjects().forEach { populateComplexValueObject(module, it) }
     }
 
+    private fun populateSimpleValueObject(
+        module: ModuleDefinition,
+        def: SimpleStructureDefinition
+    ) {
+        val type = HlaType.create(
+            name = HlaTypeName(def.getName()),
+            path = HlaTypePath.create(
+                module.getName(),
+                SubmoduleName.Api,
+                PatternName.ValueObjects
+            )
+        )
+
+        world.addClassType(ClassType.create(
+            type = type,
+            fields = listOf(
+                createFieldDefinition("value", def.getTypeName())
+                    .asClassField(world)
+            )
+        ))
+    }
     private fun populateComplexValueObject(
         module: ModuleDefinition,
         def: ComplexStructureDefinition

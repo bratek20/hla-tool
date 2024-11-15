@@ -11,9 +11,14 @@ interface TypesWorldPopulator {
 interface TypesWorldApi {
     fun populate(populator: TypesWorldPopulator): Unit
 
+    fun addType(type: HlaType): Unit
+
     fun hasType(type: HlaType): Boolean
 
-    fun getTypeDependencies(type: HlaType): List<HlaType>
+    @Throws(
+        TypeNotFoundException::class,
+    )
+    fun getTypeByName(name: HlaTypeName): HlaType
 
     fun addPrimitiveType(type: HlaType): Unit
 
@@ -28,8 +33,5 @@ interface TypesWorldApi {
     )
     fun getClassType(type: HlaType): ClassType
 
-    @Throws(
-        TypeNotFoundException::class,
-    )
-    fun getTypeByName(name: HlaTypeName): HlaType
+    fun getTypeDependencies(type: HlaType): List<HlaType>
 }

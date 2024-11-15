@@ -45,10 +45,16 @@ Interfaces
     TypesWorldApi
         populate(populator: TypesWorldPopulator)
 
+        // to populate information that such type exits
+        addType(type: HlaType)
+
         hasType(type: HlaType): bool
 
-        getTypeDependencies(type: HlaType): HlaType[]
+        getTypeByName(name: HlaTypeName): HlaType
+            throws
+                TypeNotFoundException
 
+        // to populate more detailed information about type that is used for dependencies calculation
         addPrimitiveType(type: HlaType)
         addClassType(type: ClassType)
         addConcreteWrapper(type: ConcreteWrapper)
@@ -58,6 +64,5 @@ Interfaces
             throws
                 TypeNotFoundException
 
-        getTypeByName(name: HlaTypeName): HlaType
-            throws
-                TypeNotFoundException
+        getTypeDependencies(type: HlaType): HlaType[]
+

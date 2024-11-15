@@ -5,6 +5,7 @@ import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
+import com.github.bratek20.utils.directory.fixtures.path
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -71,6 +72,29 @@ class TypesWorldImplTest {
             .get(TypesWorldApi::class.java)
     }
 
+    @Nested
+    inner class AddType {
+        @Test
+        fun `should add`() {
+            api.addType(hlaType {
+                name = "MyType"
+                path = "MyPath"
+            })
+
+            api.hasType(hlaType {
+                name = "MyType"
+                path = "MyPath"
+            }).let {
+                assertThat(it).isTrue()
+            }
+
+            api.getTypeByName(hlaTypeName("MyType")).let {
+                assertHlaType(it) {
+                    path = "MyPath"
+                }
+            }
+        }
+    }
     @Nested
     inner class GetClassType {
         @Test
