@@ -386,11 +386,10 @@ class HlaFacadeTest {
         }
 
         //view model types
-        //assertHasType("OtherClassVm", "OtherModule/ViewModel")
+        assertHasType("OtherClassVm", "OtherModule/ViewModel")
 
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
-
     }
 
     @Test
