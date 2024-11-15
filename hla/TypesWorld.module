@@ -46,7 +46,8 @@ Interfaces
         populate(populator: TypesWorldPopulator)
 
         // to populate information that such type exits
-        addType(type: HlaType)
+        // can be called multiple types for the same type
+        ensureType(type: HlaType)
 
         hasType(type: HlaType): bool
 
@@ -55,6 +56,7 @@ Interfaces
                 TypeNotFoundException
 
         // to populate more detailed information about type that is used for dependencies calculation
+        // type is also ensured
         addPrimitiveType(type: HlaType)
         addClassType(type: ClassType)
         addConcreteWrapper(type: ConcreteWrapper)

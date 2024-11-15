@@ -24,7 +24,7 @@ class TypesWorldApiLogic(
         populator.populate(this)
     }
 
-    override fun addType(type: HlaType) {
+    override fun ensureType(type: HlaType) {
         allTypes.add(type)
     }
 
@@ -54,17 +54,17 @@ class TypesWorldApiLogic(
 
     override fun addPrimitiveType(type: HlaType) {
         primitives.add(type)
-        addType(type)
+        ensureType(type)
     }
 
     override fun addClassType(type: ClassType): Unit {
         classTypes.add(type)
-        addType(type.getType())
+        ensureType(type.getType())
     }
 
     override fun addConcreteWrapper(type: ConcreteWrapper): Unit {
         concreteWrappers.add(type)
-        addType(type.getType())
+        ensureType(type.getType())
     }
 
     override fun addConcreteParametrizedClass(type: ConcreteParametrizedClass): Unit {

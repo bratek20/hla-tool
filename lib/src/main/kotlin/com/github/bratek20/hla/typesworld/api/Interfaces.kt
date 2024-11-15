@@ -11,7 +11,7 @@ interface TypesWorldPopulator {
 interface TypesWorldApi {
     fun populate(populator: TypesWorldPopulator): Unit
 
-    fun addType(type: HlaType): Unit
+    fun ensureType(type: HlaType): Unit
 
     fun hasType(type: HlaType): Boolean
 

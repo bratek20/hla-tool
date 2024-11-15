@@ -75,29 +75,68 @@ abstract class ApiPatternPopulator {
     protected abstract fun getTypeNames(): List<String>
     protected abstract fun getPatternName(): PatternName
 
-    fun ensureTypes() {
+    fun ensurePatternTypes() {
         getTypeNames().forEach { typeName ->
-            val path = HlaTypePath.create(
-                module.getName(),
-                SubmoduleName.Api,
-                getPatternName()
-            )
+            world.ensureType(getMyPatternType(typeName))
         }
     }
-    abstract fun addTypes()
+
+    protected fun getMyPatternType(typeName: String): HlaType {
+        val path = HlaTypePath.create(
+            module.getName(),
+            SubmoduleName.Api,
+            getPatternName()
+        )
+        return HlaType.create(
+            name = HlaTypeName(typeName),
+            path = path
+        )
+    }
+
+    open fun addPatternTypes() {
+        //no-op
+    }
+}
+
+class SimpleValueObjectsPopulator(
+    private val defs: List<SimpleStructureDefinition>
+): ApiPatternPopulator() {
+    override fun getPatternName() = PatternName.ValueObjects
+
+    override fun getTypeNames(): List<String> {
+        return defs.map { it.getName() }
+    }
+
+    override fun addPatternTypes() {
+        defs.forEach { def ->
+            world.addClassType(ClassType.create(
+                type = getMyPatternType(def.getName()),
+                fields = listOf(
+                    createFieldDefinition("value", def.getTypeName())
+                        .asClassField(world)
+                )
+            ))
+        }
+    }
 }
 
 class ComplexValueObjectsPopulator(
     private val defs: List<ComplexStructureDefinition>
-): ApiPatternPopulator {
-    override fun ensureTypes() {
-        TODO("Not yet implemented")
+): ApiPatternPopulator() {
+    override fun getPatternName() = PatternName.ValueObjects
+
+    override fun getTypeNames(): List<String> {
+        return defs.map { it.getName() }
     }
 
-    override fun addTypes() {
-        TODO("Not yet implemented")
+    override fun addPatternTypes() {
+        defs.forEach { def ->
+            world.addClassType(ClassType.create(
+                type = getMyPatternType(def.getName()),
+                fields = def.getFields().map { it.asClassField(world) }
+            ))
+        }
     }
-
 }
 
 class ApiTypesPopulator(
@@ -108,57 +147,27 @@ class ApiTypesPopulator(
     }
 
     private lateinit var world: TypesWorldApi
+
     override fun populate(api: TypesWorldApi) {
         this.world = api
-        modules.forEach(this::populateModuleTypes)
+        val populators = modules.flatMap { createPatternPopulators(it) }
+
+        populators.forEach { it.ensurePatternTypes() }
+        populators.forEach { it.addPatternTypes() }
     }
 
-    private fun populateModuleTypes(module: ModuleDefinition) {
-        module.getSimpleValueObjects().forEach { populateSimpleValueObject(module, it) }
-        module.getComplexValueObjects().forEach { populateComplexValueObject(module, it) }
-    }
-
-    private fun populateSimpleValueObject(
-        module: ModuleDefinition,
-        def: SimpleStructureDefinition
-    ) {
-        val type = HlaType.create(
-            name = HlaTypeName(def.getName()),
-            path = HlaTypePath.create(
-                module.getName(),
-                SubmoduleName.Api,
-                PatternName.ValueObjects
-            )
+    private fun createPatternPopulators(module: ModuleDefinition): List<ApiPatternPopulator> {
+        val populators = listOf(
+            SimpleValueObjectsPopulator(module.getSimpleValueObjects()),
+            ComplexValueObjectsPopulator(module.getComplexValueObjects())
         )
 
-        world.addClassType(ClassType.create(
-            type = type,
-            fields = listOf(
-                createFieldDefinition("value", def.getTypeName())
-                    .asClassField(world)
-            )
-        ))
+        populators.forEach { populator ->
+            populator.init(module, world)
+        }
+
+        return populators
     }
-    private fun populateComplexValueObject(
-        module: ModuleDefinition,
-        def: ComplexStructureDefinition
-    ) {
-        val type = HlaType.create(
-            name = HlaTypeName(def.getName()),
-            path = HlaTypePath.create(
-                module.getName(),
-                SubmoduleName.Api,
-                PatternName.ValueObjects
-            )
-        )
-
-        world.addClassType(ClassType.create(
-            type = type,
-            fields = def.getFields().map { it.asClassField(world) }
-        ))
-    }
-
-
 }
 
 class ModuleGroupQueries(
