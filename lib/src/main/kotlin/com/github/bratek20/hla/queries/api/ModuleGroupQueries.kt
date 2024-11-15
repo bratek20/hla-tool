@@ -38,6 +38,18 @@ class PrimitiveTypesPopulator: TypesWorldPopulator {
     }
 }
 
+fun TypeDefinition.asHlaTypeName(): HlaTypeName {
+    //TODO-FIX support for wrappers
+    return HlaTypeName(this.getName())
+}
+
+fun FieldDefinition.asClassField(world: TypesWorldApi): ClassField {
+    return ClassField.create(
+        this.getName(),
+        world.getTypeByName(this.getType().asHlaTypeName())
+    )
+}
+
 class ApiTypesPopulator(
     private val modules: List<ModuleDefinition>
 ): TypesWorldPopulator {
@@ -45,9 +57,9 @@ class ApiTypesPopulator(
         return 0
     }
 
-    private lateinit var api: TypesWorldApi
+    private lateinit var world: TypesWorldApi
     override fun populate(api: TypesWorldApi) {
-        this.api = api
+        this.world = api
         modules.forEach(this::populateModuleTypes)
     }
 
@@ -68,11 +80,13 @@ class ApiTypesPopulator(
             )
         )
 
-        api.addClassType(ClassType.create(
+        world.addClassType(ClassType.create(
             type = type,
-            fields = emptyList()
+            fields = def.getFields().map { it.asClassField(world) }
         ))
     }
+
+
 }
 
 class ModuleGroupQueries(

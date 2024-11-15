@@ -7,6 +7,7 @@ import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class Order0Populator : TypesWorldPopulator {
@@ -18,6 +19,7 @@ class Order0Populator : TypesWorldPopulator {
         api.addClassType(classType {
             type = {
                 name = "SomeClass"
+                path = "SomePath"
             }
         })
         api.addConcreteWrapper(concreteWrapper {
@@ -39,6 +41,7 @@ class Order1Populator : TypesWorldPopulator {
     override fun populate(api: TypesWorldApi) {
         val classType = api.getClassType(hlaType {
             name = "SomeClass"
+            path = "SomePath"
         })
 
         api.addClassType(ClassType.create(
@@ -68,55 +71,90 @@ class TypesWorldImplTest {
             .get(TypesWorldApi::class.java)
     }
 
-    @Test
-    fun `should get class populated`() {
-        val classType = api.getClassType(hlaType {
-            name = "OtherClass"
-        })
-
-        assertClassType(classType) {
-            type = {
+    @Nested
+    inner class GetClassType {
+        @Test
+        fun `should get populated class`() {
+            val classType = api.getClassType(hlaType {
                 name = "OtherClass"
+                path = "SomePath"
+            })
+
+            assertClassType(classType) {
+                type = {
+                    name = "OtherClass"
+                }
+            }
+        }
+
+        @Test
+        fun `should throw exception when class not found`() {
+            assertApiExceptionThrown(
+                { api.getClassType(hlaType {
+                    name = "NotExisting"
+                    path = "SomePath"
+                }) },
+                {
+                    type = TypeNotFoundException::class
+                    message = "Class type 'SomePath/NotExisting' not found"
+                }
+            )
+        }
+    }
+
+    @Nested
+    inner class GetTypeDependencies {
+        @Test
+        fun `should get type dependencies - class type`() {
+            val type = hlaType {
+                name = "OtherClass"
+                path = "SomePath"
+            }
+
+            val dependencies = api.getTypeDependencies(type)
+
+            assertThat(dependencies).hasSize(1)
+            assertHlaType(dependencies[0]) {
+                name = "SomeClass"
+            }
+        }
+
+        @Test
+        fun `should get type dependencies - concrete wrapper`() {
+            val type = hlaType {
+                name = "List<SomeClass>"
+            }
+
+            val dependencies = api.getTypeDependencies(type)
+
+            assertThat(dependencies).hasSize(1)
+            assertHlaType(dependencies[0]) {
+                name = "SomeClass"
             }
         }
     }
 
-    @Test
-    fun `should throw exception when class not found`() {
-        assertApiExceptionThrown(
-            { api.getClassType(hlaType { name = "NotExisting" }) },
-            {
-                type = TypeNotFoundException::class
-                message = "Class type 'NotExisting' not found"
+    @Nested
+    inner class GetTypeByName {
+        @Test
+        fun `should get populated type by name`() {
+            api.getTypeByName(hlaTypeName("SomeClass")).let {
+                assertHlaType(it) {
+                    name = "SomeClass"
+                    path = "SomePath"
+                }
             }
-        )
-    }
-
-    @Test
-    fun `should get type dependencies - class type`() {
-        val type = hlaType {
-            name = "OtherClass"
         }
 
-        val dependencies = api.getTypeDependencies(type)
-
-        assertThat(dependencies).hasSize(1)
-        assertHlaType(dependencies[0]) {
-            name = "SomeClass"
-        }
-    }
-
-    @Test
-    fun `should get type dependencies - concrete wrapper`() {
-        val type = hlaType {
-            name = "List<SomeClass>"
-        }
-
-        val dependencies = api.getTypeDependencies(type)
-
-        assertThat(dependencies).hasSize(1)
-        assertHlaType(dependencies[0]) {
-            name = "SomeClass"
+        @Test
+        fun `should throw exception when type not found`() {
+            assertApiExceptionThrown(
+                { api.getTypeByName(hlaTypeName("NotExisting")) },
+                {
+                    type = TypeNotFoundException::class
+                    message = "Hla type with name 'NotExisting' not found"
+                }
+            )
         }
     }
 }

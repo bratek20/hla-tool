@@ -23,7 +23,10 @@ import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.utils.directory.impl.FilesLogic
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.context.FacadeImpl
+import com.github.bratek20.hla.typesworld.api.HlaType
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.fixtures.ExpectedClassType
+import com.github.bratek20.hla.typesworld.fixtures.assertClassType
 import com.github.bratek20.hla.typesworld.fixtures.hlaType
 import java.util.stream.Stream
 
@@ -363,12 +366,24 @@ class HlaFacadeTest {
             .isTrue()
         }
 
+        val assertHasClassType = { typeName: String, typePath: String, expectedClass: ExpectedClassType.() -> Unit ->
+            assertHasType(typeName, typePath)
+            sr.typesWorldApi.getClassType(HlaType(typeName, typePath)).let {
+                assertClassType(it, expectedClass)
+            }
+        }
+
         //special types
         assertHasType("int", "Language/Types/Api/Primitives")
         assertHasType("string", "Language/Types/Api/Primitives")
 
         //api types
-        assertHasType("OtherClass", "OtherModule/Api/ValueObjects")
+        assertHasClassType("OtherClass", "OtherModule/Api/ValueObjects") {
+            fields = listOf(
+                {},
+                {}
+            )
+        }
 
         //view model types
         //assertHasType("OtherClassVm", "OtherModule/ViewModel")

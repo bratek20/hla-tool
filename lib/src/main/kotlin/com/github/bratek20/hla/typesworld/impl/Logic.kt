@@ -2,6 +2,10 @@ package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.hla.typesworld.api.*
 
+fun HlaType.getFullName(): String {
+    return "${getPath().value}/${getName()}"
+}
+
 class TypesWorldApiLogic(
     populators: Set<TypesWorldPopulator>
 ): TypesWorldApi {
@@ -67,6 +71,11 @@ class TypesWorldApiLogic(
 
     override fun getClassType(type: HlaType): ClassType {
         return classTypes.firstOrNull { it.getType() == type }
-            ?: throw TypeNotFoundException("Class type '${type.getName()}' not found")
+            ?: throw TypeNotFoundException("Class type '${type.getFullName()}' not found")
+    }
+
+    override fun getTypeByName(name: HlaTypeName): HlaType {
+        return getAllTypes().firstOrNull { it.getName() == name }
+            ?: throw TypeNotFoundException("Hla type with name '${name}' not found")
     }
 }

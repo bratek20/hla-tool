@@ -27,4 +27,9 @@ interface TypesWorldApi {
         TypeNotFoundException::class,
     )
     fun getClassType(type: HlaType): ClassType
+
+    @Throws(
+        TypeNotFoundException::class,
+    )
+    fun getTypeByName(name: HlaTypeName): HlaType
 }

@@ -57,3 +57,7 @@ Interfaces
         getClassType(type: HlaType): ClassType
             throws
                 TypeNotFoundException
+
+        getTypeByName(name: HlaTypeName): HlaType
+            throws
+                TypeNotFoundException
