@@ -34,7 +34,8 @@ class ModuleGeneratorLogic(
 ) : ModuleGenerator {
     class SubmodulesGenerator(
         private val context: ModuleGenerationContext,
-        private val prefabsGenerator: PrefabsGenerator
+        private val prefabsGenerator: PrefabsGenerator,
+        private val typesWorldApi: TypesWorldApi
     ) {
         fun generate(): List<GeneratedSubmodule> {
             return listOf(
@@ -48,7 +49,7 @@ class ModuleGeneratorLogic(
                 FixturesGenerator(),
                 TestsGenerator(),
             ).mapNotNull {
-                it.init(context, "")
+                it.init(context, "", typesWorldApi)
                 it.generateMacros()
                 it.generateSubmodule()
             }
@@ -82,7 +83,7 @@ class ModuleGeneratorLogic(
 
         return GeneratedModule.create(
             name = moduleName,
-            submodules = SubmodulesGenerator(context, prefabsGenerator).generate()
+            submodules = SubmodulesGenerator(context, prefabsGenerator, typesWorldApi).generate()
         )
     }
 }

@@ -152,9 +152,7 @@ class PrefabEnumElementBlueprintLogic(
     }
 }
 
-class PrefabBlueprintsGenerator(
-    private val typesWorldApi: TypesWorldApi
-): BaseViewModelPatternGenerator() {
+class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.PrefabBlueprints
     }

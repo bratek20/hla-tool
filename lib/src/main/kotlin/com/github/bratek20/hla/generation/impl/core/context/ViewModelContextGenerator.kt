@@ -1,16 +1,11 @@
 package com.github.bratek20.hla.generation.impl.core.context
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.languages.typescript.namespace
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelSharedLogic
-import com.github.bratek20.utils.directory.api.FileContent
 
 class ViewModelContextGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -26,7 +21,7 @@ class ViewModelContextGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val logic = ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory)
+        val logic = ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory, typesWorldApi)
 
         addClass {
             name = "${module.getName()}ViewModel"

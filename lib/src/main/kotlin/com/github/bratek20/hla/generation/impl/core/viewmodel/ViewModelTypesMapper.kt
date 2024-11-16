@@ -8,12 +8,14 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
-    private val viewModelElements: List<ViewModelElementLogic>
+    private val viewModelElements: List<ViewModelElementLogic>,
+    private val typesWorldApi: TypesWorldApi
 ) {
     fun mapViewModelToViewTypeName(viewModelType: String): String {
         val knownViewModel = viewModelElements.firstOrNull { it.getTypeName() == viewModelType }
