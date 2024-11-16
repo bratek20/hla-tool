@@ -141,6 +141,35 @@ class TypesWorldImplTest {
         }
 
         @Test
+        fun `should get type dependencies and ensure types - concrete parametrized class type`() {
+            api.addConcreteParametrizedClass(worldConcreteParametrizedClass {
+                type = {
+                    name = "SomeClass<OtherClass>"
+                }
+                typeArguments = listOf {
+                    name = "OtherClass"
+                }
+            })
+
+            val dependencies = api.getTypeDependencies(worldType {
+                name = "SomeClass<OtherClass>"
+            })
+
+            assertThat(dependencies).hasSize(1)
+            assertWorldType(dependencies[0]) {
+                name = "OtherClass"
+            }
+
+
+            assertHasType(worldType {
+                name = "SomeClass<OtherClass>"
+            })
+            assertHasType(worldType {
+                name = "OtherClass"
+            })
+        }
+
+        @Test
         fun `should get type dependencies and ensure types - concrete wrapper`() {
             api.addConcreteWrapper(worldConcreteWrapper {
                 type = {

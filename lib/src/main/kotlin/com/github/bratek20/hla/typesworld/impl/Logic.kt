@@ -11,6 +11,7 @@ class TypesWorldApiLogic: TypesWorldApi {
     private val primitives: MutableList<WorldType> = mutableListOf()
     private val classTypes: MutableList<WorldClassType> = mutableListOf()
     private val concreteWrappers: MutableList<WorldConcreteWrapper> = mutableListOf()
+    private val concreteParametrizedClasses: MutableList<WorldConcreteParametrizedClass> = mutableListOf()
 
     override fun ensureType(type: WorldType) {
         allTypes.add(type)
@@ -35,6 +36,12 @@ class TypesWorldApiLogic: TypesWorldApi {
             return listOf(
                 it.getWrappedType()
             )
+        }
+
+        concreteParametrizedClasses.firstOrNull {
+            it.getType() == type
+        }?.let {
+            return it.getTypeArguments()
         }
 
         return emptyList()
@@ -62,12 +69,22 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun addConcreteParametrizedClass(type: WorldConcreteParametrizedClass): Unit {
-        TODO("Not yet implemented")
+        concreteParametrizedClasses.add(type)
+
+        ensureType(type.getType())
+        type.getTypeArguments().forEach {
+            ensureType(it)
+        }
     }
 
     override fun getClassType(type: WorldType): WorldClassType {
         return classTypes.firstOrNull { it.getType() == type }
             ?: throw WorldTypeNotFoundException("Class type '${type.getFullName()}' not found")
+    }
+
+    override fun getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass {
+        return concreteParametrizedClasses.firstOrNull { it.getType() == type }
+            ?: throw WorldTypeNotFoundException("Concrete parametrized class type '${type.getFullName()}' not found")
     }
 
     override fun getTypeByName(name: WorldTypeName): WorldType {

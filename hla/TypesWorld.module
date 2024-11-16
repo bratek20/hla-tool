@@ -33,8 +33,7 @@ ValueObjects
         wrappedType: WorldType
 
     WorldConcreteParametrizedClass
-        name: WorldTypeName
-        path: WorldTypePath
+        type: WorldType
         typeArguments: WorldType[]
 
 Interfaces
@@ -57,6 +56,10 @@ Interfaces
         addConcreteParametrizedClass(type: WorldConcreteParametrizedClass)
 
         getClassType(type: WorldType): WorldClassType
+            throws
+                WorldTypeNotFoundException
+
+        getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
             throws
                 WorldTypeNotFoundException
 

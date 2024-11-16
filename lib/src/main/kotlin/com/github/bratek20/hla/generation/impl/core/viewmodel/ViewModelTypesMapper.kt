@@ -8,6 +8,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
@@ -73,8 +74,14 @@ class ModelToViewModelTypeMapper(
     }
 
     fun mapViewModelToModelType(viewModelType: String): ApiType {
-        return viewModelElements.firstOrNull() { it.getTypeName() == viewModelType }?.modelType
-            ?: throw IllegalArgumentException("Unknown view model type: $viewModelType")
+        val classType = typesWorldApi.getClassType(typesWorldApi.getTypeByName(WorldTypeName(viewModelType)))
+        val extendedClass = classType.getExtends()!!
+
+        val modelType = typesWorldApi.getConcreteParametrizedClass(extendedClass).getTypeArguments()[0]
+        return apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
+
+//        return viewModelElements.firstOrNull() { it.getTypeName() == viewModelType }?.modelType
+//            ?: throw IllegalArgumentException("Unknown view model type: $viewModelType")
     }
 
     fun mapModelToViewTypeName(modelType: ApiType): String {

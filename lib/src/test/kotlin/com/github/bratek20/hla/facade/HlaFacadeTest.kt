@@ -5,9 +5,7 @@ import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.context.FacadeImpl
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
-import com.github.bratek20.hla.typesworld.fixtures.ExpectedWorldClassType
-import com.github.bratek20.hla.typesworld.fixtures.assertWorldClassType
-import com.github.bratek20.hla.typesworld.fixtures.worldType
+import com.github.bratek20.hla.typesworld.fixtures.*
 import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
 import com.github.bratek20.utils.directory.api.Directory
@@ -373,6 +371,13 @@ class HlaFacadeTest {
             }
         }
 
+        val assertHasConcreteParametrizedClass = { typeName: String, typePath: String, expectedClass: ExpectedWorldConcreteParametrizedClass.() -> Unit ->
+            assertHasType(typeName, typePath)
+            sr.typesWorldApi.getConcreteParametrizedClass(WorldType(typeName, typePath)).let {
+                assertWorldConcreteParametrizedClass(it, expectedClass)
+            }
+        }
+
         //special types
         assertHasType("int", "Language/Types/Api/Primitives")
         assertHasType("string", "Language/Types/Api/Primitives")
@@ -396,7 +401,16 @@ class HlaFacadeTest {
         }
 
         //view model types
-        assertHasType("OtherClassVm", "OtherModule/ViewModel/GeneratedElements") //{
+        assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {
+            typeArguments = listOf {
+                name = "OtherClass"
+            }
+        }
+
+        assertHasClassType("OtherClassVm", "OtherModule/ViewModel/GeneratedElements") {
+            extends = {
+                name = "UiElement<OtherClass>"
+            }
 //            fields = listOf(
 //                {
 //                    name = "id"
@@ -412,7 +426,7 @@ class HlaFacadeTest {
 //                    }
 //                }
 //            )
-        //}
+        }
 
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")

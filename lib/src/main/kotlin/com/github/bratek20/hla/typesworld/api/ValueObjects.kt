@@ -118,16 +118,11 @@ data class WorldConcreteWrapper(
 }
 
 data class WorldConcreteParametrizedClass(
-    private val name: String,
-    private val path: String,
+    private val type: WorldType,
     private val typeArguments: List<WorldType>,
 ) {
-    fun getName(): WorldTypeName {
-        return WorldTypeName(this.name)
-    }
-
-    fun getPath(): WorldTypePath {
-        return worldTypePathCreate(this.path)
+    fun getType(): WorldType {
+        return this.type
     }
 
     fun getTypeArguments(): List<WorldType> {
@@ -136,13 +131,11 @@ data class WorldConcreteParametrizedClass(
 
     companion object {
         fun create(
-            name: WorldTypeName,
-            path: WorldTypePath,
+            type: WorldType,
             typeArguments: List<WorldType>,
         ): WorldConcreteParametrizedClass {
             return WorldConcreteParametrizedClass(
-                name = name.value,
-                path = worldTypePathGetValue(path),
+                type = type,
                 typeArguments = typeArguments,
             )
         }

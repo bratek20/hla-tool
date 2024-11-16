@@ -25,5 +25,10 @@ interface TypesWorldApi {
     )
     fun getClassType(type: WorldType): WorldClassType
 
+    @Throws(
+        WorldTypeNotFoundException::class,
+    )
+    fun getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
+
     fun getTypeDependencies(type: WorldType): List<WorldType>
 }

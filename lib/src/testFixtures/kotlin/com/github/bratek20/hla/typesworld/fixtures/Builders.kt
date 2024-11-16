@@ -63,15 +63,13 @@ fun worldConcreteWrapper(init: WorldConcreteWrapperDef.() -> Unit = {}): WorldCo
 }
 
 data class WorldConcreteParametrizedClassDef(
-    var name: String = "someValue",
-    var path: String = "Some/Path/To/Type",
+    var type: (WorldTypeDef.() -> Unit) = {},
     var typeArguments: List<(WorldTypeDef.() -> Unit)> = emptyList(),
 )
 fun worldConcreteParametrizedClass(init: WorldConcreteParametrizedClassDef.() -> Unit = {}): WorldConcreteParametrizedClass {
     val def = WorldConcreteParametrizedClassDef().apply(init)
     return WorldConcreteParametrizedClass.create(
-        name = WorldTypeName(def.name),
-        path = worldTypePathCreate(def.path),
+        type = worldType(def.type),
         typeArguments = def.typeArguments.map { it -> worldType(it) },
     )
 }

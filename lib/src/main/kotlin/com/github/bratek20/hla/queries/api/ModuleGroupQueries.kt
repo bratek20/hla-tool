@@ -234,14 +234,30 @@ class ViewModelTypesPopulator(
     private fun populate(module: ModuleDefinition) {
         module.getViewModelSubmodule()?.let {
             it.getElements().forEach { element ->
-               world.ensureType(WorldType.create(
-                     name = WorldTypeName(element.getName()),
-                     path = HlaTypePath.create(
-                          module.getName(),
-                          SubmoduleName.ViewModel,
-                          PatternName.GeneratedElements
-                     ).asWorld()
-               ))
+                val path = HlaTypePath.create(
+                    module.getName(),
+                    SubmoduleName.ViewModel,
+                    PatternName.GeneratedElements
+                ).asWorld()
+
+                val paramType = WorldType.create(
+                    WorldTypeName("UiElement<${element.getModel().getName()}>"),
+                    path
+                )
+                world.addConcreteParametrizedClass(WorldConcreteParametrizedClass.create(
+                    type = paramType,
+                    typeArguments = listOf(
+                        world.getTypeByName(WorldTypeName(element.getModel().getName()))
+                    )
+                ))
+                world.addClassType(WorldClassType.create(
+                   type = WorldType.create(
+                        name = WorldTypeName(element.getName()),
+                        path = path
+                   ),
+                   fields = emptyList(),
+                   extends = paramType
+                ))
             }
         }
     }

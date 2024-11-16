@@ -107,20 +107,15 @@ fun diffWorldConcreteWrapper(given: WorldConcreteWrapper, expectedInit: Expected
 }
 
 data class ExpectedWorldConcreteParametrizedClass(
-    var name: String? = null,
-    var path: String? = null,
+    var type: (ExpectedWorldType.() -> Unit)? = null,
     var typeArguments: List<(ExpectedWorldType.() -> Unit)>? = null,
 )
 fun diffWorldConcreteParametrizedClass(given: WorldConcreteParametrizedClass, expectedInit: ExpectedWorldConcreteParametrizedClass.() -> Unit, path: String = ""): String {
     val expected = ExpectedWorldConcreteParametrizedClass().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.name?.let {
-        if (diffWorldTypeName(given.getName(), it) != "") { result.add(diffWorldTypeName(given.getName(), it, "${path}name.")) }
-    }
-
-    expected.path?.let {
-        if (diffWorldTypePath(given.getPath(), it) != "") { result.add(diffWorldTypePath(given.getPath(), it, "${path}path.")) }
+    expected.type?.let {
+        if (diffWorldType(given.getType(), it) != "") { result.add(diffWorldType(given.getType(), it, "${path}type.")) }
     }
 
     expected.typeArguments?.let {
