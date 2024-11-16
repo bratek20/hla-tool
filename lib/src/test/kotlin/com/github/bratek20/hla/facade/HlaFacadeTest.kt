@@ -380,13 +380,39 @@ class HlaFacadeTest {
         //api types
         assertHasClassType("OtherClass", "OtherModule/Api/ValueObjects") {
             fields = listOf(
-                {},
-                {}
+                {
+                    name = "id"
+                    type = {
+                        name = "OtherId"
+                    }
+                },
+                {
+                    name = "amount"
+                    type = {
+                        name = "int"
+                    }
+                }
             )
         }
 
         //view model types
-        //assertHasType("OtherClassVm", "OtherModule/ViewModel")
+        assertHasType("OtherClassVm", "OtherModule/ViewModel/GeneratedElements") //{
+//            fields = listOf(
+//                {
+//                    name = "id"
+//                    type = {
+//                        name = "Label"
+//                        path = "B20/Frontend/UiElements"
+//                    }
+//                },
+//                {
+//                    name = "amount"
+//                    type = {
+//                        name = "Label"
+//                    }
+//                }
+//            )
+        //}
 
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")

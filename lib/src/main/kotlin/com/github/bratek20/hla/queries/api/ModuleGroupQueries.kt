@@ -19,7 +19,6 @@ fun isBaseType(value: String): Boolean {
 }
 
 class PrimitiveTypesPopulator {
-
     fun populate(api: TypesWorldApi) {
         BaseType.entries.forEach {
             api.addPrimitiveType(
@@ -222,6 +221,32 @@ class ApiTypesPopulator(
     }
 }
 
+class ViewModelTypesPopulator(
+    private val modules: List<ModuleDefinition>
+) {
+    private lateinit var world: TypesWorldApi
+
+    fun populate(api: TypesWorldApi) {
+        this.world = api
+        modules.forEach { populate(it) }
+    }
+
+    private fun populate(module: ModuleDefinition) {
+        module.getViewModelSubmodule()?.let {
+            it.getElements().forEach { element ->
+               world.ensureType(WorldType.create(
+                     name = WorldTypeName(element.getName()),
+                     path = HlaTypePath.create(
+                          module.getName(),
+                          SubmoduleName.ViewModel,
+                          PatternName.GeneratedElements
+                     ).asWorld()
+               ))
+            }
+        }
+    }
+}
+
 class ModuleGroupQueries(
     private val currentModuleName: ModuleName,
     private val group: ModuleGroup
@@ -229,6 +254,7 @@ class ModuleGroupQueries(
     fun populateTypes(typesWorldApi: TypesWorldApi) {
         PrimitiveTypesPopulator().populate(typesWorldApi)
         ApiTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi)
+        ViewModelTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi)
     }
 
     val currentModule: ModuleDefinition
