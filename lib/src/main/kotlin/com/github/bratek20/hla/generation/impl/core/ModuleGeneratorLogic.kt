@@ -62,7 +62,6 @@ class ModuleGeneratorLogic(
         val language = profile.getLanguage()
 
         val queries = ModuleGroupQueries(moduleName, args.getGroup())
-        queries.populateTypes(typesWorldApi)
 
         val domainContext = DomainContext(
             queries = queries,
@@ -80,6 +79,8 @@ class ModuleGeneratorLogic(
             onlyUpdate = args.getOnlyUpdate(),
             onlyPatterns = profile.getOnlyPatterns(),
         )
+
+        queries.populateTypes(typesWorldApi, context.apiTypeFactory)
 
         return GeneratedModule.create(
             name = moduleName,

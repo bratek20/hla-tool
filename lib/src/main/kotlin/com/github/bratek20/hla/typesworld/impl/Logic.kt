@@ -47,6 +47,10 @@ class TypesWorldApiLogic: TypesWorldApi {
         return emptyList()
     }
 
+    override fun getAllTypes(): List<WorldType> {
+        return allTypes.toList()
+    }
+
     override fun addPrimitiveType(type: WorldType) {
         primitives.add(type)
         ensureType(type)

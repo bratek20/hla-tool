@@ -15,6 +15,7 @@ import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.WorldTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiType {
@@ -34,6 +35,13 @@ abstract class ApiType {
     }
 
     fun asWorldType(): WorldType {
+        //TODO-REF
+        if (this is BaseApiType) {
+            return WorldType.create(
+                name = WorldTypeName(name().lowercase()),
+                path = WorldTypePath("Language/Types/Api/Primitives")
+            )
+        }
         return asOptHlaType() ?: throw IllegalStateException("No HlaType for type $this")
     }
 

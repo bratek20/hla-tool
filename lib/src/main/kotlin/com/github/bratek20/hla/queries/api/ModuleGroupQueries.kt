@@ -4,7 +4,11 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
+import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelTypesMapper
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
@@ -222,7 +226,8 @@ class ApiTypesPopulator(
 }
 
 class ViewModelTypesPopulator(
-    private val modules: List<ModuleDefinition>
+    private val modules: List<ModuleDefinition>,
+    private val apiTypeFactory: ApiTypeFactory
 ) {
     private lateinit var world: TypesWorldApi
 
@@ -255,11 +260,60 @@ class ViewModelTypesPopulator(
                         name = WorldTypeName(element.getName()),
                         path = path
                    ),
-                   fields = emptyList(),
+                   fields = getFieldsForElement(element),
                    extends = paramType
                 ))
             }
         }
+
+        populateEnumSwitches(module)
+    }
+
+    private fun populateEnumSwitches(module: ModuleDefinition) {
+        val enumSwitches = world.getAllTypes().filter {
+            it.getName().value.endsWith("Switch") &&
+                    it.getPath().asHla().getModuleName() == module.getName()
+        }
+        enumSwitches.forEach { enumSwitch ->
+            val enumType = world.getTypeByName(WorldTypeName(enumSwitch.getName().value.replace("Switch", "")))
+
+            val paramType = WorldType.create(
+                WorldTypeName("EnumSwitch<${enumType.getName()}>"),
+                enumSwitch.getPath()
+            )
+            world.addConcreteParametrizedClass(WorldConcreteParametrizedClass.create(
+                type = paramType,
+                typeArguments = listOf(
+                    enumType
+                )
+            ))
+
+            world.addClassType(
+                WorldClassType.create(
+                    type = enumSwitch,
+                    fields = emptyList(),
+                    extends = paramType
+                )
+            )
+        }
+    }
+
+    private fun getFieldsForElement(def: ViewModelElementDefinition): List<WorldClassField> {
+        return def.getModel().getMappedFields().map {
+            val type = mapModelField(def.getModel().getName(), it)
+            WorldClassField.create(it, type)
+        }
+    }
+
+    private fun mapModelField(modelTypeName: String, fieldName: String): WorldType {
+        val modelType = apiTypeFactory.create(createTypeDefinition(modelTypeName)) as ComplexValueObjectApiType
+        val field = modelType.fields.find { it.name == fieldName }
+            ?: throw IllegalStateException("Field $fieldName not found in model $modelTypeName")
+        return mapper.mapModelToViewModelType(field.type)
+    }
+
+    companion object {
+        val mapper = BaseViewModelTypesMapper()
     }
 }
 
@@ -267,10 +321,10 @@ class ModuleGroupQueries(
     private val currentModuleName: ModuleName,
     private val group: ModuleGroup
 ) {
-    fun populateTypes(typesWorldApi: TypesWorldApi) {
+    fun populateTypes(typesWorldApi: TypesWorldApi, apiTypeFactory: ApiTypeFactory) {
         PrimitiveTypesPopulator().populate(typesWorldApi)
         ApiTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi)
-        ViewModelTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi)
+        ViewModelTypesPopulator(getModulesRecursive(group), apiTypeFactory).populate(typesWorldApi)
     }
 
     val currentModule: ModuleDefinition

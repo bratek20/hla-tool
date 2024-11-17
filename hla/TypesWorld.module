@@ -65,3 +65,5 @@ Interfaces
 
         getTypeDependencies(type: WorldType): WorldType[]
 
+        getAllTypes(): WorldType[]
+

@@ -20,6 +20,15 @@ class HlaTypePath(
         return value.replaceAfterLast("/", "").dropLast(1)
     }
 
+    fun getModuleName(): ModuleName {
+        return ModuleName(getNthLastPart(3))
+    }
+
+    private fun getNthLastPart(n: Int): String {
+        val parts = asWorld().asParts()
+        return parts[parts.size - n]
+    }
+
     companion object {
         fun create(
             module: ModuleName,

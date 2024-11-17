@@ -31,4 +31,6 @@ interface TypesWorldApi {
     fun getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
 
     fun getTypeDependencies(type: WorldType): List<WorldType>
+
+    fun getAllTypes(): List<WorldType>
 }
