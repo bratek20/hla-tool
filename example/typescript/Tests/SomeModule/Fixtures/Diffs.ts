@@ -21,6 +21,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffSomeEnum2(given: SomeEnum2, expected: string, path: string = ""): string {
+        if (given != SomeEnum2.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        return ""
+    }
+
     export interface ExpectedSomeClass {
         id?: string,
         amount?: number,
@@ -300,7 +305,7 @@ namespace SomeModule {
 
         if (expected.enumList !== undefined) {
             if (given.getEnumList().length != expected.enumList.length) { result.push(`${path}enumList size ${given.getEnumList().length} != ${expected.enumList.length}`) }
-            given.getEnumList().forEach((entry, idx) => { if (diffSomeEnum(entry, expected.enumList[idx]) != "") { result.push(diffSomeEnum(entry, expected.enumList[idx], `${path}enumList[${idx}].`)) } })
+            given.getEnumList().forEach((entry, idx) => { if (diffSomeEnum2(entry, expected.enumList[idx]) != "") { result.push(diffSomeEnum2(entry, expected.enumList[idx], `${path}enumList[${idx}].`)) } })
         }
 
         return result.join("\n")

@@ -195,7 +195,7 @@ namespace SomeModule.Builder {
         const final_enumList = def?.enumList ?? []
 
         return ClassWithEnumList.create(
-            final_enumList.map(it => SomeEnum.fromName(it).get()),
+            final_enumList.map(it => SomeEnum2.fromName(it).get()),
         )
     }
 

@@ -173,7 +173,7 @@ data class ClassWithEnumListDef(
 fun classWithEnumList(init: ClassWithEnumListDef.() -> Unit = {}): ClassWithEnumList {
     val def = ClassWithEnumListDef().apply(init)
     return ClassWithEnumList.create(
-        enumList = def.enumList.map { it -> SomeEnum.valueOf(it) },
+        enumList = def.enumList.map { it -> SomeEnum2.valueOf(it) },
     )
 }
 
