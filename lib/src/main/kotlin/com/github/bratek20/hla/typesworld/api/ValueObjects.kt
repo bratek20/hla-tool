@@ -2,7 +2,7 @@
 
 package com.github.bratek20.hla.typesworld.api
 
-data class HlaTypeName(
+data class WorldTypeName(
     val value: String
 ) {
     override fun toString(): String {
@@ -10,49 +10,49 @@ data class HlaTypeName(
     }
 }
 
-data class HlaType(
+data class WorldType(
     private val name: String,
     private val path: String,
 ) {
-    fun getName(): HlaTypeName {
-        return HlaTypeName(this.name)
+    fun getName(): WorldTypeName {
+        return WorldTypeName(this.name)
     }
 
-    fun getPath(): HlaTypePath {
-        return hlaTypePathCreate(this.path)
+    fun getPath(): WorldTypePath {
+        return worldTypePathCreate(this.path)
     }
 
     companion object {
         fun create(
-            name: HlaTypeName,
-            path: HlaTypePath,
-        ): HlaType {
-            return HlaType(
+            name: WorldTypeName,
+            path: WorldTypePath,
+        ): WorldType {
+            return WorldType(
                 name = name.value,
-                path = hlaTypePathGetValue(path),
+                path = worldTypePathGetValue(path),
             )
         }
     }
 }
 
-data class ClassField(
+data class WorldClassField(
     private val name: String,
-    private val type: HlaType,
+    private val type: WorldType,
 ) {
     fun getName(): String {
         return this.name
     }
 
-    fun getType(): HlaType {
+    fun getType(): WorldType {
         return this.type
     }
 
     companion object {
         fun create(
             name: String,
-            type: HlaType,
-        ): ClassField {
-            return ClassField(
+            type: WorldType,
+        ): WorldClassField {
+            return WorldClassField(
                 name = name,
                 type = type,
             )
@@ -60,30 +60,30 @@ data class ClassField(
     }
 }
 
-data class ClassType(
-    private val type: HlaType,
-    private val fields: List<ClassField>,
-    private val extends: HlaType? = null,
+data class WorldClassType(
+    private val type: WorldType,
+    private val fields: List<WorldClassField>,
+    private val extends: WorldType? = null,
 ) {
-    fun getType(): HlaType {
+    fun getType(): WorldType {
         return this.type
     }
 
-    fun getFields(): List<ClassField> {
+    fun getFields(): List<WorldClassField> {
         return this.fields
     }
 
-    fun getExtends(): HlaType? {
+    fun getExtends(): WorldType? {
         return this.extends
     }
 
     companion object {
         fun create(
-            type: HlaType,
-            fields: List<ClassField>,
-            extends: HlaType? = null,
-        ): ClassType {
-            return ClassType(
+            type: WorldType,
+            fields: List<WorldClassField>,
+            extends: WorldType? = null,
+        ): WorldClassType {
+            return WorldClassType(
                 type = type,
                 fields = fields,
                 extends = extends,
@@ -92,24 +92,24 @@ data class ClassType(
     }
 }
 
-data class ConcreteWrapper(
-    private val type: HlaType,
-    private val wrappedType: HlaType,
+data class WorldConcreteWrapper(
+    private val type: WorldType,
+    private val wrappedType: WorldType,
 ) {
-    fun getType(): HlaType {
+    fun getType(): WorldType {
         return this.type
     }
 
-    fun getWrappedType(): HlaType {
+    fun getWrappedType(): WorldType {
         return this.wrappedType
     }
 
     companion object {
         fun create(
-            type: HlaType,
-            wrappedType: HlaType,
-        ): ConcreteWrapper {
-            return ConcreteWrapper(
+            type: WorldType,
+            wrappedType: WorldType,
+        ): WorldConcreteWrapper {
+            return WorldConcreteWrapper(
                 type = type,
                 wrappedType = wrappedType,
             )
@@ -117,32 +117,25 @@ data class ConcreteWrapper(
     }
 }
 
-data class ConcreteParametrizedClass(
-    private val name: String,
-    private val path: String,
-    private val typeArguments: List<HlaType>,
+data class WorldConcreteParametrizedClass(
+    private val type: WorldType,
+    private val typeArguments: List<WorldType>,
 ) {
-    fun getName(): HlaTypeName {
-        return HlaTypeName(this.name)
+    fun getType(): WorldType {
+        return this.type
     }
 
-    fun getPath(): HlaTypePath {
-        return hlaTypePathCreate(this.path)
-    }
-
-    fun getTypeArguments(): List<HlaType> {
+    fun getTypeArguments(): List<WorldType> {
         return this.typeArguments
     }
 
     companion object {
         fun create(
-            name: HlaTypeName,
-            path: HlaTypePath,
-            typeArguments: List<HlaType>,
-        ): ConcreteParametrizedClass {
-            return ConcreteParametrizedClass(
-                name = name.value,
-                path = hlaTypePathGetValue(path),
+            type: WorldType,
+            typeArguments: List<WorldType>,
+        ): WorldConcreteParametrizedClass {
+            return WorldConcreteParametrizedClass(
+                type = type,
                 typeArguments = typeArguments,
             )
         }

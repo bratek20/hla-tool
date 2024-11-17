@@ -7,12 +7,12 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
+import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
-import com.github.bratek20.hla.typesworld.api.HlaType
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
-import com.github.bratek20.hla.typesworld.impl.TypesWorldApiLogic
+import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
@@ -22,7 +22,7 @@ abstract class PrefabBaseBlueprintLogic(
     private val typesWorldApi: TypesWorldApi
 ) {
     abstract fun getName(): String
-    abstract fun getMyType(): HlaType
+    abstract fun getMyType(): WorldType
     abstract fun blueprintType(): BlueprintType
 
     open fun children(): List<PrefabChildBlueprint>? = null
@@ -32,8 +32,8 @@ abstract class PrefabBaseBlueprintLogic(
         return mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
     }
 
-    private fun asFullViewType(type: HlaType): String {
-        return type.getPath().value.replace("/", ".") + "." + type.getName()
+    private fun asFullViewType(type: WorldType): String {
+        return type.getPath().asHla().dropPatternPart().replace("/", ".") + "." + type.getName()
     }
 
     fun getFile(): File {
@@ -69,7 +69,7 @@ class PrefabWrappedElementBlueprintLogic(
         return view.getViewClassName().replace("View", "")
     }
 
-    override fun getMyType(): HlaType {
+    override fun getMyType(): WorldType {
         return view.getViewClassType()
     }
 
@@ -109,7 +109,7 @@ class PrefabComplexElementBlueprintLogic(
         return view.elem.modelType.name()
     }
 
-    override fun getMyType(): HlaType {
+    override fun getMyType(): WorldType {
         return view.getViewClassType()
     }
 
@@ -126,7 +126,7 @@ class PrefabWindowBlueprintLogic(
         return view.window.getClassName()
     }
 
-    override fun getMyType(): HlaType {
+    override fun getMyType(): WorldType {
         return view.getViewClassType()
     }
 
@@ -143,7 +143,7 @@ class PrefabEnumElementBlueprintLogic(
         return view.vmLogic.modelType.name()
     }
 
-    override fun getMyType(): HlaType {
+    override fun getMyType(): WorldType {
         return view.getViewClassType()
     }
 
@@ -169,15 +169,14 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
         val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) }
         val viewEnumElementLogic = logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) }
 
-        val typeWorldApi = TypesWorldApiLogic(emptySet())
         (viewComplexElementLogic + viewWindowLogic + viewElementGroupLogic + viewElementOptionalLogic + viewEnumElementLogic)
-            .forEach { it.populateType(typeWorldApi) }
+            .forEach { it.populateType(typesWorldApi) }
 
-        val elementBlueprintLogic = viewComplexElementLogic.map { PrefabComplexElementBlueprintLogic(it, typeWorldApi) }
-        val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it, typeWorldApi) }
-        val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabWrappedElementBlueprintLogic(it, typeWorldApi) }
-        val elementOptionalBlueprintLogic = viewElementOptionalLogic.map { PrefabWrappedElementBlueprintLogic(it, typeWorldApi) }
-        val enumElementBlueprintLogic = viewEnumElementLogic.map { PrefabEnumElementBlueprintLogic(it, typeWorldApi) }
+        val elementBlueprintLogic = viewComplexElementLogic.map { PrefabComplexElementBlueprintLogic(it, typesWorldApi) }
+        val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it, typesWorldApi) }
+        val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabWrappedElementBlueprintLogic(it, typesWorldApi) }
+        val elementOptionalBlueprintLogic = viewElementOptionalLogic.map { PrefabWrappedElementBlueprintLogic(it, typesWorldApi) }
+        val enumElementBlueprintLogic = viewEnumElementLogic.map { PrefabEnumElementBlueprintLogic(it, typesWorldApi) }
 
         return (elementBlueprintLogic +
                 windowBlueprintLogic +

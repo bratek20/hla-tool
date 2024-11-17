@@ -4,46 +4,46 @@ package com.github.bratek20.hla.typesworld.fixtures
 
 import com.github.bratek20.hla.typesworld.api.*
 
-fun diffHlaTypeName(given: HlaTypeName, expected: String, path: String = ""): String {
+fun diffWorldTypeName(given: WorldTypeName, expected: String, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
 
-fun diffHlaTypePath(given: HlaTypePath, expected: String, path: String = ""): String {
-    if (hlaTypePathGetValue(given) != expected) { return "${path}value ${hlaTypePathGetValue(given)} != ${expected}" }
+fun diffWorldTypePath(given: WorldTypePath, expected: String, path: String = ""): String {
+    if (worldTypePathGetValue(given) != expected) { return "${path}value ${worldTypePathGetValue(given)} != ${expected}" }
     return ""
 }
 
-fun diffHlaTypeKind(given: HlaTypeKind, expected: String, path: String = ""): String {
-    if (given != HlaTypeKind.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+fun diffWorldTypeKind(given: WorldTypeKind, expected: String, path: String = ""): String {
+    if (given != WorldTypeKind.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
     return ""
 }
 
-data class ExpectedHlaType(
+data class ExpectedWorldType(
     var name: String? = null,
     var path: String? = null,
 )
-fun diffHlaType(given: HlaType, expectedInit: ExpectedHlaType.() -> Unit, path: String = ""): String {
-    val expected = ExpectedHlaType().apply(expectedInit)
+fun diffWorldType(given: WorldType, expectedInit: ExpectedWorldType.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWorldType().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
-        if (diffHlaTypeName(given.getName(), it) != "") { result.add(diffHlaTypeName(given.getName(), it, "${path}name.")) }
+        if (diffWorldTypeName(given.getName(), it) != "") { result.add(diffWorldTypeName(given.getName(), it, "${path}name.")) }
     }
 
     expected.path?.let {
-        if (diffHlaTypePath(given.getPath(), it) != "") { result.add(diffHlaTypePath(given.getPath(), it, "${path}path.")) }
+        if (diffWorldTypePath(given.getPath(), it) != "") { result.add(diffWorldTypePath(given.getPath(), it, "${path}path.")) }
     }
 
     return result.joinToString("\n")
 }
 
-data class ExpectedClassField(
+data class ExpectedWorldClassField(
     var name: String? = null,
-    var type: (ExpectedHlaType.() -> Unit)? = null,
+    var type: (ExpectedWorldType.() -> Unit)? = null,
 )
-fun diffClassField(given: ClassField, expectedInit: ExpectedClassField.() -> Unit, path: String = ""): String {
-    val expected = ExpectedClassField().apply(expectedInit)
+fun diffWorldClassField(given: WorldClassField, expectedInit: ExpectedWorldClassField.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWorldClassField().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
@@ -51,29 +51,29 @@ fun diffClassField(given: ClassField, expectedInit: ExpectedClassField.() -> Uni
     }
 
     expected.type?.let {
-        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+        if (diffWorldType(given.getType(), it) != "") { result.add(diffWorldType(given.getType(), it, "${path}type.")) }
     }
 
     return result.joinToString("\n")
 }
 
-data class ExpectedClassType(
-    var type: (ExpectedHlaType.() -> Unit)? = null,
-    var fields: List<(ExpectedClassField.() -> Unit)>? = null,
+data class ExpectedWorldClassType(
+    var type: (ExpectedWorldType.() -> Unit)? = null,
+    var fields: List<(ExpectedWorldClassField.() -> Unit)>? = null,
     var extendsEmpty: Boolean? = null,
-    var extends: (ExpectedHlaType.() -> Unit)? = null,
+    var extends: (ExpectedWorldType.() -> Unit)? = null,
 )
-fun diffClassType(given: ClassType, expectedInit: ExpectedClassType.() -> Unit, path: String = ""): String {
-    val expected = ExpectedClassType().apply(expectedInit)
+fun diffWorldClassType(given: WorldClassType, expectedInit: ExpectedWorldClassType.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWorldClassType().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.type?.let {
-        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+        if (diffWorldType(given.getType(), it) != "") { result.add(diffWorldType(given.getType(), it, "${path}type.")) }
     }
 
     expected.fields?.let {
         if (given.getFields().size != it.size) { result.add("${path}fields size ${given.getFields().size} != ${it.size}"); return@let }
-        given.getFields().forEachIndexed { idx, entry -> if (diffClassField(entry, it[idx]) != "") { result.add(diffClassField(entry, it[idx], "${path}fields[${idx}].")) } }
+        given.getFields().forEachIndexed { idx, entry -> if (diffWorldClassField(entry, it[idx]) != "") { result.add(diffWorldClassField(entry, it[idx], "${path}fields[${idx}].")) } }
     }
 
     expected.extendsEmpty?.let {
@@ -81,51 +81,46 @@ fun diffClassType(given: ClassType, expectedInit: ExpectedClassType.() -> Unit, 
     }
 
     expected.extends?.let {
-        if (diffHlaType(given.getExtends()!!, it) != "") { result.add(diffHlaType(given.getExtends()!!, it, "${path}extends.")) }
+        if (diffWorldType(given.getExtends()!!, it) != "") { result.add(diffWorldType(given.getExtends()!!, it, "${path}extends.")) }
     }
 
     return result.joinToString("\n")
 }
 
-data class ExpectedConcreteWrapper(
-    var type: (ExpectedHlaType.() -> Unit)? = null,
-    var wrappedType: (ExpectedHlaType.() -> Unit)? = null,
+data class ExpectedWorldConcreteWrapper(
+    var type: (ExpectedWorldType.() -> Unit)? = null,
+    var wrappedType: (ExpectedWorldType.() -> Unit)? = null,
 )
-fun diffConcreteWrapper(given: ConcreteWrapper, expectedInit: ExpectedConcreteWrapper.() -> Unit, path: String = ""): String {
-    val expected = ExpectedConcreteWrapper().apply(expectedInit)
+fun diffWorldConcreteWrapper(given: WorldConcreteWrapper, expectedInit: ExpectedWorldConcreteWrapper.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWorldConcreteWrapper().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.type?.let {
-        if (diffHlaType(given.getType(), it) != "") { result.add(diffHlaType(given.getType(), it, "${path}type.")) }
+        if (diffWorldType(given.getType(), it) != "") { result.add(diffWorldType(given.getType(), it, "${path}type.")) }
     }
 
     expected.wrappedType?.let {
-        if (diffHlaType(given.getWrappedType(), it) != "") { result.add(diffHlaType(given.getWrappedType(), it, "${path}wrappedType.")) }
+        if (diffWorldType(given.getWrappedType(), it) != "") { result.add(diffWorldType(given.getWrappedType(), it, "${path}wrappedType.")) }
     }
 
     return result.joinToString("\n")
 }
 
-data class ExpectedConcreteParametrizedClass(
-    var name: String? = null,
-    var path: String? = null,
-    var typeArguments: List<(ExpectedHlaType.() -> Unit)>? = null,
+data class ExpectedWorldConcreteParametrizedClass(
+    var type: (ExpectedWorldType.() -> Unit)? = null,
+    var typeArguments: List<(ExpectedWorldType.() -> Unit)>? = null,
 )
-fun diffConcreteParametrizedClass(given: ConcreteParametrizedClass, expectedInit: ExpectedConcreteParametrizedClass.() -> Unit, path: String = ""): String {
-    val expected = ExpectedConcreteParametrizedClass().apply(expectedInit)
+fun diffWorldConcreteParametrizedClass(given: WorldConcreteParametrizedClass, expectedInit: ExpectedWorldConcreteParametrizedClass.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWorldConcreteParametrizedClass().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
-    expected.name?.let {
-        if (diffHlaTypeName(given.getName(), it) != "") { result.add(diffHlaTypeName(given.getName(), it, "${path}name.")) }
-    }
-
-    expected.path?.let {
-        if (diffHlaTypePath(given.getPath(), it) != "") { result.add(diffHlaTypePath(given.getPath(), it, "${path}path.")) }
+    expected.type?.let {
+        if (diffWorldType(given.getType(), it) != "") { result.add(diffWorldType(given.getType(), it, "${path}type.")) }
     }
 
     expected.typeArguments?.let {
         if (given.getTypeArguments().size != it.size) { result.add("${path}typeArguments size ${given.getTypeArguments().size} != ${it.size}"); return@let }
-        given.getTypeArguments().forEachIndexed { idx, entry -> if (diffHlaType(entry, it[idx]) != "") { result.add(diffHlaType(entry, it[idx], "${path}typeArguments[${idx}].")) } }
+        given.getTypeArguments().forEachIndexed { idx, entry -> if (diffWorldType(entry, it[idx]) != "") { result.add(diffWorldType(entry, it[idx], "${path}typeArguments[${idx}].")) } }
     }
 
     return result.joinToString("\n")

@@ -77,7 +77,7 @@ class GeneratedWindowLogic(
 
 abstract class BaseViewModelPatternGenerator: PatternGenerator() {
     protected val logic by lazy {
-        ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory)
+        ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory, typesWorldApi)
     }
 
     override fun supportsCodeBuilder(): Boolean {

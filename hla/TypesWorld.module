@@ -1,5 +1,5 @@
 Enums
-    HlaTypeKind
+    WorldTypeKind
         Primitive
         ClassType
         GenericWrapper
@@ -9,46 +9,61 @@ Enums
         //InterfaceType - not needed for now, model for methods will be needed
 
 CustomTypes
-    HlaTypePath: string (example: "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects")
+    WorldTypePath: string (example: "Some/Path/To/Type")
 
 ValueObjects
-    HlaTypeName: string
+    WorldTypeName: string
 
-    HlaType
-        name: HlaTypeName
-        path: HlaTypePath
+    WorldType
+        name: WorldTypeName
+        path: WorldTypePath
 
-    ClassField
+    WorldClassField
         name: string
-        type: HlaType
+        type: WorldType
 
-    ClassType
-        type: HlaType
-        fields: ClassField[]
-        extends: HlaType? = empty
-        //implements: HlaType[] = [] - not needed for now
+    WorldClassType
+        type: WorldType
+        fields: WorldClassField[]
+        extends: WorldType? = empty
+        //implements: WorldType[] = [] - not needed for now
 
-    ConcreteWrapper
-        type: HlaType
-        wrappedType: HlaType
+    WorldConcreteWrapper
+        type: WorldType
+        wrappedType: WorldType
 
-    ConcreteParametrizedClass
-        name: HlaTypeName
-        path: HlaTypePath
-        typeArguments: HlaType[]
+    WorldConcreteParametrizedClass
+        type: WorldType
+        typeArguments: WorldType[]
 
 Interfaces
-    TypesWorldPopulator
-        getOrder(): int // needed as some types are populated from others
-        populate(api: TypesWorldApi)
-
     TypesWorldApi
-        getTypeDependencies(type: HlaType): HlaType[]
+        // to populate information that such type exits
+        // can be called multiple types for the same type
+        ensureType(type: WorldType)
 
-        addClassType(type: ClassType)
-        addConcreteWrapper(type: ConcreteWrapper)
-        addConcreteParametrizedClass(type: ConcreteParametrizedClass)
+        hasType(type: WorldType): bool
 
-        getClassType(type: HlaType): ClassType
+        getTypeByName(name: WorldTypeName): WorldType
             throws
-                TypeNotFoundException
+                WorldTypeNotFoundException
+
+        // to populate more detailed information about type that is used for dependencies calculation
+        // all used types are ensured
+        addPrimitiveType(type: WorldType)
+        addClassType(type: WorldClassType)
+        addConcreteWrapper(type: WorldConcreteWrapper)
+        addConcreteParametrizedClass(type: WorldConcreteParametrizedClass)
+
+        getClassType(type: WorldType): WorldClassType
+            throws
+                WorldTypeNotFoundException
+
+        getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
+            throws
+                WorldTypeNotFoundException
+
+        getTypeDependencies(type: WorldType): WorldType[]
+
+        getAllTypes(): WorldType[]
+

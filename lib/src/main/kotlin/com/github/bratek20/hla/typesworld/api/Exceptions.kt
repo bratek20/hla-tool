@@ -4,7 +4,7 @@ package com.github.bratek20.hla.typesworld.api
 
 import com.github.bratek20.architecture.exceptions.ApiException
 
-class TypeNotFoundException(
+class WorldTypeNotFoundException(
     message: String = ""
 ): ApiException(message) {
 }

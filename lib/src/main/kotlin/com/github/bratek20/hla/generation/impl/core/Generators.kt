@@ -15,6 +15,7 @@ import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
@@ -48,15 +49,17 @@ abstract class ModulePartGenerator {
     lateinit var c: ModuleGenerationContext
     lateinit var apiTypeFactory: ApiTypeFactory
     lateinit var velocityPath: String
+    lateinit var typesWorldApi: TypesWorldApi
 
     open fun velocityPathOverride(): String? {
         return null
     }
 
-    open fun init(c: ModuleGenerationContext, velocityPath: String) {
+    open fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
         this.c = c
         this.apiTypeFactory = ApiTypeFactory(c.domain.queries, c.language.types())
         this.velocityPath = velocityPath
+        this.typesWorldApi = typesWorldApi
     }
 
     protected val module
@@ -283,13 +286,13 @@ abstract class SubmoduleGenerator
 
     abstract fun submoduleName(): SubmoduleName
 
-    override fun init(c: ModuleGenerationContext, velocityPath: String) {
-        super.init(c, velocityPath)
+    override fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
+        super.init(c, velocityPath, typesWorldApi)
 
         patternGenerators = getPatternGenerators()
 
         patternGenerators.forEach {
-            it.init(c, velocityDirPath())
+            it.init(c, velocityDirPath(), typesWorldApi)
             it.submodule = submoduleName()
         }
     }
@@ -330,7 +333,7 @@ abstract class SubmoduleGenerator
     //TODO-REF workaround to force macros generation
     fun generateMacros() {
         val macros = MacrosBuilder()
-        macros.init(c, "macros")
+        macros.init(c, "macros", typesWorldApi)
         macros.generatePatterns()
     }
 }

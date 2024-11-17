@@ -3,16 +3,88 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
-import com.github.bratek20.hla.typesworld.api.HlaType
-import com.github.bratek20.hla.typesworld.api.HlaTypeKind
-import com.github.bratek20.hla.typesworld.api.HlaTypeName
+import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.queries.api.createTypeDefinition
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
+
+open class BaseViewModelTypesMapper {
+    fun mapModelToViewModelTypeName(modelType: ApiType): String {
+        if (modelType is BaseApiType) {
+            return mapBaseType(modelType)
+        }
+        if (modelType is SimpleStructureApiType) {
+            return mapBaseType(modelType.boxedType)
+        }
+        if (modelType is ComplexStructureApiType<*>) {
+            return mapComplexStructureType(modelType)
+        }
+        if (modelType is EnumApiType) {
+            return modelType.name() + "Switch"
+        }
+        if (modelType is ListApiType) {
+            return mapListType(modelType)
+        }
+        if (modelType is OptionalApiType) {
+            return mapOptionalType(modelType)
+        }
+        return "TODO-mapModelToViewModelTypeName-${modelType.name()}"
+    }
+
+    fun mapModelToViewModelType(modelType: ApiType): WorldType {
+        val viewModelTypeName = mapModelToViewModelTypeName(modelType)
+        return WorldType.create(
+            name = WorldTypeName(viewModelTypeName),
+            path = modelType.asWorldType().getPath().asHla()
+                .replaceSubmoduleAndPattern(SubmoduleName.ViewModel, PatternName.ElementsView)
+                .asWorld()
+        )
+    }
+
+    private fun mapComplexStructureType(modelType: ComplexStructureApiType<*>): String {
+        ////TODO-FIX this is hack based on current name assumptions
+        return modelType.name + "Vm"
+    }
+
+    private fun mapListType(modelType: ListApiType): String {
+        if(modelType.wrappedType is ComplexStructureApiType<*>) {
+            val x = mapComplexStructureType(modelType.wrappedType)
+            return x + "Group"
+        }
+        if(modelType.wrappedType is EnumApiType) {
+            return mapModelToViewModelTypeName(modelType.wrappedType) + "Group"
+        }
+        throw IllegalArgumentException("Unsupported mapListType for: ${modelType.wrappedType}")
+    }
+
+    private fun mapOptionalType(modelType: OptionalApiType): String {
+        return "Optional" + mapModelToViewModelTypeName(modelType.wrappedType)
+    }
+
+    private fun mapBaseType(type: BaseApiType): String {
+        return when (type.name) {
+            BaseType.STRING -> "Label"
+            BaseType.INT -> "Label"
+            BaseType.BOOL -> "BoolSwitch"
+            BaseType.DOUBLE -> "Label"
+            BaseType.LONG -> "Label"
+            BaseType.STRUCT -> throw IllegalArgumentException("Structs are not supported in view models")
+            BaseType.VOID -> throw IllegalArgumentException("Void is not supported in view models")
+            BaseType.ANY -> throw IllegalArgumentException("Any is not supported in view models")
+        }
+    }
+}
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
-    private val viewModelElements: List<ViewModelElementLogic>
-) {
+    private val viewModelElements: List<ViewModelElementLogic>,
+    private val typesWorldApi: TypesWorldApi
+): BaseViewModelTypesMapper() {
     fun mapViewModelToViewTypeName(viewModelType: String): String {
         val knownViewModel = viewModelElements.firstOrNull { it.getTypeName() == viewModelType }
         if (knownViewModel != null) {
@@ -29,12 +101,14 @@ class ModelToViewModelTypeMapper(
         return viewModelType + "View"
     }
 
-    fun mapViewModelToViewType(viewModelType: HlaType): HlaType {
+    fun mapViewModelToViewType(viewModelType: WorldType): WorldType {
         val viewModelTypeName = viewModelType.getName().value
         val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
-        return HlaType.create(
-            name = HlaTypeName(viewTypeName),
-            path = viewModelType.getPath().replaceSubmodule(SubmoduleName.View)
+        return WorldType.create(
+            name = WorldTypeName(viewTypeName),
+            path = viewModelType.getPath().asHla()
+                .replaceSubmoduleAndPattern(SubmoduleName.View, PatternName.ElementsView)
+                .asWorld()
         )
     }
 
@@ -67,8 +141,14 @@ class ModelToViewModelTypeMapper(
     }
 
     fun mapViewModelToModelType(viewModelType: String): ApiType {
-        return viewModelElements.firstOrNull() { it.getTypeName() == viewModelType }?.modelType
-            ?: throw IllegalArgumentException("Unknown view model type: $viewModelType")
+        val classType = typesWorldApi.getClassType(typesWorldApi.getTypeByName(WorldTypeName(viewModelType)))
+        val extendedClass = classType.getExtends()!!
+
+        val modelType = typesWorldApi.getConcreteParametrizedClass(extendedClass).getTypeArguments()[0]
+        return apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
+
+//        return viewModelElements.firstOrNull() { it.getTypeName() == viewModelType }?.modelType
+//            ?: throw IllegalArgumentException("Unknown view model type: $viewModelType")
     }
 
     fun mapModelToViewTypeName(modelType: ApiType): String {
@@ -87,43 +167,13 @@ class ModelToViewModelTypeMapper(
     }
 
 
-    fun mapModelToViewType(modelType: ApiType): HlaType {
+    fun mapModelToViewType(modelType: ApiType): WorldType {
         val viewTypeName = mapModelToViewTypeName(modelType)
-        return HlaType.create(
-            name = HlaTypeName(viewTypeName),
-            path = modelType.asHlaType().getPath()
-                .replaceSubmodule(SubmoduleName.View)
-        )
-    }
-
-    fun mapModelToViewModelTypeName(modelType: ApiType): String {
-        if (modelType is BaseApiType) {
-            return mapBaseType(modelType)
-        }
-        if (modelType is SimpleStructureApiType) {
-            return mapBaseType(modelType.boxedType)
-        }
-        if (modelType is ComplexStructureApiType<*>) {
-            return mapComplexStructureType(modelType)
-        }
-        if (modelType is EnumApiType) {
-            return modelType.name() + "Switch"
-        }
-        if (modelType is ListApiType) {
-            return mapListType(modelType)
-        }
-        if (modelType is OptionalApiType) {
-            return mapOptionalType(modelType)
-        }
-        return "TODO-mapModelToViewModelTypeName-${modelType.name()}"
-    }
-
-    fun mapModelToViewModelType(modelType: ApiType): HlaType {
-        val viewModelTypeName = mapModelToViewModelTypeName(modelType)
-        return HlaType.create(
-            name = HlaTypeName(viewModelTypeName),
-            path = modelType.asHlaType().getPath()
-                .replaceSubmodule(SubmoduleName.ViewModel)
+        return WorldType.create(
+            name = WorldTypeName(viewTypeName),
+            path = modelType.asWorldType().getPath().asHla()
+                .replaceSubmoduleAndPattern(SubmoduleName.View, PatternName.ElementsView)
+                .asWorld()
         )
     }
 
@@ -133,38 +183,6 @@ class ModelToViewModelTypeMapper(
 
     private fun getViewModelElementForType(modelType: ApiType): ViewModelElementLogic {
         return viewModelElements.first { it.modelType.name() == modelType.name() }
-    }
-
-    private fun mapComplexStructureType(modelType: ComplexStructureApiType<*>): String {
-        return getViewModelElementForType(modelType).getTypeName()
-    }
-
-    private fun mapListType(modelType: ListApiType): String {
-        if(modelType.wrappedType is ComplexStructureApiType<*>) {
-            val x = mapComplexStructureType(modelType.wrappedType)
-            return x + "Group"
-        }
-        if(modelType.wrappedType is EnumApiType) {
-            return mapModelToViewModelTypeName(modelType.wrappedType) + "Group"
-        }
-        throw IllegalArgumentException("Unsupported mapListType for: ${modelType.wrappedType}")
-    }
-
-    private fun mapOptionalType(modelType: OptionalApiType): String {
-        return "Optional" + mapModelToViewModelTypeName(modelType.wrappedType)
-    }
-
-    private fun mapBaseType(type: BaseApiType): String {
-        return when (type.name) {
-            BaseType.STRING -> "Label"
-            BaseType.INT -> "Label"
-            BaseType.BOOL -> "BoolSwitch"
-            BaseType.DOUBLE -> "Label"
-            BaseType.LONG -> "Label"
-            BaseType.STRUCT -> throw IllegalArgumentException("Structs are not supported in view models")
-            BaseType.VOID -> throw IllegalArgumentException("Void is not supported in view models")
-            BaseType.ANY -> throw IllegalArgumentException("Any is not supported in view models")
-        }
     }
 
     fun mapViewModelToFullViewTypeName(viewModelTypeName: String): String {
