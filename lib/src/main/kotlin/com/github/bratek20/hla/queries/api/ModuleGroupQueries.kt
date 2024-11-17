@@ -25,15 +25,29 @@ fun isBaseType(value: String): Boolean {
 class PrimitiveTypesPopulator {
     fun populate(api: TypesWorldApi) {
         BaseType.entries.forEach {
+            val path = HlaTypePath.create(
+                GroupName("Language"),
+                ModuleName("Types"),
+                SubmoduleName.Api,
+                PatternName.Primitives
+            ).asWorld()
+
             api.addPrimitiveType(
                 WorldType.create(
                     name = WorldTypeName(it.name.lowercase()),
-                    path = HlaTypePath.create(
-                        GroupName("Language"),
-                        ModuleName("Types"),
-                        SubmoduleName.Api,
-                        PatternName.Primitives
-                    ).asWorld()
+                    path = path
+                )
+            )
+            api.ensureType(
+                WorldType.create(
+                    name = WorldTypeName("List<${it.name.lowercase()}>"),
+                    path = path
+                )
+            )
+            api.ensureType(
+                WorldType.create(
+                    name = WorldTypeName("Optional<${it.name.lowercase()}>"),
+                    path = path
                 )
             )
         }
@@ -41,7 +55,12 @@ class PrimitiveTypesPopulator {
 }
 
 fun TypeDefinition.asWorldTypeName(): WorldTypeName {
-    //TODO-FIX support for wrappers
+    if (this.getWrappers().contains(TypeWrapper.LIST)) {
+        return WorldTypeName("List<${this.getName()}>")
+    }
+    if (this.getWrappers().contains(TypeWrapper.OPTIONAL)) {
+        return WorldTypeName("Optional<${this.getName()}>")
+    }
     return WorldTypeName(this.getName())
 }
 
