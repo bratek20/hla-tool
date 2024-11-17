@@ -1,0 +1,69 @@
+Enums
+    WorldTypeKind
+        Primitive
+        ClassType
+        GenericWrapper
+        ConcreteWrapper
+        GenericParametrizedClass
+        ConcreteParametrizedClass
+        //InterfaceType - not needed for now, model for methods will be needed
+
+CustomTypes
+    WorldTypePath: string (example: "Some/Path/To/Type")
+
+ValueObjects
+    WorldTypeName: string
+
+    WorldType
+        name: WorldTypeName
+        path: WorldTypePath
+
+    WorldClassField
+        name: string
+        type: WorldType
+
+    WorldClassType
+        type: WorldType
+        fields: WorldClassField[]
+        extends: WorldType? = empty
+        //implements: WorldType[] = [] - not needed for now
+
+    WorldConcreteWrapper
+        type: WorldType
+        wrappedType: WorldType
+
+    WorldConcreteParametrizedClass
+        type: WorldType
+        typeArguments: WorldType[]
+
+Interfaces
+    TypesWorldApi
+        // to populate information that such type exits
+        // can be called multiple types for the same type
+        ensureType(type: WorldType)
+
+        hasType(type: WorldType): bool
+
+        getTypeByName(name: WorldTypeName): WorldType
+            throws
+                WorldTypeNotFoundException
+
+        // to populate more detailed information about type that is used for dependencies calculation
+        // all used types are ensured
+        addPrimitiveType(type: WorldType)
+        addClassType(type: WorldClassType)
+        addConcreteWrapper(type: WorldConcreteWrapper)
+        addConcreteParametrizedClass(type: WorldConcreteParametrizedClass)
+
+        getClassType(type: WorldType): WorldClassType
+            throws
+                WorldTypeNotFoundException
+
+        getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
+            throws
+                WorldTypeNotFoundException
+
+        getTypeDependencies(type: WorldType): WorldType[]
+
+        getAllTypes(): WorldType[]
+

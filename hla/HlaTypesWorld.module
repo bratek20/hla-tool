@@ -1,0 +1,2 @@
+CustomTypes
+    HlaTypePath: string (example: "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects")

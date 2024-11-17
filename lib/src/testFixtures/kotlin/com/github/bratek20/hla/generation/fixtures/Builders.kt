@@ -12,7 +12,7 @@ import com.github.bratek20.utils.directory.fixtures.*
 import com.github.bratek20.hla.generation.api.*
 
 data class GeneratedPatternDef(
-    var name: String = PatternName.Enums.name,
+    var name: String = PatternName.Primitives.name,
     var file: (FileDef.() -> Unit) = {},
 )
 fun generatedPattern(init: GeneratedPatternDef.() -> Unit = {}): GeneratedPattern {
