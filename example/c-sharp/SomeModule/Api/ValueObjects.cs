@@ -443,7 +443,7 @@ namespace SomeModule.Api {
         readonly double doubleExample;
         readonly long longExample;
         readonly string goodName;
-        readonly any customData;
+        readonly object customData;
 
         public SomeProperty(
             OtherProperty other,
@@ -452,7 +452,7 @@ namespace SomeModule.Api {
             double doubleExample,
             long longExample,
             string goodName,
-            any customData
+            object customData
         ) {
             this.other = other;
             this.id2 = id2;
@@ -480,10 +480,10 @@ namespace SomeModule.Api {
         public string GetGoodName() {
             return goodName;
         }
-        public any GetCustomData() {
+        public object GetCustomData() {
             return customData;
         }
-        public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, any customData) {
+        public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, object customData) {
             return new SomeProperty(other, id2.Map( it => it.Value ).OrElse(null), range.Map( it => it.fromCustomType() ).OrElse(null), doubleExample, longExample, goodName, customData);
         }
     }
