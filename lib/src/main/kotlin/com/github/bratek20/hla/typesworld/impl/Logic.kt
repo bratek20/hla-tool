@@ -92,7 +92,23 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getTypeByName(name: WorldTypeName): WorldType {
-        return allTypes.firstOrNull { it.getName() == name }
+        return getTypeByNameForWrapper(name, "List")
+            ?: getTypeByNameForWrapper(name, "Optional")
+            ?: allTypes.firstOrNull { it.getName() == name }
             ?: throw WorldTypeNotFoundException("Hla type with name '${name}' not found")
+    }
+
+    private fun getTypeByNameForWrapper(name: WorldTypeName, wrapper: String): WorldType? {
+        if (name.value.startsWith("$wrapper<")) {
+            val wrappedTypeName = name.value.removePrefix("$wrapper<").removeSuffix(">")
+            val wrappedType = allTypes.firstOrNull { it.getName().value == wrappedTypeName }
+                ?: throw WorldTypeNotFoundException("Hla type with name '${wrappedTypeName}' not found")
+
+            return WorldType.create(
+                name = name,
+                path = wrappedType.getPath()
+            )
+        }
+        return null
     }
 }

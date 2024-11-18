@@ -1,8 +1,0 @@
-{
-  "blueprintType": "ElementGroup",
-  "name": "SomeEnumSwitchGroup",
-  "viewType": "SomeModule.View.SomeEnumSwitchGroupView",
-  "creationOrder": 2,
-  "children": [ ],
-  "elementViewType": "SomeModule.View.SomeEnumSwitchView"
-}

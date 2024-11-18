@@ -5,6 +5,7 @@ import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.context.FacadeImpl
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.typesworld.fixtures.*
 import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
@@ -18,6 +19,7 @@ import com.github.bratek20.utils.directory.fixtures.assertDirectory
 import com.github.bratek20.utils.directory.impl.DirectoriesLogic
 import com.github.bratek20.utils.directory.impl.FilesLogic
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -355,6 +357,13 @@ class HlaFacadeTest {
         )
 
         //then
+        val assertHasTypeOfName = { typeName: String ->
+            assertThatCode {
+                sr.typesWorldApi.getTypeByName(WorldTypeName(typeName))
+            }
+            .withFailMessage("Type with name $typeName not found")
+            .doesNotThrowAnyException()
+        }
         val assertHasType = { typeName: String, typePath: String ->
             assertThat(sr.typesWorldApi.hasType(worldType {
                 name = typeName
@@ -382,6 +391,9 @@ class HlaFacadeTest {
         assertHasType("int", "Language/Types/Api/Primitives")
         assertHasType("string", "Language/Types/Api/Primitives")
 
+        assertHasType("List<int>", "Language/Types/Api/Primitives")
+        assertHasType("Optional<int>", "Language/Types/Api/Primitives")
+
         //api types
         assertHasClassType("OtherClass", "OtherModule/Api/ValueObjects") {
             fields = listOf(
@@ -400,6 +412,15 @@ class HlaFacadeTest {
             )
         }
 
+        assertHasClassType("ClassWithEnumList", "SomeModule/Api/ValueObjects") {
+            fields = listOf {
+                name = "enumList"
+                type = {
+                    name = "List<SomeEnum2>"
+                }
+            }
+        }
+
         //view model types
         assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {
             typeArguments = listOf {
@@ -411,22 +432,38 @@ class HlaFacadeTest {
             extends = {
                 name = "UiElement<OtherClass>"
             }
-//            fields = listOf(
-//                {
-//                    name = "id"
-//                    type = {
-//                        name = "Label"
-//                        path = "B20/Frontend/UiElements"
-//                    }
-//                },
-//                {
-//                    name = "amount"
-//                    type = {
-//                        name = "Label"
-//                    }
-//                }
-//            )
+            fields = listOf(
+                {
+                    name = "id"
+                    type = {
+                        name = "Label"
+                        //path = "B20/Frontend/UiElements" //TODO-FIX
+                    }
+                },
+                {
+                    name = "amount"
+                    type = {
+                        name = "Label"
+                    }
+                }
+            )
         }
+
+        assertHasClassType("ClassWithEnumListVm", "SomeModule/ViewModel/GeneratedElements") {
+            fields = listOf {
+                name = "enumList"
+                type = {
+                    name = "SomeEnum2SwitchGroup"
+                }
+            }
+        }
+        assertHasType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements")
+        assertHasType("SomeEnum2Switch", "SomeModule/ViewModel/GeneratedElements")
+//        assertHasClassType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements") {
+//            extends = {
+//                name = "UiElementGroup<SomeEnum2Switch,SomeEnum>"
+//            }
+//        }
 
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")

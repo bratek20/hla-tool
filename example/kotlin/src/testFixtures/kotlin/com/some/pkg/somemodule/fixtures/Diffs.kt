@@ -29,6 +29,11 @@ fun diffSomeEnum(given: SomeEnum, expected: String, path: String = ""): String {
     return ""
 }
 
+fun diffSomeEnum2(given: SomeEnum2, expected: String, path: String = ""): String {
+    if (given != SomeEnum2.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
 data class ExpectedSomeClass(
     var id: String? = null,
     var amount: Int? = null,
@@ -320,7 +325,7 @@ fun diffClassWithEnumList(given: ClassWithEnumList, expectedInit: ExpectedClassW
 
     expected.enumList?.let {
         if (given.getEnumList().size != it.size) { result.add("${path}enumList size ${given.getEnumList().size} != ${it.size}"); return@let }
-        given.getEnumList().forEachIndexed { idx, entry -> if (diffSomeEnum(entry, it[idx]) != "") { result.add(diffSomeEnum(entry, it[idx], "${path}enumList[${idx}].")) } }
+        given.getEnumList().forEachIndexed { idx, entry -> if (diffSomeEnum2(entry, it[idx]) != "") { result.add(diffSomeEnum2(entry, it[idx], "${path}enumList[${idx}].")) } }
     }
 
     return result.joinToString("\n")

@@ -5,3 +5,8 @@ enum class SomeEnum {
     VALUE_A,
     VALUE_B,
 }
+
+enum class SomeEnum2 {
+    VALUE_A,
+    VALUE_B,
+}

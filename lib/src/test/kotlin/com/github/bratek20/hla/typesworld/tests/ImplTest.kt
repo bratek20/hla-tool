@@ -68,6 +68,28 @@ class TypesWorldImplTest {
                 }
             )
         }
+
+        @Test
+        fun `should get concrete List or Optional type with path of wrapped type`() {
+            api.ensureType(worldType {
+                name = "SomeClass"
+                path = "SomePath"
+            })
+
+            api.getTypeByName(worldTypeName("List<SomeClass>")).let {
+                assertWorldType(it) {
+                    name = "List<SomeClass>"
+                    path = "SomePath"
+                }
+            }
+
+            api.getTypeByName(worldTypeName("Optional<SomeClass>")).let {
+                assertWorldType(it) {
+                    name = "Optional<SomeClass>"
+                    path = "SomePath"
+                }
+            }
+        }
     }
 
     @Nested

@@ -25,15 +25,29 @@ fun isBaseType(value: String): Boolean {
 class PrimitiveTypesPopulator {
     fun populate(api: TypesWorldApi) {
         BaseType.entries.forEach {
+            val path = HlaTypePath.create(
+                GroupName("Language"),
+                ModuleName("Types"),
+                SubmoduleName.Api,
+                PatternName.Primitives
+            ).asWorld()
+
             api.addPrimitiveType(
                 WorldType.create(
                     name = WorldTypeName(it.name.lowercase()),
-                    path = HlaTypePath.create(
-                        GroupName("Language"),
-                        ModuleName("Types"),
-                        SubmoduleName.Api,
-                        PatternName.Primitives
-                    ).asWorld()
+                    path = path
+                )
+            )
+            api.ensureType(
+                WorldType.create(
+                    name = WorldTypeName("List<${it.name.lowercase()}>"),
+                    path = path
+                )
+            )
+            api.ensureType(
+                WorldType.create(
+                    name = WorldTypeName("Optional<${it.name.lowercase()}>"),
+                    path = path
                 )
             )
         }
@@ -41,7 +55,12 @@ class PrimitiveTypesPopulator {
 }
 
 fun TypeDefinition.asWorldTypeName(): WorldTypeName {
-    //TODO-FIX support for wrappers
+    if (this.getWrappers().contains(TypeWrapper.LIST)) {
+        return WorldTypeName("List<${this.getName()}>")
+    }
+    if (this.getWrappers().contains(TypeWrapper.OPTIONAL)) {
+        return WorldTypeName("Optional<${this.getName()}>")
+    }
     return WorldTypeName(this.getName())
 }
 
@@ -237,6 +256,11 @@ class ViewModelTypesPopulator(
     }
 
     private fun populate(module: ModuleDefinition) {
+        populateElements(module)
+        populateEnumSwitches(module)
+    }
+
+    private fun populateElements(module: ModuleDefinition) {
         module.getViewModelSubmodule()?.let {
             it.getElements().forEach { element ->
                 val path = HlaTypePath.create(
@@ -256,24 +280,38 @@ class ViewModelTypesPopulator(
                     )
                 ))
                 world.addClassType(WorldClassType.create(
-                   type = WorldType.create(
+                    type = WorldType.create(
                         name = WorldTypeName(element.getName()),
                         path = path
-                   ),
-                   fields = getFieldsForElement(element),
-                   extends = paramType
+                    ),
+                    fields = getFieldsForElement(element),
+                    extends = paramType
                 ))
             }
         }
-
-        populateEnumSwitches(module)
     }
 
     private fun populateEnumSwitches(module: ModuleDefinition) {
-        val enumSwitches = world.getAllTypes().filter {
+        val ensuredEnumSwitches = world.getAllTypes().filter {
             it.getName().value.endsWith("Switch") &&
                     it.getPath().asHla().getModuleName() == module.getName()
         }
+
+        val ensuredEnumSwitchGroups = world.getAllTypes().filter {
+            it.getName().value.endsWith("SwitchGroup") &&
+                    it.getPath().asHla().getModuleName() == module.getName()
+        }
+
+        val extractedEnumSwitchesFromGroups = ensuredEnumSwitchGroups.map { group ->
+            val enumSwitch = group.getName().value.removeSuffix("Group")
+            WorldType.create(
+                name = WorldTypeName(enumSwitch),
+                path = group.getPath()
+            )
+        }
+
+        val enumSwitches = ensuredEnumSwitches + extractedEnumSwitchesFromGroups
+
         enumSwitches.forEach { enumSwitch ->
             val enumType = world.getTypeByName(WorldTypeName(enumSwitch.getName().value.replace("Switch", "")))
 

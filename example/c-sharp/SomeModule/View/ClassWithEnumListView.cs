@@ -13,7 +13,7 @@ using TypesModule.Api;
 namespace SomeModule.View {
     public class ClassWithEnumListView: ElementView<ClassWithEnumListVm> {
         [SerializeField]
-        SomeEnumGroupView enumList;
+        SomeEnum2GroupView enumList;
         protected override void OnBind() {
             base.OnBind();
             enumList.Bind(ViewModel.EnumList);

@@ -9,8 +9,10 @@ import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
+import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 
 class GeneratedWindowLogic(
     private val def: ViewModelWindowDefinition,
@@ -76,8 +78,11 @@ class GeneratedWindowLogic(
 }
 
 abstract class BaseViewModelPatternGenerator: PatternGenerator() {
-    protected val logic by lazy {
-        ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory, typesWorldApi)
+    protected lateinit var logic: ViewModelSharedLogic
+
+    override fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
+        super.init(c, velocityPath, typesWorldApi)
+        logic = ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory, typesWorldApi)
     }
 
     override fun supportsCodeBuilder(): Boolean {

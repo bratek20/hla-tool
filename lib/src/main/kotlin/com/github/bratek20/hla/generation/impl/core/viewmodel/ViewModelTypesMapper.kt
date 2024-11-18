@@ -41,7 +41,7 @@ open class BaseViewModelTypesMapper {
         return WorldType.create(
             name = WorldTypeName(viewModelTypeName),
             path = modelType.asWorldType().getPath().asHla()
-                .replaceSubmoduleAndPattern(SubmoduleName.ViewModel, PatternName.ElementsView)
+                .replaceSubmoduleAndPattern(SubmoduleName.ViewModel, PatternName.GeneratedElements)
                 .asWorld()
         )
     }
