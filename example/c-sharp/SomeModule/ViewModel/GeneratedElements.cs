@@ -65,6 +65,9 @@ namespace SomeModule.ViewModel {
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
     }
 
+    public class SomeEnum2Switch: EnumSwitch<SomeEnum2> {
+    }
+
     public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
