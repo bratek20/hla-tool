@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using B20.Ext;
 using OtherModule.Api;
 using TypesModule.Api;
@@ -363,7 +364,7 @@ namespace SomeModule.Api {
             this.enumList = enumList;
         }
         public List<SomeEnum2> GetEnumList() {
-            return enumList.Select( it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it) );
+            return enumList.Select( it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it) ).ToList();
         }
         public static ClassWithEnumList Create(List<SomeEnum2> enumList) {
             return new ClassWithEnumList(enumList.Select( it => it.ToString() ));
