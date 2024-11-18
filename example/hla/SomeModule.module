@@ -211,6 +211,11 @@ ViewModel
                 someEnum
                 class2List
 
+        SomeClass4Vm
+            SomeClass4
+                otherId
+                otherClass
+
         SomeClass6Vm
             SomeClass6
                 someClassOpt

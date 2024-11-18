@@ -39,6 +39,15 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class SomeClass4Vm: UiElement<SomeClass4> {
+        public Label OtherId { get; set; }
+        public OtherClassVm OtherClass { get; set; }
+        protected override void OnUpdate() {
+            OtherId.Update(Model.GetOtherId().Value);
+            OtherClass.Update(Model.GetOtherClass());
+        }
+    }
+
     public partial class SomeClass6Vm: UiElement<SomeClass6> {
         public OptionalSomeClassVm SomeClassOpt { get; set; }
         public SomeClass2VmGroup Class2List { get; set; }

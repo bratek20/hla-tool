@@ -17,6 +17,7 @@ namespace SomeModule.Context {
                 .SetClass<SomeClassVm>(InjectionMode.Prototype)
                 .SetClass<SomeClass2Vm>(InjectionMode.Prototype)
                 .SetClass<SomeClass3Vm>(InjectionMode.Prototype)
+                .SetClass<SomeClass4Vm>(InjectionMode.Prototype)
                 .SetClass<SomeClass6Vm>(InjectionMode.Prototype)
                 .SetClass<ClassHavingOptSimpleVoVm>(InjectionMode.Prototype)
                 .SetClass<ClassWithEnumListVm>(InjectionMode.Prototype)
