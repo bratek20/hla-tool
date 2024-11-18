@@ -8,6 +8,7 @@ using UnityEngine;
 using SomeModule.Api;
 using SomeModule.ViewModel;
 using OtherModule.Api;
+using OtherModule.View;
 using TypesModule.Api;
 
 namespace SomeModule.View {
@@ -15,7 +16,7 @@ namespace SomeModule.View {
         [SerializeField]
         LabelView otherId;
         [SerializeField]
-        OtherClassVmView otherClass;
+        OtherClassView otherClass;
         protected override void OnBind() {
             base.OnBind();
             otherId.Bind(ViewModel.OtherId);

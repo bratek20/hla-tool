@@ -10,7 +10,7 @@
     },
     {
       "name": "otherClass",
-      "viewType": "OtherModule.View.OtherClassVmView"
+      "viewType": "OtherModule.View.OtherClassView"
     }
   ],
   "elementViewType": null
