@@ -11,12 +11,6 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class ClassWithEnumListView: ElementView<ClassWithEnumListVm> {
-        [SerializeField]
-        SomeEnum2GroupView enumList;
-        protected override void OnBind() {
-            base.OnBind();
-            enumList.Bind(ViewModel.EnumList);
-        }
+    public class SomeEnum2SwitchGroupView: UiElementGroupView<SomeEnum2SwitchView, SomeEnum2Switch, SomeEnum2> {
     }
 }

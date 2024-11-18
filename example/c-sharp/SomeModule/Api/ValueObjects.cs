@@ -362,10 +362,10 @@ namespace SomeModule.Api {
         ) {
             this.enumList = enumList;
         }
-        public List<SomeEnum> GetEnumList() {
-            return enumList.Select( it => (SomeEnum)Enum.Parse(typeof(SomeEnum), it) );
+        public List<SomeEnum2> GetEnumList() {
+            return enumList.Select( it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it) );
         }
-        public static ClassWithEnumList Create(List<SomeEnum> enumList) {
+        public static ClassWithEnumList Create(List<SomeEnum2> enumList) {
             return new ClassWithEnumList(enumList.Select( it => it.ToString() ));
         }
     }

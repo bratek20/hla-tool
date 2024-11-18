@@ -256,6 +256,11 @@ class ViewModelTypesPopulator(
     }
 
     private fun populate(module: ModuleDefinition) {
+        populateElements(module)
+        populateEnumSwitches(module)
+    }
+
+    private fun populateElements(module: ModuleDefinition) {
         module.getViewModelSubmodule()?.let {
             it.getElements().forEach { element ->
                 val path = HlaTypePath.create(
@@ -275,24 +280,38 @@ class ViewModelTypesPopulator(
                     )
                 ))
                 world.addClassType(WorldClassType.create(
-                   type = WorldType.create(
+                    type = WorldType.create(
                         name = WorldTypeName(element.getName()),
                         path = path
-                   ),
-                   fields = getFieldsForElement(element),
-                   extends = paramType
+                    ),
+                    fields = getFieldsForElement(element),
+                    extends = paramType
                 ))
             }
         }
-
-        populateEnumSwitches(module)
     }
 
     private fun populateEnumSwitches(module: ModuleDefinition) {
-        val enumSwitches = world.getAllTypes().filter {
+        val ensuredEnumSwitches = world.getAllTypes().filter {
             it.getName().value.endsWith("Switch") &&
                     it.getPath().asHla().getModuleName() == module.getName()
         }
+
+        val ensuredEnumSwitchGroups = world.getAllTypes().filter {
+            it.getName().value.endsWith("SwitchGroup") &&
+                    it.getPath().asHla().getModuleName() == module.getName()
+        }
+
+        val extractedEnumSwitchesFromGroups = ensuredEnumSwitchGroups.map { group ->
+            val enumSwitch = group.getName().value.removeSuffix("Group")
+            WorldType.create(
+                name = WorldTypeName(enumSwitch),
+                path = group.getPath()
+            )
+        }
+
+        val enumSwitches = ensuredEnumSwitches + extractedEnumSwitchesFromGroups
+
         enumSwitches.forEach { enumSwitch ->
             val enumType = world.getTypeByName(WorldTypeName(enumSwitch.getName().value.replace("Switch", "")))
 
