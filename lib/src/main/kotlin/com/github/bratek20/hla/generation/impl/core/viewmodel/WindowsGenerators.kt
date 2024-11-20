@@ -82,7 +82,7 @@ abstract class BaseViewModelPatternGenerator: PatternGenerator() {
 
     override fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
         super.init(c, velocityPath, typesWorldApi)
-        logic = ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory, typesWorldApi)
+        logic = ViewModelSharedLogic(module, apiTypeFactory, typesWorldApi)
     }
 
     override fun supportsCodeBuilder(): Boolean {

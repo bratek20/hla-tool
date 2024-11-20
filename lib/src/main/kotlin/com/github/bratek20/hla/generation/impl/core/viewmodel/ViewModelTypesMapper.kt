@@ -80,16 +80,22 @@ open class BaseViewModelTypesMapper {
     }
 }
 
+fun getModelTypeForEnsuredViewModelType(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
+    val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
+    val classType = typesWorldApi.getClassType(type)
+    return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[0]
+}
+
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
     private val viewModelElements: List<ViewModelElementLogic>,
     private val typesWorldApi: TypesWorldApi
 ): BaseViewModelTypesMapper() {
     fun mapViewModelToViewTypeName(viewModelType: String): String {
-        val knownViewModel = viewModelElements.firstOrNull { it.getTypeName() == viewModelType }
-        if (knownViewModel != null) {
-            return mapModelToViewTypeName(knownViewModel.modelType)
+        if(b20ViewModelTypes.contains(viewModelType)) {
+            return viewModelType + "View"
         }
+
         if (viewModelType.endsWith("Group")) {
             val wrappedTypeName = viewModelType.replace("Group", "")
             return mapViewModelToModelType(wrappedTypeName).name() + "GroupView"
@@ -98,7 +104,12 @@ class ModelToViewModelTypeMapper(
             val wrappedTypeName = viewModelType.replace("Optional", "")
             return "Optional" + mapViewModelToViewTypeName(wrappedTypeName)
         }
-        return viewModelType + "View"
+
+        val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, viewModelType)
+        if(viewModelType.endsWith("Switch")) {
+            return modelType.getName().value + "SwitchView"
+        }
+        return modelType.getName().value + "View"
     }
 
     fun mapViewModelToViewType(viewModelType: WorldType): WorldType {
@@ -208,6 +219,13 @@ class ModelToViewModelTypeMapper(
     }
 
     companion object {
+        val b20ViewModelTypes = listOf(
+            "Label",
+            "LabelGroup",
+            "OptionalLabel",
+            "Button",
+            "BoolSwitch",
+        )
         val b20ViewTypes = listOf(
             "LabelView",
             "LabelGroupView",

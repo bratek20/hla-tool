@@ -176,6 +176,7 @@ abstract class PatternGenerator
                 cb.cSharpFile {
                     addUsing("System")
                     addUsing("System.Collections.Generic")
+                    addUsing("System.Linq")
                     addUsing("B20.Ext")
 
                     extraCSharpUsings().forEach {
@@ -196,6 +197,12 @@ abstract class PatternGenerator
                     }
                     modules.getCurrentDependencies().forEach {
                         addUsing(it.getModule().getName().value + ".Api")
+                        if (submodule == SubmoduleName.ViewModel) {
+                            addUsing(it.getModule().getName().value + ".ViewModel")
+                        }
+                        if (submodule == SubmoduleName.View) {
+                            addUsing(it.getModule().getName().value + ".View")
+                        }
                     }
 
                     namespace(submoduleNamespace(submodule, c))

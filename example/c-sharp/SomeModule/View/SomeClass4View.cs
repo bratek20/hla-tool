@@ -14,6 +14,15 @@ using TypesModule.Api;
 using TypesModule.View;
 
 namespace SomeModule.View {
-    public class SomeClass2GroupView: UiElementGroupView<SomeClass2View, SomeClass2Vm, SomeClass2> {
+    public class SomeClass4View: ElementView<SomeClass4Vm> {
+        [SerializeField]
+        LabelView otherId;
+        [SerializeField]
+        OtherClassView otherClass;
+        protected override void OnBind() {
+            base.OnBind();
+            otherId.Bind(ViewModel.OtherId);
+            otherClass.Bind(ViewModel.OtherClass);
+        }
     }
 }

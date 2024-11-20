@@ -14,6 +14,6 @@ using TypesModule.Api;
 using TypesModule.View;
 
 namespace SomeModule.View {
-    public class SomeClass2GroupView: UiElementGroupView<SomeClass2View, SomeClass2Vm, SomeClass2> {
+    public class SomeEnum2SwitchView: EnumSwitchView<SomeEnum2> {
     }
 }
