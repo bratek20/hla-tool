@@ -17,6 +17,10 @@ import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
 
+fun asFullViewType(type: WorldType): String {
+    return type.getPath().asHla().dropPatternPart().replace("/", ".") + "." + type.getName()
+}
+
 abstract class PrefabBaseBlueprintLogic(
     private val mapper: ModelToViewModelTypeMapper,
     private val typesWorldApi: TypesWorldApi
@@ -30,10 +34,6 @@ abstract class PrefabBaseBlueprintLogic(
 
     protected fun getFullType(viewModelTypeName: String): String {
         return mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
-    }
-
-    private fun asFullViewType(type: WorldType): String {
-        return type.getPath().asHla().dropPatternPart().replace("/", ".") + "." + type.getName()
     }
 
     fun getFile(): File {
