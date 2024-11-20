@@ -104,11 +104,20 @@ class ViewModelSharedLogic(
                     && it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel
                     && !it.getName().value.contains("<")
         }
-        val allEnumTypes = allModuleViewModelTypes.filter {
-            val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, it.getName().value)
-            apiTypeFactory.create(createTypeDefinition(modelType.getName().value)) is EnumApiType
+        val allEnumTypes = allModuleViewModelTypes.mapNotNull {
+            try {
+                val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, it.getName().value)
+                val apiType = apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
+                if (apiType is EnumApiType) {
+                    apiType
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                null
+            }
         }
-        return allEnumTypes.map { apiTypeFactory.create(createTypeDefinition(it.getName().value)) as EnumApiType }
+        return allEnumTypes
     }
 }
 

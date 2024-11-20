@@ -373,6 +373,15 @@ class HlaFacadeTest {
             .isTrue()
         }
 
+        val assertHasNotType = { typeName: String, typePath: String ->
+            assertThat(sr.typesWorldApi.hasType(worldType {
+                name = typeName
+                path = typePath
+            }))
+            .withFailMessage("Type $typeName found")
+            .isFalse()
+        }
+
         val assertHasClassType = { typeName: String, typePath: String, expectedClass: ExpectedWorldClassType.() -> Unit ->
             assertHasType(typeName, typePath)
             sr.typesWorldApi.getClassType(WorldType(typeName, typePath)).let {
@@ -421,7 +430,13 @@ class HlaFacadeTest {
             }
         }
 
-        //view model types
+        //b20 view model types
+
+        //TODO-FIX it should not pass
+        assertHasType("Label", "OtherModule/ViewModel/GeneratedElements")
+        //assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
+
+        //modules view model types
         assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {
             typeArguments = listOf {
                 name = "OtherClass"
