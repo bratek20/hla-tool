@@ -19,15 +19,15 @@ import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
 class ViewModelSharedLogic(
-    private val def: ViewModelSubmoduleDefinition?,
+    private val moduleDef: ModuleDefinition,
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
 ) {
     fun windowsDef(): List<ViewModelWindowDefinition> =
-        def?.getWindows() ?: emptyList()
+        moduleDef.getViewModelSubmodule()?.getWindows() ?: emptyList()
 
     fun elementsDef(): List<ViewModelElementDefinition> =
-        def?.getElements() ?: emptyList()
+        moduleDef.getViewModelSubmodule()?.getElements() ?: emptyList()
 
     fun elementsLogic(): List<ViewModelElementLogic> {
         return complexElementsLogic() + enumElementsLogic()

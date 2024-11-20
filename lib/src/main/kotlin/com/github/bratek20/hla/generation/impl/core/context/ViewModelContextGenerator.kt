@@ -21,7 +21,7 @@ class ViewModelContextGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val logic = ViewModelSharedLogic(module.getViewModelSubmodule(), apiTypeFactory, typesWorldApi)
+        val logic = ViewModelSharedLogic(module, apiTypeFactory, typesWorldApi)
 
         addClass {
             name = "${module.getName()}ViewModel"
