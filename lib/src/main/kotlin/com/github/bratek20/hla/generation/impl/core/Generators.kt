@@ -176,6 +176,7 @@ abstract class PatternGenerator
                 cb.cSharpFile {
                     addUsing("System")
                     addUsing("System.Collections.Generic")
+                    addUsing("System.Linq")
                     addUsing("B20.Ext")
 
                     extraCSharpUsings().forEach {

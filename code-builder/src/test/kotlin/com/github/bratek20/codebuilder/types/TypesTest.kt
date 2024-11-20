@@ -261,7 +261,7 @@ class TypesTest {
                    List<string> list = new List<string>();
                    list.Add("someString")
                    list.Find( it => it == other )
-                   list.Select( it => it + 1 )
+                   list.Select( it => it + 1 ).ToList()
                 """
                 }
             }

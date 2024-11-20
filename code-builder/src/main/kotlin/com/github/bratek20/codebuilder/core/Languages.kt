@@ -522,7 +522,7 @@ class CSharp: CodeBuilderLanguage {
     }
 
     override fun listMapEnd(): String {
-        return ")"
+        return ").ToList()"
     }
 
     override fun optionalGet(variableName: String): String {
