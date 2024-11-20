@@ -24,6 +24,14 @@ class HlaTypePath(
         return ModuleName(getNthLastPart(3))
     }
 
+    fun getSubmoduleName(): SubmoduleName {
+        return SubmoduleName.valueOf(getNthLastPart(2))
+    }
+
+    fun getPatternName(): PatternName {
+        return PatternName.valueOf(getNthLastPart(1))
+    }
+
     private fun getNthLastPart(n: Int): String {
         val parts = asWorld().asParts()
         return parts[parts.size - n]

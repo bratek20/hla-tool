@@ -80,6 +80,12 @@ open class BaseViewModelTypesMapper {
     }
 }
 
+fun getModelTypeForEnsuredViewModelType(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
+    val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
+    val classType = typesWorldApi.getClassType(type)
+    return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[0]
+}
+
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
     private val viewModelElements: List<ViewModelElementLogic>,
@@ -99,10 +105,8 @@ class ModelToViewModelTypeMapper(
             return "Optional" + mapViewModelToViewTypeName(wrappedTypeName)
         }
 
-        val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
-        val classType = typesWorldApi.getClassType(type)
-        val modelType = typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[0]
-        if(type.getName().value.endsWith("Switch")) {
+        val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, viewModelType)
+        if(viewModelType.endsWith("Switch")) {
             return modelType.getName().value + "SwitchView"
         }
         return modelType.getName().value + "View"

@@ -10,7 +10,9 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
@@ -96,14 +98,17 @@ class ViewModelSharedLogic(
     }
 
     fun elementEnumTypesToGenerate(): List<EnumApiType> {
-        val enumTypes: MutableList<EnumApiType> = mutableListOf();
-
-        complexElementsLogic().forEach { element ->
-            enumTypes.addAll(element.getMappedFieldsOfType(EnumApiType::class))
+        val allTypes = typesWorldApi.getAllTypes()
+        val allModuleViewModelTypes = allTypes.filter {
+            it.getPath().asHla().getModuleName() == moduleDef.getName()
+                    && it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel
+                    && !it.getName().value.contains("<")
         }
-
-        return enumTypes
-            .distinctBy { it.name() }
+        val allEnumTypes = allModuleViewModelTypes.filter {
+            val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, it.getName().value)
+            apiTypeFactory.create(createTypeDefinition(modelType.getName().value)) is EnumApiType
+        }
+        return allEnumTypes.map { apiTypeFactory.create(createTypeDefinition(it.getName().value)) as EnumApiType }
     }
 }
 
