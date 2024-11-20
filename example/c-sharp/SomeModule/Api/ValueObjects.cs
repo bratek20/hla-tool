@@ -117,13 +117,13 @@ namespace SomeModule.Api {
             return names;
         }
         public List<SomeId> GetIds() {
-            return ids.Select( it => new SomeId(it) );
+            return ids.Select( it => new SomeId(it) ).ToList();
         }
         public bool GetEnabled() {
             return enabled;
         }
         public static SomeClass2 Create(SomeId id, List<string> names, List<SomeId> ids, bool enabled) {
-            return new SomeClass2(id.Value, names, ids.Select( it => it.Value ), enabled);
+            return new SomeClass2(id.Value, names, ids.Select( it => it.Value ).ToList(), enabled);
         }
     }
 
@@ -179,13 +179,13 @@ namespace SomeModule.Api {
             return otherClass;
         }
         public List<OtherId> GetOtherIdList() {
-            return otherIdList.Select( it => new OtherId(it) );
+            return otherIdList.Select( it => new OtherId(it) ).ToList();
         }
         public List<OtherClass> GetOtherClassList() {
             return otherClassList;
         }
         public static SomeClass4 Create(OtherId otherId, OtherClass otherClass, List<OtherId> otherIdList, List<OtherClass> otherClassList) {
-            return new SomeClass4(otherId.Value, otherClass, otherIdList.Select( it => it.Value ), otherClassList);
+            return new SomeClass4(otherId.Value, otherClass, otherIdList.Select( it => it.Value ).ToList(), otherClassList);
         }
     }
 
@@ -367,7 +367,7 @@ namespace SomeModule.Api {
             return enumList.Select( it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it) ).ToList();
         }
         public static ClassWithEnumList Create(List<SomeEnum2> enumList) {
-            return new ClassWithEnumList(enumList.Select( it => it.ToString() ));
+            return new ClassWithEnumList(enumList.Select( it => it.ToString() ).ToList());
         }
     }
 
