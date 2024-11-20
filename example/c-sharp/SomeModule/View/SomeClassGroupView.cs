@@ -9,7 +9,9 @@ using UnityEngine;
 using SomeModule.Api;
 using SomeModule.ViewModel;
 using OtherModule.Api;
+using OtherModule.View;
 using TypesModule.Api;
+using TypesModule.View;
 
 namespace SomeModule.View {
     public class SomeClassGroupView: UiElementGroupView<SomeClassView, SomeClassVm, SomeClass> {

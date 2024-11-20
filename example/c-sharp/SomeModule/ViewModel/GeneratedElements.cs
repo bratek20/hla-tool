@@ -10,6 +10,7 @@ using SomeModule.Api;
 using OtherModule.Api;
 using OtherModule.ViewModel;
 using TypesModule.Api;
+using TypesModule.ViewModel;
 
 namespace SomeModule.ViewModel {
     public partial class SomeClassVm: UiElement<SomeClass> {
