@@ -201,7 +201,7 @@ class ViewModelComplexElementLogic(
     }
 
     private fun getMappedFields(): List<ComplexStructureField> {
-        return def.getModel().getMappedFields().map { fieldName ->
+        return def.getModel()!!.getMappedFields().map { fieldName ->
             (modelType as ComplexStructureApiType<*>).fields.firstOrNull { it.name == fieldName }
                 ?: throw IllegalArgumentException("Field not found: $fieldName in ${modelType.name} for ${def.getName()}")
         }
@@ -335,7 +335,7 @@ class ViewModelLogicFactory(
 ) {
     fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
-            val modelTypeName = element.getModel().getName()
+            val modelTypeName = element.getModel()!!.getName()
             val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
 
             ViewModelComplexElementLogic(element, modelType, apiTypeFactory)

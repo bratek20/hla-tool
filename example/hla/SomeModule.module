@@ -229,6 +229,8 @@ ViewModel
             ClassWithEnumList
                 enumList
 
+        SomeEmptyVm
+
     Windows
         SomeWindow
             State

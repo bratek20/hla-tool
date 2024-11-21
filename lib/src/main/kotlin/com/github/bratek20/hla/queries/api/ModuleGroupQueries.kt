@@ -270,13 +270,13 @@ class ViewModelTypesPopulator(
                 ).asWorld()
 
                 val paramType = WorldType.create(
-                    WorldTypeName("UiElement<${element.getModel().getName()}>"),
+                    WorldTypeName("UiElement<${element.getModel()!!.getName()}>"),
                     path
                 )
                 world.addConcreteParametrizedClass(WorldConcreteParametrizedClass.create(
                     type = paramType,
                     typeArguments = listOf(
-                        world.getTypeByName(WorldTypeName(element.getModel().getName()))
+                        world.getTypeByName(WorldTypeName(element.getModel()!!.getName()))
                     )
                 ))
                 world.addClassType(WorldClassType.create(
@@ -337,8 +337,8 @@ class ViewModelTypesPopulator(
     }
 
     private fun getFieldsForElement(def: ViewModelElementDefinition): List<WorldClassField> {
-        return def.getModel().getMappedFields().map {
-            val type = mapModelField(def.getModel().getName(), it)
+        return def.getModel()!!.getMappedFields().map {
+            val type = mapModelField(def.getModel()!!.getName(), it)
             WorldClassField.create(it, type)
         }
     }

@@ -253,7 +253,7 @@ data class ElementModelDefinition(
 data class ViewModelElementDefinition(
     private val name: String,
     private val attributes: List<Attribute>,
-    private val model: ElementModelDefinition,
+    private val model: ElementModelDefinition?,
     private val fields: List<FieldDefinition>,
 ) {
     fun getName(): String {
@@ -264,7 +264,7 @@ data class ViewModelElementDefinition(
         return this.attributes
     }
 
-    fun getModel(): ElementModelDefinition {
+    fun getModel(): ElementModelDefinition? {
         return this.model
     }
 
@@ -276,7 +276,7 @@ data class ViewModelElementDefinition(
         fun create(
             name: String,
             attributes: List<Attribute>,
-            model: ElementModelDefinition,
+            model: ElementModelDefinition?,
             fields: List<FieldDefinition>,
         ): ViewModelElementDefinition {
             return ViewModelElementDefinition(
