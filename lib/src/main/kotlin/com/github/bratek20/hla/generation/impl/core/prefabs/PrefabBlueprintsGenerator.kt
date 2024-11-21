@@ -6,6 +6,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
+import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelTypesMapper
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
@@ -106,6 +107,9 @@ class PrefabComplexElementBlueprintLogic(
     typesWorldApi: TypesWorldApi
 ): PrefabContainerBlueprintLogic(view, typesWorldApi) {
     override fun getName(): String {
+        if(view.elem.modelType.name() == "EmptyModel") {
+            return view.getViewModelTypeName()
+        }
         return view.elem.modelType.name()
     }
 
@@ -155,10 +159,6 @@ class PrefabEnumElementBlueprintLogic(
 class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.PrefabBlueprints
-    }
-
-    override fun mode(): GeneratorMode {
-        return GeneratorMode.ONLY_START
     }
 
     override fun generateFiles(): List<File> {

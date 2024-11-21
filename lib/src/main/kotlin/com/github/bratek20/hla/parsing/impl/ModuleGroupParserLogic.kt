@@ -164,7 +164,7 @@ class ModuleGroupParserLogic(
                     ViewModelElementDefinition(
                         name = vm.name,
                         attributes = vm.attributes,
-                        model = model[0],
+                        model = model.firstOrNull(),
                         fields = parseFields(vm.elements)
                     )
                 } ?: emptyList()

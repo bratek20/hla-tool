@@ -54,6 +54,29 @@ class PrimitiveTypesPopulator {
     }
 }
 
+class B20FrontendTypesPopulator {
+    companion object{
+        val emptyModelType = WorldType.create(
+            name = WorldTypeName("EmptyModel"),
+            path = HlaTypePath.create(
+                listOf(
+                    GroupName("B20"),
+                    GroupName("Frontend")
+                ),
+                ModuleName("UiElements"),
+                SubmoduleName.Api,
+                PatternName.ValueObjects
+            ).asWorld()
+        )
+    }
+    fun populate(api: TypesWorldApi) {
+        api.addClassType(WorldClassType.create(
+            type = emptyModelType,
+            fields = emptyList()
+        ))
+    }
+}
+
 fun TypeDefinition.asWorldTypeName(): WorldTypeName {
     if (this.getWrappers().contains(TypeWrapper.LIST)) {
         return WorldTypeName("List<${this.getName()}>")
@@ -269,14 +292,15 @@ class ViewModelTypesPopulator(
                     PatternName.GeneratedElements
                 ).asWorld()
 
+                val modelName = element.getModel()?.getName() ?: "EmptyModel"
                 val paramType = WorldType.create(
-                    WorldTypeName("UiElement<${element.getModel().getName()}>"),
+                    WorldTypeName("UiElement<${modelName}>"),
                     path
                 )
                 world.addConcreteParametrizedClass(WorldConcreteParametrizedClass.create(
                     type = paramType,
                     typeArguments = listOf(
-                        world.getTypeByName(WorldTypeName(element.getModel().getName()))
+                        world.getTypeByName(WorldTypeName(modelName))
                     )
                 ))
                 world.addClassType(WorldClassType.create(
@@ -337,10 +361,12 @@ class ViewModelTypesPopulator(
     }
 
     private fun getFieldsForElement(def: ViewModelElementDefinition): List<WorldClassField> {
-        return def.getModel().getMappedFields().map {
-            val type = mapModelField(def.getModel().getName(), it)
-            WorldClassField.create(it, type)
-        }
+        return def.getModel()?.let { model ->
+            model.getMappedFields().map {
+                val type = mapModelField(model.getName(), it)
+                WorldClassField.create(it, type)
+            }
+        } ?: emptyList()
     }
 
     private fun mapModelField(modelTypeName: String, fieldName: String): WorldType {
@@ -362,6 +388,7 @@ class ModuleGroupQueries(
     fun populateTypes(typesWorldApi: TypesWorldApi, apiTypeFactory: ApiTypeFactory) {
         PrimitiveTypesPopulator().populate(typesWorldApi)
         ApiTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi)
+        B20FrontendTypesPopulator().populate(typesWorldApi)
         ViewModelTypesPopulator(getModulesRecursive(group), apiTypeFactory).populate(typesWorldApi)
     }
 

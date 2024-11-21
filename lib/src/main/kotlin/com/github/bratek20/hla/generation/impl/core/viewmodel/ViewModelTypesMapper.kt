@@ -88,7 +88,6 @@ fun getModelTypeForEnsuredViewModelType(typesWorldApi: TypesWorldApi, viewModelT
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
-    private val viewModelElements: List<ViewModelElementLogic>,
     private val typesWorldApi: TypesWorldApi
 ): BaseViewModelTypesMapper() {
     fun mapViewModelToViewTypeName(viewModelType: String): String {
@@ -106,6 +105,9 @@ class ModelToViewModelTypeMapper(
         }
 
         val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, viewModelType)
+        if (modelType.getName().value == "EmptyModel") {
+            return viewModelType + "View"
+        }
         if(viewModelType.endsWith("Switch")) {
             return modelType.getName().value + "SwitchView"
         }
@@ -121,6 +123,11 @@ class ModelToViewModelTypeMapper(
                 .replaceSubmoduleAndPattern(SubmoduleName.View, PatternName.ElementsView)
                 .asWorld()
         )
+    }
+
+    fun mapViewModelNameToViewType(viewModelTypeName: String): WorldType {
+        val viewModelType = typesWorldApi.getTypeByName(WorldTypeName(viewModelTypeName))
+        return mapViewModelToViewType(viewModelType)
     }
 
     fun mapViewModelWrappedTypeToListType(viewModelType: String): String {
@@ -157,9 +164,6 @@ class ModelToViewModelTypeMapper(
 
         val modelType = typesWorldApi.getConcreteParametrizedClass(extendedClass).getTypeArguments()[0]
         return apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
-
-//        return viewModelElements.firstOrNull() { it.getTypeName() == viewModelType }?.modelType
-//            ?: throw IllegalArgumentException("Unknown view model type: $viewModelType")
     }
 
     fun mapModelToViewTypeName(modelType: ApiType): String {
@@ -188,14 +192,6 @@ class ModelToViewModelTypeMapper(
         )
     }
 
-    fun getModelForViewModelType(viewModelType: String): ApiType {
-        return viewModelElements.first { it.getTypeName() == viewModelType }.modelType
-    }
-
-    private fun getViewModelElementForType(modelType: ApiType): ViewModelElementLogic {
-        return viewModelElements.first { it.modelType.name() == modelType.name() }
-    }
-
     fun mapViewModelToFullViewTypeName(viewModelTypeName: String): String {
         val viewType = mapViewModelToViewTypeName(viewModelTypeName)
         if (b20ViewTypes.contains(viewType)) {
@@ -214,8 +210,8 @@ class ModelToViewModelTypeMapper(
             return getViewModelModuleName(wrappedTypeName)
         }
 
-        val apiType = mapViewModelToModelType(viewModelType)
-        return apiType.moduleName()
+        val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
+        return type.getPath().asHla().getModuleName().value
     }
 
     companion object {

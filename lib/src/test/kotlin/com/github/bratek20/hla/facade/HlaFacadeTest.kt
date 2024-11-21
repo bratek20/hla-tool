@@ -431,6 +431,7 @@ class HlaFacadeTest {
         }
 
         //b20 view model types
+        assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
 
         //TODO-FIX it should not pass
         assertHasType("Label", "OtherModule/ViewModel/GeneratedElements")
@@ -485,7 +486,7 @@ class HlaFacadeTest {
     }
 
     @Test
-    fun `should not update Prefabs submodule`() {
+    fun `should update Prefabs submodule`() {
         //given
         val (directoriesMock, facade) = setup()
 
@@ -505,7 +506,7 @@ class HlaFacadeTest {
         )
 
         assertThat(dir.getDirectories().map { it.getName().value })
-            .doesNotContain("Prefabs")
+            .contains("Prefabs")
     }
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {

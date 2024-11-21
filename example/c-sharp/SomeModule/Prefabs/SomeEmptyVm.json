@@ -1,0 +1,8 @@
+{
+  "blueprintType": "ComplexElement",
+  "name": "SomeEmptyVm",
+  "viewType": "SomeModule.View.SomeEmptyVmView",
+  "creationOrder": 1,
+  "children": [ ],
+  "elementViewType": null
+}
