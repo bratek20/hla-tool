@@ -9,6 +9,7 @@ using UnityEngine;
 using SomeModule.Api;
 using SomeModule.ViewModel;
 using OtherModule.Api;
+using OtherModule.ViewModel;
 using OtherModule.View;
 using TypesModule.Api;
 

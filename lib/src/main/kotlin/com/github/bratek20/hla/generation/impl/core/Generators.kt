@@ -201,6 +201,7 @@ abstract class PatternGenerator
                             addUsing(it.getModule().getName().value + ".ViewModel")
                         }
                         if (submodule == SubmoduleName.View && it.getModule().getViewModelSubmodule() != null) {
+                            addUsing(it.getModule().getName().value + ".ViewModel")
                             addUsing(it.getModule().getName().value + ".View")
                         }
                     }
