@@ -110,7 +110,7 @@ class ComplexElementViewLogic(
     }
 
     override fun getViewClassType(): WorldType {
-        return mapper.mapModelToViewType(elem.modelType)
+        return mapper.mapViewModelNameToViewType(elem.getTypeName())
     }
 
     override fun getViewModelTypeName(): String {

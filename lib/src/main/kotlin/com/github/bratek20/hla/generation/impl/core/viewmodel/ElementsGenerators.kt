@@ -44,7 +44,7 @@ class ViewModelSharedLogic(
     }
 
     fun mapper(): ModelToViewModelTypeMapper {
-        return ModelToViewModelTypeMapper(apiTypeFactory, elementsLogic(), typesWorldApi)
+        return ModelToViewModelTypeMapper(apiTypeFactory, typesWorldApi)
     }
 
     fun windowsLogic(): List<GeneratedWindowLogic> {

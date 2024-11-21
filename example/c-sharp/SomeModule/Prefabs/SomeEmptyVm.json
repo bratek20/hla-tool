@@ -1,7 +1,7 @@
 {
   "blueprintType": "ComplexElement",
-  "name": "EmptyModel",
-  "viewType": "B20.Frontend.UiElements.View.EmptyModelView",
+  "name": "SomeEmptyVm",
+  "viewType": "SomeModule.View.SomeEmptyVmView",
   "creationOrder": 1,
   "children": [ ],
   "elementViewType": null

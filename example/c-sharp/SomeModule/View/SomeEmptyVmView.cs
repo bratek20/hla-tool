@@ -14,7 +14,7 @@ using TypesModule.Api;
 using TypesModule.View;
 
 namespace SomeModule.View {
-    public class EmptyModelView: ElementView<SomeEmptyVm> {
+    public class SomeEmptyVmView: ElementView<SomeEmptyVm> {
         protected override void OnBind() {
             base.OnBind();
         }
