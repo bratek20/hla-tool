@@ -74,6 +74,11 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class SomeEmptyVm: UiElement<EmptyModel> {
+        protected override void OnUpdate() {
+        }
+    }
+
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
     }
 

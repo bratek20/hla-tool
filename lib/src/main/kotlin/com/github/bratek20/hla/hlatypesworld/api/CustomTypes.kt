@@ -54,5 +54,15 @@ class HlaTypePath(
         ): HlaTypePath {
             return HlaTypePath("${moduleGroup.value}/${module.value}/${submodule.name}/${pattern.name}")
         }
+
+        fun create(
+            moduleGroups: List<GroupName>,
+            module: ModuleName,
+            submodule: SubmoduleName,
+            pattern: PatternName
+        ): HlaTypePath {
+            val moduleGroupsPath = moduleGroups.joinToString("/")
+            return HlaTypePath("${moduleGroupsPath}/${module.value}/${submodule.name}/${pattern.name}")
+        }
     }
 }

@@ -31,4 +31,7 @@ namespace SomeModule.ViewModel {
 
     public partial class ClassWithEnumListVm {
     }
+
+    public partial class SomeEmptyVm {
+    }
 }

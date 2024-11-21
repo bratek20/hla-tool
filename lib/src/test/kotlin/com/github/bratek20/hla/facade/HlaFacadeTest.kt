@@ -431,6 +431,7 @@ class HlaFacadeTest {
         }
 
         //b20 view model types
+        assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
 
         //TODO-FIX it should not pass
         assertHasType("Label", "OtherModule/ViewModel/GeneratedElements")
