@@ -11,7 +11,6 @@ using SomeModule.ViewModel;
 using OtherModule.Api;
 using OtherModule.View;
 using TypesModule.Api;
-using TypesModule.View;
 
 namespace SomeModule.View {
     public class SomeEnumSwitchView: EnumSwitchView<SomeEnum> {
