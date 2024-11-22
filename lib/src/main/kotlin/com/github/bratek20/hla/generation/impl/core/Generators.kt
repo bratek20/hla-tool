@@ -7,6 +7,7 @@ import com.github.bratek20.codebuilder.languages.kotlin.kotlinFile
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptFile
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.GeneratedPattern
 import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.PatternName
@@ -91,7 +92,11 @@ abstract class ModulePartGenerator {
 }
 
 private fun submodulePackage(submodule: SubmoduleName, c: ModuleGenerationContext): String {
-    return profileToRootPackage(c.domain.profile) + "." + c.module.getName().value.lowercase() + "." + submodule.name.lowercase()
+    return submodulePackageForModule(c.module.getName(), submodule, c)
+}
+
+private fun submodulePackageForModule(moduleName: ModuleName, submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return profileToRootPackage(c.domain.profile) + "." + moduleName.value.lowercase() + "." + submodule.name.lowercase()
 }
 
 private fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationContext): String {
@@ -153,6 +158,10 @@ abstract class PatternGenerator
 
                     extraKotlinImports().forEach {
                         addImport(it)
+                    }
+
+                    modules.getCurrentDependencies().forEach {
+                        addImport(submodulePackageForModule(it.getModule().getName(), submodule, c) + ".*")
                     }
 
                     apply(ops)

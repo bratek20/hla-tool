@@ -78,6 +78,7 @@ Exceptions
 Events
     SomeEvent
         someField: string
+        otherClass: OtherClass
 
 Properties
     SomeProperty
