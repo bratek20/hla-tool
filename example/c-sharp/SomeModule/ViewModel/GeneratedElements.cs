@@ -93,13 +93,6 @@ namespace SomeModule.ViewModel {
         }
     }
 
-    public class OtherClassVmGroup: UiElementGroup<OtherClassVm, OtherClass> {
-        public OtherClassVmGroup(
-            B20.Architecture.Contexts.Api.Context c
-        ): base(() => c.Get<OtherClassVm>()) {
-        }
-    }
-
     public class SomeEnum2SwitchGroup: UiElementGroup<SomeEnum2Switch, SomeEnum2> {
         public SomeEnum2SwitchGroup(
             B20.Architecture.Contexts.Api.Context c

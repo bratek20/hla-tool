@@ -13,7 +13,8 @@ namespace OtherModule.Context {
     public class OtherModuleViewModel: ContextModule {
         public void Apply(ContextBuilder builder) {
             builder
-                .SetClass<OtherClassVm>(InjectionMode.Prototype);
+                .SetClass<OtherClassVm>(InjectionMode.Prototype)
+                .SetClass<OtherClassVmGroup>(InjectionMode.Prototype);
         }
     }
 }
