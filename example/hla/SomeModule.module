@@ -216,6 +216,7 @@ ViewModel
             SomeClass4
                 otherId
                 otherClass
+                otherClassList
 
         SomeClass6Vm
             SomeClass6

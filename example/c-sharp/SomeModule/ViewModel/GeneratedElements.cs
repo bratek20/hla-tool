@@ -44,9 +44,11 @@ namespace SomeModule.ViewModel {
     public partial class SomeClass4Vm: UiElement<SomeClass4> {
         public Label OtherId { get; set; }
         public OtherClassVm OtherClass { get; set; }
+        public OtherClassVmGroup OtherClassList { get; set; }
         protected override void OnUpdate() {
             OtherId.Update(Model.GetOtherId().Value);
             OtherClass.Update(Model.GetOtherClass());
+            OtherClassList.Update(Model.GetOtherClassList());
         }
     }
 
@@ -88,6 +90,13 @@ namespace SomeModule.ViewModel {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<SomeClass2Vm>()) {
+        }
+    }
+
+    public class OtherClassVmGroup: UiElementGroup<OtherClassVm, OtherClass> {
+        public OtherClassVmGroup(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<OtherClassVm>()) {
         }
     }
 
