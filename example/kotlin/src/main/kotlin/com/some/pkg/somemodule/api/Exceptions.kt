@@ -3,6 +3,8 @@
 package com.some.pkg.somemodule.api
 
 import com.github.bratek20.architecture.exceptions.ApiException
+import com.some.pkg.othermodule.api.*
+import com.some.pkg.typesmodule.api.*
 
 class SomeException(
     message: String = ""
