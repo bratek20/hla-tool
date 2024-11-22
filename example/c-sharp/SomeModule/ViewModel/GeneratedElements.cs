@@ -2,11 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using B20.Ext;
 using B20.Frontend.Traits;
 using B20.Frontend.UiElements;
 using SomeModule.Api;
 using OtherModule.Api;
+using OtherModule.ViewModel;
 using TypesModule.Api;
 
 namespace SomeModule.ViewModel {
@@ -39,6 +41,15 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class SomeClass4Vm: UiElement<SomeClass4> {
+        public Label OtherId { get; set; }
+        public OtherClassVm OtherClass { get; set; }
+        protected override void OnUpdate() {
+            OtherId.Update(Model.GetOtherId().Value);
+            OtherClass.Update(Model.GetOtherClass());
+        }
+    }
+
     public partial class SomeClass6Vm: UiElement<SomeClass6> {
         public OptionalSomeClassVm SomeClassOpt { get; set; }
         public SomeClass2VmGroup Class2List { get; set; }
@@ -55,13 +66,35 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class ClassWithEnumListVm: UiElement<ClassWithEnumList> {
+        public SomeEnum2SwitchGroup EnumList { get; set; }
+        protected override void OnUpdate() {
+            EnumList.Update(Model.GetEnumList());
+        }
+    }
+
+    public partial class SomeEmptyVm: UiElement<EmptyModel> {
+        protected override void OnUpdate() {
+        }
+    }
+
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
+    }
+
+    public class SomeEnum2Switch: EnumSwitch<SomeEnum2> {
     }
 
     public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<SomeClass2Vm>()) {
+        }
+    }
+
+    public class SomeEnum2SwitchGroup: UiElementGroup<SomeEnum2Switch, SomeEnum2> {
+        public SomeEnum2SwitchGroup(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<SomeEnum2Switch>()) {
         }
     }
 

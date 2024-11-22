@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using B20.Ext;
 using OtherModule.Api;
 using TypesModule.Api;

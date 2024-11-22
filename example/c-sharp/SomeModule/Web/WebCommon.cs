@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using B20.Ext;
 using HttpClientModule.Api;
 using SomeModule.Api;
@@ -108,10 +109,10 @@ namespace SomeModule.Web {
             this.list = list;
         }
         public List<SomeId> GetList() {
-            return list.Select( it => new SomeId(it) );
+            return list.Select( it => new SomeId(it) ).ToList();
         }
         public static SomeInterfaceMethodWithListOfSimpleVORequest Create(List<SomeId> list) {
-            return new SomeInterfaceMethodWithListOfSimpleVORequest(list.Select( it => it.Value ));
+            return new SomeInterfaceMethodWithListOfSimpleVORequest(list.Select( it => it.Value ).ToList());
         }
     }
 
@@ -124,7 +125,7 @@ namespace SomeModule.Web {
             this.value = value;
         }
         public List<SomeId> GetValue() {
-            return value.Select( it => new SomeId(it) );
+            return value.Select( it => new SomeId(it) ).ToList();
         }
     }
 

@@ -3,6 +3,10 @@ Enums
         VALUE_A
         VALUE_B
 
+    SomeEnum2
+        VALUE_A
+        VALUE_B
+
 CustomTypes
     DateRangeWrapper
         range: DateRange
@@ -64,6 +68,9 @@ ValueObjects
     ClassWithOptExamples
         optInt: int? (example: 1)
         optIntWrapper: SomeIntWrapper? (example: 2)
+
+    ClassWithEnumList
+        enumList: SomeEnum2[]
 
 Exceptions
     SomeExtraException
@@ -205,6 +212,11 @@ ViewModel
                 someEnum
                 class2List
 
+        SomeClass4Vm
+            SomeClass4
+                otherId
+                otherClass
+
         SomeClass6Vm
             SomeClass6
                 someClassOpt
@@ -213,6 +225,12 @@ ViewModel
         ClassHavingOptSimpleVoVm
             ClassHavingOptSimpleVo
                 optSimpleVo
+
+        ClassWithEnumListVm
+            ClassWithEnumList
+                enumList
+
+        SomeEmptyVm
 
     Windows
         SomeWindow

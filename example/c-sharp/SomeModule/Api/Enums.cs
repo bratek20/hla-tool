@@ -2,12 +2,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using B20.Ext;
 using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Api {
     public enum SomeEnum {
+        VALUE_A,
+        VALUE_B,
+    }
+
+    public enum SomeEnum2 {
         VALUE_A,
         VALUE_B,
     }

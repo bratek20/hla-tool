@@ -5,7 +5,9 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 
-class PrefabsGenerator: SubmoduleGenerator() {
+class PrefabsGenerator(
+    private val prefabBlueprintsGenerator: PrefabBlueprintsGenerator
+): SubmoduleGenerator() {
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Prefabs
     }
@@ -16,7 +18,7 @@ class PrefabsGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            PrefabBlueprintsGenerator(),
+            prefabBlueprintsGenerator
         )
     }
 }

@@ -19,10 +19,10 @@ class CSharpTypes(): LanguageTypes {
             BaseType.INT -> "int"
             BaseType.BOOL -> "bool"
             BaseType.VOID -> "void"
-            BaseType.ANY -> "any"
+            BaseType.ANY -> "object"
             BaseType.DOUBLE -> "double"
             BaseType.LONG -> "long"
-            BaseType.STRUCT -> "any"
+            BaseType.STRUCT -> "object"
         }
     }
 

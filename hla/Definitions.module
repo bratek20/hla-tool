@@ -58,7 +58,7 @@ ValueObjects
     ViewModelElementDefinition
         name: string
         attributes: Attribute[]
-        model: ElementModelDefinition
+        model: ElementModelDefinition?
         fields: FieldDefinition[]
 
     ViewModelWindowDefinition

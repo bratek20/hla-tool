@@ -9,21 +9,27 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.*
-import com.github.bratek20.hla.types.api.HlaType
-import com.github.bratek20.hla.types.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.queries.api.createTypeDefinition
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.camelToPascalCase
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
 class ViewModelSharedLogic(
-    private val def: ViewModelSubmoduleDefinition?,
-    private val apiTypeFactory: ApiTypeFactory
+    private val moduleDef: ModuleDefinition,
+    private val apiTypeFactory: ApiTypeFactory,
+    private val typesWorldApi: TypesWorldApi
 ) {
     fun windowsDef(): List<ViewModelWindowDefinition> =
-        def?.getWindows() ?: emptyList()
+        moduleDef.getViewModelSubmodule()?.getWindows() ?: emptyList()
 
     fun elementsDef(): List<ViewModelElementDefinition> =
-        def?.getElements() ?: emptyList()
+        moduleDef.getViewModelSubmodule()?.getElements() ?: emptyList()
 
     fun elementsLogic(): List<ViewModelElementLogic> {
         return complexElementsLogic() + enumElementsLogic()
@@ -38,7 +44,7 @@ class ViewModelSharedLogic(
     }
 
     fun mapper(): ModelToViewModelTypeMapper {
-        return ModelToViewModelTypeMapper(apiTypeFactory, elementsLogic())
+        return ModelToViewModelTypeMapper(apiTypeFactory, typesWorldApi)
     }
 
     fun windowsLogic(): List<GeneratedWindowLogic> {
@@ -68,7 +74,7 @@ class ViewModelSharedLogic(
         }
 
         return listTypes
-            .filter { it.wrappedType is ComplexStructureApiType<*> }
+            .filter { it.wrappedType is ComplexStructureApiType<*> || it.wrappedType is EnumApiType }
             .distinctBy { it.wrappedType.name() }
     }
 
@@ -92,21 +98,33 @@ class ViewModelSharedLogic(
     }
 
     fun elementEnumTypesToGenerate(): List<EnumApiType> {
-        val enumTypes: MutableList<EnumApiType> = mutableListOf();
-
-        complexElementsLogic().forEach { element ->
-            enumTypes.addAll(element.getMappedFieldsOfType(EnumApiType::class))
+        val allTypes = typesWorldApi.getAllTypes()
+        val allModuleViewModelTypes = allTypes.filter {
+            it.getPath().asHla().getModuleName() == moduleDef.getName()
+                    && it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel
+                    && !it.getName().value.contains("<")
         }
-
-        return enumTypes
-            .distinctBy { it.name() }
+        val allEnumTypes = allModuleViewModelTypes.mapNotNull {
+            try {
+                val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, it.getName().value)
+                val apiType = apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
+                if (apiType is EnumApiType) {
+                    apiType
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                null
+            }
+        }
+        return allEnumTypes
     }
 }
 
 class ViewModelField(
     val typeName: String,
     val name: String,
-    val hlaType: HlaType?
+    val worldType: WorldType?
 ) {
     companion object {
         fun fromDefs(moduleName: ModuleName, defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
@@ -120,7 +138,14 @@ class ViewModelField(
                     baseTypeName
                 }
 
-                val finalType = HlaType.create(finalTypeName, HlaTypePath.create(moduleName, SubmoduleName.View))
+                val finalType = WorldType.create(
+                    WorldTypeName(finalTypeName),
+                    HlaTypePath.create(
+                        moduleName,
+                        SubmoduleName.View,
+                        PatternName.ElementsView
+                    ).asWorld()
+                )
                 ViewModelField(finalTypeName, it.getName(), finalType)
             }
         }
@@ -176,10 +201,10 @@ class ViewModelComplexElementLogic(
     }
 
     private fun getMappedFields(): List<ComplexStructureField> {
-        return def.getModel().getMappedFields().map { fieldName ->
+        return def.getModel()?.getMappedFields()?.map { fieldName ->
             (modelType as ComplexStructureApiType<*>).fields.firstOrNull { it.name == fieldName }
                 ?: throw IllegalArgumentException("Field not found: $fieldName in ${modelType.name} for ${def.getName()}")
-        }
+        } ?: emptyList()
     }
 
     private fun getTraitTypesMethod(): MethodBuilderOps = {
@@ -310,8 +335,9 @@ class ViewModelLogicFactory(
 ) {
     fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
-            val modelTypeName = element.getModel().getName()
-            val modelType = apiTypeFactory.create(TypeDefinition(modelTypeName, emptyList())) as ComplexStructureApiType<*>
+            val modelType = element.getModel()?.let { model ->
+                apiTypeFactory.create(TypeDefinition(model.getName(), emptyList())) as ComplexStructureApiType<*>
+            } ?: ComplexValueObjectApiType("EmptyModel", emptyList())
 
             ViewModelComplexElementLogic(element, modelType, apiTypeFactory)
         }

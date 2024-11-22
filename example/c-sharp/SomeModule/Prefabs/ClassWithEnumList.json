@@ -1,0 +1,13 @@
+{
+  "blueprintType": "ComplexElement",
+  "name": "ClassWithEnumList",
+  "viewType": "SomeModule.View.ClassWithEnumListView",
+  "creationOrder": 2,
+  "children": [
+    {
+      "name": "enumList",
+      "viewType": "SomeModule.View.SomeEnum2GroupView"
+    }
+  ],
+  "elementViewType": null
+}

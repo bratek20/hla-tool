@@ -4,6 +4,9 @@ ViewModel
             SomeModel
                 id
             someButton: Button
+
+        SomeEmptyVm
+
     Windows
         SomeWindow
             State

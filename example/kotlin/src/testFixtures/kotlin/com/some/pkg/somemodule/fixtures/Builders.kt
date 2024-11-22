@@ -167,6 +167,16 @@ fun classWithOptExamples(init: ClassWithOptExamplesDef.() -> Unit = {}): ClassWi
     )
 }
 
+data class ClassWithEnumListDef(
+    var enumList: List<String> = emptyList(),
+)
+fun classWithEnumList(init: ClassWithEnumListDef.() -> Unit = {}): ClassWithEnumList {
+    val def = ClassWithEnumListDef().apply(init)
+    return ClassWithEnumList.create(
+        enumList = def.enumList.map { it -> SomeEnum2.valueOf(it) },
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,

@@ -29,6 +29,11 @@ fun diffSomeEnum(given: SomeEnum, expected: String, path: String = ""): String {
     return ""
 }
 
+fun diffSomeEnum2(given: SomeEnum2, expected: String, path: String = ""): String {
+    if (given != SomeEnum2.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
 data class ExpectedSomeClass(
     var id: String? = null,
     var amount: Int? = null,
@@ -306,6 +311,21 @@ fun diffClassWithOptExamples(given: ClassWithOptExamples, expectedInit: Expected
 
     expected.optIntWrapper?.let {
         if (diffSomeIntWrapper(given.getOptIntWrapper()!!, it) != "") { result.add(diffSomeIntWrapper(given.getOptIntWrapper()!!, it, "${path}optIntWrapper.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedClassWithEnumList(
+    var enumList: List<String>? = null,
+)
+fun diffClassWithEnumList(given: ClassWithEnumList, expectedInit: ExpectedClassWithEnumList.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithEnumList().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.enumList?.let {
+        if (given.getEnumList().size != it.size) { result.add("${path}enumList size ${given.getEnumList().size} != ${it.size}"); return@let }
+        given.getEnumList().forEachIndexed { idx, entry -> if (diffSomeEnum2(entry, it[idx]) != "") { result.add(diffSomeEnum2(entry, it[idx], "${path}enumList[${idx}].")) } }
     }
 
     return result.joinToString("\n")

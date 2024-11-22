@@ -368,6 +368,22 @@ class ClassWithOptExamples {
     }
 }
 
+class ClassWithEnumList {
+    private enumList = [STRING]
+
+    static create(
+        enumList: SomeEnum2[],
+    ): ClassWithEnumList {
+        const instance = new ClassWithEnumList()
+        instance.enumList = enumList.map(it => it.getName())
+        return instance
+    }
+
+    getEnumList(): SomeEnum2[] {
+        return this.enumList.map(it => SomeEnum2.fromName(it).get())
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

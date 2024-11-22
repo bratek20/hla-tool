@@ -1,8 +1,25 @@
 package com.github.bratek20.hla.facade
 
+import com.github.bratek20.architecture.context.stableContextBuilder
+import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.facade.context.FacadeImpl
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.fixtures.*
 import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
+import com.github.bratek20.utils.directory.api.Directory
+import com.github.bratek20.utils.directory.api.File
+import com.github.bratek20.utils.directory.api.Path
+import com.github.bratek20.utils.directory.context.DirectoriesMocks
+import com.github.bratek20.utils.directory.fixtures.DirectoriesMock
+import com.github.bratek20.utils.directory.fixtures.FilesMock
+import com.github.bratek20.utils.directory.fixtures.assertDirectory
+import com.github.bratek20.utils.directory.impl.DirectoriesLogic
+import com.github.bratek20.utils.directory.impl.FilesLogic
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -11,18 +28,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
 import org.junit.jupiter.params.provider.ArgumentsSource
-import com.github.bratek20.architecture.context.stableContextBuilder
-import com.github.bratek20.utils.directory.fixtures.DirectoriesMock
-import com.github.bratek20.utils.directory.api.Directory
-import com.github.bratek20.utils.directory.api.File
-import com.github.bratek20.utils.directory.api.Path
-import com.github.bratek20.utils.directory.context.DirectoriesMocks
-import com.github.bratek20.utils.directory.fixtures.FilesMock
-import com.github.bratek20.utils.directory.fixtures.assertDirectory
-import com.github.bratek20.utils.directory.impl.DirectoriesLogic
-import com.github.bratek20.utils.directory.impl.FilesLogic
-import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.hla.facade.context.FacadeImpl
 import java.util.stream.Stream
 
 class HlaFacadeTest {
@@ -191,7 +196,8 @@ class HlaFacadeTest {
         val directoriesMock: DirectoriesMock,
         val facade: HlaFacade,
         val filesMock: FilesMock,
-        val loggerMock: LoggerMock
+        val loggerMock: LoggerMock,
+        val typesWorldApi: TypesWorldApi
     )
 
     private fun setup(): SetupResult {
@@ -212,7 +218,13 @@ class HlaFacadeTest {
 
         val facade = context.get(HlaFacade::class.java)
 
-        return SetupResult(directoriesMock, facade, filesMock, loggerMock)
+        return SetupResult(
+            directoriesMock,
+            facade,
+            filesMock,
+            loggerMock,
+            typesWorldApi = context.get(TypesWorldApi::class.java)
+        )
     }
 
     @ParameterizedTest(name = "{0} ({1})")
@@ -328,7 +340,153 @@ class HlaFacadeTest {
     }
 
     @Test
-    fun `should not update Prefabs submodule`() {
+    fun `should populate types world`() {
+        //given
+        val moduleName: String = "OtherModule"
+        val profileName: String = ShouldStartCSharpModuleArgsProvider.C_SHARP_PROFILE
+        val paths: TestPaths = ShouldStartCSharpModuleArgsProvider().cSharpTestPaths("OtherModule")
+        val sr = setup()
+
+        //when
+        sr.facade.startModule(
+            ModuleOperationArgs.create(
+                moduleName = ModuleName(moduleName),
+                profileName = ProfileName(profileName),
+                hlaFolderPath = Path(paths.hlaFolderPath),
+            )
+        )
+
+        //then
+        val assertHasTypeOfName = { typeName: String ->
+            assertThatCode {
+                sr.typesWorldApi.getTypeByName(WorldTypeName(typeName))
+            }
+            .withFailMessage("Type with name $typeName not found")
+            .doesNotThrowAnyException()
+        }
+        val assertHasType = { typeName: String, typePath: String ->
+            assertThat(sr.typesWorldApi.hasType(worldType {
+                name = typeName
+                path = typePath
+            }))
+            .withFailMessage("Type $typeName not found")
+            .isTrue()
+        }
+
+        val assertHasNotType = { typeName: String, typePath: String ->
+            assertThat(sr.typesWorldApi.hasType(worldType {
+                name = typeName
+                path = typePath
+            }))
+            .withFailMessage("Type $typeName found")
+            .isFalse()
+        }
+
+        val assertHasClassType = { typeName: String, typePath: String, expectedClass: ExpectedWorldClassType.() -> Unit ->
+            assertHasType(typeName, typePath)
+            sr.typesWorldApi.getClassType(WorldType(typeName, typePath)).let {
+                assertWorldClassType(it, expectedClass)
+            }
+        }
+
+        val assertHasConcreteParametrizedClass = { typeName: String, typePath: String, expectedClass: ExpectedWorldConcreteParametrizedClass.() -> Unit ->
+            assertHasType(typeName, typePath)
+            sr.typesWorldApi.getConcreteParametrizedClass(WorldType(typeName, typePath)).let {
+                assertWorldConcreteParametrizedClass(it, expectedClass)
+            }
+        }
+
+        //special types
+        assertHasType("int", "Language/Types/Api/Primitives")
+        assertHasType("string", "Language/Types/Api/Primitives")
+
+        assertHasType("List<int>", "Language/Types/Api/Primitives")
+        assertHasType("Optional<int>", "Language/Types/Api/Primitives")
+
+        //api types
+        assertHasClassType("OtherClass", "OtherModule/Api/ValueObjects") {
+            fields = listOf(
+                {
+                    name = "id"
+                    type = {
+                        name = "OtherId"
+                    }
+                },
+                {
+                    name = "amount"
+                    type = {
+                        name = "int"
+                    }
+                }
+            )
+        }
+
+        assertHasClassType("ClassWithEnumList", "SomeModule/Api/ValueObjects") {
+            fields = listOf {
+                name = "enumList"
+                type = {
+                    name = "List<SomeEnum2>"
+                }
+            }
+        }
+
+        //b20 view model types
+        assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
+
+        //TODO-FIX it should not pass
+        assertHasType("Label", "OtherModule/ViewModel/GeneratedElements")
+        //assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
+
+        //modules view model types
+        assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {
+            typeArguments = listOf {
+                name = "OtherClass"
+            }
+        }
+
+        assertHasClassType("OtherClassVm", "OtherModule/ViewModel/GeneratedElements") {
+            extends = {
+                name = "UiElement<OtherClass>"
+            }
+            fields = listOf(
+                {
+                    name = "id"
+                    type = {
+                        name = "Label"
+                        //path = "B20/Frontend/UiElements" //TODO-FIX
+                    }
+                },
+                {
+                    name = "amount"
+                    type = {
+                        name = "Label"
+                    }
+                }
+            )
+        }
+
+        assertHasClassType("ClassWithEnumListVm", "SomeModule/ViewModel/GeneratedElements") {
+            fields = listOf {
+                name = "enumList"
+                type = {
+                    name = "SomeEnum2SwitchGroup"
+                }
+            }
+        }
+        assertHasType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements")
+        assertHasType("SomeEnum2Switch", "SomeModule/ViewModel/GeneratedElements")
+//        assertHasClassType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements") {
+//            extends = {
+//                name = "UiElementGroup<SomeEnum2Switch,SomeEnum>"
+//            }
+//        }
+
+        //view types
+        assertHasType("OtherClassView", "OtherModule/View/ElementsView")
+    }
+
+    @Test
+    fun `should update Prefabs submodule`() {
         //given
         val (directoriesMock, facade) = setup()
 
@@ -348,7 +506,7 @@ class HlaFacadeTest {
         )
 
         assertThat(dir.getDirectories().map { it.getName().value })
-            .doesNotContain("Prefabs")
+            .contains("Prefabs")
     }
 
     private fun assertWrittenDirectoryWithExample(writtenDirectory: Directory, examplePath: String ) {

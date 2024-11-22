@@ -1,0 +1,17 @@
+{
+  "blueprintType": "ComplexElement",
+  "name": "SomeClass4",
+  "viewType": "SomeModule.View.SomeClass4View",
+  "creationOrder": 2,
+  "children": [
+    {
+      "name": "otherId",
+      "viewType": "B20.Frontend.Elements.View.LabelView"
+    },
+    {
+      "name": "otherClass",
+      "viewType": "OtherModule.View.OtherClassView"
+    }
+  ],
+  "elementViewType": null
+}

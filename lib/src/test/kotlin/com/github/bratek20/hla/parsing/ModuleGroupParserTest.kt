@@ -779,23 +779,29 @@ class ModuleGroupParserTest {
         assertModules(modules, listOf {
             name = "SomeModule"
             viewModelSubmodule = {
-                elements = listOf {
-                    name = "SomeModelVm"
-                    attributes = listOf(
-                        {
-                            name = "att1"
-                        },
-                        {
-                            name = "att2"
-                        }
-                    )
-                    model = {
-                        name = "SomeModel"
-                        mappedFields = listOf(
-                            "id"
+                elements = listOf (
+                    {
+                        name = "SomeModelVm"
+                        attributes = listOf(
+                            {
+                                name = "att1"
+                            },
+                            {
+                                name = "att2"
+                            }
                         )
+                        model = {
+                            name = "SomeModel"
+                            mappedFields = listOf(
+                                "id"
+                            )
+                        }
+                    },
+                    {
+                        name = "SomeEmptyVm"
+                        modelEmpty = true
                     }
-                }
+                )
                 windows = listOf {
                     name = "SomeWindow"
                     state = {

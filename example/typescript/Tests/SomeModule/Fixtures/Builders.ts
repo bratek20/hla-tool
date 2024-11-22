@@ -188,6 +188,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassWithEnumListDef {
+        enumList?: string[],
+    }
+    export function classWithEnumList(def?: ClassWithEnumListDef): ClassWithEnumList {
+        const final_enumList = def?.enumList ?? []
+
+        return ClassWithEnumList.create(
+            final_enumList.map(it => SomeEnum2.fromName(it).get()),
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,
