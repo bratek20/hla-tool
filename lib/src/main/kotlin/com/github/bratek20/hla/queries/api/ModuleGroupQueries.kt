@@ -7,6 +7,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelTypesMapper
+import com.github.bratek20.hla.generation.impl.core.viewmodel.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
@@ -275,12 +276,9 @@ class ViewModelTypesPopulator(
 
     fun populate(api: TypesWorldApi) {
         this.world = api
-        modules.forEach { populate(it) }
-    }
-
-    private fun populate(module: ModuleDefinition) {
-        populateElements(module)
-        populateEnumSwitches(module)
+        modules.forEach { populateElements(it) }
+        modules.forEach { populateEnumSwitches(it) }
+        modules.forEach { populateElementGroups(it) }
     }
 
     private fun populateElements(module: ModuleDefinition) {
@@ -353,6 +351,37 @@ class ViewModelTypesPopulator(
             world.addClassType(
                 WorldClassType.create(
                     type = enumSwitch,
+                    fields = emptyList(),
+                    extends = paramType
+                )
+            )
+        }
+    }
+
+    private fun populateElementGroups(module: ModuleDefinition) {
+        val ensuredGroups = world.getAllTypes().filter {
+            it.getName().value.endsWith("Group") &&
+                    it.getPath().asHla().getModuleName() == module.getName()
+        }
+
+        ensuredGroups.forEach {
+            val wrappedTypeName = it.getName().value.removeSuffix("Group")
+            val modelType = getModelTypeForEnsuredUiElement(world, wrappedTypeName)
+            val viewModelType = world.getTypeByName(WorldTypeName(wrappedTypeName))
+            val paramType = WorldType.create(
+                WorldTypeName("UiElementGroup<${viewModelType.getName()},${modelType.getName()}>"),
+                it.getPath()
+            )
+            world.addConcreteParametrizedClass(WorldConcreteParametrizedClass.create(
+                type = paramType,
+                typeArguments = listOf(
+                    viewModelType,
+                    modelType
+                )
+            ))
+            world.addClassType(
+                WorldClassType.create(
+                    type = it,
                     fields = emptyList(),
                     extends = paramType
                 )

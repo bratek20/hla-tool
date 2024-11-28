@@ -58,26 +58,6 @@ class ViewModelSharedLogic(
             elementEnumTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
     }
 
-    fun elementListTypesToGenerate(): List<ListApiType> {
-        val elementsLogic = complexElementsLogic()
-        val mapper = mapper()
-        val listTypes: MutableList<ListApiType> = mutableListOf();
-
-        elementsLogic.forEach { element ->
-            listTypes.addAll(element.getMappedFieldsOfType(ListApiType::class))
-        }
-
-        windowsLogic().forEach { window ->
-            window.getElementTypesWrappedIn(TypeWrapper.LIST).forEach {
-                listTypes.add(mapper.mapViewModelWrappedTypeToListApiType(it))
-            }
-        }
-
-        return listTypes
-            .filter { it.wrappedType is ComplexStructureApiType<*> || it.wrappedType is EnumApiType }
-            .distinctBy { it.wrappedType.name() }
-    }
-
     fun elementOptionalTypesToGenerate(): List<OptionalApiType> {
         val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
         val elementsLogic = complexElementsLogic()
@@ -97,16 +77,19 @@ class ViewModelSharedLogic(
             .distinctBy { it.wrappedType.name() }
     }
 
-    fun elementEnumTypesToGenerate(): List<EnumApiType> {
+    private fun getAllModuleViewModelTypes(): List<WorldType> {
         val allTypes = typesWorldApi.getAllTypes()
-        val allModuleViewModelTypes = allTypes.filter {
+        return allTypes.filter {
             it.getPath().asHla().getModuleName() == moduleDef.getName()
                     && it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel
                     && !it.getName().value.contains("<")
         }
-        val allEnumTypes = allModuleViewModelTypes.mapNotNull {
+    }
+    
+    fun elementEnumTypesToGenerate(): List<EnumApiType> {
+        val allEnumTypes = getAllModuleViewModelTypes().mapNotNull {
             try {
-                val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, it.getName().value)
+                val modelType = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
                 val apiType = apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
                 if (apiType is EnumApiType) {
                     apiType
@@ -118,6 +101,18 @@ class ViewModelSharedLogic(
             }
         }
         return allEnumTypes
+    }
+
+    fun elementListTypesToGenerate(): List<ListApiType> {
+        return getAllModuleViewModelTypes().filter {
+            it.getName().value.endsWith("Group")
+        }.map {
+            val model = getModelTypeForEnsuredUiElementGroup(typesWorldApi, it.getName().value)
+            val typeDef = TypeDefinition.create(model.getName().value, listOf(
+                TypeWrapper.LIST
+            ))
+            apiTypeFactory.create(typeDef) as ListApiType
+        }
     }
 }
 

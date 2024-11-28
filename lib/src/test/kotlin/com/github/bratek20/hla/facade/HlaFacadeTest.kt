@@ -475,6 +475,9 @@ class HlaFacadeTest {
         }
         assertHasType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements")
         assertHasType("SomeEnum2Switch", "SomeModule/ViewModel/GeneratedElements")
+        assertHasClassType("OtherClassVmGroup", "OtherModule/ViewModel/GeneratedElements") {
+
+        }
 //        assertHasClassType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements") {
 //            extends = {
 //                name = "UiElementGroup<SomeEnum2Switch,SomeEnum>"

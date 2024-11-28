@@ -80,10 +80,16 @@ open class BaseViewModelTypesMapper {
     }
 }
 
-fun getModelTypeForEnsuredViewModelType(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
+fun getModelTypeForEnsuredUiElement(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
     val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
     val classType = typesWorldApi.getClassType(type)
     return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[0]
+}
+
+fun getModelTypeForEnsuredUiElementGroup(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
+    val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
+    val classType = typesWorldApi.getClassType(type)
+    return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[1]
 }
 
 class ModelToViewModelTypeMapper(
@@ -104,7 +110,7 @@ class ModelToViewModelTypeMapper(
             return "Optional" + mapViewModelToViewTypeName(wrappedTypeName)
         }
 
-        val modelType = getModelTypeForEnsuredViewModelType(typesWorldApi, viewModelType)
+        val modelType = getModelTypeForEnsuredUiElement(typesWorldApi, viewModelType)
         if (modelType.getName().value == "EmptyModel") {
             return viewModelType + "View"
         }
