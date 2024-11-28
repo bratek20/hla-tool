@@ -7,6 +7,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelTypesMapper
+import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.generation.impl.core.viewmodel.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asHla
@@ -410,6 +411,68 @@ class ViewModelTypesPopulator(
     }
 }
 
+class ViewTypesPopulator(
+    private val modules: List<ModuleDefinition>,
+) {
+    private lateinit var world: TypesWorldApi
+    private lateinit var mapper: ModelToViewModelTypeMapper
+
+    fun populate(api: TypesWorldApi, apiTypeFactory: ApiTypeFactory) {
+        world = api
+        mapper = ModelToViewModelTypeMapper(apiTypeFactory, api)
+
+        modules.forEach { populate(it) }
+    }
+
+    private fun populate(module: ModuleDefinition) {
+        val viewModelTypes = world.getAllTypes().filter {
+            it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel &&
+                it.getPath().asHla().getModuleName() == module.getName() &&
+                    !it.getName().value.contains("<")
+        }
+
+        viewModelTypes.forEach { type ->
+            val classType = world.getClassType(type)
+            val viewClassType = mapper.mapViewModelToViewType(classType.getType())
+            val viewFields = classType.getFields().map { field ->
+                WorldClassField.create(
+                    field.getName(),
+                    mapper.mapViewModelToViewType(field.getType())
+                )
+            }
+
+            world.addClassType(WorldClassType.create(
+                type = viewClassType,
+                fields = viewFields
+            ))
+        }
+    }
+
+//    override fun populateType(typesWorldApi: TypesWorldApi) {
+//        typesWorldApi.addClassType(WorldClassType.create(
+//            type = getViewClassType(),
+//            getFields().filter {
+//                it.worldType != null
+//            }.map {
+//                WorldClassField.create(
+//                    it.name,
+//                    mapper.mapViewModelToViewType(it.worldType!!)
+//                )
+//            }
+//        ))
+//    }
+
+//    override fun populateType(typesWorldApi: TypesWorldApi) {
+//        typesWorldApi.addConcreteWrapper(WorldConcreteWrapper.create(
+//            WorldType.create(
+//                name = WorldTypeName(getViewClassName()),
+//                path = getViewClassType().getPath()
+//            ),
+//            wrappedType = mapper.mapModelToViewType(modelType.wrappedType)
+//        ))
+//    }
+}
+
 class ModuleGroupQueries(
     private val currentModuleName: ModuleName,
     private val group: ModuleGroup
@@ -419,6 +482,7 @@ class ModuleGroupQueries(
         ApiTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi)
         B20FrontendTypesPopulator().populate(typesWorldApi)
         ViewModelTypesPopulator(getModulesRecursive(group), apiTypeFactory).populate(typesWorldApi)
+        ViewTypesPopulator(getModulesRecursive(group)).populate(typesWorldApi, apiTypeFactory)
     }
 
     val currentModule: ModuleDefinition

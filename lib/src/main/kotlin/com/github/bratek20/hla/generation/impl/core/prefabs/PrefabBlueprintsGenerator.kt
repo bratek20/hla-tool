@@ -169,9 +169,6 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
         val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) }
         val viewEnumElementLogic = logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) }
 
-        (viewComplexElementLogic + viewWindowLogic + viewElementGroupLogic + viewElementOptionalLogic + viewEnumElementLogic)
-            .forEach { it.populateType(typesWorldApi) }
-
         val elementBlueprintLogic = viewComplexElementLogic.map { PrefabComplexElementBlueprintLogic(it, typesWorldApi) }
         val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it, typesWorldApi) }
         val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabWrappedElementBlueprintLogic(it, typesWorldApi) }
