@@ -8,7 +8,6 @@ using B20.Frontend.Elements.View;
 using UnityEngine;
 using OtherModule.Api;
 using OtherModule.ViewModel;
-using OtherModule.View;
 
 namespace OtherModule.View {
     public class OtherClassGroupView: UiElementGroupView<OtherClassView, OtherClassVm, OtherClass> {
