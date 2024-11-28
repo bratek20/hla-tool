@@ -131,10 +131,27 @@ class TypesWorldImplTest {
     @Nested
     inner class GetTypeDependencies {
         @Test
-        fun `should get type dependencies and ensure types - class type`() {
+        fun `should throw if type not found`() {
+            assertApiExceptionThrown(
+                { api.getTypeDependencies(worldType {
+                    name = "NotExisting"
+                    path = "SomePath"
+                }) },
+                {
+                    type = WorldTypeNotFoundException::class
+                    message = "Type 'SomePath/NotExisting' not found"
+                }
+            )
+        }
+
+        @Test
+        fun `class type - extended class and fields are dependencies and are ensured`() {
             api.addClassType(worldClassType {
                 type = {
                     name = "SomeClass"
+                }
+                extends = {
+                    name = "SomeBaseClass"
                 }
                 fields = listOf {
                     name = "field"
@@ -148,14 +165,20 @@ class TypesWorldImplTest {
                 name = "SomeClass"
             })
 
-            assertThat(dependencies).hasSize(1)
+            assertThat(dependencies).hasSize(2)
             assertWorldType(dependencies[0]) {
+                name = "SomeBaseClass"
+            }
+            assertWorldType(dependencies[1]) {
                 name = "OtherClass"
             }
 
 
             assertHasType(worldType {
                 name = "SomeClass"
+            })
+            assertHasType(worldType {
+                name = "SomeBaseClass"
             })
             assertHasType(worldType {
                 name = "OtherClass"
@@ -217,6 +240,54 @@ class TypesWorldImplTest {
             assertHasType(worldType {
                 name = "SomeClass"
             })
+        }
+
+        @Test
+        fun `dependencies of parametrized types and wrapped types are transitive`() {
+            api.addConcreteParametrizedClass(worldConcreteParametrizedClass {
+                type = {
+                    name = "SomeClass<OtherClass>"
+                }
+                typeArguments = listOf {
+                    name = "OtherClass"
+                }
+            })
+
+            api.addConcreteWrapper(worldConcreteWrapper {
+                type = {
+                    name = "List<OtherClass2>"
+                }
+                wrappedType = {
+                    name = "OtherClass2"
+                }
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SomeBaseClass"
+                }
+                extends = {
+                    name = "SomeClass<OtherClass>"
+                }
+                fields = listOf {
+                    name = "field"
+                    type = {
+                        name = "List<OtherClass2>"
+                    }
+                }
+            })
+
+            val dependencies = api.getTypeDependencies(worldType {
+                name = "SomeBaseClass"
+            })
+
+            val dependenciesNames = dependencies.map { it.getName().value }
+            assertThat(dependenciesNames).containsExactlyInAnyOrder(
+                "SomeClass<OtherClass>",
+                "OtherClass",
+                "List<OtherClass2>",
+                "OtherClass2"
+            )
         }
     }
 

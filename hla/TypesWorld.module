@@ -64,6 +64,8 @@ Interfaces
                 WorldTypeNotFoundException
 
         getTypeDependencies(type: WorldType): WorldType[]
+            throws
+                WorldTypeNotFoundException
 
         getAllTypes(): WorldType[]
 

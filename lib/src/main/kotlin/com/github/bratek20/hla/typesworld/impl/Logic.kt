@@ -22,12 +22,37 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getTypeDependencies(type: WorldType): List<WorldType> {
+        if (!allTypes.contains(type)){
+            throw WorldTypeNotFoundException("Type '${type.getFullName()}' not found")
+        }
+
+        val direct = getDirectDependencies(type)
+        return direct + direct.flatMap {
+            getIndirectDependencies(it)
+        }
+    }
+
+    private fun getIndirectDependencies(type: WorldType): List<WorldType> {
+        concreteParametrizedClasses.firstOrNull { it.getType() == type }?.let {
+            return it.getTypeArguments()
+        }
+        concreteWrappers.firstOrNull { it.getType() == type }?.let {
+            return listOf(it.getWrappedType())
+        }
+        return emptyList()
+    }
+
+    private fun getDirectDependencies(type: WorldType): List<WorldType> {
         classTypes.firstOrNull {
             it.getType() == type
         }?.let { classType ->
-            return classType.getFields().map {
+            val extendDependency = classType.getExtends()?.let {
+                listOf(it)
+            } ?: emptyList()
+            val fieldDependencies = classType.getFields().map {
                 it.getType()
             }
+            return extendDependency + fieldDependencies
         }
 
         concreteWrappers.firstOrNull {
@@ -60,6 +85,9 @@ class TypesWorldApiLogic: TypesWorldApi {
         classTypes.add(type)
 
         ensureType(type.getType())
+        type.getExtends()?.let {
+            ensureType(it)
+        }
         type.getFields().forEach {
             ensureType(it.getType())
         }

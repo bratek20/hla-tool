@@ -34,10 +34,7 @@ abstract class ContainerViewLogic(
 
     override fun populateType(typesWorldApi: TypesWorldApi) {
         typesWorldApi.addClassType(WorldClassType.create(
-            type = WorldType.create(
-                name = getViewClassType().getName(),
-                path = getViewClassType().getPath(),
-            ),
+            type = getViewClassType(),
             getFields().filter {
                 it.worldType != null
             }.map {
