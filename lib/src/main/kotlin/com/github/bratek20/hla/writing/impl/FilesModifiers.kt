@@ -111,7 +111,7 @@ class FilesModifiers(
                 "$padding    \"type\": \"node\",",
                 "$padding    \"request\": \"launch\",",
                 "$padding    \"name\": \"Launch Test App - $moduleName Tests\",",
-                "$padding    \"program\": \"\${workspaceFolder}/Test/AFC.testapp.js\",",
+                "$padding    \"program\": \"\${workspaceFolder}/Dist/AFC.testapp.js\",",
                 "$padding    \"args\": [\" $moduleName\"],",
                 "$padding    \"outFiles\": [",
                 "$padding        \"\${workspaceFolder}/**/*.js\"",
@@ -135,15 +135,16 @@ class FilesModifiers(
             val currentLines = it.getContent().lines.toMutableList()
             val startIndex = currentLines.indexOfFirst { it.contains("\"scripts\"") }
             val indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfLast { it.contains("test ") } + startIndex + 1
-            val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
+            val padding = currentLines[indexToAdd-1].takeWhile { it == ' ' }
             val newLines = listOf(
-                "$padding\"test $moduleName\": \"npm run build_testapp && npm run run_testapp \\\" $moduleName\\\"\",",
+                "$padding\"test $moduleName\": \"npm run build_testapp && npm run run_testapp \\\" $moduleName\\\"\"",
             )
 
             if (currentLines.any { it.contains("test $moduleName") }) {
                 return
             }
 
+            currentLines[indexToAdd-1] = currentLines[indexToAdd-1] + ","
             currentLines.addAll(indexToAdd, newLines)
 
             files.write(path, File.create(it.getName(), FileContent(currentLines)))

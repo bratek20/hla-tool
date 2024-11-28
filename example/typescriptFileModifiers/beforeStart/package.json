@@ -1,7 +1,5 @@
 {
   "scripts": {
-    "test SomeModule": "npm run build_testapp && npm run run_testapp \" SomeModule\"",
-
-    "build_all": "npm run build_prod && npm run build_debug && npm run build_testapp"
+    "test SomeModule": "npm run build_testapp && npm run run_testapp \" SomeModule\""
   }
 }
