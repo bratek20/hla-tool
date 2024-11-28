@@ -1,8 +1,0 @@
-{
-  "blueprintType": "ElementGroup",
-  "name": "SomeClassGroup",
-  "viewType": "SomeModule.View.SomeClassGroupView",
-  "creationOrder": 3,
-  "children": [ ],
-  "elementViewType": "SomeModule.View.SomeClassView"
-}
