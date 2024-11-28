@@ -4,7 +4,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Test App - Leagues Tests",
-            "program": "${workspaceFolder}/Test/AFC.testapp.js",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
             "args": [" SomeModule"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
