@@ -6,9 +6,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
-import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelTypesMapper
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
-import com.github.bratek20.hla.generation.impl.core.viewmodel.getModelTypeForEnsuredUiElement
+import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
@@ -441,36 +439,26 @@ class ViewTypesPopulator(
                 )
             }
 
+            var viewExtends: WorldType? = null
+            if (classType.getExtends()!!.getName().value.startsWith("UiElementGroup")) {
+                val wrappedViewModelType = getViewModelTypeForEnsuredUiElementGroup(world, classType.getType().getName().value)
+                val wrappedViewType = mapper.mapViewModelToViewType(wrappedViewModelType)
+                viewExtends = WorldType.create(
+                    WorldTypeName("UiElementGroup<${wrappedViewType.getName()}>"),
+                    viewClassType.getPath()
+                )
+                world.addConcreteParametrizedClass(WorldConcreteParametrizedClass.create(
+                    type = viewExtends,
+                    typeArguments = listOf(wrappedViewType)
+                ))
+            }
             world.addClassType(WorldClassType.create(
                 type = viewClassType,
+                extends = viewExtends,
                 fields = viewFields
             ))
         }
     }
-
-//    override fun populateType(typesWorldApi: TypesWorldApi) {
-//        typesWorldApi.addClassType(WorldClassType.create(
-//            type = getViewClassType(),
-//            getFields().filter {
-//                it.worldType != null
-//            }.map {
-//                WorldClassField.create(
-//                    it.name,
-//                    mapper.mapViewModelToViewType(it.worldType!!)
-//                )
-//            }
-//        ))
-//    }
-
-//    override fun populateType(typesWorldApi: TypesWorldApi) {
-//        typesWorldApi.addConcreteWrapper(WorldConcreteWrapper.create(
-//            WorldType.create(
-//                name = WorldTypeName(getViewClassName()),
-//                path = getViewClassType().getPath()
-//            ),
-//            wrappedType = mapper.mapModelToViewType(modelType.wrappedType)
-//        ))
-//    }
 }
 
 class ModuleGroupQueries(

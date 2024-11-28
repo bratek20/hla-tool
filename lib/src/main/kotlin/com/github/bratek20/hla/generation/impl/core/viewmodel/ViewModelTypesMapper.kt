@@ -92,6 +92,12 @@ fun getModelTypeForEnsuredUiElementGroup(typesWorldApi: TypesWorldApi, viewModel
     return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[1]
 }
 
+fun getViewModelTypeForEnsuredUiElementGroup(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
+    val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
+    val classType = typesWorldApi.getClassType(type)
+    return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[0]
+}
+
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
