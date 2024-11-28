@@ -432,10 +432,9 @@ class HlaFacadeTest {
 
         //b20 view model types
         assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
+        assertHasType("Label", "B20/Frontend/UiElements")
 
-        //TODO-FIX it should not pass
-        assertHasType("Label", "OtherModule/ViewModel/GeneratedElements")
-        //assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
+        assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
 
         //modules view model types
         assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {

@@ -430,7 +430,14 @@ class ViewTypesPopulator(
         }
 
         viewModelTypes.forEach { type ->
-            val classType = world.getClassType(type)
+            val classType: WorldClassType
+            try {
+                classType = world.getClassType(type)
+            }
+            catch (e: WorldTypeNotFoundException) {
+                return@forEach
+            }
+
             val viewClassType = mapper.mapViewModelToViewType(classType.getType())
             val viewFields = classType.getFields().map { field ->
                 WorldClassField.create(
