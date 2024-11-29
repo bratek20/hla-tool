@@ -9,6 +9,13 @@ class CreationOrderCalculator(
     private val cache = mutableMapOf<WorldType, Int>()
 
     fun calculateCreationOrder(type: WorldType): Int {
+        if (type.getPath().value.startsWith("B20/Frontend")) {
+            return 0
+        }
+        if (type.getName().value.startsWith("UiElementGroup")) {
+            return 0
+        }
+
         return cache.getOrPut(type) {
             val dependencies = typesWorldApi.getTypeDependencies(type)
             if (dependencies.isEmpty()) {

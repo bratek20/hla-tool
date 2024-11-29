@@ -2,7 +2,7 @@
   "blueprintType": "ComplexElement",
   "name": "SomeClass",
   "viewType": "SomeModule.View.SomeClassView",
-  "creationOrder": 2,
+  "creationOrder": 1,
   "children": [
     {
       "name": "id",

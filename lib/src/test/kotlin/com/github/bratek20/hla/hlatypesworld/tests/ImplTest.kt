@@ -6,6 +6,7 @@ import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.facade.api.ModuleOperationArgs
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.generation.impl.core.prefabs.CreationOrderCalculator
 import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
 import com.github.bratek20.hla.hlatypesworld.context.HlaTypesWorldImpl
@@ -192,11 +193,20 @@ class HlaTypesWorldImplTest {
         assertHasType("SomeWindow", "SomeModule/ViewModel/GeneratedWindows")
         assertHasType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements")
 
+        assertHasClassType("OptionalSomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
+            extends = {
+                name = "OptionalUiElement<SomeClassVm,SomeClass>"
+            }
+        }
+
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
         assertHasType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView")
+
+        assertHasType("OptionalSomeClassView", "SomeModule/View/ElementsView")
     }
 
+    //TODO-REF could be in other file
     @Test
     fun `should map view models to models`() {
         val viewModel = typesWorldApi.getTypeByName(WorldTypeName("SomeEnum2SwitchGroup"))
@@ -205,5 +215,28 @@ class HlaTypesWorldImplTest {
             name = "SomeEnum2SwitchGroupView"
             path = "SomeModule/View/ElementsView"
         }
+    }
+
+    //TODO-REF should be in other file
+    @Test
+    fun `should calculate correct creation order`() {
+        val calculator = CreationOrderCalculator(typesWorldApi)
+
+        val assertCreationOrder = { typeName: String, expectedOrder: Int ->
+            val order = calculator.calculateCreationOrder(getTypeByName(typeName))
+            assertThat(order)
+                .withFailMessage("Type $typeName has wrong creation order, expected $expectedOrder, got $order")
+                .isEqualTo(expectedOrder)
+        }
+
+        assertCreationOrder("OtherClassView", 1)
+        assertCreationOrder("OtherClassGroupView", 2)
+
+        assertCreationOrder("SomeClassView", 1)
+        assertCreationOrder("OptionalSomeClassView", 2)
+    }
+
+    private fun getTypeByName(name: String): WorldType {
+        return typesWorldApi.getTypeByName(WorldTypeName(name))
     }
 }

@@ -35,6 +35,7 @@ class ViewModelTypesPopulator(
         modules.forEach { populateWindows(it) }
         modules.forEach { populateEnumSwitches(it) }
         modules.forEach { populateElementGroups(it) }
+        modules.forEach { populateOptionalElements(it) }
     }
 
     private fun populateWindows(module: ModuleDefinition) {
@@ -142,18 +143,24 @@ class ViewModelTypesPopulator(
         }
     }
 
-    private fun populateElementGroups(module: ModuleDefinition) {
+    private fun populateElementWrappers(
+        module: ModuleDefinition,
+        nameChecker: (String) -> Boolean,
+        wrappedTypeNameExtractor: (String) -> String,
+        wrappingClassName: String
+    ) {
         val ensuredGroups = world.getAllTypes().filter {
-            it.getName().value.endsWith("Group") &&
-                    it.getPath().asHla().getModuleName() == module.getName()
+            nameChecker(it.getName().value) &&
+                    it.getPath().asHla().getModuleName() == module.getName() &&
+                    it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel
         }
 
         ensuredGroups.forEach {
-            val wrappedTypeName = it.getName().value.removeSuffix("Group")
+            val wrappedTypeName = wrappedTypeNameExtractor(it.getName().value)
             val modelType = getModelTypeForEnsuredUiElement(world, wrappedTypeName)
             val viewModelType = world.getTypeByName(WorldTypeName(wrappedTypeName))
             val paramType = WorldType.create(
-                WorldTypeName("UiElementGroup<${viewModelType.getName()},${modelType.getName()}>"),
+                WorldTypeName("${wrappingClassName}<${viewModelType.getName()},${modelType.getName()}>"),
                 it.getPath()
             )
             world.addConcreteParametrizedClass(
@@ -173,6 +180,24 @@ class ViewModelTypesPopulator(
                 )
             )
         }
+    }
+
+    private fun populateElementGroups(module: ModuleDefinition) {
+        populateElementWrappers(
+            module,
+            { it.endsWith("Group") },
+            { it.removeSuffix("Group") },
+            "UiElementGroup"
+        )
+    }
+
+    private fun populateOptionalElements(module: ModuleDefinition) {
+        populateElementWrappers(
+            module,
+            { it.startsWith("Optional") },
+            { it.removePrefix("Optional") },
+            "OptionalUiElement"
+        )
     }
 
     private fun getFieldsForElement(def: ViewModelElementDefinition): List<WorldClassField> {
