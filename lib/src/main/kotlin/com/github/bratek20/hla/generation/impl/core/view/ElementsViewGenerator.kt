@@ -13,14 +13,13 @@ import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.typesworld.api.*
 
 abstract class ViewLogic(
     val mapper: ModelToViewModelTypeMapper
 ) {
     abstract fun getOps(): PerFileOperations
-
-    abstract fun populateType(typesWorldApi: TypesWorldApi)
 }
 
 abstract class ContainerViewLogic(
@@ -31,23 +30,6 @@ abstract class ContainerViewLogic(
     abstract fun getViewModelTypeName(): String
     abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
-
-    override fun populateType(typesWorldApi: TypesWorldApi) {
-        typesWorldApi.addClassType(WorldClassType.create(
-            type = WorldType.create(
-                name = getViewClassType().getName(),
-                path = getViewClassType().getPath(),
-            ),
-            getFields().filter {
-                it.worldType != null
-            }.map {
-                WorldClassField.create(
-                    it.name,
-                    mapper.mapViewModelToViewType(it.worldType!!)
-                )
-            }
-        ))
-    }
 
     override fun getOps(): PerFileOperations {
         val viewClassName = getViewClassName()
@@ -164,16 +146,6 @@ abstract class WrappedElementViewLogic(
 ): ViewLogic(mapper) {
     protected abstract fun extendedClassName(): String
 
-    override fun populateType(typesWorldApi: TypesWorldApi) {
-        typesWorldApi.addConcreteWrapper(WorldConcreteWrapper.create(
-            WorldType.create(
-                name = WorldTypeName(getViewClassName()),
-                path = getViewClassType().getPath()
-            ),
-            wrappedType = mapper.mapModelToViewType(modelType.wrappedType)
-        ))
-    }
-
     fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(modelType)
     }
@@ -255,10 +227,6 @@ class EnumElementViewLogic(
                 }
             }
         }
-    }
-
-    override fun populateType(typesWorldApi: TypesWorldApi) {
-
     }
 }
 

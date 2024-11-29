@@ -141,3 +141,21 @@ data class WorldConcreteParametrizedClass(
         }
     }
 }
+
+data class WorldTypeInfo(
+    private val kind: String,
+) {
+    fun getKind(): WorldTypeKind {
+        return WorldTypeKind.valueOf(this.kind)
+    }
+
+    companion object {
+        fun create(
+            kind: WorldTypeKind,
+        ): WorldTypeInfo {
+            return WorldTypeInfo(
+                kind = kind.name,
+            )
+        }
+    }
+}

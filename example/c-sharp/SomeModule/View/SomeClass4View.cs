@@ -19,10 +19,13 @@ namespace SomeModule.View {
         LabelView otherId;
         [SerializeField]
         OtherClassView otherClass;
+        [SerializeField]
+        OtherClassGroupView otherClassList;
         protected override void OnBind() {
             base.OnBind();
             otherId.Bind(ViewModel.OtherId);
             otherClass.Bind(ViewModel.OtherClass);
+            otherClassList.Bind(ViewModel.OtherClassList);
         }
     }
 }

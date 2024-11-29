@@ -17,4 +17,11 @@ namespace OtherModule.ViewModel {
             Amount.Update(Model.GetAmount());
         }
     }
+
+    public class OtherClassVmGroup: UiElementGroup<OtherClassVm, OtherClass> {
+        public OtherClassVmGroup(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<OtherClassVm>()) {
+        }
+    }
 }

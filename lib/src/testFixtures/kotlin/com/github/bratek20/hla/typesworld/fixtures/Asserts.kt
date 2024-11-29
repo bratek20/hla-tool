@@ -41,3 +41,8 @@ fun assertWorldConcreteParametrizedClass(given: WorldConcreteParametrizedClass, 
     val diff = diffWorldConcreteParametrizedClass(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertWorldTypeInfo(given: WorldTypeInfo, expectedInit: ExpectedWorldTypeInfo.() -> Unit) {
+    val diff = diffWorldTypeInfo(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

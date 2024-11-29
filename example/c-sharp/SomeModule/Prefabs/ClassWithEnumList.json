@@ -2,11 +2,11 @@
   "blueprintType": "ComplexElement",
   "name": "ClassWithEnumList",
   "viewType": "SomeModule.View.ClassWithEnumListView",
-  "creationOrder": 2,
+  "creationOrder": 3,
   "children": [
     {
       "name": "enumList",
-      "viewType": "SomeModule.View.SomeEnum2GroupView"
+      "viewType": "SomeModule.View.SomeEnum2SwitchGroupView"
     }
   ],
   "elementViewType": null

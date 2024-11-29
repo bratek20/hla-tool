@@ -2,7 +2,7 @@
   "blueprintType": "OptionalElement",
   "name": "OptionalSomeClass",
   "viewType": "SomeModule.View.OptionalSomeClassView",
-  "creationOrder": 3,
+  "creationOrder": 2,
   "children": [ ],
   "elementViewType": "SomeModule.View.SomeClassView"
 }

@@ -16,6 +16,8 @@ import com.github.bratek20.hla.generation.impl.core.web.WebGenerator
 import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
+import com.github.bratek20.hla.hlatypesworld.impl.HlaTypesWorldApiLogic
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 
@@ -30,7 +32,8 @@ data class DomainContext(
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
     private val prefabsGenerator: PrefabsGenerator,
-    private val typesWorldApi: TypesWorldApi
+    private val typesWorldApi: TypesWorldApi,
+    private val hlaTypesWorldApi: HlaTypesWorldApi
 ) : ModuleGenerator {
     class SubmodulesGenerator(
         private val context: ModuleGenerationContext,
@@ -80,7 +83,8 @@ class ModuleGeneratorLogic(
             onlyPatterns = profile.getOnlyPatterns(),
         )
 
-        queries.populateTypes(typesWorldApi, context.apiTypeFactory)
+        (hlaTypesWorldApi as HlaTypesWorldApiLogic).apiTypeFactory = context.apiTypeFactory
+        hlaTypesWorldApi.populate(args.getGroup())
 
         return GeneratedModule.create(
             name = moduleName,

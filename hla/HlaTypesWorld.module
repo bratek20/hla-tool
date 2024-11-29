@@ -1,2 +1,14 @@
 CustomTypes
     HlaTypePath: string (example: "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects")
+
+Interfaces
+    HlaTypesWorldApi
+        //TODO-REF in the future should use HlaModulesWorld
+        populate(group: ModuleGroup)
+
+    HlaTypesWorldQueries
+        getAll(module: ModuleName, submodule: SubmoduleName): WorldType[]
+
+    HlaTypesWorldPopulator
+        getOrder(): int
+        populate(modules: ModuleDefinition[])

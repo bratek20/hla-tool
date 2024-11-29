@@ -6,14 +6,10 @@ using System.Linq;
 using B20.Ext;
 using B20.Frontend.Elements.View;
 using UnityEngine;
-using SomeModule.Api;
-using SomeModule.ViewModel;
 using OtherModule.Api;
 using OtherModule.ViewModel;
-using OtherModule.View;
-using TypesModule.Api;
 
-namespace SomeModule.View {
-    public class SomeClassGroupView: UiElementGroupView<SomeClassView, SomeClassVm, SomeClass> {
+namespace OtherModule.View {
+    public class OtherClassGroupView: UiElementGroupView<OtherClassView, OtherClassVm, OtherClass> {
     }
 }

@@ -216,6 +216,7 @@ ViewModel
             SomeClass4
                 otherId
                 otherClass
+                otherClassList
 
         SomeClass6Vm
             SomeClass6
@@ -237,4 +238,3 @@ ViewModel
             State
                 someId: SomeId
             someClassVm: SomeClassVm
-            someClassVmList: SomeClassVm[]

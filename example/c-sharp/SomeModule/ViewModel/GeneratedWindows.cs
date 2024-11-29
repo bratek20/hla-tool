@@ -24,6 +24,5 @@ namespace SomeModule.ViewModel {
 
     public partial class SomeWindow: Window<SomeWindowState> {
         public SomeClassVm SomeClassVm { get; set; }
-        public SomeClassVmGroup SomeClassVmList { get; set; }
     }
 }

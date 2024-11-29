@@ -3,6 +3,9 @@
 package com.github.bratek20.hla.typesworld.api
 
 interface TypesWorldApi {
+    @Throws(
+        SameNameTypeExistsException::class,
+    )
     fun ensureType(type: WorldType): Unit
 
     fun hasType(type: WorldType): Boolean
@@ -11,6 +14,11 @@ interface TypesWorldApi {
         WorldTypeNotFoundException::class,
     )
     fun getTypeByName(name: WorldTypeName): WorldType
+
+    @Throws(
+        WorldTypeNotFoundException::class,
+    )
+    fun getTypeInfo(type: WorldType): WorldTypeInfo
 
     fun addPrimitiveType(type: WorldType): Unit
 
@@ -30,6 +38,9 @@ interface TypesWorldApi {
     )
     fun getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
 
+    @Throws(
+        WorldTypeNotFoundException::class,
+    )
     fun getTypeDependencies(type: WorldType): List<WorldType>
 
     fun getAllTypes(): List<WorldType>

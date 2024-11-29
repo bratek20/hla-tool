@@ -14,6 +14,13 @@ class TypesWorldApiLogic: TypesWorldApi {
     private val concreteParametrizedClasses: MutableList<WorldConcreteParametrizedClass> = mutableListOf()
 
     override fun ensureType(type: WorldType) {
+        allTypes.firstOrNull {
+            it.getName() == type.getName() && it.getPath() != type.getPath()
+        }?.let {
+            throw SameNameTypeExistsException(
+                "Can not ensure '${type.getFullName()}'. Type '${type.getName()}' already exists for different path '${it.getPath()}'"
+            )
+        }
         allTypes.add(type)
     }
 
@@ -22,12 +29,35 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getTypeDependencies(type: WorldType): List<WorldType> {
+        throwIfTypeNotFound(type)
+
+        val direct = getDirectDependencies(type)
+        return direct + direct.flatMap {
+            getIndirectDependencies(it)
+        }
+    }
+
+    private fun getIndirectDependencies(type: WorldType): List<WorldType> {
+        concreteParametrizedClasses.firstOrNull { it.getType() == type }?.let {
+            return it.getTypeArguments()
+        }
+        concreteWrappers.firstOrNull { it.getType() == type }?.let {
+            return listOf(it.getWrappedType())
+        }
+        return emptyList()
+    }
+
+    private fun getDirectDependencies(type: WorldType): List<WorldType> {
         classTypes.firstOrNull {
             it.getType() == type
         }?.let { classType ->
-            return classType.getFields().map {
+            val extendDependency = classType.getExtends()?.let {
+                listOf(it)
+            } ?: emptyList()
+            val fieldDependencies = classType.getFields().map {
                 it.getType()
             }
+            return extendDependency + fieldDependencies
         }
 
         concreteWrappers.firstOrNull {
@@ -60,6 +90,9 @@ class TypesWorldApiLogic: TypesWorldApi {
         classTypes.add(type)
 
         ensureType(type.getType())
+        type.getExtends()?.let {
+            ensureType(it)
+        }
         type.getFields().forEach {
             ensureType(it.getType())
         }
@@ -96,6 +129,28 @@ class TypesWorldApiLogic: TypesWorldApi {
             ?: getTypeByNameForWrapper(name, "Optional")
             ?: allTypes.firstOrNull { it.getName() == name }
             ?: throw WorldTypeNotFoundException("Hla type with name '${name}' not found")
+    }
+
+    override fun getTypeInfo(type: WorldType): WorldTypeInfo {
+        throwIfTypeNotFound(type)
+
+        val kind = when {
+            primitives.contains(type) -> WorldTypeKind.Primitive
+            classTypes.any { it.getType() == type } -> WorldTypeKind.ClassType
+            concreteWrappers.any { it.getType() == type } -> WorldTypeKind.ConcreteWrapper
+            concreteParametrizedClasses.any { it.getType() == type } -> WorldTypeKind.ConcreteParametrizedClass
+            else -> WorldTypeKind.Primitive
+        }
+
+        return WorldTypeInfo.create(
+            kind = kind
+        )
+    }
+
+    private fun throwIfTypeNotFound(type: WorldType) {
+        if (!allTypes.contains(type)) {
+            throw WorldTypeNotFoundException("Type '${type.getFullName()}' not found")
+        }
     }
 
     private fun getTypeByNameForWrapper(name: WorldTypeName, wrapper: String): WorldType? {

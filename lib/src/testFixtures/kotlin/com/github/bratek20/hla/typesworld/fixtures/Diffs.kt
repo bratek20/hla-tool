@@ -125,3 +125,17 @@ fun diffWorldConcreteParametrizedClass(given: WorldConcreteParametrizedClass, ex
 
     return result.joinToString("\n")
 }
+
+data class ExpectedWorldTypeInfo(
+    var kind: String? = null,
+)
+fun diffWorldTypeInfo(given: WorldTypeInfo, expectedInit: ExpectedWorldTypeInfo.() -> Unit, path: String = ""): String {
+    val expected = ExpectedWorldTypeInfo().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.kind?.let {
+        if (diffWorldTypeKind(given.getKind(), it) != "") { result.add(diffWorldTypeKind(given.getKind(), it, "${path}kind.")) }
+    }
+
+    return result.joinToString("\n")
+}

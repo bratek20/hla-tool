@@ -3,11 +3,9 @@ package com.github.bratek20.hla.generation.impl.core.prefabs
 import com.github.bratek20.architecture.serialization.api.SerializerConfig
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
-import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelTypesMapper
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
+import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
@@ -168,9 +166,6 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
         val viewElementGroupLogic = logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) }
         val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) }
         val viewEnumElementLogic = logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) }
-
-        (viewComplexElementLogic + viewWindowLogic + viewElementGroupLogic + viewElementOptionalLogic + viewEnumElementLogic)
-            .forEach { it.populateType(typesWorldApi) }
 
         val elementBlueprintLogic = viewComplexElementLogic.map { PrefabComplexElementBlueprintLogic(it, typesWorldApi) }
         val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it, typesWorldApi) }

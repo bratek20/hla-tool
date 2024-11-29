@@ -2,7 +2,7 @@
   "blueprintType": "ComplexElement",
   "name": "SomeClass4",
   "viewType": "SomeModule.View.SomeClass4View",
-  "creationOrder": 2,
+  "creationOrder": 3,
   "children": [
     {
       "name": "otherId",
@@ -11,6 +11,10 @@
     {
       "name": "otherClass",
       "viewType": "OtherModule.View.OtherClassView"
+    },
+    {
+      "name": "otherClassList",
+      "viewType": "OtherModule.View.OtherClassGroupView"
     }
   ],
   "elementViewType": null

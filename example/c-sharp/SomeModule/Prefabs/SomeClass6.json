@@ -2,7 +2,7 @@
   "blueprintType": "ComplexElement",
   "name": "SomeClass6",
   "viewType": "SomeModule.View.SomeClass6View",
-  "creationOrder": 4,
+  "creationOrder": 3,
   "children": [
     {
       "name": "someClassOpt",

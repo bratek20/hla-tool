@@ -73,3 +73,13 @@ fun worldConcreteParametrizedClass(init: WorldConcreteParametrizedClassDef.() ->
         typeArguments = def.typeArguments.map { it -> worldType(it) },
     )
 }
+
+data class WorldTypeInfoDef(
+    var kind: String = WorldTypeKind.Primitive.name,
+)
+fun worldTypeInfo(init: WorldTypeInfoDef.() -> Unit = {}): WorldTypeInfo {
+    val def = WorldTypeInfoDef().apply(init)
+    return WorldTypeInfo.create(
+        kind = WorldTypeKind.valueOf(def.kind),
+    )
+}
