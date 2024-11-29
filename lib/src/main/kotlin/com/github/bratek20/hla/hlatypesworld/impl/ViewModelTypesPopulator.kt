@@ -16,9 +16,9 @@ import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
 class ViewModelTypesPopulator(
-    private val world: TypesWorldApi,
-    private val apiTypeFactory: ApiTypeFactory
+    private val world: TypesWorldApi
 ): HlaTypesWorldPopulator {
+    lateinit var apiTypeFactory: ApiTypeFactory
 
     override fun populate(modules: List<ModuleDefinition>) {
         modules.forEach { populateElements(it) }

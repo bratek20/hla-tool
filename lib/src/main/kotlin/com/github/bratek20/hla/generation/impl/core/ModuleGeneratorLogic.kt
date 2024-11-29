@@ -17,6 +17,7 @@ import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
+import com.github.bratek20.hla.hlatypesworld.impl.HlaTypesWorldApiLogic
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 
@@ -82,6 +83,7 @@ class ModuleGeneratorLogic(
             onlyPatterns = profile.getOnlyPatterns(),
         )
 
+        (hlaTypesWorldApi as HlaTypesWorldApiLogic).apiTypeFactory = context.apiTypeFactory
         hlaTypesWorldApi.populate(args.getGroup())
 
         return GeneratedModule.create(

@@ -10,6 +10,17 @@ class HlaTypesWorldImpl: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
             .setImpl(HlaTypesWorldApi::class.java, HlaTypesWorldApiLogic::class.java)
-            .setImpl(HlaTypesWorldPopulator::class.java, HlaTypesWorldPopulatorLogic::class.java)
+            .withModule(HlaTypesWorldPopulators())
+    }
+}
+
+class HlaTypesWorldPopulators: ContextModule {
+    override fun apply(builder: ContextBuilder) {
+        builder
+            .addImpl(HlaTypesWorldPopulator::class.java, PrimitiveTypesPopulator::class.java)
+            .addImpl(HlaTypesWorldPopulator::class.java, B20FrontendTypesPopulator::class.java)
+            .addImpl(HlaTypesWorldPopulator::class.java, ApiTypesPopulator::class.java)
+            .addImpl(HlaTypesWorldPopulator::class.java, ViewModelTypesPopulator::class.java)
+            .addImpl(HlaTypesWorldPopulator::class.java, ViewTypesPopulator::class.java)
     }
 }

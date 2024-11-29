@@ -5,19 +5,16 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.generation.impl.core.viewmodel.getViewModelTypeForEnsuredUiElementGroup
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.typesworld.api.*
 
 class ViewTypesPopulator(
-    private val modules: List<ModuleDefinition>,
-) {
-    private lateinit var world: TypesWorldApi
-    private lateinit var mapper: ModelToViewModelTypeMapper
+    private val world: TypesWorldApi
+): HlaTypesWorldPopulator {
+    lateinit var mapper: ModelToViewModelTypeMapper
 
-    fun populate(api: TypesWorldApi, apiTypeFactory: ApiTypeFactory) {
-        world = api
-        mapper = ModelToViewModelTypeMapper(apiTypeFactory, api)
-
+    override fun populate(modules: List<ModuleDefinition>) {
         modules.forEach { populate(it) }
     }
 
@@ -70,5 +67,9 @@ class ViewTypesPopulator(
                 )
             )
         }
+    }
+
+    override fun getOrder(): Int {
+        return 3
     }
 }
