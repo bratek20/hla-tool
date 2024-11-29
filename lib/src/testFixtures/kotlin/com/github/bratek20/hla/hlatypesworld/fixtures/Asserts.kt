@@ -4,6 +4,11 @@ package com.github.bratek20.hla.hlatypesworld.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.definitions.fixtures.*
+import com.github.bratek20.hla.parsing.api.*
+import com.github.bratek20.hla.parsing.fixtures.*
+
 import com.github.bratek20.hla.hlatypesworld.api.*
 
 fun assertHlaTypePath(given: HlaTypePath, expected: String) {

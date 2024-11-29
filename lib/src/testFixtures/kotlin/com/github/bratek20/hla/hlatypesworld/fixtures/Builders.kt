@@ -2,6 +2,11 @@
 
 package com.github.bratek20.hla.hlatypesworld.fixtures
 
+import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.definitions.fixtures.*
+import com.github.bratek20.hla.parsing.api.*
+import com.github.bratek20.hla.parsing.fixtures.*
+
 import com.github.bratek20.hla.hlatypesworld.api.*
 
 fun hlaTypePath(value: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects"): HlaTypePath {

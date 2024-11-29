@@ -1,24 +1,34 @@
 package com.github.bratek20.hla.hlatypesworld.tests
 
-import com.github.bratek20.hla.facade.api.ModuleName
-import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
-import com.github.bratek20.hla.hlatypesworld.fixtures.assertHlaTypePath
+import com.github.bratek20.architecture.context.someContextBuilder
+import com.github.bratek20.hla.facade.api.ProfileName
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
+import com.github.bratek20.hla.hlatypesworld.context.HlaTypesWorldImpl
+import com.github.bratek20.hla.parsing.api.ModuleGroupParser
+import com.github.bratek20.hla.parsing.context.ParsingImpl
+import com.github.bratek20.logs.LogsMocks
+import com.github.bratek20.utils.directory.api.Path
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class HlaTypesWorldImplTest {
     @Test
-    fun replaceSubmoduleAndPattern() {
-        val path = HlaTypePath.create(
-            ModuleName("Module"),
-            SubmoduleName.Api,
-            PatternName.ValueObjects
+    fun `should populate types`() {
+        val c = someContextBuilder()
+            .withModules(
+                LogsMocks(),
+                ParsingImpl(),
+                HlaTypesWorldImpl()
+            ).build()
+
+        val parser = c.get(ModuleGroupParser::class.java)
+        val world = c.get(HlaTypesWorldApi::class.java)
+
+        val moduleGroup = parser.parse(
+            Path("../example/hla"),
+            ProfileName("cSharp")
         )
 
-        path.replaceSubmoduleAndPattern(SubmoduleName.Impl, PatternName.Logic).let {
-            assertHlaTypePath(it, "Module/Impl/Logic")
-        }
+        world.populate(moduleGroup)
     }
 }

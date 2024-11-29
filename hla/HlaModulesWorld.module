@@ -1,0 +1,16 @@
+CustomTypes
+    HlaModulePath: string (example: "SomeRootGroup/SomeInnerGroup")
+    HlaGroupPath: string (example: "SomeRootGroup/SomeInnerGroup")
+
+ValueObjects
+    WorldModuleGroup
+        name: GroupName
+        modules: ModuleDefinition[]
+        innerGroups: WorldModuleGroup[] = []
+
+ValueObjects
+    Organization
+        rootGroup: WorldModuleGroup
+
+    HlaModulesWorld
+        organizations: Organization[]

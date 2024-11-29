@@ -431,6 +431,7 @@ class ViewTypesPopulator(
 
         viewModelTypes.forEach { type ->
             val classType: WorldClassType
+            //TODO-REF can be removed when types world population fixed
             try {
                 classType = world.getClassType(type)
             }
