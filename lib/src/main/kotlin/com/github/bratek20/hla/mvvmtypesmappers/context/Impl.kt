@@ -10,5 +10,6 @@ class MvvmTypesMappersImpl: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
             .setImpl(ViewModelToViewMapper::class.java, ViewModelToViewMapperLogic::class.java)
+            .setImpl(ViewModelTypesCalculator::class.java, ViewModelTypesCalculatorLogic::class.java)
     }
 }

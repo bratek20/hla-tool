@@ -25,6 +25,7 @@ namespace SomeModule.Context {
                 .SetClass<SomeEmptyVm>(InjectionMode.Prototype)
                 .SetClass<SomeClass2VmGroup>(InjectionMode.Prototype)
                 .SetClass<SomeEnum2SwitchGroup>(InjectionMode.Prototype)
+                .SetClass<SomeClassVmGroup>(InjectionMode.Prototype)
                 .SetClass<OptionalSomeClassVm>(InjectionMode.Prototype)
                 .SetClass<SomeEnumSwitch>(InjectionMode.Prototype)
                 .SetClass<SomeEnum2Switch>(InjectionMode.Prototype)

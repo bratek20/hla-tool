@@ -18,10 +18,13 @@ namespace SomeModule.View {
         [SerializeField]
         SomeClassView someClassVm;
         [SerializeField]
+        SomeClassGroupView someClassVmList;
+        [SerializeField]
         ButtonView someButton;
         protected override void OnBind() {
             base.OnBind();
             someClassVm.Bind(ViewModel.SomeClassVm);
+            someClassVmList.Bind(ViewModel.SomeClassVmList);
             someButton.Bind(ViewModel.SomeButton);
         }
     }

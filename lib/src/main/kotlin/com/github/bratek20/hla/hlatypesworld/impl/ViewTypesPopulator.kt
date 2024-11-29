@@ -42,11 +42,15 @@ class ViewTypesPopulator(
             }
 
             val viewClassType = mapper.mapViewModelToViewType(classType.getType())
-            val viewFields = classType.getFields().map { field ->
-                WorldClassField.create(
-                    field.getName(),
-                    mapper.mapViewModelToViewType(field.getType())
-                )
+            val viewFields = classType.getFields().mapNotNull { field ->
+                try {
+                    WorldClassField.create(
+                        field.getName(),
+                        mapper.mapViewModelToViewType(field.getType())
+                    )
+                } catch (e: WorldTypeNotFoundException) {
+                    null
+                }
             }
 
             world.addClassType(

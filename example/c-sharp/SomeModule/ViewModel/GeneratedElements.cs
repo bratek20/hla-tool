@@ -100,6 +100,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public class SomeClassVmGroup: UiElementGroup<SomeClassVm, SomeClass> {
+        public SomeClassVmGroup(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<SomeClassVm>()) {
+        }
+    }
+
     public class OptionalSomeClassVm: OptionalUiElement<SomeClassVm, SomeClass> {
         public OptionalSomeClassVm(
             SomeClassVm element

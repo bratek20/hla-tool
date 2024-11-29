@@ -23,7 +23,7 @@ class ViewModelToViewMapperLogic(
     }
 
     fun mapViewModelToViewTypeName(viewModelType: String): String {
-        if(ModelToViewModelTypeMapper.b20ViewModelTypes.contains(viewModelType)) {
+        if (ModelToViewModelTypeMapper.b20ViewModelTypes.contains(viewModelType)) {
             return viewModelType + "View"
         }
 
@@ -46,9 +46,18 @@ class ViewModelToViewMapperLogic(
         if (modelType.getName().value == "EmptyModel") {
             return viewModelType + "View"
         }
-        if(viewModelType.endsWith("Switch")) {
+        if (viewModelType.endsWith("Switch")) {
             return modelType.getName().value + "SwitchView"
         }
         return modelType.getName().value + "View"
+    }
+}
+
+class ViewModelTypesCalculatorLogic: ViewModelTypesCalculator {
+    override fun wrapWithGroup(viewModel: WorldType): WorldType {
+        return WorldType.create(
+            name = WorldTypeName(viewModel.getName().value + "Group"),
+            path = viewModel.getPath()
+        )
     }
 }
