@@ -17,12 +17,9 @@ namespace SomeModule.View {
     public class SomeWindowView: WindowView<SomeWindow> {
         [SerializeField]
         SomeClassView someClassVm;
-        [SerializeField]
-        SomeClassGroupView someClassVmList;
         protected override void OnBind() {
             base.OnBind();
             someClassVm.Bind(ViewModel.SomeClassVm);
-            someClassVmList.Bind(ViewModel.SomeClassVmList);
         }
     }
 }

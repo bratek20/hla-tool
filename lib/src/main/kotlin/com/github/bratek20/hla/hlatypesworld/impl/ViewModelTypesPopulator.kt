@@ -148,7 +148,7 @@ class ViewModelTypesPopulator(
         wrappingClassName: String
     ) {
         val ensuredGroups = worldQueries.getAll(module.getName(), SubmoduleName.ViewModel).filter {
-            nameChecker(it.getName().value)
+            world.getTypeInfo(it).getKind() != WorldTypeKind.ConcreteParametrizedClass && nameChecker(it.getName().value)
         }
 
         ensuredGroups.forEach {

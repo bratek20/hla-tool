@@ -2,7 +2,7 @@
   "blueprintType": "ComplexElement",
   "name": "ClassHavingOptSimpleVo",
   "viewType": "SomeModule.View.ClassHavingOptSimpleVoView",
-  "creationOrder": 2,
+  "creationOrder": 1,
   "children": [
     {
       "name": "optSimpleVo",
