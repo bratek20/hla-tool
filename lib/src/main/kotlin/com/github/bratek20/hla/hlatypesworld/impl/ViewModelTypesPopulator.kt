@@ -2,6 +2,7 @@ package com.github.bratek20.hla.hlatypesworld.impl
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
+import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
@@ -12,6 +13,7 @@ import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
@@ -50,7 +52,7 @@ class ViewModelTypesPopulator(
                             name = WorldTypeName(window.getName()),
                             path = path
                         ),
-                        fields = emptyList(),
+                        fields = getFieldsForWindow(window),
                     )
                 )
             }
@@ -180,6 +182,14 @@ class ViewModelTypesPopulator(
                 WorldClassField.create(it, type)
             }
         } ?: emptyList()
+    }
+
+    private fun getFieldsForWindow(def: ViewModelWindowDefinition): List<WorldClassField> {
+        return def.getFields().map {
+            world.getTypeByName(it.getType().asWorldTypeName()).let { type ->
+                WorldClassField.create(it.getName(), type)
+            }
+        }
     }
 
     private fun mapModelField(modelTypeName: String, fieldName: String): WorldType {

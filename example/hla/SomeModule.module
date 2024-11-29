@@ -238,4 +238,3 @@ ViewModel
             State
                 someId: SomeId
             someClassVm: SomeClassVm
-            someClassVmList: SomeClassVm[]

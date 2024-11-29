@@ -190,6 +190,7 @@ class HlaTypesWorldImplTest {
             }
         }
         assertHasType("SomeWindow", "SomeModule/ViewModel/GeneratedWindows")
+        assertHasType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements")
 
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
