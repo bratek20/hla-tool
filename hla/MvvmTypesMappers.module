@@ -1,0 +1,3 @@
+Interfaces
+    ViewModelToViewMapper
+        map(viewModel: WorldType): WorldType

@@ -10,6 +10,8 @@ import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
 import com.github.bratek20.hla.hlatypesworld.context.HlaTypesWorldImpl
 import com.github.bratek20.hla.hlatypesworld.impl.HlaTypesWorldApiLogic
+import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelToViewMapper
+import com.github.bratek20.hla.mvvmtypesmappers.context.MvvmTypesMappersImpl
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.context.ParsingImpl
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
@@ -22,22 +24,28 @@ import com.github.bratek20.logs.LogsMocks
 import com.github.bratek20.utils.directory.api.Path
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class HlaTypesWorldImplTest {
-    @Test
-    fun `should populate types`() {
+    lateinit var typesWorldApi: TypesWorldApi
+    lateinit var vmToViewMapper: ViewModelToViewMapper
+
+    @BeforeEach
+    fun setUp() {
         val c = someContextBuilder()
             .withModules(
                 LogsMocks(),
                 ParsingImpl(),
                 TypesWorldImpl(),
-                HlaTypesWorldImpl()
+                HlaTypesWorldImpl(),
+                MvvmTypesMappersImpl()
             ).build()
 
         val parser = c.get(ModuleGroupParser::class.java)
         val world = c.get(HlaTypesWorldApi::class.java)
-        val typesWorldApi = c.get(TypesWorldApi::class.java)
+        typesWorldApi = c.get(TypesWorldApi::class.java)
+        vmToViewMapper = c.get(ViewModelToViewMapper::class.java)
 
         val moduleGroup = parser.parse(
             Path("../example/hla"),
@@ -49,7 +57,10 @@ class HlaTypesWorldImplTest {
             CSharpTypes()
         )
         world.populate(moduleGroup)
+    }
 
+    @Test
+    fun `should populate types`() {
         //then
         val assertHasTypeOfName = { typeName: String ->
             Assertions.assertThatCode {
@@ -59,11 +70,13 @@ class HlaTypesWorldImplTest {
                 .doesNotThrowAnyException()
         }
         val assertHasType = { typeName: String, typePath: String ->
+            assertHasTypeOfName(typeName)
+
             assertThat(typesWorldApi.hasType(worldType {
                 name = typeName
                 path = typePath
             }))
-                .withFailMessage("Type $typeName not found")
+                .withFailMessage("Type ${typePath}/${typeName} not found")
                 .isTrue()
         }
 
@@ -171,14 +184,25 @@ class HlaTypesWorldImplTest {
         assertHasClassType("OtherClassVmGroup", "OtherModule/ViewModel/GeneratedElements") {
 
         }
-//        assertHasClassType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements") {
-//            extends = {
-//                name = "UiElementGroup<SomeEnum2Switch,SomeEnum>"
-//            }
-//        }
+        assertHasClassType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements") {
+            extends = {
+                name = "UiElementGroup<SomeEnum2Switch,SomeEnum2>"
+            }
+        }
+        assertHasType("SomeWindow", "SomeModule/ViewModel/GeneratedWindows")
 
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
+        assertHasType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView")
     }
 
+    @Test
+    fun `should map view models to models`() {
+        val viewModel = typesWorldApi.getTypeByName(WorldTypeName("SomeEnum2SwitchGroup"))
+        val view = vmToViewMapper.map(viewModel)
+        assertWorldType(view) {
+            name = "SomeEnum2SwitchGroupView"
+            path = "SomeModule/View/ElementsView"
+        }
+    }
 }

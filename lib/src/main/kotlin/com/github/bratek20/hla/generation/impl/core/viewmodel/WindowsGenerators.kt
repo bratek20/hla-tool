@@ -12,14 +12,16 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 
 class GeneratedWindowLogic(
+    private val moduleName: ModuleName,
     private val def: ViewModelWindowDefinition,
     private val apiTypeFactory: ApiTypeFactory
 ) {
     fun getModuleName(): String {
-        return "TODO-FIX-ME-agasg131r1"
+        return moduleName.value
     }
 
     fun getClassName(): String {

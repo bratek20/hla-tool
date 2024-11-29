@@ -144,6 +144,13 @@ class ExternalTypesPopulator(
 class ApiTypesPopulator(
     private val world: TypesWorldApi
 ): HlaTypesWorldPopulator {
+    companion object {
+        const val ORDER = 1
+    }
+    override fun getOrder(): Int {
+        return ORDER
+    }
+
 
     private fun createPatternPopulators(module: ModuleDefinition): List<ApiPatternPopulator> {
         val populators = listOf(
@@ -165,10 +172,6 @@ class ApiTypesPopulator(
         }
 
         return populators
-    }
-
-    override fun getOrder(): Int {
-        return 1
     }
 
     override fun populate(modules: List<ModuleDefinition>) {

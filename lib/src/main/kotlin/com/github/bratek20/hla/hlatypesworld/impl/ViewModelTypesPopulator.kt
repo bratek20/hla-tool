@@ -6,8 +6,8 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
-import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelTypesMapper
-import com.github.bratek20.hla.generation.impl.core.viewmodel.getModelTypeForEnsuredUiElement
+import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper
+import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
@@ -18,12 +18,43 @@ import com.github.bratek20.hla.typesworld.api.*
 class ViewModelTypesPopulator(
     private val world: TypesWorldApi
 ): HlaTypesWorldPopulator {
+    companion object {
+        const val ORDER = ApiTypesPopulator.ORDER + 1
+    }
+    override fun getOrder(): Int {
+        return ORDER
+    }
+
     lateinit var apiTypeFactory: ApiTypeFactory
+    private val mapper = BaseViewModelTypesMapper()
 
     override fun populate(modules: List<ModuleDefinition>) {
         modules.forEach { populateElements(it) }
+        modules.forEach { populateWindows(it) }
         modules.forEach { populateEnumSwitches(it) }
         modules.forEach { populateElementGroups(it) }
+    }
+
+    private fun populateWindows(module: ModuleDefinition) {
+        module.getViewModelSubmodule()?.let {
+            it.getWindows().forEach { window ->
+                val path = HlaTypePath.create(
+                    module.getName(),
+                    SubmoduleName.ViewModel,
+                    PatternName.GeneratedWindows
+                ).asWorld()
+
+                world.addClassType(
+                    WorldClassType.create(
+                        type = WorldType.create(
+                            name = WorldTypeName(window.getName()),
+                            path = path
+                        ),
+                        fields = emptyList(),
+                    )
+                )
+            }
+        }
     }
 
     private fun populateElements(module: ModuleDefinition) {
@@ -156,13 +187,5 @@ class ViewModelTypesPopulator(
         val field = modelType.fields.find { it.name == fieldName }
             ?: throw IllegalStateException("Field $fieldName not found in model $modelTypeName")
         return mapper.mapModelToViewModelType(field.type)
-    }
-
-    companion object {
-        val mapper = BaseViewModelTypesMapper()
-    }
-
-    override fun getOrder(): Int {
-        return 2
     }
 }

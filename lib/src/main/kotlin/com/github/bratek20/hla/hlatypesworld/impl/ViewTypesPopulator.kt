@@ -2,9 +2,8 @@ package com.github.bratek20.hla.hlatypesworld.impl
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
-import com.github.bratek20.hla.generation.impl.core.viewmodel.getViewModelTypeForEnsuredUiElementGroup
+import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
+import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredUiElementGroup
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.typesworld.api.*
@@ -12,6 +11,13 @@ import com.github.bratek20.hla.typesworld.api.*
 class ViewTypesPopulator(
     private val world: TypesWorldApi
 ): HlaTypesWorldPopulator {
+    companion object {
+        const val ORDER = ViewModelTypesPopulator.ORDER + 1
+    }
+    override fun getOrder(): Int {
+        return ORDER
+    }
+
     lateinit var mapper: ModelToViewModelTypeMapper
 
     override fun populate(modules: List<ModuleDefinition>) {
@@ -44,7 +50,7 @@ class ViewTypesPopulator(
             }
 
             var viewExtends: WorldType? = null
-            if (classType.getExtends()!!.getName().value.startsWith("UiElementGroup")) {
+            if (classType.getExtends()?.getName()?.value?.startsWith("UiElementGroup") == true) {
                 val wrappedViewModelType =
                     getViewModelTypeForEnsuredUiElementGroup(world, classType.getType().getName().value)
                 val wrappedViewType = mapper.mapViewModelToViewType(wrappedViewModelType)
@@ -67,9 +73,5 @@ class ViewTypesPopulator(
                 )
             )
         }
-    }
-
-    override fun getOrder(): Int {
-        return 3
     }
 }

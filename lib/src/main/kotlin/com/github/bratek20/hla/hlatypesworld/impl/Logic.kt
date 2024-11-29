@@ -2,9 +2,8 @@ package com.github.bratek20.hla.hlatypesworld.impl
 
 import com.github.bratek20.hla.hlatypesworld.api.*
 
-import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper
+import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
