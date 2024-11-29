@@ -44,6 +44,25 @@ class TypesWorldImplTest {
         }
 
         @Test
+        fun `should throw if same name type from different path already ensured`() {
+            api.ensureType(worldType {
+                name = "MyType"
+                path = "MyPath"
+            })
+
+            assertApiExceptionThrown(
+                { api.ensureType(worldType {
+                    name = "MyType"
+                    path = "OtherPath"
+                }) },
+                {
+                    type = SameNameTypeExistsException::class
+                    message = "Can not ensure 'OtherPath/MyType'. Type 'MyType' already exists for different path 'MyPath'"
+                }
+            )
+        }
+
+        @Test
         fun `should get populated type by name`() {
             api.ensureType(worldType {
                 name = "SomeClass"

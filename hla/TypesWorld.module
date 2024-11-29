@@ -41,6 +41,8 @@ Interfaces
         // to populate information that such type exits
         // can be called multiple types for the same type
         ensureType(type: WorldType)
+            throws
+                SameNameTypeExistsException
 
         hasType(type: WorldType): bool
 

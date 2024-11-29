@@ -3,6 +3,9 @@
 package com.github.bratek20.hla.typesworld.api
 
 interface TypesWorldApi {
+    @Throws(
+        SameNameTypeExistsException::class,
+    )
     fun ensureType(type: WorldType): Unit
 
     fun hasType(type: WorldType): Boolean

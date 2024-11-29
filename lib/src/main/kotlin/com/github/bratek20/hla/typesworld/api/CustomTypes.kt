@@ -1,7 +1,11 @@
 package com.github.bratek20.hla.typesworld.api
 
-class WorldTypePath(
+data class WorldTypePath(
     val value: String
 ){
     fun asParts() = value.split("/")
+
+    override fun toString(): String {
+        return value
+    }
 }

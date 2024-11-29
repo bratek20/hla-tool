@@ -29,6 +29,19 @@ class B20FrontendTypesPopulator(
                 PatternName.ValueObjects
             ).asWorld()
         )
+
+        val labelType = WorldType.create(
+            name = WorldTypeName("Label"),
+            path = HlaTypePath.create(
+                listOf(
+                    GroupName("B20"),
+                    GroupName("Frontend")
+                ),
+                ModuleName("UiElements"),
+                SubmoduleName.Api,
+                PatternName.Undefined
+            ).asWorld()
+        )
     }
 
     override fun getOrder(): Int {
@@ -39,6 +52,13 @@ class B20FrontendTypesPopulator(
         api.addClassType(
             WorldClassType.create(
                 type = emptyModelType,
+                fields = emptyList()
+            )
+        )
+
+        api.addClassType(
+            WorldClassType.create(
+                type = labelType,
                 fields = emptyList()
             )
         )

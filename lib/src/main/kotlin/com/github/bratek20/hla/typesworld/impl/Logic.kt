@@ -14,6 +14,13 @@ class TypesWorldApiLogic: TypesWorldApi {
     private val concreteParametrizedClasses: MutableList<WorldConcreteParametrizedClass> = mutableListOf()
 
     override fun ensureType(type: WorldType) {
+        allTypes.firstOrNull {
+            it.getName() == type.getName() && it.getPath() != type.getPath()
+        }?.let {
+            throw SameNameTypeExistsException(
+                "Can not ensure '${type.getFullName()}'. Type '${type.getName()}' already exists for different path '${it.getPath()}'"
+            )
+        }
         allTypes.add(type)
     }
 

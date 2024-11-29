@@ -126,7 +126,7 @@ class HlaTypesWorldImplTest {
 
         //b20 view model types
         assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
-        assertHasType("Label", "B20/Frontend/UiElements")
+        assertHasType("Label", "B20/Frontend/UiElements/Api/Undefined")
 
         assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
 

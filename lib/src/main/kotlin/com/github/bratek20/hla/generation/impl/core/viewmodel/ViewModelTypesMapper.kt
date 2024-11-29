@@ -6,12 +6,16 @@ import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.*
+import com.github.bratek20.hla.generation.impl.core.viewmodel.ModelToViewModelTypeMapper.Companion.b20ViewModelTypes
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
+import com.github.bratek20.hla.hlatypesworld.impl.ViewModelTypesPopulator
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.WorldTypePath
 
 open class BaseViewModelTypesMapper {
     fun mapModelToViewModelTypeName(modelType: ApiType): String {
@@ -38,6 +42,12 @@ open class BaseViewModelTypesMapper {
 
     fun mapModelToViewModelType(modelType: ApiType): WorldType {
         val viewModelTypeName = mapModelToViewModelTypeName(modelType)
+        if (b20ViewModelTypes.contains(viewModelTypeName)) {
+            return WorldType.create(
+                name = WorldTypeName(viewModelTypeName),
+                path = B20FrontendTypesPopulator.labelType.getPath()
+            )
+        }
         return WorldType.create(
             name = WorldTypeName(viewModelTypeName),
             path = modelType.asWorldType().getPath().asHla()
