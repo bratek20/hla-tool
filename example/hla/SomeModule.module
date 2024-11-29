@@ -238,3 +238,4 @@ ViewModel
             State
                 someId: SomeId
             someClassVm: SomeClassVm
+            someButton: Button

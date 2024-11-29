@@ -61,56 +61,26 @@ class HlaTypesWorldImplTest {
     }
 
     @Test
-    fun `should populate types`() {
-        //then
-        val assertHasTypeOfName = { typeName: String ->
-            Assertions.assertThatCode {
-                typesWorldApi.getTypeByName(WorldTypeName(typeName))
-            }
-                .withFailMessage("Type with name $typeName not found")
-                .doesNotThrowAnyException()
-        }
-        val assertHasType = { typeName: String, typePath: String ->
-            assertHasTypeOfName(typeName)
-
-            assertThat(typesWorldApi.hasType(worldType {
-                name = typeName
-                path = typePath
-            }))
-                .withFailMessage("Type ${typePath}/${typeName} not found")
-                .isTrue()
-        }
-
-        val assertHasNotType = { typeName: String, typePath: String ->
-            assertThat(typesWorldApi.hasType(worldType {
-                name = typeName
-                path = typePath
-            }))
-                .withFailMessage("Type $typeName found")
-                .isFalse()
-        }
-
-        val assertHasClassType = { typeName: String, typePath: String, expectedClass: ExpectedWorldClassType.() -> Unit ->
-            assertHasType(typeName, typePath)
-            typesWorldApi.getClassType(WorldType(typeName, typePath)).let {
-                assertWorldClassType(it, expectedClass)
-            }
-        }
-
-        val assertHasConcreteParametrizedClass = { typeName: String, typePath: String, expectedClass: ExpectedWorldConcreteParametrizedClass.() -> Unit ->
-            assertHasType(typeName, typePath)
-            typesWorldApi.getConcreteParametrizedClass(WorldType(typeName, typePath)).let {
-                assertWorldConcreteParametrizedClass(it, expectedClass)
-            }
-        }
-
-        //special types
+    fun `should populate special types`() {
         assertHasType("int", "Language/Types/Api/Primitives")
         assertHasType("string", "Language/Types/Api/Primitives")
 
         assertHasType("List<int>", "Language/Types/Api/Primitives")
         assertHasType("Optional<int>", "Language/Types/Api/Primitives")
+    }
 
+
+    @Test
+    fun `should populate b20 view model types`() {
+        assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
+        assertHasType("Label", "B20/Frontend/UiElements/Api/Undefined")
+        assertHasType("Button", "B20/Frontend/UiElements/Api/Undefined")
+
+        assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
+    }
+
+    @Test
+    fun `should populate types from hla modules`() {
         //api types
         assertHasClassType("OtherClass", "OtherModule/Api/ValueObjects") {
             fields = listOf(
@@ -137,12 +107,6 @@ class HlaTypesWorldImplTest {
                 }
             }
         }
-
-        //b20 view model types
-        assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
-        assertHasType("Label", "B20/Frontend/UiElements/Api/Undefined")
-
-        assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
 
         //modules view model types
         assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {
@@ -248,5 +212,47 @@ class HlaTypesWorldImplTest {
 
     private fun getTypeByName(name: String): WorldType {
         return typesWorldApi.getTypeByName(WorldTypeName(name))
+    }
+
+    private fun assertHasTypeOfName(typeName: String) {
+        Assertions.assertThatCode {
+            typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        }
+            .withFailMessage("Type with name $typeName not found")
+            .doesNotThrowAnyException()
+    }
+
+    private fun assertHasType(typeName: String, typePath: String) {
+        assertHasTypeOfName(typeName)
+
+        assertThat(typesWorldApi.hasType(worldType {
+            name = typeName
+            path = typePath
+        }))
+            .withFailMessage("Type ${typePath}/${typeName} not found")
+            .isTrue()
+    }
+
+    private fun assertHasNotType(typeName: String, typePath: String) {
+        assertThat(typesWorldApi.hasType(worldType {
+            name = typeName
+            path = typePath
+        }))
+            .withFailMessage("Type $typeName found")
+            .isFalse()
+    }
+
+    private fun assertHasClassType(typeName: String, typePath: String, expectedClass: ExpectedWorldClassType.() -> Unit) {
+        assertHasType(typeName, typePath)
+        typesWorldApi.getClassType(WorldType(typeName, typePath)).let {
+            assertWorldClassType(it, expectedClass)
+        }
+    }
+
+    private fun assertHasConcreteParametrizedClass(typeName: String, typePath: String, expectedClass: ExpectedWorldConcreteParametrizedClass.() -> Unit) {
+        assertHasType(typeName, typePath)
+        typesWorldApi.getConcreteParametrizedClass(WorldType(typeName, typePath)).let {
+            assertWorldConcreteParametrizedClass(it, expectedClass)
+        }
     }
 }

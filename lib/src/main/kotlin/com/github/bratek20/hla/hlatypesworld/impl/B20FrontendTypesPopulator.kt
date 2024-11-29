@@ -30,17 +30,19 @@ class B20FrontendTypesPopulator(
             ).asWorld()
         )
 
+        val pathForUndefinedPattern = HlaTypePath.create(
+            listOf(
+                GroupName("B20"),
+                GroupName("Frontend")
+            ),
+            ModuleName("UiElements"),
+            SubmoduleName.Api,
+            PatternName.Undefined
+        ).asWorld()
+
         val labelType = WorldType.create(
             name = WorldTypeName("Label"),
-            path = HlaTypePath.create(
-                listOf(
-                    GroupName("B20"),
-                    GroupName("Frontend")
-                ),
-                ModuleName("UiElements"),
-                SubmoduleName.Api,
-                PatternName.Undefined
-            ).asWorld()
+            path = pathForUndefinedPattern
         )
     }
 
@@ -59,6 +61,16 @@ class B20FrontendTypesPopulator(
         api.addClassType(
             WorldClassType.create(
                 type = labelType,
+                fields = emptyList()
+            )
+        )
+
+        api.addClassType(
+            WorldClassType.create(
+                type = WorldType.create(
+                    name = WorldTypeName("Button"),
+                    path = pathForUndefinedPattern
+                ),
                 fields = emptyList()
             )
         )

@@ -17,9 +17,12 @@ namespace SomeModule.View {
     public class SomeWindowView: WindowView<SomeWindow> {
         [SerializeField]
         SomeClassView someClassVm;
+        [SerializeField]
+        ButtonView someButton;
         protected override void OnBind() {
             base.OnBind();
             someClassVm.Bind(ViewModel.SomeClassVm);
+            someButton.Bind(ViewModel.SomeButton);
         }
     }
 }
