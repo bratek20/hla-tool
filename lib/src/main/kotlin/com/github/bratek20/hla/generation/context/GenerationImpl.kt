@@ -7,6 +7,7 @@ import com.github.bratek20.hla.generation.impl.core.ModuleGeneratorLogic
 import com.github.bratek20.hla.generation.impl.core.prefabs.PrefabBlueprintsGenerator
 import com.github.bratek20.hla.generation.impl.core.prefabs.PrefabsGenerator
 import com.github.bratek20.hla.hlatypesworld.context.HlaTypesWorldImpl
+import com.github.bratek20.hla.mvvmtypesmappers.context.MvvmTypesMappersImpl
 import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.velocity.context.VelocityImpl
 
@@ -17,7 +18,8 @@ class GenerationImpl: ContextModule {
             .withModules(
                 VelocityImpl(),
                 TypesWorldImpl(),
-                HlaTypesWorldImpl()
+                HlaTypesWorldImpl(),
+                MvvmTypesMappersImpl()
             )
             .addClass(PrefabsGenerator::class.java)
             .addClass(PrefabBlueprintsGenerator::class.java)

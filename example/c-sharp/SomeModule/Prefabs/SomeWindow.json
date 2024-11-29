@@ -2,11 +2,15 @@
   "blueprintType": "Window",
   "name": "SomeWindow",
   "viewType": "SomeModule.View.SomeWindowView",
-  "creationOrder": 2,
+  "creationOrder": 3,
   "children": [
     {
       "name": "someClassVm",
       "viewType": "SomeModule.View.SomeClassView"
+    },
+    {
+      "name": "someClassVmList",
+      "viewType": "SomeModule.View.SomeClassGroupView"
     },
     {
       "name": "someButton",

@@ -1,3 +1,6 @@
 Interfaces
     ViewModelToViewMapper
         map(viewModel: WorldType): WorldType
+
+    ViewModelTypesCalculator
+        wrapWithGroup(viewModel: WorldType): WorldType

@@ -1,13 +1,12 @@
 package com.github.bratek20.hla.hlatypesworld.impl
 
-import com.github.bratek20.hla.definitions.api.ModuleDefinition
-import com.github.bratek20.hla.definitions.api.ViewModelElementDefinition
-import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
+import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
 import com.github.bratek20.hla.hlatypesworld.api.*
+import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelTypesCalculator
 import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.queries.api.asWorldTypeName
@@ -16,7 +15,8 @@ import com.github.bratek20.hla.typesworld.api.*
 
 class ViewModelTypesPopulator(
     private val world: TypesWorldApi,
-    private val worldQueries: HlaTypesWorldQueries
+    private val worldQueries: HlaTypesWorldQueries,
+    private val vmTypesCalculator: ViewModelTypesCalculator
 ): HlaTypesWorldPopulator {
     companion object {
         const val ORDER = ApiTypesPopulator.ORDER + 1
@@ -205,9 +205,19 @@ class ViewModelTypesPopulator(
         } ?: emptyList()
     }
 
+    private fun viewModelTypeDefToWorldType(def: TypeDefinition): WorldTypeName {
+        if (def.getWrappers().contains(TypeWrapper.LIST)) {
+            val wrappedType = world.getTypeByName(WorldTypeName(def.getName()))
+            val groupType = vmTypesCalculator.wrapWithGroup(wrappedType)
+            world.ensureType(groupType)
+            return groupType.getName()
+        }
+        return WorldTypeName(def.getName())
+    }
+
     private fun getFieldsForWindow(def: ViewModelWindowDefinition): List<WorldClassField> {
         return def.getFields().map {
-            world.getTypeByName(it.getType().asWorldTypeName()).let { type ->
+            world.getTypeByName(viewModelTypeDefToWorldType(it.getType())).let { type ->
                 WorldClassField.create(it.getName(), type)
             }
         }
