@@ -36,6 +36,9 @@ ValueObjects
         type: WorldType
         typeArguments: WorldType[]
 
+    WorldTypeInfo
+        kind: WorldTypeKind
+
 Interfaces
     TypesWorldApi
         // to populate information that such type exits
@@ -47,6 +50,10 @@ Interfaces
         hasType(type: WorldType): bool
 
         getTypeByName(name: WorldTypeName): WorldType
+            throws
+                WorldTypeNotFoundException
+
+        getTypeInfo(type: WorldType): WorldTypeInfo
             throws
                 WorldTypeNotFoundException
 

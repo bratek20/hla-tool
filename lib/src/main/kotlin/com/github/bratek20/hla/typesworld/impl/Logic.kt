@@ -29,9 +29,7 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getTypeDependencies(type: WorldType): List<WorldType> {
-        if (!allTypes.contains(type)){
-            throw WorldTypeNotFoundException("Type '${type.getFullName()}' not found")
-        }
+        throwIfTypeNotFound(type)
 
         val direct = getDirectDependencies(type)
         return direct + direct.flatMap {
@@ -131,6 +129,28 @@ class TypesWorldApiLogic: TypesWorldApi {
             ?: getTypeByNameForWrapper(name, "Optional")
             ?: allTypes.firstOrNull { it.getName() == name }
             ?: throw WorldTypeNotFoundException("Hla type with name '${name}' not found")
+    }
+
+    override fun getTypeInfo(type: WorldType): WorldTypeInfo {
+        throwIfTypeNotFound(type)
+
+        val kind = when {
+            primitives.contains(type) -> WorldTypeKind.Primitive
+            classTypes.any { it.getType() == type } -> WorldTypeKind.ClassType
+            concreteWrappers.any { it.getType() == type } -> WorldTypeKind.ConcreteWrapper
+            concreteParametrizedClasses.any { it.getType() == type } -> WorldTypeKind.ConcreteParametrizedClass
+            else -> WorldTypeKind.Primitive
+        }
+
+        return WorldTypeInfo.create(
+            kind = kind
+        )
+    }
+
+    private fun throwIfTypeNotFound(type: WorldType) {
+        if (!allTypes.contains(type)) {
+            throw WorldTypeNotFoundException("Type '${type.getFullName()}' not found")
+        }
     }
 
     private fun getTypeByNameForWrapper(name: WorldTypeName, wrapper: String): WorldType? {

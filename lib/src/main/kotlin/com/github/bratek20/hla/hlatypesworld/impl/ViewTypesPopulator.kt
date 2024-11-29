@@ -3,7 +3,7 @@ package com.github.bratek20.hla.hlatypesworld.impl
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
-import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredUiElementGroup
+import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredElementWrapper
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.typesworld.api.*
@@ -49,29 +49,54 @@ class ViewTypesPopulator(
                 )
             }
 
-            var viewExtends: WorldType? = null
-            if (classType.getExtends()?.getName()?.value?.startsWith("UiElementGroup") == true) {
-                val wrappedViewModelType =
-                    getViewModelTypeForEnsuredUiElementGroup(world, classType.getType().getName().value)
-                val wrappedViewType = mapper.mapViewModelToViewType(wrappedViewModelType)
-                viewExtends = WorldType.create(
-                    WorldTypeName("UiElementGroup<${wrappedViewType.getName()}>"),
-                    viewClassType.getPath()
-                )
-                world.addConcreteParametrizedClass(
-                    WorldConcreteParametrizedClass.create(
-                        type = viewExtends,
-                        typeArguments = listOf(wrappedViewType)
-                    )
-                )
-            }
             world.addClassType(
                 WorldClassType.create(
                     type = viewClassType,
-                    extends = viewExtends,
+                    extends = populateExtendTypeIfPresent(classType, viewClassType),
                     fields = viewFields
                 )
             )
         }
+    }
+
+    private fun populateExtendTypeIfPresent(viewModel: WorldClassType, view: WorldType): WorldType? {
+        return populateExtendWrapperTypeIfPresent(
+            viewModel, view,
+            { it.startsWith("UiElementGroup") },
+            "UiElementGroupView"
+        ) ?: populateExtendWrapperTypeIfPresent(
+            viewModel, view,
+            { it.startsWith("OptionalUiElement") },
+            "OptionalUiElementView"
+        )
+    }
+
+    private fun populateExtendWrapperTypeIfPresent(
+        viewModel: WorldClassType,
+        view: WorldType,
+        nameChecker: (String) -> Boolean,
+        wrapperName: String
+    ): WorldType? {
+        if (viewModel.getExtends() == null) {
+            return null
+        }
+
+        var viewExtends: WorldType? = null
+        if (nameChecker(viewModel.getExtends()!!.getName().value)) {
+            val wrappedViewModelType =
+                getViewModelTypeForEnsuredElementWrapper(world, viewModel.getType().getName().value)
+            val wrappedViewType = mapper.mapViewModelToViewType(wrappedViewModelType)
+            viewExtends = WorldType.create(
+                WorldTypeName("${wrapperName}<${wrappedViewType.getName()}>"),
+                view.getPath()
+            )
+            world.addConcreteParametrizedClass(
+                WorldConcreteParametrizedClass.create(
+                    type = viewExtends,
+                    typeArguments = listOf(wrappedViewType)
+                )
+            )
+        }
+        return viewExtends
     }
 }

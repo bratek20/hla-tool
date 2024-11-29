@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.prefabs
 
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeKind
 
 class CreationOrderCalculator(
     private val typesWorldApi: TypesWorldApi,
@@ -12,7 +13,7 @@ class CreationOrderCalculator(
         if (type.getPath().value.startsWith("B20/Frontend")) {
             return 0
         }
-        if (type.getName().value.startsWith("UiElementGroup")) {
+        if (typesWorldApi.getTypeInfo(type).getKind() == WorldTypeKind.ConcreteParametrizedClass) {
             return 0
         }
 

@@ -15,6 +15,11 @@ interface TypesWorldApi {
     )
     fun getTypeByName(name: WorldTypeName): WorldType
 
+    @Throws(
+        WorldTypeNotFoundException::class,
+    )
+    fun getTypeInfo(type: WorldType): WorldTypeInfo
+
     fun addPrimitiveType(type: WorldType): Unit
 
     fun addClassType(type: WorldClassType): Unit

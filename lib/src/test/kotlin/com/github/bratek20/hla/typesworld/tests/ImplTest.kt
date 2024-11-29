@@ -21,7 +21,7 @@ class TypesWorldImplTest {
     }
 
     @Nested
-    inner class AddTypeAndGetTypeByName {
+    inner class EnsureAndHasAndGetTypeByName {
         @Test
         fun `should add`() {
             api.ensureType(worldType {
@@ -108,6 +108,51 @@ class TypesWorldImplTest {
                     path = "SomePath"
                 }
             }
+        }
+    }
+
+    @Nested
+    inner class GetTypeInfoScope {
+        @Test
+        fun `should throw if type not found`() {
+            assertApiExceptionThrown(
+                { api.getTypeInfo(worldType {
+                    name = "NotExisting"
+                    path = "SomePath"
+                }) },
+                {
+                    type = WorldTypeNotFoundException::class
+                    message = "Type 'SomePath/NotExisting' not found"
+                }
+            )
+        }
+
+        @Test
+        fun `should return correct kind`() {
+            api.addConcreteWrapper(worldConcreteWrapper {
+                type = {
+                    name = "SomeConcreteWrapper"
+                }
+            })
+
+            api.addConcreteParametrizedClass(worldConcreteParametrizedClass {
+                type = {
+                    name = "SomeConcreteParametrizedClass"
+                }
+            })
+
+            val assertKind = { typeName: String, expectedKind: WorldTypeKind ->
+                api.getTypeInfo(worldType {
+                    name = typeName
+                }).let {
+                    assertWorldTypeInfo(it) {
+                        kind = expectedKind.name
+                    }
+                }
+            }
+
+            assertKind("SomeConcreteWrapper", WorldTypeKind.ConcreteWrapper)
+            assertKind("SomeConcreteParametrizedClass", WorldTypeKind.ConcreteParametrizedClass)
         }
     }
 

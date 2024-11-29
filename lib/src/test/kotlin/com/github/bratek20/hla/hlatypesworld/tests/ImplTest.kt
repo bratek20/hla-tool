@@ -203,7 +203,17 @@ class HlaTypesWorldImplTest {
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
         assertHasType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView")
 
-        assertHasType("OptionalSomeClassView", "SomeModule/View/ElementsView")
+        assertHasClassType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView") {
+            extends = {
+                name = "UiElementGroupView<SomeEnum2SwitchView>"
+            }
+        }
+
+        assertHasClassType("OptionalSomeClassView", "SomeModule/View/ElementsView") {
+            extends = {
+                name = "OptionalUiElementView<SomeClassView>"
+            }
+        }
     }
 
     //TODO-REF could be in other file
