@@ -6,6 +6,9 @@ Interfaces
         //TODO-REF in the future should use HlaModulesWorld
         populate(group: ModuleGroup)
 
+    HlaTypesWorldQueries
+        getAll(module: ModuleName, submodule: SubmoduleName): WorldType[]
+
     HlaTypesWorldPopulator
         getOrder(): int
         populate(modules: ModuleDefinition[])

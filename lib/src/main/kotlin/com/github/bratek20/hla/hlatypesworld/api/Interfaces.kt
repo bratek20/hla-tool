@@ -3,10 +3,17 @@
 package com.github.bratek20.hla.hlatypesworld.api
 
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.generation.api.*
 import com.github.bratek20.hla.parsing.api.*
+import com.github.bratek20.hla.typesworld.api.*
 
 interface HlaTypesWorldApi {
     fun populate(group: ModuleGroup): Unit
+}
+
+interface HlaTypesWorldQueries {
+    fun getAll(module: ModuleName, submodule: SubmoduleName): List<WorldType>
 }
 
 interface HlaTypesWorldPopulator {

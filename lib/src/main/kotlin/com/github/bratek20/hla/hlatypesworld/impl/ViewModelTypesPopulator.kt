@@ -7,18 +7,16 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
+import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
-import com.github.bratek20.hla.hlatypesworld.api.asHla
-import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
 class ViewModelTypesPopulator(
-    private val world: TypesWorldApi
+    private val world: TypesWorldApi,
+    private val worldQueries: HlaTypesWorldQueries
 ): HlaTypesWorldPopulator {
     companion object {
         const val ORDER = ApiTypesPopulator.ORDER + 1
@@ -149,10 +147,8 @@ class ViewModelTypesPopulator(
         wrappedTypeNameExtractor: (String) -> String,
         wrappingClassName: String
     ) {
-        val ensuredGroups = world.getAllTypes().filter {
-            nameChecker(it.getName().value) &&
-                    it.getPath().asHla().getModuleName() == module.getName() &&
-                    it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel
+        val ensuredGroups = worldQueries.getAll(module.getName(), SubmoduleName.ViewModel).filter {
+            nameChecker(it.getName().value)
         }
 
         ensuredGroups.forEach {

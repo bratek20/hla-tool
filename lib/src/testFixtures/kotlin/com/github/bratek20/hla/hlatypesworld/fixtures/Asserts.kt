@@ -6,8 +6,14 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.definitions.fixtures.*
+import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.facade.fixtures.*
+import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.hla.generation.fixtures.*
 import com.github.bratek20.hla.parsing.api.*
 import com.github.bratek20.hla.parsing.fixtures.*
+import com.github.bratek20.hla.typesworld.api.*
+import com.github.bratek20.hla.typesworld.fixtures.*
 
 import com.github.bratek20.hla.hlatypesworld.api.*
 

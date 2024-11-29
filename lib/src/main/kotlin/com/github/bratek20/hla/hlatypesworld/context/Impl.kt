@@ -10,6 +10,7 @@ class HlaTypesWorldImpl: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
             .setImpl(HlaTypesWorldApi::class.java, HlaTypesWorldApiLogic::class.java)
+            .setImpl(HlaTypesWorldQueries::class.java, HlaTypesWorldQueriesLogic::class.java)
             .withModule(HlaTypesWorldPopulators())
     }
 }
