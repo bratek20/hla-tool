@@ -19,7 +19,7 @@ class GeneratedWindowLogic(
     private val apiTypeFactory: ApiTypeFactory
 ) {
     fun getModuleName(): String {
-        return apiTypeFactory.modules.currentModule.getName().value
+        return "TODO-FIX-ME-agasg131r1"
     }
 
     fun getClassName(): String {

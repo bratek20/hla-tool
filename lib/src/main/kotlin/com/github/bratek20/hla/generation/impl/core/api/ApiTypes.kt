@@ -13,8 +13,8 @@ import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
-import com.github.bratek20.hla.parsing.api.GroupName
-import com.github.bratek20.hla.queries.api.B20FrontendTypesPopulator
+import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
+import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.typesworld.api.WorldTypePath
@@ -666,7 +666,7 @@ data class ApiCustomTypes(
 )
 
 class ApiTypeFactory(
-    val modules: ModuleGroupQueries,
+    val modules: BaseModuleGroupQueries,
     private val languageTypes: LanguageTypes
 ) {
     fun create(type: TypeDefinition?): ApiType {

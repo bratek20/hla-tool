@@ -190,7 +190,7 @@ class ViewModelComplexElementLogic(
             ))
         }
 
-        result.addAll(ViewModelField.fromDefs(apiTypeFactory.modules.currentModule.getName(), def.getFields(), mapper))
+        result.addAll(ViewModelField.fromDefs(ModuleName("TODO-FIX-ME_13131523"), def.getFields(), mapper))
 
         return result
     }
