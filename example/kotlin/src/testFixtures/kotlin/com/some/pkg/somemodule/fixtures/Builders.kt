@@ -113,16 +113,6 @@ fun someClass6(init: SomeClass6Def.() -> Unit = {}): SomeClass6 {
     )
 }
 
-data class ClassUsingExternalTypeDef(
-    var extType: com.some.pkg.legacy.LegacyType? = null,
-)
-fun classUsingExternalType(init: ClassUsingExternalTypeDef.() -> Unit = {}): ClassUsingExternalType {
-    val def = ClassUsingExternalTypeDef().apply(init)
-    return ClassUsingExternalType.create(
-        extType = legacyType(def.extType),
-    )
-}
-
 data class ClassHavingOptListDef(
     var optList: List<(SomeClassDef.() -> Unit)>? = null,
 )

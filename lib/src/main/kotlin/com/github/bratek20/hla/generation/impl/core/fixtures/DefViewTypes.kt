@@ -23,7 +23,8 @@ abstract class DefType<T: ApiTypeLogic>(
     @Deprecated("Use defaultValueBuilder() instead")
     fun defaultValue(): String = defaultValueBuilder().build(api.languageTypes.context())
 
-    abstract fun build(variableName: String): String
+    @Deprecated("Use modernBuild() instead")
+    fun build(variableName: String): String = modernBuild(variable(variableName)).build(api.languageTypes.context())
 
     abstract fun builder(): TypeBuilder
 
@@ -37,10 +38,6 @@ class BaseDefType(
 ) : DefType<BaseApiType>(api) {
     override fun name(): String {
         return api.name()
-    }
-
-    override fun build(variableName: String): String {
-        return variableName
     }
 
     override fun builder(): TypeBuilder {
@@ -67,38 +64,10 @@ abstract class StructureDefType<T: StructureApiType>(
     }
 }
 
-class ExternalDefType(
-    api: ExternalApiType,
-) : DefType<ExternalApiType>(api) {
-    override fun name(): String {
-        return languageTypes.wrapWithOptional(pascalToCamelCase(api.name()))
-    }
-
-    override fun build(variableName: String): String {
-        return pascalToCamelCase(api.rawName) + "($variableName)"
-    }
-
-    override fun builder(): TypeBuilder {
-        return api.serializableBuilder()
-    }
-
-    override fun defaultValueBuilder(): ExpressionBuilder {
-        return nullValue()
-    }
-
-    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
-        return variable
-    }
-}
-
 abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseDefType
 ) : StructureDefType<T>(api) {
-    override fun build(variableName: String): String {
-        return api.deserialize(variableName)
-    }
-
     override fun name(): String {
         return boxedType.name()
     }
@@ -181,21 +150,18 @@ open class ComplexStructureDefType(
         return pattern.defClassType(api.name());
     }
 
-    override fun build(variableName: String): String {
-        return pattern.complexVoDefConstructor(api.name(), variableName)
-    }
-
     override fun builder(): TypeBuilder {
         return lambdaType(typeName(defName()))
     }
 
     override fun defaultValueBuilder(): ExpressionBuilder {
-        return emptyLambda()
+        return emptyLambda(1)
     }
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        val variableName = variable.build(api.languageTypes.context())
         return methodCall {
-            methodName = funName()
+            methodName = pattern.complexVoDefConstructor(api.name(), variableName)
             addArg {
                 variable
             }
@@ -219,14 +185,6 @@ class OptionalDefType(
         return languageTypes.wrapWithSoftOptional(wrappedType.name())
     }
 
-    override fun build(variableName: String): String {
-        val mapping = wrappedType.build("it")
-        if (mapping == "it") {
-            return pattern.mapOptionalDefBaseElement(variableName)
-        }
-        return pattern.mapOptionalDefElement(variableName, "it", mapping)
-    }
-
     override fun builder(): TypeBuilder {
         return softOptionalType(wrappedType.builder())
     }
@@ -236,7 +194,18 @@ class OptionalDefType(
     }
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
+        val asOptional = hardOptional(wrappedType.builder()) {
+            variable
+        }
+
+        val mapping = wrappedType.modernBuild(variable("it"))
+        if (mapping.build(api.languageTypes.context()) == "it") {
+            return asOptional
+        }
+
+        return optionalOp(asOptional).map {
+            mapping
+        }
     }
 }
 
@@ -248,19 +217,15 @@ class ListDefType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun build(variableName: String): String {
-        if (wrappedType is BaseDefType) {
-            return variableName
-        }
-        return languageTypes.mapListElements(variableName, "it", wrappedType.build("it"))
-    }
-
     override fun defaultValueBuilder(): ExpressionBuilder {
         return emptyImmutableList(wrappedType.builder())
     }
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
+        if (wrappedType is BaseDefType) {
+            return variable
+        }
+        return listOp(variable).map { wrappedType.modernBuild(variable("it")) }
     }
 
     override fun builder(): TypeBuilder {
@@ -273,10 +238,6 @@ class EnumDefType(
 ) : DefType<EnumApiType>(api) {
     override fun name(): String {
         return api.serializableName()
-    }
-
-    override fun build(variableName: String): String {
-        return api.deserialize(variableName)
     }
 
     override fun builder(): TypeBuilder {
@@ -305,7 +266,6 @@ class DefTypeFactory(
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
             is SerializableApiType -> ComplexStructureDefType(type, createFields(type.fields))
-            is ExternalApiType -> ExternalDefType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

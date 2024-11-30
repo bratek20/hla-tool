@@ -57,11 +57,11 @@ class ComplexBuilder(
     fun getMethodBuilder(): MethodBuilderOps = {
         static = true
         name = def.funName()
-        returnType = typeName(def.api.name())
+        returnType = def.api.builder()
         addArg {
             type = lambdaType(typeName(def.defName()))
             name = "init"
-            defaultValue = emptyLambda()
+            defaultValue = nullValue()
         }
         setBody {
             add(assignment {
@@ -76,6 +76,13 @@ class ComplexBuilder(
                 name = "init"
                 addArg {
                     variable("def")
+                }
+            })
+            add(assignment {
+                left = variable("def")
+                right = nullCoalescing {
+                    left = variable("def")
+                    defaultValue = emptyLambda(1)
                 }
             })
             add(returnStatement {

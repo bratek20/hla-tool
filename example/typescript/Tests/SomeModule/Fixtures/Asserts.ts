@@ -46,11 +46,6 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function classUsingExternalType(given: ClassUsingExternalType, expected: ExpectedClassUsingExternalType) {
-        const diff = diffClassUsingExternalType(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
     export function classHavingOptList(given: ClassHavingOptList, expected: ExpectedClassHavingOptList) {
         const diff = diffClassHavingOptList(given, expected)
         AssertEquals(diff, "", diff)

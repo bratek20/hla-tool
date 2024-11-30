@@ -44,7 +44,7 @@ class KotlinBuildersPattern(
     }
 
     override fun complexVoDefConstructor(name: String, arg: String): String {
-        return "${pascalToCamelCase(name)}($arg)"
+        return "${pascalToCamelCase(name)}"
     }
 }
 

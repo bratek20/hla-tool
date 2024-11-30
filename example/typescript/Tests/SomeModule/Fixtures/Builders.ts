@@ -127,17 +127,6 @@ namespace SomeModule.Builder {
         )
     }
 
-    export interface ClassUsingExternalTypeDef {
-        extType?: Optional<legacyType>,
-    }
-    export function classUsingExternalType(def?: ClassUsingExternalTypeDef): ClassUsingExternalType {
-        const final_extType = def?.extType ?? undefined
-
-        return ClassUsingExternalType.create(
-            legacyType(final_extType),
-        )
-    }
-
     export interface ClassHavingOptListDef {
         optList?: SomeClassDef[],
     }
