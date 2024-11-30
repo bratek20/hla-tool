@@ -339,20 +339,21 @@ class ComplexCustomApiType(
         return getterName(fieldName) + "($variableName)"
     }
 
-    override fun serialize(variableName: String): String {
-        return "${serializableName()}.fromCustomType($variableName)"
-    }
-
-    override fun deserialize(variableName: String): String {
-        return "${variableName}.toCustomType()"
-    }
-
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
+        return methodCall {
+            target = variable
+            methodName = "toCustomType"
+        }
     }
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
+        return methodCall {
+            target = variable(serializableName())
+            methodName = "fromCustomType"
+            addArg {
+                variable
+            }
+        }
     }
 }
 
@@ -405,7 +406,7 @@ open class ComplexValueObjectApiType(
     fields: List<ComplexStructureField>
 ) : SerializableApiType(name, fields) {
     open fun getClassOps(): ClassBuilderOps = {
-        name = name()
+        this.name = name()
         fields.forEach {
             addField {
                 type = it.type.serializableBuilder()
