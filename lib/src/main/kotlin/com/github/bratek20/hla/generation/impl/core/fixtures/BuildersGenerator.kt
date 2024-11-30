@@ -61,7 +61,7 @@ class ComplexBuilder(
         addArg {
             type = lambdaType(typeName(def.defName()))
             name = "init"
-            defaultValue = emptyLambda(1)
+            defaultValue = nullValue()
         }
         setBody {
             add(assignment {

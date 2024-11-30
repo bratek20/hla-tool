@@ -190,7 +190,7 @@ open class ComplexStructureDefType(
     }
 
     override fun defaultValueBuilder(): ExpressionBuilder {
-        return emptyLambda()
+        return emptyLambda(1)
     }
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {

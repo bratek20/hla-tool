@@ -22,17 +22,17 @@ namespace OtherModule.Fixtures {
         public static OtherId BuildOtherId(int value = 0) {
             return new OtherId(value);
         }
-        public static OtherProperty BuildOtherProperty(Action<OtherPropertyDef> init = (_) => {}) {
+        public static OtherProperty BuildOtherProperty(Action<OtherPropertyDef> init = null) {
             var def = new OtherPropertyDef();
             init.Invoke(def);
             return OtherProperty.Create(new OtherId(def.Id), def.Name);
         }
-        public static OtherClass BuildOtherClass(Action<OtherClassDef> init = (_) => {}) {
+        public static OtherClass BuildOtherClass(Action<OtherClassDef> init = null) {
             var def = new OtherClassDef();
             init.Invoke(def);
             return OtherClass.Create(new OtherId(def.Id), def.Amount);
         }
-        public static OtherData BuildOtherData(Action<OtherDataDef> init = (_) => {}) {
+        public static OtherData BuildOtherData(Action<OtherDataDef> init = null) {
             var def = new OtherDataDef();
             init.Invoke(def);
             return OtherData.Create(new OtherId(def.Id));
