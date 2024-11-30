@@ -12,6 +12,13 @@ namespace OtherModule.Fixtures {
             public int Id { get; set; } = 0;
             public string Name { get; set; } = "someValue";
         }
+        public class OtherClassDef {
+            public int Id { get; set; } = 0;
+            public int Amount { get; set; } = 0;
+        }
+        public class OtherDataDef {
+            public int Id { get; set; } = 0;
+        }
         public static OtherId BuildOtherId(int value = 0) {
             return new OtherId(value);
         }
@@ -19,6 +26,16 @@ namespace OtherModule.Fixtures {
             var def = new OtherPropertyDef();
             init.Invoke(def);
             return OtherProperty.Create(new OtherId(def.id), def.name);
+        }
+        public static OtherClass BuildOtherClass(Action<OtherClassDef> init = () => {}) {
+            var def = new OtherClassDef();
+            init.Invoke(def);
+            return OtherClass.Create(new OtherId(def.id), def.amount);
+        }
+        public static OtherData BuildOtherData(Action<OtherDataDef> init = () => {}) {
+            var def = new OtherDataDef();
+            init.Invoke(def);
+            return OtherData.Create(new OtherId(def.id));
         }
     }
 }

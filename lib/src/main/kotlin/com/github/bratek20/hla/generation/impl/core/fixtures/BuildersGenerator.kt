@@ -196,7 +196,7 @@ class BuildersGenerator: PatternGenerator() {
                 addMethod(it.getMethodBuilder())
             }
 
-            getComplexBuilders()[0].let {
+            getComplexBuilders().forEach {
                 addClass(it.getDefClassBuilder())
                 addMethod(it.getMethodBuilder())
             }
