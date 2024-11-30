@@ -72,17 +72,17 @@ class ComplexBuilder(
                     className = def.defName()
                 }
             })
+            add(assignment {
+                left = variable("init")
+                right = nullCoalescing {
+                    left = variable("init")
+                    defaultValue = emptyLambda(1)
+                }
+            })
             add(lambdaCallStatement {
                 name = "init"
                 addArg {
                     variable("def")
-                }
-            })
-            add(assignment {
-                left = variable("def")
-                right = nullCoalescing {
-                    left = variable("def")
-                    defaultValue = emptyLambda(1)
                 }
             })
             add(returnStatement {
