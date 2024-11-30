@@ -212,6 +212,10 @@ class ListDefType(
     override fun defaultValueBuilder(): ExpressionBuilder {
         return emptyImmutableList(wrappedType.builder())
     }
+
+    override fun builder(): TypeBuilder {
+        return listType(wrappedType.builder())
+    }
 }
 
 class EnumDefType(

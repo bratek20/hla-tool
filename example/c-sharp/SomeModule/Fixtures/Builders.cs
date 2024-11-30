@@ -23,13 +23,13 @@ namespace SomeModule.Fixtures {
         public class SomeClass3Def {
             public Action<SomeClass2Def> Class2Object { get; set; } = () => {};
             public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
-            public List<SomeClass2> Class2List { get; set; } = new List<SomeClass2>();
+            public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<SomeClass2>();
         }
         public class SomeClass4Def {
             public int OtherId { get; set; } = 0;
             public Action<OtherClassDef> OtherClass { get; set; } = () => {};
             public List<int> OtherIdList { get; set; } = new List<int>();
-            public List<OtherClass> OtherClassList { get; set; } = new List<Action<OtherClassDef>>();
+            public List<Action<OtherClassDef>> OtherClassList { get; set; } = new List<Action<OtherClassDef>>();
         }
         public class SomeClass5Def {
             public string Date { get; set; } = "01/01/1970 00:00";
@@ -41,8 +41,8 @@ namespace SomeModule.Fixtures {
         public class SomeClass6Def {
             public SomeClass? SomeClassOpt { get; set; } = null;
             public string? OptString { get; set; } = null;
-            public List<SomeClass2> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
-            public List<SomeClass6> SameClassList { get; set; } = new List<SomeClass6>();
+            public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
+            public List<Action<SomeClass6Def>> SameClassList { get; set; } = new List<SomeClass6>();
         }
         public class ClassUsingExternalTypeDef {
             public LegacyType ExtType { get; set; } = null;
