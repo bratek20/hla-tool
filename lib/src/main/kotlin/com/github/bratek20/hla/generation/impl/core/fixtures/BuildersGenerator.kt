@@ -151,7 +151,7 @@ class BuildersGenerator: PatternGenerator() {
         getComplexBuilders().forEach {
             addClass(it.getDefClassBuilder())
         }
-        
+
         addClass {
             name = moduleName + "Builders"
 

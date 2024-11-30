@@ -6,7 +6,9 @@ using System.Linq;
 using B20.Ext;
 using SomeModule.Api;
 using OtherModule.Api;
+using OtherModule.Fixtures;
 using TypesModule.Api;
+using TypesModule.Fixtures;
 
 namespace SomeModule.Fixtures {
     public class SomeClassDef {

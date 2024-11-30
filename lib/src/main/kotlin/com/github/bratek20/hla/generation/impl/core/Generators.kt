@@ -213,6 +213,9 @@ abstract class PatternGenerator
                             addUsing(it.getModule().getName().value + ".ViewModel")
                             addUsing(it.getModule().getName().value + ".View")
                         }
+                        if (submodule == SubmoduleName.Fixtures) {
+                            addUsing(it.getModule().getName().value + ".Fixtures")
+                        }
                     }
 
                     namespace(submoduleNamespace(submodule, c))
