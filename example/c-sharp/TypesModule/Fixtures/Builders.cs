@@ -7,7 +7,7 @@ using B20.Ext;
 using TypesModule.Api;
 
 namespace TypesModule.Fixtures {
-    public class OtherModuleBuilders {
+    public class TypesModuleBuilders {
         public class DateRangeDef {
             public string From { get; set; } = "01/01/1970 00:00";
             public string To { get; set; } = "01/01/2030 00:00";

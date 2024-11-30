@@ -190,7 +190,7 @@ class BuildersGenerator: PatternGenerator() {
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         addClass {
-            name = "OtherModuleBuilders"
+            name = moduleName + "Builders"
 
             getSimpleBuilders().forEach {
                 addMethod(it.getMethodBuilder())

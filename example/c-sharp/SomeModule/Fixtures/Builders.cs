@@ -9,7 +9,7 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Fixtures {
-    public class OtherModuleBuilders {
+    public class SomeModuleBuilders {
         public class SomeClassDef {
             public string Id { get; set; } = "someValue";
             public int Amount { get; set; } = 10;

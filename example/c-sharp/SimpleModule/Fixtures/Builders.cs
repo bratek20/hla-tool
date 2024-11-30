@@ -7,7 +7,7 @@ using B20.Ext;
 using SimpleModule.Api;
 
 namespace SimpleModule.Fixtures {
-    public class OtherModuleBuilders {
+    public class SimpleModuleBuilders {
         public static SimpleId BuildSimpleId(string value = "someValue") {
             return new SimpleId(value);
         }
