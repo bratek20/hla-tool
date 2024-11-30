@@ -185,7 +185,7 @@ class BuildersGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return module.getName().value == "OtherModule"
+        return !modules.allStructureDefinitions(module).areAllEmpty()
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
