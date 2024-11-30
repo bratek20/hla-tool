@@ -24,7 +24,7 @@ abstract class DefType<T: ApiTypeLogic>(
     fun defaultValue(): String = defaultValueBuilder().build(api.languageTypes.context())
 
     @Deprecated("Use modernBuild() instead")
-    open fun build(variableName: String): String = modernBuild(variable(variableName)).build(api.languageTypes.context())
+    fun build(variableName: String): String = modernBuild(variable(variableName)).build(api.languageTypes.context())
 
     abstract fun builder(): TypeBuilder
 
@@ -150,10 +150,6 @@ open class ComplexStructureDefType(
         return pattern.defClassType(api.name());
     }
 
-//    override fun build(variableName: String): String {
-//        return pattern.complexVoDefConstructor(api.name(), variableName)
-//    }
-
     override fun builder(): TypeBuilder {
         return lambdaType(typeName(defName()))
     }
@@ -189,14 +185,6 @@ class OptionalDefType(
         return languageTypes.wrapWithSoftOptional(wrappedType.name())
     }
 
-    override fun build(variableName: String): String {
-        val mapping = wrappedType.build("it")
-        if (mapping == "it") {
-            return pattern.mapOptionalDefBaseElement(variableName)
-        }
-        return pattern.mapOptionalDefElement(variableName, "it", mapping)
-    }
-
     override fun builder(): TypeBuilder {
         return softOptionalType(wrappedType.builder())
     }
@@ -206,7 +194,18 @@ class OptionalDefType(
     }
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
+        val asOptional = hardOptional(wrappedType.builder()) {
+            variable
+        }
+
+        val mapping = wrappedType.modernBuild(variable("it"))
+        if (mapping.build(api.languageTypes.context()) == "it") {
+            return asOptional
+        }
+
+        return optionalOp(asOptional).map {
+            mapping
+        }
     }
 }
 
@@ -218,19 +217,15 @@ class ListDefType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun build(variableName: String): String {
-        if (wrappedType is BaseDefType) {
-            return variableName
-        }
-        return languageTypes.mapListElements(variableName, "it", wrappedType.build("it"))
-    }
-
     override fun defaultValueBuilder(): ExpressionBuilder {
         return emptyImmutableList(wrappedType.builder())
     }
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
+        if (wrappedType is BaseDefType) {
+            return variable
+        }
+        return listOp(variable).map { wrappedType.modernBuild(variable("it")) }
     }
 
     override fun builder(): TypeBuilder {

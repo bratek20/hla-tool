@@ -124,19 +124,19 @@ namespace SomeModule.Fixtures {
             var def = new SomeClass2Def();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeClass2.Create(new SomeId(def.Id), TODO, TODO, def.Enabled);
+            return SomeClass2.Create(new SomeId(def.Id), def.Names, def.Ids.Select(it => new SomeId(it)).ToList(), def.Enabled);
         }
         public static SomeClass3 BuildSomeClass3(Action<SomeClass3Def> init = null) {
             var def = new SomeClass3Def();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeClass3.Create(BuildSomeClass2(def.Class2Object), (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), TODO);
+            return SomeClass3.Create(BuildSomeClass2(def.Class2Object), (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), def.Class2List.Select(it => BuildSomeClass2(it)).ToList());
         }
         public static SomeClass4 BuildSomeClass4(Action<SomeClass4Def> init = null) {
             var def = new SomeClass4Def();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeClass4.Create(new OtherId(def.OtherId), BuildOtherClass(def.OtherClass), TODO, TODO);
+            return SomeClass4.Create(new OtherId(def.OtherId), BuildOtherClass(def.OtherClass), def.OtherIdList.Select(it => new OtherId(it)).ToList(), def.OtherClassList.Select(it => BuildOtherClass(it)).ToList());
         }
         public static SomeClass5 BuildSomeClass5(Action<SomeClass5Def> init = null) {
             var def = new SomeClass5Def();
@@ -148,19 +148,19 @@ namespace SomeModule.Fixtures {
             var def = new SomeClass6Def();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeClass6.Create(TODO, TODO, TODO, TODO);
+            return SomeClass6.Create(Optional<Action<SomeClassDef>>.Of(def.SomeClassOpt).Map(it => BuildSomeClass(it)), Optional<string>.Of(def.OptString), def.Class2List.Select(it => BuildSomeClass2(it)).ToList(), def.SameClassList.Select(it => BuildSomeClass6(it)).ToList());
         }
         public static ClassHavingOptList BuildClassHavingOptList(Action<ClassHavingOptListDef> init = null) {
             var def = new ClassHavingOptListDef();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return ClassHavingOptList.Create(TODO);
+            return ClassHavingOptList.Create(Optional<List<Action<SomeClassDef>>>.Of(def.OptList).Map(it => it.Select(it => BuildSomeClass(it)).ToList()));
         }
         public static ClassHavingOptSimpleVo BuildClassHavingOptSimpleVo(Action<ClassHavingOptSimpleVoDef> init = null) {
             var def = new ClassHavingOptSimpleVoDef();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return ClassHavingOptSimpleVo.Create(TODO);
+            return ClassHavingOptSimpleVo.Create(Optional<string>.Of(def.OptSimpleVo).Map(it => new SomeId(it)));
         }
         public static RecordClass BuildRecordClass(Action<RecordClassDef> init = null) {
             var def = new RecordClassDef();
@@ -172,13 +172,13 @@ namespace SomeModule.Fixtures {
             var def = new ClassWithOptExamplesDef();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return ClassWithOptExamples.Create(TODO, TODO);
+            return ClassWithOptExamples.Create(Optional<int>.Of(def.OptInt), Optional<int>.Of(def.OptIntWrapper).Map(it => new SomeIntWrapper(it)));
         }
         public static ClassWithEnumList BuildClassWithEnumList(Action<ClassWithEnumListDef> init = null) {
             var def = new ClassWithEnumListDef();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return ClassWithEnumList.Create(TODO);
+            return ClassWithEnumList.Create(def.EnumList.Select(it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it)).ToList());
         }
         public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = null) {
             var def = new SomeQueryInputDef();
@@ -202,13 +202,13 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyDef();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeProperty.Create(BuildOtherProperty(def.Other), TODO, TODO, def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
+            return SomeProperty.Create(BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
         }
         public static SomeProperty2 BuildSomeProperty2(Action<SomeProperty2Def> init = null) {
             var def = new SomeProperty2Def();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeProperty2.Create(def.Value, def.Custom, (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), TODO);
+            return SomeProperty2.Create(def.Value, def.Custom, (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), Optional<object>.Of(def.CustomOpt));
         }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();
@@ -220,13 +220,13 @@ namespace SomeModule.Fixtures {
             var def = new SomeDataDef();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeData.Create(BuildOtherData(def.Other), def.Custom, TODO, def.GoodDataName);
+            return SomeData.Create(BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
         }
         public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = null) {
             var def = new SomeData2Def();
             init.Invoke(def);
             def = def ?? ((_) => {});
-            return SomeData2.Create(TODO, TODO);
+            return SomeData2.Create(Optional<string>.Of(def.OptEnum).Map(it => (SomeEnum)Enum.Parse(typeof(SomeEnum), it)), Optional<string>.Of(def.OptCustomType).Map(it => TODO(it)));
         }
         public static SomeEvent BuildSomeEvent(Action<SomeEventDef> init = null) {
             var def = new SomeEventDef();
