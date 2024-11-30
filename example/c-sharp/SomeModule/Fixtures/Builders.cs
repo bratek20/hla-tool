@@ -39,7 +39,7 @@ namespace SomeModule.Fixtures {
             public Action<OtherPropertyDef> OtherProperty { get; set; } = () => {};
         }
         public class SomeClass6Def {
-            public SomeClass? SomeClassOpt { get; set; } = null;
+            public Action<SomeClassDef>? SomeClassOpt { get; set; } = null;
             public string? OptString { get; set; } = null;
             public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
             public List<Action<SomeClass6Def>> SameClassList { get; set; } = new List<SomeClass6>();
@@ -48,7 +48,7 @@ namespace SomeModule.Fixtures {
             public LegacyType ExtType { get; set; } = null;
         }
         public class ClassHavingOptListDef {
-            public List<SomeClass>? OptList { get; set; } = null;
+            public List<Action<SomeClassDef>>? OptList { get; set; } = null;
         }
         public class ClassHavingOptSimpleVoDef {
             public string? OptSimpleVo { get; set; } = null;
@@ -79,7 +79,7 @@ namespace SomeModule.Fixtures {
         public class SomePropertyDef {
             public Action<OtherPropertyDef> Other { get; set; } = () => {};
             public int? Id2 { get; set; } = null;
-            public SerializedDateRange? Range { get; set; } = null;
+            public Action<DateRangeDef>? Range { get; set; } = null;
             public double DoubleExample { get; set; } = 0;
             public long LongExample { get; set; } = 0;
             public string GoodName { get; set; } = "someValue";

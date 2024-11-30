@@ -27,9 +27,7 @@ abstract class DefType<T: ApiType>(
 
     abstract fun build(variableName: String): String
 
-    open fun builder(): TypeBuilder {
-        return api.serializableBuilder()
-    }
+    abstract fun builder(): TypeBuilder
 
     abstract fun defaultValueBuilder(): ExpressionBuilder
 }
@@ -43,6 +41,10 @@ class BaseDefType(
 
     override fun build(variableName: String): String {
         return variableName
+    }
+
+    override fun builder(): TypeBuilder {
+        return api.serializableBuilder()
     }
 
     override fun defaultValueBuilder(): ExpressionBuilder {
@@ -72,6 +74,10 @@ class ExternalDefType(
         return pascalToCamelCase(api.rawName) + "($variableName)"
     }
 
+    override fun builder(): TypeBuilder {
+        return api.serializableBuilder()
+    }
+
     override fun defaultValueBuilder(): ExpressionBuilder {
         return nullValue()
     }
@@ -91,6 +97,10 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
 
     override fun defaultValueBuilder(): ExpressionBuilder {
         return api.exampleValueBuilder() ?: boxedType.defaultValueBuilder()
+    }
+
+    override fun builder(): TypeBuilder {
+        return boxedType.builder()
     }
 }
 
@@ -189,6 +199,10 @@ class OptionalDefType(
         return pattern.mapOptionalDefElement(variableName, "it", mapping)
     }
 
+    override fun builder(): TypeBuilder {
+        return softOptionalType(wrappedType.builder())
+    }
+
     override fun defaultValueBuilder(): ExpressionBuilder {
         return nullValue()
     }
@@ -227,6 +241,10 @@ class EnumDefType(
 
     override fun build(variableName: String): String {
         return api.deserialize(variableName)
+    }
+
+    override fun builder(): TypeBuilder {
+        return api.serializableBuilder()
     }
 
     override fun defaultValueBuilder(): ExpressionBuilder {
