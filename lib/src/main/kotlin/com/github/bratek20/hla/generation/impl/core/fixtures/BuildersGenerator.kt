@@ -3,8 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.types.baseType
-import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -99,7 +98,7 @@ class BuildersGenerator: PatternGenerator() {
                 addArg {
                     name = "value"
                     type = typeName("int")
-                    defaultValue = "0"
+                    defaultValue = const(0)
                 }
 
                 setBody {
@@ -135,7 +134,11 @@ class BuildersGenerator: PatternGenerator() {
                 static = true
                 name = "BuildOtherProperty"
                 returnType = typeName("OtherProperty")
-
+                addArg {
+                    type = lambdaType(typeName("OtherPropertyDef"))
+                    name = "init"
+                    defaultValue = emptyLambda()
+                }
                 setBody {
                     add(assignment {
                         left = variableDeclaration {
@@ -145,14 +148,20 @@ class BuildersGenerator: PatternGenerator() {
                             className = "OtherPropertyDef"
                         }
                     })
-                    //add(fun)
+                    add(lambdaCallStatement {
+                        name = "init"
+                        addArg {
+                            variable("def")
+                        }
+                    })
                     add(returnStatement {
                         methodCall {
                             target = variable("OtherProperty")
                             methodName = "create"
                             addArg {
-                                functionCall {
-                                    name = "buildOtherId"
+                                methodCall {
+                                    target = variable("OtherModuleBuilders")
+                                    methodName = "buildOtherId"
                                     addArg {
                                         getterFieldAccess {
                                             objectRef = variable("def")
@@ -172,6 +181,5 @@ class BuildersGenerator: PatternGenerator() {
                 }
             }
         }
-        addExtraEmptyLines(13)
     }
 }

@@ -162,7 +162,7 @@ class MocksGenerator: PatternGenerator() {
                         addArg {
                             name = "times"
                             type = baseType(BaseType.INT)
-                            defaultValue = "1"
+                            defaultValue = const(1)
                         }
                         legacyBody = {
                             line("assertThat(${callsListName}.size).withFailMessage(\"Expected ${def.name} to be called \$times times, but was called \$${def.name}Calls times\").isEqualTo(times)")
@@ -178,7 +178,7 @@ class MocksGenerator: PatternGenerator() {
                         addArg {
                             name = "times"
                             type = baseType(BaseType.INT)
-                            defaultValue = "1"
+                            defaultValue = const(1)
                         }
                         legacyBody = {
                             line("val calls = ${callsListName}.filter { ${inputDiffMethodName}(it, args) == \"\" }")

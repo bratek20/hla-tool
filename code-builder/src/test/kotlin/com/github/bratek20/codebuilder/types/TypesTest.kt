@@ -325,6 +325,7 @@ class TypesTest {
             }
         }
     }
+
     @Test
     fun optional() {
         testOp {
@@ -431,6 +432,59 @@ class TypesTest {
                    string? unpackedToSoftDefaultNull = optional.OrElse(null);
                    int plusOne = optional.Map( it => it + 1 );
                 """
+            }
+        }
+    }
+
+    @Nested
+    inner class LambdaTypeScope {
+        @Test
+        fun `empty lambda`() {
+            testLinePartOps {
+                ops {
+                    add(emptyLambda())
+                }
+                langExpected {
+                    lang = CSharp()
+                    expected = """
+                    () => {}
+                    """
+                }
+            }
+        }
+
+        @Test
+        fun `lambda type`() {
+            testLinePartOps {
+                ops {
+                    add(lambdaType(typeName("SomeType")))
+                }
+                langExpected {
+                    lang = CSharp()
+                    expected = """
+                    Action<SomeType>
+                    """
+                }
+            }
+        }
+
+        @Test
+        fun `lambda call`() {
+            testLinePartOps {
+                ops {
+                    add(lambdaCall {
+                        name = "someLambda"
+                        addArg {
+                            variable("arg")
+                        }
+                    })
+                }
+                langExpected {
+                    lang = CSharp()
+                    expected = """
+                    someLambda.Invoke(arg)
+                    """
+                }
             }
         }
     }

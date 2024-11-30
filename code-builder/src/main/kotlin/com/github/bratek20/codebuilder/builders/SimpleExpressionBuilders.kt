@@ -62,6 +62,7 @@ fun instanceVariable(name: String) = expression { c ->
 fun const(value: Int) = expression(value.toString())
 fun nullValue() = expression { c -> c.lang.nullValue() }
 fun string(value: String) = expression("\"$value\"")
+fun emptyString() = string("")
 
 class PlusBuilder: ExpressionBuilder {
     lateinit var left: ExpressionBuilder

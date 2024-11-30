@@ -36,7 +36,7 @@ class ExceptionsGenerator: PatternGenerator() {
                         addArg {
                             name = "message"
                             type = baseType(BaseType.STRING)
-                            defaultValue = "\"\""
+                            defaultValue = emptyString()
                         }
                     }
                     addPassingArg {
@@ -74,7 +74,7 @@ class ExceptionsGenerator: PatternGenerator() {
                         addArg {
                             name = "message"
                             type = baseType(BaseType.STRING)
-                            defaultValue = "\"\""
+                            defaultValue = emptyString()
                         }
                     }
                     addPassingArg {
