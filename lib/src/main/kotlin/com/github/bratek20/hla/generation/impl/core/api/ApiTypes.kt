@@ -64,11 +64,11 @@ abstract class ApiType {
         }
     }
 
-    abstract fun name(): String
+    @Deprecated("Use builder instead", ReplaceWith("builder()"))
+    open fun name(): String = builder().build(c)
 
-    open fun serializableName(): String {
-        return name()
-    }
+    @Deprecated("Use serializableBuilder instead", ReplaceWith("serializableBuilder()"))
+    open fun serializableName(): String = serializableBuilder().build(c)
 
     abstract fun builder(): TypeBuilder
     abstract fun serializableBuilder(): TypeBuilder
@@ -95,16 +95,12 @@ abstract class ApiType {
 class BaseApiType(
     val name: BaseType
 ) : ApiType() {
-    override fun name(): String {
-        return languageTypes.mapBaseType(name)
-    }
-
     override fun builder(): TypeBuilder {
         val cb = codeBuilderBaseType()
         return if (cb != null) {
             baseType(cb)
         } else {
-            typeName(name())
+            typeName(languageTypes.mapBaseType(name))
         }
     }
 
@@ -137,10 +133,6 @@ class BaseApiType(
 class InterfaceApiType(
     val name: String
 ) : ApiType() {
-    override fun name(): String {
-        return name
-    }
-
     override fun builder(): TypeBuilder {
         return typeName(name)
     }
@@ -161,19 +153,8 @@ class InterfaceApiType(
 class ExternalApiType(
     val rawName: String
 ) : ApiType() {
-    override fun name(): String {
-        if (languageTypes is KotlinTypes) {
-            typeModule!!.getKotlinConfig()?.let { config ->
-                config.getExternalTypePackages().find { it.getName() == rawName }?.let {
-                    return it.getPackageName() + "." + rawName
-                }
-            }
-        }
-        return rawName
-    }
-
     override fun builder(): TypeBuilder {
-        return typeName(name())
+        return typeName(adjustedName())
     }
 
     override fun serializableBuilder(): TypeBuilder {
@@ -187,15 +168,22 @@ class ExternalApiType(
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         return variable
     }
+
+    private fun adjustedName(): String {
+        if (languageTypes is KotlinTypes) {
+            typeModule!!.getKotlinConfig()?.let { config ->
+                config.getExternalTypePackages().find { it.getName() == rawName }?.let {
+                    return it.getPackageName() + "." + rawName
+                }
+            }
+        }
+        return rawName
+    }
 }
 
 abstract class StructureApiType(
     val name: String
 ) : ApiType() {
-    override fun name(): String {
-        return name
-    }
-
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
     }
@@ -217,14 +205,6 @@ abstract class SimpleStructureApiType(
     val def: SimpleStructureDefinition,
     val boxedType: BaseApiType
 ) : StructureApiType(def.getName()) {
-
-    override fun serializableName(): String {
-        return boxedType.name()
-    }
-
-    override fun deserialize(variableName: String) : String {
-        return constructorCall() + "($variableName)"
-    }
 
     fun unbox(variableName: String): String {
         return serialize(variableName)
