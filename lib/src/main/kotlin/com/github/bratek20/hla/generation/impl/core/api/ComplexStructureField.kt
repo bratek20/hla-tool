@@ -24,7 +24,7 @@ open class ComplexStructureField(
 
     val name = def.getName()
 
-    val type: ApiType by lazy {
+    val type: LegacyApiType by lazy {
         factory.create(def.getType())
     }
 

@@ -11,7 +11,7 @@ import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 open class BaseViewModelTypesMapper {
-    fun mapModelToViewModelTypeName(modelType: ApiType): String {
+    fun mapModelToViewModelTypeName(modelType: LegacyApiType): String {
         if (modelType is BaseApiType) {
             return mapBaseType(modelType)
         }
@@ -33,7 +33,7 @@ open class BaseViewModelTypesMapper {
         return "TODO-mapModelToViewModelTypeName-${modelType.name()}"
     }
 
-    fun mapModelToViewModelType(modelType: ApiType): WorldType {
+    fun mapModelToViewModelType(modelType: LegacyApiType): WorldType {
         val viewModelTypeName = mapModelToViewModelTypeName(modelType)
         if (ModelToViewModelTypeMapper.b20ViewModelTypes.contains(viewModelTypeName)) {
             return WorldType.create(

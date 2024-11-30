@@ -8,7 +8,7 @@ import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.ApiType
+import com.github.bratek20.hla.generation.impl.core.api.LegacyApiType
 import com.github.bratek20.hla.generation.impl.core.api.BaseApiType
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceView
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
@@ -95,7 +95,7 @@ class WebCommonGenerator: PatternGenerator() {
         }
     }
 
-    private fun objectCreationType(type: ApiType): String  {
+    private fun objectCreationType(type: LegacyApiType): String  {
         val oc = ObjectCreationMapper()
         return oc.map(type.serializableName())
     }

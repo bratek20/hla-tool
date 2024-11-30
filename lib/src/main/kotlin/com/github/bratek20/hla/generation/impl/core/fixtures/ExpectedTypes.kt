@@ -7,7 +7,7 @@ import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPatt
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 
-abstract class ExpectedType<T: ApiType>(
+abstract class ExpectedType<T: LegacyApiType>(
     val api: T
 ) {
     lateinit var languageTypes: LanguageTypes
@@ -134,7 +134,7 @@ class ListExpectedTypeField(
     }
 }
 
-abstract class ExpectedTypeWithFunName<T: ApiType>(
+abstract class ExpectedTypeWithFunName<T: LegacyApiType>(
     api: T,
 ) : ExpectedType<T>(api) {
     override fun name(): String {
@@ -285,7 +285,7 @@ class EnumExpectedType(
 class ExpectedTypeFactory(
     private val c: ModuleGenerationContext
 ) {
-    fun create(type: ApiType): ExpectedType<*> {
+    fun create(type: LegacyApiType): ExpectedType<*> {
         val result =  when (type) {
             is BaseApiType -> BaseExpectedType(type)
             is SimpleValueObjectApiType -> SimpleValueObjectExpectedType(type, create(type.boxedType) as BaseExpectedType)

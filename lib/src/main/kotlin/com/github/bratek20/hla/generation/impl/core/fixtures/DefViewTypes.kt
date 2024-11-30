@@ -9,7 +9,7 @@ import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.utils.pascalToCamelCase
 
-abstract class DefType<T: ApiType>(
+abstract class DefType<T: LegacyApiType>(
     val api: T
 ) {
     protected val languageTypes: LanguageTypes
@@ -294,7 +294,7 @@ class EnumDefType(
 class DefTypeFactory(
     private val pattern: LanguageBuildersPattern
 ) {
-    fun create(type: ApiType): DefType<*> {
+    fun create(type: LegacyApiType): DefType<*> {
         val result = when (type) {
             is BaseApiType -> BaseDefType(type)
             is SimpleValueObjectApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)

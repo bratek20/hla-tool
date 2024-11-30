@@ -2,13 +2,12 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
-import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.ApiType
+import com.github.bratek20.hla.generation.impl.core.api.LegacyApiType
 import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
 import com.github.bratek20.hla.generation.impl.core.api.BaseApiType
 import com.github.bratek20.utils.camelToPascalCase
@@ -17,12 +16,12 @@ import com.github.bratek20.utils.directory.api.FileContent
 data class ArgumentView(
     val name: String,
     val type: String,
-    val apiType: ApiType
+    val apiType: LegacyApiType
 )
 data class MethodView(
     val name: String,
     val returnType: String,
-    val returnApiType: ApiType,
+    val returnApiType: LegacyApiType,
     val args: List<ArgumentView>,
     val throws: List<String>,
 ) {

@@ -7,7 +7,6 @@ import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
-import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
@@ -20,7 +19,15 @@ import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.typesworld.api.WorldTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
-abstract class ApiType {
+interface ApiType {
+    fun builder(): TypeBuilder
+    fun serializableBuilder(): TypeBuilder
+
+    fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder
+    fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder
+}
+
+abstract class LegacyApiType: ApiType {
     protected val c
         get() = languageTypes.context()
 
@@ -70,22 +77,15 @@ abstract class ApiType {
     @Deprecated("Use serializableBuilder instead", ReplaceWith("serializableBuilder()"))
     open fun serializableName(): String = serializableBuilder().build(c)
 
-    abstract fun builder(): TypeBuilder
-    abstract fun serializableBuilder(): TypeBuilder
-
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernDeserialize(variableName)"))
     open fun deserialize(variableName: String): String {
         return modernDeserialize(variable(variableName)).build(c)
     }
 
-    abstract fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder
-
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernSerialize(variableName)"))
     open fun serialize(variableName: String): String {
         return modernSerialize(variable(variableName)).build(c)
     }
-
-    abstract fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder
 
     override fun toString(): String {
         return "$javaClass(name=${name()})"
@@ -94,7 +94,7 @@ abstract class ApiType {
 
 class BaseApiType(
     val name: BaseType
-) : ApiType() {
+) : LegacyApiType() {
     override fun builder(): TypeBuilder {
         val cb = codeBuilderBaseType()
         return if (cb != null) {
@@ -132,7 +132,7 @@ class BaseApiType(
 
 class InterfaceApiType(
     val name: String
-) : ApiType() {
+) : LegacyApiType() {
     override fun builder(): TypeBuilder {
         return typeName(name)
     }
@@ -152,7 +152,7 @@ class InterfaceApiType(
 
 class ExternalApiType(
     val rawName: String
-) : ApiType() {
+) : LegacyApiType() {
     override fun builder(): TypeBuilder {
         return typeName(adjustedName())
     }
@@ -183,7 +183,7 @@ class ExternalApiType(
 
 abstract class StructureApiType(
     val name: String
-) : ApiType() {
+) : LegacyApiType() {
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
     }
@@ -367,13 +367,13 @@ class ComplexCustomApiType(
 
 data class ComplexStructureGetter(
     val name: String,
-    val type: ApiType,
+    val type: LegacyApiType,
     val field: String
 )
 
 data class ComplexStructureSetter(
     val name: String,
-    val type: ApiType,
+    val type: LegacyApiType,
     val publicField: String,
     val privateField: String
 )
@@ -486,7 +486,7 @@ class DataClassApiType(
 
 
 class ListApiType(
-    wrappedType: ApiType,
+    wrappedType: LegacyApiType,
 ) : WrappedApiType(wrappedType) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
@@ -538,11 +538,11 @@ class ListApiType(
 }
 
 abstract class WrappedApiType(
-    val wrappedType: ApiType
-): ApiType()
+    val wrappedType: LegacyApiType
+): LegacyApiType()
 
 class OptionalApiType(
-    wrappedType: ApiType,
+    wrappedType: LegacyApiType,
 ) : WrappedApiType(wrappedType) {
     override fun name(): String {
         return languageTypes.wrapWithOptional(wrappedType.name())
@@ -612,7 +612,7 @@ class OptionalApiType(
 
 class EnumApiType(
     private val def: EnumDefinition,
-) : ApiType() {
+) : LegacyApiType() {
     override fun name(): String {
         return def.getName()
     }
@@ -661,7 +661,7 @@ class ApiTypeFactory(
     val modules: BaseModuleGroupQueries,
     val languageTypes: LanguageTypes
 ) {
-    fun create(type: TypeDefinition?): ApiType {
+    fun create(type: TypeDefinition?): LegacyApiType {
         if (type == null) {
             return createBaseApiType(BaseType.VOID)
         }

@@ -63,7 +63,7 @@ class ModelToViewModelTypeMapper(
         return optionalApiType as OptionalApiType
     }
 
-    fun mapViewModelToModelType(viewModelType: String): ApiType {
+    fun mapViewModelToModelType(viewModelType: String): LegacyApiType {
         val classType = typesWorldApi.getClassType(typesWorldApi.getTypeByName(WorldTypeName(viewModelType)))
         val extendedClass = classType.getExtends()!!
 
@@ -71,7 +71,7 @@ class ModelToViewModelTypeMapper(
         return apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
     }
 
-    fun mapModelToViewTypeName(modelType: ApiType): String {
+    fun mapModelToViewTypeName(modelType: LegacyApiType): String {
         if (modelType is ListApiType) {
             return mapModelToViewTypeName(modelType.wrappedType).replace("View", "GroupView")
         }
@@ -87,7 +87,7 @@ class ModelToViewModelTypeMapper(
     }
 
 
-    fun mapModelToViewType(modelType: ApiType): WorldType {
+    fun mapModelToViewType(modelType: LegacyApiType): WorldType {
         val viewTypeName = mapModelToViewTypeName(modelType)
         return WorldType.create(
             name = WorldTypeName(viewTypeName),

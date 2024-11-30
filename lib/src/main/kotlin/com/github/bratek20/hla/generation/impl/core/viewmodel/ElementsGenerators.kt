@@ -151,7 +151,7 @@ class ViewModelField(
 }
 
 abstract class ViewModelElementLogic(
-    val modelType: ApiType
+    val modelType: LegacyApiType
 ) {
     abstract fun getTypeName(): String
 
@@ -270,7 +270,7 @@ class ViewModelComplexElementLogic(
         }
     }
 
-    fun <T : ApiType> getMappedFieldsOfType(type: KClass<T>): List<T> {
+    fun <T : LegacyApiType> getMappedFieldsOfType(type: KClass<T>): List<T> {
         return getMappedFields().mapNotNull { field ->
             if (type.isInstance(field.type)) {
                 type.cast(field.type)
@@ -337,6 +337,7 @@ class ViewModelLogicFactory(
                 apiTypeFactory.create(TypeDefinition(model.getName(), emptyList())) as ComplexStructureApiType<*>
             } ?: ComplexValueObjectApiType("EmptyModel", emptyList())
 
+            modelType.init(apiTypeFactory.languageTypes, null)
             ViewModelComplexElementLogic(element, modelType, apiTypeFactory)
         }
     }
