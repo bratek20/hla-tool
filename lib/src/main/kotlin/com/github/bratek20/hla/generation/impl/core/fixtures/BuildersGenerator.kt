@@ -148,6 +148,10 @@ class BuildersGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
+        getComplexBuilders().forEach {
+            addClass(it.getDefClassBuilder())
+        }
+        
         addClass {
             name = moduleName + "Builders"
 
@@ -156,7 +160,6 @@ class BuildersGenerator: PatternGenerator() {
             }
 
             getComplexBuilders().forEach {
-                addClass(it.getDefClassBuilder())
                 addMethod(it.getMethodBuilder())
             }
         }

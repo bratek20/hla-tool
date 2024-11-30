@@ -7,18 +7,21 @@ using B20.Ext;
 using OtherModule.Api;
 
 namespace OtherModule.Fixtures {
+    public class OtherPropertyDef {
+        public int Id { get; set; } = 0;
+        public string Name { get; set; } = "someValue";
+    }
+
+    public class OtherClassDef {
+        public int Id { get; set; } = 0;
+        public int Amount { get; set; } = 0;
+    }
+
+    public class OtherDataDef {
+        public int Id { get; set; } = 0;
+    }
+
     public class OtherModuleBuilders {
-        public class OtherPropertyDef {
-            public int Id { get; set; } = 0;
-            public string Name { get; set; } = "someValue";
-        }
-        public class OtherClassDef {
-            public int Id { get; set; } = 0;
-            public int Amount { get; set; } = 0;
-        }
-        public class OtherDataDef {
-            public int Id { get; set; } = 0;
-        }
         public static OtherId BuildOtherId(int value = 0) {
             return new OtherId(value);
         }
