@@ -445,6 +445,18 @@ class TypesTest {
                     add(emptyLambda())
                 }
                 langExpected {
+                    lang = Kotlin()
+                    expected = """
+                    {}
+                    """
+                }
+                langExpected {
+                    lang = TypeScript()
+                    expected = """
+                    {}
+                    """
+                }
+                langExpected {
                     lang = CSharp()
                     expected = """
                     () => {}

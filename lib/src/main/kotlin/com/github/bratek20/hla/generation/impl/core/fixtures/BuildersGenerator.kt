@@ -31,7 +31,7 @@ class SimpleBuilder(
         addArg {
             name = "value"
             type = typeName(def.name())
-            defaultValue = variable(def.defaultValue())
+            defaultValue = def.defaultValueBuilder()
         }
 
         setBody {
@@ -88,7 +88,7 @@ class ComplexBuilder(
                     methodName = "create"
                     def.fields.forEach { f ->
                         addArg {
-                            expression(f.build("def"))
+                            hardcodedExpression(f.build("def"))
                         }
                     }
 //                    addArg {

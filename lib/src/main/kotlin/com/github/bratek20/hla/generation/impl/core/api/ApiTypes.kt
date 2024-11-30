@@ -237,7 +237,18 @@ abstract class SimpleStructureApiType(
         return boxedType.builder()
     }
 
+    @Deprecated("Use defaultValueBuilder() instead")
     fun exampleValue(): String? {
+        return exampleValueBuilder()?.build(languageTypes.context())
+    }
+
+    fun exampleValueBuilder(): ExpressionBuilder? {
+        return extractExampleValue()?.let {
+            const(it)
+        }
+    }
+
+    private fun extractExampleValue(): String? {
         if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT) {
             return extractExampleValueForBaseType(def.getAttributes())
         }

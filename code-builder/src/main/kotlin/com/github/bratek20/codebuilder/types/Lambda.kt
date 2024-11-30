@@ -1,10 +1,17 @@
 package com.github.bratek20.codebuilder.types
 
 import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.utils.camelToPascalCase
 
-fun emptyLambda() = expression("() => {}")
+fun emptyLambda() = expression { c ->
+    if (c.lang is CSharp) {
+        "() => {}"
+    } else {
+        "{}"
+    }
+}
 
 fun lambdaType(type: TypeBuilder) = typeName { c ->
     "Action<${type.build(c)}>"
