@@ -29,6 +29,23 @@ class BuildersGenerator: PatternGenerator() {
         fun body(): String {
             return "return ${def.api.constructorCall()}(value)"
         }
+
+        fun getMethodBuilder(): MethodBuilderOps = {
+            static = true
+            name = def.funName()
+            returnType = typeName(def.api.name())
+            addArg {
+                name = "value"
+                type = typeName(def.name())
+                defaultValue = variable(def.defaultValue())
+            }
+
+            setBody {
+                add(returnStatement {
+                    def.api.modernDeserialize("value")
+                })
+            }
+        }
     }
 
     private fun externalTypeBuilder(type: TypeDefinition): FunctionBuilder {
@@ -55,9 +72,7 @@ class BuildersGenerator: PatternGenerator() {
 
         val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
 
-        val simpleBuilders = (defTypes.simple).map {
-            SimpleBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as SimpleStructureDefType<*>)
-        }
+        val simpleBuilders = getSimpleBuilders()
         val builders = (defTypes.complex).map {
             defTypeFactory.create(apiTypeFactory.create(it))
         }
@@ -79,6 +94,15 @@ class BuildersGenerator: PatternGenerator() {
             .build()
     }
 
+    private fun getSimpleBuilders(): List<SimpleBuilder> {
+        val defTypes = modules.allStructureDefinitions(module)
+        val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
+
+        return (defTypes.simple).map {
+            SimpleBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as SimpleStructureDefType<*>)
+        }
+    }
+
     override fun supportsCodeBuilder(): Boolean {
         return c.language.name() == ModuleLanguage.C_SHARP
     }
@@ -91,26 +115,8 @@ class BuildersGenerator: PatternGenerator() {
         addClass {
             name = "OtherModuleBuilders"
 
-            addMethod {
-                static = true
-                name = "buildOtherId"
-                returnType = typeName("OtherId")
-                addArg {
-                    name = "value"
-                    type = typeName("int")
-                    defaultValue = const(0)
-                }
-
-                setBody {
-                    add(returnStatement {
-                        constructorCall {
-                            className = "OtherId"
-                            addArg {
-                                variable("value")
-                            }
-                        }
-                    })
-                }
+            getSimpleBuilders().forEach {
+                addMethod(it.getMethodBuilder())
             }
 
             addClass {

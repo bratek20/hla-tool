@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
+import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -41,6 +42,9 @@ abstract class StructureDefType<T: StructureApiType>(
     api: T,
 ) : DefType<T>(api) {
     fun funName(): String {
+        if (languageTypes is CSharpTypes) {
+            return "Build" + api.name()
+        }
         return pascalToCamelCase(api.name())
     }
 }
