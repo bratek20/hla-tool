@@ -44,9 +44,6 @@ namespace SomeModule.Fixtures {
             public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
             public List<Action<SomeClass6Def>> SameClassList { get; set; } = new List<SomeClass6>();
         }
-        public class ClassUsingExternalTypeDef {
-            public LegacyType ExtType { get; set; } = null;
-        }
         public class ClassHavingOptListDef {
             public List<Action<SomeClassDef>>? OptList { get; set; } = null;
         }
@@ -152,12 +149,6 @@ namespace SomeModule.Fixtures {
             init.Invoke(def);
             def = def ?? ((_) => {});
             return SomeClass6.Create(TODO, TODO, TODO, TODO);
-        }
-        public static ClassUsingExternalType BuildClassUsingExternalType(Action<ClassUsingExternalTypeDef> init = null) {
-            var def = new ClassUsingExternalTypeDef();
-            init.Invoke(def);
-            def = def ?? ((_) => {});
-            return ClassUsingExternalType.Create(def.ExtType);
         }
         public static ClassHavingOptList BuildClassHavingOptList(Action<ClassHavingOptListDef> init = null) {
             var def = new ClassHavingOptListDef();

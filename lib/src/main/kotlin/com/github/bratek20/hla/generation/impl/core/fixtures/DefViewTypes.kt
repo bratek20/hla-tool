@@ -23,7 +23,8 @@ abstract class DefType<T: ApiTypeLogic>(
     @Deprecated("Use defaultValueBuilder() instead")
     fun defaultValue(): String = defaultValueBuilder().build(api.languageTypes.context())
 
-    abstract fun build(variableName: String): String
+    @Deprecated("Use modernBuild() instead")
+    open fun build(variableName: String): String = modernBuild(variable(variableName)).build(api.languageTypes.context())
 
     abstract fun builder(): TypeBuilder
 
@@ -37,10 +38,6 @@ class BaseDefType(
 ) : DefType<BaseApiType>(api) {
     override fun name(): String {
         return api.name()
-    }
-
-    override fun build(variableName: String): String {
-        return variableName
     }
 
     override fun builder(): TypeBuilder {
@@ -72,10 +69,6 @@ class ExternalDefType(
 ) : DefType<ExternalApiType>(api) {
     override fun name(): String {
         return languageTypes.wrapWithOptional(pascalToCamelCase(api.name()))
-    }
-
-    override fun build(variableName: String): String {
-        return pascalToCamelCase(api.rawName) + "($variableName)"
     }
 
     override fun builder(): TypeBuilder {
@@ -273,10 +266,6 @@ class EnumDefType(
 ) : DefType<EnumApiType>(api) {
     override fun name(): String {
         return api.serializableName()
-    }
-
-    override fun build(variableName: String): String {
-        return api.deserialize(variableName)
     }
 
     override fun builder(): TypeBuilder {

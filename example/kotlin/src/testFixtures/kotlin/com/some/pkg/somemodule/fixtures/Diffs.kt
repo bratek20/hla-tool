@@ -215,20 +215,6 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     return result.joinToString("\n")
 }
 
-data class ExpectedClassUsingExternalType(
-    var extType: com.some.pkg.legacy.LegacyType? = null,
-)
-fun diffClassUsingExternalType(given: ClassUsingExternalType, expectedInit: ExpectedClassUsingExternalType.() -> Unit, path: String = ""): String {
-    val expected = ExpectedClassUsingExternalType().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.extType?.let {
-        if (diffLegacyType(given.getExtType(), it) != "") { result.add(diffLegacyType(given.getExtType(), it, "${path}extType.")) }
-    }
-
-    return result.joinToString("\n")
-}
-
 data class ExpectedClassHavingOptList(
     var optListEmpty: Boolean? = null,
     var optList: List<(ExpectedSomeClass.() -> Unit)>? = null,

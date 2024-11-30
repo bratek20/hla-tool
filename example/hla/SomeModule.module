@@ -52,9 +52,6 @@ ValueObjects
         class2List: SomeClass2[]
         sameClassList: SomeClass6[] = []
 
-    ClassUsingExternalType
-        extType: LegacyType
-
     ClassHavingOptList
         optList: SomeClass[]?
 

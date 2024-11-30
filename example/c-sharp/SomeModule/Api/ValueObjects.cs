@@ -263,22 +263,6 @@ namespace SomeModule.Api {
         }
     }
 
-    public class ClassUsingExternalType {
-        readonly LegacyType extType;
-
-        public ClassUsingExternalType(
-            LegacyType extType
-        ) {
-            this.extType = extType;
-        }
-        public LegacyType GetExtType() {
-            return extType;
-        }
-        public static ClassUsingExternalType Create(LegacyType extType) {
-            return new ClassUsingExternalType(extType);
-        }
-    }
-
     public class ClassHavingOptList {
         readonly List<SomeClass>? optList;
 
