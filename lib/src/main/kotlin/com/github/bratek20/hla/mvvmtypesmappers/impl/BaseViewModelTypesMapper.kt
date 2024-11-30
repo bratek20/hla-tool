@@ -1,9 +1,9 @@
 package com.github.bratek20.hla.mvvmtypesmappers.impl
 
+import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
@@ -11,7 +11,7 @@ import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 open class BaseViewModelTypesMapper {
-    fun mapModelToViewModelTypeName(modelType: LegacyApiType): String {
+    fun mapModelToViewModelTypeName(modelType: ApiTypeLogic): String {
         if (modelType is BaseApiType) {
             return mapBaseType(modelType)
         }
@@ -33,7 +33,7 @@ open class BaseViewModelTypesMapper {
         return "TODO-mapModelToViewModelTypeName-${modelType.name()}"
     }
 
-    fun mapModelToViewModelType(modelType: LegacyApiType): WorldType {
+    fun mapModelToViewModelType(modelType: ApiTypeLogic): WorldType {
         val viewModelTypeName = mapModelToViewModelTypeName(modelType)
         if (ModelToViewModelTypeMapper.b20ViewModelTypes.contains(viewModelTypeName)) {
             return WorldType.create(

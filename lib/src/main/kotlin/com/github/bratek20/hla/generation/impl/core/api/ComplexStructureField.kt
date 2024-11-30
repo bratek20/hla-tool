@@ -5,6 +5,7 @@ import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.nullValue
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
+import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
@@ -14,7 +15,7 @@ import com.github.bratek20.utils.camelToPascalCase
 
 open class ComplexStructureField(
     protected val def: FieldDefinition,
-    val factory: ApiTypeFactory
+    val factory: ApiTypeFactoryLogic
 ) {
     private lateinit var complexStructure: ComplexStructureApiType<*>
 
@@ -24,7 +25,7 @@ open class ComplexStructureField(
 
     val name = def.getName()
 
-    val type: LegacyApiType by lazy {
+    val type: ApiTypeLogic by lazy {
         factory.create(def.getType())
     }
 

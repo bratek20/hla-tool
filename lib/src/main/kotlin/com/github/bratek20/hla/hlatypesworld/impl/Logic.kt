@@ -4,7 +4,7 @@ import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.hlatypesworld.api.*
 
-import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
@@ -17,7 +17,7 @@ class HlaTypesWorldApiLogic(
     private val viewTypesPopulator: ViewTypesPopulator,
     private val typesWorldApi: TypesWorldApi
 ): HlaTypesWorldApi {
-    lateinit var apiTypeFactory: ApiTypeFactory
+    lateinit var apiTypeFactory: ApiTypeFactoryLogic
     override fun populate(group: ModuleGroup) {
         viewModelTypesPopulator.apiTypeFactory = apiTypeFactory
         viewTypesPopulator.mapper = ModelToViewModelTypeMapper(apiTypeFactory, typesWorldApi)

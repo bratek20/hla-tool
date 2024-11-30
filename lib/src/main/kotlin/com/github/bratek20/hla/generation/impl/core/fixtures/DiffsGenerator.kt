@@ -10,7 +10,7 @@ import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
+import com.github.bratek20.hla.apitypes.impl.ExternalApiType
 import com.github.bratek20.utils.directory.api.FileContent
 
 class DiffsGenerator: PatternGenerator() {

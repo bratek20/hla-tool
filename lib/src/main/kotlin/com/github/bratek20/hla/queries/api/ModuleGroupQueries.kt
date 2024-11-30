@@ -2,9 +2,6 @@ package com.github.bratek20.hla.queries.api
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
-import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
-import com.github.bratek20.hla.hlatypesworld.impl.*
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.typesworld.api.*
 

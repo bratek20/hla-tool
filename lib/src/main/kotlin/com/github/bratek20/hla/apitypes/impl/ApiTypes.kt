@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.generation.impl.core.api
+package com.github.bratek20.hla.apitypes.impl
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.*
@@ -7,6 +7,7 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
@@ -20,7 +21,7 @@ import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.typesworld.api.WorldTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
-abstract class LegacyApiType: ApiType {
+abstract class ApiTypeLogic: ApiType {
     protected val c
         get() = languageTypes.context()
 
@@ -87,7 +88,7 @@ abstract class LegacyApiType: ApiType {
 
 class BaseApiType(
     val name: BaseType
-) : LegacyApiType() {
+) : ApiTypeLogic() {
     override fun builder(): TypeBuilder {
         val cb = codeBuilderBaseType()
         return if (cb != null) {
@@ -125,7 +126,7 @@ class BaseApiType(
 
 class InterfaceApiType(
     val name: String
-) : LegacyApiType() {
+) : ApiTypeLogic() {
     override fun builder(): TypeBuilder {
         return typeName(name)
     }
@@ -145,7 +146,7 @@ class InterfaceApiType(
 
 class ExternalApiType(
     val rawName: String
-) : LegacyApiType() {
+) : ApiTypeLogic() {
     override fun builder(): TypeBuilder {
         return typeName(adjustedName())
     }
@@ -176,7 +177,7 @@ class ExternalApiType(
 
 abstract class StructureApiType(
     val name: String
-) : LegacyApiType() {
+) : ApiTypeLogic() {
     open fun constructorCall(): String {
         return languageTypes.classConstructorCall(name())
     }
@@ -360,13 +361,13 @@ class ComplexCustomApiType(
 
 data class ComplexStructureGetter(
     val name: String,
-    val type: LegacyApiType,
+    val type: ApiTypeLogic,
     val field: String
 )
 
 data class ComplexStructureSetter(
     val name: String,
-    val type: LegacyApiType,
+    val type: ApiTypeLogic,
     val publicField: String,
     val privateField: String
 )
@@ -479,7 +480,7 @@ class DataClassApiType(
 
 
 class ListApiType(
-    wrappedType: LegacyApiType,
+    wrappedType: ApiTypeLogic,
 ) : WrappedApiType(wrappedType) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())
@@ -531,11 +532,11 @@ class ListApiType(
 }
 
 abstract class WrappedApiType(
-    val wrappedType: LegacyApiType
-): LegacyApiType()
+    val wrappedType: ApiTypeLogic
+): ApiTypeLogic()
 
 class OptionalApiType(
-    wrappedType: LegacyApiType,
+    wrappedType: ApiTypeLogic,
 ) : WrappedApiType(wrappedType) {
     override fun name(): String {
         return languageTypes.wrapWithOptional(wrappedType.name())
@@ -605,7 +606,7 @@ class OptionalApiType(
 
 class EnumApiType(
     private val def: EnumDefinition,
-) : LegacyApiType() {
+) : ApiTypeLogic() {
     override fun name(): String {
         return def.getName()
     }
@@ -650,11 +651,11 @@ data class ApiCustomTypes(
     val complexList: List<ComplexCustomApiType>
 )
 
-class ApiTypeFactory(
+class ApiTypeFactoryLogic(
     val modules: BaseModuleGroupQueries,
     val languageTypes: LanguageTypes
 ) {
-    fun create(type: TypeDefinition?): LegacyApiType {
+    fun create(type: TypeDefinition?): ApiTypeLogic {
         if (type == null) {
             return createBaseApiType(BaseType.VOID)
         }
