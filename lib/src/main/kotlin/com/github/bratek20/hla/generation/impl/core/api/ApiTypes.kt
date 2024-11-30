@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.*
+import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
@@ -19,14 +20,6 @@ import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.typesworld.api.WorldTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
-interface ApiType {
-    fun builder(): TypeBuilder
-    fun serializableBuilder(): TypeBuilder
-
-    fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder
-    fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder
-}
-
 abstract class LegacyApiType: ApiType {
     protected val c
         get() = languageTypes.context()
@@ -43,7 +36,7 @@ abstract class LegacyApiType: ApiType {
         return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
     }
 
-    fun asWorldType(): WorldType {
+    override fun asWorldType(): WorldType {
         //TODO-REF
         if (this is BaseApiType) {
             return WorldType.create(
