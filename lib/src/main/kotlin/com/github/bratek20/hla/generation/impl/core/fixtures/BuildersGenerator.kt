@@ -45,6 +45,74 @@ class SimpleBuilder(
 class ComplexBuilder(
     val def: ComplexStructureDefType
 ) {
+    fun getDefClassBuilder(): ClassBuilderOps = {
+        name = "OtherPropertyDef"
+        addField {
+            name = "id"
+            type = typeName("int")
+            setter = true
+            getter = true
+            defaultValue = const(0)
+        }
+        addField {
+            name = "name"
+            type = typeName("string")
+            setter = true
+            getter = true
+            defaultValue = string("someValue")
+        }
+    }
+
+    fun getMethodBuilder(): MethodBuilderOps = {
+        static = true
+        name = "BuildOtherProperty"
+        returnType = typeName("OtherProperty")
+        addArg {
+            type = lambdaType(typeName("OtherPropertyDef"))
+            name = "init"
+            defaultValue = emptyLambda()
+        }
+        setBody {
+            add(assignment {
+                left = variableDeclaration {
+                    name = "def"
+                }
+                right = constructorCall {
+                    className = "OtherPropertyDef"
+                }
+            })
+            add(lambdaCallStatement {
+                name = "init"
+                addArg {
+                    variable("def")
+                }
+            })
+            add(returnStatement {
+                methodCall {
+                    target = variable("OtherProperty")
+                    methodName = "create"
+                    addArg {
+                        methodCall {
+                            target = variable("OtherModuleBuilders")
+                            methodName = "buildOtherId"
+                            addArg {
+                                getterFieldAccess {
+                                    objectRef = variable("def")
+                                    fieldName = "id"
+                                }
+                            }
+                        }
+                    }
+                    addArg {
+                        getterFieldAccess {
+                            objectRef = variable("def")
+                            fieldName = "name"
+                        }
+                    }
+                }
+            })
+        }
+    }
 }
 
 class BuildersGenerator: PatternGenerator() {
@@ -128,72 +196,9 @@ class BuildersGenerator: PatternGenerator() {
                 addMethod(it.getMethodBuilder())
             }
 
-            addClass {
-                name = "OtherPropertyDef"
-                addField {
-                    name = "id"
-                    type = typeName("int")
-                    setter = true
-                    getter = true
-                    defaultValue = const(0)
-                }
-                addField {
-                    name = "name"
-                    type = typeName("string")
-                    setter = true
-                    getter = true
-                    defaultValue = string("someValue")
-                }
-            }
-            addMethod {
-                static = true
-                name = "BuildOtherProperty"
-                returnType = typeName("OtherProperty")
-                addArg {
-                    type = lambdaType(typeName("OtherPropertyDef"))
-                    name = "init"
-                    defaultValue = emptyLambda()
-                }
-                setBody {
-                    add(assignment {
-                        left = variableDeclaration {
-                            name = "def"
-                        }
-                        right = constructorCall {
-                            className = "OtherPropertyDef"
-                        }
-                    })
-                    add(lambdaCallStatement {
-                        name = "init"
-                        addArg {
-                            variable("def")
-                        }
-                    })
-                    add(returnStatement {
-                        methodCall {
-                            target = variable("OtherProperty")
-                            methodName = "create"
-                            addArg {
-                                methodCall {
-                                    target = variable("OtherModuleBuilders")
-                                    methodName = "buildOtherId"
-                                    addArg {
-                                        getterFieldAccess {
-                                            objectRef = variable("def")
-                                            fieldName = "id"
-                                        }
-                                    }
-                                }
-                            }
-                            addArg {
-                                getterFieldAccess {
-                                    objectRef = variable("def")
-                                    fieldName = "name"
-                                }
-                            }
-                        }
-                    })
-                }
+            getComplexBuilders()[0].let {
+                addClass(it.getDefClassBuilder())
+                addMethod(it.getMethodBuilder())
             }
         }
     }
