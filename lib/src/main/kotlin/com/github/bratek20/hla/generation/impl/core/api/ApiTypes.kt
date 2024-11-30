@@ -75,14 +75,14 @@ abstract class ApiType {
 
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernDeserialize(variableName)"))
     open fun deserialize(variableName: String): String {
-        return variableName
+        return modernDeserialize(variable(variableName)).build(c)
     }
 
     abstract fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder
 
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernSerialize(variableName)"))
     open fun serialize(variableName: String): String {
-        return variableName
+        return modernSerialize(variable(variableName)).build(c)
     }
 
     abstract fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder
