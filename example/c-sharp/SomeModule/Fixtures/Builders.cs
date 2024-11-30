@@ -117,107 +117,107 @@ namespace SomeModule.Fixtures {
         public static SomeId2 BuildSomeId2(int value = 0) {
             return new SomeId2(value);
         }
-        public static SomeClass BuildSomeClass(Action<SomeClassDef> init = () => {}) {
+        public static SomeClass BuildSomeClass(Action<SomeClassDef> init = (_) => {}) {
             var def = new SomeClassDef();
             init.Invoke(def);
             return SomeClass.Create(new SomeId(def.Id), def.Amount);
         }
-        public static SomeClass2 BuildSomeClass2(Action<SomeClass2Def> init = () => {}) {
+        public static SomeClass2 BuildSomeClass2(Action<SomeClass2Def> init = (_) => {}) {
             var def = new SomeClass2Def();
             init.Invoke(def);
             return SomeClass2.Create(new SomeId(def.Id), TODO, TODO, def.Enabled);
         }
-        public static SomeClass3 BuildSomeClass3(Action<SomeClass3Def> init = () => {}) {
+        public static SomeClass3 BuildSomeClass3(Action<SomeClass3Def> init = (_) => {}) {
             var def = new SomeClass3Def();
             init.Invoke(def);
             return SomeClass3.Create(BuildSomeClass2(def.Class2Object), (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), TODO);
         }
-        public static SomeClass4 BuildSomeClass4(Action<SomeClass4Def> init = () => {}) {
+        public static SomeClass4 BuildSomeClass4(Action<SomeClass4Def> init = (_) => {}) {
             var def = new SomeClass4Def();
             init.Invoke(def);
             return SomeClass4.Create(new OtherId(def.OtherId), BuildOtherClass(def.OtherClass), TODO, TODO);
         }
-        public static SomeClass5 BuildSomeClass5(Action<SomeClass5Def> init = () => {}) {
+        public static SomeClass5 BuildSomeClass5(Action<SomeClass5Def> init = (_) => {}) {
             var def = new SomeClass5Def();
             init.Invoke(def);
             return SomeClass5.Create(TODO(def.Date), BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), BuildOtherProperty(def.OtherProperty));
         }
-        public static SomeClass6 BuildSomeClass6(Action<SomeClass6Def> init = () => {}) {
+        public static SomeClass6 BuildSomeClass6(Action<SomeClass6Def> init = (_) => {}) {
             var def = new SomeClass6Def();
             init.Invoke(def);
             return SomeClass6.Create(TODO, TODO, TODO, TODO);
         }
-        public static ClassUsingExternalType BuildClassUsingExternalType(Action<ClassUsingExternalTypeDef> init = () => {}) {
+        public static ClassUsingExternalType BuildClassUsingExternalType(Action<ClassUsingExternalTypeDef> init = (_) => {}) {
             var def = new ClassUsingExternalTypeDef();
             init.Invoke(def);
             return ClassUsingExternalType.Create(def.ExtType);
         }
-        public static ClassHavingOptList BuildClassHavingOptList(Action<ClassHavingOptListDef> init = () => {}) {
+        public static ClassHavingOptList BuildClassHavingOptList(Action<ClassHavingOptListDef> init = (_) => {}) {
             var def = new ClassHavingOptListDef();
             init.Invoke(def);
             return ClassHavingOptList.Create(TODO);
         }
-        public static ClassHavingOptSimpleVo BuildClassHavingOptSimpleVo(Action<ClassHavingOptSimpleVoDef> init = () => {}) {
+        public static ClassHavingOptSimpleVo BuildClassHavingOptSimpleVo(Action<ClassHavingOptSimpleVoDef> init = (_) => {}) {
             var def = new ClassHavingOptSimpleVoDef();
             init.Invoke(def);
             return ClassHavingOptSimpleVo.Create(TODO);
         }
-        public static RecordClass BuildRecordClass(Action<RecordClassDef> init = () => {}) {
+        public static RecordClass BuildRecordClass(Action<RecordClassDef> init = (_) => {}) {
             var def = new RecordClassDef();
             init.Invoke(def);
             return RecordClass.Create(new SomeId(def.Id), def.Amount);
         }
-        public static ClassWithOptExamples BuildClassWithOptExamples(Action<ClassWithOptExamplesDef> init = () => {}) {
+        public static ClassWithOptExamples BuildClassWithOptExamples(Action<ClassWithOptExamplesDef> init = (_) => {}) {
             var def = new ClassWithOptExamplesDef();
             init.Invoke(def);
             return ClassWithOptExamples.Create(TODO, TODO);
         }
-        public static ClassWithEnumList BuildClassWithEnumList(Action<ClassWithEnumListDef> init = () => {}) {
+        public static ClassWithEnumList BuildClassWithEnumList(Action<ClassWithEnumListDef> init = (_) => {}) {
             var def = new ClassWithEnumListDef();
             init.Invoke(def);
             return ClassWithEnumList.Create(TODO);
         }
-        public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = () => {}) {
+        public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = (_) => {}) {
             var def = new SomeQueryInputDef();
             init.Invoke(def);
             return SomeQueryInput.Create(new SomeId(def.Id), def.Amount);
         }
-        public static SomeHandlerInput BuildSomeHandlerInput(Action<SomeHandlerInputDef> init = () => {}) {
+        public static SomeHandlerInput BuildSomeHandlerInput(Action<SomeHandlerInputDef> init = (_) => {}) {
             var def = new SomeHandlerInputDef();
             init.Invoke(def);
             return SomeHandlerInput.Create(new SomeId(def.Id), def.Amount);
         }
-        public static SomeHandlerOutput BuildSomeHandlerOutput(Action<SomeHandlerOutputDef> init = () => {}) {
+        public static SomeHandlerOutput BuildSomeHandlerOutput(Action<SomeHandlerOutputDef> init = (_) => {}) {
             var def = new SomeHandlerOutputDef();
             init.Invoke(def);
             return SomeHandlerOutput.Create(new SomeId(def.Id), def.Amount);
         }
-        public static SomeProperty BuildSomeProperty(Action<SomePropertyDef> init = () => {}) {
+        public static SomeProperty BuildSomeProperty(Action<SomePropertyDef> init = (_) => {}) {
             var def = new SomePropertyDef();
             init.Invoke(def);
             return SomeProperty.Create(BuildOtherProperty(def.Other), TODO, TODO, def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
         }
-        public static SomeProperty2 BuildSomeProperty2(Action<SomeProperty2Def> init = () => {}) {
+        public static SomeProperty2 BuildSomeProperty2(Action<SomeProperty2Def> init = (_) => {}) {
             var def = new SomeProperty2Def();
             init.Invoke(def);
             return SomeProperty2.Create(def.Value, def.Custom, (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), TODO);
         }
-        public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = () => {}) {
+        public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = (_) => {}) {
             var def = new DateRangeWrapperDef();
             init.Invoke(def);
             return DateRangeWrapper.Create(BuildDateRange(def.Range));
         }
-        public static SomeData BuildSomeData(Action<SomeDataDef> init = () => {}) {
+        public static SomeData BuildSomeData(Action<SomeDataDef> init = (_) => {}) {
             var def = new SomeDataDef();
             init.Invoke(def);
             return SomeData.Create(BuildOtherData(def.Other), def.Custom, TODO, def.GoodDataName);
         }
-        public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = () => {}) {
+        public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = (_) => {}) {
             var def = new SomeData2Def();
             init.Invoke(def);
             return SomeData2.Create(TODO, TODO);
         }
-        public static SomeEvent BuildSomeEvent(Action<SomeEventDef> init = () => {}) {
+        public static SomeEvent BuildSomeEvent(Action<SomeEventDef> init = (_) => {}) {
             var def = new SomeEventDef();
             init.Invoke(def);
             return SomeEvent.Create(def.SomeField, BuildOtherClass(def.OtherClass));

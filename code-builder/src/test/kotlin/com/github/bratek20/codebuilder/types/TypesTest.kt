@@ -443,10 +443,14 @@ class TypesTest {
             testLinePartOps {
                 ops {
                     add(emptyLambda())
+                    add(emptyLambda(1))
+                    add(emptyLambda(2))
                 }
                 langExpected {
                     lang = Kotlin()
                     expected = """
+                    {}
+                    {}
                     {}
                     """
                 }
@@ -454,12 +458,16 @@ class TypesTest {
                     lang = TypeScript()
                     expected = """
                     {}
+                    {}
+                    {}
                     """
                 }
                 langExpected {
                     lang = CSharp()
                     expected = """
                     () => {}
+                    (_) => {}
+                    (_1, _2) => {}
                     """
                 }
             }

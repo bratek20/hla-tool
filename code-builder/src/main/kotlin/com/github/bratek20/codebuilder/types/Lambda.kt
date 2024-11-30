@@ -5,9 +5,15 @@ import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.utils.camelToPascalCase
 
-fun emptyLambda() = expression { c ->
+fun emptyLambda(argsNumber: Int = 0) = expression { c ->
     if (c.lang is CSharp) {
-        "() => {}"
+        if (argsNumber == 0) {
+            "() => {}"
+        } else if (argsNumber == 1) {
+            "(_) => {}"
+        } else {
+            "(" + (1..argsNumber).joinToString(", ") { "_$it" } + ") => {}"
+        }
     } else {
         "{}"
     }
