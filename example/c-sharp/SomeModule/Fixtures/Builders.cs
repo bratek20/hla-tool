@@ -6,105 +6,127 @@ using System.Linq;
 using B20.Ext;
 using SomeModule.Api;
 using OtherModule.Api;
+using OtherModule.Fixtures;
 using TypesModule.Api;
+using TypesModule.Fixtures;
 
 namespace SomeModule.Fixtures {
+    public class SomeClassDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 10;
+    }
+
+    public class SomeClass2Def {
+        public string Id { get; set; } = "someValue";
+        public List<string> Names { get; set; } = new List<string>();
+        public List<string> Ids { get; set; } = new List<string>();
+        public bool Enabled { get; set; } = true;
+    }
+
+    public class SomeClass3Def {
+        public Action<SomeClass2Def> Class2Object { get; set; } = (_) => {};
+        public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
+        public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<SomeClass2>();
+    }
+
+    public class SomeClass4Def {
+        public int OtherId { get; set; } = 0;
+        public Action<OtherClassDef> OtherClass { get; set; } = (_) => {};
+        public List<int> OtherIdList { get; set; } = new List<int>();
+        public List<Action<OtherClassDef>> OtherClassList { get; set; } = new List<Action<OtherClassDef>>();
+    }
+
+    public class SomeClass5Def {
+        public string Date { get; set; } = "01/01/1970 00:00";
+        public Action<DateRangeDef> DateRange { get; set; } = (_) => {};
+        public Action<DateRangeWrapperDef> DateRangeWrapper { get; set; } = (_) => {};
+        public Action<SomePropertyDef> SomeProperty { get; set; } = (_) => {};
+        public Action<OtherPropertyDef> OtherProperty { get; set; } = (_) => {};
+    }
+
+    public class SomeClass6Def {
+        public Action<SomeClassDef>? SomeClassOpt { get; set; } = null;
+        public string? OptString { get; set; } = null;
+        public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
+        public List<Action<SomeClass6Def>> SameClassList { get; set; } = new List<SomeClass6>();
+    }
+
+    public class ClassHavingOptListDef {
+        public List<Action<SomeClassDef>>? OptList { get; set; } = null;
+    }
+
+    public class ClassHavingOptSimpleVoDef {
+        public string? OptSimpleVo { get; set; } = null;
+    }
+
+    public class RecordClassDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 0;
+    }
+
+    public class ClassWithOptExamplesDef {
+        public int? OptInt { get; set; } = 1;
+        public int? OptIntWrapper { get; set; } = 2;
+    }
+
+    public class ClassWithEnumListDef {
+        public List<string> EnumList { get; set; } = new List<string>();
+    }
+
+    public class SomeQueryInputDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 0;
+    }
+
+    public class SomeHandlerInputDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 0;
+    }
+
+    public class SomeHandlerOutputDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 0;
+    }
+
+    public class SomePropertyDef {
+        public Action<OtherPropertyDef> Other { get; set; } = (_) => {};
+        public int? Id2 { get; set; } = null;
+        public Action<DateRangeDef>? Range { get; set; } = null;
+        public double DoubleExample { get; set; } = 0;
+        public long LongExample { get; set; } = 0;
+        public string GoodName { get; set; } = "someValue";
+        public object CustomData { get; set; } = null;
+    }
+
+    public class SomeProperty2Def {
+        public string Value { get; set; } = "someValue";
+        public object Custom { get; set; } = null;
+        public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
+        public object? CustomOpt { get; set; } = null;
+    }
+
+    public class DateRangeWrapperDef {
+        public Action<DateRangeDef> Range { get; set; } = (_) => {};
+    }
+
+    public class SomeDataDef {
+        public Action<OtherDataDef> Other { get; set; } = (_) => {};
+        public object Custom { get; set; } = null;
+        public object? CustomOpt { get; set; } = null;
+        public string GoodDataName { get; set; } = "someValue";
+    }
+
+    public class SomeData2Def {
+        public string? OptEnum { get; set; } = null;
+        public string? OptCustomType { get; set; } = null;
+    }
+
+    public class SomeEventDef {
+        public string SomeField { get; set; } = "someValue";
+        public Action<OtherClassDef> OtherClass { get; set; } = (_) => {};
+    }
+
     public class SomeModuleBuilders {
-        public class SomeClassDef {
-            public string Id { get; set; } = "someValue";
-            public int Amount { get; set; } = 10;
-        }
-        public class SomeClass2Def {
-            public string Id { get; set; } = "someValue";
-            public List<string> Names { get; set; } = new List<string>();
-            public List<string> Ids { get; set; } = new List<string>();
-            public bool Enabled { get; set; } = true;
-        }
-        public class SomeClass3Def {
-            public Action<SomeClass2Def> Class2Object { get; set; } = (_) => {};
-            public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
-            public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<SomeClass2>();
-        }
-        public class SomeClass4Def {
-            public int OtherId { get; set; } = 0;
-            public Action<OtherClassDef> OtherClass { get; set; } = (_) => {};
-            public List<int> OtherIdList { get; set; } = new List<int>();
-            public List<Action<OtherClassDef>> OtherClassList { get; set; } = new List<Action<OtherClassDef>>();
-        }
-        public class SomeClass5Def {
-            public string Date { get; set; } = "01/01/1970 00:00";
-            public Action<DateRangeDef> DateRange { get; set; } = (_) => {};
-            public Action<DateRangeWrapperDef> DateRangeWrapper { get; set; } = (_) => {};
-            public Action<SomePropertyDef> SomeProperty { get; set; } = (_) => {};
-            public Action<OtherPropertyDef> OtherProperty { get; set; } = (_) => {};
-        }
-        public class SomeClass6Def {
-            public Action<SomeClassDef>? SomeClassOpt { get; set; } = null;
-            public string? OptString { get; set; } = null;
-            public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
-            public List<Action<SomeClass6Def>> SameClassList { get; set; } = new List<SomeClass6>();
-        }
-        public class ClassHavingOptListDef {
-            public List<Action<SomeClassDef>>? OptList { get; set; } = null;
-        }
-        public class ClassHavingOptSimpleVoDef {
-            public string? OptSimpleVo { get; set; } = null;
-        }
-        public class RecordClassDef {
-            public string Id { get; set; } = "someValue";
-            public int Amount { get; set; } = 0;
-        }
-        public class ClassWithOptExamplesDef {
-            public int? OptInt { get; set; } = 1;
-            public int? OptIntWrapper { get; set; } = 2;
-        }
-        public class ClassWithEnumListDef {
-            public List<string> EnumList { get; set; } = new List<string>();
-        }
-        public class SomeQueryInputDef {
-            public string Id { get; set; } = "someValue";
-            public int Amount { get; set; } = 0;
-        }
-        public class SomeHandlerInputDef {
-            public string Id { get; set; } = "someValue";
-            public int Amount { get; set; } = 0;
-        }
-        public class SomeHandlerOutputDef {
-            public string Id { get; set; } = "someValue";
-            public int Amount { get; set; } = 0;
-        }
-        public class SomePropertyDef {
-            public Action<OtherPropertyDef> Other { get; set; } = (_) => {};
-            public int? Id2 { get; set; } = null;
-            public Action<DateRangeDef>? Range { get; set; } = null;
-            public double DoubleExample { get; set; } = 0;
-            public long LongExample { get; set; } = 0;
-            public string GoodName { get; set; } = "someValue";
-            public object CustomData { get; set; } = null;
-        }
-        public class SomeProperty2Def {
-            public string Value { get; set; } = "someValue";
-            public object Custom { get; set; } = null;
-            public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
-            public object? CustomOpt { get; set; } = null;
-        }
-        public class DateRangeWrapperDef {
-            public Action<DateRangeDef> Range { get; set; } = (_) => {};
-        }
-        public class SomeDataDef {
-            public Action<OtherDataDef> Other { get; set; } = (_) => {};
-            public object Custom { get; set; } = null;
-            public object? CustomOpt { get; set; } = null;
-            public string GoodDataName { get; set; } = "someValue";
-        }
-        public class SomeData2Def {
-            public string? OptEnum { get; set; } = null;
-            public string? OptCustomType { get; set; } = null;
-        }
-        public class SomeEventDef {
-            public string SomeField { get; set; } = "someValue";
-            public Action<OtherClassDef> OtherClass { get; set; } = (_) => {};
-        }
         public static SomeId BuildSomeId(string value = "someValue") {
             return new SomeId(value);
         }
@@ -136,13 +158,13 @@ namespace SomeModule.Fixtures {
             var def = new SomeClass4Def();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeClass4.Create(new OtherId(def.OtherId), BuildOtherClass(def.OtherClass), def.OtherIdList.Select(it => new OtherId(it)).ToList(), def.OtherClassList.Select(it => BuildOtherClass(it)).ToList());
+            return SomeClass4.Create(new OtherId(def.OtherId), OtherModuleBuilders.BuildOtherClass(def.OtherClass), def.OtherIdList.Select(it => new OtherId(it)).ToList(), def.OtherClassList.Select(it => OtherModuleBuilders.BuildOtherClass(it)).ToList());
         }
         public static SomeClass5 BuildSomeClass5(Action<SomeClass5Def> init = null) {
             var def = new SomeClass5Def();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeClass5.Create(TODO(def.Date), BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), BuildOtherProperty(def.OtherProperty));
+            return SomeClass5.Create(TODO(def.Date), TypesModuleBuilders.BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), OtherModuleBuilders.BuildOtherProperty(def.OtherProperty));
         }
         public static SomeClass6 BuildSomeClass6(Action<SomeClass6Def> init = null) {
             var def = new SomeClass6Def();
@@ -202,7 +224,7 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeProperty.Create(BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
+            return SomeProperty.Create(OtherModuleBuilders.BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => TypesModuleBuilders.BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
         }
         public static SomeProperty2 BuildSomeProperty2(Action<SomeProperty2Def> init = null) {
             var def = new SomeProperty2Def();
@@ -214,13 +236,13 @@ namespace SomeModule.Fixtures {
             var def = new DateRangeWrapperDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return DateRangeWrapper.Create(BuildDateRange(def.Range));
+            return DateRangeWrapper.Create(TypesModuleBuilders.BuildDateRange(def.Range));
         }
         public static SomeData BuildSomeData(Action<SomeDataDef> init = null) {
             var def = new SomeDataDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeData.Create(BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
+            return SomeData.Create(OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
         }
         public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = null) {
             var def = new SomeData2Def();
@@ -232,7 +254,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeEventDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeEvent.Create(def.SomeField, BuildOtherClass(def.OtherClass));
+            return SomeEvent.Create(def.SomeField, OtherModuleBuilders.BuildOtherClass(def.OtherClass));
         }
     }
 }
