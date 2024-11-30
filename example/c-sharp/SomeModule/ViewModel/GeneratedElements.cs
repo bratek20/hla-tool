@@ -64,7 +64,7 @@ namespace SomeModule.ViewModel {
     public partial class ClassHavingOptSimpleVoVm: UiElement<ClassHavingOptSimpleVo> {
         public OptionalLabel OptSimpleVo { get; set; }
         protected override void OnUpdate() {
-            OptSimpleVo.Update(Model.GetOptSimpleVo().Map( it => it.Value ));
+            OptSimpleVo.Update(Model.GetOptSimpleVo().Map(it => it.Value));
         }
     }
 

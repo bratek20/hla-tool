@@ -195,11 +195,11 @@ class Kotlin: CodeBuilderLanguage {
     }
 
     override fun optionalMapBegin(): String {
-        return "?.let {"
+        return "?.let { "
     }
 
     override fun optionalMapEnd(): String {
-        return "}"
+        return " }"
     }
 
     override fun lambdaArrow(): String {

@@ -80,10 +80,10 @@ namespace SomeModule.Web {
             this.optId = optId;
         }
         public Optional<SomeId> GetOptId() {
-            return Optional<string>.Of(optId).Map( it => new SomeId(it) );
+            return Optional<string>.Of(optId).Map(it => new SomeId(it));
         }
         public static SomeInterfaceOptMethodRequest Create(Optional<SomeId> optId) {
-            return new SomeInterfaceOptMethodRequest(optId.Map( it => it.Value ).OrElse(null));
+            return new SomeInterfaceOptMethodRequest(optId.Map(it => it.Value).OrElse(null));
         }
     }
 
@@ -109,10 +109,10 @@ namespace SomeModule.Web {
             this.list = list;
         }
         public List<SomeId> GetList() {
-            return list.Select( it => new SomeId(it) ).ToList();
+            return list.Select(it => new SomeId(it)).ToList();
         }
         public static SomeInterfaceMethodWithListOfSimpleVORequest Create(List<SomeId> list) {
-            return new SomeInterfaceMethodWithListOfSimpleVORequest(list.Select( it => it.Value ).ToList());
+            return new SomeInterfaceMethodWithListOfSimpleVORequest(list.Select(it => it.Value).ToList());
         }
     }
 
@@ -125,7 +125,7 @@ namespace SomeModule.Web {
             this.value = value;
         }
         public List<SomeId> GetValue() {
-            return value.Select( it => new SomeId(it) ).ToList();
+            return value.Select(it => new SomeId(it)).ToList();
         }
     }
 
@@ -167,7 +167,7 @@ namespace SomeModule.Web {
             this.value = value;
         }
         public Optional<SomeId> GetValue() {
-            return Optional<string>.Of(value).Map( it => new SomeId(it) );
+            return Optional<string>.Of(value).Map(it => new SomeId(it));
         }
     }
 

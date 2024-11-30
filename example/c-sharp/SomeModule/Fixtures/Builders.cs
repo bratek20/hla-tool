@@ -140,7 +140,7 @@ namespace SomeModule.Fixtures {
         public static SomeClass5 BuildSomeClass5(Action<SomeClass5Def> init = () => {}) {
             var def = new SomeClass5Def();
             init.Invoke(def);
-            return SomeClass5.Create(TODO, BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), BuildOtherProperty(def.OtherProperty));
+            return SomeClass5.Create(TODO(def.Date), BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), BuildOtherProperty(def.OtherProperty));
         }
         public static SomeClass6 BuildSomeClass6(Action<SomeClass6Def> init = () => {}) {
             var def = new SomeClass6Def();

@@ -418,7 +418,7 @@ class TypesTest {
                    const unpacked: string = optional.get()
                    const unpackedToSoft: number? = optional.orElse(1)
                    const unpackedToSoftDefaultNull: string? = optional.orElse(undefined)
-                   const plusOne: number = optional.map( it => it + 1 )
+                   const plusOne: number = optional.map(it => it + 1)
                 """
             }
             langExpected {
@@ -430,7 +430,7 @@ class TypesTest {
                    string unpacked = optional.Get();
                    int? unpackedToSoft = optional.OrElse(1);
                    string? unpackedToSoftDefaultNull = optional.OrElse(null);
-                   int plusOne = optional.Map( it => it + 1 );
+                   int plusOne = optional.Map(it => it + 1);
                 """
             }
         }
