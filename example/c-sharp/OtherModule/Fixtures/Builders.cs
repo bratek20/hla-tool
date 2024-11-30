@@ -18,7 +18,7 @@ namespace OtherModule.Fixtures {
         public static OtherProperty BuildOtherProperty(Action<OtherPropertyDef> init = () => {}) {
             var def = new OtherPropertyDef();
             init.Invoke(def);
-            return OtherProperty.Create(OtherModuleBuilders.BuildOtherId(def.Id), def.Name);
+            return OtherProperty.Create(new OtherId(def.id), def.name);
         }
     }
 }

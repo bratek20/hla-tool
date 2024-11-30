@@ -84,26 +84,31 @@ class ComplexBuilder(
             })
             add(returnStatement {
                 methodCall {
-                    target = variable("OtherProperty")
+                    target = variable(def.api.name())
                     methodName = "create"
-                    addArg {
-                        methodCall {
-                            target = variable("OtherModuleBuilders")
-                            methodName = "buildOtherId"
-                            addArg {
-                                getterFieldAccess {
-                                    objectRef = variable("def")
-                                    fieldName = "id"
-                                }
-                            }
+                    def.fields.forEach { f ->
+                        addArg {
+                            expression(f.build("def"))
                         }
                     }
-                    addArg {
-                        getterFieldAccess {
-                            objectRef = variable("def")
-                            fieldName = "name"
-                        }
-                    }
+//                    addArg {
+//                        methodCall {
+//                            target = variable("OtherModuleBuilders")
+//                            methodName = "buildOtherId"
+//                            addArg {
+//                                getterFieldAccess {
+//                                    objectRef = variable("def")
+//                                    fieldName = "id"
+//                                }
+//                            }
+//                        }
+//                    }
+//                    addArg {
+//                        getterFieldAccess {
+//                            objectRef = variable("def")
+//                            fieldName = "name"
+//                        }
+//                    }
                 }
             })
         }
