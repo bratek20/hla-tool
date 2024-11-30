@@ -206,6 +206,14 @@ abstract class StructureApiType(
     }
 }
 
+fun extractExampleValue(attributes: List<Attribute>): String? {
+    return attributes.firstOrNull { it.getName() == "example" }?.getValue()
+}
+
+fun extractExampleValueForBaseType(attributes: List<Attribute>): String? {
+    return attributes.firstOrNull { it.getName() == "startsFrom" }?.getValue() ?: extractExampleValue(attributes)
+}
+
 abstract class SimpleStructureApiType(
     val def: SimpleStructureDefinition,
     val boxedType: BaseApiType
@@ -231,9 +239,9 @@ abstract class SimpleStructureApiType(
 
     fun exampleValue(): String? {
         if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT) {
-            return def.getAttributes().firstOrNull { it.getName() == "example" || it.getName() == "startsFrom" }?.getValue()
+            return extractExampleValueForBaseType(def.getAttributes())
         }
-        return def.getAttributes().firstOrNull { it.getName() == "example" }?.getValue()
+        return extractExampleValue(def.getAttributes())
     }
 }
 

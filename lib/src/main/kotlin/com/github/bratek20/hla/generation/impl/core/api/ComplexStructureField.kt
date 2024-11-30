@@ -54,10 +54,10 @@ open class ComplexStructureField(
         if(type is BaseApiType) {
             val basApiType = type as BaseApiType
             if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT) {
-                return def.getAttributes().firstOrNull { it.getName() == "example" || it.getName() == "startsFrom"}?.getValue()
+                return extractExampleValueForBaseType(def.getAttributes())
             }
         }
-        return def.getAttributes().firstOrNull { it.getName() == "example"}?.getValue()
+        return extractExampleValue(def.getAttributes())
     }
 
     @Deprecated("Use defaultValueBuilder() instead")
