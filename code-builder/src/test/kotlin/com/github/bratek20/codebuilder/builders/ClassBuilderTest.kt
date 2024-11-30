@@ -40,6 +40,31 @@ class ClassBuilderTest {
         }
     }
 
+
+    @Test
+    fun `inner class`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+
+                    addClass {
+                        name = "InnerClass"
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        public class InnerClass {
+                        }
+                    }
+                """
+            }
+        }
+    }
+
     @Test
     fun `class extension`() {
         testOp {
@@ -655,6 +680,31 @@ class ClassBuilderTest {
                         public int FieldWithGetter { get; }
                         public int FieldWithSetter { set; }
                         public int FieldWithGetterAndSetter { get; set; }
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `class field with default value`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    addField {
+                        name = "someField"
+                        type = baseType(BaseType.INT)
+                        getter = true
+                        defaultValue = const(1)
+                    }
+                })
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        public int SomeField { get; } = 1;
                     }
                 """
             }

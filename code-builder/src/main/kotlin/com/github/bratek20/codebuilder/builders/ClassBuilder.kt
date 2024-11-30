@@ -24,6 +24,8 @@ class FieldBuilder(
     var setter = false
     var fromConstructor = false
 
+    var defaultValue: ExpressionBuilder? = null
+
     private val annotations: MutableList<String> = mutableListOf()
     fun addAnnotation(name: String) {
         annotations.add(name)
@@ -47,7 +49,13 @@ class FieldBuilder(
         add(type!!)
         val getPart = if (getter) "get; " else ""
         val setPart = if (setter) "set; " else ""
-        lineEnd(" ${camelToPascalCase(name)} { $getPart$setPart}")
+        linePart(" ${camelToPascalCase(name)} { $getPart$setPart}")
+
+        defaultValue?.let {
+            linePart(" = ")
+            add(it)
+            statementLineEnd()
+        } ?: lineEnd()
     }
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
@@ -185,6 +193,8 @@ open class ClassBuilder: CodeBlockBuilder {
     private val methods
         get() = allMethods.filter { !it.static }
 
+    private val innerClasses: MutableList<ClassBuilder> = mutableListOf()
+
     fun addMethod(ops: MethodBuilderOps) {
         allMethods.add(method(ops))
     }
@@ -192,6 +202,10 @@ open class ClassBuilder: CodeBlockBuilder {
     fun addField(ops: FieldBuilderOps) {
         fieldOps.add(ops)
         fields.add(field(ops))
+    }
+
+    fun addClass(block: ClassBuilderOps) {
+        innerClasses.add(ClassBuilder().apply(block))
     }
 
     private val passingArgs2: MutableList<ExpressionBuilder> = mutableListOf()
@@ -215,6 +229,9 @@ open class ClassBuilder: CodeBlockBuilder {
         legacyBody?.let { addOps(it) }
         methods.forEach { method ->
             add(method)
+        }
+        innerClasses.forEach { c ->
+            add(c)
         }
         if(equalsAndHashCode) {
             addOps(equalsAndHashCodeSection(c))

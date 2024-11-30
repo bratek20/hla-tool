@@ -1,10 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.codebuilder.builders.FunctionBuilder
-import com.github.bratek20.codebuilder.builders.function
+import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
+import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.TypeDefinition
+import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
@@ -76,5 +78,100 @@ class BuildersGenerator: PatternGenerator() {
             .put("builders", builders)
             .put("externalTypesBuilders", externalTypesBuilders)
             .build()
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return c.language.name() == ModuleLanguage.C_SHARP
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return module.getName().value == "OtherModule"
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        addClass {
+            name = "OtherModuleBuilders"
+
+            addMethod {
+                static = true
+                name = "buildOtherId"
+                returnType = typeName("OtherId")
+                addArg {
+                    name = "value"
+                    type = typeName("int")
+                    defaultValue = "0"
+                }
+
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
+                            className = "OtherId"
+                            addArg {
+                                variable("value")
+                            }
+                        }
+                    })
+                }
+            }
+
+            addClass {
+                name = "OtherPropertyDef"
+                addField {
+                    name = "id"
+                    type = typeName("int")
+                    setter = true
+                    getter = true
+                    defaultValue = const(0)
+                }
+                addField {
+                    name = "name"
+                    type = typeName("string")
+                    setter = true
+                    getter = true
+                    defaultValue = string("someValue")
+                }
+            }
+            addMethod {
+                static = true
+                name = "BuildOtherProperty"
+                returnType = typeName("OtherProperty")
+
+                setBody {
+                    add(assignment {
+                        left = variableDeclaration {
+                            name = "def"
+                        }
+                        right = constructorCall {
+                            className = "OtherPropertyDef"
+                        }
+                    })
+                    //add(fun)
+                    add(returnStatement {
+                        methodCall {
+                            target = variable("OtherProperty")
+                            methodName = "create"
+                            addArg {
+                                functionCall {
+                                    name = "buildOtherId"
+                                    addArg {
+                                        getterFieldAccess {
+                                            objectRef = variable("def")
+                                            fieldName = "id"
+                                        }
+                                    }
+                                }
+                            }
+                            addArg {
+                                getterFieldAccess {
+                                    objectRef = variable("def")
+                                    fieldName = "name"
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        addExtraEmptyLines(13)
     }
 }
