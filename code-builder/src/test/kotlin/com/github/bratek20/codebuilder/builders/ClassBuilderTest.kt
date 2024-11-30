@@ -854,7 +854,7 @@ class ClassBuilderTest {
                         }
                     }
                     addArg {
-                        optionalOp("op2").map {
+                        optionalOp(variable("op2")).map {
                             plus {
                                 left = variable("it")
                                 right = const(2)

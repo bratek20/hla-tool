@@ -535,14 +535,6 @@ abstract class WrappedApiType(
 class OptionalApiType(
     wrappedType: ApiTypeLogic,
 ) : WrappedApiType(wrappedType) {
-    override fun name(): String {
-        return languageTypes.wrapWithOptional(wrappedType.name())
-    }
-
-    override fun serializableName(): String {
-        return languageTypes.wrapWithOptional(wrappedType.serializableName())
-    }
-
     override fun builder(): TypeBuilder {
         return hardOptionalType(wrappedType.builder())
     }

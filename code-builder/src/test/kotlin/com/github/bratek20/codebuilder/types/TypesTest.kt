@@ -201,7 +201,7 @@ class TypesTest {
                             type = baseType(BaseType.STRING)
                             name = "firstElem"
                         }
-                        right = listOp("list").get(0)
+                        right = listOp(variable("list")).get(0)
                     })
                     add(assignment {
                         left = variableDeclaration {
@@ -211,13 +211,13 @@ class TypesTest {
                         right = emptyMutableList(baseType(BaseType.STRING))
                     })
 
-                    add(listOp("list").add {
+                    add(listOp(variable("list")).add {
                         string("someString")
                     })
 
 
                     lineStart()
-                    add(listOp("list").find {
+                    add(listOp(variable("list")).find {
                         isEqualTo {
                             left = variable("it")
                             right = variable("other")
@@ -226,7 +226,7 @@ class TypesTest {
                     lineEnd()
 
                     lineStart()
-                    add(listOp("list").map {
+                    add(listOp(variable("list")).map {
                         plus {
                             left = variable("it")
                             right = const(1)
@@ -361,7 +361,7 @@ class TypesTest {
                         type = baseType(BaseType.STRING)
                         name = "unpacked"
                     }
-                    right = optionalOp("optional").get()
+                    right = optionalOp(variable("optional")).get()
                 })
 
                 add(assignment {
@@ -369,7 +369,7 @@ class TypesTest {
                         type = softOptionalType(baseType(BaseType.INT))
                         name = "unpackedToSoft"
                     }
-                    right = optionalOp("optional").orElse {
+                    right = optionalOp(variable("optional")).orElse {
                         const(1)
                     }
                 })
@@ -379,7 +379,7 @@ class TypesTest {
                         type = softOptionalType(baseType(BaseType.STRING))
                         name = "unpackedToSoftDefaultNull"
                     }
-                    right = optionalOp("optional").orElse {
+                    right = optionalOp(variable("optional")).orElse {
                         nullValue()
                     }
                 })
@@ -389,7 +389,7 @@ class TypesTest {
                         type = baseType(BaseType.INT)
                         name = "plusOne"
                     }
-                    right = optionalOp("optional").map {
+                    right = optionalOp(variable("optional")).map {
                         plus {
                             left = variable("it")
                             right = const(1)
