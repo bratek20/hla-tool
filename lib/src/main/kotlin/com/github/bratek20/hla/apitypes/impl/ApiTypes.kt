@@ -472,13 +472,6 @@ class ListApiType(
         return listType(wrappedType.serializableBuilder())
     }
 
-    override fun deserialize(variableName: String): String {
-        if (wrappedType.name() == wrappedType.serializableName()) {
-            return variableName
-        }
-        return languageTypes.mapListElements(variableName, "it", wrappedType.deserialize("it"))
-    }
-
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
         if (wrappedType.name() == wrappedType.serializableName()) {
             return variable
@@ -486,13 +479,6 @@ class ListApiType(
         return listOp(variable).map {
             wrappedType.modernDeserialize(variable("it"))
         }
-    }
-
-    override fun serialize(variableName: String): String {
-        if (wrappedType.name() == wrappedType.serializableName()) {
-            return variableName
-        }
-        return languageTypes.mapListElements(variableName, "it", wrappedType.serialize("it"))
     }
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {

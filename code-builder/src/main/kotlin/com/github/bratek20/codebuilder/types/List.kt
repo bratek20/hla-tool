@@ -55,17 +55,17 @@ class ListOperations(
 
     fun find(predicate: ExpressionBuilderProvider) = expression { c ->
         StringBuilder().apply {
-            append("${variable.build(c)}.${c.lang.listFindBegin()} it ${c.lang.lambdaArrow()} ")
+            append("${variable.build(c)}.${c.lang.listFindBegin()}it ${c.lang.lambdaArrow()} ")
             append(predicate().build(c))
-            append(" ${c.lang.listFindEnd()}")
+            append(c.lang.listFindEnd())
         }.toString()
     }
 
     fun map(predicate: ExpressionBuilderProvider) = expression { c ->
         StringBuilder().apply {
-            append("${variable.build(c)}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
+            append("${variable.build(c)}.${c.lang.listMapBegin()}it ${c.lang.lambdaArrow()} ")
             append(predicate().build(c))
-            append(" " + c.lang.listMapEnd())
+            append(c.lang.listMapEnd())
         }.toString()
     }
 }

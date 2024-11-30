@@ -155,19 +155,19 @@ class Kotlin: CodeBuilderLanguage {
     }
 
     override fun listFindBegin(): String {
-        return "find {"
+        return "find { "
     }
 
     override fun listFindEnd(): String {
-        return "}"
+        return " }"
     }
 
     override fun listMapBegin(): String {
-        return "map {"
+        return "map { "
     }
 
     override fun listMapEnd(): String {
-        return "}"
+        return " }"
     }
 
     override fun softOptionalType(elementType: String): String {

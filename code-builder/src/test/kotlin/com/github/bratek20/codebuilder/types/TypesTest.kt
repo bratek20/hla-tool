@@ -250,8 +250,8 @@ class TypesTest {
                    const firstElem: string = list[0]
                    const list: string[] = []
                    list.push("someString")
-                   list.find( it => it == other )
-                   list.map( it => it + 1 )
+                   list.find(it => it == other)
+                   list.map(it => it + 1)
                 """
                 }
                 langExpected {
@@ -260,8 +260,8 @@ class TypesTest {
                    string firstElem = list[0];
                    List<string> list = new List<string>();
                    list.Add("someString")
-                   list.Find( it => it == other )
-                   list.Select( it => it + 1 ).ToList()
+                   list.Find(it => it == other)
+                   list.Select(it => it + 1).ToList()
                 """
                 }
             }
