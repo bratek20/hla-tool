@@ -60,3 +60,12 @@ fun optionalOp(variable: ExpressionBuilderProvider): OptionalOperations {
 fun optionalOp(variable: ExpressionBuilder) = optionalOp {
     variable
 }
+
+class NullCoalescingArgs {
+    lateinit var left: ExpressionBuilder
+    lateinit var defaultValue: ExpressionBuilder
+}
+fun nullCoalescing(init: NullCoalescingArgs.() -> Unit) = expression { c ->
+    val args = NullCoalescingArgs().apply(init)
+    args.left.build(c) + " ?? " + "("+args.defaultValue.build(c)+")"
+}

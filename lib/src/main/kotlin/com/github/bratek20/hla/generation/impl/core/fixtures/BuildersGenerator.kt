@@ -78,6 +78,13 @@ class ComplexBuilder(
                     variable("def")
                 }
             })
+            add(assignment {
+                left = variable("def")
+                right = nullCoalescing {
+                    left = variable("def")
+                    defaultValue = emptyLambda(1)
+                }
+            })
             add(returnStatement {
                 methodCall {
                     target = variable(def.api.name())

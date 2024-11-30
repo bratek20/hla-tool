@@ -18,6 +18,7 @@ namespace TypesModule.Fixtures {
         public static DateRange BuildDateRange(Action<DateRangeDef> init = null) {
             var def = new DateRangeDef();
             init.Invoke(def);
+            def = def ?? ((_) => {});
             return DateRange.Create(TODO(def.From), TODO(def.To));
         }
     }

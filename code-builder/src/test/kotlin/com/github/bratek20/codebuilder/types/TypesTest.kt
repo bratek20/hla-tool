@@ -396,6 +396,13 @@ class TypesTest {
                         }
                     }
                 })
+                add(assignment {
+                    left = variable("x")
+                    right = nullCoalescing {
+                        left = variable("y")
+                        defaultValue = const(1)
+                    }
+                })
             }
             langExpected {
                 lang = Kotlin()
@@ -407,6 +414,7 @@ class TypesTest {
                    val unpackedToSoft: Int? = optional ?: 1
                    val unpackedToSoftDefaultNull: String? = optional
                    val plusOne: Int = optional?.let { it -> it + 1 }
+                   x = y ?? (1)
                 """
             }
             langExpected {
@@ -419,6 +427,7 @@ class TypesTest {
                    const unpackedToSoft: number? = optional.orElse(1)
                    const unpackedToSoftDefaultNull: string? = optional.orElse(undefined)
                    const plusOne: number = optional.map(it => it + 1)
+                   x = y ?? (1)
                 """
             }
             langExpected {
@@ -431,6 +440,7 @@ class TypesTest {
                    int? unpackedToSoft = optional.OrElse(1);
                    string? unpackedToSoftDefaultNull = optional.OrElse(null);
                    int plusOne = optional.Map(it => it + 1);
+                   x = y ?? (1);
                 """
             }
         }
