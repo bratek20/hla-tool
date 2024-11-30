@@ -2,6 +2,8 @@
 
 package com.github.bratek20.hla.apitypes.fixtures
 
+import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.definitions.fixtures.*
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.hla.typesworld.fixtures.*
 

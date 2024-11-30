@@ -2,6 +2,7 @@
 
 package com.github.bratek20.hla.apitypes.api
 
+import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.typesworld.api.*
 
 interface ApiType {
@@ -14,4 +15,8 @@ interface ApiType {
     fun modernDeserialize(variable: com.github.bratek20.codebuilder.builders.ExpressionBuilder): com.github.bratek20.codebuilder.builders.ExpressionBuilder
 
     fun modernSerialize(variable: com.github.bratek20.codebuilder.builders.ExpressionBuilder): com.github.bratek20.codebuilder.builders.ExpressionBuilder
+}
+
+interface ApiTypeFactory {
+    fun create(type: TypeDefinition?): ApiType
 }

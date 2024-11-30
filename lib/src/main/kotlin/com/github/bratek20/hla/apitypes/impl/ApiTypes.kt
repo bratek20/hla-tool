@@ -3,6 +3,7 @@ package com.github.bratek20.hla.apitypes.impl
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
+import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
@@ -654,8 +655,8 @@ data class ApiCustomTypes(
 class ApiTypeFactoryLogic(
     val modules: BaseModuleGroupQueries,
     val languageTypes: LanguageTypes
-) {
-    fun create(type: TypeDefinition?): ApiTypeLogic {
+): ApiTypeFactory {
+    override fun create(type: TypeDefinition?): ApiTypeLogic {
         if (type == null) {
             return createBaseApiType(BaseType.VOID)
         }
