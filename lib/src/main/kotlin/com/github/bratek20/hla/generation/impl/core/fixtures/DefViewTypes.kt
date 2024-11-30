@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.ExpressionBuilder
+import com.github.bratek20.codebuilder.builders.const
 import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.nullValue
 import com.github.bratek20.codebuilder.types.*
@@ -22,7 +23,7 @@ abstract class DefType<T: ApiType>(
     abstract fun name(): String
 
     @Deprecated("Use defaultValueBuilder() instead")
-    abstract fun defaultValue(): String
+    fun defaultValue(): String = defaultValueBuilder().build(api.languageTypes.context())
 
     abstract fun build(variableName: String): String
 
@@ -40,16 +41,12 @@ class BaseDefType(
         return api.name()
     }
 
-    override fun defaultValue(): String {
-        return api.languageTypes.defaultValueForBaseType(api.name)
-    }
-
     override fun build(variableName: String): String {
         return variableName
     }
 
     override fun defaultValueBuilder(): ExpressionBuilder {
-        return expression(defaultValue())
+        return const(api.languageTypes.defaultValueForBaseType(api.name))
     }
 }
 
@@ -71,10 +68,6 @@ class ExternalDefType(
         return languageTypes.wrapWithOptional(pascalToCamelCase(api.name()))
     }
 
-    override fun defaultValue(): String {
-        return languageTypes.undefinedValue()
-    }
-
     override fun build(variableName: String): String {
         return pascalToCamelCase(api.rawName) + "($variableName)"
     }
@@ -94,10 +87,6 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
 
     override fun name(): String {
         return boxedType.name()
-    }
-
-    override fun defaultValue(): String {
-        return defaultValueBuilder().build(api.languageTypes.context())
     }
 
     override fun defaultValueBuilder(): ExpressionBuilder {
@@ -163,10 +152,6 @@ open class ComplexStructureDefType(
         return pattern.defClassType(api.name());
     }
 
-    override fun defaultValue(): String {
-        return "{}"
-    }
-
     override fun build(variableName: String): String {
         return pattern.complexVoDefConstructor(api.name(), variableName)
     }
@@ -179,11 +164,6 @@ open class ComplexStructureDefType(
         return emptyLambda()
     }
 }
-
-class ComplexVODefType(
-    api: ComplexStructureApiType<*>,
-    fields: List<DefField>
-) : ComplexStructureDefType(api, fields)
 
 class ComplexCustomDefType(
     api: ComplexStructureApiType<*>,
@@ -199,10 +179,6 @@ class OptionalDefType(
             return pattern.defOptionalComplexType(wrappedType.api.name())
         }
         return languageTypes.wrapWithSoftOptional(wrappedType.name())
-    }
-
-    override fun defaultValue(): String {
-        return languageTypes.undefinedValue()
     }
 
     override fun build(variableName: String): String {
@@ -226,10 +202,6 @@ class ListDefType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun defaultValue(): String {
-        return languageTypes.defaultValueForList()
-    }
-
     override fun build(variableName: String): String {
         if (wrappedType is BaseDefType) {
             return variableName
@@ -247,10 +219,6 @@ class EnumDefType(
 ) : DefType<EnumApiType>(api) {
     override fun name(): String {
         return api.serializableName()
-    }
-
-    override fun defaultValue(): String {
-        return api.serialize(api.defaultValue())
     }
 
     override fun build(variableName: String): String {
