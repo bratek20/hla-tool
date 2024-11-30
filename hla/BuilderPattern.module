@@ -1,0 +1,5 @@
+//For complex structure X
+//there is def class XDef that mimics the class X fields, have always some default values
+//there are also XDefOps -> lambda type that can modify XDef
+//there is also build function that takes XDefOps and returns X
+

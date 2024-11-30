@@ -16,53 +16,53 @@ namespace SomeModule.Fixtures {
         }
         public class SomeClass2Def {
             public string Id { get; set; } = "someValue";
-            public string[] Names { get; set; } = [];
-            public string[] Ids { get; set; } = [];
+            public List<string> Names { get; set; } = [];
+            public List<string> Ids { get; set; } = [];
             public bool Enabled { get; set; } = true;
         }
         public class SomeClass3Def {
-            public SomeClass2Def Class2Object { get; set; } = {};
+            public Action<SomeClass2Def> Class2Object { get; set; } = {};
             public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
-            public SomeClass2Def[] Class2List { get; set; } = [];
+            public List<SomeClass2> Class2List { get; set; } = [];
         }
         public class SomeClass4Def {
             public int OtherId { get; set; } = 0;
-            public OtherModule.Builder.OtherClassDef OtherClass { get; set; } = {};
-            public int[] OtherIdList { get; set; } = [];
-            public OtherModule.Builder.OtherClassDef[] OtherClassList { get; set; } = [];
+            public Action<OtherClassDef> OtherClass { get; set; } = {};
+            public List<int> OtherIdList { get; set; } = [];
+            public List<OtherClass> OtherClassList { get; set; } = [];
         }
         public class SomeClass5Def {
             public string Date { get; set; } = "01/01/1970 00:00";
-            public TypesModule.Builder.DateRangeDef DateRange { get; set; } = {};
-            public DateRangeWrapperDef DateRangeWrapper { get; set; } = {};
-            public SomePropertyDef SomeProperty { get; set; } = {};
-            public OtherModule.Builder.OtherPropertyDef OtherProperty { get; set; } = {};
+            public Action<DateRangeDef> DateRange { get; set; } = {};
+            public Action<DateRangeWrapperDef> DateRangeWrapper { get; set; } = {};
+            public Action<SomePropertyDef> SomeProperty { get; set; } = {};
+            public Action<OtherPropertyDef> OtherProperty { get; set; } = {};
         }
         public class SomeClass6Def {
-            public SomeClassDef SomeClassOpt { get; set; } = undefined;
-            public string OptString { get; set; } = undefined;
-            public SomeClass2Def[] Class2List { get; set; } = [];
-            public SomeClass6Def[] SameClassList { get; set; } = [];
+            public SomeClass? SomeClassOpt { get; set; } = undefined;
+            public string? OptString { get; set; } = undefined;
+            public List<SomeClass2> Class2List { get; set; } = [];
+            public List<SomeClass6> SameClassList { get; set; } = [];
         }
         public class ClassUsingExternalTypeDef {
-            public Optional<legacyType> ExtType { get; set; } = undefined;
+            public LegacyType ExtType { get; set; } = undefined;
         }
         public class ClassHavingOptListDef {
-            public SomeClassDef[] OptList { get; set; } = undefined;
+            public List<SomeClass>? OptList { get; set; } = undefined;
         }
         public class ClassHavingOptSimpleVoDef {
-            public string OptSimpleVo { get; set; } = undefined;
+            public string? OptSimpleVo { get; set; } = undefined;
         }
         public class RecordClassDef {
             public string Id { get; set; } = "someValue";
             public int Amount { get; set; } = 0;
         }
         public class ClassWithOptExamplesDef {
-            public int OptInt { get; set; } = 1;
-            public int OptIntWrapper { get; set; } = 2;
+            public int? OptInt { get; set; } = 1;
+            public int? OptIntWrapper { get; set; } = 2;
         }
         public class ClassWithEnumListDef {
-            public string[] EnumList { get; set; } = [];
+            public List<string> EnumList { get; set; } = [];
         }
         public class SomeQueryInputDef {
             public string Id { get; set; } = "someValue";
@@ -77,9 +77,9 @@ namespace SomeModule.Fixtures {
             public int Amount { get; set; } = 0;
         }
         public class SomePropertyDef {
-            public OtherModule.Builder.OtherPropertyDef Other { get; set; } = {};
-            public int Id2 { get; set; } = undefined;
-            public TypesModule.Builder.DateRangeDef Range { get; set; } = undefined;
+            public Action<OtherPropertyDef> Other { get; set; } = {};
+            public int? Id2 { get; set; } = undefined;
+            public SerializedDateRange? Range { get; set; } = undefined;
             public double DoubleExample { get; set; } = 0;
             public long LongExample { get; set; } = 0;
             public string GoodName { get; set; } = "someValue";
@@ -89,24 +89,24 @@ namespace SomeModule.Fixtures {
             public string Value { get; set; } = "someValue";
             public object Custom { get; set; } = {};
             public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
-            public object CustomOpt { get; set; } = undefined;
+            public object? CustomOpt { get; set; } = undefined;
         }
         public class DateRangeWrapperDef {
-            public TypesModule.Builder.DateRangeDef Range { get; set; } = {};
+            public Action<DateRangeDef> Range { get; set; } = {};
         }
         public class SomeDataDef {
-            public OtherModule.Builder.OtherDataDef Other { get; set; } = {};
+            public Action<OtherDataDef> Other { get; set; } = {};
             public object Custom { get; set; } = {};
-            public object CustomOpt { get; set; } = undefined;
+            public object? CustomOpt { get; set; } = undefined;
             public string GoodDataName { get; set; } = "someValue";
         }
         public class SomeData2Def {
-            public string OptEnum { get; set; } = undefined;
-            public string OptCustomType { get; set; } = undefined;
+            public string? OptEnum { get; set; } = undefined;
+            public string? OptCustomType { get; set; } = undefined;
         }
         public class SomeEventDef {
             public string SomeField { get; set; } = "someValue";
-            public OtherModule.Builder.OtherClassDef OtherClass { get; set; } = {};
+            public Action<OtherClassDef> OtherClass { get; set; } = {};
         }
         public static SomeId BuildSomeId(string value = "someValue") {
             return new SomeId(value);

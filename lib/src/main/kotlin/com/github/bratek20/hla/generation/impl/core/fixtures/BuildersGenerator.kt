@@ -50,7 +50,7 @@ class ComplexBuilder(
         def.fields.forEach { f ->
             addField {
                 name = f.name
-                type = typeName(f.type.name())
+                type = f.type.builder()
                 setter = true
                 getter = true
                 defaultValue = variable(f.defaultValue())

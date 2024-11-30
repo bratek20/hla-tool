@@ -1,5 +1,8 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.codebuilder.types.TypeBuilder
+import com.github.bratek20.codebuilder.types.lambdaType
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
@@ -20,6 +23,10 @@ abstract class DefType<T: ApiType>(
     abstract fun defaultValue(): String
 
     abstract fun build(variableName: String): String
+
+    open fun builder(): TypeBuilder {
+        return api.serializableBuilder()
+    }
 }
 
 class BaseDefType(
@@ -141,6 +148,10 @@ open class ComplexStructureDefType(
 
     override fun build(variableName: String): String {
         return pattern.complexVoDefConstructor(api.name(), variableName)
+    }
+
+    override fun builder(): TypeBuilder {
+        return lambdaType(typeName(defName()))
     }
 }
 
