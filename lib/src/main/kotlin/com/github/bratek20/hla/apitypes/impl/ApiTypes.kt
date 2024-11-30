@@ -63,10 +63,10 @@ abstract class ApiTypeLogic: ApiType {
     }
 
     @Deprecated("Use builder instead", ReplaceWith("builder()"))
-    open fun name(): String = builder().build(c)
+    fun name(): String = builder().build(c)
 
     @Deprecated("Use serializableBuilder instead", ReplaceWith("serializableBuilder()"))
-    open fun serializableName(): String = serializableBuilder().build(c)
+    fun serializableName(): String = serializableBuilder().build(c)
 
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernDeserialize(variableName)"))
     open fun deserialize(variableName: String): String {
@@ -298,12 +298,8 @@ class ComplexCustomApiType(
     name: String,
     fields: List<ComplexStructureField>
 ) : ComplexStructureApiType<ComplexStructureField>(name, fields) {
-    override fun serializableName(): String {
-        return "Serialized$name"
-    }
-
     override fun serializableBuilder(): TypeBuilder {
-        return typeName(serializableName())
+        return typeName("Serialized$name")
     }
 
     override fun constructorCall(): String {
@@ -468,14 +464,6 @@ class DataClassApiType(
 class ListApiType(
     wrappedType: ApiTypeLogic,
 ) : WrappedApiType(wrappedType) {
-    override fun name(): String {
-        return languageTypes.wrapWithList(wrappedType.name())
-    }
-
-    override fun serializableName(): String {
-        return languageTypes.wrapWithList(wrappedType.serializableName())
-    }
-
     override fun builder(): TypeBuilder {
         return listType(wrappedType.builder())
     }
