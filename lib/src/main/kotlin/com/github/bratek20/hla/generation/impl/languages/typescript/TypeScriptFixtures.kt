@@ -45,7 +45,7 @@ class TypeScriptBuildersPattern(private val modules: ModuleGroupQueries) : Langu
     }
 
     override fun complexVoDefConstructor(name: String, arg: String): String {
-        val base = "${pascalToCamelCase(name)}($arg)"
+        val base = pascalToCamelCase(name)
         return handleReferencing(modules, name, base, "Builder")
     }
 }

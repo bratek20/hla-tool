@@ -64,34 +64,10 @@ abstract class StructureDefType<T: StructureApiType>(
     }
 }
 
-class ExternalDefType(
-    api: ExternalApiType,
-) : DefType<ExternalApiType>(api) {
-    override fun name(): String {
-        return languageTypes.wrapWithOptional(pascalToCamelCase(api.name()))
-    }
-
-    override fun builder(): TypeBuilder {
-        return api.serializableBuilder()
-    }
-
-    override fun defaultValueBuilder(): ExpressionBuilder {
-        return nullValue()
-    }
-
-    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
-        return variable
-    }
-}
-
 abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
     api: T,
     private val boxedType: BaseDefType
 ) : StructureDefType<T>(api) {
-    override fun build(variableName: String): String {
-        return api.deserialize(variableName)
-    }
-
     override fun name(): String {
         return boxedType.name()
     }
@@ -174,9 +150,9 @@ open class ComplexStructureDefType(
         return pattern.defClassType(api.name());
     }
 
-    override fun build(variableName: String): String {
-        return pattern.complexVoDefConstructor(api.name(), variableName)
-    }
+//    override fun build(variableName: String): String {
+//        return pattern.complexVoDefConstructor(api.name(), variableName)
+//    }
 
     override fun builder(): TypeBuilder {
         return lambdaType(typeName(defName()))
@@ -187,8 +163,9 @@ open class ComplexStructureDefType(
     }
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        val variableName = variable.build(api.languageTypes.context())
         return methodCall {
-            methodName = funName()
+            methodName = pattern.complexVoDefConstructor(api.name(), variableName)
             addArg {
                 variable
             }
@@ -294,7 +271,6 @@ class DefTypeFactory(
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
             is SerializableApiType -> ComplexStructureDefType(type, createFields(type.fields))
-            is ExternalApiType -> ExternalDefType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 

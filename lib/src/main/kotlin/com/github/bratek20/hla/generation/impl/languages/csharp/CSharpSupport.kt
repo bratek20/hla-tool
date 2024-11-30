@@ -33,7 +33,7 @@ class CSharpSupport(private val c: DomainContext): LanguageSupport {
     }
 
     override fun buildersFixture(): LanguageBuildersPattern {
-        return TypeScriptBuildersPattern(c.queries)
+        return CSharpBuildersPattern()
     }
 
     override fun dtoPattern(): LanguageDtoPattern {
