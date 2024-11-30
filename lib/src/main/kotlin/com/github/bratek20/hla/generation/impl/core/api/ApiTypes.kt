@@ -667,7 +667,7 @@ data class ApiCustomTypes(
 
 class ApiTypeFactory(
     val modules: BaseModuleGroupQueries,
-    private val languageTypes: LanguageTypes
+    val languageTypes: LanguageTypes
 ) {
     fun create(type: TypeDefinition?): ApiType {
         if (type == null) {

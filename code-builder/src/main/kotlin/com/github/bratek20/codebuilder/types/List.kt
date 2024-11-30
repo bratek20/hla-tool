@@ -16,6 +16,11 @@ fun mutableListType(elementType: TypeBuilder) = typeName { c ->
     c.lang.mutableListType(elementType.build(c))
 }
 
+//emptyList collides with kotlin global function
+fun emptyImmutableList(elementType: TypeBuilder) = expression { c ->
+    c.lang.newEmptyList(elementType.build(c))
+}
+
 fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
     c.lang.newEmptyMutableList(elementType.build(c))
 }

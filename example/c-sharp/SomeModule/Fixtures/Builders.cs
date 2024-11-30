@@ -23,7 +23,7 @@ namespace SomeModule.Fixtures {
         public class SomeClass3Def {
             public Action<SomeClass2Def> Class2Object { get; set; } = {};
             public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
-            public List<SomeClass2> Class2List { get; set; } = [];
+            public List<SomeClass2> Class2List { get; set; } = new List<SomeClass2>();
         }
         public class SomeClass4Def {
             public int OtherId { get; set; } = 0;
@@ -42,7 +42,7 @@ namespace SomeModule.Fixtures {
             public SomeClass? SomeClassOpt { get; set; } = undefined;
             public string? OptString { get; set; } = undefined;
             public List<SomeClass2> Class2List { get; set; } = [];
-            public List<SomeClass6> SameClassList { get; set; } = [];
+            public List<SomeClass6> SameClassList { get; set; } = new List<SomeClass6>();
         }
         public class ClassUsingExternalTypeDef {
             public LegacyType ExtType { get; set; } = undefined;
@@ -89,7 +89,7 @@ namespace SomeModule.Fixtures {
             public string Value { get; set; } = "someValue";
             public object Custom { get; set; } = {};
             public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
-            public object? CustomOpt { get; set; } = undefined;
+            public object? CustomOpt { get; set; } = null;
         }
         public class DateRangeWrapperDef {
             public Action<DateRangeDef> Range { get; set; } = {};

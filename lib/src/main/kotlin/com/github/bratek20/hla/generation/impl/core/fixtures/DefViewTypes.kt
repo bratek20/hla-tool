@@ -129,10 +129,9 @@ open class DefField(
     }
 
     // used by velocity
+    @Deprecated("Use exampleValueBuilder() instead")
     fun defaultValue(): String {
-        return api.exampleValue() ?:
-            api.defaultSerializedValue() ?:
-            type.defaultValue()
+        return defaultValueBuilder().build(api.factory.languageTypes.context())
     }
 
     fun defaultValueBuilder(): ExpressionBuilder {
