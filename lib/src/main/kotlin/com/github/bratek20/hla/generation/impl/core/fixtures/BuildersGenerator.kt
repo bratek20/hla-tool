@@ -46,29 +46,24 @@ class ComplexBuilder(
     val def: ComplexStructureDefType
 ) {
     fun getDefClassBuilder(): ClassBuilderOps = {
-        name = "OtherPropertyDef"
-        addField {
-            name = "id"
-            type = typeName("int")
-            setter = true
-            getter = true
-            defaultValue = const(0)
-        }
-        addField {
-            name = "name"
-            type = typeName("string")
-            setter = true
-            getter = true
-            defaultValue = string("someValue")
+        name = def.defName()
+        def.fields.forEach { f ->
+            addField {
+                name = f.name
+                type = typeName(f.type.name())
+                setter = true
+                getter = true
+                defaultValue = variable(f.defaultValue())
+            }
         }
     }
 
     fun getMethodBuilder(): MethodBuilderOps = {
         static = true
-        name = "BuildOtherProperty"
-        returnType = typeName("OtherProperty")
+        name = def.funName()
+        returnType = typeName(def.api.name())
         addArg {
-            type = lambdaType(typeName("OtherPropertyDef"))
+            type = lambdaType(typeName(def.defName()))
             name = "init"
             defaultValue = emptyLambda()
         }
@@ -78,7 +73,7 @@ class ComplexBuilder(
                     name = "def"
                 }
                 right = constructorCall {
-                    className = "OtherPropertyDef"
+                    className = def.defName()
                 }
             })
             add(lambdaCallStatement {
