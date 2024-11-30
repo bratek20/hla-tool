@@ -4,7 +4,7 @@ import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
+import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
 
 class EventsGenerator: PatternGenerator() {
     override fun patternName(): PatternName {

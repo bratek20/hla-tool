@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.types.*
+import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
@@ -25,7 +26,7 @@ import kotlin.reflect.cast
 
 class ViewModelSharedLogic(
     private val moduleDef: ModuleDefinition,
-    private val apiTypeFactory: ApiTypeFactory,
+    private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ) {
     fun windowsDef(): List<ViewModelWindowDefinition> =
@@ -151,7 +152,7 @@ class ViewModelField(
 }
 
 abstract class ViewModelElementLogic(
-    val modelType: ApiType
+    val modelType: ApiTypeLogic
 ) {
     abstract fun getTypeName(): String
 
@@ -179,7 +180,7 @@ class ViewModelEnumElementLogic(
 class ViewModelComplexElementLogic(
     val def: ViewModelElementDefinition,
     modelType: ComplexStructureApiType<*>,
-    val apiTypeFactory: ApiTypeFactory
+    val apiTypeFactory: ApiTypeFactoryLogic
 ): ViewModelElementLogic(modelType) {
     override fun getTypeName(): String = def.getName()
 
@@ -270,7 +271,7 @@ class ViewModelComplexElementLogic(
         }
     }
 
-    fun <T : ApiType> getMappedFieldsOfType(type: KClass<T>): List<T> {
+    fun <T : ApiTypeLogic> getMappedFieldsOfType(type: KClass<T>): List<T> {
         return getMappedFields().mapNotNull { field ->
             if (type.isInstance(field.type)) {
                 type.cast(field.type)
@@ -329,7 +330,7 @@ abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
 }
 
 class ViewModelLogicFactory(
-    private val apiTypeFactory: ApiTypeFactory
+    private val apiTypeFactory: ApiTypeFactoryLogic
 ) {
     fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
@@ -337,6 +338,7 @@ class ViewModelLogicFactory(
                 apiTypeFactory.create(TypeDefinition(model.getName(), emptyList())) as ComplexStructureApiType<*>
             } ?: ComplexValueObjectApiType("EmptyModel", emptyList())
 
+            modelType.init(apiTypeFactory.languageTypes, null)
             ViewModelComplexElementLogic(element, modelType, apiTypeFactory)
         }
     }

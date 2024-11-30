@@ -117,13 +117,13 @@ namespace SomeModule.Api {
             return names;
         }
         public List<SomeId> GetIds() {
-            return ids.Select( it => new SomeId(it) ).ToList();
+            return ids.Select(it => new SomeId(it)).ToList();
         }
         public bool GetEnabled() {
             return enabled;
         }
         public static SomeClass2 Create(SomeId id, List<string> names, List<SomeId> ids, bool enabled) {
-            return new SomeClass2(id.Value, names, ids.Select( it => it.Value ).ToList(), enabled);
+            return new SomeClass2(id.Value, names, ids.Select(it => it.Value).ToList(), enabled);
         }
     }
 
@@ -179,13 +179,13 @@ namespace SomeModule.Api {
             return otherClass;
         }
         public List<OtherId> GetOtherIdList() {
-            return otherIdList.Select( it => new OtherId(it) ).ToList();
+            return otherIdList.Select(it => new OtherId(it)).ToList();
         }
         public List<OtherClass> GetOtherClassList() {
             return otherClassList;
         }
         public static SomeClass4 Create(OtherId otherId, OtherClass otherClass, List<OtherId> otherIdList, List<OtherClass> otherClassList) {
-            return new SomeClass4(otherId.Value, otherClass, otherIdList.Select( it => it.Value ).ToList(), otherClassList);
+            return new SomeClass4(otherId.Value, otherClass, otherIdList.Select(it => it.Value).ToList(), otherClassList);
         }
     }
 
@@ -210,13 +210,13 @@ namespace SomeModule.Api {
             this.otherProperty = otherProperty;
         }
         public Date GetDate() {
-            return TODO;
+            return TODO(date);
         }
         public DateRange GetDateRange() {
-            return TODO;
+            return dateRange.ToCustomType();
         }
         public DateRangeWrapper GetDateRangeWrapper() {
-            return TODO;
+            return dateRangeWrapper.ToCustomType();
         }
         public SomeProperty GetSomeProperty() {
             return someProperty;
@@ -225,7 +225,7 @@ namespace SomeModule.Api {
             return otherProperty;
         }
         public static SomeClass5 Create(Date date, DateRange dateRange, DateRangeWrapper dateRangeWrapper, SomeProperty someProperty, OtherProperty otherProperty) {
-            return new SomeClass5(TODO, TODO, TODO, someProperty, otherProperty);
+            return new SomeClass5(TODO(date), SerializedDateRange.FromCustomType(dateRange), SerializedDateRangeWrapper.FromCustomType(dateRangeWrapper), someProperty, otherProperty);
         }
     }
 
@@ -304,10 +304,10 @@ namespace SomeModule.Api {
             this.optSimpleVo = optSimpleVo;
         }
         public Optional<SomeId> GetOptSimpleVo() {
-            return Optional<string>.Of(optSimpleVo).Map( it => new SomeId(it) );
+            return Optional<string>.Of(optSimpleVo).Map(it => new SomeId(it));
         }
         public static ClassHavingOptSimpleVo Create(Optional<SomeId> optSimpleVo) {
-            return new ClassHavingOptSimpleVo(optSimpleVo.Map( it => it.Value ).OrElse(null));
+            return new ClassHavingOptSimpleVo(optSimpleVo.Map(it => it.Value).OrElse(null));
         }
     }
 
@@ -348,10 +348,10 @@ namespace SomeModule.Api {
             return Optional<int>.Of(optInt);
         }
         public Optional<SomeIntWrapper> GetOptIntWrapper() {
-            return Optional<int>.Of(optIntWrapper).Map( it => new SomeIntWrapper(it) );
+            return Optional<int>.Of(optIntWrapper).Map(it => new SomeIntWrapper(it));
         }
         public static ClassWithOptExamples Create(Optional<int> optInt, Optional<SomeIntWrapper> optIntWrapper) {
-            return new ClassWithOptExamples(optInt.OrElse(null), optIntWrapper.Map( it => it.Value ).OrElse(null));
+            return new ClassWithOptExamples(optInt.OrElse(null), optIntWrapper.Map(it => it.Value).OrElse(null));
         }
     }
 
@@ -364,10 +364,10 @@ namespace SomeModule.Api {
             this.enumList = enumList;
         }
         public List<SomeEnum2> GetEnumList() {
-            return enumList.Select( it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it) ).ToList();
+            return enumList.Select(it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it)).ToList();
         }
         public static ClassWithEnumList Create(List<SomeEnum2> enumList) {
-            return new ClassWithEnumList(enumList.Select( it => it.ToString() ).ToList());
+            return new ClassWithEnumList(enumList.Select(it => it.ToString()).ToList());
         }
     }
 
@@ -467,10 +467,10 @@ namespace SomeModule.Api {
             return other;
         }
         public Optional<SomeId2> GetId2() {
-            return Optional<int>.Of(id2).Map( it => new SomeId2(it) );
+            return Optional<int>.Of(id2).Map(it => new SomeId2(it));
         }
         public Optional<DateRange> GetRange() {
-            return Optional<SerializedDateRange>.Of(range).Map( it => TODO );
+            return Optional<SerializedDateRange>.Of(range).Map(it => it.ToCustomType());
         }
         public double GetDoubleExample() {
             return doubleExample;
@@ -485,7 +485,7 @@ namespace SomeModule.Api {
             return customData;
         }
         public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, object customData) {
-            return new SomeProperty(other, id2.Map( it => it.Value ).OrElse(null), range.Map( it => TODO ).OrElse(null), doubleExample, longExample, goodName, customData);
+            return new SomeProperty(other, id2.Map(it => it.Value).OrElse(null), range.Map(it => SerializedDateRange.FromCustomType(it)).OrElse(null), doubleExample, longExample, goodName, customData);
         }
     }
 

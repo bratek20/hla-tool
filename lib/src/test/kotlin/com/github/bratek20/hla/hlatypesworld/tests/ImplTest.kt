@@ -1,11 +1,8 @@
 package com.github.bratek20.hla.hlatypesworld.tests
 
 import com.github.bratek20.architecture.context.someContextBuilder
-import com.github.bratek20.hla.facade.HlaFacadeTest
-import com.github.bratek20.hla.facade.api.ModuleName
-import com.github.bratek20.hla.facade.api.ModuleOperationArgs
 import com.github.bratek20.hla.facade.api.ProfileName
-import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.generation.impl.core.prefabs.CreationOrderCalculator
 import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
@@ -53,7 +50,7 @@ class HlaTypesWorldImplTest {
             ProfileName("cSharp")
         )
 
-        (world as HlaTypesWorldApiLogic).apiTypeFactory = ApiTypeFactory(
+        (world as HlaTypesWorldApiLogic).apiTypeFactory = ApiTypeFactoryLogic(
             BaseModuleGroupQueries(moduleGroup),
             CSharpTypes()
         )

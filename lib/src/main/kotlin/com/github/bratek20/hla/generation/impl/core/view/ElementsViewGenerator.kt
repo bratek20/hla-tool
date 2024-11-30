@@ -7,9 +7,9 @@ import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PerFileOperations
-import com.github.bratek20.hla.generation.impl.core.api.ListApiType
-import com.github.bratek20.hla.generation.impl.core.api.OptionalApiType
-import com.github.bratek20.hla.generation.impl.core.api.WrappedApiType
+import com.github.bratek20.hla.apitypes.impl.ListApiType
+import com.github.bratek20.hla.apitypes.impl.OptionalApiType
+import com.github.bratek20.hla.apitypes.impl.WrappedApiType
 import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asWorld

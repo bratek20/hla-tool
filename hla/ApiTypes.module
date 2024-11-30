@@ -1,0 +1,21 @@
+Interfaces
+    ApiType
+        asWorldType(): WorldType
+
+        builder(): TypeBuilder
+        serializableBuilder(): TypeBuilder
+
+        modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder
+        modernSerialize(variable: ExpressionBuilder): ExpressionBuilder
+
+    ApiTypeFactory
+        create(type: TypeDefinition?): ApiType
+
+ExternalTypes
+    TypeBuilder
+    ExpressionBuilder
+
+Kotlin
+    ExternalTypePackages
+        TypeBuilder -> com.github.bratek20.codebuilder.types
+        ExpressionBuilder -> com.github.bratek20.codebuilder.builders

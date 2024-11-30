@@ -1,5 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.hla.apitypes.impl.ApiCustomTypes
+import com.github.bratek20.hla.apitypes.impl.ComplexCustomApiType
+import com.github.bratek20.hla.apitypes.impl.DataClassApiType
+import com.github.bratek20.hla.apitypes.impl.ListApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName

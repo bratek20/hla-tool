@@ -1,15 +1,11 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.*
-import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.utils.directory.api.FileContent
-import com.github.bratek20.utils.pascalToCamelCase
 
 class SimpleBuilder(
     val def: SimpleStructureDefType<*>

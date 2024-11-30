@@ -3,13 +3,12 @@ package com.github.bratek20.hla.hlatypesworld.impl
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
-import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
+import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
+import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
 import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelTypesCalculator
 import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
-import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
@@ -25,7 +24,7 @@ class ViewModelTypesPopulator(
         return ORDER
     }
 
-    lateinit var apiTypeFactory: ApiTypeFactory
+    lateinit var apiTypeFactory: ApiTypeFactoryLogic
     private val mapper = BaseViewModelTypesMapper()
 
     override fun populate(modules: List<ModuleDefinition>) {

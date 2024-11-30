@@ -1,12 +1,11 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.api.ComplexValueObjectApiType
-import com.github.bratek20.hla.generation.impl.core.api.SimpleValueObjectApiType
+import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
+import com.github.bratek20.hla.apitypes.impl.SimpleValueObjectApiType
 import com.github.bratek20.utils.directory.api.FileContent
 
 class ValueObjectsGenerator: PatternGenerator() {

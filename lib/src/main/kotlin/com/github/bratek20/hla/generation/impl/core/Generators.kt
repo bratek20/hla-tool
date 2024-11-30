@@ -12,7 +12,7 @@ import com.github.bratek20.hla.generation.api.GeneratedPattern
 import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.generation.impl.core.api.ApiTypeFactory
+import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
@@ -33,8 +33,8 @@ class ModuleGenerationContext(
     val module: ModuleDefinition
         get() = domain.module
 
-    val apiTypeFactory: ApiTypeFactory
-        get() = ApiTypeFactory(domain.queries, language.types())
+    val apiTypeFactory: ApiTypeFactoryLogic
+        get() = ApiTypeFactoryLogic(domain.queries, language.types())
 }
 
 interface ContentBuilderExtension{
@@ -48,7 +48,7 @@ enum class GeneratorMode {
 
 abstract class ModulePartGenerator {
     lateinit var c: ModuleGenerationContext
-    lateinit var apiTypeFactory: ApiTypeFactory
+    lateinit var apiTypeFactory: ApiTypeFactoryLogic
     lateinit var velocityPath: String
     lateinit var typesWorldApi: TypesWorldApi
 
@@ -58,7 +58,7 @@ abstract class ModulePartGenerator {
 
     open fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
         this.c = c
-        this.apiTypeFactory = ApiTypeFactory(c.domain.queries, c.language.types())
+        this.apiTypeFactory = ApiTypeFactoryLogic(c.domain.queries, c.language.types())
         this.velocityPath = velocityPath
         this.typesWorldApi = typesWorldApi
     }

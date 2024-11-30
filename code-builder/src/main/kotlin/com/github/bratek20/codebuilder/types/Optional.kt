@@ -48,9 +48,9 @@ class OptionalOperations(
 
     fun map(predicate: ExpressionBuilderProvider) = expression { c ->
        StringBuilder().apply {
-           append("${getVariableName(c)}${c.lang.optionalMapBegin()} it ${c.lang.lambdaArrow()} ")
+           append("${getVariableName(c)}${c.lang.optionalMapBegin()}it ${c.lang.lambdaArrow()} ")
            append(predicate().build(c))
-           append(" " + c.lang.optionalMapEnd())
+           append(c.lang.optionalMapEnd())
        }.toString()
     }
 }

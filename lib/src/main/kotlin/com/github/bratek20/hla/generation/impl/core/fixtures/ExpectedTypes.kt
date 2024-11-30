@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.api.*
@@ -7,7 +8,7 @@ import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPatt
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 
-abstract class ExpectedType<T: ApiType>(
+abstract class ExpectedType<T: ApiTypeLogic>(
     val api: T
 ) {
     lateinit var languageTypes: LanguageTypes
@@ -134,7 +135,7 @@ class ListExpectedTypeField(
     }
 }
 
-abstract class ExpectedTypeWithFunName<T: ApiType>(
+abstract class ExpectedTypeWithFunName<T: ApiTypeLogic>(
     api: T,
 ) : ExpectedType<T>(api) {
     override fun name(): String {
@@ -285,7 +286,7 @@ class EnumExpectedType(
 class ExpectedTypeFactory(
     private val c: ModuleGenerationContext
 ) {
-    fun create(type: ApiType): ExpectedType<*> {
+    fun create(type: ApiTypeLogic): ExpectedType<*> {
         val result =  when (type) {
             is BaseApiType -> BaseExpectedType(type)
             is SimpleValueObjectApiType -> SimpleValueObjectExpectedType(type, create(type.boxedType) as BaseExpectedType)

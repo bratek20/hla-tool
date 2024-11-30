@@ -1,10 +1,10 @@
 package com.github.bratek20.hla.mvvmtypesmappers.impl
 
+import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.queries.api.createTypeDefinition
@@ -13,7 +13,7 @@ import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class ModelToViewModelTypeMapper(
-    private val apiTypeFactory: ApiTypeFactory,
+    private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ): BaseViewModelTypesMapper() {
     private val vmToViewMapper = ViewModelToViewMapperLogic(typesWorldApi)
@@ -63,7 +63,7 @@ class ModelToViewModelTypeMapper(
         return optionalApiType as OptionalApiType
     }
 
-    fun mapViewModelToModelType(viewModelType: String): ApiType {
+    fun mapViewModelToModelType(viewModelType: String): ApiTypeLogic {
         val classType = typesWorldApi.getClassType(typesWorldApi.getTypeByName(WorldTypeName(viewModelType)))
         val extendedClass = classType.getExtends()!!
 
@@ -71,7 +71,7 @@ class ModelToViewModelTypeMapper(
         return apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
     }
 
-    fun mapModelToViewTypeName(modelType: ApiType): String {
+    fun mapModelToViewTypeName(modelType: ApiTypeLogic): String {
         if (modelType is ListApiType) {
             return mapModelToViewTypeName(modelType.wrappedType).replace("View", "GroupView")
         }
@@ -87,7 +87,7 @@ class ModelToViewModelTypeMapper(
     }
 
 
-    fun mapModelToViewType(modelType: ApiType): WorldType {
+    fun mapModelToViewType(modelType: ApiTypeLogic): WorldType {
         val viewTypeName = mapModelToViewTypeName(modelType)
         return WorldType.create(
             name = WorldTypeName(viewTypeName),

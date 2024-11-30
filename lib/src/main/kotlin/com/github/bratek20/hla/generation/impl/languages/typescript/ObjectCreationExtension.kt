@@ -8,8 +8,8 @@ class ObjectCreationMapper {
         if (type.contains("[]")) {
             return "[" + map(type.replace("[]", "")) + "]"
         }
-        if (type.contains("Optional<")) {
-            val innerType = type.replace("Optional<", "").replace(">", "")
+        if (type.endsWith("?")) {
+            val innerType = type.replace("?", "")
             return map(innerType)
         }
         return when (type) {
@@ -22,7 +22,7 @@ class ObjectCreationMapper {
     }
 
     fun adjustAssignment(type: String): String {
-        if (type.contains("Optional<")) {
+        if (type.endsWith("?")) {
             return "?"
         }
         return ""
