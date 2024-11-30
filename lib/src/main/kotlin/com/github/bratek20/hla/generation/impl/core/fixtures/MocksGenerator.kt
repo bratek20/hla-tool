@@ -110,7 +110,7 @@ class MocksGenerator: PatternGenerator() {
                             type = typeName(defOutputType)
                         }
                         setBody {
-                            add(listOp(responsesListName).add {
+                            add(listOp(variable(responsesListName)).add {
                                 newPair("args", "response")
                             })
                         }
@@ -126,7 +126,7 @@ class MocksGenerator: PatternGenerator() {
                             type = typeName(inputTypeName)
                         }
                         setBody {
-                            add(listOp(callsListName).add {
+                            add(listOp(variable(callsListName)).add {
                                 variable(inputArgName)
                             })
                             add(assignment {
@@ -134,7 +134,7 @@ class MocksGenerator: PatternGenerator() {
                                     name = "findResult"
                                 }
 
-                                right = listOp(responsesListName).find {
+                                right = listOp(variable(responsesListName)).find {
                                     isEqualTo {
                                         left = functionCall {
                                             name = inputDiffMethodName

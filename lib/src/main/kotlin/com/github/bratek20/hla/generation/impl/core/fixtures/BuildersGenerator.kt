@@ -36,7 +36,7 @@ class SimpleBuilder(
 
         setBody {
             add(returnStatement {
-                def.api.modernDeserialize("value")
+                def.api.modernDeserialize(variable("value"))
             })
         }
     }
@@ -88,7 +88,7 @@ class ComplexBuilder(
                     methodName = "create"
                     def.fields.forEach { f ->
                         addArg {
-                            hardcodedExpression(f.build("def"))
+                            f.modernBuild("def")
                         }
                     }
                 }

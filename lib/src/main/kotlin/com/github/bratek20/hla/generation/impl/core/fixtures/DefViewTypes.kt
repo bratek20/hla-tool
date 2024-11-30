@@ -1,9 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.codebuilder.builders.ExpressionBuilder
-import com.github.bratek20.codebuilder.builders.const
-import com.github.bratek20.codebuilder.builders.expression
-import com.github.bratek20.codebuilder.builders.nullValue
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
@@ -30,6 +27,8 @@ abstract class DefType<T: ApiType>(
     abstract fun builder(): TypeBuilder
 
     abstract fun defaultValueBuilder(): ExpressionBuilder
+
+    abstract fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder
 }
 
 class BaseDefType(
@@ -50,6 +49,10 @@ class BaseDefType(
     override fun defaultValueBuilder(): ExpressionBuilder {
         return const(api.languageTypes.defaultValueForBaseType(api.name))
     }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return variable
+    }
 }
 
 abstract class StructureDefType<T: StructureApiType>(
@@ -57,7 +60,7 @@ abstract class StructureDefType<T: StructureApiType>(
 ) : DefType<T>(api) {
     fun funName(): String {
         if (languageTypes is CSharpTypes) {
-            return "Build" + api.name()
+            return "build" + api.name()
         }
         return pascalToCamelCase(api.name())
     }
@@ -81,6 +84,10 @@ class ExternalDefType(
     override fun defaultValueBuilder(): ExpressionBuilder {
         return nullValue()
     }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return variable
+    }
 }
 
 abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
@@ -101,6 +108,10 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
 
     override fun builder(): TypeBuilder {
         return boxedType.builder()
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return api.modernDeserialize(variable)
     }
 }
 
@@ -135,6 +146,13 @@ open class DefField(
             return type.build("final_$name")
         }
         return type.build(name)
+    }
+
+    fun modernBuild(variableName: String): ExpressionBuilder {
+        return type.modernBuild(getterFieldAccess {
+            objectRef = variable(variableName)
+            fieldName = name
+        })
     }
 
     // used by velocity
@@ -173,6 +191,15 @@ open class ComplexStructureDefType(
     override fun defaultValueBuilder(): ExpressionBuilder {
         return emptyLambda()
     }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return methodCall {
+            methodName = funName()
+            addArg {
+                variable
+            }
+        }
+    }
 }
 
 class ComplexCustomDefType(
@@ -206,6 +233,10 @@ class OptionalDefType(
     override fun defaultValueBuilder(): ExpressionBuilder {
         return nullValue()
     }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return hardcodedExpression("TODO")
+    }
 }
 
 class ListDefType(
@@ -225,6 +256,10 @@ class ListDefType(
 
     override fun defaultValueBuilder(): ExpressionBuilder {
         return emptyImmutableList(wrappedType.builder())
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return hardcodedExpression("TODO")
     }
 
     override fun builder(): TypeBuilder {
@@ -248,7 +283,11 @@ class EnumDefType(
     }
 
     override fun defaultValueBuilder(): ExpressionBuilder {
-        return api.modernSerialize(api.defaultValue())
+        return api.modernSerialize(variable(api.defaultValue()))
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return api.modernDeserialize(variable)
     }
 }
 

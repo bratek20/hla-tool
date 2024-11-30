@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.web.http
 
+import com.github.bratek20.codebuilder.builders.hardcodedExpression
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
@@ -69,7 +70,7 @@ class WebServerGenerator: PatternGenerator() {
 
         val initApiCall = "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
 
-        val apiCall = method.returnApiType.modernSerialize(initApiCall).build(c.language.types().context());
+        val apiCall = method.returnApiType.modernSerialize(hardcodedExpression(initApiCall)).build(c.language.types().context());
         val suffix = if (method.returnType != "Unit") "))" else ""
         val secondLine = "${prefix}${apiCall}${suffix}"
 

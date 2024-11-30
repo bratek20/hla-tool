@@ -83,7 +83,7 @@ namespace SomeModule.Fixtures {
             public double DoubleExample { get; set; } = 0;
             public long LongExample { get; set; } = 0;
             public string GoodName { get; set; } = "someValue";
-            public object CustomData { get; set; } = {};
+            public object CustomData { get; set; } = null;
         }
         public class SomeProperty2Def {
             public string Value { get; set; } = "someValue";
@@ -130,7 +130,7 @@ namespace SomeModule.Fixtures {
         public static SomeClass3 BuildSomeClass3(Action<SomeClass3Def> init = () => {}) {
             var def = new SomeClass3Def();
             init.Invoke(def);
-            return SomeClass3.Create(someClass2(def.class2Object), (SomeEnum)Enum.Parse(typeof(SomeEnum), def.someEnum), def.class2List.map(it => someClass2(it)));
+            return SomeClass3.Create(BuildSomeClass2(def.class2Object), (SomeEnum)Enum.Parse(typeof(SomeEnum), def.someEnum), def.class2List.map(it => someClass2(it)));
         }
         public static SomeClass4 BuildSomeClass4(Action<SomeClass4Def> init = () => {}) {
             var def = new SomeClass4Def();
