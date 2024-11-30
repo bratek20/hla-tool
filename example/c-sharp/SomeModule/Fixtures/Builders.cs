@@ -116,122 +116,122 @@ namespace SomeModule.Fixtures {
         }
         public static SomeClass BuildSomeClass(Action<SomeClassDef> init = null) {
             var def = new SomeClassDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeClass.Create(new SomeId(def.Id), def.Amount);
         }
         public static SomeClass2 BuildSomeClass2(Action<SomeClass2Def> init = null) {
             var def = new SomeClass2Def();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeClass2.Create(new SomeId(def.Id), def.Names, def.Ids.Select(it => new SomeId(it)).ToList(), def.Enabled);
         }
         public static SomeClass3 BuildSomeClass3(Action<SomeClass3Def> init = null) {
             var def = new SomeClass3Def();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeClass3.Create(BuildSomeClass2(def.Class2Object), (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), def.Class2List.Select(it => BuildSomeClass2(it)).ToList());
         }
         public static SomeClass4 BuildSomeClass4(Action<SomeClass4Def> init = null) {
             var def = new SomeClass4Def();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeClass4.Create(new OtherId(def.OtherId), BuildOtherClass(def.OtherClass), def.OtherIdList.Select(it => new OtherId(it)).ToList(), def.OtherClassList.Select(it => BuildOtherClass(it)).ToList());
         }
         public static SomeClass5 BuildSomeClass5(Action<SomeClass5Def> init = null) {
             var def = new SomeClass5Def();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeClass5.Create(TODO(def.Date), BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), BuildOtherProperty(def.OtherProperty));
         }
         public static SomeClass6 BuildSomeClass6(Action<SomeClass6Def> init = null) {
             var def = new SomeClass6Def();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeClass6.Create(Optional<Action<SomeClassDef>>.Of(def.SomeClassOpt).Map(it => BuildSomeClass(it)), Optional<string>.Of(def.OptString), def.Class2List.Select(it => BuildSomeClass2(it)).ToList(), def.SameClassList.Select(it => BuildSomeClass6(it)).ToList());
         }
         public static ClassHavingOptList BuildClassHavingOptList(Action<ClassHavingOptListDef> init = null) {
             var def = new ClassHavingOptListDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return ClassHavingOptList.Create(Optional<List<Action<SomeClassDef>>>.Of(def.OptList).Map(it => it.Select(it => BuildSomeClass(it)).ToList()));
         }
         public static ClassHavingOptSimpleVo BuildClassHavingOptSimpleVo(Action<ClassHavingOptSimpleVoDef> init = null) {
             var def = new ClassHavingOptSimpleVoDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return ClassHavingOptSimpleVo.Create(Optional<string>.Of(def.OptSimpleVo).Map(it => new SomeId(it)));
         }
         public static RecordClass BuildRecordClass(Action<RecordClassDef> init = null) {
             var def = new RecordClassDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return RecordClass.Create(new SomeId(def.Id), def.Amount);
         }
         public static ClassWithOptExamples BuildClassWithOptExamples(Action<ClassWithOptExamplesDef> init = null) {
             var def = new ClassWithOptExamplesDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return ClassWithOptExamples.Create(Optional<int>.Of(def.OptInt), Optional<int>.Of(def.OptIntWrapper).Map(it => new SomeIntWrapper(it)));
         }
         public static ClassWithEnumList BuildClassWithEnumList(Action<ClassWithEnumListDef> init = null) {
             var def = new ClassWithEnumListDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return ClassWithEnumList.Create(def.EnumList.Select(it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it)).ToList());
         }
         public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = null) {
             var def = new SomeQueryInputDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeQueryInput.Create(new SomeId(def.Id), def.Amount);
         }
         public static SomeHandlerInput BuildSomeHandlerInput(Action<SomeHandlerInputDef> init = null) {
             var def = new SomeHandlerInputDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeHandlerInput.Create(new SomeId(def.Id), def.Amount);
         }
         public static SomeHandlerOutput BuildSomeHandlerOutput(Action<SomeHandlerOutputDef> init = null) {
             var def = new SomeHandlerOutputDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeHandlerOutput.Create(new SomeId(def.Id), def.Amount);
         }
         public static SomeProperty BuildSomeProperty(Action<SomePropertyDef> init = null) {
             var def = new SomePropertyDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeProperty.Create(BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
         }
         public static SomeProperty2 BuildSomeProperty2(Action<SomeProperty2Def> init = null) {
             var def = new SomeProperty2Def();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeProperty2.Create(def.Value, def.Custom, (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), Optional<object>.Of(def.CustomOpt));
         }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return DateRangeWrapper.Create(BuildDateRange(def.Range));
         }
         public static SomeData BuildSomeData(Action<SomeDataDef> init = null) {
             var def = new SomeDataDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeData.Create(BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
         }
         public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = null) {
             var def = new SomeData2Def();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeData2.Create(Optional<string>.Of(def.OptEnum).Map(it => (SomeEnum)Enum.Parse(typeof(SomeEnum), it)), Optional<string>.Of(def.OptCustomType).Map(it => TODO(it)));
         }
         public static SomeEvent BuildSomeEvent(Action<SomeEventDef> init = null) {
             var def = new SomeEventDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return SomeEvent.Create(def.SomeField, BuildOtherClass(def.OtherClass));
         }
     }

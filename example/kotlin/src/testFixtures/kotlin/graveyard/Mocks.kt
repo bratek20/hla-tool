@@ -12,7 +12,6 @@ import com.some.pkg.othermodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
 import com.some.pkg.somemodule.fixtures.diffLegacyType
-import com.some.pkg.somemodule.fixtures.legacyType
 
 class SomeInterface2Mock: SomeInterface2 {
     // referenceOtherClass
@@ -46,9 +45,7 @@ class SomeInterface2Mock: SomeInterface2 {
     }
 
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
-        referenceLegacyTypeCalls.add(legacyType)
-        val findResult = referenceLegacyTypeResponses.find { it -> diffLegacyType(legacyType, it.first) == "" }
-        return legacyType(findResult?.second ?: null)
+        TODO()
     }
 
     fun assertReferenceLegacyTypeCalled(times: Int = 1) {

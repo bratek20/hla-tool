@@ -24,20 +24,20 @@ namespace OtherModule.Fixtures {
         }
         public static OtherProperty BuildOtherProperty(Action<OtherPropertyDef> init = null) {
             var def = new OtherPropertyDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return OtherProperty.Create(new OtherId(def.Id), def.Name);
         }
         public static OtherClass BuildOtherClass(Action<OtherClassDef> init = null) {
             var def = new OtherClassDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return OtherClass.Create(new OtherId(def.Id), def.Amount);
         }
         public static OtherData BuildOtherData(Action<OtherDataDef> init = null) {
             var def = new OtherDataDef();
+            init = init ?? ((_) => {});
             init.Invoke(def);
-            def = def ?? ((_) => {});
             return OtherData.Create(new OtherId(def.Id));
         }
     }
