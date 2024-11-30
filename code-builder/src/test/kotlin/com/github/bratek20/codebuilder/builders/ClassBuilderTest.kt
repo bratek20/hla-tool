@@ -866,7 +866,7 @@ class ClassBuilderTest {
             langExpected {
                 lang = CSharp()
                 expected = """
-                    new SomeClass(op1.Map( it => it + 1 ), op2.Map( it => it + 2 ))
+                    new SomeClass(op1.Map(it => it + 1), op2.Map(it => it + 2))
                 """
             }
         }
