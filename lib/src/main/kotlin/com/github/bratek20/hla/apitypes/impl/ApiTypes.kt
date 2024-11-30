@@ -243,12 +243,8 @@ class SimpleValueObjectApiType(
         }
     }
 
-    override fun serialize(variableName: String): String {
-        return "$variableName.value"
-    }
-
     fun getClassOps(): ClassBuilderOps =  {
-        name = name()
+        name = this@SimpleValueObjectApiType.name
         equalsAndHashCode = true
 
         addField {
@@ -264,24 +260,16 @@ class SimpleCustomApiType(
     def: SimpleStructureDefinition,
     boxedType: BaseApiType
 ) : SimpleStructureApiType(def, boxedType) {
-    override fun serialize(variableName: String): String {
-        return languageTypes.customTypeGetterCall(name, "value") + "($variableName)"
-    }
 
     override fun constructorCall(): String {
         return languageTypes.customTypeConstructorCall(name)
     }
+    override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
+        return hardcodedExpression(languageTypes.customTypeGetterCall(name, "value") + "(${variable.build(c)})")
+    }
 
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
-    }
-
-    override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
-        return hardcodedExpression("TODO")
-    }
-
-    override fun deserialize(variableName: String): String {
-        return languageTypes.customTypeConstructorCall(name) + "($variableName)"
+        return hardcodedExpression(languageTypes.customTypeConstructorCall(name) + "(${variable.build(c)})")
     }
 
     // used by velocity
