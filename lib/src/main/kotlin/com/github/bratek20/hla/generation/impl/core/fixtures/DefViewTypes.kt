@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.codebuilder.builders.ExpressionBuilder
+import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.lambdaType
 import com.github.bratek20.codebuilder.types.typeName
@@ -26,6 +28,10 @@ abstract class DefType<T: ApiType>(
 
     open fun builder(): TypeBuilder {
         return api.serializableBuilder()
+    }
+
+    open fun defaultValueBuilder(): ExpressionBuilder {
+        return expression(defaultValue())
     }
 }
 
@@ -127,6 +133,12 @@ open class DefField(
         return api.exampleValue() ?:
             api.defaultSerializedValue() ?:
             type.defaultValue()
+    }
+
+    fun defaultValueBuilder(): ExpressionBuilder {
+        return api.exampleValueBuilder() ?:
+            api.defaultSerializedValueBuilder() ?:
+            type.defaultValueBuilder()
     }
 }
 

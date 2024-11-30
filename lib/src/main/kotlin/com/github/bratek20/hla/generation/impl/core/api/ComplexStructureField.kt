@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.ExpressionBuilder
+import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
@@ -44,6 +46,12 @@ open class ComplexStructureField(
         return def.getAttributes().firstOrNull { it.getName() == "example"}?.getValue()
     }
 
+    fun exampleValueBuilder(): ExpressionBuilder? {
+        return exampleValue()?.let {
+            expression(it)
+        }
+    }
+
     fun defaultValue(): String? {
         def.getDefaultValue()?.let {
             return mapDefaultValue(it)
@@ -54,6 +62,13 @@ open class ComplexStructureField(
     fun defaultSerializedValue(): String? {
         def.getDefaultValue()?.let {
             return mapDefaultSerializedValue(it)
+        }
+        return null
+    }
+
+    fun defaultSerializedValueBuilder(): ExpressionBuilder? {
+        defaultSerializedValue()?.let {
+            return expression(it)
         }
         return null
     }

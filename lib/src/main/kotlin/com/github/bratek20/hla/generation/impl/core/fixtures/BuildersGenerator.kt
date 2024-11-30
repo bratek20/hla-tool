@@ -53,7 +53,7 @@ class ComplexBuilder(
                 type = f.type.builder()
                 setter = true
                 getter = true
-                defaultValue = variable(f.defaultValue())
+                defaultValue = f.defaultValueBuilder()
             }
         }
     }
