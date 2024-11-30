@@ -200,7 +200,6 @@ abstract class StructureApiType(
         return languageTypes.classConstructorCall(name())
     }
 
-
     override fun builder(): TypeBuilder {
         return typeName(name)
     }
@@ -227,19 +226,12 @@ abstract class SimpleStructureApiType(
         return constructorCall() + "($variableName)"
     }
 
-    abstract fun unbox(variableName: String): String;
-
-    override fun serialize(variableName: String): String {
-        return unbox(variableName)
+    fun unbox(variableName: String): String {
+        return serialize(variableName)
     }
 
     override fun serializableBuilder(): TypeBuilder {
         return boxedType.builder()
-    }
-
-    @Deprecated("Use defaultValueBuilder() instead")
-    fun exampleValue(): String? {
-        return exampleValueBuilder()?.build(languageTypes.context())
     }
 
     fun exampleValueBuilder(): ExpressionBuilder? {
@@ -280,7 +272,7 @@ class SimpleValueObjectApiType(
         }
     }
 
-    override fun unbox(variableName: String): String {
+    override fun serialize(variableName: String): String {
         return "$variableName.value"
     }
 
@@ -301,7 +293,7 @@ class SimpleCustomApiType(
     def: SimpleStructureDefinition,
     boxedType: BaseApiType
 ) : SimpleStructureApiType(def, boxedType) {
-    override fun unbox(variableName: String): String {
+    override fun serialize(variableName: String): String {
         return languageTypes.customTypeGetterCall(name, "value") + "($variableName)"
     }
 
