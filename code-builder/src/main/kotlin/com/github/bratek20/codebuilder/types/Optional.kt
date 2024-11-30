@@ -1,5 +1,6 @@
 package com.github.bratek20.codebuilder.types
 
+import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.ExpressionBuilderProvider
 import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.variable
@@ -56,6 +57,6 @@ class OptionalOperations(
 fun optionalOp(variable: ExpressionBuilderProvider): OptionalOperations {
     return OptionalOperations(variable)
 }
-fun optionalOp(variableName: String) = optionalOp {
-    variable(variableName)
+fun optionalOp(variable: ExpressionBuilder) = optionalOp {
+    variable
 }

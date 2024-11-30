@@ -1,8 +1,11 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
+import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -16,9 +19,16 @@ abstract class DefType<T: ApiType>(
 
     abstract fun name(): String
 
-    abstract fun defaultValue(): String
+    @Deprecated("Use defaultValueBuilder() instead")
+    fun defaultValue(): String = defaultValueBuilder().build(api.languageTypes.context())
 
     abstract fun build(variableName: String): String
+
+    abstract fun builder(): TypeBuilder
+
+    abstract fun defaultValueBuilder(): ExpressionBuilder
+
+    abstract fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder
 }
 
 class BaseDefType(
@@ -28,12 +38,20 @@ class BaseDefType(
         return api.name()
     }
 
-    override fun defaultValue(): String {
-        return api.languageTypes.defaultValueForBaseType(api.name)
-    }
-
     override fun build(variableName: String): String {
         return variableName
+    }
+
+    override fun builder(): TypeBuilder {
+        return api.serializableBuilder()
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return const(api.languageTypes.defaultValueForBaseType(api.name))
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return variable
     }
 }
 
@@ -41,6 +59,9 @@ abstract class StructureDefType<T: StructureApiType>(
     api: T,
 ) : DefType<T>(api) {
     fun funName(): String {
+        if (languageTypes is CSharpTypes) {
+            return "build" + api.name()
+        }
         return pascalToCamelCase(api.name())
     }
 }
@@ -52,12 +73,20 @@ class ExternalDefType(
         return languageTypes.wrapWithOptional(pascalToCamelCase(api.name()))
     }
 
-    override fun defaultValue(): String {
-        return languageTypes.undefinedValue()
-    }
-
     override fun build(variableName: String): String {
         return pascalToCamelCase(api.rawName) + "($variableName)"
+    }
+
+    override fun builder(): TypeBuilder {
+        return api.serializableBuilder()
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return nullValue()
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return variable
     }
 }
 
@@ -73,8 +102,16 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
         return boxedType.name()
     }
 
-    override fun defaultValue(): String {
-        return api.exampleValue() ?: boxedType.defaultValue()
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return api.exampleValueBuilder() ?: boxedType.defaultValueBuilder()
+    }
+
+    override fun builder(): TypeBuilder {
+        return boxedType.builder()
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return api.modernDeserialize(variable)
     }
 }
 
@@ -111,11 +148,23 @@ open class DefField(
         return type.build(name)
     }
 
+    fun modernBuild(variableName: String): ExpressionBuilder {
+        return type.modernBuild(getterFieldAccess {
+            objectRef = variable(variableName)
+            fieldName = name
+        })
+    }
+
     // used by velocity
+    @Deprecated("Use defaultValueBuilder() instead")
     fun defaultValue(): String {
-        return api.exampleValue() ?:
-            api.defaultSerializedValue() ?:
-            type.defaultValue()
+        return defaultValueBuilder().build(api.factory.languageTypes.context())
+    }
+
+    fun defaultValueBuilder(): ExpressionBuilder {
+        return api.exampleValueBuilder() ?:
+            api.defaultSerializedValueBuilder() ?:
+            type.defaultValueBuilder()
     }
 }
 
@@ -131,19 +180,27 @@ open class ComplexStructureDefType(
         return pattern.defClassType(api.name());
     }
 
-    override fun defaultValue(): String {
-        return "{}"
-    }
-
     override fun build(variableName: String): String {
         return pattern.complexVoDefConstructor(api.name(), variableName)
     }
-}
 
-class ComplexVODefType(
-    api: ComplexStructureApiType<*>,
-    fields: List<DefField>
-) : ComplexStructureDefType(api, fields)
+    override fun builder(): TypeBuilder {
+        return lambdaType(typeName(defName()))
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return emptyLambda()
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return methodCall {
+            methodName = funName()
+            addArg {
+                variable
+            }
+        }
+    }
+}
 
 class ComplexCustomDefType(
     api: ComplexStructureApiType<*>,
@@ -161,16 +218,24 @@ class OptionalDefType(
         return languageTypes.wrapWithSoftOptional(wrappedType.name())
     }
 
-    override fun defaultValue(): String {
-        return languageTypes.undefinedValue()
-    }
-
     override fun build(variableName: String): String {
         val mapping = wrappedType.build("it")
         if (mapping == "it") {
             return pattern.mapOptionalDefBaseElement(variableName)
         }
         return pattern.mapOptionalDefElement(variableName, "it", mapping)
+    }
+
+    override fun builder(): TypeBuilder {
+        return softOptionalType(wrappedType.builder())
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return nullValue()
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return hardcodedExpression("TODO")
     }
 }
 
@@ -182,15 +247,23 @@ class ListDefType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
-    override fun defaultValue(): String {
-        return languageTypes.defaultValueForList()
-    }
-
     override fun build(variableName: String): String {
         if (wrappedType is BaseDefType) {
             return variableName
         }
         return languageTypes.mapListElements(variableName, "it", wrappedType.build("it"))
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return emptyImmutableList(wrappedType.builder())
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return hardcodedExpression("TODO")
+    }
+
+    override fun builder(): TypeBuilder {
+        return listType(wrappedType.builder())
     }
 }
 
@@ -201,12 +274,20 @@ class EnumDefType(
         return api.serializableName()
     }
 
-    override fun defaultValue(): String {
-        return api.serialize(api.defaultValue())
-    }
-
     override fun build(variableName: String): String {
         return api.deserialize(variableName)
+    }
+
+    override fun builder(): TypeBuilder {
+        return api.serializableBuilder()
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return api.modernSerialize(variable(api.defaultValue()))
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return api.modernDeserialize(variable)
     }
 }
 

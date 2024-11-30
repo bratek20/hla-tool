@@ -300,6 +300,3 @@ fun someEvent(init: SomeEventDef.() -> Unit = {}): SomeEvent {
         otherClass = otherClass(def.otherClass),
     )
 }
-fun legacyType(value: com.some.pkg.legacy.LegacyType?): com.some.pkg.legacy.LegacyType {
-    return value!!
-}

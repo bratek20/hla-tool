@@ -32,10 +32,10 @@ class CSharpTypes(): LanguageTypes {
             BaseType.INT -> "0"
             BaseType.BOOL -> "false"
             BaseType.VOID -> throw IllegalArgumentException("Void type has no default value")
-            BaseType.ANY -> "{}"
+            BaseType.ANY -> "null"
             BaseType.DOUBLE -> "0"
             BaseType.LONG -> "0"
-            BaseType.STRUCT -> "{}"
+            BaseType.STRUCT -> "null"
         }
     }
 

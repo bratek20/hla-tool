@@ -28,7 +28,7 @@ fun parent(): ExpressionBuilder {
     return expression("base")
 }
 
-//if you are lazy, in the end all usages should be refactored to proper builders
+@Deprecated("if you are lazy, in the end all usages should be refactored to proper builders")
 fun hardcodedExpression(value: String) = expression(value)
 
 fun getterField(name: String) = expression { c ->
@@ -60,8 +60,11 @@ fun instanceVariable(name: String) = expression { c ->
 }
 
 fun const(value: Int) = expression(value.toString())
+fun const(value: String) = expression(value)
+
 fun nullValue() = expression { c -> c.lang.nullValue() }
 fun string(value: String) = expression("\"$value\"")
+fun emptyString() = string("")
 
 class PlusBuilder: ExpressionBuilder {
     lateinit var left: ExpressionBuilder

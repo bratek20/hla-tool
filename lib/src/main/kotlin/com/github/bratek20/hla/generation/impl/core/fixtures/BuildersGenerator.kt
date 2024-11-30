@@ -1,48 +1,105 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
-import com.github.bratek20.codebuilder.builders.FunctionBuilder
-import com.github.bratek20.codebuilder.builders.function
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.TypeDefinition
+import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
+class SimpleBuilder(
+    val def: SimpleStructureDefType<*>
+) {
+    // used by velocity
+    fun declaration(): String {
+        return "${def.funName()}(value: ${def.name()} = ${def.defaultValue()}): ${def.api.name()}"
+    }
+
+    // used by velocity
+    fun body(): String {
+        return "return ${def.api.constructorCall()}(value)"
+    }
+
+    fun getMethodBuilder(): MethodBuilderOps = {
+        static = true
+        name = def.funName()
+        returnType = typeName(def.api.name())
+        addArg {
+            name = "value"
+            type = typeName(def.name())
+            defaultValue = def.defaultValueBuilder()
+        }
+
+        setBody {
+            add(returnStatement {
+                def.api.modernDeserialize(variable("value"))
+            })
+        }
+    }
+}
+
+class ComplexBuilder(
+    val def: ComplexStructureDefType
+) {
+    fun getDefClassBuilder(): ClassBuilderOps = {
+        name = def.defName()
+        def.fields.forEach { f ->
+            addField {
+                name = f.name
+                type = f.type.builder()
+                setter = true
+                getter = true
+                defaultValue = f.defaultValueBuilder()
+            }
+        }
+    }
+
+    fun getMethodBuilder(): MethodBuilderOps = {
+        static = true
+        name = def.funName()
+        returnType = typeName(def.api.name())
+        addArg {
+            type = lambdaType(typeName(def.defName()))
+            name = "init"
+            defaultValue = emptyLambda()
+        }
+        setBody {
+            add(assignment {
+                left = variableDeclaration {
+                    name = "def"
+                }
+                right = constructorCall {
+                    className = def.defName()
+                }
+            })
+            add(lambdaCallStatement {
+                name = "init"
+                addArg {
+                    variable("def")
+                }
+            })
+            add(returnStatement {
+                methodCall {
+                    target = variable(def.api.name())
+                    methodName = "create"
+                    def.fields.forEach { f ->
+                        addArg {
+                            f.modernBuild("def")
+                        }
+                    }
+                }
+            })
+        }
+    }
+}
+
 class BuildersGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.Builders
-    }
-
-    data class SimpleBuilder(
-        val def: SimpleStructureDefType<*>
-    ) {
-        // used by velocity
-        fun declaration(): String {
-            return "${def.funName()}(value: ${def.name()} = ${def.defaultValue()}): ${def.api.name()}"
-        }
-
-        // used by velocity
-        fun body(): String {
-            return "return ${def.api.constructorCall()}(value)"
-        }
-    }
-
-    private fun externalTypeBuilder(type: TypeDefinition): FunctionBuilder {
-        val apiType = apiTypeFactory.create(type) as ExternalApiType
-        return function {
-            name = pascalToCamelCase(apiType.rawName)
-            addArg {
-                name = "value"
-                this.type = typeName(apiType.name() + "?") //TODO soft optional type wrap?
-            }
-            returnType = typeName(apiType.name())
-            legacyBody = {
-                line("return value!!") // TODO soft optional unpack?
-            }
-        }
     }
 
     override fun generateFileContent(): FileContent? {
@@ -52,29 +109,53 @@ class BuildersGenerator: PatternGenerator() {
             return null
         }
 
-        val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
-
-        val simpleBuilders = (defTypes.simple).map {
-            SimpleBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as SimpleStructureDefType<*>)
-        }
-        val builders = (defTypes.complex).map {
-            defTypeFactory.create(apiTypeFactory.create(it))
-        }
-
-        val externalTypesBuilders = if (externalTypes.isEmpty())
-                null
-            else
-                CodeBuilder(lang)
-                    .addMany(
-                        externalTypes.map { externalTypeBuilder(it) }
-                    )
-                    .build()
-
+        val simpleBuilders = getSimpleBuilders()
+        val complexBuildersDefs = getComplexBuilders().map { it.def }
 
         return contentBuilder("builders.vm")
             .put("simpleBuilders", simpleBuilders)
-            .put("builders", builders)
-            .put("externalTypesBuilders", externalTypesBuilders)
+            .put("builders", complexBuildersDefs)
             .build()
+    }
+
+    private fun getSimpleBuilders(): List<SimpleBuilder> {
+        val defTypes = modules.allStructureDefinitions(module)
+        val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
+
+        return (defTypes.simple).map {
+            SimpleBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as SimpleStructureDefType<*>)
+        }
+    }
+
+    private fun getComplexBuilders(): List<ComplexBuilder> {
+        val defTypes = modules.allStructureDefinitions(module)
+        val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
+
+        return (defTypes.complex).map {
+            ComplexBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as ComplexStructureDefType)
+        }
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return c.language.name() == ModuleLanguage.C_SHARP
+    }
+
+    override fun shouldGenerate(): Boolean {
+        return !modules.allStructureDefinitions(module).areAllEmpty()
+    }
+
+    override fun getOperations(): TopLevelCodeBuilderOps = {
+        addClass {
+            name = moduleName + "Builders"
+
+            getSimpleBuilders().forEach {
+                addMethod(it.getMethodBuilder())
+            }
+
+            getComplexBuilders().forEach {
+                addClass(it.getDefClassBuilder())
+                addMethod(it.getMethodBuilder())
+            }
+        }
     }
 }

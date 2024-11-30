@@ -210,13 +210,13 @@ namespace SomeModule.Api {
             this.otherProperty = otherProperty;
         }
         public Date GetDate() {
-            return TODO(date);
+            return TODO;
         }
         public DateRange GetDateRange() {
-            return dateRange.toCustomType();
+            return TODO;
         }
         public DateRangeWrapper GetDateRangeWrapper() {
-            return dateRangeWrapper.toCustomType();
+            return TODO;
         }
         public SomeProperty GetSomeProperty() {
             return someProperty;
@@ -225,7 +225,7 @@ namespace SomeModule.Api {
             return otherProperty;
         }
         public static SomeClass5 Create(Date date, DateRange dateRange, DateRangeWrapper dateRangeWrapper, SomeProperty someProperty, OtherProperty otherProperty) {
-            return new SomeClass5(TODO(date), dateRange.fromCustomType(), dateRangeWrapper.fromCustomType(), someProperty, otherProperty);
+            return new SomeClass5(TODO, TODO, TODO, someProperty, otherProperty);
         }
     }
 
@@ -470,7 +470,7 @@ namespace SomeModule.Api {
             return Optional<int>.Of(id2).Map( it => new SomeId2(it) );
         }
         public Optional<DateRange> GetRange() {
-            return Optional<SerializedDateRange>.Of(range).Map( it => it.toCustomType() );
+            return Optional<SerializedDateRange>.Of(range).Map( it => TODO );
         }
         public double GetDoubleExample() {
             return doubleExample;
@@ -485,7 +485,7 @@ namespace SomeModule.Api {
             return customData;
         }
         public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, object customData) {
-            return new SomeProperty(other, id2.Map( it => it.Value ).OrElse(null), range.Map( it => it.fromCustomType() ).OrElse(null), doubleExample, longExample, goodName, customData);
+            return new SomeProperty(other, id2.Map( it => it.Value ).OrElse(null), range.Map( it => TODO ).OrElse(null), doubleExample, longExample, goodName, customData);
         }
     }
 

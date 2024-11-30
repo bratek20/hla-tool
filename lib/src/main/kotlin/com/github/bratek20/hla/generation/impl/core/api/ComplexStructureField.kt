@@ -1,5 +1,10 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.codebuilder.builders.ExpressionBuilder
+import com.github.bratek20.codebuilder.builders.expression
+import com.github.bratek20.codebuilder.builders.nullValue
+import com.github.bratek20.codebuilder.types.emptyHardOptional
+import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
@@ -9,7 +14,7 @@ import com.github.bratek20.utils.camelToPascalCase
 
 open class ComplexStructureField(
     protected val def: FieldDefinition,
-    private val factory: ApiTypeFactory
+    val factory: ApiTypeFactory
 ) {
     private lateinit var complexStructure: ComplexStructureApiType<*>
 
@@ -34,26 +39,47 @@ open class ComplexStructureField(
         return type.languageTypes.customTypeGetterCall(complexStructure.name, name) + "($variableName)"
     }
 
+    @Deprecated("Use exampleValueBuilder() instead")
     fun exampleValue(): String? {
+        return exampleValueBuilder()?.build(factory.languageTypes.context())
+    }
+
+    fun exampleValueBuilder(): ExpressionBuilder? {
+        return extractExampleValue()?.let {
+            expression(it)
+        }
+    }
+
+    private fun extractExampleValue(): String? {
         if(type is BaseApiType) {
             val basApiType = type as BaseApiType
             if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT) {
-                return def.getAttributes().firstOrNull { it.getName() == "example" || it.getName() == "startsFrom"}?.getValue()
+                return extractExampleValueForBaseType(def.getAttributes())
             }
         }
-        return def.getAttributes().firstOrNull { it.getName() == "example"}?.getValue()
+        return extractExampleValue(def.getAttributes())
     }
 
+    @Deprecated("Use defaultValueBuilder() instead")
     fun defaultValue(): String? {
+        return defaultValueBuilder()?.build(factory.languageTypes.context())
+    }
+
+    fun defaultValueBuilder(): ExpressionBuilder? {
         def.getDefaultValue()?.let {
             return mapDefaultValue(it)
         }
         return null
     }
 
+    @Deprecated("Use defaultSerializedValueBuilder() instead")
     fun defaultSerializedValue(): String? {
+        return defaultSerializedValueBuilder()?.build(factory.languageTypes.context())
+    }
+
+    fun defaultSerializedValueBuilder(): ExpressionBuilder? {
         def.getDefaultValue()?.let {
-            return mapDefaultSerializedValue(it)
+            return mapDefaultSerializableValue(it)
         }
         return null
     }
@@ -105,24 +131,24 @@ open class ComplexStructureField(
         return name
     }
 
-    private fun mapDefaultValue(value: String): String {
+    private fun mapDefaultValue(value: String): ExpressionBuilder {
         if (value == "[]") {
-            return type.languageTypes.defaultValueForList()
+            return emptyImmutableList((type as ListApiType).wrappedType.builder())
         }
         if (value == "empty") {
-            return type.languageTypes.emptyOptional()
+            return emptyHardOptional((type as OptionalApiType).wrappedType.builder())
         }
-        return value
+        return expression(value)
     }
 
-    private fun mapDefaultSerializedValue(value: String): String {
+    private fun mapDefaultSerializableValue(value: String): ExpressionBuilder {
         if (value == "[]") {
-            return type.languageTypes.defaultValueForList()
+            return emptyImmutableList((type as ListApiType).wrappedType.serializableBuilder())
         }
         if (value == "empty") {
-            return type.languageTypes.undefinedValue()
+            return nullValue()
         }
-        return value
+        return expression(value)
     }
 
     fun getter(): ComplexStructureGetter {

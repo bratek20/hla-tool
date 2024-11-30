@@ -239,7 +239,7 @@ class ProcedureBuildersTest {
                     addArg {
                         name = "a"
                         type = baseType(BaseType.INT)
-                        defaultValue = "5"
+                        defaultValue = const(5)
                     }
                     returnType = baseType(BaseType.INT)
                 })

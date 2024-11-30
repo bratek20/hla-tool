@@ -8,7 +8,7 @@ class ArgumentBuilder: CodeBlockBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilder
 
-    var defaultValue: String? = null
+    var defaultValue: ExpressionBuilder? = null
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
         return {
@@ -23,7 +23,7 @@ class ArgumentBuilder: CodeBlockBuilder {
             }
 
             defaultValue?.let {
-                linePart(" = $it")
+                linePart(" = ${it.build(c)}")
             }
         }
     }

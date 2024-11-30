@@ -16,6 +16,11 @@ fun mutableListType(elementType: TypeBuilder) = typeName { c ->
     c.lang.mutableListType(elementType.build(c))
 }
 
+//emptyList collides with kotlin global function
+fun emptyImmutableList(elementType: TypeBuilder) = expression { c ->
+    c.lang.newEmptyList(elementType.build(c))
+}
+
 fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
     c.lang.newEmptyMutableList(elementType.build(c))
 }
@@ -33,13 +38,15 @@ fun newListOf(elementType: TypeBuilder, vararg elements: ExpressionBuilder) = ex
 }
 
 class ListOperations(
-    private val variableName: String
+    private val variable: ExpressionBuilder
 ) {
-    fun get(index: Int): ExpressionBuilder = expression("$variableName[$index]")
+    fun get(index: Int): ExpressionBuilder = expression { c ->
+        "${variable.build(c)}[$index]"
+    }
 
     fun add(element: ExpressionBuilderProvider): StatementBuilder = object : StatementBuilder {
         override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-            lineStart("${variableName}." + c.lang.listAddCallName())
+            lineStart("${variable.build(c)}." + c.lang.listAddCallName())
             linePart("(")
             add(element())
             lineSoftEnd(")")
@@ -48,7 +55,7 @@ class ListOperations(
 
     fun find(predicate: ExpressionBuilderProvider) = expression { c ->
         StringBuilder().apply {
-            append("${variableName}.${c.lang.listFindBegin()} it ${c.lang.lambdaArrow()} ")
+            append("${variable.build(c)}.${c.lang.listFindBegin()} it ${c.lang.lambdaArrow()} ")
             append(predicate().build(c))
             append(" ${c.lang.listFindEnd()}")
         }.toString()
@@ -56,13 +63,13 @@ class ListOperations(
 
     fun map(predicate: ExpressionBuilderProvider) = expression { c ->
         StringBuilder().apply {
-            append("${variableName}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
+            append("${variable.build(c)}.${c.lang.listMapBegin()} it ${c.lang.lambdaArrow()} ")
             append(predicate().build(c))
             append(" " + c.lang.listMapEnd())
         }.toString()
     }
 }
 
-fun listOp(variableName: String): ListOperations {
-    return ListOperations(variableName)
+fun listOp(variable: ExpressionBuilder): ListOperations {
+    return ListOperations(variable)
 }

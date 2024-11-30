@@ -63,7 +63,7 @@ class WebCommonGenerator: PatternGenerator() {
                     returnType = arg.apiType.builder()
                     setBody {
                         add(returnStatement {
-                            arg.apiType.modernDeserialize(arg.name)
+                            arg.apiType.modernDeserialize(variable(arg.name))
                         })
                     }
                 }
@@ -85,7 +85,7 @@ class WebCommonGenerator: PatternGenerator() {
                             className = requestName(interfName, method)
                             method.args.forEach {
                                 addArg {
-                                    it.apiType.modernSerialize(it.name)
+                                    it.apiType.modernSerialize(variable(it.name))
                                 }
                             }
                         }
@@ -201,7 +201,7 @@ class WebCommonGenerator: PatternGenerator() {
                 returnType = method.returnApiType.builder()
                 setBody {
                     add(returnStatement {
-                        method.returnApiType.modernDeserialize("value")
+                        method.returnApiType.modernDeserialize(variable("value"))
                     })
                 }
             }

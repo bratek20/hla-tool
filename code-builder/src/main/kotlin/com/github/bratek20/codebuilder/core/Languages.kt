@@ -35,6 +35,7 @@ interface CodeBuilderLanguage {
 
     fun listType(elementType: String): String
     fun mutableListType(elementType: String): String
+    fun newEmptyList(elementType: String): String
     fun newEmptyMutableList(elementType: String): String
     fun listAddCallName(): String
     fun listFindBegin(): String
@@ -143,6 +144,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun mutableListType(elementType: String): String {
         return "MutableList<$elementType>"
+    }
+
+    override fun newEmptyList(elementType: String): String {
+        return "emptyList()"
     }
 
     override fun listAddCallName(): String {
@@ -321,6 +326,10 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun mutableListType(elementType: String): String {
         return "$elementType[]"
+    }
+
+    override fun newEmptyList(elementType: String): String {
+        return "[]"
     }
 
     override fun listAddCallName(): String {
@@ -503,6 +512,10 @@ class CSharp: CodeBuilderLanguage {
 
     override fun mutableListType(elementType: String): String {
         return "List<$elementType>"
+    }
+
+    override fun newEmptyList(elementType: String): String {
+        return newEmptyMutableList(elementType)
     }
 
     override fun listAddCallName(): String {

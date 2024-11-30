@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.FunctionBuilder
+import com.github.bratek20.codebuilder.builders.emptyString
 import com.github.bratek20.codebuilder.builders.function
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
@@ -67,7 +68,7 @@ class DiffsGenerator: PatternGenerator() {
             addArg {
                 name = "path"
                 this.type = baseType(BaseType.STRING)
-                defaultValue = "\"\""
+                defaultValue = emptyString()
             }
             returnType = baseType(BaseType.STRING)
             legacyBody = {
