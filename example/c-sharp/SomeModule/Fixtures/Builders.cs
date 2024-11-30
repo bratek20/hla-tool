@@ -158,13 +158,13 @@ namespace SomeModule.Fixtures {
             var def = new SomeClass4Def();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeClass4.Create(new OtherId(def.OtherId), BuildOtherClass(def.OtherClass), def.OtherIdList.Select(it => new OtherId(it)).ToList(), def.OtherClassList.Select(it => BuildOtherClass(it)).ToList());
+            return SomeClass4.Create(new OtherId(def.OtherId), OtherModuleBuilders.BuildOtherClass(def.OtherClass), def.OtherIdList.Select(it => new OtherId(it)).ToList(), def.OtherClassList.Select(it => OtherModuleBuilders.BuildOtherClass(it)).ToList());
         }
         public static SomeClass5 BuildSomeClass5(Action<SomeClass5Def> init = null) {
             var def = new SomeClass5Def();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeClass5.Create(TODO(def.Date), BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), BuildOtherProperty(def.OtherProperty));
+            return SomeClass5.Create(TODO(def.Date), TypesModuleBuilders.BuildDateRange(def.DateRange), BuildDateRangeWrapper(def.DateRangeWrapper), BuildSomeProperty(def.SomeProperty), OtherModuleBuilders.BuildOtherProperty(def.OtherProperty));
         }
         public static SomeClass6 BuildSomeClass6(Action<SomeClass6Def> init = null) {
             var def = new SomeClass6Def();
@@ -224,7 +224,7 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeProperty.Create(BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
+            return SomeProperty.Create(OtherModuleBuilders.BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => TypesModuleBuilders.BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
         }
         public static SomeProperty2 BuildSomeProperty2(Action<SomeProperty2Def> init = null) {
             var def = new SomeProperty2Def();
@@ -236,13 +236,13 @@ namespace SomeModule.Fixtures {
             var def = new DateRangeWrapperDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return DateRangeWrapper.Create(BuildDateRange(def.Range));
+            return DateRangeWrapper.Create(TypesModuleBuilders.BuildDateRange(def.Range));
         }
         public static SomeData BuildSomeData(Action<SomeDataDef> init = null) {
             var def = new SomeDataDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeData.Create(BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
+            return SomeData.Create(OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
         }
         public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = null) {
             var def = new SomeData2Def();
@@ -254,7 +254,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeEventDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeEvent.Create(def.SomeField, BuildOtherClass(def.OtherClass));
+            return SomeEvent.Create(def.SomeField, OtherModuleBuilders.BuildOtherClass(def.OtherClass));
         }
     }
 }
