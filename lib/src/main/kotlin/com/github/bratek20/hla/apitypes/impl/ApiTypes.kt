@@ -604,16 +604,9 @@ class OptionalApiType(
 class EnumApiType(
     private val def: EnumDefinition,
 ) : ApiTypeLogic() {
-    override fun name(): String {
-        return def.getName()
-    }
-
-    override fun serializableName(): String {
-        return languageTypes.mapBaseType(BaseType.STRING)
-    }
 
     override fun builder(): TypeBuilder {
-        return typeName(name())
+        return typeName(def.getName())
     }
 
     override fun serializableBuilder(): TypeBuilder {
@@ -624,22 +617,14 @@ class EnumApiType(
         return name() + "." + def.getValues().first()
     }
 
-    override fun deserialize(variableName: String): String {
-        return languageTypes.deserializeEnum(name(), variableName)
-    }
-
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
         val variableName = variable.build(c)
-        return expression(languageTypes.deserializeEnum(name(), variableName))
-    }
-
-    override fun serialize(variableName: String): String {
-        return languageTypes.serializeEnum(variableName)
+        return hardcodedExpression(languageTypes.deserializeEnum(name(), variableName))
     }
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         val variableName = variable.build(c)
-        return expression(languageTypes.serializeEnum(variableName))
+        return hardcodedExpression(languageTypes.serializeEnum(variableName))
     }
 }
 
