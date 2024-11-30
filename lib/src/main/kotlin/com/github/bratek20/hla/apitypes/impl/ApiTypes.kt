@@ -30,7 +30,7 @@ abstract class ApiTypeLogic: ApiType {
         this.typeModule = typeModule
     }
 
-    fun moduleName(): String {
+    private fun moduleName(): String {
         return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
     }
 
@@ -49,7 +49,7 @@ abstract class ApiTypeLogic: ApiType {
         return asOptHlaType() ?: throw IllegalStateException("No HlaType for type $this")
     }
 
-    fun asOptHlaType(): WorldType? {
+    private fun asOptHlaType(): WorldType? {
         return typeModule?.let {
             WorldType.create(
                 name = WorldTypeName(name()),
@@ -69,12 +69,12 @@ abstract class ApiTypeLogic: ApiType {
     fun serializableName(): String = serializableBuilder().build(c)
 
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernDeserialize(variableName)"))
-    open fun deserialize(variableName: String): String {
+    fun deserialize(variableName: String): String {
         return modernDeserialize(variable(variableName)).build(c)
     }
 
     @Deprecated("Use modernDeserialize instead", ReplaceWith("modernSerialize(variableName)"))
-    open fun serialize(variableName: String): String {
+    fun serialize(variableName: String): String {
         return modernSerialize(variable(variableName)).build(c)
     }
 
