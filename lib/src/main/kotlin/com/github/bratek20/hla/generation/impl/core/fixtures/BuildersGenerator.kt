@@ -1,7 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.TypeDefinition
@@ -12,40 +11,45 @@ import com.github.bratek20.hla.generation.impl.core.api.ExternalApiType
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.pascalToCamelCase
 
+class SimpleBuilder(
+    val def: SimpleStructureDefType<*>
+) {
+    // used by velocity
+    fun declaration(): String {
+        return "${def.funName()}(value: ${def.name()} = ${def.defaultValue()}): ${def.api.name()}"
+    }
+
+    // used by velocity
+    fun body(): String {
+        return "return ${def.api.constructorCall()}(value)"
+    }
+
+    fun getMethodBuilder(): MethodBuilderOps = {
+        static = true
+        name = def.funName()
+        returnType = typeName(def.api.name())
+        addArg {
+            name = "value"
+            type = typeName(def.name())
+            defaultValue = variable(def.defaultValue())
+        }
+
+        setBody {
+            add(returnStatement {
+                def.api.modernDeserialize("value")
+            })
+        }
+    }
+}
+
+class ComplexBuilder(
+    val def: ComplexStructureDefType
+) {
+}
+
 class BuildersGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.Builders
-    }
-
-    data class SimpleBuilder(
-        val def: SimpleStructureDefType<*>
-    ) {
-        // used by velocity
-        fun declaration(): String {
-            return "${def.funName()}(value: ${def.name()} = ${def.defaultValue()}): ${def.api.name()}"
-        }
-
-        // used by velocity
-        fun body(): String {
-            return "return ${def.api.constructorCall()}(value)"
-        }
-
-        fun getMethodBuilder(): MethodBuilderOps = {
-            static = true
-            name = def.funName()
-            returnType = typeName(def.api.name())
-            addArg {
-                name = "value"
-                type = typeName(def.name())
-                defaultValue = variable(def.defaultValue())
-            }
-
-            setBody {
-                add(returnStatement {
-                    def.api.modernDeserialize("value")
-                })
-            }
-        }
     }
 
     private fun externalTypeBuilder(type: TypeDefinition): FunctionBuilder {
@@ -70,12 +74,8 @@ class BuildersGenerator: PatternGenerator() {
             return null
         }
 
-        val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
-
         val simpleBuilders = getSimpleBuilders()
-        val builders = (defTypes.complex).map {
-            defTypeFactory.create(apiTypeFactory.create(it))
-        }
+        val complexBuildersDefs = getComplexBuilders().map { it.def }
 
         val externalTypesBuilders = if (externalTypes.isEmpty())
                 null
@@ -89,7 +89,7 @@ class BuildersGenerator: PatternGenerator() {
 
         return contentBuilder("builders.vm")
             .put("simpleBuilders", simpleBuilders)
-            .put("builders", builders)
+            .put("builders", complexBuildersDefs)
             .put("externalTypesBuilders", externalTypesBuilders)
             .build()
     }
@@ -100,6 +100,15 @@ class BuildersGenerator: PatternGenerator() {
 
         return (defTypes.simple).map {
             SimpleBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as SimpleStructureDefType<*>)
+        }
+    }
+
+    private fun getComplexBuilders(): List<ComplexBuilder> {
+        val defTypes = modules.allStructureDefinitions(module)
+        val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
+
+        return (defTypes.complex).map {
+            ComplexBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as ComplexStructureDefType)
         }
     }
 
