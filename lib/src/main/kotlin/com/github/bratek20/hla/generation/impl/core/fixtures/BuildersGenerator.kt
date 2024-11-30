@@ -91,24 +91,6 @@ class ComplexBuilder(
                             hardcodedExpression(f.build("def"))
                         }
                     }
-//                    addArg {
-//                        methodCall {
-//                            target = variable("OtherModuleBuilders")
-//                            methodName = "buildOtherId"
-//                            addArg {
-//                                getterFieldAccess {
-//                                    objectRef = variable("def")
-//                                    fieldName = "id"
-//                                }
-//                            }
-//                        }
-//                    }
-//                    addArg {
-//                        getterFieldAccess {
-//                            objectRef = variable("def")
-//                            fieldName = "name"
-//                        }
-//                    }
                 }
             })
         }
@@ -118,21 +100,6 @@ class ComplexBuilder(
 class BuildersGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.Builders
-    }
-
-    private fun externalTypeBuilder(type: TypeDefinition): FunctionBuilder {
-        val apiType = apiTypeFactory.create(type) as ExternalApiType
-        return function {
-            name = pascalToCamelCase(apiType.rawName)
-            addArg {
-                name = "value"
-                this.type = typeName(apiType.name() + "?") //TODO soft optional type wrap?
-            }
-            returnType = typeName(apiType.name())
-            legacyBody = {
-                line("return value!!") // TODO soft optional unpack?
-            }
-        }
     }
 
     override fun generateFileContent(): FileContent? {
@@ -145,20 +112,9 @@ class BuildersGenerator: PatternGenerator() {
         val simpleBuilders = getSimpleBuilders()
         val complexBuildersDefs = getComplexBuilders().map { it.def }
 
-        val externalTypesBuilders = if (externalTypes.isEmpty())
-                null
-            else
-                CodeBuilder(lang)
-                    .addMany(
-                        externalTypes.map { externalTypeBuilder(it) }
-                    )
-                    .build()
-
-
         return contentBuilder("builders.vm")
             .put("simpleBuilders", simpleBuilders)
             .put("builders", complexBuildersDefs)
-            .put("externalTypesBuilders", externalTypesBuilders)
             .build()
     }
 
