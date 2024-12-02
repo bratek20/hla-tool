@@ -5,5 +5,5 @@ package com.github.bratek20.hla.validations.api
 import com.github.bratek20.utils.directory.api.*
 
 interface HlaValidator {
-    fun validateProperties(hlaFolderPath: Path, properties: com.github.bratek20.architecture.properties.api.Properties): Unit
+    fun validateProperties(hlaFolderPath: Path, properties: com.github.bratek20.architecture.properties.api.Properties): ValidationResult
 }

@@ -7,6 +7,17 @@ import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.validations.api.*
 
+data class ValidationResultDef(
+    var ok: Boolean = false,
+    var errors: List<String> = emptyList(),
+)
+fun validationResult(init: ValidationResultDef.() -> Unit = {}): ValidationResult {
+    val def = ValidationResultDef().apply(init)
+    return ValidationResult.create(
+        ok = def.ok,
+        errors = def.errors,
+    )
+}
 fun properties(value: com.github.bratek20.architecture.properties.api.Properties?): com.github.bratek20.architecture.properties.api.Properties {
     return value!!
 }

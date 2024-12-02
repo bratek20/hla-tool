@@ -6,7 +6,7 @@ import com.github.bratek20.hla.validations.api.*
 import com.github.bratek20.utils.directory.api.*
 
 class HlaValidatorLogic: HlaValidator {
-    override fun validateProperties(hlaFolderPath: Path, properties: Properties): Unit {
-        
+    override fun validateProperties(hlaFolderPath: Path, properties: Properties): ValidationResult {
+        return ValidationResult(true, emptyList())
     }
 }

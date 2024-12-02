@@ -1,6 +1,9 @@
 Interfaces
     HlaValidator
-        validateProperties(hlaFolderPath: Path, properties: Properties)
+        ValidationResult
+            ok: bool
+            errors: string[]
+        validateProperties(hlaFolderPath: Path, properties: Properties): ValidationResult
 
 ExternalTypes
     Properties
