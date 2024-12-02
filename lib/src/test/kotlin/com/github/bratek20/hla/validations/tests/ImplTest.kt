@@ -16,6 +16,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 
+//SomePropertyEntry
+//id: SomeId (idSource)
+//
+//SomeReferencingProperty
+//referenceId: SomeId
+
+//"SomeSourcePropertyList" -> SomePropertyEntry[]
+//"SomeReferencingPropertyObject" -> SomeReferencingProperty
+//"SomeReferencingPropertyList" -> SomeReferencingProperty[]
+
 val SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeSourcePropertyList",
     Struct::class
@@ -30,12 +40,6 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
     "SomeReferencingPropertyList",
     Struct::class
 )
-
-//SomePropertyEntry
-//id: SomeId (idSource)
-//
-//SomeReferencingProperty
-//referenceId: SomeId
 
 class ValidationsImplTest {
     private lateinit var validator: HlaValidator
@@ -109,8 +113,8 @@ class ValidationsImplTest {
         assertValidationResult(result) {
             ok = false
             errors = listOf(
-                "Key 'SomeReferencingPropertyObject', path 'SomeReferencingProperty/referenceId' id '2' does not exist for key 'SomeSourcePropertyList' in 'SomePropertyEntry/id'",
-                "Key 'SomeReferencingPropertyList', path 'SomeReferencingProperty/referenceId' id '3' does not exist for key 'SomeSourcePropertyList' in 'SomePropertyEntry/id'"
+                "Key 'SomeReferencingPropertyObject', path 'SomeReferencingProperty/referenceId' id '2' does not exist for source of key 'SomeSourcePropertyList' in 'SomePropertyEntry/id'",
+                "Key 'SomeReferencingPropertyList', path 'SomeReferencingProperty/referenceId' id '3' does not exist for source of key 'SomeSourcePropertyList' in 'SomePropertyEntry/id'"
             )
         }
     }
