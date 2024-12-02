@@ -7,6 +7,7 @@ import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 
 abstract class ExpectedType<T: ApiTypeLogic>(
     val api: T
@@ -43,7 +44,22 @@ abstract class ExpectedType<T: ApiTypeLogic>(
 
 class BaseExpectedType(
     api: BaseApiType,
-) : ExpectedType<BaseApiType>(api)
+) : ExpectedType<BaseApiType>(api) {
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        if (api.name == BaseType.STRUCT && languageTypes is TypeScriptTypes) {
+            return languageTypes.wrapWithString("$path \${JSON.stringify($givenVariable)} != \${JSON.stringify($expectedVariable)}")
+
+        }
+        return languageTypes.wrapWithString("$path \${$givenVariable} != \${$expectedVariable}")
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String? {
+        if (api.name == BaseType.STRUCT && languageTypes is TypeScriptTypes) {
+            return "JSON.stringify($givenVariable) != JSON.stringify($expectedVariable)"
+        }
+        return "$givenVariable != $expectedVariable"
+    }
+}
 
 open class SimpleStructureExpectedType<T: SimpleStructureApiType>(
     api: T,

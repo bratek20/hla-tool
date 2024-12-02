@@ -399,7 +399,7 @@ namespace SomeModule {
         }
 
         if (expected.customData !== undefined) {
-            if (given.getCustomData() != expected.customData) { result.push(`${path}customData ${given.getCustomData()} != ${expected.customData}`) }
+            if (JSON.stringify(given.getCustomData()) != JSON.stringify(expected.customData)) { result.push(`${path}customData ${JSON.stringify(given.getCustomData())} != ${JSON.stringify(expected.customData)}`) }
         }
 
         return result.join("\n")

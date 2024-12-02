@@ -229,7 +229,7 @@ class HlaFacadeTest {
 
     @ParameterizedTest(name = "{0} ({1})")
     @ArgumentsSource(ShouldStartModuleArgsProvider::class)
-    fun `should start module`(
+    fun `should start Kotlin module`(
         moduleName: String,
         profileName: String,
         paths: TestPaths
