@@ -108,6 +108,16 @@ fun assertSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePropertyEntry.() -> Unit) {
+    val diff = diffSomePropertyEntry(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: ExpectedSomeReferencingProperty.() -> Unit) {
+    val diff = diffSomeReferencingProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

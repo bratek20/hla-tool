@@ -5,4 +5,19 @@ namespace SomeModule {
         "SomeKey",
         SomeProperty
     )
+
+    export const SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeSourcePropertyList",
+        SomePropertyEntry
+    )
+
+    export const SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY = new ObjectPropertyKey(
+        "SomeReferencingPropertyObject",
+        SomeReferencingProperty
+    )
+
+    export const SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeReferencingPropertyList",
+        SomeReferencingProperty
+    )
 }

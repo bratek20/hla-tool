@@ -105,6 +105,14 @@ namespace SomeModule.Fixtures {
         public object? CustomOpt { get; set; } = null;
     }
 
+    public class SomePropertyEntryDef {
+        public string Id { get; set; } = "someValue";
+    }
+
+    public class SomeReferencingPropertyDef {
+        public string ReferenceId { get; set; } = "someValue";
+    }
+
     public class DateRangeWrapperDef {
         public Action<DateRangeDef> Range { get; set; } = (_) => {};
     }
@@ -231,6 +239,18 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeProperty2.Create(def.Value, def.Custom, (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), Optional<object>.Of(def.CustomOpt));
+        }
+        public static SomePropertyEntry BuildSomePropertyEntry(Action<SomePropertyEntryDef> init = null) {
+            var def = new SomePropertyEntryDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomePropertyEntry.Create(new SomeId(def.Id));
+        }
+        public static SomeReferencingProperty BuildSomeReferencingProperty(Action<SomeReferencingPropertyDef> init = null) {
+            var def = new SomeReferencingPropertyDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeReferencingProperty.Create(new SomeId(def.ReferenceId));
         }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();

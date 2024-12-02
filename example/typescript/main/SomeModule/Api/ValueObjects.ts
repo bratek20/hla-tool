@@ -531,3 +531,35 @@ class SomeProperty2 {
         return Optional.of(this.customOpt)
     }
 }
+
+class SomePropertyEntry {
+    private id = STRING
+
+    static create(
+        id: SomeId,
+    ): SomePropertyEntry {
+        const instance = new SomePropertyEntry()
+        instance.id = id.value
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+}
+
+class SomeReferencingProperty {
+    private referenceId = STRING
+
+    static create(
+        referenceId: SomeId,
+    ): SomeReferencingProperty {
+        const instance = new SomeReferencingProperty()
+        instance.referenceId = referenceId.value
+        return instance
+    }
+
+    getReferenceId(): SomeId {
+        return new SomeId(this.referenceId)
+    }
+}

@@ -438,6 +438,32 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomePropertyEntry {
+        id?: string,
+    }
+    export function diffSomePropertyEntry(given: SomePropertyEntry, expected: ExpectedSomePropertyEntry, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeReferencingProperty {
+        referenceId?: string,
+    }
+    export function diffSomeReferencingProperty(given: SomeReferencingProperty, expected: ExpectedSomeReferencingProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.referenceId !== undefined) {
+            if (diffSomeId(given.getReferenceId(), expected.referenceId) != "") { result.push(diffSomeId(given.getReferenceId(), expected.referenceId, `${path}referenceId.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedDateRangeWrapper {
         range?: TypesModule.ExpectedDateRange,
     }

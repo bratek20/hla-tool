@@ -31,7 +31,9 @@ import org.junit.jupiter.params.provider.ArgumentsSource
 import java.util.stream.Stream
 
 class HlaFacadeTest {
-
+    companion object {
+        const val HLA_FOLDER_PATH = "../example/hla"
+    }
 
     data class TestPaths(
         val exampleMainPath: String,
@@ -40,7 +42,7 @@ class HlaFacadeTest {
         val expectedMainPath: String,
         val expectedFixturesPath: String,
         val expectedTestsPath: String,
-        val hlaFolderPath: String = "../example/hla"
+        val hlaFolderPath: String = HLA_FOLDER_PATH
     )
 
     class ShouldStartModuleArgsProvider : ArgumentsProvider {

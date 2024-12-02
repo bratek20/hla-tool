@@ -279,6 +279,28 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomePropertyEntryDef {
+        id?: string,
+    }
+    export function somePropertyEntry(def?: SomePropertyEntryDef): SomePropertyEntry {
+        const final_id = def?.id ?? "someValue"
+
+        return SomePropertyEntry.create(
+            new SomeId(final_id),
+        )
+    }
+
+    export interface SomeReferencingPropertyDef {
+        referenceId?: string,
+    }
+    export function someReferencingProperty(def?: SomeReferencingPropertyDef): SomeReferencingProperty {
+        const final_referenceId = def?.referenceId ?? "someValue"
+
+        return SomeReferencingProperty.create(
+            new SomeId(final_referenceId),
+        )
+    }
+
     export interface DateRangeWrapperDef {
         range?: TypesModule.Builder.DateRangeDef,
     }

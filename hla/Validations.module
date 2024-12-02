@@ -1,0 +1,10 @@
+Interfaces
+    HlaValidator
+        validateProperties(hlaFolderPath: Path, properties: Properties)
+
+ExternalTypes
+    Properties
+
+Kotlin
+    ExternalTypePackages
+        Properties -> com.github.bratek20.architecture.properties.api
