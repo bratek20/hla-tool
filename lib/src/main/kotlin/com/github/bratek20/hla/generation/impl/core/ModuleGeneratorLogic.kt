@@ -83,7 +83,7 @@ class ModuleGeneratorLogic(
             onlyPatterns = profile.getOnlyPatterns(),
         )
 
-        (hlaTypesWorldApi as HlaTypesWorldApiLogic).apiTypeFactory = context.apiTypeFactory
+        (hlaTypesWorldApi as HlaTypesWorldApiLogic).init(context.apiTypeFactory)
         hlaTypesWorldApi.populate(args.getGroup())
 
         return GeneratedModule.create(

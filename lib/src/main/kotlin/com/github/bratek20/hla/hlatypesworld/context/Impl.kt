@@ -11,6 +11,7 @@ class HlaTypesWorldImpl: ContextModule {
         builder
             .setImpl(HlaTypesWorldApi::class.java, HlaTypesWorldApiLogic::class.java)
             .setImpl(HlaTypesWorldQueries::class.java, HlaTypesWorldQueriesLogic::class.java)
+            .setImpl(HlaTypesExtraInfo::class.java, HlaTypesExtraInfoLogic::class.java)
             .withModule(HlaTypesWorldPopulators())
     }
 }

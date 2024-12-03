@@ -9,6 +9,15 @@ Interfaces
     HlaTypesWorldQueries
         getAll(module: ModuleName, submodule: SubmoduleName): WorldType[]
 
+    HlaTypesExtraInfo
+        IdSourceInfo
+            type: WorldType
+            fieldName: string
+            parent: WorldType
+        markAsIdSource(info: IdSourceInfo)
+
+        getAllIdSourceInfo(): IdSourceInfo[]
+
     HlaTypesWorldPopulator
         getOrder(): int
         populate(modules: ModuleDefinition[])

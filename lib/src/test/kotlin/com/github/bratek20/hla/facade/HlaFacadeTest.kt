@@ -33,6 +33,8 @@ import java.util.stream.Stream
 class HlaFacadeTest {
     companion object {
         const val HLA_FOLDER_PATH = "../example/hla"
+        const val KOTLIN_PROFILE = "kotlin"
+        const val KOTLIN_2_PROFILE = "kotlin2"
     }
 
     data class TestPaths(
@@ -69,8 +71,6 @@ class HlaFacadeTest {
             )
         }
 
-        private val KOTLIN_PROFILE = "kotlin"
-        private val KOTLIN_2_PROFILE = "kotlin2"
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(

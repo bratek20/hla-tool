@@ -2,6 +2,7 @@
 
 package com.github.bratek20.hla.validations.api
 
+import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.utils.directory.api.*
 
 data class ValidationResult(

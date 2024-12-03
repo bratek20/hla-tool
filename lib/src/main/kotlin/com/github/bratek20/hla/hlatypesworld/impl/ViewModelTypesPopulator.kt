@@ -28,6 +28,9 @@ class ViewModelTypesPopulator(
     private val mapper = BaseViewModelTypesMapper()
 
     override fun populate(modules: List<ModuleDefinition>) {
+        //TODO-REF
+        if (!::apiTypeFactory.isInitialized) return
+
         modules.forEach { populateElements(it) }
         modules.forEach { populateWindows(it) }
         modules.forEach { populateEnumSwitches(it) }

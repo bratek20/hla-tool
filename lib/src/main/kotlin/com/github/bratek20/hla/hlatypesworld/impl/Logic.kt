@@ -17,10 +17,16 @@ class HlaTypesWorldApiLogic(
     private val viewTypesPopulator: ViewTypesPopulator,
     private val typesWorldApi: TypesWorldApi
 ): HlaTypesWorldApi {
-    lateinit var apiTypeFactory: ApiTypeFactoryLogic
+    private var apiTypeFactory: ApiTypeFactoryLogic? = null
+    fun init(apiTypeFactory: ApiTypeFactoryLogic) {
+        this.apiTypeFactory = apiTypeFactory
+    }
+
     override fun populate(group: ModuleGroup) {
-        viewModelTypesPopulator.apiTypeFactory = apiTypeFactory
-        viewTypesPopulator.mapper = ModelToViewModelTypeMapper(apiTypeFactory, typesWorldApi)
+        apiTypeFactory?.let {
+            viewModelTypesPopulator.apiTypeFactory = it
+            viewTypesPopulator.mapper = ModelToViewModelTypeMapper(it, typesWorldApi)
+        }
 
         val modules = BaseModuleGroupQueries(group).modules
         populators
@@ -37,5 +43,17 @@ class HlaTypesWorldQueriesLogic(
             val hlaPath = it.getPath().asHla()
             hlaPath.getModuleName() == module && hlaPath.getSubmoduleName() == submodule
         }
+    }
+}
+
+class HlaTypesExtraInfoLogic: HlaTypesExtraInfo {
+    private val idSources: MutableSet<IdSourceInfo> = mutableSetOf()
+
+    override fun markAsIdSource(info: IdSourceInfo) {
+        idSources.add(info)
+    }
+
+    override fun getAllIdSourceInfo(): List<IdSourceInfo> {
+        return idSources.toList()
     }
 }

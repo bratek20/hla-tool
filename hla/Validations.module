@@ -3,7 +3,7 @@ Interfaces
         ValidationResult
             ok: bool
             errors: string[]
-        validateProperties(hlaFolderPath: Path, properties: Properties): ValidationResult
+        validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult
 
 ExternalTypes
     Properties
