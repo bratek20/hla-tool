@@ -61,14 +61,21 @@ Interfaces
         // all used types are ensured
         addPrimitiveType(type: WorldType)
         addClassType(type: WorldClassType)
-        addConcreteWrapper(type: WorldConcreteWrapper)
+
         addConcreteParametrizedClass(type: WorldConcreteParametrizedClass)
+
+        //for now List and Optional are hardcoded, in the future it could be handled better by having addGenericWrapper
+        //that will add types in format like List<*> or Optional<*>
 
         getClassType(type: WorldType): WorldClassType
             throws
                 WorldTypeNotFoundException
 
         getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
+            throws
+                WorldTypeNotFoundException
+
+        getConcreteWrapper(type: WorldType): WorldConcreteWrapper
             throws
                 WorldTypeNotFoundException
 

@@ -17,7 +17,7 @@ class TypesWorldImplTest {
     fun setUp() {
         api = someContextBuilder()
             .withModule(TypesWorldImpl())
-            .get(TypesWorldApi::class.java)
+            .buildAndGet(TypesWorldApi::class.java)
     }
 
     @Nested
@@ -129,10 +129,8 @@ class TypesWorldImplTest {
 
         @Test
         fun `should return correct kind`() {
-            api.addConcreteWrapper(worldConcreteWrapper {
-                type = {
-                    name = "SomeConcreteWrapper"
-                }
+            api.addPrimitiveType(worldType {
+                name = "SomePrimitive"
             })
 
             api.addConcreteParametrizedClass(worldConcreteParametrizedClass {
@@ -151,7 +149,8 @@ class TypesWorldImplTest {
                 }
             }
 
-            assertKind("SomeConcreteWrapper", WorldTypeKind.ConcreteWrapper)
+            assertKind("SomePrimitive", WorldTypeKind.Primitive)
+            assertKind("List<SomePrimitive>", WorldTypeKind.ConcreteWrapper)
             assertKind("SomeConcreteParametrizedClass", WorldTypeKind.ConcreteParametrizedClass)
         }
     }
@@ -280,13 +279,8 @@ class TypesWorldImplTest {
 
         @Test
         fun `should get type dependencies and ensure types - concrete wrapper`() {
-            api.addConcreteWrapper(worldConcreteWrapper {
-                type = {
-                    name = "List<SomeClass>"
-                }
-                wrappedType = {
-                    name = "SomeClass"
-                }
+            api.ensureType(worldType {
+                name = "SomeClass"
             })
 
             val dependencies = api.getTypeDependencies(worldType {
@@ -317,13 +311,8 @@ class TypesWorldImplTest {
                 }
             })
 
-            api.addConcreteWrapper(worldConcreteWrapper {
-                type = {
-                    name = "List<OtherClass2>"
-                }
-                wrappedType = {
-                    name = "OtherClass2"
-                }
+            api.ensureType(worldType {
+                name = "OtherClass2"
             })
 
             api.addClassType(worldClassType {
