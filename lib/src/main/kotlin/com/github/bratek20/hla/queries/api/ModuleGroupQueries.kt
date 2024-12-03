@@ -43,9 +43,14 @@ fun createFieldDefinition(fieldName: String, typeName: String): FieldDefinition 
     )
 }
 
+fun ModuleGroup.getAllPropertyKeys(): List<KeyDefinition> {
+    return this.getModules().flatMap { it.getPropertyKeys() }
+}
+
 open class BaseModuleGroupQueries(
     val group: ModuleGroup
 ) {
+
     private fun getModulesRecursive(group: ModuleGroup): List<ModuleDefinition> {
         val groupModules = group.getModules()
         val resolvedModules = group.getDependencies().flatMap {

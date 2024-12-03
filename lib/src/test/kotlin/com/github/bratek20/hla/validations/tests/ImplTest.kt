@@ -101,7 +101,11 @@ class ValidationsImplTest {
             "Parsing module TypesModule",
 
             "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]",
-            "Values for sourceId 'SomeId': [1]"
+            "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
+
+            "Checking properties: [otherProperty, otherProperties, SomeKey, SomeSourcePropertyList, SomeReferencingPropertyObject, SomeReferencingPropertyList]",
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
+            "Found reference for 'SomeId' for '\"SomeReferencingPropertyList\"/[*]/referenceId'",
         )
 
         assertValidationResult(result) {
@@ -133,8 +137,8 @@ class ValidationsImplTest {
         assertValidationResult(result) {
             ok = false
             errors = listOf(
-                "Key 'SomeReferencingPropertyObject', path 'SomeReferencingProperty/referenceId' id '2' does not exist for source of key 'SomeSourcePropertyList' in 'SomePropertyEntry/id'",
-                "Key 'SomeReferencingPropertyList', path 'SomeReferencingProperty/referenceId' id '3' does not exist for source of key 'SomeSourcePropertyList' in 'SomePropertyEntry/id'"
+                "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
+                "Value '3' at '\"SomeReferencingPropertyList\"/[0]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
             )
         }
     }

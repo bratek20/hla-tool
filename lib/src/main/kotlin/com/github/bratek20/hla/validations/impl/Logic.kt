@@ -1,23 +1,15 @@
 package com.github.bratek20.hla.validations.impl
 
 import com.github.bratek20.architecture.properties.api.Properties
-import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
-import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.ProfileName
-import com.github.bratek20.hla.generation.impl.core.DomainContext
-import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
-import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpSupport
-import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
-import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
 import com.github.bratek20.hla.hlatypesworld.api.IdSourceInfo
 import com.github.bratek20.hla.hlatypesworld.api.asHla
-import com.github.bratek20.hla.hlatypesworld.impl.HlaTypesWorldApiLogic
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
-import com.github.bratek20.hla.queries.api.ModuleGroupQueries
+import com.github.bratek20.hla.queries.api.getAllPropertyKeys
 import com.github.bratek20.hla.validations.api.*
 import com.github.bratek20.logs.api.Logger
 
@@ -39,14 +31,19 @@ class HlaValidatorLogic(
         logger.info("Source infos: $sourceInfos")
 
         sourceInfos.forEach { sourceInfo ->
-            handleSourceInfo(sourceInfo, group, properties)
+            findValuesForIdSource(sourceInfo, group, properties)
         }
+
+        val allPropertiesKeysFromHla = group.getAllPropertyKeys()
+        val allKeyNames = allPropertiesKeysFromHla.map { it.getName() }
+        logger.info( "Checking properties: $allKeyNames")
         //get values of all ids for source
         //get all values for referencing fields, know their path, check if they are in the list
         return ValidationResult(true, emptyList())
     }
 
-    private fun handleSourceInfo(sourceInfo: IdSourceInfo, group: ModuleGroup, properties: Properties) {
+    //Assumes that idSource comes always from list and is at the top level
+    private fun findValuesForIdSource(sourceInfo: IdSourceInfo, group: ModuleGroup, properties: Properties) {
         val parentType = sourceInfo.getParent()
         val parentModule = parentType.getPath().asHla().getModuleName()
         val moduleKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
@@ -55,6 +52,6 @@ class HlaValidatorLogic(
         val prop = properties.getAll().first { it.keyName == keyName }
         val values = prop.value.asList().map { it[sourceInfo.getFieldName()] }
 
-        logger.info("Values for sourceId '${sourceInfo.getType().getName()}': $values")
+        logger.info("Allowed values for '${sourceInfo.getType().getName()}' from source '\"${keyName}\"/[*]/${sourceInfo.getFieldName()}': $values")
     }
 }
