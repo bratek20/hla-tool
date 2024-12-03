@@ -4,8 +4,8 @@ import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.properties.PropertiesMock
 import com.github.bratek20.architecture.properties.PropertiesMocks
 import com.github.bratek20.architecture.properties.api.Properties
-import com.github.bratek20.architecture.serialization.api.Struct
-import com.github.bratek20.architecture.serialization.api.struct
+import com.github.bratek20.architecture.structs.api.Struct
+import com.github.bratek20.architecture.structs.api.struct
 import com.github.bratek20.hla.facade.HlaFacadeTest
 import com.github.bratek20.hla.facade.api.HlaFacade
 import com.github.bratek20.hla.facade.fixtures.profileName
@@ -100,7 +100,8 @@ class ValidationsImplTest {
             "Parsing module SomeModule",
             "Parsing module TypesModule",
 
-            "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]"
+            "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]",
+            "Values for sourceId 'SomeId': [1]"
         )
 
         assertValidationResult(result) {

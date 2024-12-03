@@ -11,6 +11,8 @@ import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
+import com.github.bratek20.hla.hlatypesworld.api.IdSourceInfo
+import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.impl.HlaTypesWorldApiLogic
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
@@ -29,21 +31,30 @@ class HlaValidatorLogic(
 ): HlaValidator {
     override fun validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult {
         val group = parser.parse(hlaFolderPath, profileName)
-        populate(group)
+
+        hlaTypesWorldApi.populate(group)
+
         val sourceInfos = extraInfo.getAllIdSourceInfo()
 
         logger.info("Source infos: $sourceInfos")
 
+        sourceInfos.forEach { sourceInfo ->
+            handleSourceInfo(sourceInfo, group, properties)
+        }
         //get values of all ids for source
         //get all values for referencing fields, know their path, check if they are in the list
         return ValidationResult(true, emptyList())
     }
 
-    private fun populate(group: ModuleGroup) {
-        //val queries = BaseModuleGroupQueries(group)
-        //val apiTypeFactory = ApiTypeFactoryLogic(queries, group.getProfile().getLanguage())
+    private fun handleSourceInfo(sourceInfo: IdSourceInfo, group: ModuleGroup, properties: Properties) {
+        val parentType = sourceInfo.getParent()
+        val parentModule = parentType.getPath().asHla().getModuleName()
+        val moduleKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
+        val keyName = moduleKeys.first { it.getType().getName() == parentType.getName().value }.getName()
 
-        //(hlaTypesWorldApi as HlaTypesWorldApiLogic).apiTypeFactory = context.apiTypeFactory
-        hlaTypesWorldApi.populate(group)
+        val prop = properties.getAll().first { it.keyName == keyName }
+        val values = prop.value.asList().map { it[sourceInfo.getFieldName()] }
+
+        logger.info("Values for sourceId '${sourceInfo.getType().getName()}': $values")
     }
 }
