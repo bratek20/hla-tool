@@ -14,6 +14,7 @@ import com.github.bratek20.hla.validations.api.HlaValidator
 import com.github.bratek20.hla.validations.api.ValidationResult
 import com.github.bratek20.hla.validations.context.ValidationsImpl
 import com.github.bratek20.hla.validations.fixtures.assertValidationResult
+import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
 import com.github.bratek20.utils.directory.fixtures.path
 import org.assertj.core.api.Assertions.assertThat
@@ -50,6 +51,7 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
 class ValidationsImplTest {
     private lateinit var validator: HlaValidator
     private lateinit var extraInfo: HlaTypesExtraInfo
+    private lateinit var loggerMock: LoggerMock
 
     private lateinit var propertiesMock: PropertiesMock
 
@@ -64,6 +66,7 @@ class ValidationsImplTest {
 
         validator = validationsContext.get(HlaValidator::class.java)
         extraInfo = validationsContext.get(HlaTypesExtraInfo::class.java)
+        loggerMock = validationsContext.get(LoggerMock::class.java)
 
         propertiesMock = someContextBuilder()
             .withModules(
@@ -72,7 +75,7 @@ class ValidationsImplTest {
     }
 
     @Test
-    fun `should pass`() {
+    fun `should pass + log info`() {
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
             struct {
                 "id" to "1"
@@ -91,17 +94,18 @@ class ValidationsImplTest {
 
         val result = validateCall()
 
+        loggerMock.assertInfos(
+            "Parsing module OtherModule",
+            "Parsing module SimpleModule",
+            "Parsing module SomeModule",
+            "Parsing module TypesModule",
+
+            "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]"
+        )
+
         assertValidationResult(result) {
             ok = true
         }
-    }
-
-    @Test
-    fun `should populate id source to extra info during validation`() {
-        validateCall()
-
-        val infos = extraInfo.getAllIdSourceInfo()
-        assertThat(infos).hasSize(1)
     }
 
     @Disabled

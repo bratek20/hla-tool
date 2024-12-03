@@ -17,18 +17,22 @@ import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.validations.api.*
+import com.github.bratek20.logs.api.Logger
 
 import com.github.bratek20.utils.directory.api.*
 
 class HlaValidatorLogic(
     private val parser: ModuleGroupParser,
     private val hlaTypesWorldApi: HlaTypesWorldApi,
-    private val extraInfo: HlaTypesExtraInfo
+    private val extraInfo: HlaTypesExtraInfo,
+    private val logger: Logger
 ): HlaValidator {
     override fun validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult {
         val group = parser.parse(hlaFolderPath, profileName)
         populate(group)
-        extraInfo.getAllIdSourceInfo()
+        val sourceInfos = extraInfo.getAllIdSourceInfo()
+
+        logger.info("Source infos: $sourceInfos")
 
         //get values of all ids for source
         //get all values for referencing fields, know their path, check if they are in the list
