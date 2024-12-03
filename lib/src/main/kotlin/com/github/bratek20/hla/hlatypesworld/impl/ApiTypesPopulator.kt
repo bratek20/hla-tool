@@ -1,14 +1,14 @@
 package com.github.bratek20.hla.hlatypesworld.impl
 
+import com.github.bratek20.hla.attributes.KnownAttribute
+import com.github.bratek20.hla.attributes.hasAttribute
 import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.EnumDefinition
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.definitions.api.SimpleStructureDefinition
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
-import com.github.bratek20.hla.hlatypesworld.api.asWorld
+import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.queries.api.*
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldClassType
@@ -18,10 +18,12 @@ import com.github.bratek20.hla.typesworld.api.WorldTypeName
 abstract class ApiPatternPopulator {
     private lateinit var module: ModuleDefinition
     protected lateinit var world: TypesWorldApi
+    protected lateinit var extraInfo: HlaTypesExtraInfo
 
-    fun init(module: ModuleDefinition, world: TypesWorldApi) {
+    fun init(module: ModuleDefinition, world: TypesWorldApi, extraInfo: HlaTypesExtraInfo) {
         this.module = module
         this.world = world
+        this.extraInfo = extraInfo
     }
 
     protected abstract fun getTypeNames(): List<String>
@@ -97,6 +99,16 @@ abstract class ComplexStructuresPopulator(
                 type = getMyPatternType(def.getName()),
                 fields = def.getFields().map { it.asClassField(world) }
             ))
+
+            def.getFields()
+                .filter { hasAttribute(it.getAttributes(), KnownAttribute.ID_SOURCE) }
+                .forEach { field ->
+                    extraInfo.markAsIdSource(IdSourceInfo(
+                        type = field.asClassField(world).getType(),
+                        fieldName = field.getName(),
+                        parent = getMyPatternType(def.getName())
+                    ))
+                }
         }
     }
 }
@@ -142,7 +154,8 @@ class ExternalTypesPopulator(
 }
 
 class ApiTypesPopulator(
-    private val world: TypesWorldApi
+    private val world: TypesWorldApi,
+    private val extraInfo: HlaTypesExtraInfo
 ): HlaTypesWorldPopulator {
     companion object {
         const val ORDER = 1
@@ -168,7 +181,7 @@ class ApiTypesPopulator(
         )
 
         populators.forEach { populator ->
-            populator.init(module, world)
+            populator.init(module, world, extraInfo)
         }
 
         return populators
