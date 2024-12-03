@@ -44,9 +44,11 @@ class HlaValidatorLogic(
         val allKeyNames = allPropertiesKeysFromHla.map { it.getName() }
         logger.info( "Checking properties: $allKeyNames")
 
-        allPropertiesKeysFromHla.forEach {
+        allPropertiesKeysFromHla.forEach { propertyKey ->
             sourceInfos.forEach { sourceInfo ->
-                findReference(sourceInfo.getType(), it)
+                if (sourceInfo.getParent().getName().value != propertyKey.getType().getName()) {
+                    findReference(sourceInfo.getType(), propertyKey)
+                }
             }
         }
         //get values of all ids for source
@@ -71,7 +73,7 @@ class HlaValidatorLogic(
         val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
         val referencePath = findReferencePath(idSourceType, propertyType)
         if (referencePath != null) {
-            val propertyValuePath = "\"$propertyKey\"/$referencePath"
+            val propertyValuePath = "\"${propertyKey.getName()}\"/$referencePath".dropLast(1)
             logger.info("Found reference for '${idSourceType.getName()}' at '$propertyValuePath'")
         }
     }
