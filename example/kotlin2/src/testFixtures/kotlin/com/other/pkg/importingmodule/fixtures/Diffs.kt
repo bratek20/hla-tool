@@ -7,6 +7,11 @@ import com.some.pkg.othermodule.fixtures.*
 
 import com.other.pkg.importingmodule.api.*
 
+fun diffImportingEnum(given: ImportingEnum, expected: String, path: String = ""): String {
+    if (given != ImportingEnum.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
 data class ExpectedImportingProperty(
     var other: (ExpectedOtherProperty.() -> Unit)? = null,
 )
