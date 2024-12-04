@@ -1,3 +1,10 @@
+Enums
+    ImportingEnum
+        A
+
+Exceptions
+    ImportingException
+
 ValueObjects
     ImportingProperty
         other: OtherProperty
