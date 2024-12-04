@@ -241,6 +241,26 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
     )
 }
 
+data class SomePropertyEntryDef(
+    var id: String = "someValue",
+)
+fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyEntry {
+    val def = SomePropertyEntryDef().apply(init)
+    return SomePropertyEntry.create(
+        id = SomeId(def.id),
+    )
+}
+
+data class SomeReferencingPropertyDef(
+    var referenceId: String = "someValue",
+)
+fun someReferencingProperty(init: SomeReferencingPropertyDef.() -> Unit = {}): SomeReferencingProperty {
+    val def = SomeReferencingPropertyDef().apply(init)
+    return SomeReferencingProperty.create(
+        referenceId = SomeId(def.referenceId),
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )

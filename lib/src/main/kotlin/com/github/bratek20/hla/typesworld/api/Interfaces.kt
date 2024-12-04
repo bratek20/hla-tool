@@ -24,8 +24,6 @@ interface TypesWorldApi {
 
     fun addClassType(type: WorldClassType): Unit
 
-    fun addConcreteWrapper(type: WorldConcreteWrapper): Unit
-
     fun addConcreteParametrizedClass(type: WorldConcreteParametrizedClass): Unit
 
     @Throws(
@@ -37,6 +35,11 @@ interface TypesWorldApi {
         WorldTypeNotFoundException::class,
     )
     fun getConcreteParametrizedClass(type: WorldType): WorldConcreteParametrizedClass
+
+    @Throws(
+        WorldTypeNotFoundException::class,
+    )
+    fun getConcreteWrapper(type: WorldType): WorldConcreteWrapper
 
     @Throws(
         WorldTypeNotFoundException::class,

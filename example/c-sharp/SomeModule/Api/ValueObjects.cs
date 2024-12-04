@@ -506,4 +506,36 @@ namespace SomeModule.Api {
             return new SomeProperty2(value, custom, someEnum.ToString(), customOpt.OrElse(null));
         }
     }
+
+    public class SomePropertyEntry {
+        readonly string id;
+
+        public SomePropertyEntry(
+            string id
+        ) {
+            this.id = id;
+        }
+        public SomeId GetId() {
+            return new SomeId(id);
+        }
+        public static SomePropertyEntry Create(SomeId id) {
+            return new SomePropertyEntry(id.Value);
+        }
+    }
+
+    public class SomeReferencingProperty {
+        readonly string referenceId;
+
+        public SomeReferencingProperty(
+            string referenceId
+        ) {
+            this.referenceId = referenceId;
+        }
+        public SomeId GetReferenceId() {
+            return new SomeId(referenceId);
+        }
+        public static SomeReferencingProperty Create(SomeId referenceId) {
+            return new SomeReferencingProperty(referenceId.Value);
+        }
+    }
 }

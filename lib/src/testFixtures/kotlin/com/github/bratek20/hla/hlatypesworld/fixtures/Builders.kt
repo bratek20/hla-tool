@@ -18,3 +18,17 @@ import com.github.bratek20.hla.hlatypesworld.api.*
 fun hlaTypePath(value: String = "SomeRootGroup/SomeNestedGroup/SomeModule/Api/ValueObjects"): HlaTypePath {
     return hlaTypePathCreate(value)
 }
+
+data class IdSourceInfoDef(
+    var type: (WorldTypeDef.() -> Unit) = {},
+    var fieldName: String = "someValue",
+    var parent: (WorldTypeDef.() -> Unit) = {},
+)
+fun idSourceInfo(init: IdSourceInfoDef.() -> Unit = {}): IdSourceInfo {
+    val def = IdSourceInfoDef().apply(init)
+    return IdSourceInfo.create(
+        type = worldType(def.type),
+        fieldName = def.fieldName,
+        parent = worldType(def.parent),
+    )
+}

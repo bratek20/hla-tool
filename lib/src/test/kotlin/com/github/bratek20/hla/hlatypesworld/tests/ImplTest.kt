@@ -50,10 +50,10 @@ class HlaTypesWorldImplTest {
             ProfileName("cSharp")
         )
 
-        (world as HlaTypesWorldApiLogic).apiTypeFactory = ApiTypeFactoryLogic(
+        (world as HlaTypesWorldApiLogic).init(ApiTypeFactoryLogic(
             BaseModuleGroupQueries(moduleGroup),
             CSharpTypes()
-        )
+        ))
         world.populate(moduleGroup)
     }
 

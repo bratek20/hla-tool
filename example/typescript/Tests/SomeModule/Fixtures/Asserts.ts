@@ -96,6 +96,16 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function somePropertyEntry(given: SomePropertyEntry, expected: ExpectedSomePropertyEntry) {
+        const diff = diffSomePropertyEntry(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someReferencingProperty(given: SomeReferencingProperty, expected: ExpectedSomeReferencingProperty) {
+        const diff = diffSomeReferencingProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
         const diff = diffDateRangeWrapper(given, expected)
         AssertEquals(diff, "", diff)

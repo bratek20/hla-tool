@@ -16,6 +16,12 @@ interface HlaTypesWorldQueries {
     fun getAll(module: ModuleName, submodule: SubmoduleName): List<WorldType>
 }
 
+interface HlaTypesExtraInfo {
+    fun markAsIdSource(info: IdSourceInfo): Unit
+
+    fun getAllIdSourceInfo(): List<IdSourceInfo>
+}
+
 interface HlaTypesWorldPopulator {
     fun getOrder(): Int
 

@@ -21,3 +21,8 @@ fun assertHlaTypePath(given: HlaTypePath, expected: String) {
     val diff = diffHlaTypePath(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertIdSourceInfo(given: IdSourceInfo, expectedInit: ExpectedIdSourceInfo.() -> Unit) {
+    val diff = diffIdSourceInfo(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

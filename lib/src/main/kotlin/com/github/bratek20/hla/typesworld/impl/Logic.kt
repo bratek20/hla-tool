@@ -7,10 +7,13 @@ fun WorldType.getFullName(): String {
 }
 
 class TypesWorldApiLogic: TypesWorldApi {
+    companion object {
+        private val wrappers = setOf("List", "Optional")
+    }
+
     private val allTypes: MutableSet<WorldType> = mutableSetOf()
     private val primitives: MutableList<WorldType> = mutableListOf()
     private val classTypes: MutableList<WorldClassType> = mutableListOf()
-    private val concreteWrappers: MutableList<WorldConcreteWrapper> = mutableListOf()
     private val concreteParametrizedClasses: MutableList<WorldConcreteParametrizedClass> = mutableListOf()
 
     override fun ensureType(type: WorldType) {
@@ -25,7 +28,7 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun hasType(type: WorldType): Boolean {
-        return allTypes.contains(type)
+        return allTypes.contains(type) || isWrapper(type)
     }
 
     override fun getTypeDependencies(type: WorldType): List<WorldType> {
@@ -41,8 +44,8 @@ class TypesWorldApiLogic: TypesWorldApi {
         concreteParametrizedClasses.firstOrNull { it.getType() == type }?.let {
             return it.getTypeArguments()
         }
-        concreteWrappers.firstOrNull { it.getType() == type }?.let {
-            return listOf(it.getWrappedType())
+        if (isWrapper(type)) {
+            return listOf(getConcreteWrapper(type).getWrappedType())
         }
         return emptyList()
     }
@@ -60,18 +63,14 @@ class TypesWorldApiLogic: TypesWorldApi {
             return extendDependency + fieldDependencies
         }
 
-        concreteWrappers.firstOrNull {
-            it.getType() == type
-        }?.let {
-            return listOf(
-                it.getWrappedType()
-            )
-        }
-
         concreteParametrizedClasses.firstOrNull {
             it.getType() == type
         }?.let {
             return it.getTypeArguments()
+        }
+
+        if (isWrapper(type)) {
+            return listOf(getConcreteWrapper(type).getWrappedType())
         }
 
         return emptyList()
@@ -98,13 +97,6 @@ class TypesWorldApiLogic: TypesWorldApi {
         }
     }
 
-    override fun addConcreteWrapper(type: WorldConcreteWrapper): Unit {
-        concreteWrappers.add(type)
-
-        ensureType(type.getType())
-        ensureType(type.getWrappedType())
-    }
-
     override fun addConcreteParametrizedClass(type: WorldConcreteParametrizedClass): Unit {
         concreteParametrizedClasses.add(type)
 
@@ -124,20 +116,35 @@ class TypesWorldApiLogic: TypesWorldApi {
             ?: throw WorldTypeNotFoundException("Concrete parametrized class type '${type.getFullName()}' not found")
     }
 
+    override fun getConcreteWrapper(type: WorldType): WorldConcreteWrapper {
+        val wrappedTypeName = tryExtractWrappedTypeName(type.getName())
+            ?: throw WorldTypeNotFoundException("Type '${type.getFullName()}' is not a wrapper")
+
+        val wrappedType = getTypeByName(wrappedTypeName)
+        return WorldConcreteWrapper.create(
+            type = type,
+            wrappedType = wrappedType
+        )
+    }
+
     override fun getTypeByName(name: WorldTypeName): WorldType {
-        return getTypeByNameForWrapper(name, "List")
-            ?: getTypeByNameForWrapper(name, "Optional")
+        return findTypeByNameForWrappers(name)
             ?: allTypes.firstOrNull { it.getName() == name }
             ?: throw WorldTypeNotFoundException("Hla type with name '${name}' not found")
     }
 
     override fun getTypeInfo(type: WorldType): WorldTypeInfo {
+        if (findTypeByNameForWrappers(type.getName()) != null) {
+            return WorldTypeInfo.create(
+                kind = WorldTypeKind.ConcreteWrapper
+            )
+        }
+
         throwIfTypeNotFound(type)
 
         val kind = when {
             primitives.contains(type) -> WorldTypeKind.Primitive
             classTypes.any { it.getType() == type } -> WorldTypeKind.ClassType
-            concreteWrappers.any { it.getType() == type } -> WorldTypeKind.ConcreteWrapper
             concreteParametrizedClasses.any { it.getType() == type } -> WorldTypeKind.ConcreteParametrizedClass
             else -> WorldTypeKind.Primitive
         }
@@ -148,21 +155,40 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     private fun throwIfTypeNotFound(type: WorldType) {
-        if (!allTypes.contains(type)) {
+        if (!hasType(type)) {
             throw WorldTypeNotFoundException("Type '${type.getFullName()}' not found")
         }
     }
 
-    private fun getTypeByNameForWrapper(name: WorldTypeName, wrapper: String): WorldType? {
+    private fun isWrapper(type: WorldType): Boolean {
+        return tryExtractWrappedTypeName(type.getName()) != null
+    }
+
+    private fun findTypeByNameForWrappers(name: WorldTypeName): WorldType? {
+        return wrappers.firstNotNullOfOrNull { findTypeByNameForWrapper(name, it) }
+    }
+
+    private fun findTypeByNameForWrapper(name: WorldTypeName, wrapper: String): WorldType? {
         if (name.value.startsWith("$wrapper<")) {
             val wrappedTypeName = name.value.removePrefix("$wrapper<").removeSuffix(">")
-            val wrappedType = allTypes.firstOrNull { it.getName().value == wrappedTypeName }
-                ?: throw WorldTypeNotFoundException("Hla type with name '${wrappedTypeName}' not found")
+            val wrappedType = getTypeByName(WorldTypeName(wrappedTypeName))
 
             return WorldType.create(
                 name = name,
                 path = wrappedType.getPath()
             )
+        }
+        return null
+    }
+
+    private fun tryExtractWrappedTypeName(name: WorldTypeName): WorldTypeName? {
+        return wrappers.firstNotNullOfOrNull { tryExtractWrappedTypeNameForWrapper(name, it) }
+    }
+
+    private fun tryExtractWrappedTypeNameForWrapper(name: WorldTypeName, wrapper: String): WorldTypeName? {
+        if (name.value.startsWith("$wrapper<")) {
+            val wrappedTypeName = name.value.removePrefix("$wrapper<").removeSuffix(">")
+            return WorldTypeName(wrappedTypeName)
         }
         return null
     }

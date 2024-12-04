@@ -462,6 +462,34 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
     return result.joinToString("\n")
 }
 
+data class ExpectedSomePropertyEntry(
+    var id: String? = null,
+)
+fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePropertyEntry.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomePropertyEntry().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeReferencingProperty(
+    var referenceId: String? = null,
+)
+fun diffSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: ExpectedSomeReferencingProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeReferencingProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.referenceId?.let {
+        if (diffSomeId(given.getReferenceId(), it) != "") { result.add(diffSomeId(given.getReferenceId(), it, "${path}referenceId.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )

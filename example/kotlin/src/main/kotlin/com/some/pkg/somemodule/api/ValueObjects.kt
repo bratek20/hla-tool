@@ -550,3 +550,39 @@ data class SomeProperty2(
         }
     }
 }
+
+data class SomePropertyEntry(
+    private val id: String,
+) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
+    companion object {
+        fun create(
+            id: SomeId,
+        ): SomePropertyEntry {
+            return SomePropertyEntry(
+                id = id.value,
+            )
+        }
+    }
+}
+
+data class SomeReferencingProperty(
+    private val referenceId: String,
+) {
+    fun getReferenceId(): SomeId {
+        return SomeId(this.referenceId)
+    }
+
+    companion object {
+        fun create(
+            referenceId: SomeId,
+        ): SomeReferencingProperty {
+            return SomeReferencingProperty(
+                referenceId = referenceId.value,
+            )
+        }
+    }
+}

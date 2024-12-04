@@ -1,0 +1,13 @@
+Interfaces
+    HlaValidator
+        ValidationResult
+            ok: bool
+            errors: string[]
+        validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult
+
+ExternalTypes
+    Properties
+
+Kotlin
+    ExternalTypePackages
+        Properties -> com.github.bratek20.architecture.properties.api

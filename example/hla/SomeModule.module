@@ -93,7 +93,17 @@ Properties
         someEnum: SomeEnum
         customOpt: any? = empty
 
+    SomePropertyEntry
+        id: SomeId (idSource)
+
+    SomeReferencingProperty
+        referenceId: SomeId
+
     "SomeKey" -> SomeProperty
+    "SomeSourcePropertyList" -> SomePropertyEntry[]
+    "SomeReferencingPropertyObject" -> SomeReferencingProperty
+    "SomeReferencingPropertyList" -> SomeReferencingProperty[]
+
 Data
     SomeData
         other: OtherData
