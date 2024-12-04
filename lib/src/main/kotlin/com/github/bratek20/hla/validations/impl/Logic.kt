@@ -1,6 +1,10 @@
 package com.github.bratek20.hla.validations.impl
 
 import com.github.bratek20.architecture.properties.api.Properties
+import com.github.bratek20.architecture.properties.api.Property
+import com.github.bratek20.architecture.structs.api.AnyStruct
+import com.github.bratek20.architecture.structs.api.StructPath
+import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
@@ -47,13 +51,27 @@ class HlaValidatorLogic(
         allPropertiesKeysFromHla.forEach { propertyKey ->
             sourceInfos.forEach { sourceInfo ->
                 if (sourceInfo.getParent().getName().value != propertyKey.getType().getName()) {
-                    findReference(sourceInfo.getType(), propertyKey)
+                    val ref = findReference(sourceInfo.getType(), propertyKey)
+                    ref?.let {
+                        val propValue = getPropertyValue(ref.keyName, properties)
+                        val values = StructsFactory.createAnyStructHelper().getValues(propValue, StructPath(ref.structPath)).map { it.value }
+                        logger.info("Values for '$ref': $values")
+                    }
                 }
             }
         }
         //get values of all ids for source
         //get all values for referencing fields, know their path, check if they are in the list
         return ValidationResult(true, emptyList())
+    }
+
+    data class PropertyValuePath(
+        val keyName: String,
+        val structPath: String
+    ) {
+        override fun toString(): String {
+            return "\"$keyName\"/$structPath"
+        }
     }
 
     //Assumes that idSource comes always from list and is at the top level
@@ -63,19 +81,24 @@ class HlaValidatorLogic(
         val moduleKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
         val keyName = moduleKeys.first { it.getType().getName() == parentType.getName().value }.getName()
 
-        val prop = properties.getAll().first { it.keyName == keyName }
-        val values = prop.value.asList().map { it[sourceInfo.getFieldName()] }
+        val values = getPropertyValue(keyName, properties).asList().map { it[sourceInfo.getFieldName()] }
 
         logger.info("Allowed values for '${sourceInfo.getType().getName()}' from source '\"${keyName}\"/[*]/${sourceInfo.getFieldName()}': $values")
     }
 
-    private fun findReference(idSourceType: WorldType, propertyKey: KeyDefinition) {
+    private fun getPropertyValue(keyName: String, properties: Properties): AnyStruct {
+        return properties.getAll().first { it.keyName == keyName }.value
+    }
+
+    private fun findReference(idSourceType: WorldType, propertyKey: KeyDefinition): PropertyValuePath? {
         val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
         val referencePath = findReferencePath(idSourceType, propertyType)
         if (referencePath != null) {
-            val propertyValuePath = "\"${propertyKey.getName()}\"/$referencePath".dropLast(1)
+            val propertyValuePath = PropertyValuePath(propertyKey.getName(), referencePath.dropLast(1))
             logger.info("Found reference for '${idSourceType.getName()}' at '$propertyValuePath'")
+            return propertyValuePath
         }
+        return null
     }
 
     private fun findReferencePath(idSourceType: WorldType, currentType: WorldType): String? {

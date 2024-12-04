@@ -106,7 +106,10 @@ class ValidationsImplTest {
             "Checking properties: [otherProperty, otherProperties, SomeKey, SomeSourcePropertyList, SomeReferencingPropertyObject, SomeReferencingPropertyList]",
 
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
+            "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
+
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
+            "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]"
         )
 
         assertValidationResult(result) {
