@@ -22,7 +22,7 @@ class KotlinTypes: LanguageTypes {
             BaseType.ANY -> "Any"
             BaseType.DOUBLE -> "Double"
             BaseType.LONG -> "Long"
-            BaseType.STRUCT -> "com.github.bratek20.architecture.serialization.api.Struct"
+            BaseType.STRUCT -> "com.github.bratek20.architecture.structs.api.Struct"
         }
     }
 
@@ -35,7 +35,7 @@ class KotlinTypes: LanguageTypes {
             BaseType.ANY -> "Any()"
             BaseType.DOUBLE -> "0.0"
             BaseType.LONG -> "0L"
-            BaseType.STRUCT -> "com.github.bratek20.architecture.serialization.api.Struct()"
+            BaseType.STRUCT -> "com.github.bratek20.architecture.structs.api.Struct()"
         }
     }
 
