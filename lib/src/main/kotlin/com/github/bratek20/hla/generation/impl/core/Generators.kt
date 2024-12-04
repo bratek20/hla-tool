@@ -16,6 +16,7 @@ import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
 import com.github.bratek20.hla.velocity.api.VelocityFacade
@@ -91,12 +92,12 @@ abstract class ModulePartGenerator {
     }
 }
 
-private fun submodulePackage(submodule: SubmoduleName, c: ModuleGenerationContext): String {
-    return submodulePackageForModule(c.module.getName(), submodule, c)
+private fun submodulePackage(group: ModuleGroup, submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return submodulePackageForModule(group, c.module.getName(), submodule, c)
 }
 
-private fun submodulePackageForModule(moduleName: ModuleName, submodule: SubmoduleName, c: ModuleGenerationContext): String {
-    return profileToRootPackage(c.domain.profile) + "." + moduleName.value.lowercase() + "." + submodule.name.lowercase()
+private fun submodulePackageForModule(group: ModuleGroup, moduleName: ModuleName, submodule: SubmoduleName, c: ModuleGenerationContext): String {
+    return profileToRootPackage(group.getProfile()) + "." + moduleName.value.lowercase() + "." + submodule.name.lowercase()
 }
 
 private fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationContext): String {
@@ -154,14 +155,14 @@ abstract class PatternGenerator
         when (c.language.name()) {
             ModuleLanguage.KOTLIN -> {
                 cb.kotlinFile {
-                    packageName = submodulePackage(submodule, c)
+                    packageName = submodulePackage(c.domain.queries.group, submodule, c)
 
                     extraKotlinImports().forEach {
                         addImport(it)
                     }
 
                     modules.getCurrentDependencies().forEach {
-                        addImport(submodulePackageForModule(it.getModule().getName(), submodule, c) + ".*")
+                        addImport(submodulePackageForModule(it.getGroup(), it.getModule().getName(), submodule, c) + ".*")
                     }
 
                     apply(ops)
