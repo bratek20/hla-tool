@@ -2,8 +2,8 @@
 
 package com.some.pkg.somemodule.web
 
+import com.github.bratek20.architecture.structs.api.Struct
 import com.github.bratek20.architecture.serialization.api.Serializer
-import com.github.bratek20.architecture.serialization.api.Struct
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 
 import org.springframework.web.bind.annotation.PostMapping

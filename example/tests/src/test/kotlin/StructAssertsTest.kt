@@ -1,4 +1,4 @@
-import com.github.bratek20.architecture.serialization.api.struct
+import com.github.bratek20.architecture.structs.api.struct
 import com.some.pkg.somemodule.fixtures.assertSomeProperty
 import com.some.pkg.somemodule.fixtures.diffSomeProperty
 import com.some.pkg.somemodule.fixtures.someProperty
