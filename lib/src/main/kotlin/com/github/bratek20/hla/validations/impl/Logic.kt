@@ -24,77 +24,80 @@ import com.github.bratek20.logs.api.Logger
 
 import com.github.bratek20.utils.directory.api.*
 
-class HlaValidatorLogic(
-    private val parser: ModuleGroupParser,
-    private val hlaTypesWorldApi: HlaTypesWorldApi,
-    private val extraInfo: HlaTypesExtraInfo,
+data class PropertyValuePath(
+    val keyName: String,
+    val structPath: StructPath
+) {
+    override fun toString(): String {
+        return "\"$keyName\"/$structPath"
+    }
+}
+
+private class IdSourceValidator(
+    private val info: IdSourceInfo,
     private val logger: Logger,
-    private val typesWorldApi: TypesWorldApi
-): HlaValidator {
-    override fun validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult {
-        val group = parser.parse(hlaFolderPath, profileName)
+    private val typesWorldApi: TypesWorldApi,
+    private val group: ModuleGroup,
+    private val properties: Properties
+) {
+    private val idSourcePath: PropertyValuePath
 
-        hlaTypesWorldApi.populate(group)
-
-        val sourceInfos = extraInfo.getAllIdSourceInfo()
-
-        logger.info("Source infos: $sourceInfos")
-
-        sourceInfos.forEach { sourceInfo ->
-            findValuesForIdSource(sourceInfo, group, properties)
-        }
-
-        val allPropertiesKeysFromHla = group.getAllPropertyKeys()
-        val allKeyNames = allPropertiesKeysFromHla.map { it.getName() }
-        logger.info( "Checking properties: $allKeyNames")
-
-        allPropertiesKeysFromHla.forEach { propertyKey ->
-            sourceInfos.forEach { sourceInfo ->
-                if (sourceInfo.getParent().getName().value != propertyKey.getType().getName()) {
-                    val ref = findReference(sourceInfo.getType(), propertyKey)
-                    ref?.let {
-                        val propValue = getPropertyValue(ref.keyName, properties)
-                        val values = StructsFactory.createAnyStructHelper().getValues(propValue, StructPath(ref.structPath)).map { it.value }
-                        logger.info("Values for '$ref': $values")
-                    }
-                }
-            }
-        }
-        //get values of all ids for source
-        //get all values for referencing fields, know their path, check if they are in the list
-        return ValidationResult(true, emptyList())
-    }
-
-    data class PropertyValuePath(
-        val keyName: String,
-        val structPath: String
-    ) {
-        override fun toString(): String {
-            return "\"$keyName\"/$structPath"
-        }
-    }
-
-    //Assumes that idSource comes always from list and is at the top level
-    private fun findValuesForIdSource(sourceInfo: IdSourceInfo, group: ModuleGroup, properties: Properties) {
-        val parentType = sourceInfo.getParent()
+    init {
+        val parentType = info.getParent()
         val parentModule = parentType.getPath().asHla().getModuleName()
         val moduleKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
         val keyName = moduleKeys.first { it.getType().getName() == parentType.getName().value }.getName()
 
-        val values = getPropertyValue(keyName, properties).asList().map { it[sourceInfo.getFieldName()] }
-
-        logger.info("Allowed values for '${sourceInfo.getType().getName()}' from source '\"${keyName}\"/[*]/${sourceInfo.getFieldName()}': $values")
+        //I assume that idSource comes always from list and is at the top level
+        idSourcePath = PropertyValuePath(keyName, StructPath("[*]/${info.getFieldName()}"))
     }
 
-    private fun getPropertyValue(keyName: String, properties: Properties): AnyStruct {
-        return properties.getAll().first { it.keyName == keyName }.value
+    fun validate(): ValidationResult {
+        val allowedValues = getAllowedValues()
+
+        return group.getAllPropertyKeys()
+            .filter {
+                info.getParent().getName().value != it.getType().getName()
+            }
+            .map { propertyKey ->
+                validateProperty(propertyKey, allowedValues)
+            }
+            .reduce(ValidationResult::merge)
+    }
+
+    private fun validateProperty(propertyKey: KeyDefinition, allowedValues: List<String>): ValidationResult {
+        val errors = mutableListOf<String>()
+        val ref = findReference(info.getType(), propertyKey)
+        ref?.let {
+            val values = getPropertyValuesAt(it)
+            logger.info("Values for '$it': $values")
+
+            for (value in values) {
+                if (value !in allowedValues) {
+                    errors.add("Value '$value' at '$it' not found in source values from '${idSourcePath}'")
+                }
+            }
+        }
+
+        return createValidationResult(errors)
+    }
+
+    private fun getAllowedValues(): List<String> {
+        val values = getPropertyValuesAt(idSourcePath)
+        logger.info("Allowed values for '${info.getType().getName()}' from source '$idSourcePath': $values")
+        return values
+    }
+
+    private fun getPropertyValuesAt(path: PropertyValuePath): List<String> {
+        val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
+        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.value }
     }
 
     private fun findReference(idSourceType: WorldType, propertyKey: KeyDefinition): PropertyValuePath? {
         val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
         val referencePath = findReferencePath(idSourceType, propertyType)
         if (referencePath != null) {
-            val propertyValuePath = PropertyValuePath(propertyKey.getName(), referencePath.dropLast(1))
+            val propertyValuePath = PropertyValuePath(propertyKey.getName(), StructPath(referencePath.dropLast(1)))
             logger.info("Found reference for '${idSourceType.getName()}' at '$propertyValuePath'")
             return propertyValuePath
         }
@@ -121,5 +124,50 @@ class HlaValidatorLogic(
             }
         }
         return null
+    }
+}
+
+fun ValidationResult.merge(other: ValidationResult): ValidationResult {
+    return ValidationResult(
+        ok = this.getOk() && other.getOk(),
+        errors = this.getErrors() + other.getErrors()
+    )
+}
+
+fun createValidationResult(errors: List<String>): ValidationResult {
+    return ValidationResult(errors.isEmpty(), errors)
+}
+
+class HlaValidatorLogic(
+    private val parser: ModuleGroupParser,
+    private val hlaTypesWorldApi: HlaTypesWorldApi,
+    private val extraInfo: HlaTypesExtraInfo,
+    private val logger: Logger,
+    private val typesWorldApi: TypesWorldApi
+): HlaValidator {
+    override fun validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult {
+        val group = parser.parse(hlaFolderPath, profileName)
+
+        hlaTypesWorldApi.populate(group)
+
+        val sourceInfos = extraInfo.getAllIdSourceInfo()
+
+        logger.info("Source infos: $sourceInfos")
+
+        val allPropertiesKeysFromHla = group.getAllPropertyKeys()
+        val allKeyNames = allPropertiesKeysFromHla.map { it.getName() }
+        logger.info( "Known properties: $allKeyNames")
+
+        val sourceValidators = sourceInfos.map {
+            IdSourceValidator(
+                info = it,
+                logger = logger,
+                typesWorldApi = typesWorldApi,
+                group = group,
+                properties = properties
+            )
+        }
+
+        return sourceValidators.map { it.validate() }.reduce(ValidationResult::merge)
     }
 }

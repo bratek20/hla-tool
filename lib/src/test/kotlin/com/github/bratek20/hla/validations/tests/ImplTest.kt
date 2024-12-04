@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
-
 //SomePropertyEntry
 //id: SomeId (idSource)
 //
@@ -71,7 +70,7 @@ class ValidationsImplTest {
         propertiesMock = someContextBuilder()
             .withModules(
                 PropertiesMocks()
-            ).get(PropertiesMock::class.java)
+            ).buildAndGet(PropertiesMock::class.java)
     }
 
     @Test
@@ -101,9 +100,9 @@ class ValidationsImplTest {
             "Parsing module TypesModule",
 
             "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]",
-            "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
+            "Known properties: [otherProperty, otherProperties, SomeKey, SomeSourcePropertyList, SomeReferencingPropertyObject, SomeReferencingPropertyList]",
 
-            "Checking properties: [otherProperty, otherProperties, SomeKey, SomeSourcePropertyList, SomeReferencingPropertyObject, SomeReferencingPropertyList]",
+            "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
 
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
@@ -117,7 +116,6 @@ class ValidationsImplTest {
         }
     }
 
-    @Disabled
     @Test
     fun `should fail`() {
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
@@ -142,7 +140,7 @@ class ValidationsImplTest {
             ok = false
             errors = listOf(
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
-                "Value '3' at '\"SomeReferencingPropertyList\"/[0]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
+                "Value '3' at '\"SomeReferencingPropertyList\"/[*]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
             )
         }
     }
