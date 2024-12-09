@@ -208,6 +208,7 @@ ViewModel
             SomeClass
                 id
             button: Button
+            boolSwitch: BoolSwitch
 
         SomeClass2Vm
             SomeClass2

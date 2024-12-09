@@ -11,6 +11,10 @@
     {
       "name": "button",
       "viewType": "B20.Frontend.Elements.View.ButtonView"
+    },
+    {
+      "name": "boolSwitch",
+      "viewType": "B20.Frontend.Elements.View.BoolSwitchView"
     }
   ],
   "elementViewType": null

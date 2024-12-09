@@ -19,10 +19,13 @@ namespace SomeModule.View {
         LabelView id;
         [SerializeField]
         ButtonView button;
+        [SerializeField]
+        BoolSwitchView boolSwitch;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
             button.Bind(ViewModel.Button);
+            boolSwitch.Bind(ViewModel.BoolSwitch);
         }
     }
 }
