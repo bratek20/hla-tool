@@ -248,3 +248,4 @@ ViewModel
             someClassVm: SomeClassVm
             someClassVmList: SomeClassVm[]
             someButton: Button
+            newOptVm: SomeClass6Vm?
