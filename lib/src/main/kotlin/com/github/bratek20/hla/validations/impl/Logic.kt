@@ -19,6 +19,7 @@ import com.github.bratek20.hla.queries.api.getAllPropertyKeys
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeKind
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.validations.api.*
 import com.github.bratek20.logs.api.Logger
 
@@ -33,12 +34,21 @@ data class PropertyValuePath(
     }
 }
 
+private class PropertiesTraverser(
+    private val properties: Properties
+) {
+    fun getPropertyValuesAt(path: PropertyValuePath): List<String> {
+        val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
+        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.value }
+    }
+}
+
 private class IdSourceValidator(
     private val info: IdSourceInfo,
     private val logger: Logger,
     private val typesWorldApi: TypesWorldApi,
     private val group: ModuleGroup,
-    private val properties: Properties
+    private val traverser: PropertiesTraverser
 ) {
     private val idSourcePath: PropertyValuePath
 
@@ -80,7 +90,7 @@ private class IdSourceValidator(
         val errors = mutableListOf<String>()
         val ref = findReference(info.getType(), propertyKey)
         ref?.let {
-            val values = getPropertyValuesAt(it)
+            val values = traverser.getPropertyValuesAt(it)
             logger.info("Values for '$it': $values")
 
             for (value in values) {
@@ -94,14 +104,9 @@ private class IdSourceValidator(
     }
 
     private fun getAllowedValues(): List<String> {
-        val values = getPropertyValuesAt(idSourcePath)
+        val values = traverser.getPropertyValuesAt(idSourcePath)
         logger.info("Allowed values for '${info.getType().getName()}' from source '$idSourcePath': $values")
         return values
-    }
-
-    private fun getPropertyValuesAt(path: PropertyValuePath): List<String> {
-        val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
-        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.value }
     }
 
     private fun findReference(idSourceType: WorldType, propertyKey: KeyDefinition): PropertyValuePath? {
@@ -151,6 +156,13 @@ class HlaValidatorLogic(
 
         hlaTypesWorldApi.populate(group)
 
+        val idSourceValidationResult = validateIdSources(group, properties)
+        val typeValidatorsResult = executeTypeValidators(properties)
+
+        return idSourceValidationResult.merge(typeValidatorsResult)
+    }
+
+    private fun validateIdSources(group: ModuleGroup, properties: Properties): ValidationResult {
         val sourceInfos = extraInfo.getAllIdSourceInfo()
 
         logger.info("Source infos: $sourceInfos")
@@ -165,10 +177,20 @@ class HlaValidatorLogic(
                 logger = logger,
                 typesWorldApi = typesWorldApi,
                 group = group,
-                properties = properties
+                traverser = PropertiesTraverser(properties)
             )
         }
 
         return sourceValidators.map { it.validate() }.reduce(ValidationResult::merge)
+    }
+
+    private fun executeTypeValidators(properties: Properties): ValidationResult {
+        typeValidators.forEach {
+            val typeToValidate = it.getType()
+            val typeName = typeToValidate.simpleName
+
+            val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        }
+        return ValidationResult.ok()
     }
 }

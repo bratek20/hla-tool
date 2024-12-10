@@ -60,6 +60,8 @@ data class SomeReferencingProperty(
 }
 
 class SomeReferencingPropertyValidator: TypeValidator<SomeReferencingProperty> {
+    override fun getType() = SomeReferencingProperty::class.java
+
     override fun validate(property: SomeReferencingProperty): ValidationResult {
         return ValidationResult.createFor(
             "Error for ${property.getReferenceId()}",
