@@ -73,7 +73,7 @@ private class IdSourceValidator(
         val countPerValue = allowedValues.groupingBy { it }.eachCount()
         val errors = countPerValue.filter { it.value > 1 }
             .map { "Value '${it.key}' at '${idSourcePath}' is not unique" }
-        return createValidationResult(errors)
+        return ValidationResult.createFor(errors)
     }
 
     private fun validateProperty(propertyKey: KeyDefinition, allowedValues: List<String>): ValidationResult {
@@ -90,7 +90,7 @@ private class IdSourceValidator(
             }
         }
 
-        return createValidationResult(errors)
+        return ValidationResult.createFor(errors)
     }
 
     private fun getAllowedValues(): List<String> {
@@ -138,23 +138,13 @@ private class IdSourceValidator(
     }
 }
 
-fun ValidationResult.merge(other: ValidationResult): ValidationResult {
-    return ValidationResult(
-        ok = this.getOk() && other.getOk(),
-        errors = this.getErrors() + other.getErrors()
-    )
-}
-
-fun createValidationResult(errors: List<String>): ValidationResult {
-    return ValidationResult(errors.isEmpty(), errors)
-}
-
 class HlaValidatorLogic(
     private val parser: ModuleGroupParser,
     private val hlaTypesWorldApi: HlaTypesWorldApi,
     private val extraInfo: HlaTypesExtraInfo,
     private val logger: Logger,
-    private val typesWorldApi: TypesWorldApi
+    private val typesWorldApi: TypesWorldApi,
+    private val typeValidators: Set<TypeValidator<*>>
 ): HlaValidator {
     override fun validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult {
         val group = parser.parse(hlaFolderPath, profileName)
