@@ -11,7 +11,6 @@ import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
 
 import com.some.pkg.somemodule.api.*
-import com.some.pkg.somemodule.fixtures.diffLegacyType
 
 class SomeInterface2Mock: SomeInterface2 {
     // referenceOtherClass
@@ -50,11 +49,6 @@ class SomeInterface2Mock: SomeInterface2 {
 
     fun assertReferenceLegacyTypeCalled(times: Int = 1) {
         assertThat(referenceLegacyTypeCalls.size).withFailMessage("Expected referenceLegacyType to be called $times times, but was called $referenceLegacyTypeCalls times").isEqualTo(times)
-    }
-
-    fun assertReferenceLegacyTypeCalledForArgs(args: com.some.pkg.legacy.LegacyType, times: Int = 1) {
-        val calls = referenceLegacyTypeCalls.filter { diffLegacyType(it, args) == "" }
-        assertThat(calls.size).withFailMessage("Expected referenceLegacyType to be called $times times, but was called $referenceLegacyTypeCalls times").isEqualTo(times)
     }
 }
 
