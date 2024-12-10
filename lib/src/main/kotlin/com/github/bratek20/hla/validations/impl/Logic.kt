@@ -39,7 +39,7 @@ private class PropertiesTraverser(
 ) {
     fun getPropertyValuesAt(path: PropertyValuePath): List<String> {
         val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
-        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.value }
+        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.asPrimitive().value }
     }
 }
 
