@@ -121,6 +121,9 @@ class ValidationsImplTest {
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
             struct {
                 "id" to "1"
+            },
+            struct {
+                "id" to "1"
             }
         ))
 
@@ -139,6 +142,7 @@ class ValidationsImplTest {
         assertValidationResult(result) {
             ok = false
             errors = listOf(
+                "Value '1' at '\"SomeSourcePropertyList\"/[*]/id' is not unique",
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '3' at '\"SomeReferencingPropertyList\"/[*]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
             )

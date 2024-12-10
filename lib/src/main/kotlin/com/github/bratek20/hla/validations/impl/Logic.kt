@@ -55,7 +55,9 @@ private class IdSourceValidator(
     fun validate(): ValidationResult {
         val allowedValues = getAllowedValues()
 
-        return group.getAllPropertyKeys()
+        val allowedValuesValidation = validateAllowedValuesUnique(allowedValues)
+
+        val propertiesValidation = group.getAllPropertyKeys()
             .filter {
                 info.getParent().getName().value != it.getType().getName()
             }
@@ -63,6 +65,15 @@ private class IdSourceValidator(
                 validateProperty(propertyKey, allowedValues)
             }
             .reduce(ValidationResult::merge)
+
+        return allowedValuesValidation.merge(propertiesValidation)
+    }
+
+    private fun validateAllowedValuesUnique(allowedValues: List<String>): ValidationResult {
+        val countPerValue = allowedValues.groupingBy { it }.eachCount()
+        val errors = countPerValue.filter { it.value > 1 }
+            .map { "Value '${it.key}' at '${idSourcePath}' is not unique" }
+        return createValidationResult(errors)
     }
 
     private fun validateProperty(propertyKey: KeyDefinition, allowedValues: List<String>): ValidationResult {
