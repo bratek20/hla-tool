@@ -1,8 +1,7 @@
 package com.github.bratek20.hla.validations.impl
 
 import com.github.bratek20.architecture.properties.api.Properties
-import com.github.bratek20.architecture.properties.api.Property
-import com.github.bratek20.architecture.structs.api.AnyStruct
+import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.architecture.structs.api.StructPath
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
@@ -34,19 +33,70 @@ data class PropertyValuePath(
     }
 }
 
-private class PropertiesTraverser(
-    private val properties: Properties
+private class WorldTypeTraverser(
+    private val typesWorldApi: TypesWorldApi
 ) {
-    fun getPropertyValuesAt(path: PropertyValuePath): List<String> {
+    fun findAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
+        if (target == searchFor) {
+            return listOf(StructPath(""))
+        }
+
+        val kind = typesWorldApi.getTypeInfo(target).getKind()
+
+        if (kind == WorldTypeKind.ClassType) {
+            return typesWorldApi.getClassType(target).getFields().flatMap { field ->
+                findAllReferencesOf(searchFor, field.getType()).map {
+                    StructPath("${field.getName()}/$it")
+                }
+            }
+        }
+
+        if (kind == WorldTypeKind.ConcreteWrapper) {
+            return typesWorldApi.getConcreteWrapper(target).getWrappedType().let { wrappedType ->
+                findAllReferencesOf(wrappedType, searchFor).map {
+                    StructPath("[*]/$it")
+                }
+            }
+        }
+
+        return emptyList()
+    }
+}
+
+private class PropertiesTraverser(
+    private val properties: Properties,
+    private val typesWorldApi: TypesWorldApi,
+    private val logger: Logger
+) {
+    fun getPrimitiveValuesAt(path: PropertyValuePath): List<String> {
         val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
         return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.asPrimitive().value }
+    }
+
+    fun getStructValuesAt(path: PropertyValuePath, type: Class<*>): List<*> {
+        val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
+        val rawStructs = StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.asObject() }
+        val serializer = SerializationFactory.createSerializer()
+        return rawStructs.map {
+            serializer.fromStruct(it, type)
+        }
+    }
+
+    fun findReferences(searchFor: WorldType, propertyKey: KeyDefinition): List<PropertyValuePath> {
+        val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
+        val referencePaths = WorldTypeTraverser(typesWorldApi).findAllReferencesOf(propertyType, searchFor)
+
+        return referencePaths.map { referencePath ->
+            val propertyValuePath = PropertyValuePath(propertyKey.getName(), referencePath)
+            logger.info("Found reference for '${searchFor.getName()}' at '$propertyValuePath'")
+            propertyValuePath
+        }
     }
 }
 
 private class IdSourceValidator(
     private val info: IdSourceInfo,
     private val logger: Logger,
-    private val typesWorldApi: TypesWorldApi,
     private val group: ModuleGroup,
     private val traverser: PropertiesTraverser
 ) {
@@ -88,9 +138,9 @@ private class IdSourceValidator(
 
     private fun validateProperty(propertyKey: KeyDefinition, allowedValues: List<String>): ValidationResult {
         val errors = mutableListOf<String>()
-        val ref = findReference(info.getType(), propertyKey)
-        ref?.let {
-            val values = traverser.getPropertyValuesAt(it)
+        val refs = traverser.findReferences(info.getType(), propertyKey)
+        refs.forEach {
+            val values = traverser.getPrimitiveValuesAt(it)
             logger.info("Values for '$it': $values")
 
             for (value in values) {
@@ -104,42 +154,9 @@ private class IdSourceValidator(
     }
 
     private fun getAllowedValues(): List<String> {
-        val values = traverser.getPropertyValuesAt(idSourcePath)
+        val values = traverser.getPrimitiveValuesAt(idSourcePath)
         logger.info("Allowed values for '${info.getType().getName()}' from source '$idSourcePath': $values")
         return values
-    }
-
-    private fun findReference(idSourceType: WorldType, propertyKey: KeyDefinition): PropertyValuePath? {
-        val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
-        val referencePath = findReferencePath(idSourceType, propertyType)
-        if (referencePath != null) {
-            val propertyValuePath = PropertyValuePath(propertyKey.getName(), StructPath(referencePath.dropLast(1)))
-            logger.info("Found reference for '${idSourceType.getName()}' at '$propertyValuePath'")
-            return propertyValuePath
-        }
-        return null
-    }
-
-    private fun findReferencePath(idSourceType: WorldType, currentType: WorldType): String? {
-        if (currentType == idSourceType) {
-            return ""
-        }
-        val kind = typesWorldApi.getTypeInfo(currentType).getKind()
-        if (kind == WorldTypeKind.ClassType) {
-            typesWorldApi.getClassType(currentType).getFields().firstOrNull {
-                findReferencePath(idSourceType, it.getType()) != null
-            }?.let {
-                return "${it.getName()}/${findReferencePath(idSourceType, it.getType())}"
-            }
-        }
-        if (kind == WorldTypeKind.ConcreteWrapper) {
-            typesWorldApi.getConcreteWrapper(currentType).getWrappedType().let {
-                findReferencePath(idSourceType, it)?.let {
-                    return "[*]/$it"
-                }
-            }
-        }
-        return null
     }
 }
 
@@ -157,7 +174,7 @@ class HlaValidatorLogic(
         hlaTypesWorldApi.populate(group)
 
         val idSourceValidationResult = validateIdSources(group, properties)
-        val typeValidatorsResult = executeTypeValidators(properties)
+        val typeValidatorsResult = executeTypeValidators(properties, group)
 
         return idSourceValidationResult.merge(typeValidatorsResult)
     }
@@ -175,21 +192,43 @@ class HlaValidatorLogic(
             IdSourceValidator(
                 info = it,
                 logger = logger,
-                typesWorldApi = typesWorldApi,
                 group = group,
-                traverser = PropertiesTraverser(properties)
+                traverser = PropertiesTraverser(
+                    properties = properties,
+                    typesWorldApi = typesWorldApi,
+                    logger = logger
+                )
             )
         }
 
         return sourceValidators.map { it.validate() }.reduce(ValidationResult::merge)
     }
 
-    private fun executeTypeValidators(properties: Properties): ValidationResult {
-        typeValidators.forEach {
-            val typeToValidate = it.getType()
+    private fun createTraverser(properties: Properties): PropertiesTraverser {
+        return PropertiesTraverser(
+            properties = properties,
+            typesWorldApi = typesWorldApi,
+            logger = logger
+        )
+    }
+
+    private fun executeTypeValidators(properties: Properties, group: ModuleGroup): ValidationResult {
+        val traverser = createTraverser(properties)
+        typeValidators.forEach { validator ->
+            val typeToValidate = validator.getType()
             val typeName = typeToValidate.simpleName
 
             val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+
+            group.getAllPropertyKeys()
+                .forEach { propertyKey ->
+                    traverser.findReferences(worldType, propertyKey).forEach { ref ->
+                        traverser.getStructValuesAt(ref, typeToValidate)
+                            .map { value ->
+                                validator.validate(validator.getType().cast(value))
+                            }
+                }
+
         }
         return ValidationResult.ok()
     }
