@@ -139,7 +139,3 @@ fun diffWorldTypeInfo(given: WorldTypeInfo, expectedInit: ExpectedWorldTypeInfo.
 
     return result.joinToString("\n")
 }
-fun diffStructPath(given: com.github.bratek20.architecture.structs.api.StructPath, expected: com.github.bratek20.architecture.structs.api.StructPath, path: String = ""): String {
-    if (given != expected) { return "${path}value ${given} != ${expected}" }
-    return ""
-}

@@ -83,6 +83,3 @@ fun worldTypeInfo(init: WorldTypeInfoDef.() -> Unit = {}): WorldTypeInfo {
         kind = WorldTypeKind.valueOf(def.kind),
     )
 }
-fun structPath(value: com.github.bratek20.architecture.structs.api.StructPath?): com.github.bratek20.architecture.structs.api.StructPath {
-    return value!!
-}
