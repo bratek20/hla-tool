@@ -90,7 +90,7 @@ class TypesWorldApiLogic: TypesWorldApi {
 
         if (kind == WorldTypeKind.ClassType) {
             return getClassType(target).getFields().flatMap { field ->
-                getAllReferencesOf(searchFor, field.getType()).map {
+                getAllReferencesOf(field.getType(), searchFor).map {
                     toStructPath("${field.getName()}/$it")
                 }
             }
