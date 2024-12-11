@@ -47,7 +47,7 @@ private class WorldTypeTraverser(
         if (kind == WorldTypeKind.ClassType) {
             return typesWorldApi.getClassType(target).getFields().flatMap { field ->
                 findAllReferencesOf(searchFor, field.getType()).map {
-                    StructPath("${field.getName()}/$it")
+                    toStructPath("${field.getName()}/$it")
                 }
             }
         }
@@ -55,12 +55,19 @@ private class WorldTypeTraverser(
         if (kind == WorldTypeKind.ConcreteWrapper) {
             return typesWorldApi.getConcreteWrapper(target).getWrappedType().let { wrappedType ->
                 findAllReferencesOf(wrappedType, searchFor).map {
-                    StructPath("[*]/$it")
+                    toStructPath("[*]/$it")
                 }
             }
         }
 
         return emptyList()
+    }
+
+    private fun toStructPath(path: String): StructPath {
+        if (path.endsWith("/")) {
+            return StructPath(path.dropLast(1))
+        }
+        return StructPath(path)
     }
 }
 
@@ -218,22 +225,33 @@ class HlaValidatorLogic(
 
     private fun executeTypeValidators(properties: Properties, group: ModuleGroup): ValidationResult {
         val traverser = createTraverser(properties)
-
-        return typeValidators.map { validator ->
-            val typeToValidate = validator.getType()
-            val typeName = typeToValidate.simpleName
-
-            val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
-
-            group.getAllPropertyKeys()
-                .flatMap { propertyKey ->
-                    traverser.findReferences(worldType, propertyKey).flatMap { ref ->
-                        traverser.getStructValuesAt(ref, typeToValidate).map { value ->
-                            val castValue = typeToValidate.cast(value)
-                            validator.validate(castValue)
-                        }
-                    }
-                }
-        }.flatten().fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+        return ValidationResult.ok()
+//        return typeValidators.flatMap { validator ->
+//            val typeToValidate = validator.getType()
+//            val typeName = typeToValidate.simpleName
+//
+//            // Fetch the type information from the world API
+//            val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+//
+//            // Iterate over all property keys in the group
+//            group.getAllPropertyKeys().flatMap { propertyKey ->
+//                // Find references for the current property key
+//                traverser.findReferences(worldType, propertyKey).flatMap { ref ->
+//                    // Extract values of the specific type
+//                    traverser.getStructValuesAt(ref, typeToValidate).mapNotNull { value ->
+//                        try {
+//                            // Cast the value to the expected type
+//                            val castValue = typeToValidate.cast(value)
+//                            // Validate the cast value
+//                            (validator as TypeValidator<Any>).validate(castValue!!)
+//                        } catch (e: ClassCastException) {
+//                            logger.warn("Failed to cast value $value to type ${typeToValidate.simpleName}: ${e.message}")
+//                            null // Return null to skip this invalid value
+//                        }
+//                    }
+//                }
+//            }
+//        }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
     }
+
 }

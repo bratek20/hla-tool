@@ -4,11 +4,9 @@ import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.context.stableContextBuilder
 import com.github.bratek20.architecture.properties.PropertiesMock
 import com.github.bratek20.architecture.properties.PropertiesMocks
-import com.github.bratek20.architecture.properties.api.Properties
 import com.github.bratek20.architecture.structs.api.Struct
 import com.github.bratek20.architecture.structs.api.struct
 import com.github.bratek20.hla.facade.HlaFacadeTest
-import com.github.bratek20.hla.facade.api.HlaFacade
 import com.github.bratek20.hla.facade.fixtures.profileName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
 import com.github.bratek20.hla.validations.api.*
@@ -17,9 +15,7 @@ import com.github.bratek20.hla.validations.fixtures.assertValidationResult
 import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
 import com.github.bratek20.utils.directory.fixtures.path
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 //SomePropertyEntry
@@ -59,7 +55,7 @@ data class SomeReferencingProperty(
     }
 }
 
-class SomeReferencingPropertyValidator: TypeValidator<SomeReferencingProperty> {
+class SomeReferencingPropertyFailingValidator: TypeValidator<SomeReferencingProperty> {
     override fun getType() = SomeReferencingProperty::class.java
 
     override fun validate(property: SomeReferencingProperty): ValidationResult {
@@ -67,6 +63,14 @@ class SomeReferencingPropertyValidator: TypeValidator<SomeReferencingProperty> {
             "Error for ${property.getReferenceId()}",
             "Other error for ${property.getReferenceId()}"
         )
+    }
+}
+
+class SomeReferencingPropertyOkValidator: TypeValidator<SomeReferencingProperty> {
+    override fun getType() = SomeReferencingProperty::class.java
+
+    override fun validate(property: SomeReferencingProperty): ValidationResult {
+        return ValidationResult.ok()
     }
 }
 
@@ -91,11 +95,6 @@ class ValidationsImplTest {
     private lateinit var loggerMock: LoggerMock
 
     private lateinit var propertiesMock: PropertiesMock
-
-    @BeforeEach
-    fun beforeEach() {
-        setup()
-    }
 
     class SetupArgs(
         var typeValidatorsToInject: Class<out TypeValidator<*>>? = null
@@ -127,6 +126,10 @@ class ValidationsImplTest {
 
     @Test
     fun `should pass + log info`() {
+        setup {
+            typeValidatorsToInject = SomeReferencingPropertyOkValidator::class.java
+        }
+
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
             struct {
                 "id" to "1"
@@ -156,12 +159,20 @@ class ValidationsImplTest {
 
             "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
 
+            "Found reference for 'SomeId' at '\"otherProperty\"/name/value'",
+            "Values for '\"otherProperty\"/name/value': []",
+            "Found reference for 'SomeId' at '\"otherProperties\"/[*]/name/value'",
+            "Values for '\"otherProperties\"/[*]/name/value': []",
+            "Found reference for 'SomeId' at '\"SomeKey\"/other/value/name'",
+            "Found reference for 'SomeId' at '\"SomeKey\"/goodName/value'",
+            "Values for '\"SomeKey\"/other/value/name': []",
+            "Values for '\"SomeKey\"/goodName/value': []",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
-
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]"
         )
+
 
         assertValidationResult(result) {
             ok = true
@@ -170,6 +181,8 @@ class ValidationsImplTest {
 
     @Test
     fun `should fail if source ids not unique or other properties reference with wrong value`() {
+        setup()
+
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
             struct {
                 "id" to "1"
@@ -204,7 +217,7 @@ class ValidationsImplTest {
     @Test
     fun `should fail based on type validators`() {
         setup {
-            typeValidatorsToInject = SomeReferencingPropertyValidator::class.java
+            typeValidatorsToInject = SomeReferencingPropertyFailingValidator::class.java
         }
 
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
