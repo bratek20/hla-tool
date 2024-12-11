@@ -200,11 +200,14 @@ class HlaValidatorLogic(
                 // Find references for the current property key
                 traverser.findReferences(worldType, propertyKey).flatMap { ref ->
                     // Extract values of the specific type
-//                    traverser.getStructValuesAt(ref, typeToValidate).map { value ->
-//                        val castValue = typeToValidate.cast(value)
-//                        (validator as TypeValidator<Any>).validate(castValue!!)
-//                    }
-                    listOf(ValidationResult.ok())
+                    traverser.getStructValuesAt(ref, typeToValidate).map { value ->
+                        val castValue = typeToValidate.cast(value)
+                        (validator as TypeValidator<Any>).validate(castValue!!)
+                    }.map {
+                        ValidationResult.createFor(it.getErrors().map {
+                            "Type validator failed at '$ref', message: $it"
+                        })
+                    }
                 }
             }
         }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }

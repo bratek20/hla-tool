@@ -237,8 +237,8 @@ class ValidationsImplTest {
         assertValidationResult(result) {
             ok = false
             errors = listOf(
-                "Type validator failed at '\"SomeReferencingPropertyObject\"', message: Error for 1",
-                "Type validator failed at '\"SomeReferencingPropertyObject\"', message: Other error for 1",
+                "Type validator failed at '\"SomeReferencingPropertyObject\"/', message: Error for 1",
+                "Type validator failed at '\"SomeReferencingPropertyObject\"/', message: Other error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[*]', message: Error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[*]', message: Other error for 1",
             )
