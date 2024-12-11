@@ -2,6 +2,7 @@ package com.github.bratek20.hla.validations.impl
 
 import com.github.bratek20.architecture.properties.api.Properties
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
+import com.github.bratek20.architecture.structs.api.AnyStruct
 import com.github.bratek20.architecture.structs.api.StructPath
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
@@ -69,17 +70,20 @@ private class PropertiesTraverser(
     private val logger: Logger
 ) {
     fun getPrimitiveValuesAt(path: PropertyValuePath): List<String> {
-        val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
-        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.asPrimitive().value }
+        return getValuesAt(path).map { it.asPrimitive().value }
     }
 
     fun getStructValuesAt(path: PropertyValuePath, type: Class<*>): List<*> {
-        val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
-        val rawStructs = StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.asObject() }
+        val rawStructs = getValuesAt(path).map { it.asObject() }
         val serializer = SerializationFactory.createSerializer()
         return rawStructs.map {
             serializer.fromStruct(it, type)
         }
+    }
+
+    private fun getValuesAt(path: PropertyValuePath): List<AnyStruct> {
+        val propertyValue = properties.getAll().firstOrNull { it.keyName == path.keyName }?.value ?: return emptyList()
+        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath)
     }
 
     fun findReferences(searchFor: WorldType, propertyKey: KeyDefinition): List<PropertyValuePath> {
@@ -214,22 +218,22 @@ class HlaValidatorLogic(
 
     private fun executeTypeValidators(properties: Properties, group: ModuleGroup): ValidationResult {
         val traverser = createTraverser(properties)
-        typeValidators.forEach { validator ->
+
+        return typeValidators.map { validator ->
             val typeToValidate = validator.getType()
             val typeName = typeToValidate.simpleName
 
             val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
 
             group.getAllPropertyKeys()
-                .forEach { propertyKey ->
-                    traverser.findReferences(worldType, propertyKey).forEach { ref ->
-                        traverser.getStructValuesAt(ref, typeToValidate)
-                            .map { value ->
-                                validator.validate(validator.getType().cast(value))
-                            }
+                .flatMap { propertyKey ->
+                    traverser.findReferences(worldType, propertyKey).flatMap { ref ->
+                        traverser.getStructValuesAt(ref, typeToValidate).map { value ->
+                            val castValue = typeToValidate.cast(value)
+                            validator.validate(castValue)
+                        }
+                    }
                 }
-
-        }
-        return ValidationResult.ok()
+        }.flatten().fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
     }
 }
