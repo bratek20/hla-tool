@@ -21,4 +21,4 @@ dependencies {
 }
 
 group = "com.github.bratek20.hla"
-version = "1.0.1"
+version = "1.0.2"

@@ -1,7 +1,7 @@
 package com.github.bratek20.hla.validations.impl
 
 import com.github.bratek20.architecture.properties.api.Properties
-import com.github.bratek20.architecture.properties.api.Property
+import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.architecture.structs.api.AnyStruct
 import com.github.bratek20.architecture.structs.api.StructPath
 import com.github.bratek20.architecture.structs.context.StructsFactory
@@ -19,10 +19,12 @@ import com.github.bratek20.hla.queries.api.getAllPropertyKeys
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeKind
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.validations.api.*
 import com.github.bratek20.logs.api.Logger
 
 import com.github.bratek20.utils.directory.api.*
+import java.lang.reflect.ParameterizedType
 
 data class PropertyValuePath(
     val keyName: String,
@@ -33,12 +35,45 @@ data class PropertyValuePath(
     }
 }
 
+private class PropertiesTraverser(
+    private val properties: Properties,
+    private val typesWorldApi: TypesWorldApi,
+    private val logger: Logger
+) {
+    fun getPrimitiveValuesAt(path: PropertyValuePath): List<String> {
+        return getValuesAt(path).map { it.asPrimitive().value }
+    }
+
+    fun getStructValuesAt(path: PropertyValuePath, type: Class<*>): List<*> {
+        val rawStructs = getValuesAt(path).map { it.asObject() }
+        val serializer = SerializationFactory.createSerializer()
+        return rawStructs.map {
+            serializer.fromStruct(it, type)
+        }
+    }
+
+    private fun getValuesAt(path: PropertyValuePath): List<AnyStruct> {
+        val propertyValue = properties.getAll().firstOrNull { it.keyName == path.keyName }?.value ?: return emptyList()
+        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath)
+    }
+
+    fun findReferences(searchFor: WorldType, propertyKey: KeyDefinition): List<PropertyValuePath> {
+        val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
+        val referencePaths = typesWorldApi.getAllReferencesOf(propertyType, searchFor)
+
+        return referencePaths.map { referencePath ->
+            val propertyValuePath = PropertyValuePath(propertyKey.getName(), referencePath)
+            logger.info("Found reference for '${searchFor.getName()}' at '$propertyValuePath'")
+            propertyValuePath
+        }
+    }
+}
+
 private class IdSourceValidator(
     private val info: IdSourceInfo,
     private val logger: Logger,
-    private val typesWorldApi: TypesWorldApi,
     private val group: ModuleGroup,
-    private val properties: Properties
+    private val traverser: PropertiesTraverser
 ) {
     private val idSourcePath: PropertyValuePath
 
@@ -55,7 +90,9 @@ private class IdSourceValidator(
     fun validate(): ValidationResult {
         val allowedValues = getAllowedValues()
 
-        return group.getAllPropertyKeys()
+        val allowedValuesValidation = validateAllowedValuesUnique(allowedValues)
+
+        val propertiesValidation = group.getAllPropertyKeys()
             .filter {
                 info.getParent().getName().value != it.getType().getName()
             }
@@ -63,13 +100,22 @@ private class IdSourceValidator(
                 validateProperty(propertyKey, allowedValues)
             }
             .reduce(ValidationResult::merge)
+
+        return allowedValuesValidation.merge(propertiesValidation)
+    }
+
+    private fun validateAllowedValuesUnique(allowedValues: List<String>): ValidationResult {
+        val countPerValue = allowedValues.groupingBy { it }.eachCount()
+        val errors = countPerValue.filter { it.value > 1 }
+            .map { "Value '${it.key}' at '${idSourcePath}' is not unique" }
+        return ValidationResult.createFor(errors)
     }
 
     private fun validateProperty(propertyKey: KeyDefinition, allowedValues: List<String>): ValidationResult {
         val errors = mutableListOf<String>()
-        val ref = findReference(info.getType(), propertyKey)
-        ref?.let {
-            val values = getPropertyValuesAt(it)
+        val refs = traverser.findReferences(info.getType(), propertyKey)
+        refs.forEach {
+            val values = traverser.getPrimitiveValuesAt(it)
             logger.info("Values for '$it': $values")
 
             for (value in values) {
@@ -79,63 +125,14 @@ private class IdSourceValidator(
             }
         }
 
-        return createValidationResult(errors)
+        return ValidationResult.createFor(errors)
     }
 
     private fun getAllowedValues(): List<String> {
-        val values = getPropertyValuesAt(idSourcePath)
+        val values = traverser.getPrimitiveValuesAt(idSourcePath)
         logger.info("Allowed values for '${info.getType().getName()}' from source '$idSourcePath': $values")
         return values
     }
-
-    private fun getPropertyValuesAt(path: PropertyValuePath): List<String> {
-        val propertyValue = properties.getAll().first { it.keyName == path.keyName }.value
-        return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath).map { it.value }
-    }
-
-    private fun findReference(idSourceType: WorldType, propertyKey: KeyDefinition): PropertyValuePath? {
-        val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
-        val referencePath = findReferencePath(idSourceType, propertyType)
-        if (referencePath != null) {
-            val propertyValuePath = PropertyValuePath(propertyKey.getName(), StructPath(referencePath.dropLast(1)))
-            logger.info("Found reference for '${idSourceType.getName()}' at '$propertyValuePath'")
-            return propertyValuePath
-        }
-        return null
-    }
-
-    private fun findReferencePath(idSourceType: WorldType, currentType: WorldType): String? {
-        if (currentType == idSourceType) {
-            return ""
-        }
-        val kind = typesWorldApi.getTypeInfo(currentType).getKind()
-        if (kind == WorldTypeKind.ClassType) {
-            typesWorldApi.getClassType(currentType).getFields().firstOrNull {
-                findReferencePath(idSourceType, it.getType()) != null
-            }?.let {
-                return "${it.getName()}/${findReferencePath(idSourceType, it.getType())}"
-            }
-        }
-        if (kind == WorldTypeKind.ConcreteWrapper) {
-            typesWorldApi.getConcreteWrapper(currentType).getWrappedType().let {
-                findReferencePath(idSourceType, it)?.let {
-                    return "[*]/$it"
-                }
-            }
-        }
-        return null
-    }
-}
-
-fun ValidationResult.merge(other: ValidationResult): ValidationResult {
-    return ValidationResult(
-        ok = this.getOk() && other.getOk(),
-        errors = this.getErrors() + other.getErrors()
-    )
-}
-
-fun createValidationResult(errors: List<String>): ValidationResult {
-    return ValidationResult(errors.isEmpty(), errors)
 }
 
 class HlaValidatorLogic(
@@ -143,13 +140,21 @@ class HlaValidatorLogic(
     private val hlaTypesWorldApi: HlaTypesWorldApi,
     private val extraInfo: HlaTypesExtraInfo,
     private val logger: Logger,
-    private val typesWorldApi: TypesWorldApi
+    private val typesWorldApi: TypesWorldApi,
+    private val typeValidators: Set<TypeValidator<*>>
 ): HlaValidator {
     override fun validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult {
         val group = parser.parse(hlaFolderPath, profileName)
 
         hlaTypesWorldApi.populate(group)
 
+        val idSourceValidationResult = validateIdSources(group, properties)
+        val typeValidatorsResult = executeTypeValidators(properties, group)
+
+        return idSourceValidationResult.merge(typeValidatorsResult)
+    }
+
+    private fun validateIdSources(group: ModuleGroup, properties: Properties): ValidationResult {
         val sourceInfos = extraInfo.getAllIdSourceInfo()
 
         logger.info("Source infos: $sourceInfos")
@@ -162,12 +167,55 @@ class HlaValidatorLogic(
             IdSourceValidator(
                 info = it,
                 logger = logger,
-                typesWorldApi = typesWorldApi,
                 group = group,
-                properties = properties
+                traverser = PropertiesTraverser(
+                    properties = properties,
+                    typesWorldApi = typesWorldApi,
+                    logger = logger
+                )
             )
         }
 
         return sourceValidators.map { it.validate() }.reduce(ValidationResult::merge)
     }
+
+    private fun createTraverser(properties: Properties): PropertiesTraverser {
+        return PropertiesTraverser(
+            properties = properties,
+            typesWorldApi = typesWorldApi,
+            logger = logger
+        )
+    }
+
+    private fun executeTypeValidators(properties: Properties, group: ModuleGroup): ValidationResult {
+        val traverser = createTraverser(properties)
+        return typeValidators.flatMap { validator ->
+            val typeToValidate =  (validator::class.java.genericInterfaces
+                .first { it is ParameterizedType } as ParameterizedType)
+                .actualTypeArguments[0]
+                .let { it as Class<*> }
+
+            val typeName = typeToValidate.simpleName
+            logger.info("Validating type '$typeName'")
+            // Fetch the type information from the world API
+            val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+
+            // Iterate over all property keys in the group
+            group.getAllPropertyKeys().flatMap { propertyKey ->
+                // Find references for the current property key
+                traverser.findReferences(worldType, propertyKey).flatMap { ref ->
+                    // Extract values of the specific type
+                    traverser.getStructValuesAt(ref, typeToValidate).map { value ->
+                        val castValue = typeToValidate.cast(value)
+                        (validator as TypeValidator<Any>).validate(castValue!!)
+                    }.map {
+                        ValidationResult.createFor(it.getErrors().map {
+                            "Type validator failed at '$ref', message: $it"
+                        })
+                    }
+                }
+            }
+        }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+    }
+
 }

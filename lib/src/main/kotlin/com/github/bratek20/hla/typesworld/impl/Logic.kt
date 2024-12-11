@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.typesworld.impl
 
+import com.github.bratek20.architecture.structs.api.StructPath
 import com.github.bratek20.hla.typesworld.api.*
 
 fun WorldType.getFullName(): String {
@@ -78,6 +79,39 @@ class TypesWorldApiLogic: TypesWorldApi {
 
     override fun getAllTypes(): List<WorldType> {
         return allTypes.toList()
+    }
+
+    override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
+        if (target == searchFor) {
+            return listOf(StructPath(""))
+        }
+
+        val kind = getTypeInfo(target).getKind()
+
+        if (kind == WorldTypeKind.ClassType) {
+            return getClassType(target).getFields().flatMap { field ->
+                getAllReferencesOf(field.getType(), searchFor).map {
+                    toStructPath("${field.getName()}/$it")
+                }
+            }
+        }
+
+        if (kind == WorldTypeKind.ConcreteWrapper) {
+            return getConcreteWrapper(target).getWrappedType().let { wrappedType ->
+                getAllReferencesOf(wrappedType, searchFor).map {
+                    toStructPath("[*]/$it")
+                }
+            }
+        }
+
+        return emptyList()
+    }
+
+    private fun toStructPath(path: String): StructPath {
+        if (path.endsWith("/")) {
+            return StructPath(path.dropLast(1))
+        }
+        return StructPath(path)
     }
 
     override fun addPrimitiveType(type: WorldType) {
