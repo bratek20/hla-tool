@@ -56,8 +56,6 @@ data class SomeReferencingProperty(
 }
 
 class SomeReferencingPropertyFailingValidator: TypeValidator<SomeReferencingProperty> {
-    override fun getType() = SomeReferencingProperty::class.java
-
     override fun validate(property: SomeReferencingProperty): ValidationResult {
         return ValidationResult.createFor(
             "Error for ${property.getReferenceId()}",
@@ -67,8 +65,6 @@ class SomeReferencingPropertyFailingValidator: TypeValidator<SomeReferencingProp
 }
 
 class SomeReferencingPropertyOkValidator: TypeValidator<SomeReferencingProperty> {
-    override fun getType() = SomeReferencingProperty::class.java
-
     override fun validate(property: SomeReferencingProperty): ValidationResult {
         return ValidationResult.ok()
     }

@@ -24,6 +24,7 @@ import com.github.bratek20.hla.validations.api.*
 import com.github.bratek20.logs.api.Logger
 
 import com.github.bratek20.utils.directory.api.*
+import java.lang.reflect.ParameterizedType
 
 data class PropertyValuePath(
     val keyName: String,
@@ -189,7 +190,11 @@ class HlaValidatorLogic(
     private fun executeTypeValidators(properties: Properties, group: ModuleGroup): ValidationResult {
         val traverser = createTraverser(properties)
         return typeValidators.flatMap { validator ->
-            val typeToValidate = validator.getType()
+            val typeToValidate =  (validator::class.java.genericInterfaces
+                .first { it is ParameterizedType } as ParameterizedType)
+                .actualTypeArguments[0]
+                .let { it as Class<*> }
+
             val typeName = typeToValidate.simpleName
             logger.info("Validating type '$typeName'")
             // Fetch the type information from the world API
