@@ -34,43 +34,6 @@ data class PropertyValuePath(
     }
 }
 
-private class WorldTypeTraverser(
-    private val typesWorldApi: TypesWorldApi
-) {
-    fun findAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
-        if (target == searchFor) {
-            return listOf(StructPath(""))
-        }
-
-        val kind = typesWorldApi.getTypeInfo(target).getKind()
-
-        if (kind == WorldTypeKind.ClassType) {
-            return typesWorldApi.getClassType(target).getFields().flatMap { field ->
-                findAllReferencesOf(searchFor, field.getType()).map {
-                    toStructPath("${field.getName()}/$it")
-                }
-            }
-        }
-
-        if (kind == WorldTypeKind.ConcreteWrapper) {
-            return typesWorldApi.getConcreteWrapper(target).getWrappedType().let { wrappedType ->
-                findAllReferencesOf(wrappedType, searchFor).map {
-                    toStructPath("[*]/$it")
-                }
-            }
-        }
-
-        return emptyList()
-    }
-
-    private fun toStructPath(path: String): StructPath {
-        if (path.endsWith("/")) {
-            return StructPath(path.dropLast(1))
-        }
-        return StructPath(path)
-    }
-}
-
 private class PropertiesTraverser(
     private val properties: Properties,
     private val typesWorldApi: TypesWorldApi,
@@ -95,7 +58,7 @@ private class PropertiesTraverser(
 
     fun findReferences(searchFor: WorldType, propertyKey: KeyDefinition): List<PropertyValuePath> {
         val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
-        val referencePaths = WorldTypeTraverser(typesWorldApi).findAllReferencesOf(propertyType, searchFor)
+        val referencePaths = typesWorldApi.getAllReferencesOf(propertyType, searchFor)
 
         return referencePaths.map { referencePath ->
             val propertyValuePath = PropertyValuePath(propertyKey.getName(), referencePath)
@@ -225,33 +188,26 @@ class HlaValidatorLogic(
 
     private fun executeTypeValidators(properties: Properties, group: ModuleGroup): ValidationResult {
         val traverser = createTraverser(properties)
-        return ValidationResult.ok()
-//        return typeValidators.flatMap { validator ->
-//            val typeToValidate = validator.getType()
-//            val typeName = typeToValidate.simpleName
-//
-//            // Fetch the type information from the world API
-//            val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
-//
-//            // Iterate over all property keys in the group
-//            group.getAllPropertyKeys().flatMap { propertyKey ->
-//                // Find references for the current property key
-//                traverser.findReferences(worldType, propertyKey).flatMap { ref ->
-//                    // Extract values of the specific type
-//                    traverser.getStructValuesAt(ref, typeToValidate).mapNotNull { value ->
-//                        try {
-//                            // Cast the value to the expected type
-//                            val castValue = typeToValidate.cast(value)
-//                            // Validate the cast value
-//                            (validator as TypeValidator<Any>).validate(castValue!!)
-//                        } catch (e: ClassCastException) {
-//                            logger.warn("Failed to cast value $value to type ${typeToValidate.simpleName}: ${e.message}")
-//                            null // Return null to skip this invalid value
-//                        }
+        return typeValidators.flatMap { validator ->
+            val typeToValidate = validator.getType()
+            val typeName = typeToValidate.simpleName
+            logger.info("Validating type '$typeName'")
+            // Fetch the type information from the world API
+            val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+
+            // Iterate over all property keys in the group
+            group.getAllPropertyKeys().flatMap { propertyKey ->
+                // Find references for the current property key
+                traverser.findReferences(worldType, propertyKey).flatMap { ref ->
+                    // Extract values of the specific type
+//                    traverser.getStructValuesAt(ref, typeToValidate).map { value ->
+//                        val castValue = typeToValidate.cast(value)
+//                        (validator as TypeValidator<Any>).validate(castValue!!)
 //                    }
-//                }
-//            }
-//        }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+                    listOf(ValidationResult.ok())
+                }
+            }
+        }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
     }
 
 }

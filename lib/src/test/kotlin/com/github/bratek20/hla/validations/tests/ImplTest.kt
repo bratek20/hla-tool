@@ -170,7 +170,15 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
-            "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]"
+            "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]",
+
+            "Validating type 'SomeReferencingProperty'",
+            "Found reference for 'SomeReferencingProperty' at '\"SomeKey\"/other/referenceId/name/value'",
+            "Found reference for 'SomeReferencingProperty' at '\"SomeKey\"/range/referenceId/[*]/from/value/value'",
+            "Found reference for 'SomeReferencingProperty' at '\"SomeKey\"/range/referenceId/[*]/to/value/value'",
+            "Found reference for 'SomeReferencingProperty' at '\"SomeSourcePropertyList\"/[*]/id/referenceId'",
+            "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyObject\"/'",
+            "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyList\"/[*]'"
         )
 
 
