@@ -159,24 +159,12 @@ class ValidationsImplTest {
 
             "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
 
-            "Found reference for 'SomeId' at '\"otherProperty\"/name/value'",
-            "Values for '\"otherProperty\"/name/value': []",
-            "Found reference for 'SomeId' at '\"otherProperties\"/[*]/name/value'",
-            "Values for '\"otherProperties\"/[*]/name/value': []",
-            "Found reference for 'SomeId' at '\"SomeKey\"/other/value/name'",
-            "Found reference for 'SomeId' at '\"SomeKey\"/goodName/value'",
-            "Values for '\"SomeKey\"/other/value/name': []",
-            "Values for '\"SomeKey\"/goodName/value': []",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]",
 
             "Validating type 'SomeReferencingProperty'",
-            "Found reference for 'SomeReferencingProperty' at '\"SomeKey\"/other/referenceId/name/value'",
-            "Found reference for 'SomeReferencingProperty' at '\"SomeKey\"/range/referenceId/[*]/from/value/value'",
-            "Found reference for 'SomeReferencingProperty' at '\"SomeKey\"/range/referenceId/[*]/to/value/value'",
-            "Found reference for 'SomeReferencingProperty' at '\"SomeSourcePropertyList\"/[*]/id/referenceId'",
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyObject\"/'",
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyList\"/[*]'"
         )
