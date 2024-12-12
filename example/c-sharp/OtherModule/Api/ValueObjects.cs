@@ -6,7 +6,7 @@ using System.Linq;
 using B20.Ext;
 
 namespace OtherModule.Api {
-    public class OtherId {
+    public class OtherId: ValueObject {
         public int Value { get; }
 
         public OtherId(
@@ -14,20 +14,9 @@ namespace OtherModule.Api {
         ) {
             Value = value;
         }
-
-        public override bool Equals(object? obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Value == ((OtherId)obj).Value;
-        }
-
-        public override int GetHashCode() {
-            return Value.GetHashCode();
-        }
     }
 
-    public class OtherProperty {
+    public class OtherProperty: ValueObject {
         readonly int id;
         readonly string name;
 
@@ -49,7 +38,7 @@ namespace OtherModule.Api {
         }
     }
 
-    public class OtherClass {
+    public class OtherClass: ValueObject {
         readonly int id;
         readonly int amount;
 

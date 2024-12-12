@@ -8,7 +8,7 @@ using OtherModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Api {
-    public class SomeId {
+    public class SomeId: ValueObject {
         public string Value { get; }
 
         public SomeId(
@@ -16,20 +16,9 @@ namespace SomeModule.Api {
         ) {
             Value = value;
         }
-
-        public override bool Equals(object? obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Value == ((SomeId)obj).Value;
-        }
-
-        public override int GetHashCode() {
-            return Value.GetHashCode();
-        }
     }
 
-    public class SomeIntWrapper {
+    public class SomeIntWrapper: ValueObject {
         public int Value { get; }
 
         public SomeIntWrapper(
@@ -37,20 +26,9 @@ namespace SomeModule.Api {
         ) {
             Value = value;
         }
-
-        public override bool Equals(object? obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Value == ((SomeIntWrapper)obj).Value;
-        }
-
-        public override int GetHashCode() {
-            return Value.GetHashCode();
-        }
     }
 
-    public class SomeId2 {
+    public class SomeId2: ValueObject {
         public int Value { get; }
 
         public SomeId2(
@@ -58,20 +36,9 @@ namespace SomeModule.Api {
         ) {
             Value = value;
         }
-
-        public override bool Equals(object? obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Value == ((SomeId2)obj).Value;
-        }
-
-        public override int GetHashCode() {
-            return Value.GetHashCode();
-        }
     }
 
-    public class SomeClass {
+    public class SomeClass: ValueObject {
         readonly string id;
         readonly int amount;
 
@@ -93,7 +60,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeClass2 {
+    public class SomeClass2: ValueObject {
         readonly string id;
         readonly List<string> names;
         readonly List<string> ids;
@@ -127,7 +94,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeClass3 {
+    public class SomeClass3: ValueObject {
         readonly SomeClass2 class2Object;
         readonly string someEnum;
         readonly List<SomeClass2> class2List;
@@ -155,7 +122,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeClass4 {
+    public class SomeClass4: ValueObject {
         readonly int otherId;
         readonly OtherClass otherClass;
         readonly List<int> otherIdList;
@@ -189,7 +156,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeClass5 {
+    public class SomeClass5: ValueObject {
         readonly string date;
         readonly SerializedDateRange dateRange;
         readonly SerializedDateRangeWrapper dateRangeWrapper;
@@ -229,7 +196,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeClass6 {
+    public class SomeClass6: ValueObject {
         readonly SomeClass? someClassOpt;
         readonly string? optString;
         readonly List<SomeClass2> class2List;
@@ -263,7 +230,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class ClassHavingOptList {
+    public class ClassHavingOptList: ValueObject {
         readonly List<SomeClass>? optList;
 
         public ClassHavingOptList(
@@ -279,7 +246,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class ClassHavingOptSimpleVo {
+    public class ClassHavingOptSimpleVo: ValueObject {
         readonly string? optSimpleVo;
 
         public ClassHavingOptSimpleVo(
@@ -295,7 +262,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class RecordClass {
+    public class RecordClass: ValueObject {
         readonly string id;
         readonly int amount;
 
@@ -317,7 +284,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class ClassWithOptExamples {
+    public class ClassWithOptExamples: ValueObject {
         readonly int? optInt;
         readonly int? optIntWrapper;
 
@@ -339,7 +306,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class ClassWithEnumList {
+    public class ClassWithEnumList: ValueObject {
         readonly List<string> enumList;
 
         public ClassWithEnumList(
@@ -355,7 +322,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeQueryInput {
+    public class SomeQueryInput: ValueObject {
         readonly string id;
         readonly int amount;
 
@@ -377,7 +344,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeHandlerInput {
+    public class SomeHandlerInput: ValueObject {
         readonly string id;
         readonly int amount;
 
@@ -399,7 +366,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeHandlerOutput {
+    public class SomeHandlerOutput: ValueObject {
         readonly string id;
         readonly int amount;
 
@@ -421,7 +388,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeProperty {
+    public class SomeProperty: ValueObject {
         readonly OtherProperty other;
         readonly int? id2;
         readonly SerializedDateRange? range;
@@ -473,7 +440,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeProperty2 {
+    public class SomeProperty2: ValueObject {
         readonly string value;
         readonly object custom;
         readonly string someEnum;
@@ -507,7 +474,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomePropertyEntry {
+    public class SomePropertyEntry: ValueObject {
         readonly string id;
 
         public SomePropertyEntry(
@@ -523,7 +490,7 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeReferencingProperty {
+    public class SomeReferencingProperty: ValueObject {
         readonly string referenceId;
 
         public SomeReferencingProperty(
