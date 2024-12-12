@@ -3,7 +3,9 @@ package com.github.bratek20.hla.validations.impl
 import com.github.bratek20.architecture.properties.api.Properties
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.architecture.structs.api.AnyStruct
+import com.github.bratek20.architecture.structs.api.StructConversionException
 import com.github.bratek20.architecture.structs.api.StructPath
+import com.github.bratek20.architecture.structs.api.struct
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.facade.api.ProfileName
@@ -18,7 +20,6 @@ import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.getAllPropertyKeys
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
-import com.github.bratek20.hla.typesworld.api.WorldTypeKind
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.validations.api.*
 import com.github.bratek20.logs.api.Logger
@@ -44,8 +45,23 @@ private class PropertiesTraverser(
         return getValuesAt(path).map { it.asPrimitive().value }
     }
 
-    fun getStructValuesAt(path: PropertyValuePath, type: Class<*>): List<*> {
+    fun getStructValuesAtAsObject(path: PropertyValuePath, type: Class<*>): List<*> {
         val rawStructs = getValuesAt(path).map { it.asObject() }
+        val serializer = SerializationFactory.createSerializer()
+        return rawStructs.map {
+            serializer.fromStruct(it, type)
+        }
+    }
+
+    fun getPrimitiveValuesAtAsSimpleVO(path: PropertyValuePath, type: Class<*>): List<*> {
+        val rawStructs = getValuesAt(path)
+            .map { it.asPrimitive() }
+            .map {
+                struct {
+                    "value" to it.value
+                }
+            }
+
         val serializer = SerializationFactory.createSerializer()
         return rawStructs.map {
             serializer.fromStruct(it, type)
@@ -203,18 +219,32 @@ class HlaValidatorLogic(
             // Iterate over all property keys in the group
             group.getAllPropertyKeys().flatMap { propertyKey ->
                 // Find references for the current property key
-                traverser.findReferences(worldType, propertyKey).flatMap { ref ->
-                    // Extract values of the specific type
-                    traverser.getStructValuesAt(ref, typeToValidate).map { value ->
-                        val castValue = typeToValidate.cast(value)
-                        (validator as TypeValidator<Any>).validate(castValue!!)
-                    }.map {
-                        ValidationResult.createFor(it.getErrors().map {
-                            "Type validator failed at '$ref', message: $it"
-                        })
-                    }
+                traverser.findReferences(worldType, propertyKey).map { ref ->
+                    validateTypeForRef(traverser, typeToValidate, ref, validator)
                 }
             }
+        }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+    }
+
+    private fun validateTypeForRef(
+        traverser: PropertiesTraverser,
+        typeToValidate: Class<*>,
+        ref: PropertyValuePath,
+        validator: TypeValidator<*>
+    ): ValidationResult {
+        val objectValues = try {
+            traverser.getStructValuesAtAsObject(ref, typeToValidate)
+        } catch (e: StructConversionException) {
+            traverser.getPrimitiveValuesAtAsSimpleVO(ref, typeToValidate)
+        }
+
+        return objectValues.map { value ->
+            val castValue = typeToValidate.cast(value)
+            (validator as TypeValidator<Any>).validate(castValue!!)
+        }.map {
+            ValidationResult.createFor(it.getErrors().map {
+                "Type validator failed at '$ref', message: $it"
+            })
         }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
     }
 

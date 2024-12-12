@@ -70,6 +70,20 @@ class SomeReferencingPropertyOkValidator: TypeValidator<SomeReferencingProperty>
     }
 }
 
+class SomeIdFailValidator: TypeValidator<SomeId> {
+    override fun validate(property: SomeId): ValidationResult {
+        return ValidationResult.createFor(
+            "Error for ${property.value}"
+        )
+    }
+}
+
+class SomeIdOkValidator: TypeValidator<SomeId> {
+    override fun validate(property: SomeId): ValidationResult {
+        return ValidationResult.ok()
+    }
+}
+
 val SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeSourcePropertyList",
     Struct::class
@@ -93,7 +107,7 @@ class ValidationsImplTest {
     private lateinit var propertiesMock: PropertiesMock
 
     class SetupArgs(
-        var typeValidatorsToInject: Class<out TypeValidator<*>>? = null
+        var typeValidatorsToInject: List<Class<out TypeValidator<*>>>? = null
     )
     private fun setup(init: SetupArgs.() -> Unit = {}) {
         val args = SetupArgs().apply(init)
@@ -104,7 +118,7 @@ class ValidationsImplTest {
                 ValidationsImpl()
             )
 
-        args.typeValidatorsToInject?.let {
+        args.typeValidatorsToInject?.forEach {
             builder.addImpl(TypeValidator::class.java, it)
         }
 
@@ -123,7 +137,10 @@ class ValidationsImplTest {
     @Test
     fun `should pass + log info`() {
         setup {
-            typeValidatorsToInject = SomeReferencingPropertyOkValidator::class.java
+            typeValidatorsToInject = listOf(
+                SomeReferencingPropertyOkValidator::class.java,
+                SomeIdOkValidator::class.java
+            )
         }
 
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
@@ -162,7 +179,12 @@ class ValidationsImplTest {
 
             "Validating type 'SomeReferencingProperty'",
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyObject\"/'",
-            "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyList\"/[*]'"
+            "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyList\"/[*]'",
+
+            "Validating type 'SomeId'",
+            "Found reference for 'SomeId' at '\"SomeSourcePropertyList\"/[*]/id'",
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'"
         )
 
 
@@ -209,7 +231,10 @@ class ValidationsImplTest {
     @Test
     fun `should fail based on type validators`() {
         setup {
-            typeValidatorsToInject = SomeReferencingPropertyFailingValidator::class.java
+            typeValidatorsToInject = listOf(
+                SomeReferencingPropertyFailingValidator::class.java,
+                SomeIdFailValidator::class.java
+            )
         }
 
         propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
@@ -237,6 +262,10 @@ class ValidationsImplTest {
                 "Type validator failed at '\"SomeReferencingPropertyObject\"/', message: Other error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[*]', message: Error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[*]', message: Other error for 1",
+
+                "Type validator failed at '\"SomeSourcePropertyList\"/[*]/id', message: Error for 1",
+                "Type validator failed at '\"SomeReferencingPropertyObject\"/referenceId', message: Error for 1",
+                "Type validator failed at '\"SomeReferencingPropertyList\"/[*]/referenceId', message: Error for 1",
             )
         }
     }
