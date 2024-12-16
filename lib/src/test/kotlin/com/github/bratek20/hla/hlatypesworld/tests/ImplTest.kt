@@ -160,6 +160,8 @@ class HlaTypesWorldImplTest {
             }
         }
 
+        assertHasType("OptionalSomeClass6Vm", "SomeModule/ViewModel/GeneratedElements")
+
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
         assertHasType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView")

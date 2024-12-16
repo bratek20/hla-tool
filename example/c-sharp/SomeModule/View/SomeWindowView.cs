@@ -21,11 +21,14 @@ namespace SomeModule.View {
         SomeClassGroupView someClassVmList;
         [SerializeField]
         ButtonView someButton;
+        [SerializeField]
+        OptionalSomeClass6View newOptVm;
         protected override void OnBind() {
             base.OnBind();
             someClassVm.Bind(ViewModel.SomeClassVm);
             someClassVmList.Bind(ViewModel.SomeClassVmList);
             someButton.Bind(ViewModel.SomeButton);
+            newOptVm.Bind(ViewModel.NewOptVm);
         }
     }
 }

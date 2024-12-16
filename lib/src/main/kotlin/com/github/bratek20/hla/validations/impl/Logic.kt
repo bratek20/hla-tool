@@ -174,11 +174,7 @@ class HlaValidatorLogic(
         val sourceInfos = extraInfo.getAllIdSourceInfo()
 
         logger.info("Source infos: $sourceInfos")
-
-        val allPropertiesKeysFromHla = group.getAllPropertyKeys()
-        val allKeyNames = allPropertiesKeysFromHla.map { it.getName() }
-        logger.info( "Known properties: $allKeyNames")
-
+        
         val sourceValidators = sourceInfos.map {
             IdSourceValidator(
                 info = it,

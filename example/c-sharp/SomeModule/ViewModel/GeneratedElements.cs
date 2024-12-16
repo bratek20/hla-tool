@@ -114,4 +114,11 @@ namespace SomeModule.ViewModel {
         ): base(element) {
         }
     }
+
+    public class OptionalSomeClass6Vm: OptionalUiElement<SomeClass6Vm, SomeClass6> {
+        public OptionalSomeClass6Vm(
+            SomeClass6Vm element
+        ): base(element) {
+        }
+    }
 }

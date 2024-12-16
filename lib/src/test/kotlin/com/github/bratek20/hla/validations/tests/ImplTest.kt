@@ -168,7 +168,6 @@ class ValidationsImplTest {
             "Parsing module TypesModule",
 
             "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]",
-            "Known properties: [otherProperty, otherProperties, SomeKey, SomeSourcePropertyList, SomeReferencingPropertyObject, SomeReferencingPropertyList]",
 
             "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
 
