@@ -2,7 +2,6 @@ package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.hla.apitypes.impl.ApiCustomTypes
 import com.github.bratek20.hla.apitypes.impl.ComplexCustomApiType
-import com.github.bratek20.hla.apitypes.impl.DataClassApiType
 import com.github.bratek20.hla.apitypes.impl.ListApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
@@ -25,28 +24,6 @@ class MacrosBuilder: PatternGenerator() {
     override fun patternName(): PatternName {
         //hack
         return PatternName.DataKeys
-    }
-}
-
-open class DataClassesGenerator: PatternGenerator() {
-    override fun patternName(): PatternName {
-        return PatternName.DataClasses
-    }
-
-    protected open fun dataClasses(): List<ComplexStructureDefinition> {
-        return module.getDataClasses()
-    }
-
-    override fun generateFileContent(): FileContent? {
-        val dataClasses = dataClasses().map { apiTypeFactory.create<DataClassApiType>(it) }
-
-        if (dataClasses.isEmpty()) {
-            return null
-        }
-
-        return contentBuilder("dataClasses.vm")
-            .put("dataClasses", dataClasses)
-            .build()
     }
 }
 
