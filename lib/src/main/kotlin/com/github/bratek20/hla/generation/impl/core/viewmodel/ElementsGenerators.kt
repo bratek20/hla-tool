@@ -15,7 +15,6 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
-import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElementGroup
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
@@ -62,25 +61,6 @@ class ViewModelSharedLogic(
             elementEnumTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
     }
 
-    fun elementOptionalTypesToGenerate(): List<OptionalApiType> {
-        val optionalTypes: MutableList<OptionalApiType> = mutableListOf();
-        val elementsLogic = complexElementsLogic()
-        val mapper = mapper()
-
-        elementsLogic.forEach { element ->
-            optionalTypes.addAll(element.getMappedFieldsOfType(OptionalApiType::class))
-        }
-
-        windowsLogic().forEach { window ->
-            window.getElementTypesWrappedIn(TypeWrapper.OPTIONAL).forEach {
-                optionalTypes.add(mapper.mapViewModelWrappedTypeToOptionalApiType(it))
-            }
-        }
-        return optionalTypes
-            .filter { it.wrappedType is ComplexStructureApiType<*> }
-            .distinctBy { it.wrappedType.name() }
-    }
-
     private fun getAllModuleViewModelTypes(): List<WorldType> {
         val allTypes = typesWorldApi.getAllTypes()
         return allTypes.filter {
@@ -90,28 +70,40 @@ class ViewModelSharedLogic(
         }
     }
     
-    fun elementEnumTypesToGenerate(): List<EnumApiType> {
-        val allEnumTypes = getAllModuleViewModelTypes().mapNotNull {
-            try {
+    private fun elementEnumTypesToGenerate(): List<EnumApiType> {
+        val allEnumTypes = getAllModuleViewModelTypes()
+            .filter {
+                it.getName().value.endsWith("Switch")
+            }
+            .map {
                 val modelType = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
                 val apiType = apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
-                if (apiType is EnumApiType) {
-                    apiType
-                } else {
-                    null
-                }
-            } catch (e: Exception) {
-                null
+                apiType as EnumApiType
             }
-        }
         return allEnumTypes
+    }
+
+    fun elementOptionalTypesToGenerate(): List<OptionalApiType> {
+        return getAllModuleViewModelTypes().filter {
+            it.getName().value.startsWith("Optional")
+        }.mapNotNull {
+            val model = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
+            if (model.getPath().asHla().getModuleName() != moduleDef.getName()) {
+                return@mapNotNull null
+            }
+
+            val typeDef = TypeDefinition.create(model.getName().value, listOf(
+                TypeWrapper.OPTIONAL
+            ))
+            apiTypeFactory.create(typeDef) as OptionalApiType
+        }
     }
 
     fun elementListTypesToGenerate(): List<ListApiType> {
         return getAllModuleViewModelTypes().filter {
             it.getName().value.endsWith("Group")
         }.map {
-            val model = getModelTypeForEnsuredUiElementGroup(typesWorldApi, it.getName().value)
+            val model = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
             val typeDef = TypeDefinition.create(model.getName().value, listOf(
                 TypeWrapper.LIST
             ))

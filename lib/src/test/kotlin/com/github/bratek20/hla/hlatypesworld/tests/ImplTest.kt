@@ -16,6 +16,7 @@ import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.WorldTypeNotFoundException
 import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
 import com.github.bratek20.logs.LogsMocks
@@ -230,6 +231,14 @@ class HlaTypesWorldImplTest {
         }))
             .withFailMessage("Type ${typePath}/${typeName} not found")
             .isTrue()
+    }
+
+    private fun assertHasNotTypeOfName(typeName: String) {
+        Assertions.assertThatCode {
+            typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        }
+            .withFailMessage("Type with name $typeName found")
+            .isInstanceOf(WorldTypeNotFoundException::class.java)
     }
 
     private fun assertHasNotType(typeName: String, typePath: String) {

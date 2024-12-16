@@ -32,7 +32,7 @@ class ViewModelToViewMapperLogic(
         }
 
         if (viewModelType.endsWith("Group")) {
-            return getModelTypeForEnsuredUiElementGroup(typesWorldApi, viewModelType).getName().value + "GroupView"
+            return getModelTypeForEnsuredUiElement(typesWorldApi, viewModelType).getName().value + "GroupView"
         }
         if (viewModelType.startsWith("Optional")) {
             val wrappedTypeName = viewModelType.replace("Optional", "")
