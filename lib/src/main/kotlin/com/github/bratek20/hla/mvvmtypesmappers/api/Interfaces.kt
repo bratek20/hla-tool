@@ -10,4 +10,6 @@ interface ViewModelToViewMapper {
 
 interface ViewModelTypesCalculator {
     fun wrapWithGroup(viewModel: WorldType): WorldType
+
+    fun wrapWithOptional(viewModel: WorldType): WorldType
 }

@@ -60,4 +60,11 @@ class ViewModelTypesCalculatorLogic: ViewModelTypesCalculator {
             path = viewModel.getPath()
         )
     }
+
+    override fun wrapWithOptional(viewModel: WorldType): WorldType {
+        return WorldType.create(
+            name = WorldTypeName("Optional" + viewModel.getName().value),
+            path = viewModel.getPath()
+        )
+    }
 }

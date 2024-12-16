@@ -2,7 +2,7 @@
   "blueprintType": "Window",
   "name": "SomeWindow",
   "viewType": "SomeModule.View.SomeWindowView",
-  "creationOrder": 3,
+  "creationOrder": 5,
   "children": [
     {
       "name": "someClassVm",
@@ -15,6 +15,10 @@
     {
       "name": "someButton",
       "viewType": "B20.Frontend.Elements.View.ButtonView"
+    },
+    {
+      "name": "newOptVm",
+      "viewType": "SomeModule.View.OptionalSomeClass6View"
     }
   ],
   "elementViewType": null

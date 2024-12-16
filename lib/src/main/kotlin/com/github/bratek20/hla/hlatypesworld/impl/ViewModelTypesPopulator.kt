@@ -209,12 +209,22 @@ class ViewModelTypesPopulator(
 
     private fun viewModelTypeDefToWorldType(def: TypeDefinition): WorldTypeName {
         if (def.getWrappers().contains(TypeWrapper.LIST)) {
-            val wrappedType = world.getTypeByName(WorldTypeName(def.getName()))
-            val groupType = vmTypesCalculator.wrapWithGroup(wrappedType)
-            world.ensureType(groupType)
-            return groupType.getName()
+            return viewModelTypeDefToWorldTypeForWrapper(def, vmTypesCalculator::wrapWithGroup)
+        }
+        if (def.getWrappers().contains(TypeWrapper.OPTIONAL)) {
+            return viewModelTypeDefToWorldTypeForWrapper(def, vmTypesCalculator::wrapWithOptional)
         }
         return WorldTypeName(def.getName())
+    }
+
+    private fun viewModelTypeDefToWorldTypeForWrapper(
+        def: TypeDefinition,
+        wrappingFun: (WorldType) -> WorldType,
+    ): WorldTypeName {
+        val wrappedType = world.getTypeByName(WorldTypeName(def.getName()))
+        val wrapperType = wrappingFun(wrappedType)
+        world.ensureType(wrapperType)
+        return wrapperType.getName()
     }
 
     private fun getFieldsForWindow(def: ViewModelWindowDefinition): List<WorldClassField> {

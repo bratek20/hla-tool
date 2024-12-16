@@ -4,3 +4,4 @@ Interfaces
 
     ViewModelTypesCalculator
         wrapWithGroup(viewModel: WorldType): WorldType
+        wrapWithOptional(viewModel: WorldType): WorldType
