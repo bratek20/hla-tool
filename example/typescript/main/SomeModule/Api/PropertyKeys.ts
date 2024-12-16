@@ -20,4 +20,9 @@ namespace SomeModule {
         "SomeReferencingPropertyList",
         SomeReferencingProperty
     )
+
+    export const REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = new ObjectPropertyKey(
+        "ReferencingOtherProperty",
+        OtherProperty
+    )
 }

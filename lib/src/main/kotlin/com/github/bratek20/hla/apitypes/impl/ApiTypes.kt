@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.apitypes.impl
 
 import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.definitions.api.*
@@ -9,6 +10,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
+import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
@@ -245,7 +247,11 @@ class SimpleValueObjectApiType(
 
     fun getClassOps(): ClassBuilderOps =  {
         name = this@SimpleValueObjectApiType.name
-        equalsAndHashCode = true
+        if (c.lang is CSharp) {
+            extends {
+                className = "ValueObject"
+            }
+        }
 
         addField {
             type = serializableBuilder()
@@ -391,6 +397,11 @@ open class ComplexValueObjectApiType(
 ) : SerializableApiType(name, fields) {
     open fun getClassOps(): ClassBuilderOps = {
         this.name = name()
+        if (c.lang is CSharp) {
+            extends {
+                className = "ValueObject"
+            }
+        }
         fields.forEach {
             addField {
                 type = it.type.serializableBuilder()

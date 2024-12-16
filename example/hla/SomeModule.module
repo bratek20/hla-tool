@@ -104,6 +104,8 @@ Properties
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
 
+    "ReferencingOtherProperty" -> OtherProperty
+
 Data
     SomeData
         other: OtherData

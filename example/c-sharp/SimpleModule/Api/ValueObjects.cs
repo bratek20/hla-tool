@@ -6,7 +6,7 @@ using System.Linq;
 using B20.Ext;
 
 namespace SimpleModule.Api {
-    public class SimpleId {
+    public class SimpleId: ValueObject {
         public string Value { get; }
 
         public SimpleId(
@@ -14,37 +14,15 @@ namespace SimpleModule.Api {
         ) {
             Value = value;
         }
-
-        public override bool Equals(object? obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Value == ((SimpleId)obj).Value;
-        }
-
-        public override int GetHashCode() {
-            return Value.GetHashCode();
-        }
     }
 
-    public class SomeLongWrapper {
+    public class SomeLongWrapper: ValueObject {
         public long Value { get; }
 
         public SomeLongWrapper(
             long value
         ) {
             Value = value;
-        }
-
-        public override bool Equals(object? obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Value == ((SomeLongWrapper)obj).Value;
-        }
-
-        public override int GetHashCode() {
-            return Value.GetHashCode();
         }
     }
 }

@@ -11,6 +11,9 @@ Enums
 CustomTypes
     WorldTypePath: string (example: "Some/Path/To/Type")
 
+ExternalTypes
+    StructPath
+
 ValueObjects
     WorldTypeName: string
 
@@ -85,3 +88,8 @@ Interfaces
 
         getAllTypes(): WorldType[]
 
+        getAllReferencesOf(target: WorldType, searchFor: WorldType): StructPath[]
+
+Kotlin
+    ExternalTypePackages
+        StructPath -> com.github.bratek20.architecture.structs.api

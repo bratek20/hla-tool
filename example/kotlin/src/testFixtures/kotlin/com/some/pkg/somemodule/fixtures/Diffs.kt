@@ -585,7 +585,3 @@ fun diffSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit, 
 
     return result.joinToString("\n")
 }
-fun diffLegacyType(given: com.some.pkg.legacy.LegacyType, expected: com.some.pkg.legacy.LegacyType, path: String = ""): String {
-    if (given != expected) { return "${path}value ${given} != ${expected}" }
-    return ""
-}
