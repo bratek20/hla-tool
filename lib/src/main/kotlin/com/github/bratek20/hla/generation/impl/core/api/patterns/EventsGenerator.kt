@@ -12,7 +12,7 @@ class EventsGenerator: PatternGenerator() {
     }
 
     override fun supportsCodeBuilder(): Boolean {
-        return c.language.name() == ModuleLanguage.KOTLIN
+        return c.language.name() == ModuleLanguage.KOTLIN || c.language.name() == ModuleLanguage.C_SHARP
     }
 
     override fun shouldGenerate(): Boolean {
