@@ -251,3 +251,4 @@ ViewModel
             someClassVmList: SomeClassVm[]
             someButton: Button
             newOptVm: SomeClass6Vm?
+            optEmptyVm: SomeEmptyVm?
