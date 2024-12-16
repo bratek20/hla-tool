@@ -2,6 +2,9 @@
 
 package com.some.pkg.somemodule.api
 
+import com.some.pkg.othermodule.api.*
+import com.some.pkg.typesmodule.api.*
+
 val SOME_KEY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeKey",
     SomeProperty::class
@@ -20,4 +23,9 @@ val SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY = com.github.bratek20.architec
 val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeReferencingPropertyList",
     SomeReferencingProperty::class
+)
+
+val REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "ReferencingOtherProperty",
+    OtherProperty::class
 )
