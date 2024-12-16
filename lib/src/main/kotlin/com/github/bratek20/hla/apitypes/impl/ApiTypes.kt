@@ -389,12 +389,7 @@ open class SerializableApiType(
     override fun serializableBuilder(): TypeBuilder {
         return typeName(name())
     }
-}
 
-open class ComplexValueObjectApiType(
-    name: String,
-    fields: List<ComplexStructureField>
-) : SerializableApiType(name, fields) {
     open fun getClassOps(): ClassBuilderOps = {
         this.name = name()
         if (c.lang is CSharp) {
@@ -424,7 +419,7 @@ open class ComplexValueObjectApiType(
 
         addMethod {
             static = true
-            returnType = this@ComplexValueObjectApiType.builder()
+            returnType = this@SerializableApiType.builder()
             name = "create"
             fields.forEach {
                 addArg {
@@ -435,7 +430,7 @@ open class ComplexValueObjectApiType(
             setBody {
                 add(returnStatement {
                     constructorCall {
-                        className = this@ComplexValueObjectApiType.name
+                        className = this@SerializableApiType.name
                         fields.forEach {
                             addArg {
                                 it.type.modernSerialize(variable(it.name))
@@ -446,6 +441,12 @@ open class ComplexValueObjectApiType(
             }
         }
     }
+}
+
+open class ComplexValueObjectApiType(
+    name: String,
+    fields: List<ComplexStructureField>
+) : SerializableApiType(name, fields) {
 }
 
 class EventApiType(

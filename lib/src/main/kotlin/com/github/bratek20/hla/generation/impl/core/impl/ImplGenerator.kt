@@ -9,7 +9,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.generation.impl.core.api.DataClassesGenerator
+import com.github.bratek20.hla.generation.impl.core.api.patterns.DataClassesGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
 
