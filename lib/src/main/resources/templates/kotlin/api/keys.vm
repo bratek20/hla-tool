@@ -1,4 +1,4 @@
-package ${packageName}.api
+#generateKotlinApiPackageAndImports()
 #foreach($k in $keys)
 
 val $k.constantName = ${k.kotlinPackage()}.${k.outerKeyType}(
