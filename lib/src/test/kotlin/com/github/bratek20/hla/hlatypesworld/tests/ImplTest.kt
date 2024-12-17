@@ -73,6 +73,7 @@ class HlaTypesWorldImplTest {
         assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
         assertHasType("Label", "B20/Frontend/UiElements/Api/Undefined")
         assertHasType("Button", "B20/Frontend/UiElements/Api/Undefined")
+        assertHasType("BoolSwitch", "B20/Frontend/UiElements/Api/Undefined")
 
         assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
     }
@@ -153,7 +154,26 @@ class HlaTypesWorldImplTest {
             }
         }
         assertHasType("SomeWindow", "SomeModule/ViewModel/GeneratedWindows")
-        assertHasType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements")
+
+        assertHasClassType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
+            fields = listOf(
+                {
+                    name = "id"
+                },
+                {
+                    name = "button"
+                    type = {
+                        name = "Button"
+                    }
+                },
+                {
+                    name = "boolSwitch"
+                    type = {
+                        name = "BoolSwitch"
+                    }
+                }
+            )
+        }
 
         assertHasClassType("OptionalSomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
             extends = {

@@ -116,21 +116,6 @@ class ViewModelField(
     val typeName: String,
     val name: String
 ) {
-    companion object {
-        fun fromDefs(moduleName: ModuleName, defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
-            return defs.map {
-                val baseTypeName = it.getType().getName()
-                val finalTypeName = if (it.getType().getWrappers().contains(TypeWrapper.LIST)) {
-                    mapper.mapViewModelWrappedTypeToListType(baseTypeName)
-                } else if (it.getType().getWrappers().contains(TypeWrapper.OPTIONAL)) {
-                    mapper.mapViewModelWrappedTypeToOptionalType(baseTypeName)
-                } else {
-                    baseTypeName
-                }
-                ViewModelField(finalTypeName, it.getName())
-            }
-        }
-    }
 }
 
 abstract class ViewModelElementLogic(
@@ -177,19 +162,6 @@ class ViewModelComplexElementLogic(
             )
         }
     }
-//    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
-//        val result = mutableListOf<ViewModelField>()
-//        getMappedFields().forEach { field ->
-//            result.add(ViewModelField(
-//                mapper.mapModelToViewModelTypeName(field.type),
-//                field.name
-//            ))
-//        }
-//
-//        result.addAll(ViewModelField.fromDefs(ModuleName("TODO-FIX-ME_13131523"), def.getFields(), mapper))
-//
-//        return result
-//    }
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel()?.getMappedFields()?.map { fieldName ->
@@ -259,16 +231,6 @@ class ViewModelComplexElementLogic(
                         }
                     }
                 })
-            }
-        }
-    }
-
-    fun <T : ApiTypeLogic> getMappedFieldsOfType(type: KClass<T>): List<T> {
-        return getMappedFields().mapNotNull { field ->
-            if (type.isInstance(field.type)) {
-                type.cast(field.type)
-            } else {
-                null
             }
         }
     }
