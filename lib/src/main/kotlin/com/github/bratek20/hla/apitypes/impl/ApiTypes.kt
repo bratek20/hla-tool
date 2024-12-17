@@ -13,6 +13,7 @@ import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
 import com.github.bratek20.hla.typesworld.api.WorldType
@@ -564,7 +565,13 @@ class EnumApiType(
     }
 
     fun defaultValue(): String {
-        return name() + "." + def.getValues().first()
+        val value = name() + "." + def.getValues().first()
+        if (c.lang is CSharp) {
+            val x = asWorldType().getPath().asHla()
+            val prefixToAvoidCollision = x.getModuleName().value + "." + x.getSubmoduleName().name + "."
+            return prefixToAvoidCollision + value
+        }
+        return value
     }
 
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {

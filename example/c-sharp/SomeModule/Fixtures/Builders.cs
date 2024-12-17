@@ -25,7 +25,7 @@ namespace SomeModule.Fixtures {
 
     public class SomeClass3Def {
         public Action<SomeClass2Def> Class2Object { get; set; } = (_) => {};
-        public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
+        public string SomeEnum { get; set; } = SomeModule.Api.SomeEnum.VALUE_A.ToString();
         public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<SomeClass2>();
     }
 
@@ -101,7 +101,7 @@ namespace SomeModule.Fixtures {
     public class SomeProperty2Def {
         public string Value { get; set; } = "someValue";
         public object Custom { get; set; } = null;
-        public string SomeEnum { get; set; } = SomeEnum.VALUE_A.ToString();
+        public string SomeEnum { get; set; } = SomeModule.Api.SomeEnum.VALUE_A.ToString();
         public object? CustomOpt { get; set; } = null;
     }
 
