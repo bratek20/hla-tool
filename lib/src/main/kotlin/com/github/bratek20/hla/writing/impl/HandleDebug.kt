@@ -14,7 +14,7 @@ fun shouldHandleDebug(args: WriteArgs): Boolean {
     val profile = args.getProfile()
 
     val moduleName = module.getName().value
-    return profile.getLanguage() == ModuleLanguage.C_SHARP && moduleName.equals("OtherModule", ignoreCase = true)
+    return profile.getLanguage() == ModuleLanguage.C_SHARP && moduleName.equals("SomeModule", ignoreCase = true)
 }
 
 fun handleDebug(module: GeneratedModule) {

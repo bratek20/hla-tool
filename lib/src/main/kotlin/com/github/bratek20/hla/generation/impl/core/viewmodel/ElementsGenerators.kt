@@ -15,6 +15,7 @@ import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiEle
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeKind
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
@@ -49,24 +50,18 @@ class ViewModelSharedLogic(
         return windowsDef().map { GeneratedWindowLogic(moduleDef.getName(), it, apiTypeFactory, typesWorldApi) }
     }
 
-    fun allElementTypeNames(): List<String> {
-        return elementsDef().map { it.getName() } +
-            elementListTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it.model) } +
-            elementOptionalTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it.model) } +
-            elementEnumTypesToGenerate().map { mapper().mapModelToViewModelTypeName(it) }
-    }
-
-    private fun getAllModuleViewModelTypes(): List<WorldType> {
+    fun allModuleElementTypes(): List<WorldType> {
         val allTypes = typesWorldApi.getAllTypes()
         return allTypes.filter {
             it.getPath().asHla().getModuleName() == moduleDef.getName()
                     && it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel
-                    && !it.getName().value.contains("<")
+                    && it.getPath().asHla().getPatternName() == PatternName.GeneratedElements
+                    && typesWorldApi.getTypeInfo(it).getKind() == WorldTypeKind.ClassType
         }
     }
     
     private fun elementEnumTypesToGenerate(): List<EnumApiType> {
-        val allEnumTypes = getAllModuleViewModelTypes()
+        val allEnumTypes = allModuleElementTypes()
             .filter {
                 it.getName().value.endsWith("Switch")
             }
@@ -79,7 +74,7 @@ class ViewModelSharedLogic(
     }
 
     fun elementOptionalTypesToGenerate(): List<OptionalElementViewModelLogic> {
-        return getAllModuleViewModelTypes().filter {
+        return allModuleElementTypes().filter {
             it.getName().value.startsWith("Optional")
         }.mapNotNull {
             val model = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
@@ -97,7 +92,7 @@ class ViewModelSharedLogic(
     }
 
     fun elementListTypesToGenerate(): List<ElementGroupViewModelLogic> {
-        return getAllModuleViewModelTypes().filter {
+        return allModuleElementTypes().filter {
             it.getName().value.endsWith("Group")
         }.map {
             val model = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
@@ -384,7 +379,6 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val elementsLogic = logic.elementsLogic()
-        val mapper = logic.mapper()
 
         elementsLogic.forEach { element ->
             addClass(element.getClass())
