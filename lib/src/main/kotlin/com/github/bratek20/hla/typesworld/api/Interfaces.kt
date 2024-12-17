@@ -10,6 +10,8 @@ interface TypesWorldApi {
 
     fun hasType(type: WorldType): Boolean
 
+    fun hasTypeByName(name: WorldTypeName): Boolean
+
     @Throws(
         WorldTypeNotFoundException::class,
     )

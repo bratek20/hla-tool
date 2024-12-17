@@ -51,6 +51,7 @@ Interfaces
                 SameNameTypeExistsException
 
         hasType(type: WorldType): bool
+        hasTypeByName(name: WorldTypeName): bool
 
         getTypeByName(name: WorldTypeName): WorldType
             throws

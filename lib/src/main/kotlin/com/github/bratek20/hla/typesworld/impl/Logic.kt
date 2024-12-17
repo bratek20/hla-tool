@@ -32,6 +32,10 @@ class TypesWorldApiLogic: TypesWorldApi {
         return allTypes.contains(type) || isWrapper(type)
     }
 
+    override fun hasTypeByName(name: WorldTypeName): Boolean {
+        return allTypes.any { it.getName() == name } || wrappers.any { tryExtractWrappedTypeNameForWrapper(name, it) != null }
+    }
+
     override fun getTypeDependencies(type: WorldType): List<WorldType> {
         throwIfTypeNotFound(type)
 

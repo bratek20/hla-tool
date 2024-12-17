@@ -12,6 +12,7 @@ import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
@@ -25,7 +26,7 @@ abstract class PrefabBaseBlueprintLogic(
     private val typesWorldApi: TypesWorldApi
 ) {
     abstract fun getName(): String
-    abstract fun getMyType(): WorldType
+    abstract fun getMyTypeName(): WorldTypeName
     abstract fun blueprintType(): BlueprintType
 
     open fun children(): List<PrefabChildBlueprint>? = null
@@ -37,7 +38,8 @@ abstract class PrefabBaseBlueprintLogic(
 
     fun getFile(): File {
         val calculator = CreationOrderCalculator(typesWorldApi)
-        val type = getMyType()
+        val typeName = getMyTypeName()
+        val type = typesWorldApi.getTypeByName(typeName)
 
         val blueprint = PrefabBlueprint.create(
             blueprintType = blueprintType(),
@@ -68,8 +70,8 @@ class PrefabWrappedElementBlueprintLogic(
         return view.getViewClassName().replace("View", "")
     }
 
-    override fun getMyType(): WorldType {
-        return view.getViewClassType()
+    override fun getMyTypeName(): WorldTypeName {
+        return view.getViewClassType().getName()
     }
 
     override fun blueprintType(): BlueprintType {
@@ -111,8 +113,8 @@ class PrefabComplexElementBlueprintLogic(
         return view.elem.modelType.name()
     }
 
-    override fun getMyType(): WorldType {
-        return view.getViewClassType()
+    override fun getMyTypeName(): WorldTypeName {
+        return view.getViewClassType().getName()
     }
 
     override fun blueprintType(): BlueprintType {
@@ -128,8 +130,8 @@ class PrefabWindowBlueprintLogic(
         return view.window.getClassName()
     }
 
-    override fun getMyType(): WorldType {
-        return view.getViewClassType()
+    override fun getMyTypeName(): WorldTypeName {
+        return view.getViewClassType().getName()
     }
 
     override fun blueprintType(): BlueprintType {
@@ -145,8 +147,8 @@ class PrefabEnumElementBlueprintLogic(
         return view.vmLogic.modelType.name()
     }
 
-    override fun getMyType(): WorldType {
-        return view.getViewClassType()
+    override fun getMyTypeName(): WorldTypeName {
+        return view.getViewClassType().getName()
     }
 
     override fun blueprintType(): BlueprintType {

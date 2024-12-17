@@ -152,7 +152,20 @@ class HlaTypesWorldImplTest {
                 name = "UiElementGroup<SomeEnum2Switch,SomeEnum2>"
             }
         }
-        assertHasType("SomeWindow", "SomeModule/ViewModel/GeneratedWindows")
+        assertHasClassType("SomeWindow", "SomeModule/ViewModel/GeneratedWindows") {
+            fields = listOf(
+                {},
+                {},
+                {},
+                {
+                    name = "newOptVm"
+                    type = {
+                        name = "OptionalSomeClass6Vm"
+                    }
+                },
+                {},
+            )
+        }
 
         assertHasClassType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
             fields = listOf(
