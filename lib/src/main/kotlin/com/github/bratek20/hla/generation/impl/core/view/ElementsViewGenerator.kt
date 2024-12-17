@@ -23,7 +23,7 @@ abstract class ViewLogic(
 
     abstract fun getViewClassName(): String
 
-    open fun getOps(): PerFileOperations {
+    fun getOps(): PerFileOperations {
         val type = typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
         val classType = typesWorldApi.getClassType(type)
         val extendedType = classType.getExtends()!!
@@ -40,8 +40,61 @@ abstract class ViewLogic(
                         }
                     }
                 }
+
+                getBodyOps().invoke(this)
             }
         }
+    }
+
+    private fun getBodyOps(): ClassBuilderOps {
+        val fields = getFields()
+        if (fields.isEmpty()) {
+            return {}
+        }
+
+        return {
+            fields.forEach {
+                addField {
+                    mutable = true
+                    type = typeName(it.getType().getName().value)
+                    name = it.getName()
+
+                    addAnnotation("SerializeField")
+                }
+            }
+
+            addMethod {
+                modifier = AccessModifier.PROTECTED
+                overridesClassMethod = true
+                name = "onBind"
+
+                setBody {
+                    add(methodCallStatement {
+                        target = parent()
+                        methodName = "onBind"
+                    })
+
+                    fields.forEach {
+                        add(methodCallStatement {
+                            target = variable(it.getName())
+                            methodName = "bind"
+                            addArg {
+                                getterFieldAccess {
+                                    objectRef = getterField("viewModel")
+                                    fieldName = it.getName()
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getFields(): List<WorldClassField> {
+        val type = typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
+        val classType = typesWorldApi.getClassType(type)
+        return classType.getFields()
     }
 }
 
@@ -52,57 +105,6 @@ abstract class ContainerViewLogic(
     abstract fun getViewModelTypeName(): String
     abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
-
-//    override fun getOps(): PerFileOperations {
-//        val viewClassName = getViewClassName()
-//        return PerFileOperations(viewClassName) {
-//            addClass {
-//                name = viewClassName
-//                extends {
-//                    className = getExtendedClassName()
-//                    addGeneric {
-//                        typeName(getViewModelTypeName())
-//                    }
-//                }
-//
-//                getFields().forEach {
-//                    addField {
-//                        mutable = true
-//                        type = typeName(mapper.mapViewModelToViewTypeName(it.typeName))
-//                        name = it.name
-//
-//                        addAnnotation("SerializeField")
-//                    }
-//                }
-//
-//                addMethod {
-//                    modifier = AccessModifier.PROTECTED
-//                    overridesClassMethod = true
-//                    name = "onBind"
-//
-//                    setBody {
-//                        add(methodCallStatement {
-//                            target = parent()
-//                            methodName = "onBind"
-//                        })
-//
-//                        getFields().forEach {
-//                            add(methodCallStatement {
-//                                target = variable(it.name)
-//                                methodName = "bind"
-//                                addArg {
-//                                    getterFieldAccess {
-//                                        objectRef = getterField("viewModel")
-//                                        fieldName = it.name
-//                                    }
-//                                }
-//                            })
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
 
 class ComplexElementViewLogic(
