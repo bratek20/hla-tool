@@ -87,6 +87,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class ToggleOverride: UiElement<ClassWithBoolField> {
+        public Toggle BoolField { get; set; }
+        protected override void OnUpdate() {
+            BoolField.Update(Model.GetBoolField());
+        }
+    }
+
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
     }
 

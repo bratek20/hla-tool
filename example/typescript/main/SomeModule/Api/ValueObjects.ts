@@ -368,6 +368,22 @@ class ClassWithEnumList {
     }
 }
 
+class ClassWithBoolField {
+    private boolField = BOOLEAN
+
+    static create(
+        boolField: boolean,
+    ): ClassWithBoolField {
+        const instance = new ClassWithBoolField()
+        instance.boolField = boolField
+        return instance
+    }
+
+    getBoolField(): boolean {
+        return this.boolField
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

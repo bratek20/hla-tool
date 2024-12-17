@@ -84,5 +84,15 @@ class B20FrontendTypesPopulator(
                 fields = emptyList()
             )
         )
+
+        api.addClassType(
+            WorldClassType.create(
+                type = WorldType.create(
+                    name = WorldTypeName("Toggle"),
+                    path = pathForUndefinedPattern
+                ),
+                fields = emptyList()
+            )
+        )
     }
 }

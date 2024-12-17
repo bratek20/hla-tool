@@ -3,6 +3,9 @@
 package com.github.bratek20.hla.parsing.api
 
 import com.github.bratek20.architecture.exceptions.ApiException
+import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.utils.directory.api.*
 
 class UnknownRootSectionException(
     message: String = ""

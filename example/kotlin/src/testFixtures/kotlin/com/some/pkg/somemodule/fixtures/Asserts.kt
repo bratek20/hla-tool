@@ -83,6 +83,11 @@ fun assertClassWithEnumList(given: ClassWithEnumList, expectedInit: ExpectedClas
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertClassWithBoolField(given: ClassWithBoolField, expectedInit: ExpectedClassWithBoolField.() -> Unit) {
+    val diff = diffClassWithBoolField(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
     val diff = diffSomeQueryInput(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

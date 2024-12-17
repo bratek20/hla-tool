@@ -377,6 +377,24 @@ data class ClassWithEnumList(
     }
 }
 
+data class ClassWithBoolField(
+    private val boolField: Boolean,
+) {
+    fun getBoolField(): Boolean {
+        return this.boolField
+    }
+
+    companion object {
+        fun create(
+            boolField: Boolean,
+        ): ClassWithBoolField {
+            return ClassWithBoolField(
+                boolField = boolField,
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,

@@ -36,4 +36,7 @@ namespace SomeModule.ViewModel {
 
     public partial class ReferencingOtherClassVm {
     }
+
+    public partial class ToggleOverride {
+    }
 }

@@ -8,10 +8,3 @@ import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.hla.typesworld.fixtures.*
 
 import com.github.bratek20.hla.apitypes.api.*
-
-fun typeBuilder(value: com.github.bratek20.codebuilder.types.TypeBuilder?): com.github.bratek20.codebuilder.types.TypeBuilder {
-    return value!!
-}
-fun expressionBuilder(value: com.github.bratek20.codebuilder.builders.ExpressionBuilder?): com.github.bratek20.codebuilder.builders.ExpressionBuilder {
-    return value!!
-}

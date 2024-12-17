@@ -225,22 +225,47 @@ data class WebSubmoduleDefinition(
     }
 }
 
-data class ElementModelDefinition(
+data class ViewModelMappedField(
     private val name: String,
-    private val mappedFields: List<String>,
+    private val overriddenViewModelType: String?,
 ) {
     fun getName(): String {
         return this.name
     }
 
-    fun getMappedFields(): List<String> {
+    fun getOverriddenViewModelType(): String? {
+        return this.overriddenViewModelType
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            overriddenViewModelType: String?,
+        ): ViewModelMappedField {
+            return ViewModelMappedField(
+                name = name,
+                overriddenViewModelType = overriddenViewModelType,
+            )
+        }
+    }
+}
+
+data class ElementModelDefinition(
+    private val name: String,
+    private val mappedFields: List<ViewModelMappedField>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getMappedFields(): List<ViewModelMappedField> {
         return this.mappedFields
     }
 
     companion object {
         fun create(
             name: String,
-            mappedFields: List<String>,
+            mappedFields: List<ViewModelMappedField>,
         ): ElementModelDefinition {
             return ElementModelDefinition(
                 name = name,

@@ -20,6 +20,3 @@ fun validationResult(init: ValidationResultDef.() -> Unit = {}): ValidationResul
         errors = def.errors,
     )
 }
-fun properties(value: com.github.bratek20.architecture.properties.api.Properties?): com.github.bratek20.architecture.properties.api.Properties {
-    return value!!
-}

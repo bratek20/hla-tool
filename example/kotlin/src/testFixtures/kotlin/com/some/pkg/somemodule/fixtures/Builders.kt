@@ -167,6 +167,16 @@ fun classWithEnumList(init: ClassWithEnumListDef.() -> Unit = {}): ClassWithEnum
     )
 }
 
+data class ClassWithBoolFieldDef(
+    var boolField: Boolean = false,
+)
+fun classWithBoolField(init: ClassWithBoolFieldDef.() -> Unit = {}): ClassWithBoolField {
+    val def = ClassWithBoolFieldDef().apply(init)
+    return ClassWithBoolField.create(
+        boolField = def.boolField,
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,

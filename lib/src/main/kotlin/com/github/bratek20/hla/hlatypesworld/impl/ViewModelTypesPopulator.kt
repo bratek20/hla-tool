@@ -227,8 +227,10 @@ class ViewModelTypesPopulator(
     private fun getFieldsForElement(def: ViewModelElementDefinition): List<WorldClassField> {
         val modelFields = def.getModel()?.let { model ->
             model.getMappedFields().map {
-                val type = mapModelField(model.getName(), it)
-                WorldClassField.create(it, type)
+                val type = it.getOverriddenViewModelType()?.let { typeName ->
+                    world.getTypeByName(WorldTypeName(typeName))
+                } ?: mapModelField(model.getName(), it.getName())
+                WorldClassField.create(it.getName(), type)
             }
         } ?: emptyList()
 

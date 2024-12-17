@@ -69,6 +69,9 @@ ValueObjects
     ClassWithEnumList
         enumList: SomeEnum2[]
 
+    ClassWithBoolField
+        boolField: bool
+
 Exceptions
     SomeExtraException
 
@@ -246,6 +249,10 @@ ViewModel
 
         ReferencingOtherClassVm
             OtherClass
+
+        ToggleOverride
+            ClassWithBoolField
+                boolField -> Toggle
 
     Windows
         SomeWindow

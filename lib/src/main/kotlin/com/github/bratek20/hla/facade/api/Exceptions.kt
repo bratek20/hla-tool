@@ -3,6 +3,8 @@
 package com.github.bratek20.hla.facade.api
 
 import com.github.bratek20.architecture.exceptions.ApiException
+import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.utils.directory.api.*
 
 class ProfileNotFoundException(
     message: String = ""

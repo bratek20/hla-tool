@@ -71,6 +71,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function classWithBoolField(given: ClassWithBoolField, expected: ExpectedClassWithBoolField) {
+        const diff = diffClassWithBoolField(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
         const diff = diffSomeQueryInput(given, expected)
         AssertEquals(diff, "", diff)

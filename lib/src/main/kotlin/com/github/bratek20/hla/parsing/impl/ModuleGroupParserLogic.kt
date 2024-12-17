@@ -4,7 +4,6 @@ import com.github.bratek20.architecture.properties.impl.PropertiesLogic
 import com.github.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.utils.directory.api.File
-import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
 import com.github.bratek20.utils.directory.api.Path
 import com.github.bratek20.utils.directory.impl.DirectoriesLogic
@@ -16,7 +15,6 @@ import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import com.github.bratek20.logs.api.Logger
-import java.util.*
 
 class ModuleGroupParserLogic(
     private val log: Logger
@@ -154,11 +152,14 @@ class ModuleGroupParserLogic(
                 ?.filterIsInstance<Section>()?.map { vm ->
                     val model = vm.elements.filterIsInstance<Section>().map { m ->
                         val mappedFields = m.elements.filterIsInstance<Section>().map {
-                            it.name
+                            ViewModelMappedField(it.name, null)
+                        }
+                        val mappedFieldsWithOverrides = m.elements.filterIsInstance<ParsedMapping>().map {
+                            ViewModelMappedField(it.key, it.value)
                         }
                         ElementModelDefinition(
                             name = m.name,
-                            mappedFields = mappedFields
+                            mappedFields = mappedFields + mappedFieldsWithOverrides
                         )
                     }
                     ViewModelElementDefinition(

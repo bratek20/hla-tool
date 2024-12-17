@@ -1,0 +1,13 @@
+{
+  "blueprintType": "ComplexElement",
+  "name": "ClassWithBoolField",
+  "viewType": "SomeModule.View.ClassWithBoolFieldView",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "boolField",
+      "viewType": "B20.Frontend.UiElements.View.ToggleView"
+    }
+  ],
+  "elementViewType": null
+}
