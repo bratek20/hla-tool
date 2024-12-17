@@ -53,56 +53,56 @@ abstract class ContainerViewLogic(
     abstract fun getFields(): List<ViewModelField>
     protected abstract fun getExtendedClassName(): String
 
-    override fun getOps(): PerFileOperations {
-        val viewClassName = getViewClassName()
-        return PerFileOperations(viewClassName) {
-            addClass {
-                name = viewClassName
-                extends {
-                    className = getExtendedClassName()
-                    addGeneric {
-                        typeName(getViewModelTypeName())
-                    }
-                }
-
-                getFields().forEach {
-                    addField {
-                        mutable = true
-                        type = typeName(mapper.mapViewModelToViewTypeName(it.typeName))
-                        name = it.name
-
-                        addAnnotation("SerializeField")
-                    }
-                }
-
-                addMethod {
-                    modifier = AccessModifier.PROTECTED
-                    overridesClassMethod = true
-                    name = "onBind"
-
-                    setBody {
-                        add(methodCallStatement {
-                            target = parent()
-                            methodName = "onBind"
-                        })
-
-                        getFields().forEach {
-                            add(methodCallStatement {
-                                target = variable(it.name)
-                                methodName = "bind"
-                                addArg {
-                                    getterFieldAccess {
-                                        objectRef = getterField("viewModel")
-                                        fieldName = it.name
-                                    }
-                                }
-                            })
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    override fun getOps(): PerFileOperations {
+//        val viewClassName = getViewClassName()
+//        return PerFileOperations(viewClassName) {
+//            addClass {
+//                name = viewClassName
+//                extends {
+//                    className = getExtendedClassName()
+//                    addGeneric {
+//                        typeName(getViewModelTypeName())
+//                    }
+//                }
+//
+//                getFields().forEach {
+//                    addField {
+//                        mutable = true
+//                        type = typeName(mapper.mapViewModelToViewTypeName(it.typeName))
+//                        name = it.name
+//
+//                        addAnnotation("SerializeField")
+//                    }
+//                }
+//
+//                addMethod {
+//                    modifier = AccessModifier.PROTECTED
+//                    overridesClassMethod = true
+//                    name = "onBind"
+//
+//                    setBody {
+//                        add(methodCallStatement {
+//                            target = parent()
+//                            methodName = "onBind"
+//                        })
+//
+//                        getFields().forEach {
+//                            add(methodCallStatement {
+//                                target = variable(it.name)
+//                                methodName = "bind"
+//                                addArg {
+//                                    getterFieldAccess {
+//                                        objectRef = getterField("viewModel")
+//                                        fieldName = it.name
+//                                    }
+//                                }
+//                            })
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 class ComplexElementViewLogic(
@@ -178,32 +178,6 @@ abstract class WrappedElementViewLogic(
 
     fun getElementViewModelTypeName(): String {
         return mapper.mapModelToViewModelTypeName(modelType.wrappedType)
-    }
-
-    override fun getOps(): PerFileOperations {
-        val viewClassName = getViewClassName()
-        val elementViewTypeName = mapper.mapModelToViewTypeName(modelType.wrappedType)
-        val elementViewModelTypeName = getElementViewModelTypeName()
-        val elementModelTypeName = modelType.wrappedType.name()
-
-        return PerFileOperations(viewClassName) {
-            addClass {
-                name = viewClassName
-                extends {
-                    className = extendedClassName()
-
-                    addGeneric {
-                        typeName(elementViewTypeName)
-                    }
-                    addGeneric {
-                        typeName(elementViewModelTypeName)
-                    }
-                    addGeneric {
-                        typeName(elementModelTypeName)
-                    }
-                }
-            }
-        }
     }
 }
 
