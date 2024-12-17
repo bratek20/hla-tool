@@ -5,14 +5,13 @@ import com.github.bratek20.architecture.serialization.context.SerializationFacto
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
-import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
-import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
@@ -22,11 +21,11 @@ fun asFullViewType(type: WorldType): String {
 }
 
 abstract class PrefabBaseBlueprintLogic(
+    private val view: ViewLogic,
     private val mapper: ModelToViewModelTypeMapper,
     private val typesWorldApi: TypesWorldApi
 ) {
     abstract fun getName(): String
-    abstract fun getMyTypeName(): WorldTypeName
     abstract fun blueprintType(): BlueprintType
 
     open fun children(): List<PrefabChildBlueprint>? = null
@@ -38,8 +37,7 @@ abstract class PrefabBaseBlueprintLogic(
 
     fun getFile(): File {
         val calculator = CreationOrderCalculator(typesWorldApi)
-        val typeName = getMyTypeName()
-        val type = typesWorldApi.getTypeByName(typeName)
+        val type = view.getViewType()
 
         val blueprint = PrefabBlueprint.create(
             blueprintType = blueprintType(),
@@ -65,13 +63,9 @@ abstract class PrefabBaseBlueprintLogic(
 class PrefabWrappedElementBlueprintLogic(
     private val view: WrappedElementViewLogic,
     typesWorldApi: TypesWorldApi
-): PrefabBaseBlueprintLogic(view.mapper, typesWorldApi) {
+): PrefabBaseBlueprintLogic(view, view.mapper, typesWorldApi) {
     override fun getName(): String {
         return view.getViewClassName().replace("View", "")
-    }
-
-    override fun getMyTypeName(): WorldTypeName {
-        return view.getViewClassType().getName()
     }
 
     override fun blueprintType(): BlueprintType {
@@ -90,7 +84,7 @@ class PrefabWrappedElementBlueprintLogic(
 abstract class PrefabContainerBlueprintLogic(
     private val view: ContainerViewLogic,
     typesWorldApi: TypesWorldApi
-): PrefabBaseBlueprintLogic(view.mapper, typesWorldApi) {
+): PrefabBaseBlueprintLogic(view, view.mapper, typesWorldApi) {
 
     override fun children(): List<PrefabChildBlueprint>? {
         return view.getFields().map {
@@ -113,10 +107,6 @@ class PrefabComplexElementBlueprintLogic(
         return view.elem.modelType.name()
     }
 
-    override fun getMyTypeName(): WorldTypeName {
-        return view.getViewClassType().getName()
-    }
-
     override fun blueprintType(): BlueprintType {
         return BlueprintType.ComplexElement
     }
@@ -130,10 +120,6 @@ class PrefabWindowBlueprintLogic(
         return view.window.getClassName()
     }
 
-    override fun getMyTypeName(): WorldTypeName {
-        return view.getViewClassType().getName()
-    }
-
     override fun blueprintType(): BlueprintType {
         return BlueprintType.Window
     }
@@ -142,13 +128,9 @@ class PrefabWindowBlueprintLogic(
 class PrefabEnumElementBlueprintLogic(
     private val view: EnumElementViewLogic,
     typesWorldApi: TypesWorldApi
-): PrefabBaseBlueprintLogic(view.mapper, typesWorldApi) {
+): PrefabBaseBlueprintLogic(view, view.mapper, typesWorldApi) {
     override fun getName(): String {
         return view.vmLogic.modelType.name()
-    }
-
-    override fun getMyTypeName(): WorldTypeName {
-        return view.getViewClassType().getName()
     }
 
     override fun blueprintType(): BlueprintType {

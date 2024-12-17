@@ -23,6 +23,10 @@ abstract class ViewLogic(
 
     abstract fun getViewClassName(): String
 
+    fun getViewType(): WorldType {
+        return typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
+    }
+
     fun getOps(): PerFileOperations {
         val type = typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
         val classType = typesWorldApi.getClassType(type)
@@ -150,14 +154,8 @@ abstract class WrappedElementViewLogic(
     val modelType: WrappedApiType,
     mapper: ModelToViewModelTypeMapper
 ): ViewLogic(mapper) {
-    protected abstract fun extendedClassName(): String
-
     override fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(modelType)
-    }
-
-    fun getViewClassType(): WorldType {
-        return mapper.mapModelToViewType(modelType)
     }
 
     fun getElementViewModelTypeName(): String {
@@ -169,18 +167,12 @@ class ElementGroupViewLogic(
     modelType: ListApiType,
     mapper: ModelToViewModelTypeMapper
 ): WrappedElementViewLogic(modelType, mapper) {
-    override fun extendedClassName(): String {
-        return "UiElementGroupView"
-    }
 }
 
 class OptionalElementViewLogic(
     modelType: OptionalApiType,
     mapper: ModelToViewModelTypeMapper
 ): WrappedElementViewLogic(modelType, mapper) {
-    override fun extendedClassName(): String {
-        return "OptionalUiElementView"
-    }
 }
 
 class EnumElementViewLogic(
@@ -189,10 +181,6 @@ class EnumElementViewLogic(
 ) : ViewLogic(mapper) {
     override fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(vmLogic.modelType)
-    }
-
-    fun getViewClassType(): WorldType {
-        return mapper.mapModelToViewType(vmLogic.modelType)
     }
 }
 
