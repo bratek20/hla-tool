@@ -51,7 +51,7 @@ class ViewModelSharedLogic(
     }
 
     fun windowsLogic(): List<GeneratedWindowLogic> {
-        return windowsDef().map { GeneratedWindowLogic(moduleDef.getName(), it, apiTypeFactory) }
+        return windowsDef().map { GeneratedWindowLogic(moduleDef.getName(), it, apiTypeFactory, typesWorldApi) }
     }
 
     fun allElementTypeNames(): List<String> {
@@ -114,8 +114,7 @@ class ViewModelSharedLogic(
 
 class ViewModelField(
     val typeName: String,
-    val name: String,
-    val worldType: WorldType?
+    val name: String
 ) {
     companion object {
         fun fromDefs(moduleName: ModuleName, defs: List<FieldDefinition>, mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
@@ -137,7 +136,7 @@ class ViewModelField(
                         PatternName.ElementsView
                     ).asWorld()
                 )
-                ViewModelField(finalTypeName, it.getName(), finalType)
+                ViewModelField(finalTypeName, it.getName())
             }
         }
     }
@@ -181,8 +180,7 @@ class ViewModelComplexElementLogic(
         getMappedFields().forEach { field ->
             result.add(ViewModelField(
                 mapper.mapModelToViewModelTypeName(field.type),
-                field.name,
-                if (field.type !is BaseApiType && field.type !is SimpleStructureApiType) mapper.mapModelToViewModelType(field.type) else null
+                field.name
             ))
         }
 
