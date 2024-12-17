@@ -23,10 +23,16 @@ abstract class ViewLogic(
 ) {
     val typesWorldApi: TypesWorldApi = viewModel.typesWorldApi
 
-    abstract fun getViewClassName(): String
+    fun getViewClassName(): String {
+        return getViewType().getName().value
+    }
+
+    fun getViewModelTypeName(): String {
+        return viewModel.type.getName().value
+    }
 
     fun getViewType(): WorldType {
-        return typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
+        return ViewModelToViewMapperLogic(typesWorldApi).map(viewModel.type)
     }
 
     fun getExtendedParamType(): WorldConcreteParametrizedClass {
@@ -111,48 +117,17 @@ abstract class ViewLogic(
 abstract class ContainerViewLogic(
     viewModel: ViewModelLogic
 ): ViewLogic(viewModel) {
-    abstract fun getViewClassType(): WorldType
-    abstract fun getViewModelTypeName(): String
 }
 
 class ComplexElementViewLogic(
     val elem: ViewModelComplexElementLogic,
     val mapper: ModelToViewModelTypeMapper
 ): ContainerViewLogic(elem) {
-    public override fun getViewClassName(): String {
-        return mapper.mapViewModelToViewTypeName(elem.getTypeName())
-    }
-
-    override fun getViewClassType(): WorldType {
-        return mapper.mapViewModelNameToViewType(elem.getTypeName())
-    }
-
-    override fun getViewModelTypeName(): String {
-        return elem.getTypeName()
-    }
 }
 
 class WindowViewLogic(
     val window: GeneratedWindowLogic
 ): ContainerViewLogic(window) {
-    public override fun getViewClassName(): String {
-        return window.getClassName() + "View"
-    }
-
-    override fun getViewClassType(): WorldType {
-        return WorldType.create(
-            WorldTypeName(getViewClassName()),
-            HlaTypePath.create(
-                ModuleName(window.getModuleName()),
-                SubmoduleName.View,
-                PatternName.ElementsView
-            ).asWorld()
-        )
-    }
-
-    override fun getViewModelTypeName(): String {
-        return window.getClassName()
-    }
 }
 
 abstract class WrappedElementViewLogic(
@@ -160,9 +135,6 @@ abstract class WrappedElementViewLogic(
     val mapper: ModelToViewModelTypeMapper,
     viewModel: ViewModelLogic
 ): ViewLogic(viewModel) {
-    override fun getViewClassName(): String {
-        return mapper.mapModelToViewTypeName(modelType)
-    }
 
     fun getElementViewType(): WorldType {
         return getExtendedParamType().getTypeArguments().first()
@@ -187,9 +159,6 @@ class EnumElementViewLogic(
     val vmLogic: ViewModelEnumElementLogic,
     val mapper: ViewModelToViewMapper,
 ) : ViewLogic(vmLogic) {
-    override fun getViewClassName(): String {
-        return mapper.map(vmLogic.type).getName().value
-    }
 }
 
 class ElementsViewGenerator: BaseViewModelPatternGenerator() {
