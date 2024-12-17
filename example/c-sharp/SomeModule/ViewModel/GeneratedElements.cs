@@ -127,4 +127,11 @@ namespace SomeModule.ViewModel {
         ): base(element) {
         }
     }
+
+    public class OptionalSomeEmptyVm: OptionalUiElement<SomeEmptyVm, EmptyModel> {
+        public OptionalSomeEmptyVm(
+            SomeEmptyVm element
+        ): base(element) {
+        }
+    }
 }

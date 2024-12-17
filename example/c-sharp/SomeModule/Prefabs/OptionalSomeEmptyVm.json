@@ -1,0 +1,8 @@
+{
+  "blueprintType": "OptionalElement",
+  "name": "OptionalSomeEmptyVm",
+  "viewType": "SomeModule.View.OptionalSomeEmptyVmView",
+  "creationOrder": 2,
+  "children": [ ],
+  "elementViewType": "SomeModule.View.SomeEmptyVmView"
+}
