@@ -18,7 +18,7 @@ import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.ViewModelToViewMapperLogic
 import com.github.bratek20.hla.typesworld.api.*
 
-abstract class ViewLogic(
+open class ViewLogic(
     val viewModel: ViewModelLogic,
 ) {
     val typesWorldApi: TypesWorldApi = viewModel.typesWorldApi
@@ -114,51 +114,12 @@ abstract class ViewLogic(
     }
 }
 
-abstract class ContainerViewLogic(
+class WrappedElementViewLogic(
     viewModel: ViewModelLogic
 ): ViewLogic(viewModel) {
-}
-
-class ComplexElementViewLogic(
-    val elem: ViewModelComplexElementLogic,
-    val mapper: ModelToViewModelTypeMapper
-): ContainerViewLogic(elem) {
-}
-
-class WindowViewLogic(
-    val window: GeneratedWindowLogic
-): ContainerViewLogic(window) {
-}
-
-abstract class WrappedElementViewLogic(
-    val modelType: WrappedApiType,
-    val mapper: ModelToViewModelTypeMapper,
-    viewModel: ViewModelLogic
-): ViewLogic(viewModel) {
-
     fun getElementViewType(): WorldType {
         return getExtendedParamType().getTypeArguments().first()
     }
-}
-
-class ElementGroupViewLogic(
-    modelType: ListApiType,
-    mapper: ModelToViewModelTypeMapper,
-    viewModel: ViewModelLogic
-): WrappedElementViewLogic(modelType, mapper, viewModel) {
-}
-
-class OptionalElementViewLogic(
-    modelType: OptionalApiType,
-    mapper: ModelToViewModelTypeMapper,
-    viewModel: ViewModelLogic
-): WrappedElementViewLogic(modelType, mapper, viewModel) {
-}
-
-class EnumElementViewLogic(
-    val vmLogic: ViewModelEnumElementLogic,
-    val mapper: ViewModelToViewMapper,
-) : ViewLogic(vmLogic) {
 }
 
 class ElementsViewGenerator: BaseViewModelPatternGenerator() {
@@ -171,14 +132,11 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     }
 
     override fun getOperationsPerFile(): List<PerFileOperations> {
-        val mapper = logic.mapper()
-        val typesWorldApi = mapper.typesWorldApi
-
-        return (logic.complexElementsLogic().map { ComplexElementViewLogic(it, mapper) } +
-                logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it.model, mapper, it) } +
-                logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it.model, mapper, it) } +
-                logic.windowsLogic().map { WindowViewLogic(it) } +
-                logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper.vmToViewMapper) })
+        return (logic.complexElementsLogic().map { ViewLogic(it) } +
+                logic.elementListTypesToGenerate().map { WrappedElementViewLogic(it) } +
+                logic.elementOptionalTypesToGenerate().map { WrappedElementViewLogic(it) } +
+                logic.windowsLogic().map { ViewLogic(it) } +
+                logic.enumElementsLogic().map { ViewLogic(it) })
             .map { it.getOps() }
     }
 
