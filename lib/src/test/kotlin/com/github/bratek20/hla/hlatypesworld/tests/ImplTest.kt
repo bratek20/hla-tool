@@ -79,8 +79,7 @@ class HlaTypesWorldImplTest {
     }
 
     @Test
-    fun `should populate types from hla modules`() {
-        //api types
+    fun `should populate api types`() {
         assertHasClassType("OtherClass", "OtherModule/Api/ValueObjects") {
             fields = listOf(
                 {
@@ -106,8 +105,10 @@ class HlaTypesWorldImplTest {
                 }
             }
         }
+    }
 
-        //modules view model types
+    @Test
+    fun `should populate view model types`() {
         assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {
             typeArguments = listOf {
                 name = "OtherClass"
@@ -206,8 +207,16 @@ class HlaTypesWorldImplTest {
 
         assertHasType("OptionalSomeClass6Vm", "SomeModule/ViewModel/GeneratedElements")
 
-        //view types
-        assertHasType("OtherClassView", "OtherModule/View/ElementsView")
+    }
+
+    @Test
+    fun `should populate view types`() {
+        assertHasClassType("OtherClassView", "OtherModule/View/ElementsView") {
+            extends = {
+                name = "ElementView<OtherClassVm>"
+            }
+        }
+
         assertHasType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView")
 
         assertHasClassType("SomeEnum2SwitchView", "SomeModule/View/ElementsView") {
@@ -218,13 +227,19 @@ class HlaTypesWorldImplTest {
 
         assertHasClassType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView") {
             extends = {
-                name = "UiElementGroupView<SomeEnum2SwitchView>"
+                name = "UiElementGroupView<SomeEnum2SwitchView,SomeEnum2Switch,SomeEnum2>"
             }
         }
 
         assertHasClassType("OptionalSomeClassView", "SomeModule/View/ElementsView") {
             extends = {
-                name = "OptionalUiElementView<SomeClassView>"
+                name = "OptionalUiElementView<SomeClassView,SomeClassVm,SomeClass>"
+            }
+        }
+
+        assertHasClassType("SomeWindowView", "SomeModule/View/ElementsView") {
+            extends = {
+                name = "WindowView<SomeWindow>"
             }
         }
     }

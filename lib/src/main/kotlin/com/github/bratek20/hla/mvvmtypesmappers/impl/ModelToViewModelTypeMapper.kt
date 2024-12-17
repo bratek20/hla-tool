@@ -14,9 +14,9 @@ import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class ModelToViewModelTypeMapper(
     private val apiTypeFactory: ApiTypeFactoryLogic,
-    private val typesWorldApi: TypesWorldApi
+    val typesWorldApi: TypesWorldApi
 ): BaseViewModelTypesMapper() {
-    private val vmToViewMapper = ViewModelToViewMapperLogic(typesWorldApi)
+    val vmToViewMapper = ViewModelToViewMapperLogic(typesWorldApi)
 
     fun mapViewModelToViewTypeName(viewModelType: String): String {
         return vmToViewMapper.mapViewModelToViewTypeName(viewModelType)

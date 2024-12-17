@@ -15,7 +15,7 @@ class CreationOrderCalculator(
         if (type.getPath().value.startsWith("B20/Frontend")) {
             return 0
         }
-        if (type.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
+        if (type.getPath().asHla().getSubmoduleName() != SubmoduleName.View) {
             return 0
         }
         if (typesWorldApi.getTypeInfo(type).getKind() == WorldTypeKind.ConcreteParametrizedClass) {
