@@ -10,8 +10,8 @@ import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
-open class BaseViewModelTypesMapper {
-    fun mapModelToViewModelTypeName(modelType: ApiTypeLogic): String {
+internal class BaseViewModelTypesMapper {
+    private fun mapModelToViewModelTypeName(modelType: ApiTypeLogic): String {
         if (modelType is BaseApiType) {
             return mapBaseType(modelType)
         }
@@ -35,7 +35,7 @@ open class BaseViewModelTypesMapper {
 
     fun mapModelToViewModelType(modelType: ApiTypeLogic): WorldType {
         val viewModelTypeName = mapModelToViewModelTypeName(modelType)
-        if (ModelToViewModelTypeMapper.b20ViewModelTypes.contains(viewModelTypeName)) {
+        if (b20ViewModelTypes.contains(viewModelTypeName)) {
             return WorldType.create(
                 name = WorldTypeName(viewModelTypeName),
                 path = B20FrontendTypesPopulator.labelType.getPath()
@@ -80,5 +80,15 @@ open class BaseViewModelTypesMapper {
             BaseType.VOID -> throw IllegalArgumentException("Void is not supported in view models")
             BaseType.ANY -> throw IllegalArgumentException("Any is not supported in view models")
         }
+    }
+
+    companion object {
+        val b20ViewModelTypes = listOf(
+            "Label",
+            "LabelGroup",
+            "OptionalLabel",
+            "Button",
+            "BoolSwitch",
+        )
     }
 }

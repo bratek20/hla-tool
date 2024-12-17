@@ -5,6 +5,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.mvvmtypesmappers.api.*
+import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper.Companion.b20ViewModelTypes
 
 import com.github.bratek20.hla.typesworld.api.*
 
@@ -22,8 +23,8 @@ class ViewModelToViewMapperLogic(
         )
     }
 
-    fun mapViewModelToViewTypeName(viewModelType: String): String {
-        if (ModelToViewModelTypeMapper.b20ViewModelTypes.contains(viewModelType)) {
+    private fun mapViewModelToViewTypeName(viewModelType: String): String {
+        if (b20ViewModelTypes.contains(viewModelType)) {
             return viewModelType + "View"
         }
 

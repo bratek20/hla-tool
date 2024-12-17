@@ -8,9 +8,8 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
-import com.github.bratek20.hla.generation.impl.core.api.*
+import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.hlatypesworld.api.asHla
-import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElementWrapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredElementWrapper
@@ -42,10 +41,6 @@ class ViewModelSharedLogic(
 
     fun enumElementsLogic(): List<ViewModelEnumElementLogic> {
         return ViewModelLogicFactory(apiTypeFactory, typesWorldApi).createEnumElementsLogic(elementEnumTypesToGenerate())
-    }
-
-    fun mapper(): ModelToViewModelTypeMapper {
-        return ModelToViewModelTypeMapper(apiTypeFactory, typesWorldApi)
     }
 
     fun windowsLogic(): List<GeneratedWindowLogic> {
