@@ -13,8 +13,7 @@ class ViewModelToViewMapperLogic(
     private val typesWorldApi: TypesWorldApi
 ): ViewModelToViewMapper {
     override fun map(viewModel: WorldType): WorldType {
-        val viewModelTypeName = viewModel.getName().value
-        val viewTypeName = mapViewModelToViewTypeName(viewModelTypeName)
+        val viewTypeName = mapViewModelToViewTypeName(viewModel)
         return WorldType.create(
             name = WorldTypeName(viewTypeName),
             path = viewModel.getPath().asHla()
@@ -23,7 +22,8 @@ class ViewModelToViewMapperLogic(
         )
     }
 
-    private fun mapViewModelToViewTypeName(viewModelType: String): String {
+    private fun mapViewModelToViewTypeName(viewModel: WorldType): String {
+        val viewModelType = viewModel.getName().value
         if (b20ViewModelTypes.contains(viewModelType)) {
             return viewModelType + "View"
         }
@@ -37,7 +37,7 @@ class ViewModelToViewMapperLogic(
         }
         if (viewModelType.startsWith("Optional")) {
             val wrappedTypeName = viewModelType.replace("Optional", "")
-            return "Optional" + mapViewModelToViewTypeName(wrappedTypeName)
+            return "Optional" + mapViewModelToViewTypeName(typesWorldApi.getTypeByName(WorldTypeName(wrappedTypeName)))
         }
         if (viewModelType.endsWith("Window")) {
             return viewModelType + "View"
@@ -47,6 +47,9 @@ class ViewModelToViewMapperLogic(
         if (modelType.getName().value == "EmptyModel") {
             return viewModelType + "View"
         }
+//        if (modelType.getPath().asHla().getModuleName() != viewModel.getPath().asHla().getModuleName()) {
+//            return viewModelType + "View"
+//        }
         if (viewModelType.endsWith("Switch")) {
             return modelType.getName().value + "SwitchView"
         }
