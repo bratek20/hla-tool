@@ -143,7 +143,12 @@ class HlaTypesWorldImplTest {
             }
         }
         assertHasType("SomeEnum2SwitchGroup", "SomeModule/ViewModel/GeneratedElements")
-        assertHasType("SomeEnum2Switch", "SomeModule/ViewModel/GeneratedElements")
+        assertHasClassType("SomeEnum2Switch", "SomeModule/ViewModel/GeneratedElements") {
+            extends = {
+                name = "EnumSwitch<SomeEnum2>"
+            }
+        }
+
         assertHasClassType("OtherClassVmGroup", "OtherModule/ViewModel/GeneratedElements") {
 
         }
@@ -204,6 +209,12 @@ class HlaTypesWorldImplTest {
         //view types
         assertHasType("OtherClassView", "OtherModule/View/ElementsView")
         assertHasType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView")
+
+        assertHasClassType("SomeEnum2SwitchView", "SomeModule/View/ElementsView") {
+            extends = {
+                name = "EnumSwitchView<SomeEnum2>"
+            }
+        }
 
         assertHasClassType("SomeEnum2SwitchGroupView", "SomeModule/View/ElementsView") {
             extends = {

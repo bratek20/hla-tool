@@ -1,5 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.prefabs
 
+import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeKind
@@ -11,6 +13,9 @@ class CreationOrderCalculator(
 
     fun calculateCreationOrder(type: WorldType): Int {
         if (type.getPath().value.startsWith("B20/Frontend")) {
+            return 0
+        }
+        if (type.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
             return 0
         }
         if (typesWorldApi.getTypeInfo(type).getKind() == WorldTypeKind.ConcreteParametrizedClass) {

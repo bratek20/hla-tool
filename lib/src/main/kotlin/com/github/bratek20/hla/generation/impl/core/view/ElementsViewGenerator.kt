@@ -205,7 +205,8 @@ class OptionalElementViewLogic(
 
 class EnumElementViewLogic(
     val vmLogic: ViewModelEnumElementLogic,
-    mapper: ModelToViewModelTypeMapper
+    mapper: ModelToViewModelTypeMapper,
+    private val typesWorldApi: TypesWorldApi
 ) : ViewLogic(mapper) {
     fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(vmLogic.modelType)
@@ -216,13 +217,20 @@ class EnumElementViewLogic(
     }
 
     override fun getOps(): PerFileOperations {
+        val type = typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
+        val classType = typesWorldApi.getClassType(type)
+        val extendedType = classType.getExtends()!!
+        val extendedParamType = typesWorldApi.getConcreteParametrizedClass(extendedType)
+
         return PerFileOperations(getViewClassName()) {
             addClass {
-                name = getViewClassName()
+                name = type.getName().value
                 extends {
-                    className = "EnumSwitchView"
-                    addGeneric {
-                        typeName(vmLogic.modelType.name())
+                    className = extendedType.getName().value.replaceAfter("<", "").dropLast(1)
+                    extendedParamType.getTypeArguments().forEach {
+                        addGeneric {
+                            typeName(it.getName().value)
+                        }
                     }
                 }
             }
@@ -245,7 +253,7 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
                 logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) } +
                 logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) } +
                 logic.windowsLogic().map { WindowViewLogic(it, mapper) } +
-                logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) })
+                logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper, typesWorldApi) })
             .map { it.getOps() }
     }
 

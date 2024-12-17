@@ -70,7 +70,30 @@ class ViewTypesPopulator(
             viewModel, view,
             { it.startsWith("OptionalUiElement") },
             "OptionalUiElementView"
+        ) ?: populateExtendEnumSwitchTypeIfPresent(viewModel, view)
+    }
+
+    private fun populateExtendEnumSwitchTypeIfPresent(viewModel: WorldClassType, view: WorldType): WorldType? {
+        if (viewModel.getExtends() == null) {
+            return null
+        }
+        if (!viewModel.getExtends()!!.getName().value.startsWith("EnumSwitch")) {
+            return null
+        }
+        val enumSwitchParamType = world.getConcreteParametrizedClass(viewModel.getExtends()!!)
+        val enumType = enumSwitchParamType.getTypeArguments().first()
+        val viewExtends = WorldType.create(
+            WorldTypeName("EnumSwitchView<${enumType.getName()}>"),
+            view.getPath()
         )
+        world.addConcreteParametrizedClass(
+            WorldConcreteParametrizedClass.create(
+                type = viewExtends,
+                typeArguments = listOf(enumType)
+            )
+        )
+
+        return viewExtends
     }
 
     private fun populateExtendWrapperTypeIfPresent(
