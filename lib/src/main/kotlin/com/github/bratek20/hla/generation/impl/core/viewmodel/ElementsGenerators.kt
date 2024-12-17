@@ -73,18 +73,8 @@ class ViewModelSharedLogic(
     fun elementOptionalTypesToGenerate(): List<OptionalElementViewModelLogic> {
         return allModuleElementTypes().filter {
             it.getName().value.startsWith("Optional")
-        }.mapNotNull {
-            val model = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
-            if (model.getPath().asHla().getModuleName() != moduleDef.getName()) {
-                return@mapNotNull null
-            }
-
-            val typeDef = TypeDefinition.create(model.getName().value, listOf(
-                TypeWrapper.OPTIONAL
-            ))
-            (apiTypeFactory.create(typeDef) as OptionalApiType) to it
         }.map {
-            OptionalElementViewModelLogic(it.first, typesWorldApi, it.second)
+            OptionalElementViewModelLogic(typesWorldApi, it)
         }
     }
 
@@ -92,13 +82,7 @@ class ViewModelSharedLogic(
         return allModuleElementTypes().filter {
             it.getName().value.endsWith("Group")
         }.map {
-            val model = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
-            val typeDef = TypeDefinition.create(model.getName().value, listOf(
-                TypeWrapper.LIST
-            ))
-            (apiTypeFactory.create(typeDef) as ListApiType) to it
-        }.map {
-            ElementGroupViewModelLogic(it.first, typesWorldApi, it.second)
+            ElementGroupViewModelLogic(typesWorldApi, it)
         }
     }
 }
@@ -124,7 +108,6 @@ abstract class ViewModelWrapperLogic(
 }
 
 class ElementGroupViewModelLogic(
-    val model: ListApiType,
     typesWorldApi: TypesWorldApi,
     type: WorldType
 ): ViewModelWrapperLogic(typesWorldApi, type) {
@@ -158,7 +141,6 @@ class ElementGroupViewModelLogic(
 }
 
 class OptionalElementViewModelLogic(
-    val model: OptionalApiType,
     typesWorldApi: TypesWorldApi,
     type: WorldType
 ): ViewModelWrapperLogic(typesWorldApi, type) {
