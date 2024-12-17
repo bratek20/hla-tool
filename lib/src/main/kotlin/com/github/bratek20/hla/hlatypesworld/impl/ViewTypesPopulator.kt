@@ -73,12 +73,17 @@ class ViewTypesPopulator(
             { it.startsWith("OptionalUiElement") },
             "OptionalUiElementView"
         ) ?: populateExtendEnumSwitchTypeIfPresent(viewModel, view)
-        ?: populateExtendUiElement(viewModel, view)
+        ?: populateExtendUiElementOrWindow(viewModel, view)
     }
 
-    private fun populateExtendUiElement(viewModel: WorldClassType, view: WorldType): WorldType {
+    private fun populateExtendUiElementOrWindow(viewModel: WorldClassType, view: WorldType): WorldType {
+        val extendName = if (viewModel.getExtends()!!.getName().value.startsWith("Window"))
+            "WindowView"
+        else
+            "ElementView"
+
         val viewExtends = WorldType.create(
-            WorldTypeName("ElementView<${viewModel.getType().getName()}>"),
+            WorldTypeName("$extendName<${viewModel.getType().getName()}>"),
             view.getPath()
         )
         world.addConcreteParametrizedClass(
