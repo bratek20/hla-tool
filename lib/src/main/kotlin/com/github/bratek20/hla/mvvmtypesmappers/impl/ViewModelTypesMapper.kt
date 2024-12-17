@@ -13,7 +13,7 @@ fun getModelTypeForEnsuredUiElement(typesWorldApi: TypesWorldApi, viewModelType:
     return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[0]
 }
 
-private fun getModelTypeForEnsuredUiElementWrapper(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
+fun getModelTypeForEnsuredUiElementWrapper(typesWorldApi: TypesWorldApi, viewModelType: String): WorldType {
     val type = typesWorldApi.getTypeByName(WorldTypeName(viewModelType))
     val classType = typesWorldApi.getClassType(type)
     return typesWorldApi.getConcreteParametrizedClass(classType.getExtends()!!).getTypeArguments()[1]
