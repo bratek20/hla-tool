@@ -21,11 +21,14 @@ namespace SomeModule.View {
         ButtonView button;
         [SerializeField]
         BoolSwitchView boolSwitch;
+        [SerializeField]
+        OptionalLabelView optLabel;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
             button.Bind(ViewModel.Button);
             boolSwitch.Bind(ViewModel.BoolSwitch);
+            optLabel.Bind(ViewModel.OptLabel);
         }
     }
 }

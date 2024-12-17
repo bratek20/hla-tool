@@ -16,6 +16,7 @@ import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.WorldTypeNotFoundException
 import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
 import com.github.bratek20.logs.LogsMocks
@@ -72,6 +73,7 @@ class HlaTypesWorldImplTest {
         assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
         assertHasType("Label", "B20/Frontend/UiElements/Api/Undefined")
         assertHasType("Button", "B20/Frontend/UiElements/Api/Undefined")
+        assertHasType("BoolSwitch", "B20/Frontend/UiElements/Api/Undefined")
 
         assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
     }
@@ -121,7 +123,6 @@ class HlaTypesWorldImplTest {
                     name = "id"
                     type = {
                         name = "Label"
-                        //path = "B20/Frontend/UiElements" //TODO-FIX
                     }
                 },
                 {
@@ -152,7 +153,32 @@ class HlaTypesWorldImplTest {
             }
         }
         assertHasType("SomeWindow", "SomeModule/ViewModel/GeneratedWindows")
-        assertHasType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements")
+
+        assertHasClassType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
+            fields = listOf(
+                {
+                    name = "id"
+                },
+                {
+                    name = "button"
+                    type = {
+                        name = "Button"
+                    }
+                },
+                {
+                    name = "boolSwitch"
+                    type = {
+                        name = "BoolSwitch"
+                    }
+                },
+                {
+                    name = "optLabel"
+                    type = {
+                        name = "OptionalLabel"
+                    }
+                }
+            )
+        }
 
         assertHasClassType("OptionalSomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
             extends = {
@@ -230,6 +256,14 @@ class HlaTypesWorldImplTest {
         }))
             .withFailMessage("Type ${typePath}/${typeName} not found")
             .isTrue()
+    }
+
+    private fun assertHasNotTypeOfName(typeName: String) {
+        Assertions.assertThatCode {
+            typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        }
+            .withFailMessage("Type with name $typeName found")
+            .isInstanceOf(WorldTypeNotFoundException::class.java)
     }
 
     private fun assertHasNotType(typeName: String, typePath: String) {

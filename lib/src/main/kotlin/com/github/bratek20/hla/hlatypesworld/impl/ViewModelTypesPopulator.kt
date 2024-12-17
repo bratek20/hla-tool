@@ -199,12 +199,14 @@ class ViewModelTypesPopulator(
     }
 
     private fun getFieldsForElement(def: ViewModelElementDefinition): List<WorldClassField> {
-        return def.getModel()?.let { model ->
+        val modelFields = def.getModel()?.let { model ->
             model.getMappedFields().map {
                 val type = mapModelField(model.getName(), it)
                 WorldClassField.create(it, type)
             }
         } ?: emptyList()
+
+        return modelFields + mapViewModelFields(def.getFields())
     }
 
     private fun viewModelTypeDefToWorldType(def: TypeDefinition): WorldTypeName {
@@ -228,11 +230,7 @@ class ViewModelTypesPopulator(
     }
 
     private fun getFieldsForWindow(def: ViewModelWindowDefinition): List<WorldClassField> {
-        return def.getFields().map {
-            world.getTypeByName(viewModelTypeDefToWorldType(it.getType())).let { type ->
-                WorldClassField.create(it.getName(), type)
-            }
-        }
+        return mapViewModelFields(def.getFields())
     }
 
     private fun mapModelField(modelTypeName: String, fieldName: String): WorldType {
@@ -240,5 +238,13 @@ class ViewModelTypesPopulator(
         val field = modelType.fields.find { it.name == fieldName }
             ?: throw IllegalStateException("Field $fieldName not found in model $modelTypeName")
         return mapper.mapModelToViewModelType(field.type)
+    }
+
+    private fun mapViewModelFields(defs: List<FieldDefinition>): List<WorldClassField> {
+        return defs.map {
+            world.getTypeByName(viewModelTypeDefToWorldType(it.getType())).let { type ->
+                WorldClassField.create(it.getName(), type)
+            }
+        }
     }
 }

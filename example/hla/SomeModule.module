@@ -211,6 +211,7 @@ ViewModel
                 id
             button: Button
             boolSwitch: BoolSwitch
+            optLabel: Label?
 
         SomeClass2Vm
             SomeClass2
@@ -251,3 +252,4 @@ ViewModel
             someClassVmList: SomeClassVm[]
             someButton: Button
             newOptVm: SomeClass6Vm?
+            optEmptyVm: SomeEmptyVm?

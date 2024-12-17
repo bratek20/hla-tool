@@ -19,6 +19,10 @@
     {
       "name": "newOptVm",
       "viewType": "SomeModule.View.OptionalSomeClass6View"
+    },
+    {
+      "name": "optEmptyVm",
+      "viewType": "SomeModule.View.OptionalSomeEmptyVmView"
     }
   ],
   "elementViewType": null

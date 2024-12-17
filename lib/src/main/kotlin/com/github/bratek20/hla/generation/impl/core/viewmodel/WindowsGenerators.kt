@@ -14,11 +14,13 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class GeneratedWindowLogic(
     private val moduleName: ModuleName,
     private val def: ViewModelWindowDefinition,
-    private val apiTypeFactory: ApiTypeFactoryLogic
+    private val apiTypeFactory: ApiTypeFactoryLogic,
+    private val typesWorldApi: TypesWorldApi
 ) {
     fun getModuleName(): String {
         return moduleName.value
@@ -41,8 +43,15 @@ class GeneratedWindowLogic(
         }
     }
 
-    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
-        return ViewModelField.fromDefs(ModuleName(getModuleName()), def.getFields(), mapper)
+    fun getFields(): List<ViewModelField> {
+        val type = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
+        val classType = typesWorldApi.getClassType(type)
+        return classType.getFields().map { field ->
+            ViewModelField(
+                typeName = field.getType().getName().value,
+                name = field.getName(),
+            )
+        }
     }
 
     fun getWindowClass(): ClassBuilderOps = {
@@ -70,12 +79,6 @@ class GeneratedWindowLogic(
             return field.getType().getName() + "Group"
         }
         return field.getType().getName()
-    }
-
-    fun getElementTypesWrappedIn(type: TypeWrapper): List<String> {
-        return def.getFields()
-            .filter { it.getType().getWrappers().contains(type) }
-            .map { it.getType().getName() }
     }
 }
 

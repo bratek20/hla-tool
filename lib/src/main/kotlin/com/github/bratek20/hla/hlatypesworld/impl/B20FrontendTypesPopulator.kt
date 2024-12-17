@@ -74,5 +74,15 @@ class B20FrontendTypesPopulator(
                 fields = emptyList()
             )
         )
+
+        api.addClassType(
+            WorldClassType.create(
+                type = WorldType.create(
+                    name = WorldTypeName("BoolSwitch"),
+                    path = pathForUndefinedPattern
+                ),
+                fields = emptyList()
+            )
+        )
     }
 }

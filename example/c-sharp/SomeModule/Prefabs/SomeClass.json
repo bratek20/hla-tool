@@ -15,6 +15,10 @@
     {
       "name": "boolSwitch",
       "viewType": "B20.Frontend.Elements.View.BoolSwitchView"
+    },
+    {
+      "name": "optLabel",
+      "viewType": "B20.Frontend.Elements.View.OptionalLabelView"
     }
   ],
   "elementViewType": null
