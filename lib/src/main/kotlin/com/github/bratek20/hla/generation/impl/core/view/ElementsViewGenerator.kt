@@ -188,7 +188,7 @@ class EnumElementViewLogic(
     val mapper: ViewModelToViewMapper,
 ) : ViewLogic(vmLogic) {
     override fun getViewClassName(): String {
-        return mapper.map(vmLogic.getType()).getName().value
+        return mapper.map(vmLogic.type).getName().value
     }
 }
 

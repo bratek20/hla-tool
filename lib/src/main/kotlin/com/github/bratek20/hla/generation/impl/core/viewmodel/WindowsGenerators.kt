@@ -14,14 +14,16 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class GeneratedWindowLogic(
     private val moduleName: ModuleName,
     private val def: ViewModelWindowDefinition,
     private val apiTypeFactory: ApiTypeFactoryLogic,
-    typesWorldApi: TypesWorldApi
-): ViewModelLogic(typesWorldApi) {
+    typesWorldApi: TypesWorldApi,
+    type: WorldType
+): ViewModelLogic(typesWorldApi, type) {
     fun getModuleName(): String {
         return moduleName.value
     }
