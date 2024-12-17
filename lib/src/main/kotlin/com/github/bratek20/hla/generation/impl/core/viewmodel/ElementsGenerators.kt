@@ -245,19 +245,10 @@ class ViewModelComplexElementLogic(
             }
         }
 
-        getMappedFields().forEach { field ->
+        getFields().forEach { field ->
             addField {
-                type = typeName(mapper.mapModelToViewModelTypeName(field.type))
+                type = typeName(field.typeName)
                 name = field.name
-                getter = true
-                setter = true
-            }
-        }
-
-        def.getFields().forEach { field ->
-            addField {
-                type = typeName(field.getType().getName())
-                name = field.getName()
                 getter = true
                 setter = true
             }
