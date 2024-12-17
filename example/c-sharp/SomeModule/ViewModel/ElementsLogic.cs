@@ -33,4 +33,7 @@ namespace SomeModule.ViewModel {
 
     public partial class SomeEmptyVm {
     }
+
+    public partial class ReferencingOtherClassVm {
+    }
 }

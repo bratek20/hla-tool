@@ -1,0 +1,17 @@
+{
+  "blueprintType": "ComplexElement",
+  "name": "OtherClass",
+  "viewType": "OtherModule.View.OtherClassView",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "id",
+      "viewType": "B20.Frontend.UiElements.View.LabelView"
+    },
+    {
+      "name": "amount",
+      "viewType": "B20.Frontend.UiElements.View.LabelView"
+    }
+  ],
+  "elementViewType": null
+}

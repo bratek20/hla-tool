@@ -24,7 +24,8 @@ open class ViewLogic(
     }
 
     fun getViewType(): WorldType {
-        return ViewModelToViewMapperLogic(typesWorldApi).map(viewModel.type)
+        val viewTypeName = ViewModelToViewMapperLogic(typesWorldApi).map(viewModel.type).getName()
+        return typesWorldApi.getTypeByName(viewTypeName)
     }
 
     fun getExtendedParamType(): WorldConcreteParametrizedClass {

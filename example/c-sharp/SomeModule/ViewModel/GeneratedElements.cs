@@ -82,6 +82,11 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class ReferencingOtherClassVm: UiElement<OtherClass> {
+        protected override void OnUpdate() {
+        }
+    }
+
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {
     }
 
