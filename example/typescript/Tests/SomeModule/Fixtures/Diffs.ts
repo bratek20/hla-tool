@@ -298,6 +298,19 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassWithBoolField {
+        boolField?: boolean,
+    }
+    export function diffClassWithBoolField(given: ClassWithBoolField, expected: ExpectedClassWithBoolField, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.boolField !== undefined) {
+            if (given.getBoolField() != expected.boolField) { result.push(`${path}boolField ${given.getBoolField()} != ${expected.boolField}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeQueryInput {
         id?: string,
         amount?: number,

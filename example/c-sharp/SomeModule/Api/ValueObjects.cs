@@ -322,6 +322,22 @@ namespace SomeModule.Api {
         }
     }
 
+    public class ClassWithBoolField: ValueObject {
+        readonly bool boolField;
+
+        public ClassWithBoolField(
+            bool boolField
+        ) {
+            this.boolField = boolField;
+        }
+        public bool GetBoolField() {
+            return boolField;
+        }
+        public static ClassWithBoolField Create(bool boolField) {
+            return new ClassWithBoolField(boolField);
+        }
+    }
+
     public class SomeQueryInput: ValueObject {
         readonly string id;
         readonly int amount;

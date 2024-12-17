@@ -317,6 +317,20 @@ fun diffClassWithEnumList(given: ClassWithEnumList, expectedInit: ExpectedClassW
     return result.joinToString("\n")
 }
 
+data class ExpectedClassWithBoolField(
+    var boolField: Boolean? = null,
+)
+fun diffClassWithBoolField(given: ClassWithBoolField, expectedInit: ExpectedClassWithBoolField.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithBoolField().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.boolField?.let {
+        if (given.getBoolField() != it) { result.add("${path}boolField ${given.getBoolField()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,

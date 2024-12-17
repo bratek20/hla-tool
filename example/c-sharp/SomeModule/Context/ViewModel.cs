@@ -28,6 +28,7 @@ namespace SomeModule.Context {
                 .SetClass<SomeEnum2SwitchGroup>(InjectionMode.Prototype)
                 .SetClass<SomeEmptyVm>(InjectionMode.Prototype)
                 .SetClass<ReferencingOtherClassVm>(InjectionMode.Prototype)
+                .SetClass<ToggleOverride>(InjectionMode.Prototype)
                 .SetClass<SomeClassVmGroup>(InjectionMode.Prototype)
                 .SetClass<OptionalSomeClass6Vm>(InjectionMode.Prototype)
                 .SetClass<OptionalSomeEmptyVm>(InjectionMode.Prototype)

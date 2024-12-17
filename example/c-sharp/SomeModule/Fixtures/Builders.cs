@@ -73,6 +73,10 @@ namespace SomeModule.Fixtures {
         public List<string> EnumList { get; set; } = new List<string>();
     }
 
+    public class ClassWithBoolFieldDef {
+        public bool BoolField { get; set; } = false;
+    }
+
     public class SomeQueryInputDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 0;
@@ -209,6 +213,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return ClassWithEnumList.Create(def.EnumList.Select(it => (SomeEnum2)Enum.Parse(typeof(SomeEnum2), it)).ToList());
+        }
+        public static ClassWithBoolField BuildClassWithBoolField(Action<ClassWithBoolFieldDef> init = null) {
+            var def = new ClassWithBoolFieldDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassWithBoolField.Create(def.BoolField);
         }
         public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = null) {
             var def = new SomeQueryInputDef();

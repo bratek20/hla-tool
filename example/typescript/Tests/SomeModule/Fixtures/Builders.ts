@@ -188,6 +188,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassWithBoolFieldDef {
+        boolField?: boolean,
+    }
+    export function classWithBoolField(def?: ClassWithBoolFieldDef): ClassWithBoolField {
+        const final_boolField = def?.boolField ?? false
+
+        return ClassWithBoolField.create(
+            final_boolField,
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,
