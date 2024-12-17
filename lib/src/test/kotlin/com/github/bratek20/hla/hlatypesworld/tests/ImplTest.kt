@@ -123,7 +123,6 @@ class HlaTypesWorldImplTest {
                     name = "id"
                     type = {
                         name = "Label"
-                        //path = "B20/Frontend/UiElements" //TODO-FIX
                     }
                 },
                 {
@@ -170,6 +169,12 @@ class HlaTypesWorldImplTest {
                     name = "boolSwitch"
                     type = {
                         name = "BoolSwitch"
+                    }
+                },
+                {
+                    name = "optLabel"
+                    type = {
+                        name = "OptionalLabel"
                     }
                 }
             )
