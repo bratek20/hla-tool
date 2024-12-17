@@ -13,7 +13,6 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElementWrapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredElementWrapper
-import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeKind
@@ -192,8 +191,7 @@ class ViewModelEnumElementLogic(
 
 class ViewModelComplexElementLogic(
     val def: ViewModelElementDefinition,
-    val modelType: ComplexStructureApiType<*>,
-    val apiTypeFactory: ApiTypeFactoryLogic,
+    private val modelType: ComplexStructureApiType<*>,
     typesWorldApi: TypesWorldApi,
     type: WorldType
 ): ViewModelElementLogic(typesWorldApi, type) {
@@ -210,7 +208,7 @@ class ViewModelComplexElementLogic(
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel()?.getMappedFields()?.map { fieldName ->
-            (modelType as ComplexStructureApiType<*>).fields.firstOrNull { it.name == fieldName }
+            modelType.fields.firstOrNull { it.name == fieldName }
                 ?: throw IllegalArgumentException("Field not found: $fieldName in ${modelType.name} for ${def.getName()}")
         } ?: emptyList()
     }
@@ -323,7 +321,6 @@ class ViewModelLogicFactory(
     private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ) {
-    //TODO
     fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
             val modelType = element.getModel()?.let { model ->
@@ -331,7 +328,7 @@ class ViewModelLogicFactory(
             } ?: ComplexValueObjectApiType("EmptyModel", emptyList())
 
             modelType.init(apiTypeFactory.languageTypes, null)
-            ViewModelComplexElementLogic(element, modelType, apiTypeFactory, typesWorldApi, typesWorldApi.getTypeByName(WorldTypeName(element.getName())))
+            ViewModelComplexElementLogic(element, modelType, typesWorldApi, typesWorldApi.getTypeByName(WorldTypeName(element.getName())))
         }
     }
 
