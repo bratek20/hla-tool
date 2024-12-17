@@ -40,11 +40,11 @@ class ViewModelContextGenerator: PatternGenerator() {
                         instanceVariable("builder")
                     }
 
-                    logic.allElementTypeNames().forEach { elementTypeName ->
+                    logic.allModuleElementTypes().forEach { type ->
                         builderOperations.then {
                             methodCall {
                                 methodName = "setClass"
-                                addGeneric(elementTypeName)
+                                addGeneric(type.getName().value)
                                 addArg {
                                     hardcodedExpression("InjectionMode.Prototype")
                                 }
