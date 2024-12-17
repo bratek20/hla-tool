@@ -6,7 +6,6 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.view.*
 import com.github.bratek20.hla.generation.impl.core.viewmodel.BaseViewModelPatternGenerator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
-import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.prefabcreator.api.BlueprintType
 import com.github.bratek20.hla.prefabcreator.api.PrefabBlueprint
 import com.github.bratek20.hla.prefabcreator.api.PrefabChildBlueprint
@@ -22,18 +21,13 @@ fun asFullViewType(type: WorldType): String {
 
 abstract class PrefabBaseBlueprintLogic(
     private val view: ViewLogic,
-    private val mapper: ModelToViewModelTypeMapper,
     private val typesWorldApi: TypesWorldApi
 ) {
     abstract fun getName(): String
     abstract fun blueprintType(): BlueprintType
 
     open fun children(): List<PrefabChildBlueprint>? = null
-    open fun elementViewType(): String? = null
-
-    protected fun getFullType(viewModelTypeName: String): String {
-        return mapper.mapViewModelToFullViewTypeName(viewModelTypeName)
-    }
+    open fun elementViewType(): WorldType? = null
 
     fun getFile(): File {
         val calculator = CreationOrderCalculator(typesWorldApi)
@@ -45,7 +39,7 @@ abstract class PrefabBaseBlueprintLogic(
             viewType = asFullViewType(type),
             creationOrder = calculator.calculateCreationOrder(type),
             children = children() ?: emptyList(),
-            elementViewType = elementViewType()
+            elementViewType = elementViewType()?.let { asFullViewType(it) }
         )
 
         val serializer = SerializationFactory.createSerializer(SerializerConfig.create(
@@ -63,7 +57,7 @@ abstract class PrefabBaseBlueprintLogic(
 class PrefabWrappedElementBlueprintLogic(
     private val view: WrappedElementViewLogic,
     typesWorldApi: TypesWorldApi
-): PrefabBaseBlueprintLogic(view, view.mapper, typesWorldApi) {
+): PrefabBaseBlueprintLogic(view, typesWorldApi) {
     override fun getName(): String {
         return view.getViewClassName().replace("View", "")
     }
@@ -76,15 +70,15 @@ class PrefabWrappedElementBlueprintLogic(
         }
     }
 
-    override fun elementViewType(): String {
-        return getFullType(view.getElementViewModelTypeName())
+    override fun elementViewType(): WorldType {
+        return view.getElementViewType()
     }
 }
 
 abstract class PrefabContainerBlueprintLogic(
     private val view: ContainerViewLogic,
     typesWorldApi: TypesWorldApi
-): PrefabBaseBlueprintLogic(view, view.mapper, typesWorldApi) {
+): PrefabBaseBlueprintLogic(view, typesWorldApi) {
 
     override fun children(): List<PrefabChildBlueprint>? {
         return view.getFields().map {
@@ -128,7 +122,7 @@ class PrefabWindowBlueprintLogic(
 class PrefabEnumElementBlueprintLogic(
     private val view: EnumElementViewLogic,
     typesWorldApi: TypesWorldApi
-): PrefabBaseBlueprintLogic(view, view.mapper, typesWorldApi) {
+): PrefabBaseBlueprintLogic(view, typesWorldApi) {
     override fun getName(): String {
         return view.vmLogic.modelType.name()
     }
@@ -146,7 +140,7 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
     override fun generateFiles(): List<File> {
         val mapper = logic.mapper()
         val viewComplexElementLogic = logic.complexElementsLogic().map { ComplexElementViewLogic(it, mapper) }
-        val viewWindowLogic = logic.windowsLogic().map { WindowViewLogic(it, mapper) }
+        val viewWindowLogic = logic.windowsLogic().map { WindowViewLogic(it, mapper.typesWorldApi) }
         val viewElementGroupLogic = logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) }
         val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) }
         val viewEnumElementLogic = logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) }
