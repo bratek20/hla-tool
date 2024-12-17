@@ -20,8 +20,8 @@ class GeneratedWindowLogic(
     private val moduleName: ModuleName,
     private val def: ViewModelWindowDefinition,
     private val apiTypeFactory: ApiTypeFactoryLogic,
-    private val typesWorldApi: TypesWorldApi
-) {
+    typesWorldApi: TypesWorldApi
+): ViewModelLogic(typesWorldApi) {
     fun getModuleName(): String {
         return moduleName.value
     }

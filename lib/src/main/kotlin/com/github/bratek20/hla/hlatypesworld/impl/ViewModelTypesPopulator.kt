@@ -47,12 +47,28 @@ class ViewModelTypesPopulator(
                     PatternName.GeneratedWindows
                 ).asWorld()
 
+                val modelName = window.getName() + "State"
+                val paramType = WorldType.create(
+                    WorldTypeName("Window<${modelName}>"),
+                    path
+                )
+
+                world.addConcreteParametrizedClass(
+                    WorldConcreteParametrizedClass.create(
+                        type = paramType,
+                        typeArguments = listOf(
+                            WorldType.create(WorldTypeName(modelName), path)
+                        )
+                    )
+                )
+
                 world.addClassType(
                     WorldClassType.create(
                         type = WorldType.create(
                             name = WorldTypeName(window.getName()),
                             path = path
                         ),
+                        extends = paramType,
                         fields = getFieldsForWindow(window),
                     )
                 )

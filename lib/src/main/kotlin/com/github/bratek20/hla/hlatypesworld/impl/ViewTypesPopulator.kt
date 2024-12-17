@@ -5,6 +5,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelToViewMapper
+import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredElementWrapper
 import com.github.bratek20.hla.typesworld.api.*
 
@@ -27,7 +28,8 @@ class ViewTypesPopulator(
         val viewModelTypes = world.getAllTypes().filter {
             it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel &&
                 it.getPath().asHla().getModuleName() == module.getName() &&
-                    !it.getName().value.contains("<")
+                    !it.getName().value.contains("<") &&
+                    world.getTypeInfo(it).getKind() == WorldTypeKind.ClassType
         }
 
         viewModelTypes.forEach { type ->
@@ -54,14 +56,14 @@ class ViewTypesPopulator(
             world.addClassType(
                 WorldClassType.create(
                     type = viewClassType,
-                    extends = populateExtendTypeIfPresent(classType, viewClassType),
+                    extends = populateExtendType(classType, viewClassType),
                     fields = viewFields
                 )
             )
         }
     }
 
-    private fun populateExtendTypeIfPresent(viewModel: WorldClassType, view: WorldType): WorldType? {
+    private fun populateExtendType(viewModel: WorldClassType, view: WorldType): WorldType {
         return populateExtendWrapperTypeIfPresent(
             viewModel, view,
             { it.startsWith("UiElementGroup") },
@@ -70,7 +72,48 @@ class ViewTypesPopulator(
             viewModel, view,
             { it.startsWith("OptionalUiElement") },
             "OptionalUiElementView"
+        ) ?: populateExtendEnumSwitchTypeIfPresent(viewModel, view)
+        ?: populateExtendUiElementOrWindow(viewModel, view)
+    }
+
+    private fun populateExtendUiElementOrWindow(viewModel: WorldClassType, view: WorldType): WorldType {
+        val extendName = if (viewModel.getExtends()!!.getName().value.startsWith("Window"))
+            "WindowView"
+        else
+            "ElementView"
+
+        val viewExtends = WorldType.create(
+            WorldTypeName("$extendName<${viewModel.getType().getName()}>"),
+            view.getPath()
         )
+        world.addConcreteParametrizedClass(
+            WorldConcreteParametrizedClass.create(
+                type = viewExtends,
+                typeArguments = listOf(viewModel.getType())
+            )
+        )
+
+        return viewExtends
+    }
+
+    private fun populateExtendEnumSwitchTypeIfPresent(viewModel: WorldClassType, view: WorldType): WorldType? {
+        if (!viewModel.getExtends()!!.getName().value.startsWith("EnumSwitch")) {
+            return null
+        }
+        val enumSwitchParamType = world.getConcreteParametrizedClass(viewModel.getExtends()!!)
+        val enumType = enumSwitchParamType.getTypeArguments().first()
+        val viewExtends = WorldType.create(
+            WorldTypeName("EnumSwitchView<${enumType.getName()}>"),
+            view.getPath()
+        )
+        world.addConcreteParametrizedClass(
+            WorldConcreteParametrizedClass.create(
+                type = viewExtends,
+                typeArguments = listOf(enumType)
+            )
+        )
+
+        return viewExtends
     }
 
     private fun populateExtendWrapperTypeIfPresent(
@@ -79,23 +122,20 @@ class ViewTypesPopulator(
         nameChecker: (String) -> Boolean,
         wrapperName: String
     ): WorldType? {
-        if (viewModel.getExtends() == null) {
-            return null
-        }
-
         var viewExtends: WorldType? = null
         if (nameChecker(viewModel.getExtends()!!.getName().value)) {
             val wrappedViewModelType =
                 getViewModelTypeForEnsuredElementWrapper(world, viewModel.getType().getName().value)
+            val wrappedModelType = getModelTypeForEnsuredUiElement(world, wrappedViewModelType.getName().value)
             val wrappedViewType = vmToViewMapper.map(wrappedViewModelType)
             viewExtends = WorldType.create(
-                WorldTypeName("${wrapperName}<${wrappedViewType.getName()}>"),
+                WorldTypeName("${wrapperName}<${wrappedViewType.getName()},${wrappedViewModelType.getName()},${wrappedModelType.getName()}>"),
                 view.getPath()
             )
             world.addConcreteParametrizedClass(
                 WorldConcreteParametrizedClass.create(
                     type = viewExtends,
-                    typeArguments = listOf(wrappedViewType)
+                    typeArguments = listOf(wrappedViewType, wrappedViewModelType, wrappedModelType)
                 )
             )
         }
