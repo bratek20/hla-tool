@@ -244,8 +244,8 @@ ViewModel
 
         SomeEmptyVm
 
-        ReferencingOtherClassVm
-            OtherClass
+        //ReferencingOtherClassVm
+            //OtherClass
 
     Windows
         SomeWindow

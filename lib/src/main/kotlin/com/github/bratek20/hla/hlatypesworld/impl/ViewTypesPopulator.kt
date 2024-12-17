@@ -2,14 +2,15 @@ package com.github.bratek20.hla.hlatypesworld.impl
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
-import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredElementWrapper
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelToViewMapper
+import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredElementWrapper
 import com.github.bratek20.hla.typesworld.api.*
 
 class ViewTypesPopulator(
-    private val world: TypesWorldApi
+    private val world: TypesWorldApi,
+    private val vmToViewMapper: ViewModelToViewMapper
 ): HlaTypesWorldPopulator {
     companion object {
         const val ORDER = ViewModelTypesPopulator.ORDER + 1
@@ -17,8 +18,6 @@ class ViewTypesPopulator(
     override fun getOrder(): Int {
         return ORDER
     }
-
-    lateinit var mapper: ModelToViewModelTypeMapper
 
     override fun populate(modules: List<ModuleDefinition>) {
         modules.forEach { populate(it) }
@@ -32,25 +31,20 @@ class ViewTypesPopulator(
         }
 
         viewModelTypes.forEach { type ->
-            val classType: WorldClassType
-            //TODO-REF can be removed when types world population fixed
-            try {
-                classType = world.getClassType(type)
-            }
-            catch (e: WorldTypeNotFoundException) {
-                return@forEach
-            }
-
-            val viewClassType = mapper.mapViewModelToViewType(classType.getType())
+            val classType = world.getClassType(type)
+            val viewClassType = vmToViewMapper.map(classType.getType())
             if (world.hasTypeByName(viewClassType.getName())) {
-                return@forEach
+                val existingType = world.getTypeByName(viewClassType.getName())
+                if (world.getTypeInfo(existingType).getKind() == WorldTypeKind.ClassType) {
+                    return@forEach
+                }
             }
 
             val viewFields = classType.getFields().mapNotNull { field ->
                 try {
                     WorldClassField.create(
                         field.getName(),
-                        mapper.mapViewModelToViewType(field.getType())
+                        vmToViewMapper.map(field.getType())
                     )
                 } catch (e: WorldTypeNotFoundException) {
                     null
@@ -93,7 +87,7 @@ class ViewTypesPopulator(
         if (nameChecker(viewModel.getExtends()!!.getName().value)) {
             val wrappedViewModelType =
                 getViewModelTypeForEnsuredElementWrapper(world, viewModel.getType().getName().value)
-            val wrappedViewType = mapper.mapViewModelToViewType(wrappedViewModelType)
+            val wrappedViewType = vmToViewMapper.map(wrappedViewModelType)
             viewExtends = WorldType.create(
                 WorldTypeName("${wrapperName}<${wrappedViewType.getName()}>"),
                 view.getPath()
