@@ -16,6 +16,7 @@ namespace SomeModule.ViewModel {
         public Label Id { get; set; }
         public Button Button { get; set; }
         public BoolSwitch BoolSwitch { get; set; }
+        public Label OptLabel { get; set; }
         protected override List<Type> GetTraitTypes() {
             return new List<Type>() { typeof(Clickable), typeof(Draggable), typeof(WithRect) };
         }
