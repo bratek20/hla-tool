@@ -64,21 +64,14 @@ class GeneratedWindowLogic(
             }
         }
 
-        def.getFields().forEach { field ->
+        getFields().forEach { field ->
             addField {
-                type = typeName(getFinalFieldTypeName(field))
-                name = field.getName()
+                type = typeName(field.typeName)
+                name = field.name
                 getter = true
                 setter = true
             }
         }
-    }
-
-    private fun getFinalFieldTypeName(field: FieldDefinition): String {
-        if (field.getType().getWrappers().contains(TypeWrapper.LIST)) {
-            return field.getType().getName() + "Group"
-        }
-        return field.getType().getName()
     }
 }
 
