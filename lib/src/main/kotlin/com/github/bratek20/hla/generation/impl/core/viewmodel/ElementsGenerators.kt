@@ -323,6 +323,7 @@ class ViewModelLogicFactory(
     private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ) {
+    //TODO
     fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
             val modelType = element.getModel()?.let { model ->
