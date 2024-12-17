@@ -3,25 +3,24 @@ package com.github.bratek20.hla.generation.impl.core.viewmodel
 import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.types.typeName
-import com.github.bratek20.hla.definitions.api.FieldDefinition
-import com.github.bratek20.hla.definitions.api.TypeWrapper
+import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
-import com.github.bratek20.hla.mvvmtypesmappers.impl.ModelToViewModelTypeMapper
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class GeneratedWindowLogic(
     private val moduleName: ModuleName,
     private val def: ViewModelWindowDefinition,
     private val apiTypeFactory: ApiTypeFactoryLogic,
-    typesWorldApi: TypesWorldApi
-): ViewModelLogic(typesWorldApi) {
+    typesWorldApi: TypesWorldApi,
+    type: WorldType
+): ViewModelLogic(typesWorldApi, type) {
     fun getModuleName(): String {
         return moduleName.value
     }

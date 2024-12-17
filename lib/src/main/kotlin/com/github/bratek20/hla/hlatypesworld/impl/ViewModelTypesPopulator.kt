@@ -1,10 +1,10 @@
 package com.github.bratek20.hla.hlatypesworld.impl
 
+import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
+import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
-import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
 import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelTypesCalculator
 import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper
