@@ -95,8 +95,8 @@ abstract class PrefabContainerBlueprintLogic(
     override fun children(): List<PrefabChildBlueprint>? {
         return view.getFields().map {
             PrefabChildBlueprint.create(
-                name = it.name,
-                viewType = getFullType(it.typeName)
+                name = it.getName(),
+                viewType = asFullViewType(it.getType())
             )
         }
     }

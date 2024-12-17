@@ -91,7 +91,7 @@ abstract class ViewLogic(
         }
     }
 
-    private fun getFields(): List<WorldClassField> {
+    fun getFields(): List<WorldClassField> {
         val type = typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
         val classType = typesWorldApi.getClassType(type)
         return classType.getFields()
@@ -103,8 +103,6 @@ abstract class ContainerViewLogic(
 ): ViewLogic(mapper) {
     abstract fun getViewClassType(): WorldType
     abstract fun getViewModelTypeName(): String
-    abstract fun getFields(): List<ViewModelField>
-    protected abstract fun getExtendedClassName(): String
 }
 
 class ComplexElementViewLogic(
@@ -121,14 +119,6 @@ class ComplexElementViewLogic(
 
     override fun getViewModelTypeName(): String {
         return elem.getTypeName()
-    }
-
-    override fun getFields(): List<ViewModelField> {
-        return elem.getFields()
-    }
-
-    override fun getExtendedClassName(): String {
-        return "ElementView"
     }
 }
 
@@ -153,14 +143,6 @@ class WindowViewLogic(
 
     override fun getViewModelTypeName(): String {
         return window.getClassName()
-    }
-
-    override fun getFields(): List<ViewModelField> {
-        return window.getFields()
-    }
-
-    override fun getExtendedClassName(): String {
-        return "WindowView"
     }
 }
 

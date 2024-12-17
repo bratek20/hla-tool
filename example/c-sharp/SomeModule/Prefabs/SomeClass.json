@@ -6,19 +6,19 @@
   "children": [
     {
       "name": "id",
-      "viewType": "B20.Frontend.Elements.View.LabelView"
+      "viewType": "B20.Frontend.UiElements.View.LabelView"
     },
     {
       "name": "button",
-      "viewType": "B20.Frontend.Elements.View.ButtonView"
+      "viewType": "B20.Frontend.UiElements.View.ButtonView"
     },
     {
       "name": "boolSwitch",
-      "viewType": "B20.Frontend.Elements.View.BoolSwitchView"
+      "viewType": "B20.Frontend.UiElements.View.BoolSwitchView"
     },
     {
       "name": "optLabel",
-      "viewType": "B20.Frontend.Elements.View.OptionalLabelView"
+      "viewType": "B20.Frontend.UiElements.View.OptionalLabelView"
     }
   ],
   "elementViewType": null
