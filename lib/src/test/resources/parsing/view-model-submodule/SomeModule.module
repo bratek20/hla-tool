@@ -3,6 +3,7 @@ ViewModel
         SomeModelVm (att1, att2)
             SomeModel
                 id
+                field -> OverriddenVm
             someButton: Button
 
         SomeEmptyVm

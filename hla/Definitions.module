@@ -51,9 +51,13 @@ ValueObjects
 
     // ViewModel start
 
+    ViewModelMappedField
+        name: string
+        overriddenViewModelType: string?
+
     ElementModelDefinition
         name: string
-        mappedFields: string[]
+        mappedFields: ViewModelMappedField[]
 
     ViewModelElementDefinition
         name: string

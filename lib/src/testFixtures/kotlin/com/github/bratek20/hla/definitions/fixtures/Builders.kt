@@ -109,15 +109,27 @@ fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): Web
     )
 }
 
+data class ViewModelMappedFieldDef(
+    var name: String = "someValue",
+    var overriddenViewModelType: String? = null,
+)
+fun viewModelMappedField(init: ViewModelMappedFieldDef.() -> Unit = {}): ViewModelMappedField {
+    val def = ViewModelMappedFieldDef().apply(init)
+    return ViewModelMappedField.create(
+        name = def.name,
+        overriddenViewModelType = def.overriddenViewModelType,
+    )
+}
+
 data class ElementModelDefinitionDef(
     var name: String = "someValue",
-    var mappedFields: List<String> = emptyList(),
+    var mappedFields: List<(ViewModelMappedFieldDef.() -> Unit)> = emptyList(),
 )
 fun elementModelDefinition(init: ElementModelDefinitionDef.() -> Unit = {}): ElementModelDefinition {
     val def = ElementModelDefinitionDef().apply(init)
     return ElementModelDefinition.create(
         name = def.name,
-        mappedFields = def.mappedFields,
+        mappedFields = def.mappedFields.map { it -> viewModelMappedField(it) },
     )
 }
 

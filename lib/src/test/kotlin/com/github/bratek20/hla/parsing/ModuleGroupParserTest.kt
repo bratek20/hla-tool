@@ -793,7 +793,13 @@ class ModuleGroupParserTest {
                         model = {
                             name = "SomeModel"
                             mappedFields = listOf(
-                                "id"
+                                {
+                                    name = "id"
+                                },
+                                {
+                                    name = "field"
+                                    overriddenViewModelType = "OverriddenVm"
+                                }
                             )
                         }
                     },

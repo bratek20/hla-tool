@@ -28,7 +28,3 @@ fun diffValidationResult(given: ValidationResult, expectedInit: ExpectedValidati
 
     return result.joinToString("\n")
 }
-fun diffProperties(given: com.github.bratek20.architecture.properties.api.Properties, expected: com.github.bratek20.architecture.properties.api.Properties, path: String = ""): String {
-    if (given != expected) { return "${path}value ${given} != ${expected}" }
-    return ""
-}

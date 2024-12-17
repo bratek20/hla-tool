@@ -221,9 +221,33 @@ fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Expe
     return result.joinToString("\n")
 }
 
+data class ExpectedViewModelMappedField(
+    var name: String? = null,
+    var overriddenViewModelTypeEmpty: Boolean? = null,
+    var overriddenViewModelType: String? = null,
+)
+fun diffViewModelMappedField(given: ViewModelMappedField, expectedInit: ExpectedViewModelMappedField.() -> Unit, path: String = ""): String {
+    val expected = ExpectedViewModelMappedField().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.overriddenViewModelTypeEmpty?.let {
+        if ((given.getOverriddenViewModelType() == null) != it) { result.add("${path}overriddenViewModelType empty ${(given.getOverriddenViewModelType() == null)} != ${it}") }
+    }
+
+    expected.overriddenViewModelType?.let {
+        if (given.getOverriddenViewModelType()!! != it) { result.add("${path}overriddenViewModelType ${given.getOverriddenViewModelType()!!} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedElementModelDefinition(
     var name: String? = null,
-    var mappedFields: List<String>? = null,
+    var mappedFields: List<(ExpectedViewModelMappedField.() -> Unit)>? = null,
 )
 fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: ExpectedElementModelDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedElementModelDefinition().apply(expectedInit)
@@ -235,7 +259,7 @@ fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: Expe
 
     expected.mappedFields?.let {
         if (given.getMappedFields().size != it.size) { result.add("${path}mappedFields size ${given.getMappedFields().size} != ${it.size}"); return@let }
-        given.getMappedFields().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}mappedFields[${idx}] ${entry} != ${it[idx]}") } }
+        given.getMappedFields().forEachIndexed { idx, entry -> if (diffViewModelMappedField(entry, it[idx]) != "") { result.add(diffViewModelMappedField(entry, it[idx], "${path}mappedFields[${idx}].")) } }
     }
 
     return result.joinToString("\n")

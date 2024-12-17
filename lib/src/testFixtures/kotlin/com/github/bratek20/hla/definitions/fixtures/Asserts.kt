@@ -49,6 +49,11 @@ fun assertWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Ex
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertViewModelMappedField(given: ViewModelMappedField, expectedInit: ExpectedViewModelMappedField.() -> Unit) {
+    val diff = diffViewModelMappedField(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertElementModelDefinition(given: ElementModelDefinition, expectedInit: ExpectedElementModelDefinition.() -> Unit) {
     val diff = diffElementModelDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
