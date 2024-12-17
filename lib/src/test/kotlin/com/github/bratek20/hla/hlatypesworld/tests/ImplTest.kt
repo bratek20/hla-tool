@@ -74,8 +74,7 @@ class HlaTypesWorldImplTest {
         assertHasType("Label", "B20/Frontend/UiElements/Api/Undefined")
         assertHasType("Button", "B20/Frontend/UiElements/Api/Undefined")
         assertHasType("BoolSwitch", "B20/Frontend/UiElements/Api/Undefined")
-
-        assertHasNotType("Label", "OtherModule/ViewModel/GeneratedElements")
+        assertHasType("Toggle", "B20/Frontend/UiElements/Api/Undefined")
     }
 
     @Test
@@ -207,6 +206,14 @@ class HlaTypesWorldImplTest {
 
         assertHasType("OptionalSomeClass6Vm", "SomeModule/ViewModel/GeneratedElements")
 
+        assertHasClassType("ToggleOverride", "SomeModule/ViewModel/GeneratedElements") {
+            fields = listOf {
+                name = "boolField"
+                type = {
+                    name = "Toggle"
+                }
+            }
+        }
     }
 
     @Test

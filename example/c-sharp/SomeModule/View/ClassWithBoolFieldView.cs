@@ -16,7 +16,7 @@ using TypesModule.Api;
 namespace SomeModule.View {
     public class ClassWithBoolFieldView: ElementView<ToggleOverride> {
         [SerializeField]
-        BoolSwitchView boolField;
+        ToggleView boolField;
         protected override void OnBind() {
             base.OnBind();
             boolField.Bind(ViewModel.BoolField);

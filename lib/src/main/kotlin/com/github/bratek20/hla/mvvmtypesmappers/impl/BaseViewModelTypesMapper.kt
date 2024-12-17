@@ -89,6 +89,7 @@ internal class BaseViewModelTypesMapper {
             "OptionalLabel",
             "Button",
             "BoolSwitch",
+            "Toggle"
         )
     }
 }
