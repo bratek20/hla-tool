@@ -157,7 +157,7 @@ abstract class ViewModelElementLogic(
         return typesWorldApi.getTypeByName(WorldTypeName(getTypeName()))
     }
 
-    abstract fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps
+    abstract fun getClass(): ClassBuilderOps
 }
 
 class ViewModelEnumElementLogic(
@@ -168,7 +168,7 @@ class ViewModelEnumElementLogic(
         return modelType.name() + "Switch"
     }
 
-    override fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps = {
+    override fun getClass(): ClassBuilderOps = {
         name = getTypeName()
         extends {
             className = "EnumSwitch"
@@ -270,7 +270,7 @@ class ViewModelComplexElementLogic(
         }
     }
 
-    override fun getClass(mapper: ModelToViewModelTypeMapper): ClassBuilderOps = {
+    override fun getClass(): ClassBuilderOps = {
         name = def.getName()
         partial = true
         extends {
@@ -338,7 +338,7 @@ class GeneratedElementsGenerator: BaseElementsGenerator() {
         val mapper = logic.mapper()
 
         elementsLogic.forEach { element ->
-            addClass(element.getClass(mapper))
+            addClass(element.getClass())
         }
 
         logic.elementListTypesToGenerate().forEach {
