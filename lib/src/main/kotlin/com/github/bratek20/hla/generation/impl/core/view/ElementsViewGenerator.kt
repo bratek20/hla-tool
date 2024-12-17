@@ -19,13 +19,35 @@ import com.github.bratek20.hla.typesworld.api.*
 abstract class ViewLogic(
     val mapper: ModelToViewModelTypeMapper
 ) {
-    abstract fun getOps(): PerFileOperations
+    private val typesWorldApi: TypesWorldApi = mapper.typesWorldApi
+
+    abstract fun getViewClassName(): String
+
+    open fun getOps(): PerFileOperations {
+        val type = typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
+        val classType = typesWorldApi.getClassType(type)
+        val extendedType = classType.getExtends()!!
+        val extendedParamType = typesWorldApi.getConcreteParametrizedClass(extendedType)
+
+        return PerFileOperations(getViewClassName()) {
+            addClass {
+                name = type.getName().value
+                extends {
+                    className = extendedType.getName().value.replaceAfter("<", "").dropLast(1)
+                    extendedParamType.getTypeArguments().forEach {
+                        addGeneric {
+                            typeName(it.getName().value)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 abstract class ContainerViewLogic(
     mapper: ModelToViewModelTypeMapper
 ): ViewLogic(mapper) {
-    protected abstract fun getViewClassName(): String
     abstract fun getViewClassType(): WorldType
     abstract fun getViewModelTypeName(): String
     abstract fun getFields(): List<ViewModelField>
@@ -146,7 +168,7 @@ abstract class WrappedElementViewLogic(
 ): ViewLogic(mapper) {
     protected abstract fun extendedClassName(): String
 
-    fun getViewClassName(): String {
+    override fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(modelType)
     }
 
@@ -205,36 +227,14 @@ class OptionalElementViewLogic(
 
 class EnumElementViewLogic(
     val vmLogic: ViewModelEnumElementLogic,
-    mapper: ModelToViewModelTypeMapper,
-    private val typesWorldApi: TypesWorldApi
+    mapper: ModelToViewModelTypeMapper
 ) : ViewLogic(mapper) {
-    fun getViewClassName(): String {
+    override fun getViewClassName(): String {
         return mapper.mapModelToViewTypeName(vmLogic.modelType)
     }
 
     fun getViewClassType(): WorldType {
         return mapper.mapModelToViewType(vmLogic.modelType)
-    }
-
-    override fun getOps(): PerFileOperations {
-        val type = typesWorldApi.getTypeByName(WorldTypeName(getViewClassName()))
-        val classType = typesWorldApi.getClassType(type)
-        val extendedType = classType.getExtends()!!
-        val extendedParamType = typesWorldApi.getConcreteParametrizedClass(extendedType)
-
-        return PerFileOperations(getViewClassName()) {
-            addClass {
-                name = type.getName().value
-                extends {
-                    className = extendedType.getName().value.replaceAfter("<", "").dropLast(1)
-                    extendedParamType.getTypeArguments().forEach {
-                        addGeneric {
-                            typeName(it.getName().value)
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -253,7 +253,7 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
                 logic.elementListTypesToGenerate().map { ElementGroupViewLogic(it, mapper) } +
                 logic.elementOptionalTypesToGenerate().map { OptionalElementViewLogic(it, mapper) } +
                 logic.windowsLogic().map { WindowViewLogic(it, mapper) } +
-                logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper, typesWorldApi) })
+                logic.enumElementsLogic().map { EnumElementViewLogic(it, mapper) })
             .map { it.getOps() }
     }
 
