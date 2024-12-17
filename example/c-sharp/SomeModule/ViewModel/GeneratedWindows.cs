@@ -27,5 +27,6 @@ namespace SomeModule.ViewModel {
         public SomeClassVmGroup SomeClassVmList { get; set; }
         public Button SomeButton { get; set; }
         public SomeClass6Vm NewOptVm { get; set; }
+        public SomeEmptyVm OptEmptyVm { get; set; }
     }
 }
