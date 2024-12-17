@@ -57,17 +57,11 @@ class ViewModelSharedLogic(
         }
     }
     
-    private fun elementEnumTypesToGenerate(): List<Pair<EnumApiType, WorldType>> {
-        val allEnumTypes = allModuleElementTypes()
+    private fun elementEnumTypesToGenerate(): List<WorldType> {
+        return allModuleElementTypes()
             .filter {
                 it.getName().value.endsWith("Switch")
             }
-            .map {
-                val modelType = getModelTypeForEnsuredUiElement(typesWorldApi, it.getName().value)
-                val apiType = apiTypeFactory.create(createTypeDefinition(modelType.getName().value))
-                (apiType as EnumApiType) to it
-            }
-        return allEnumTypes
     }
 
     fun elementOptionalTypesToGenerate(): List<OptionalElementViewModelLogic> {
@@ -97,7 +91,9 @@ abstract class ViewModelLogic(
     val typesWorldApi: TypesWorldApi,
     val type: WorldType
 ) {
-
+    fun getTypeName(): String {
+        return type.getName().value
+    }
 }
 
 abstract class ViewModelWrapperLogic(
@@ -173,30 +169,22 @@ class OptionalElementViewModelLogic(
 }
 
 abstract class ViewModelElementLogic(
-    val modelType: ApiTypeLogic,
     typesWorldApi: TypesWorldApi,
     type: WorldType
 ): ViewModelLogic(typesWorldApi, type)  {
-    abstract fun getTypeName(): String
-
     abstract fun getClass(): ClassBuilderOps
 }
 
 class ViewModelEnumElementLogic(
-    modelType: EnumApiType,
     typesWorldApi: TypesWorldApi,
     type: WorldType
-): ViewModelElementLogic(modelType, typesWorldApi, type) {
-    override fun getTypeName(): String {
-        return modelType.name() + "Switch"
-    }
-
+): ViewModelElementLogic(typesWorldApi, type) {
     override fun getClass(): ClassBuilderOps = {
         name = getTypeName()
         extends {
             className = "EnumSwitch"
             addGeneric {
-                typeName(modelType.name())
+                typeName(getModelTypeForEnsuredUiElement(typesWorldApi, getTypeName()).getName().value)
             }
         }
     }
@@ -204,13 +192,11 @@ class ViewModelEnumElementLogic(
 
 class ViewModelComplexElementLogic(
     val def: ViewModelElementDefinition,
-    modelType: ComplexStructureApiType<*>,
+    val modelType: ComplexStructureApiType<*>,
     val apiTypeFactory: ApiTypeFactoryLogic,
     typesWorldApi: TypesWorldApi,
     type: WorldType
-): ViewModelElementLogic(modelType, typesWorldApi, type) {
-    override fun getTypeName(): String = def.getName()
-
+): ViewModelElementLogic(typesWorldApi, type) {
     fun getFields(): List<ViewModelField> {
         val type = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
         val classType = typesWorldApi.getClassType(type)
@@ -348,8 +334,8 @@ class ViewModelLogicFactory(
         }
     }
 
-    fun createEnumElementsLogic(defs: List<Pair<EnumApiType, WorldType>>): List<ViewModelEnumElementLogic> {
-        return defs.map { ViewModelEnumElementLogic(it.first, typesWorldApi, it.second) }
+    fun createEnumElementsLogic(defs: List<WorldType>): List<ViewModelEnumElementLogic> {
+        return defs.map { ViewModelEnumElementLogic(typesWorldApi, it) }
     }
 }
 class GeneratedElementsGenerator: BaseElementsGenerator() {
