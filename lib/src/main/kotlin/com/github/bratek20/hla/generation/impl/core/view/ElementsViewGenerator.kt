@@ -100,7 +100,7 @@ class ComplexElementViewLogic(
     }
 
     override fun getFields(): List<ViewModelField> {
-        return elem.getFields(mapper)
+        return elem.getFields()
     }
 
     override fun getExtendedClassName(): String {

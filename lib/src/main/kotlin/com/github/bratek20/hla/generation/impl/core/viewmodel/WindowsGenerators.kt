@@ -80,12 +80,6 @@ class GeneratedWindowLogic(
         }
         return field.getType().getName()
     }
-
-    fun getElementTypesWrappedIn(type: TypeWrapper): List<String> {
-        return def.getFields()
-            .filter { it.getType().getWrappers().contains(type) }
-            .map { it.getType().getName() }
-    }
 }
 
 abstract class BaseViewModelPatternGenerator: PatternGenerator() {

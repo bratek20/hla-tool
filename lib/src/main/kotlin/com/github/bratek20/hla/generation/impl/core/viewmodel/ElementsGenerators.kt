@@ -39,11 +39,11 @@ class ViewModelSharedLogic(
     }
 
     fun complexElementsLogic(): List<ViewModelComplexElementLogic> {
-        return ViewModelLogicFactory(apiTypeFactory).createComplexElementsLogic(elementsDef())
+        return ViewModelLogicFactory(apiTypeFactory, typesWorldApi).createComplexElementsLogic(elementsDef())
     }
 
     fun enumElementsLogic(): List<ViewModelEnumElementLogic> {
-        return ViewModelLogicFactory(apiTypeFactory).createEnumElementsLogic(elementEnumTypesToGenerate())
+        return ViewModelLogicFactory(apiTypeFactory, typesWorldApi).createEnumElementsLogic(elementEnumTypesToGenerate())
     }
 
     fun mapper(): ModelToViewModelTypeMapper {
@@ -127,15 +127,6 @@ class ViewModelField(
                 } else {
                     baseTypeName
                 }
-
-                val finalType = WorldType.create(
-                    WorldTypeName(finalTypeName),
-                    HlaTypePath.create(
-                        moduleName,
-                        SubmoduleName.View,
-                        PatternName.ElementsView
-                    ).asWorld()
-                )
                 ViewModelField(finalTypeName, it.getName())
             }
         }
@@ -171,23 +162,34 @@ class ViewModelEnumElementLogic(
 class ViewModelComplexElementLogic(
     val def: ViewModelElementDefinition,
     modelType: ComplexStructureApiType<*>,
-    val apiTypeFactory: ApiTypeFactoryLogic
+    val apiTypeFactory: ApiTypeFactoryLogic,
+    val typesWorldApi: TypesWorldApi
 ): ViewModelElementLogic(modelType) {
     override fun getTypeName(): String = def.getName()
 
-    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
-        val result = mutableListOf<ViewModelField>()
-        getMappedFields().forEach { field ->
-            result.add(ViewModelField(
-                mapper.mapModelToViewModelTypeName(field.type),
-                field.name
-            ))
+    fun getFields(): List<ViewModelField> {
+        val type = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
+        val classType = typesWorldApi.getClassType(type)
+        return classType.getFields().map { field ->
+            ViewModelField(
+                typeName = field.getType().getName().value,
+                name = field.getName(),
+            )
         }
-
-        result.addAll(ViewModelField.fromDefs(ModuleName("TODO-FIX-ME_13131523"), def.getFields(), mapper))
-
-        return result
     }
+//    fun getFields(mapper: ModelToViewModelTypeMapper): List<ViewModelField> {
+//        val result = mutableListOf<ViewModelField>()
+//        getMappedFields().forEach { field ->
+//            result.add(ViewModelField(
+//                mapper.mapModelToViewModelTypeName(field.type),
+//                field.name
+//            ))
+//        }
+//
+//        result.addAll(ViewModelField.fromDefs(ModuleName("TODO-FIX-ME_13131523"), def.getFields(), mapper))
+//
+//        return result
+//    }
 
     private fun getMappedFields(): List<ComplexStructureField> {
         return def.getModel()?.getMappedFields()?.map { fieldName ->
@@ -320,7 +322,8 @@ abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
 }
 
 class ViewModelLogicFactory(
-    private val apiTypeFactory: ApiTypeFactoryLogic
+    private val apiTypeFactory: ApiTypeFactoryLogic,
+    private val typesWorldApi: TypesWorldApi
 ) {
     fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
@@ -329,7 +332,7 @@ class ViewModelLogicFactory(
             } ?: ComplexValueObjectApiType("EmptyModel", emptyList())
 
             modelType.init(apiTypeFactory.languageTypes, null)
-            ViewModelComplexElementLogic(element, modelType, apiTypeFactory)
+            ViewModelComplexElementLogic(element, modelType, apiTypeFactory, typesWorldApi)
         }
     }
 
