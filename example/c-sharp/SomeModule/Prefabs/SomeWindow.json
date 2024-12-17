@@ -23,6 +23,10 @@
     {
       "name": "optEmptyVm",
       "viewType": "SomeModule.View.OptionalSomeEmptyVmView"
+    },
+    {
+      "name": "optReferencing",
+      "viewType": "SomeModule.View.OptionalReferencingOtherClassVmView"
     }
   ],
   "elementViewType": null

@@ -28,5 +28,6 @@ namespace SomeModule.ViewModel {
         public Button SomeButton { get; set; }
         public OptionalSomeClass6Vm NewOptVm { get; set; }
         public OptionalSomeEmptyVm OptEmptyVm { get; set; }
+        public OptionalReferencingOtherClassVm OptReferencing { get; set; }
     }
 }

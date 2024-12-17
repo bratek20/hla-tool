@@ -32,6 +32,7 @@ namespace SomeModule.Context {
                 .SetClass<SomeClassVmGroup>(InjectionMode.Prototype)
                 .SetClass<OptionalSomeClass6Vm>(InjectionMode.Prototype)
                 .SetClass<OptionalSomeEmptyVm>(InjectionMode.Prototype)
+                .SetClass<OptionalReferencingOtherClassVm>(InjectionMode.Prototype)
                 .SetClass<SomeEnum2Switch>(InjectionMode.Prototype)
                 .AddImpl<Window, SomeWindow>();
         }

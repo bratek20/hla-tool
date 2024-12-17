@@ -263,4 +263,4 @@ ViewModel
             someButton: Button
             newOptVm: SomeClass6Vm?
             optEmptyVm: SomeEmptyVm?
-            //optReferencing: ReferencingOtherClassVm?
+            optReferencing: ReferencingOtherClassVm?

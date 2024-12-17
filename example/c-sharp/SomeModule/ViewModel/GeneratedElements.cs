@@ -141,4 +141,11 @@ namespace SomeModule.ViewModel {
         ): base(element) {
         }
     }
+
+    public class OptionalReferencingOtherClassVm: OptionalUiElement<ReferencingOtherClassVm, OtherClass> {
+        public OptionalReferencingOtherClassVm(
+            ReferencingOtherClassVm element
+        ): base(element) {
+        }
+    }
 }

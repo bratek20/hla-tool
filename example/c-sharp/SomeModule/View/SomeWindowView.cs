@@ -25,6 +25,8 @@ namespace SomeModule.View {
         OptionalSomeClass6View newOptVm;
         [SerializeField]
         OptionalSomeEmptyVmView optEmptyVm;
+        [SerializeField]
+        OptionalReferencingOtherClassVmView optReferencing;
         protected override void OnBind() {
             base.OnBind();
             someClassVm.Bind(ViewModel.SomeClassVm);
@@ -32,6 +34,7 @@ namespace SomeModule.View {
             someButton.Bind(ViewModel.SomeButton);
             newOptVm.Bind(ViewModel.NewOptVm);
             optEmptyVm.Bind(ViewModel.OptEmptyVm);
+            optReferencing.Bind(ViewModel.OptReferencing);
         }
     }
 }

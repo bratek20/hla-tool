@@ -1,0 +1,8 @@
+{
+  "blueprintType": "OptionalElement",
+  "name": "OptionalReferencingOtherClassVm",
+  "viewType": "SomeModule.View.OptionalReferencingOtherClassVmView",
+  "creationOrder": 2,
+  "children": [ ],
+  "elementViewType": "SomeModule.View.ReferencingOtherClassVmView"
+}

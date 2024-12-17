@@ -47,9 +47,9 @@ class ViewModelToViewMapperLogic(
         if (modelType.getName().value == "EmptyModel") {
             return viewModelType + "View"
         }
-//        if (modelType.getPath().asHla().getModuleName() != viewModel.getPath().asHla().getModuleName()) {
-//            return viewModelType + "View"
-//        }
+        if (modelType.getPath().asHla().getModuleName() != viewModel.getPath().asHla().getModuleName()) {
+            return viewModelType + "View"
+        }
         if (viewModelType.endsWith("Switch")) {
             return modelType.getName().value + "SwitchView"
         }
