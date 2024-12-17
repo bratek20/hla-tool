@@ -70,18 +70,28 @@ class ViewModelTypesPopulator(
                 ).asWorld()
 
                 val modelName = element.getModel()?.getName() ?: "EmptyModel"
-                val paramType = WorldType.create(
-                    WorldTypeName("UiElement<${modelName}>"),
-                    path
-                )
-                world.addConcreteParametrizedClass(
-                    WorldConcreteParametrizedClass.create(
-                        type = paramType,
-                        typeArguments = listOf(
-                            world.getTypeByName(WorldTypeName(modelName))
+                val paramTypeName = WorldTypeName("UiElement<${modelName}>")
+
+                val paramType = if (!world.hasTypeByName(paramTypeName)) {
+                    val paramType = WorldType.create(
+                        paramTypeName,
+                        path
+                    )
+
+                    world.addConcreteParametrizedClass(
+                        WorldConcreteParametrizedClass.create(
+                            type = paramType,
+                            typeArguments = listOf(
+                                world.getTypeByName(WorldTypeName(modelName))
+                            )
                         )
                     )
-                )
+
+                    paramType
+                } else {
+                    world.getTypeByName(paramTypeName)
+                }
+
                 world.addClassType(
                     WorldClassType.create(
                         type = WorldType.create(

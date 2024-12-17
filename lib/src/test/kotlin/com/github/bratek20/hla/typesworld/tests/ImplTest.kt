@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 
 class TypesWorldImplTest {
     private lateinit var api: TypesWorldApi
@@ -33,6 +34,9 @@ class TypesWorldImplTest {
                 name = "MyType"
                 path = "MyPath"
             }).let {
+                assertThat(it).isTrue()
+            }
+            api.hasTypeByName(worldTypeName("MyType")).let {
                 assertThat(it).isTrue()
             }
 

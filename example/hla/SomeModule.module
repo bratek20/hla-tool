@@ -244,6 +244,9 @@ ViewModel
 
         SomeEmptyVm
 
+        ReferencingOtherClassVm
+            OtherClass
+
     Windows
         SomeWindow
             State

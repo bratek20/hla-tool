@@ -42,6 +42,10 @@ class ViewTypesPopulator(
             }
 
             val viewClassType = mapper.mapViewModelToViewType(classType.getType())
+            if (world.hasTypeByName(viewClassType.getName())) {
+                return@forEach
+            }
+
             val viewFields = classType.getFields().mapNotNull { field ->
                 try {
                     WorldClassField.create(
