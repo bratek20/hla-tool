@@ -23,6 +23,13 @@ namespace SomeModule.Api {
         }
     }
 
+    public class OtherExtraException: ApiException {
+        public OtherExtraException(
+            string message = ""
+        ): base(message) {
+        }
+    }
+
     public class SomeExtraException: ApiException {
         public SomeExtraException(
             string message = ""
