@@ -9,6 +9,7 @@ interface SomeInterface {
     /**
      * @throws { SomeException }
      * @throws { Some2Exception }
+     * @throws { OtherExtraException }
      */
     someCommand(id: SomeId, amount: number): void
 

@@ -141,6 +141,7 @@ Interfaces
             throws
                 SomeException
                 Some2Exception
+                OtherExtraException
 
         SomeQueryInput
             id: SomeId

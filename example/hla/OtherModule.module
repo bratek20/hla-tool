@@ -19,6 +19,9 @@ PropertyKeys
 DataKeys
     "otherData" -> OtherData
 
+Exceptions
+    OtherExtraException
+
 Interfaces
     OtherInterface
         otherMethod()

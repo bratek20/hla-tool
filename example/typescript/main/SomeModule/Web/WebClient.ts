@@ -15,6 +15,7 @@ namespace SomeModule.Web {
         /**
         * @throws { SomeException }
         * @throws { Some2Exception }
+        * @throws { OtherExtraException }
         */
         someCommand(id: SomeId, amount: number): void {
             this.client.post("/some/prefix/someInterface/someCommand", Optional.of(SomeInterfaceSomeCommandRequest.create(id, amount)))

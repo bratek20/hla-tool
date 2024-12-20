@@ -24,6 +24,7 @@ namespace SomeModule.Web {
         }
         /// <exception cref="SomeException"/>
         /// <exception cref="Some2Exception"/>
+        /// <exception cref="OtherExtraException"/>
         public void SomeCommand(SomeId id, int amount) {
             client.Post("/some/prefix/someInterface/someCommand", Optional<SomeInterfaceSomeCommandRequest>.Of(SomeInterfaceSomeCommandRequest.Create(id, amount)));
         }

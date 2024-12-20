@@ -16,6 +16,7 @@ namespace SomeModule.Api {
 
         /// <exception cref="SomeException"/>
         /// <exception cref="Some2Exception"/>
+        /// <exception cref="OtherExtraException"/>
         void SomeCommand(SomeId id, int amount);
 
         /// <exception cref="SomeException"/>

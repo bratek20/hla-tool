@@ -271,7 +271,9 @@ class ModuleGroupQueries(
             .distinct()
 
         val extraExceptions = currentModule.getExceptions().map { it.getName() }
+        val exceptionsToExclude = group.getModules().flatMap{ module -> module.getExceptions().map{it.getName()}}
+        val notDefinedInterfaceExceptions = interfaceExceptions.filter { !exceptionsToExclude.contains(it) && !extraExceptions.contains(it) }
 
-        return interfaceExceptions + extraExceptions
+        return notDefinedInterfaceExceptions + extraExceptions
     }
 }
