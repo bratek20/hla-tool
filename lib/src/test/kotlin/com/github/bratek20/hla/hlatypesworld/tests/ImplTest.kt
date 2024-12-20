@@ -70,11 +70,11 @@ class HlaTypesWorldImplTest {
 
     @Test
     fun `should populate b20 view model types`() {
-        assertHasType("EmptyModel", "B20/Frontend/UiElements/Api/ValueObjects")
-        assertHasType("Label", "B20/Frontend/UiElements/Api/Undefined")
-        assertHasType("Button", "B20/Frontend/UiElements/Api/Undefined")
-        assertHasType("BoolSwitch", "B20/Frontend/UiElements/Api/Undefined")
-        assertHasType("Toggle", "B20/Frontend/UiElements/Api/Undefined")
+        assertHasType("EmptyModel", "B20/ViewModel/UiElements/Api/ValueObjects")
+        assertHasType("Label", "B20/ViewModel/UiElements/Api/Undefined")
+        assertHasType("Button", "B20/ViewModel/UiElements/Api/Undefined")
+        assertHasType("BoolSwitch", "B20/ViewModel/UiElements/Api/Undefined")
+        assertHasType("Toggle", "B20/ViewModel/UiElements/Api/Undefined")
     }
 
     @Test
