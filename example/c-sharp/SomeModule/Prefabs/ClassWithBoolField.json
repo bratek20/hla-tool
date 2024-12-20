@@ -6,7 +6,7 @@
   "children": [
     {
       "name": "boolField",
-      "viewType": "B20.Frontend.UiElements.View.ToggleView"
+      "viewType": "B20.View.UiElements.ToggleView"
     }
   ],
   "elementViewType": null

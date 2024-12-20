@@ -13,6 +13,14 @@ class ViewModelToViewMapperLogic(
     private val typesWorldApi: TypesWorldApi
 ): ViewModelToViewMapper {
     override fun map(viewModel: WorldType): WorldType {
+        val viewModelType = viewModel.getName().value
+        if (b20ViewModelTypes.contains(viewModelType)) {
+            return WorldType.create(
+                name = WorldTypeName(viewModelType + "View"),
+                path = WorldTypePath("B20/View/UiElements")
+            )
+        }
+
         val viewTypeName = mapViewModelToViewTypeName(viewModel)
         return WorldType.create(
             name = WorldTypeName(viewTypeName),
@@ -24,9 +32,6 @@ class ViewModelToViewMapperLogic(
 
     private fun mapViewModelToViewTypeName(viewModel: WorldType): String {
         val viewModelType = viewModel.getName().value
-        if (b20ViewModelTypes.contains(viewModelType)) {
-            return viewModelType + "View"
-        }
 
         if (viewModelType.endsWith("SwitchGroup")) {
             return viewModelType + "View"

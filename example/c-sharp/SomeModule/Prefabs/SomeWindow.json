@@ -14,7 +14,7 @@
     },
     {
       "name": "someButton",
-      "viewType": "B20.Frontend.UiElements.View.ButtonView"
+      "viewType": "B20.View.UiElements.ButtonView"
     },
     {
       "name": "newOptVm",

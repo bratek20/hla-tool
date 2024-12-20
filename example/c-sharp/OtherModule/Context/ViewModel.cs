@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
 using B20.Architecture.Contexts.Api;
-using B20.Frontend.Windows.Api;
+using B20.ViewModel.Windows.Api;
 using OtherModule.Api;
 using OtherModule.ViewModel;
 
