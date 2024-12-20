@@ -6,7 +6,7 @@
   "children": [
     {
       "name": "otherId",
-      "viewType": "B20.Frontend.UiElements.View.LabelView"
+      "viewType": "B20.View.UiElements.LabelView"
     },
     {
       "name": "otherClass",

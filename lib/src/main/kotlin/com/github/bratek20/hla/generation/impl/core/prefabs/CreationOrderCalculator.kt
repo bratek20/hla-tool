@@ -12,7 +12,7 @@ class CreationOrderCalculator(
     private val cache = mutableMapOf<WorldType, Int>()
 
     fun calculateCreationOrder(type: WorldType): Int {
-        if (type.getPath().value.startsWith("B20/Frontend")) {
+        if (type.getPath().value.startsWith("B20/View")) {
             return 0
         }
         if (type.getPath().asHla().getSubmoduleName() != SubmoduleName.View) {

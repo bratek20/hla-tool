@@ -6,11 +6,11 @@
   "children": [
     {
       "name": "id",
-      "viewType": "B20.Frontend.UiElements.View.LabelView"
+      "viewType": "B20.View.UiElements.LabelView"
     },
     {
       "name": "amount",
-      "viewType": "B20.Frontend.UiElements.View.LabelView"
+      "viewType": "B20.View.UiElements.LabelView"
     }
   ],
   "elementViewType": null

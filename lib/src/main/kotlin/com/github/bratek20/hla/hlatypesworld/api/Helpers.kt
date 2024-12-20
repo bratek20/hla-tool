@@ -14,5 +14,14 @@ fun WorldTypePath.asHla(): HlaTypePath {
     )
 }
 
+fun WorldTypePath.isHla(): Boolean {
+    try {
+        asHla().getSubmoduleName()
+        return true
+    } catch (e: Exception) {
+        return false
+    }
+}
+
 
 

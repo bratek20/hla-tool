@@ -69,7 +69,7 @@ class ViewModelContextGenerator: PatternGenerator() {
 
     override fun extraCSharpUsings(): List<String> = listOf(
         "B20.Architecture.Contexts.Api",
-        "B20.Frontend.Windows.Api",
+        "B20.ViewModel.Windows.Api",
     )
 
 }

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
-using B20.Frontend.Elements.View;
+using B20.View.UiElements;
 using UnityEngine;
 using SomeModule.Api;
 using SomeModule.ViewModel;

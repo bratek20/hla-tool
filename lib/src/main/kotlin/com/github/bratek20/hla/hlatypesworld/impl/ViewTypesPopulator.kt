@@ -4,6 +4,7 @@ import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.hlatypesworld.api.isHla
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelToViewMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getViewModelTypeForEnsuredElementWrapper
@@ -26,9 +27,9 @@ class ViewTypesPopulator(
 
     private fun populate(module: ModuleDefinition) {
         val viewModelTypes = world.getAllTypes().filter {
+            it.getPath().isHla() &&
             it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel &&
                 it.getPath().asHla().getModuleName() == module.getName() &&
-                    !it.getName().value.contains("<") &&
                     world.getTypeInfo(it).getKind() == WorldTypeKind.ClassType
         }
 

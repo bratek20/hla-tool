@@ -22,7 +22,7 @@ class B20FrontendTypesPopulator(
             path = HlaTypePath.create(
                 listOf(
                     GroupName("B20"),
-                    GroupName("Frontend")
+                    GroupName("ViewModel")
                 ),
                 ModuleName("UiElements"),
                 SubmoduleName.Api,
@@ -33,7 +33,7 @@ class B20FrontendTypesPopulator(
         val pathForUndefinedPattern = HlaTypePath.create(
             listOf(
                 GroupName("B20"),
-                GroupName("Frontend")
+                GroupName("ViewModel")
             ),
             ModuleName("UiElements"),
             SubmoduleName.Api,
