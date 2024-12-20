@@ -26,19 +26,6 @@ class Some2Exception extends ApiException<Some2Exception> {
 
 ExceptionsRegistry.register(Some2Exception)
 
-class OtherExtraException extends ApiException<OtherExtraException> {
-    constructor(
-        message: string = ""
-    ) {
-        super(OtherExtraException, message)
-    }
-    getTypeName(): string {
-        return "OtherExtraException"
-    }
-}
-
-ExceptionsRegistry.register(OtherExtraException)
-
 class SomeExtraException extends ApiException<SomeExtraException> {
     constructor(
         message: string = ""
