@@ -16,11 +16,6 @@ class Some2Exception(
 ): ApiException(message) {
 }
 
-class OtherExtraException(
-    message: String = ""
-): ApiException(message) {
-}
-
 class SomeExtraException(
     message: String = ""
 ): ApiException(message) {
