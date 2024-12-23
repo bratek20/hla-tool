@@ -14,6 +14,7 @@ interface SomeInterface {
     @Throws(
         SomeException::class,
         Some2Exception::class,
+        OtherExtraException::class,
     )
     fun someCommand(id: SomeId, amount: Int): Unit
 
