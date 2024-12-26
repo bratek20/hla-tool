@@ -12,22 +12,17 @@ using OtherModule.ViewModel;
 using TypesModule.Api;
 
 namespace SomeModule.ViewModel {
-    public class SomeWindowState {
+    public class SomePopupState {
         public SomeId SomeId { get; }
 
-        public SomeWindowState(
+        public SomePopupState(
             SomeId someId
         ) {
             SomeId = someId;
         }
     }
 
-    public partial class SomeWindow: Window<SomeWindowState> {
+    public partial class SomePopup: Popup<SomePopupState> {
         public SomeClassVm SomeClassVm { get; set; }
-        public SomeClassVmGroup SomeClassVmList { get; set; }
-        public Button SomeButton { get; set; }
-        public OptionalSomeClass6Vm NewOptVm { get; set; }
-        public OptionalSomeEmptyVm OptEmptyVm { get; set; }
-        public OptionalReferencingOtherClassVm OptReferencing { get; set; }
     }
 }

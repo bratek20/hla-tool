@@ -35,7 +35,7 @@ namespace SomeModule.Context {
                 .SetClass<OptionalReferencingOtherClassVm>(InjectionMode.Prototype)
                 .SetClass<SomeEnum2Switch>(InjectionMode.Prototype)
                 .AddImpl<Window, SomeWindow>()
-                .AddImpl<Window, SomePopup>();
+                .AddImpl<Popup, SomePopup>();
         }
     }
 }
