@@ -14,7 +14,7 @@ using OtherModule.View;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class SomeWindowView: WindowView<SomeWindow> {
+    public class SomeWindowView: UiContainerView<SomeWindow> {
         [SerializeField]
         SomeClassView someClassVm;
         [SerializeField]

@@ -79,7 +79,7 @@ class ViewTypesPopulator(
 
     private fun populateExtendUiElementOrWindow(viewModel: WorldClassType, view: WorldType): WorldType {
         val extendName = if (viewModel.getExtends()!!.getName().value.startsWith("Window"))
-            "WindowView"
+            "UiContainerView"
         else
             "ElementView"
 
