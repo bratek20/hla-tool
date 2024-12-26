@@ -24,10 +24,10 @@ class ViewModelSharedLogic(
     private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun windowsDef(): List<ViewModelWindowDefinition> =
+    fun windowsDef(): List<UiContainerDefinition> =
         moduleDef.getViewModelSubmodule()?.getWindows() ?: emptyList()
 
-    fun elementsDef(): List<ViewModelElementDefinition> =
+    fun elementsDef(): List<UiElementDefinition> =
         moduleDef.getViewModelSubmodule()?.getElements() ?: emptyList()
 
     fun elementsLogic(): List<ViewModelElementLogic> {
@@ -190,7 +190,7 @@ class ViewModelEnumElementLogic(
 }
 
 class ViewModelComplexElementLogic(
-    val def: ViewModelElementDefinition,
+    val def: UiElementDefinition,
     private val modelType: ComplexStructureApiType<*>,
     typesWorldApi: TypesWorldApi,
     type: WorldType
@@ -321,7 +321,7 @@ class ViewModelLogicFactory(
     private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
+    fun createComplexElementsLogic(defs: List<UiElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
             val modelType = element.getModel()?.let { model ->
                 apiTypeFactory.create(TypeDefinition(model.getName(), emptyList())) as ComplexStructureApiType<*>

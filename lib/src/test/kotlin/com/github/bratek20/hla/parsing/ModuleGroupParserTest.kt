@@ -825,6 +825,23 @@ class ModuleGroupParserTest {
                         }
                     }
                 }
+                popups = listOf {
+                    name = "SomePopup"
+                    state = {
+                        fields = listOf {
+                            name = "name"
+                            type = {
+                                name = "string"
+                            }
+                        }
+                    }
+                    fields = listOf {
+                        name = "someVm"
+                        type = {
+                            name = "SomeModelVm"
+                        }
+                    }
+                }
             }
         })
     }

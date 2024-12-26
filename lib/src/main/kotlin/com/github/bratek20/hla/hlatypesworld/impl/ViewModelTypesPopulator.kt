@@ -224,7 +224,7 @@ class ViewModelTypesPopulator(
         )
     }
 
-    private fun getFieldsForElement(def: ViewModelElementDefinition): List<WorldClassField> {
+    private fun getFieldsForElement(def: UiElementDefinition): List<WorldClassField> {
         val modelFields = def.getModel()?.let { model ->
             model.getMappedFields().map {
                 val type = it.getOverriddenViewModelType()?.let { typeName ->
@@ -257,7 +257,7 @@ class ViewModelTypesPopulator(
         return wrapperType.getName()
     }
 
-    private fun getFieldsForWindow(def: ViewModelWindowDefinition): List<WorldClassField> {
+    private fun getFieldsForWindow(def: UiContainerDefinition): List<WorldClassField> {
         return mapViewModelFields(def.getFields())
     }
 

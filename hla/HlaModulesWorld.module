@@ -1,6 +1,6 @@
-CustomTypes
-    HlaModulePath: string (example: "SomeRootGroup/SomeInnerGroup")
-    HlaGroupPath: string (example: "SomeRootGroup/SomeInnerGroup")
+//CustomTypes
+    //HlaModulePath: string (example: "SomeRootGroup/SomeInnerGroup")
+    //HlaGroupPath: string (example: "SomeRootGroup/SomeInnerGroup")
 
 ValueObjects
     WorldModuleGroup

@@ -133,15 +133,15 @@ fun elementModelDefinition(init: ElementModelDefinitionDef.() -> Unit = {}): Ele
     )
 }
 
-data class ViewModelElementDefinitionDef(
+data class UiElementDefinitionDef(
     var name: String = "someValue",
     var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
     var model: (ElementModelDefinitionDef.() -> Unit)? = null,
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
 )
-fun viewModelElementDefinition(init: ViewModelElementDefinitionDef.() -> Unit = {}): ViewModelElementDefinition {
-    val def = ViewModelElementDefinitionDef().apply(init)
-    return ViewModelElementDefinition.create(
+fun uiElementDefinition(init: UiElementDefinitionDef.() -> Unit = {}): UiElementDefinition {
+    val def = UiElementDefinitionDef().apply(init)
+    return UiElementDefinition.create(
         name = def.name,
         attributes = def.attributes.map { it -> attribute(it) },
         model = def.model?.let { it -> elementModelDefinition(it) },
@@ -149,14 +149,14 @@ fun viewModelElementDefinition(init: ViewModelElementDefinitionDef.() -> Unit = 
     )
 }
 
-data class ViewModelWindowDefinitionDef(
+data class UiContainerDefinitionDef(
     var name: String = "someValue",
     var state: (ComplexStructureDefinitionDef.() -> Unit)? = null,
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
 )
-fun viewModelWindowDefinition(init: ViewModelWindowDefinitionDef.() -> Unit = {}): ViewModelWindowDefinition {
-    val def = ViewModelWindowDefinitionDef().apply(init)
-    return ViewModelWindowDefinition.create(
+fun uiContainerDefinition(init: UiContainerDefinitionDef.() -> Unit = {}): UiContainerDefinition {
+    val def = UiContainerDefinitionDef().apply(init)
+    return UiContainerDefinition.create(
         name = def.name,
         state = def.state?.let { it -> complexStructureDefinition(it) },
         fields = def.fields.map { it -> fieldDefinition(it) },
@@ -164,14 +164,16 @@ fun viewModelWindowDefinition(init: ViewModelWindowDefinitionDef.() -> Unit = {}
 }
 
 data class ViewModelSubmoduleDefinitionDef(
-    var elements: List<(ViewModelElementDefinitionDef.() -> Unit)> = emptyList(),
-    var windows: List<(ViewModelWindowDefinitionDef.() -> Unit)> = emptyList(),
+    var elements: List<(UiElementDefinitionDef.() -> Unit)> = emptyList(),
+    var windows: List<(UiContainerDefinitionDef.() -> Unit)> = emptyList(),
+    var popups: List<(UiContainerDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun viewModelSubmoduleDefinition(init: ViewModelSubmoduleDefinitionDef.() -> Unit = {}): ViewModelSubmoduleDefinition {
     val def = ViewModelSubmoduleDefinitionDef().apply(init)
     return ViewModelSubmoduleDefinition.create(
-        elements = def.elements.map { it -> viewModelElementDefinition(it) },
-        windows = def.windows.map { it -> viewModelWindowDefinition(it) },
+        elements = def.elements.map { it -> uiElementDefinition(it) },
+        windows = def.windows.map { it -> uiContainerDefinition(it) },
+        popups = def.popups.map { it -> uiContainerDefinition(it) },
     )
 }
 

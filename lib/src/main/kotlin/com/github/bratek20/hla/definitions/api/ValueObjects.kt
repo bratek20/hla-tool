@@ -275,7 +275,7 @@ data class ElementModelDefinition(
     }
 }
 
-data class ViewModelElementDefinition(
+data class UiElementDefinition(
     private val name: String,
     private val attributes: List<Attribute>,
     private val model: ElementModelDefinition?,
@@ -303,8 +303,8 @@ data class ViewModelElementDefinition(
             attributes: List<Attribute>,
             model: ElementModelDefinition?,
             fields: List<FieldDefinition>,
-        ): ViewModelElementDefinition {
-            return ViewModelElementDefinition(
+        ): UiElementDefinition {
+            return UiElementDefinition(
                 name = name,
                 attributes = attributes,
                 model = model,
@@ -314,7 +314,7 @@ data class ViewModelElementDefinition(
     }
 }
 
-data class ViewModelWindowDefinition(
+data class UiContainerDefinition(
     private val name: String,
     private val state: ComplexStructureDefinition?,
     private val fields: List<FieldDefinition>,
@@ -336,8 +336,8 @@ data class ViewModelWindowDefinition(
             name: String,
             state: ComplexStructureDefinition?,
             fields: List<FieldDefinition>,
-        ): ViewModelWindowDefinition {
-            return ViewModelWindowDefinition(
+        ): UiContainerDefinition {
+            return UiContainerDefinition(
                 name = name,
                 state = state,
                 fields = fields,
@@ -347,25 +347,32 @@ data class ViewModelWindowDefinition(
 }
 
 data class ViewModelSubmoduleDefinition(
-    private val elements: List<ViewModelElementDefinition>,
-    private val windows: List<ViewModelWindowDefinition>,
+    private val elements: List<UiElementDefinition>,
+    private val windows: List<UiContainerDefinition>,
+    private val popups: List<UiContainerDefinition>,
 ) {
-    fun getElements(): List<ViewModelElementDefinition> {
+    fun getElements(): List<UiElementDefinition> {
         return this.elements
     }
 
-    fun getWindows(): List<ViewModelWindowDefinition> {
+    fun getWindows(): List<UiContainerDefinition> {
         return this.windows
+    }
+
+    fun getPopups(): List<UiContainerDefinition> {
+        return this.popups
     }
 
     companion object {
         fun create(
-            elements: List<ViewModelElementDefinition>,
-            windows: List<ViewModelWindowDefinition>,
+            elements: List<UiElementDefinition>,
+            windows: List<UiContainerDefinition>,
+            popups: List<UiContainerDefinition>,
         ): ViewModelSubmoduleDefinition {
             return ViewModelSubmoduleDefinition(
                 elements = elements,
                 windows = windows,
+                popups = popups,
             )
         }
     }

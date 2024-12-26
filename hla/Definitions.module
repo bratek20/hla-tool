@@ -59,20 +59,21 @@ ValueObjects
         name: string
         mappedFields: ViewModelMappedField[]
 
-    ViewModelElementDefinition
+    UiElementDefinition
         name: string
         attributes: Attribute[]
         model: ElementModelDefinition?
         fields: FieldDefinition[]
 
-    ViewModelWindowDefinition
+    UiContainerDefinition
         name: string
         state: ComplexStructureDefinition?
         fields: FieldDefinition[]
 
     ViewModelSubmoduleDefinition
-        elements: ViewModelElementDefinition[]
-        windows: ViewModelWindowDefinition[]
+        elements: UiElementDefinition[]
+        windows: UiContainerDefinition[]
+        popups: UiContainerDefinition[]
 
     // ViewModel end
 

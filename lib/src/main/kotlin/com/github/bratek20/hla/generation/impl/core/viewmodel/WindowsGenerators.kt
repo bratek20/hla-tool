@@ -4,7 +4,7 @@ import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
-import com.github.bratek20.hla.definitions.api.ViewModelWindowDefinition
+import com.github.bratek20.hla.definitions.api.UiContainerDefinition
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
@@ -16,7 +16,7 @@ import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 class GeneratedWindowLogic(
     private val moduleName: ModuleName,
-    private val def: ViewModelWindowDefinition,
+    private val def: UiContainerDefinition,
     private val apiTypeFactory: ApiTypeFactoryLogic,
     typesWorldApi: TypesWorldApi,
     type: WorldType
