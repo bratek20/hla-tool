@@ -126,6 +126,7 @@ abstract class BaseWindowsGenerator: BaseViewModelPatternGenerator() {
         return listOf(
             "B20.ViewModel.UiElements.Api",
             "B20.ViewModel.Windows.Api",
+            "B20.ViewModel.Popups.Api",
         )
     }
 }
