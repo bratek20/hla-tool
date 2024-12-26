@@ -37,3 +37,8 @@ ViewModel
             OtherClass
                 id
                 amount
+
+    Popups
+        OtherPopup
+            State
+                id: OtherId

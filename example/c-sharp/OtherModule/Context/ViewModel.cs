@@ -15,7 +15,8 @@ namespace OtherModule.Context {
         public void Apply(ContextBuilder builder) {
             builder
                 .SetClass<OtherClassVm>(InjectionMode.Prototype)
-                .SetClass<OtherClassVmGroup>(InjectionMode.Prototype);
+                .SetClass<OtherClassVmGroup>(InjectionMode.Prototype)
+                .AddImpl<Popup, OtherPopup>();
         }
     }
 }

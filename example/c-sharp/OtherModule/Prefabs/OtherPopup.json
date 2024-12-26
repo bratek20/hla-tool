@@ -1,0 +1,8 @@
+{
+  "blueprintType": "Popup",
+  "name": "OtherPopup",
+  "viewType": "OtherModule.View.OtherPopupView",
+  "creationOrder": 1,
+  "children": [ ],
+  "elementViewType": null
+}

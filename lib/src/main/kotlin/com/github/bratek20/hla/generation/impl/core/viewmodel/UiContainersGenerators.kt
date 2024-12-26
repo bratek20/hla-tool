@@ -117,9 +117,10 @@ abstract class BaseViewModelPatternGenerator: PatternGenerator() {
 }
 
 abstract class BaseWindowsGenerator: BaseViewModelPatternGenerator() {
+    protected abstract fun getDefs(): List<UiContainerDefinition>
 
     override fun shouldGenerate(): Boolean {
-        return logic.windowsDef().isNotEmpty()
+        return getDefs().isNotEmpty()
     }
 
     override fun extraCSharpUsings(): List<String> {
@@ -143,6 +144,10 @@ abstract class GeneratedUiContainersGenerator: BaseWindowsGenerator() {
 }
 
 class GeneratedWindowsGenerator: GeneratedUiContainersGenerator() {
+    override fun getDefs(): List<UiContainerDefinition> {
+        return logic.windowsDef()
+    }
+
     override fun getLogicClasses(): List<GeneratedUiContainerLogic> {
         return logic.windowsLogic()
     }
@@ -153,6 +158,10 @@ class GeneratedWindowsGenerator: GeneratedUiContainersGenerator() {
 }
 
 class GeneratedPopupsGenerator: GeneratedUiContainersGenerator() {
+    override fun getDefs(): List<UiContainerDefinition> {
+        return logic.popupsDef()
+    }
+
     override fun getLogicClasses(): List<GeneratedUiContainerLogic> {
         return logic.popupsLogic()
     }
@@ -163,7 +172,6 @@ class GeneratedPopupsGenerator: GeneratedUiContainersGenerator() {
 }
 
 abstract class UiContainersLogicGenerator: BaseWindowsGenerator() {
-    protected abstract fun getDefs(): List<UiContainerDefinition>
 
     override fun mode(): GeneratorMode {
         return GeneratorMode.ONLY_START
