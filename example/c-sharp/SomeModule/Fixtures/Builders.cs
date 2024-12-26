@@ -99,7 +99,7 @@ namespace SomeModule.Fixtures {
         public double DoubleExample { get; set; } = 0;
         public long LongExample { get; set; } = 0;
         public string GoodName { get; set; } = "someValue";
-        public object CustomData { get; set; } = null;
+        public B20.Architecture.Structs.Api.Struct CustomData { get; set; } = null;
     }
 
     public class SomeProperty2Def {

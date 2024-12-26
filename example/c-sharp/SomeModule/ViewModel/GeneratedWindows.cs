@@ -30,4 +30,18 @@ namespace SomeModule.ViewModel {
         public OptionalSomeEmptyVm OptEmptyVm { get; set; }
         public OptionalReferencingOtherClassVm OptReferencing { get; set; }
     }
+
+    public class SomePopupState {
+        public SomeId SomeId { get; }
+
+        public SomePopupState(
+            SomeId someId
+        ) {
+            SomeId = someId;
+        }
+    }
+
+    public partial class SomePopup: Window<SomePopupState> {
+        public SomeClassVm SomeClassVm { get; set; }
+    }
 }

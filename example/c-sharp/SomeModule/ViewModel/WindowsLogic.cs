@@ -12,4 +12,7 @@ using TypesModule.Api;
 namespace SomeModule.ViewModel {
     public partial class SomeWindow {
     }
+
+    public partial class SomePopup {
+    }
 }
