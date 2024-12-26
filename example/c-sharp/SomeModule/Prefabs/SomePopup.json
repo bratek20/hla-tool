@@ -1,7 +1,7 @@
 {
-  "blueprintType": "Window",
+  "blueprintType": "Popup",
   "name": "SomePopup",
-  "viewType": "SomeModule.View.SomePopupStateView",
+  "viewType": "SomeModule.View.SomePopupView",
   "creationOrder": 2,
   "children": [
     {
