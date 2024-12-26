@@ -247,7 +247,7 @@ class HlaTypesWorldImplTest {
 
         assertHasClassType("SomeWindowView", "SomeModule/View/ElementsView") {
             extends = {
-                name = "WindowView<SomeWindow>"
+                name = "UiContainerView<SomeWindow>"
             }
         }
     }

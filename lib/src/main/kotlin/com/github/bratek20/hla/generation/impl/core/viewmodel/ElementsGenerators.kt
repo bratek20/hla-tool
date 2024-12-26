@@ -24,10 +24,13 @@ class ViewModelSharedLogic(
     private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun windowsDef(): List<ViewModelWindowDefinition> =
+    fun windowsDef(): List<UiContainerDefinition> =
         moduleDef.getViewModelSubmodule()?.getWindows() ?: emptyList()
 
-    fun elementsDef(): List<ViewModelElementDefinition> =
+    fun popupsDef(): List<UiContainerDefinition> =
+        moduleDef.getViewModelSubmodule()?.getPopups() ?: emptyList()
+
+    fun elementsDef(): List<UiElementDefinition> =
         moduleDef.getViewModelSubmodule()?.getElements() ?: emptyList()
 
     fun elementsLogic(): List<ViewModelElementLogic> {
@@ -43,7 +46,25 @@ class ViewModelSharedLogic(
     }
 
     fun windowsLogic(): List<GeneratedWindowLogic> {
-        return windowsDef().map { GeneratedWindowLogic(moduleDef.getName(), it, apiTypeFactory, typesWorldApi, typesWorldApi.getTypeByName(WorldTypeName(it.getName()))) }
+        return windowsDef().map {
+            GeneratedWindowLogic(
+                moduleDef.getName(),
+                it,
+                apiTypeFactory,
+                typesWorldApi
+            )
+        }
+    }
+
+    fun popupsLogic(): List<GeneratedPopupLogic> {
+        return popupsDef().map {
+            GeneratedPopupLogic(
+                moduleDef.getName(),
+                it,
+                apiTypeFactory,
+                typesWorldApi
+            )
+        }
     }
 
     fun allModuleElementTypes(): List<WorldType> {
@@ -190,7 +211,7 @@ class ViewModelEnumElementLogic(
 }
 
 class ViewModelComplexElementLogic(
-    val def: ViewModelElementDefinition,
+    val def: UiElementDefinition,
     private val modelType: ComplexStructureApiType<*>,
     typesWorldApi: TypesWorldApi,
     type: WorldType
@@ -321,7 +342,7 @@ class ViewModelLogicFactory(
     private val apiTypeFactory: ApiTypeFactoryLogic,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun createComplexElementsLogic(defs: List<ViewModelElementDefinition>): List<ViewModelComplexElementLogic> {
+    fun createComplexElementsLogic(defs: List<UiElementDefinition>): List<ViewModelComplexElementLogic> {
         return defs.map { element ->
             val modelType = element.getModel()?.let { model ->
                 apiTypeFactory.create(TypeDefinition(model.getName(), emptyList())) as ComplexStructureApiType<*>

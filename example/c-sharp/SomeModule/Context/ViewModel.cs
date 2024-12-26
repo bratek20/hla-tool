@@ -6,6 +6,7 @@ using System.Linq;
 using B20.Ext;
 using B20.Architecture.Contexts.Api;
 using B20.ViewModel.Windows.Api;
+using B20.ViewModel.Popups.Api;
 using SomeModule.Api;
 using SomeModule.ViewModel;
 using OtherModule.Api;
@@ -34,7 +35,8 @@ namespace SomeModule.Context {
                 .SetClass<OptionalSomeEmptyVm>(InjectionMode.Prototype)
                 .SetClass<OptionalReferencingOtherClassVm>(InjectionMode.Prototype)
                 .SetClass<SomeEnum2Switch>(InjectionMode.Prototype)
-                .AddImpl<Window, SomeWindow>();
+                .AddImpl<Window, SomeWindow>()
+                .AddImpl<Popup, SomePopup>();
         }
     }
 }

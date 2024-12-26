@@ -22,7 +22,7 @@ class CSharpTypes(): LanguageTypes {
             BaseType.ANY -> "object"
             BaseType.DOUBLE -> "double"
             BaseType.LONG -> "long"
-            BaseType.STRUCT -> "object"
+            BaseType.STRUCT -> "B20.Architecture.Structs.Api.Struct"
         }
     }
 

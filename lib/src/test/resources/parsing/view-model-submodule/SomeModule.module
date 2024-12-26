@@ -13,3 +13,9 @@ ViewModel
             State
                 name: string
             someVm: SomeModelVm
+
+    Popups
+        SomePopup
+            State
+                name: string
+            someVm: SomeModelVm

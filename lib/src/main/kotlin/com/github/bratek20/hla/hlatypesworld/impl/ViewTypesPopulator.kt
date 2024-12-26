@@ -78,8 +78,9 @@ class ViewTypesPopulator(
     }
 
     private fun populateExtendUiElementOrWindow(viewModel: WorldClassType, view: WorldType): WorldType {
-        val extendName = if (viewModel.getExtends()!!.getName().value.startsWith("Window"))
-            "WindowView"
+        val name = viewModel.getExtends()!!.getName().value
+        val extendName = if (name.startsWith("Window") || name.startsWith("Popup"))
+            "UiContainerView"
         else
             "ElementView"
 

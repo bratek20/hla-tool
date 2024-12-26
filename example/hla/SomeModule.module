@@ -265,3 +265,9 @@ ViewModel
             newOptVm: SomeClass6Vm?
             optEmptyVm: SomeEmptyVm?
             optReferencing: ReferencingOtherClassVm?
+
+    Popups
+        SomePopup
+            State
+                someId: SomeId
+            someClassVm: SomeClassVm

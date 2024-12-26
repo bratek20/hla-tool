@@ -265,15 +265,15 @@ fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: Expe
     return result.joinToString("\n")
 }
 
-data class ExpectedViewModelElementDefinition(
+data class ExpectedUiElementDefinition(
     var name: String? = null,
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
     var modelEmpty: Boolean? = null,
     var model: (ExpectedElementModelDefinition.() -> Unit)? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
 )
-fun diffViewModelElementDefinition(given: ViewModelElementDefinition, expectedInit: ExpectedViewModelElementDefinition.() -> Unit, path: String = ""): String {
-    val expected = ExpectedViewModelElementDefinition().apply(expectedInit)
+fun diffUiElementDefinition(given: UiElementDefinition, expectedInit: ExpectedUiElementDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedUiElementDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
@@ -301,14 +301,14 @@ fun diffViewModelElementDefinition(given: ViewModelElementDefinition, expectedIn
     return result.joinToString("\n")
 }
 
-data class ExpectedViewModelWindowDefinition(
+data class ExpectedUiContainerDefinition(
     var name: String? = null,
     var stateEmpty: Boolean? = null,
     var state: (ExpectedComplexStructureDefinition.() -> Unit)? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
 )
-fun diffViewModelWindowDefinition(given: ViewModelWindowDefinition, expectedInit: ExpectedViewModelWindowDefinition.() -> Unit, path: String = ""): String {
-    val expected = ExpectedViewModelWindowDefinition().apply(expectedInit)
+fun diffUiContainerDefinition(given: UiContainerDefinition, expectedInit: ExpectedUiContainerDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedUiContainerDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
@@ -332,8 +332,9 @@ fun diffViewModelWindowDefinition(given: ViewModelWindowDefinition, expectedInit
 }
 
 data class ExpectedViewModelSubmoduleDefinition(
-    var elements: List<(ExpectedViewModelElementDefinition.() -> Unit)>? = null,
-    var windows: List<(ExpectedViewModelWindowDefinition.() -> Unit)>? = null,
+    var elements: List<(ExpectedUiElementDefinition.() -> Unit)>? = null,
+    var windows: List<(ExpectedUiContainerDefinition.() -> Unit)>? = null,
+    var popups: List<(ExpectedUiContainerDefinition.() -> Unit)>? = null,
 )
 fun diffViewModelSubmoduleDefinition(given: ViewModelSubmoduleDefinition, expectedInit: ExpectedViewModelSubmoduleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedViewModelSubmoduleDefinition().apply(expectedInit)
@@ -341,12 +342,17 @@ fun diffViewModelSubmoduleDefinition(given: ViewModelSubmoduleDefinition, expect
 
     expected.elements?.let {
         if (given.getElements().size != it.size) { result.add("${path}elements size ${given.getElements().size} != ${it.size}"); return@let }
-        given.getElements().forEachIndexed { idx, entry -> if (diffViewModelElementDefinition(entry, it[idx]) != "") { result.add(diffViewModelElementDefinition(entry, it[idx], "${path}elements[${idx}].")) } }
+        given.getElements().forEachIndexed { idx, entry -> if (diffUiElementDefinition(entry, it[idx]) != "") { result.add(diffUiElementDefinition(entry, it[idx], "${path}elements[${idx}].")) } }
     }
 
     expected.windows?.let {
         if (given.getWindows().size != it.size) { result.add("${path}windows size ${given.getWindows().size} != ${it.size}"); return@let }
-        given.getWindows().forEachIndexed { idx, entry -> if (diffViewModelWindowDefinition(entry, it[idx]) != "") { result.add(diffViewModelWindowDefinition(entry, it[idx], "${path}windows[${idx}].")) } }
+        given.getWindows().forEachIndexed { idx, entry -> if (diffUiContainerDefinition(entry, it[idx]) != "") { result.add(diffUiContainerDefinition(entry, it[idx], "${path}windows[${idx}].")) } }
+    }
+
+    expected.popups?.let {
+        if (given.getPopups().size != it.size) { result.add("${path}popups size ${given.getPopups().size} != ${it.size}"); return@let }
+        given.getPopups().forEachIndexed { idx, entry -> if (diffUiContainerDefinition(entry, it[idx]) != "") { result.add(diffUiContainerDefinition(entry, it[idx], "${path}popups[${idx}].")) } }
     }
 
     return result.joinToString("\n")

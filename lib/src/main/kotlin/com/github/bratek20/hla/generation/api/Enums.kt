@@ -41,6 +41,8 @@ enum class PatternName {
     ElementsLogic,
     GeneratedWindows,
     WindowsLogic,
+    GeneratedPopups,
+    PopupsLogic,
     ElementsView,
     PrefabBlueprints,
     Impl,

@@ -2,6 +2,7 @@ Enums
     BlueprintType
         ComplexElement
         Window
+        Popup
         ElementGroup
         OptionalElement
         EnumElement

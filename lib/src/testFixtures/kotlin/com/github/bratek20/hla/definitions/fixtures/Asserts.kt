@@ -59,13 +59,13 @@ fun assertElementModelDefinition(given: ElementModelDefinition, expectedInit: Ex
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertViewModelElementDefinition(given: ViewModelElementDefinition, expectedInit: ExpectedViewModelElementDefinition.() -> Unit) {
-    val diff = diffViewModelElementDefinition(given, expectedInit)
+fun assertUiElementDefinition(given: UiElementDefinition, expectedInit: ExpectedUiElementDefinition.() -> Unit) {
+    val diff = diffUiElementDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertViewModelWindowDefinition(given: ViewModelWindowDefinition, expectedInit: ExpectedViewModelWindowDefinition.() -> Unit) {
-    val diff = diffViewModelWindowDefinition(given, expectedInit)
+fun assertUiContainerDefinition(given: UiContainerDefinition, expectedInit: ExpectedUiContainerDefinition.() -> Unit) {
+    val diff = diffUiContainerDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

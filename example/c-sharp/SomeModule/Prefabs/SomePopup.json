@@ -1,0 +1,13 @@
+{
+  "blueprintType": "Popup",
+  "name": "SomePopup",
+  "viewType": "SomeModule.View.SomePopupView",
+  "creationOrder": 2,
+  "children": [
+    {
+      "name": "someClassVm",
+      "viewType": "SomeModule.View.SomeClassView"
+    }
+  ],
+  "elementViewType": null
+}

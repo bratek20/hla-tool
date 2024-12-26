@@ -125,6 +125,19 @@ class PrefabWindowBlueprintLogic(
     }
 }
 
+class PrefabPopupBlueprintLogic(
+    private val view: ViewLogic,
+    typesWorldApi: TypesWorldApi
+): PrefabContainerBlueprintLogic(view, typesWorldApi) {
+    override fun getName(): String {
+        return view.getViewModelTypeName()
+    }
+
+    override fun blueprintType(): BlueprintType {
+        return BlueprintType.Popup
+    }
+}
+
 class PrefabEnumElementBlueprintLogic(
     private val view: ViewLogic,
     typesWorldApi: TypesWorldApi
@@ -146,18 +159,21 @@ class PrefabBlueprintsGenerator: BaseViewModelPatternGenerator() {
     override fun generateFiles(): List<File> {
         val viewComplexElementLogic = logic.complexElementsLogic().map { ViewLogic(it) }
         val viewWindowLogic = logic.windowsLogic().map { ViewLogic(it) }
+        val viewPopupLogic = logic.popupsLogic().map { ViewLogic(it) }
         val viewElementGroupLogic = logic.elementListTypesToGenerate().map { WrappedElementViewLogic(it) }
         val viewElementOptionalLogic = logic.elementOptionalTypesToGenerate().map { WrappedElementViewLogic(it) }
         val viewEnumElementLogic = logic.enumElementsLogic().map { ViewLogic(it) }
 
         val elementBlueprintLogic = viewComplexElementLogic.map { PrefabComplexElementBlueprintLogic(it, typesWorldApi) }
         val windowBlueprintLogic = viewWindowLogic.map { PrefabWindowBlueprintLogic(it, typesWorldApi) }
+        val popupBlueprintLogic = viewPopupLogic.map { PrefabPopupBlueprintLogic(it, typesWorldApi) }
         val elementGroupBlueprintLogic = viewElementGroupLogic.map { PrefabWrappedElementBlueprintLogic(it, typesWorldApi) }
         val elementOptionalBlueprintLogic = viewElementOptionalLogic.map { PrefabWrappedElementBlueprintLogic(it, typesWorldApi) }
         val enumElementBlueprintLogic = viewEnumElementLogic.map { PrefabEnumElementBlueprintLogic(it, typesWorldApi) }
 
         return (elementBlueprintLogic +
                 windowBlueprintLogic +
+                popupBlueprintLogic +
                 elementGroupBlueprintLogic +
                 elementOptionalBlueprintLogic +
                 enumElementBlueprintLogic)

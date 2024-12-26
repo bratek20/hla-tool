@@ -6,6 +6,7 @@ using System.Linq;
 using B20.Ext;
 using B20.Architecture.Contexts.Api;
 using B20.ViewModel.Windows.Api;
+using B20.ViewModel.Popups.Api;
 using OtherModule.Api;
 using OtherModule.ViewModel;
 

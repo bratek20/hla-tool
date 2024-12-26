@@ -162,7 +162,7 @@ class ModuleGroupParserLogic(
                             mappedFields = mappedFields + mappedFieldsWithOverrides
                         )
                     }
-                    ViewModelElementDefinition(
+                    UiElementDefinition(
                         name = vm.name,
                         attributes = vm.attributes,
                         model = model.firstOrNull(),
@@ -170,22 +170,26 @@ class ModuleGroupParserLogic(
                     )
                 } ?: emptyList()
 
-            val windows = findSection(viewModel.elements, "Windows")?.elements
-                ?.filterIsInstance<Section>()?.map { w ->
-                    val state = findSection(w.elements, "State")?.let {
-                        parseComplexStructureDefinition(it).definition
-                    }
-                    ViewModelWindowDefinition(
-                        name = w.name,
-                        state = state,
-                        fields = parseFields(w.elements)
-                    )
-                } ?: emptyList()
             return ViewModelSubmoduleDefinition(
                 elements = vmElements,
-                windows = windows,
+                windows = parseUiContainers(viewModel.elements, "Windows"),
+                popups = parseUiContainers(viewModel.elements, "Popups")
             )
         }
+    }
+
+    private fun parseUiContainers(elements: List<ParsedElement>, containersName: String): List<UiContainerDefinition> {
+        return findSection(elements, containersName)?.elements
+            ?.filterIsInstance<Section>()?.map { w ->
+                val state = findSection(w.elements, "State")?.let {
+                    parseComplexStructureDefinition(it).definition
+                }
+                UiContainerDefinition(
+                    name = w.name,
+                    state = state,
+                    fields = parseFields(w.elements)
+                )
+            } ?: emptyList()
     }
 
     private fun parseExposedInterfaces(elements: List<ParsedElement>): List<ExposedInterface> {

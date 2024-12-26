@@ -19,7 +19,9 @@ class ViewModelGenerator: SubmoduleGenerator() {
             GeneratedElementsGenerator(),
             ElementsLogicGenerator(),
             GeneratedWindowsGenerator(),
-            WindowsLogicGenerator()
+            WindowsLogicGenerator(),
+            GeneratedPopupsGenerator(),
+            PopupsLogicGenerator(),
         )
     }
 }

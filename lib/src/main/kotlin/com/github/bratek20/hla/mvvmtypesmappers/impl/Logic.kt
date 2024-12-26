@@ -44,7 +44,7 @@ class ViewModelToViewMapperLogic(
             val wrappedTypeName = viewModelType.replace("Optional", "")
             return "Optional" + mapViewModelToViewTypeName(typesWorldApi.getTypeByName(WorldTypeName(wrappedTypeName)))
         }
-        if (viewModelType.endsWith("Window")) {
+        if (viewModelType.endsWith("Window") || viewModelType.endsWith("Popup")) {
             return viewModelType + "View"
         }
 

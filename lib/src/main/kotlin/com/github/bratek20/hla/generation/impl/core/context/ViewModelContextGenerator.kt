@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.context
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.definitions.api.UiContainerDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -51,15 +52,21 @@ class ViewModelContextGenerator: PatternGenerator() {
                             }
                         }
                     }
-                    logic.windowsDef().forEach { window ->
-                        builderOperations.then {
-                            methodCall {
-                                methodName = "addImpl"
-                                addGeneric("Window")
-                                addGeneric(window.getName())
+
+                    val addUiContainerImpl = { baseContainerName: String, containers: List<UiContainerDefinition> ->
+                        containers.forEach { container ->
+                            builderOperations.then {
+                                methodCall {
+                                    methodName = "addImpl"
+                                    addGeneric(baseContainerName)
+                                    addGeneric(container.getName())
+                                }
                             }
                         }
                     }
+
+                    addUiContainerImpl("Window", logic.windowsDef())
+                    addUiContainerImpl("Popup", logic.popupsDef())
 
                     add(builderOperations)
                 }
@@ -70,6 +77,7 @@ class ViewModelContextGenerator: PatternGenerator() {
     override fun extraCSharpUsings(): List<String> = listOf(
         "B20.Architecture.Contexts.Api",
         "B20.ViewModel.Windows.Api",
+        "B20.ViewModel.Popups.Api",
     )
 
 }
