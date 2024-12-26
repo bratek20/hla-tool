@@ -14,7 +14,7 @@ using OtherModule.View;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class SomePopupStateView: UiContainerView<SomePopup> {
+    public class SomePopupView: UiContainerView<SomePopup> {
         [SerializeField]
         SomeClassView someClassVm;
         protected override void OnBind() {

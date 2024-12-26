@@ -129,6 +129,7 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
                 logic.elementListTypesToGenerate().map { WrappedElementViewLogic(it) } +
                 logic.elementOptionalTypesToGenerate().map { WrappedElementViewLogic(it) } +
                 logic.windowsLogic().map { ViewLogic(it) } +
+                logic.popupsLogic().map { ViewLogic(it) } +
                 logic.enumElementsLogic().map { ViewLogic(it) })
             .map { it.getOps() }
     }
