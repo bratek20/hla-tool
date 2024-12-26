@@ -32,48 +32,59 @@ class ViewModelTypesPopulator(
         if (!::apiTypeFactory.isInitialized) return
 
         modules.forEach { populateElements(it) }
-        modules.forEach { populateWindows(it) }
+        modules.forEach { populateContainers(it) }
         modules.forEach { populateEnumSwitches(it) }
         modules.forEach { populateElementGroups(it) }
         modules.forEach { populateOptionalElements(it) }
     }
 
-    private fun populateWindows(module: ModuleDefinition) {
+    private fun populateContainers(module: ModuleDefinition) {
         module.getViewModelSubmodule()?.let {
             it.getWindows().forEach { window ->
-                val path = HlaTypePath.create(
-                    module.getName(),
-                    SubmoduleName.ViewModel,
-                    PatternName.GeneratedWindows
-                ).asWorld()
-
-                val modelName = window.getName() + "State"
-                val paramType = WorldType.create(
-                    WorldTypeName("Window<${modelName}>"),
-                    path
-                )
-
-                world.addConcreteParametrizedClass(
-                    WorldConcreteParametrizedClass.create(
-                        type = paramType,
-                        typeArguments = listOf(
-                            WorldType.create(WorldTypeName(modelName), path)
-                        )
-                    )
-                )
-
-                world.addClassType(
-                    WorldClassType.create(
-                        type = WorldType.create(
-                            name = WorldTypeName(window.getName()),
-                            path = path
-                        ),
-                        extends = paramType,
-                        fields = getFieldsForWindow(window),
-                    )
-                )
+                populateContainer(module, window, "Window")
+            }
+            it.getPopups().forEach { popup ->
+                populateContainer(module, popup, "Popup")
             }
         }
+    }
+
+    private fun populateContainer(
+        module: ModuleDefinition,
+        containerDef: UiContainerDefinition,
+        baseContainerName: String
+    ) {
+        val path = HlaTypePath.create(
+            module.getName(),
+            SubmoduleName.ViewModel,
+            PatternName.GeneratedWindows
+        ).asWorld()
+
+        val modelName = containerDef.getName() + "State"
+        val paramType = WorldType.create(
+            WorldTypeName("${baseContainerName}<${modelName}>"),
+            path
+        )
+
+        world.addConcreteParametrizedClass(
+            WorldConcreteParametrizedClass.create(
+                type = paramType,
+                typeArguments = listOf(
+                    WorldType.create(WorldTypeName(modelName), path)
+                )
+            )
+        )
+
+        world.addClassType(
+            WorldClassType.create(
+                type = WorldType.create(
+                    name = WorldTypeName(containerDef.getName()),
+                    path = path
+                ),
+                extends = paramType,
+                fields = getFieldsForWindow(containerDef),
+            )
+        )
     }
 
     private fun populateElements(module: ModuleDefinition) {

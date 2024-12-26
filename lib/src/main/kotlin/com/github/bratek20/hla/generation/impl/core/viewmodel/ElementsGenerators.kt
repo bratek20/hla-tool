@@ -27,6 +27,9 @@ class ViewModelSharedLogic(
     fun windowsDef(): List<UiContainerDefinition> =
         moduleDef.getViewModelSubmodule()?.getWindows() ?: emptyList()
 
+    fun popupsDef(): List<UiContainerDefinition> =
+        moduleDef.getViewModelSubmodule()?.getPopups() ?: emptyList()
+
     fun elementsDef(): List<UiElementDefinition> =
         moduleDef.getViewModelSubmodule()?.getElements() ?: emptyList()
 
@@ -43,7 +46,25 @@ class ViewModelSharedLogic(
     }
 
     fun windowsLogic(): List<GeneratedWindowLogic> {
-        return windowsDef().map { GeneratedWindowLogic(moduleDef.getName(), it, apiTypeFactory, typesWorldApi, typesWorldApi.getTypeByName(WorldTypeName(it.getName()))) }
+        return windowsDef().map {
+            GeneratedWindowLogic(
+                moduleDef.getName(),
+                it,
+                apiTypeFactory,
+                typesWorldApi
+            )
+        }
+    }
+
+    fun popupsLogic(): List<GeneratedPopupLogic> {
+        return popupsDef().map {
+            GeneratedPopupLogic(
+                moduleDef.getName(),
+                it,
+                apiTypeFactory,
+                typesWorldApi
+            )
+        }
     }
 
     fun allModuleElementTypes(): List<WorldType> {

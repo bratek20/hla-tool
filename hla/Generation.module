@@ -42,6 +42,8 @@ Enums
         ElementsLogic
         GeneratedWindows
         WindowsLogic
+        GeneratedPopups
+        PopupsLogic
 
         //view
         ElementsView
