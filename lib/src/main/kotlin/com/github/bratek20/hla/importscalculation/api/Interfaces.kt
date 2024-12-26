@@ -2,9 +2,8 @@
 
 package com.github.bratek20.hla.importscalculation.api
 
-import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.hla.generation.api.*
+import com.github.bratek20.hla.hlatypesworld.api.*
 
 interface ImportsCalculator {
-    fun calculate(module: ModuleName, submodule: SubmoduleName): List<String>
+    fun calculate(path: HlaTypePath): List<String>
 }

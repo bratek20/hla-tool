@@ -3,6 +3,7 @@ package com.github.bratek20.hla.importscalculation.tests
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.hla.facade.fixtures.moduleName
 import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.hlatypesworld.fixtures.hlaTypePath
 import com.github.bratek20.hla.importscalculation.api.ImportsCalculator
 import com.github.bratek20.hla.importscalculation.context.ImportsCalculationImpl
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
@@ -34,33 +35,30 @@ class ImportsCalculationImplTest {
         typesWorldApi.addClassType(worldClassType {
             type = {
                 name = "SomeType"
-                path = "SomeGroup/SomeModule/Api/ValueObjects"
+                path = "SomeModule/Api/ValueObjects"
             }
             fields = listOf {
                 type = {
                     name = "OtherType"
-                    path = "SomeGroup/OtherModule/Api/ValueObjects"
+                    path = "OtherModule/Api/ValueObjects"
                 }
             }
         })
 
         testCalculate(
-            "SomeModule",
-            SubmoduleName.Api,
+            "SomeModule/Api/ValueObjects",
             listOf(
-                "SomeGroup.OtherModule.Api.ValueObjects"
+                "OtherModule.Api"
             )
         )
     }
 
     private fun testCalculate(
-        moduleName: String,
-        submoduleName: SubmoduleName,
+        path: String,
         expectedImports: List<String>
     ) {
         val imports = calculator.calculate(
-            moduleName(moduleName),
-            submoduleName
+            hlaTypePath(path)
         )
 
         assertThat(imports).containsExactlyElementsOf(expectedImports)

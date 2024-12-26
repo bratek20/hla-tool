@@ -18,6 +18,7 @@ import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinSupport
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
 import com.github.bratek20.hla.hlatypesworld.impl.HlaTypesWorldApiLogic
+import com.github.bratek20.hla.importscalculation.api.ImportsCalculator
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 
@@ -31,18 +32,22 @@ data class DomainContext(
 
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
+    private val apiGenerator: ApiGenerator,
     private val prefabsGenerator: PrefabsGenerator,
     private val typesWorldApi: TypesWorldApi,
-    private val hlaTypesWorldApi: HlaTypesWorldApi
+    private val hlaTypesWorldApi: HlaTypesWorldApi,
+    private val patternGenerators: Set<PatternGenerator>,
+    private val importsCalculator: ImportsCalculator
 ) : ModuleGenerator {
     class SubmodulesGenerator(
         private val context: ModuleGenerationContext,
+        private val apiGenerator: ApiGenerator,
         private val prefabsGenerator: PrefabsGenerator,
         private val typesWorldApi: TypesWorldApi
     ) {
         fun generate(): List<GeneratedSubmodule> {
             return listOf(
-                ApiGenerator(),
+                apiGenerator,
                 ImplGenerator(),
                 WebGenerator(),
                 ViewModelGenerator(),
@@ -52,7 +57,7 @@ class ModuleGeneratorLogic(
                 FixturesGenerator(),
                 TestsGenerator(),
             ).mapNotNull {
-                it.init(context, "", typesWorldApi)
+                it.legacyInit(context, "", typesWorldApi)
                 it.generateMacros()
                 it.generateSubmodule()
             }
@@ -86,9 +91,13 @@ class ModuleGeneratorLogic(
         (hlaTypesWorldApi as HlaTypesWorldApiLogic).init(context.apiTypeFactory)
         hlaTypesWorldApi.populate(args.getGroup())
 
+        patternGenerators.forEach {
+            it.init(importsCalculator)
+        }
+
         return GeneratedModule.create(
             name = moduleName,
-            submodules = SubmodulesGenerator(context, prefabsGenerator, typesWorldApi).generate()
+            submodules = SubmodulesGenerator(context, apiGenerator, prefabsGenerator, typesWorldApi).generate()
         )
     }
 }

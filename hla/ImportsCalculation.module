@@ -1,4 +1,3 @@
 Interfaces
     ImportsCalculator
-        //get all types for given module and submodule
-        calculate(module: ModuleName, submodule: SubmoduleName): string[]
+        calculate(path: HlaTypePath): string[]

@@ -11,7 +11,6 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
-import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 abstract class GeneratedUiContainerLogic(
@@ -106,8 +105,8 @@ class GeneratedPopupLogic(
 abstract class BaseViewModelPatternGenerator: PatternGenerator() {
     protected lateinit var logic: ViewModelSharedLogic
 
-    override fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
-        super.init(c, velocityPath, typesWorldApi)
+    override fun legacyInit(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
+        super.legacyInit(c, velocityPath, typesWorldApi)
         logic = ViewModelSharedLogic(module, apiTypeFactory, typesWorldApi)
     }
 

@@ -21,6 +21,10 @@ class ValueObjectsGenerator: PatternGenerator() {
         return module.getSimpleValueObjects().isNotEmpty() || module.getComplexValueObjects().isNotEmpty()
     }
 
+    override fun useImportsCalculator(): Boolean {
+        return true
+    }
+
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val simpleVOs = module.getSimpleValueObjects().map {
             apiTypeFactory.create<SimpleValueObjectApiType>(it)
