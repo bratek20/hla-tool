@@ -8,15 +8,19 @@ using B20.ViewModel.UiElements.Api;
 using B20.ViewModel.Windows.Api;
 using B20.ViewModel.Popups.Api;
 using OtherModule.Api;
+using SimpleModule.Api;
 
 namespace OtherModule.ViewModel {
     public class OtherPopupState {
         public OtherId Id { get; }
+        public SimpleId SimpleId { get; }
 
         public OtherPopupState(
-            OtherId id
+            OtherId id,
+            SimpleId simpleId
         ) {
             Id = id;
+            SimpleId = simpleId;
         }
     }
 
