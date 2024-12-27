@@ -31,18 +31,26 @@ class ImportsCalculationImplTest {
     }
 
     @Test
-    fun `should work`() {
+    fun `should not duplicate same imports`() {
         typesWorldApi.addClassType(worldClassType {
             type = {
                 name = "SomeType"
                 path = "SomeModule/Api/ValueObjects"
             }
-            fields = listOf {
-                type = {
-                    name = "OtherType"
-                    path = "OtherModule/Api/ValueObjects"
+            fields = listOf (
+                {
+                    type = {
+                        name = "OtherType"
+                        path = "OtherModule/Api/ValueObjects"
+                    }
+                },
+                {
+                    type = {
+                        name = "OtherType2"
+                        path = "OtherModule/Api/ValueObjects"
+                    }
                 }
-            }
+            )
         })
 
         testCalculate(
@@ -50,6 +58,48 @@ class ImportsCalculationImplTest {
             listOf(
                 "OtherModule.Api"
             )
+        )
+    }
+
+    @Test
+    fun `should skip imports for paths starting with Language`() {
+        typesWorldApi.addClassType(worldClassType {
+            type = {
+                name = "SomeType"
+                path = "SomeModule/Api/ValueObjects"
+            }
+            fields = listOf {
+                type = {
+                    name = "int"
+                    path = "Language/Types/Api/Primitives"
+                }
+            }
+        })
+
+        testCalculate(
+            "SomeModule/Api/ValueObjects",
+            emptyList()
+        )
+    }
+
+    @Test
+    fun `should skip import to current path`() {
+        typesWorldApi.addClassType(worldClassType {
+            type = {
+                name = "SomeType"
+                path = "SomeModule/Api/ValueObjects"
+            }
+            fields = listOf {
+                type = {
+                    name = "SomeType2"
+                    path = "SomeModule/Api/ValueObjects"
+                }
+            }
+        })
+
+        testCalculate(
+            "SomeModule/Api/ValueObjects",
+            emptyList()
         )
     }
 
