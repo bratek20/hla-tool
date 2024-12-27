@@ -16,6 +16,8 @@ import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
+import com.github.bratek20.hla.importscalculation.api.ImportsCalculator
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
@@ -57,7 +59,7 @@ abstract class ModulePartGenerator {
         return null
     }
 
-    open fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
+    open fun legacyInit(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
         this.c = c
         this.apiTypeFactory = ApiTypeFactoryLogic(c.domain.queries, c.language.types())
         this.velocityPath = velocityPath
@@ -113,6 +115,12 @@ abstract class PatternGenerator
 {
     lateinit var submodule: SubmoduleName
 
+    private lateinit var importsCalculator: ImportsCalculator
+    fun init(
+        importsCalculator: ImportsCalculator
+    ) {
+        this.importsCalculator = importsCalculator
+    }
 
     @Deprecated("Migrate to code builder", ReplaceWith("applyOperations"))
     open fun generateFileContent(): FileContent? { return null }
@@ -148,6 +156,10 @@ abstract class PatternGenerator
 
     open fun generateFiles(): List<File> {
         return emptyList()
+    }
+
+    open fun useImportsCalculator(): Boolean {
+        return false
     }
 
     private fun generateFileContent(ops: TopLevelCodeBuilderOps): FileContent {
@@ -193,29 +205,41 @@ abstract class PatternGenerator
                         addUsing(it)
                     }
 
-                    if (submodule != SubmoduleName.Api) {
-                        addUsing("$moduleName.Api")
-                    }
-                    if (submodule == SubmoduleName.View) {
-                        addUsing("$moduleName.ViewModel")
-                    }
-                    if (submodule == SubmoduleName.Context && patternName() == PatternName.Web) {
-                        addUsing("$moduleName.Web")
-                    }
-                    if (submodule == SubmoduleName.Context && patternName() == PatternName.ViewModel) {
-                        addUsing("$moduleName.ViewModel")
-                    }
-                    modules.getCurrentDependencies().forEach {
-                        addUsing(it.getModule().getName().value + ".Api")
-                        if (submodule == SubmoduleName.ViewModel && it.getModule().getViewModelSubmodule() != null) {
-                            addUsing(it.getModule().getName().value + ".ViewModel")
+                    if (useImportsCalculator()) {
+                        val patternPath = HlaTypePath.create(
+                            c.module.getName(),
+                            submodule,
+                            patternName()
+                        )
+                        importsCalculator.calculate(patternPath).forEach {
+                            addUsing(it)
                         }
-                        if (submodule == SubmoduleName.View && it.getModule().getViewModelSubmodule() != null) {
-                            addUsing(it.getModule().getName().value + ".ViewModel")
-                            addUsing(it.getModule().getName().value + ".View")
+                    }
+                    else {
+                        if (submodule != SubmoduleName.Api) {
+                            addUsing("$moduleName.Api")
                         }
-                        if (submodule == SubmoduleName.Fixtures) {
-                            addUsing(it.getModule().getName().value + ".Fixtures")
+                        if (submodule == SubmoduleName.View) {
+                            addUsing("$moduleName.ViewModel")
+                        }
+                        if (submodule == SubmoduleName.Context && patternName() == PatternName.Web) {
+                            addUsing("$moduleName.Web")
+                        }
+                        if (submodule == SubmoduleName.Context && patternName() == PatternName.ViewModel) {
+                            addUsing("$moduleName.ViewModel")
+                        }
+                        modules.getCurrentDependencies().forEach {
+                            addUsing(it.getModule().getName().value + ".Api")
+                            if (submodule == SubmoduleName.ViewModel && it.getModule().getViewModelSubmodule() != null) {
+                                addUsing(it.getModule().getName().value + ".ViewModel")
+                            }
+                            if (submodule == SubmoduleName.View && it.getModule().getViewModelSubmodule() != null) {
+                                addUsing(it.getModule().getName().value + ".ViewModel")
+                                addUsing(it.getModule().getName().value + ".View")
+                            }
+                            if (submodule == SubmoduleName.Fixtures) {
+                                addUsing(it.getModule().getName().value + ".Fixtures")
+                            }
                         }
                     }
 
@@ -307,13 +331,13 @@ abstract class SubmoduleGenerator
 
     abstract fun submoduleName(): SubmoduleName
 
-    override fun init(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
-        super.init(c, velocityPath, typesWorldApi)
+    override fun legacyInit(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
+        super.legacyInit(c, velocityPath, typesWorldApi)
 
         patternGenerators = getPatternGenerators()
 
         patternGenerators.forEach {
-            it.init(c, velocityDirPath(), typesWorldApi)
+            it.legacyInit(c, velocityDirPath(), typesWorldApi)
             it.submodule = submoduleName()
         }
     }
@@ -354,7 +378,7 @@ abstract class SubmoduleGenerator
     //TODO-REF workaround to force macros generation
     fun generateMacros() {
         val macros = MacrosBuilder()
-        macros.init(c, "macros", typesWorldApi)
+        macros.legacyInit(c, "macros", typesWorldApi)
         macros.generatePatterns()
     }
 }

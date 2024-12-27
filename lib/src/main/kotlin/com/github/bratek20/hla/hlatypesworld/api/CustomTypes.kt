@@ -37,6 +37,10 @@ class HlaTypePath(
         return parts[parts.size - n]
     }
 
+    override fun toString(): String {
+        return value
+    }
+
     companion object {
         fun create(
             module: ModuleName,

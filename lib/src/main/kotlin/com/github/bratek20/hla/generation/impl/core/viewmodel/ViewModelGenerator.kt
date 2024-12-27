@@ -5,7 +5,10 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 
-class ViewModelGenerator: SubmoduleGenerator() {
+class ViewModelGenerator(
+    private val generatedPopupsGenerator: GeneratedPopupsGenerator,
+    private val generatedWindowsGenerator: GeneratedWindowsGenerator,
+): SubmoduleGenerator() {
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.ViewModel
     }
@@ -18,9 +21,9 @@ class ViewModelGenerator: SubmoduleGenerator() {
         return listOf(
             GeneratedElementsGenerator(),
             ElementsLogicGenerator(),
-            GeneratedWindowsGenerator(),
+            generatedWindowsGenerator,
             WindowsLogicGenerator(),
-            GeneratedPopupsGenerator(),
+            generatedPopupsGenerator,
             PopupsLogicGenerator(),
         )
     }

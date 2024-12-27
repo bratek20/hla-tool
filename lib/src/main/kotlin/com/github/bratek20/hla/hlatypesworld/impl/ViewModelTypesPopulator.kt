@@ -9,6 +9,7 @@ import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelTypesCalculator
 import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
+import com.github.bratek20.hla.queries.api.asClassField
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
@@ -41,10 +42,10 @@ class ViewModelTypesPopulator(
     private fun populateContainers(module: ModuleDefinition) {
         module.getViewModelSubmodule()?.let {
             it.getWindows().forEach { window ->
-                populateContainer(module, window, "Window")
+                populateContainer(module, window, "Window", PatternName.GeneratedWindows)
             }
             it.getPopups().forEach { popup ->
-                populateContainer(module, popup, "Popup")
+                populateContainer(module, popup, "Popup", PatternName.GeneratedPopups)
             }
         }
     }
@@ -52,12 +53,13 @@ class ViewModelTypesPopulator(
     private fun populateContainer(
         module: ModuleDefinition,
         containerDef: UiContainerDefinition,
-        baseContainerName: String
+        baseContainerName: String,
+        patternName: PatternName
     ) {
         val path = HlaTypePath.create(
             module.getName(),
             SubmoduleName.ViewModel,
-            PatternName.GeneratedWindows
+            patternName
         ).asWorld()
 
         val modelName = containerDef.getName() + "State"
@@ -85,6 +87,18 @@ class ViewModelTypesPopulator(
                 fields = getFieldsForWindow(containerDef),
             )
         )
+
+        containerDef.getState()?.let { state ->
+            world.addClassType(
+                WorldClassType.create(
+                    type = WorldType.create(
+                        name = WorldTypeName(modelName),
+                        path = path
+                    ),
+                    fields = state.getFields().map { it.asClassField(world) }
+                )
+            )
+        }
     }
 
     private fun populateElements(module: ModuleDefinition) {

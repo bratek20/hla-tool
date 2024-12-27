@@ -153,7 +153,9 @@ class SerializedCustomTypesGenerator: PatternGenerator() {
     }
 }
 
-class ApiGenerator: SubmoduleGenerator() {
+class ApiGenerator(
+    private val valueObjectsGenerator: ValueObjectsGenerator
+): SubmoduleGenerator() {
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Api
     }
@@ -168,7 +170,7 @@ class ApiGenerator: SubmoduleGenerator() {
             CustomTypesGenerator(),
             CustomTypesMapperGenerator(),
             SerializedCustomTypesGenerator(),
-            ValueObjectsGenerator(),
+            valueObjectsGenerator,
             DataClassesGenerator(),
             PropertyOrDataKeysGenerator(false),
             PropertyOrDataKeysGenerator(true),
