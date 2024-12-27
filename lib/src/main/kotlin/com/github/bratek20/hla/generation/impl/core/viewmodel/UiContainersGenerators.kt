@@ -124,7 +124,6 @@ abstract class BaseWindowsGenerator: BaseViewModelPatternGenerator() {
 
     override fun extraCSharpUsings(): List<String> {
         return listOf(
-            "B20.ViewModel.UiElements.Api",
             "B20.ViewModel.Windows.Api",
             "B20.ViewModel.Popups.Api",
         )
@@ -139,6 +138,10 @@ abstract class GeneratedUiContainersGenerator: BaseWindowsGenerator() {
             addClass(logic.getState())
             addClass(logic.getWindowClass())
         }
+    }
+
+    override fun useImportsCalculator(): Boolean {
+        return true
     }
 }
 
@@ -167,10 +170,6 @@ class GeneratedPopupsGenerator: GeneratedUiContainersGenerator() {
 
     override fun patternName(): PatternName {
         return PatternName.GeneratedPopups
-    }
-
-    override fun useImportsCalculator(): Boolean {
-        return true
     }
 }
 
