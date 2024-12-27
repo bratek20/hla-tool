@@ -173,6 +173,8 @@ class HlaTypesWorldImplTest {
             )
         }
 
+        assertHasType("SomePopup", "SomeModule/ViewModel/GeneratedPopups")
+
         assertHasClassType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
             fields = listOf(
                 {

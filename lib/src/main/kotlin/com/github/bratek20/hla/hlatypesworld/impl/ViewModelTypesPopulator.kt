@@ -41,10 +41,10 @@ class ViewModelTypesPopulator(
     private fun populateContainers(module: ModuleDefinition) {
         module.getViewModelSubmodule()?.let {
             it.getWindows().forEach { window ->
-                populateContainer(module, window, "Window")
+                populateContainer(module, window, "Window", PatternName.GeneratedWindows)
             }
             it.getPopups().forEach { popup ->
-                populateContainer(module, popup, "Popup")
+                populateContainer(module, popup, "Popup", PatternName.GeneratedPopups)
             }
         }
     }
@@ -52,12 +52,13 @@ class ViewModelTypesPopulator(
     private fun populateContainer(
         module: ModuleDefinition,
         containerDef: UiContainerDefinition,
-        baseContainerName: String
+        baseContainerName: String,
+        patternName: PatternName
     ) {
         val path = HlaTypePath.create(
             module.getName(),
             SubmoduleName.ViewModel,
-            PatternName.GeneratedWindows
+            patternName
         ).asWorld()
 
         val modelName = containerDef.getName() + "State"
