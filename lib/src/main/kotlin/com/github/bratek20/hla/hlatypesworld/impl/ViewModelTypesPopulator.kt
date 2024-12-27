@@ -9,6 +9,7 @@ import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelTypesCalculator
 import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper
 import com.github.bratek20.hla.mvvmtypesmappers.impl.getModelTypeForEnsuredUiElement
+import com.github.bratek20.hla.queries.api.asClassField
 import com.github.bratek20.hla.queries.api.createTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
@@ -86,6 +87,18 @@ class ViewModelTypesPopulator(
                 fields = getFieldsForWindow(containerDef),
             )
         )
+
+        containerDef.getState()?.let { state ->
+            world.addClassType(
+                WorldClassType.create(
+                    type = WorldType.create(
+                        name = WorldTypeName(modelName),
+                        path = path
+                    ),
+                    fields = state.getFields().map { it.asClassField(world) }
+                )
+            )
+        }
     }
 
     private fun populateElements(module: ModuleDefinition) {

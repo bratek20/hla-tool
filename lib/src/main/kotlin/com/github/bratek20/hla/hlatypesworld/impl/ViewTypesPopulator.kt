@@ -30,7 +30,8 @@ class ViewTypesPopulator(
             it.getPath().isHla() &&
             it.getPath().asHla().getSubmoduleName() == SubmoduleName.ViewModel &&
                 it.getPath().asHla().getModuleName() == module.getName() &&
-                    world.getTypeInfo(it).getKind() == WorldTypeKind.ClassType
+                    world.getTypeInfo(it).getKind() == WorldTypeKind.ClassType &&
+                    !it.getName().value.endsWith("State")
         }
 
         viewModelTypes.forEach { type ->

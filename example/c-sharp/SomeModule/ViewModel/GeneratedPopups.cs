@@ -8,9 +8,6 @@ using B20.ViewModel.UiElements.Api;
 using B20.ViewModel.Windows.Api;
 using B20.ViewModel.Popups.Api;
 using SomeModule.Api;
-using OtherModule.Api;
-using OtherModule.ViewModel;
-using TypesModule.Api;
 
 namespace SomeModule.ViewModel {
     public class SomePopupState {
