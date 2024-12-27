@@ -168,6 +168,10 @@ class GeneratedPopupsGenerator: GeneratedUiContainersGenerator() {
     override fun patternName(): PatternName {
         return PatternName.GeneratedPopups
     }
+
+    override fun useImportsCalculator(): Boolean {
+        return true
+    }
 }
 
 abstract class UiContainersLogicGenerator: BaseWindowsGenerator() {

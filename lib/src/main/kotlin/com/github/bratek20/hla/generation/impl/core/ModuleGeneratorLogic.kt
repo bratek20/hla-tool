@@ -33,6 +33,7 @@ data class DomainContext(
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
     private val apiGenerator: ApiGenerator,
+    private val viewModelGenerator: ViewModelGenerator,
     private val prefabsGenerator: PrefabsGenerator,
     private val typesWorldApi: TypesWorldApi,
     private val hlaTypesWorldApi: HlaTypesWorldApi,
@@ -42,6 +43,7 @@ class ModuleGeneratorLogic(
     class SubmodulesGenerator(
         private val context: ModuleGenerationContext,
         private val apiGenerator: ApiGenerator,
+        private val viewModelGenerator: ViewModelGenerator,
         private val prefabsGenerator: PrefabsGenerator,
         private val typesWorldApi: TypesWorldApi
     ) {
@@ -50,7 +52,7 @@ class ModuleGeneratorLogic(
                 apiGenerator,
                 ImplGenerator(),
                 WebGenerator(),
-                ViewModelGenerator(),
+                viewModelGenerator,
                 ViewGenerator(),
                 prefabsGenerator,
                 ContextGenerator(),
@@ -97,7 +99,13 @@ class ModuleGeneratorLogic(
 
         return GeneratedModule.create(
             name = moduleName,
-            submodules = SubmodulesGenerator(context, apiGenerator, prefabsGenerator, typesWorldApi).generate()
+            submodules = SubmodulesGenerator(
+                context,
+                apiGenerator,
+                viewModelGenerator,
+                prefabsGenerator,
+                typesWorldApi
+            ).generate()
         )
     }
 }
