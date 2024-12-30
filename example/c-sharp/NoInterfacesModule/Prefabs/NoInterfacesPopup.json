@@ -1,0 +1,8 @@
+{
+  "blueprintType": "Popup",
+  "name": "NoInterfacesPopup",
+  "viewType": "NoInterfacesModule.View.NoInterfacesPopupView",
+  "creationOrder": 1,
+  "children": [ ],
+  "elementViewType": null
+}

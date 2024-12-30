@@ -1,0 +1,8 @@
+ValueObjects
+    NoInterfaceId: string
+
+ViewModel
+    Popups
+        NoInterfacesPopup
+            State
+                id: NoInterfaceId

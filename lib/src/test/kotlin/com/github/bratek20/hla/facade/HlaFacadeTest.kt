@@ -186,6 +186,11 @@ class HlaFacadeTest {
                     C_SHARP_PROFILE,
                     cSharpTestPaths("SomeModule")
                 ),
+                Arguments.of(
+                    "NoInterfacesModule",
+                    C_SHARP_PROFILE,
+                    cSharpTestPaths("NoInterfacesModule")
+                ),
             )
         }
 
@@ -496,6 +501,7 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Starting module SomeModule with profile kotlin",
+                "Parsing module NoInterfacesModule",
                 "Parsing module OtherModule",
                 "Parsing module SimpleModule",
                 "Parsing module SomeModule",
@@ -534,6 +540,7 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Updating module SomeModule with profile kotlin",
+                "Parsing module NoInterfacesModule",
                 "Parsing module OtherModule",
                 "Parsing module SimpleModule",
                 "Parsing module SomeModule",
@@ -629,7 +636,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(8)
+        directoriesMock.assertWriteCount(10)
     }
 
     @Test

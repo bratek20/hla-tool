@@ -15,7 +15,11 @@ class ImplContextGenerator: PatternGenerator() {
         return GeneratorMode.ONLY_START
     }
 
-    override fun generateFileContent(): FileContent {
+    override fun generateFileContent(): FileContent? {
+        if (module.getInterfaces().isEmpty()) {
+            return null
+        }
+
         val factory = InterfaceViewFactory(apiTypeFactory)
         return contentBuilder("impl.vm")
             .put("interfaces", factory.create(module.getInterfaces()))

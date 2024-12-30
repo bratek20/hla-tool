@@ -13,10 +13,6 @@ class ContextGenerator: SubmoduleGenerator() {
         return "context"
     }
 
-    override fun shouldGenerateSubmodule(): Boolean {
-        return module.getInterfaces().isNotEmpty()
-    }
-
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplContextGenerator(),
