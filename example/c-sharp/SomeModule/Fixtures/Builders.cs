@@ -26,7 +26,7 @@ namespace SomeModule.Fixtures {
     public class SomeClass3Def {
         public Action<SomeClass2Def> Class2Object { get; set; } = (_) => {};
         public string SomeEnum { get; set; } = SomeModule.Api.SomeEnum.VALUE_A.ToString();
-        public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<SomeClass2>();
+        public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
     }
 
     public class SomeClass4Def {
@@ -48,7 +48,7 @@ namespace SomeModule.Fixtures {
         public Action<SomeClassDef>? SomeClassOpt { get; set; } = null;
         public string? OptString { get; set; } = null;
         public List<Action<SomeClass2Def>> Class2List { get; set; } = new List<Action<SomeClass2Def>>();
-        public List<Action<SomeClass6Def>> SameClassList { get; set; } = new List<SomeClass6>();
+        public List<Action<SomeClass6Def>> SameClassList { get; set; } = new List<Action<SomeClass6Def>>();
     }
 
     public class ClassHavingOptListDef {

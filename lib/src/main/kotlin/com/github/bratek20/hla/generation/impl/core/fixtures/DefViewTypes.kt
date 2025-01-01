@@ -132,6 +132,9 @@ open class DefField(
     }
 
     fun defaultValueBuilder(): ExpressionBuilder {
+        if (type is ListDefType) {
+            return type.defaultValueBuilder()
+        }
         return api.exampleValueBuilder() ?:
             api.defaultSerializedValueBuilder() ?:
             type.defaultValueBuilder()
