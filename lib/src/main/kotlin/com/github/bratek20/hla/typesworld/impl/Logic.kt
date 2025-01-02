@@ -86,14 +86,17 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
-       return getAllReferencesOfFor(target, searchFor, "").map {
-           if (it.endsWith("/")) {
-               StructPath(it.dropLast(1))
-           }
-           else {
-               StructPath(it)
-           }
-       }
+        return getAllReferencesOfFor(target, searchFor, "").map {
+            StructPath(dropSlashIfPresent(it))
+        }
+    }
+
+    private fun dropSlashIfPresent(path: String): String {
+        return if (path.endsWith("/")) {
+            path.dropLast(1)
+        } else {
+            path
+        }
     }
 
     private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPath: String): List<String> {
@@ -110,15 +113,16 @@ class TypesWorldApiLogic: TypesWorldApi {
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
-            return getConcreteWrapper(target).getWrappedType().let { wrappedType ->
-                getAllReferencesOfFor(wrappedType, searchFor, traversedPath).map {
-                    if (isListWrapper(target)) {
-                        "[*]/$it"
-                    } else if(isOptionalWrapper(target)) {
-                        "$it?"
-                    } else {
-                        throw IllegalStateException("Unknown wrapper type: $target")
+            val wrappedType = getConcreteWrapper(target).getWrappedType()
+            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, "")
+
+            return innerPaths.map { innerPath ->
+                when {
+                    isListWrapper(target) -> "$traversedPath[*]/$innerPath"
+                    isOptionalWrapper(target) -> {
+                        dropSlashIfPresent(traversedPath) + "?/$innerPath"
                     }
+                    else -> throw IllegalStateException("Unknown wrapper type: ${target.getName().value}")
                 }
             }
         }
@@ -133,6 +137,7 @@ class TypesWorldApiLogic: TypesWorldApi {
     private fun isOptionalWrapper(type: WorldType): Boolean {
         return type.getName().value.startsWith("Optional<")
     }
+
 
     override fun addPrimitiveType(type: WorldType) {
         primitives.add(type)

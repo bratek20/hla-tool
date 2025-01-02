@@ -360,7 +360,7 @@ class TypesWorldImplTest {
     @Nested
     inner class GetAllReferencesOf {
         @Test
-        fun `should support optional fields syntax`() {
+        fun `should work for normal, optional and list fields`() {
             api.ensureType(worldType {
                 name = "ValueClass"
             })
