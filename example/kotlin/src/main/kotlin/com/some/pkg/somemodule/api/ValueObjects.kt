@@ -604,3 +604,39 @@ data class SomeReferencingProperty(
         }
     }
 }
+
+data class NestedValue(
+    private val value: String,
+) {
+    fun getValue(): String {
+        return this.value
+    }
+
+    companion object {
+        fun create(
+            value: String,
+        ): NestedValue {
+            return NestedValue(
+                value = value,
+            )
+        }
+    }
+}
+
+data class OptionalFieldProperty(
+    private val optionalField: NestedValue?,
+) {
+    fun getOptionalField(): NestedValue? {
+        return this.optionalField
+    }
+
+    companion object {
+        fun create(
+            optionalField: NestedValue?,
+        ): OptionalFieldProperty {
+            return OptionalFieldProperty(
+                optionalField = optionalField,
+            )
+        }
+    }
+}

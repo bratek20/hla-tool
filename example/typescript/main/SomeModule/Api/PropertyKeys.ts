@@ -25,4 +25,9 @@ namespace SomeModule {
         "ReferencingOtherProperty",
         OtherProperty
     )
+
+    export const OPTIONAL_FIELD_PROPERTIES_PROPERTY_KEY = new ListPropertyKey(
+        "OptionalFieldProperties",
+        OptionalFieldProperty
+    )
 }

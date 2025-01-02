@@ -504,6 +504,39 @@ fun diffSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: Ex
     return result.joinToString("\n")
 }
 
+data class ExpectedNestedValue(
+    var value: String? = null,
+)
+fun diffNestedValue(given: NestedValue, expectedInit: ExpectedNestedValue.() -> Unit, path: String = ""): String {
+    val expected = ExpectedNestedValue().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.value?.let {
+        if (given.getValue() != it) { result.add("${path}value ${given.getValue()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedOptionalFieldProperty(
+    var optionalFieldEmpty: Boolean? = null,
+    var optionalField: (ExpectedNestedValue.() -> Unit)? = null,
+)
+fun diffOptionalFieldProperty(given: OptionalFieldProperty, expectedInit: ExpectedOptionalFieldProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedOptionalFieldProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optionalFieldEmpty?.let {
+        if ((given.getOptionalField() == null) != it) { result.add("${path}optionalField empty ${(given.getOptionalField() == null)} != ${it}") }
+    }
+
+    expected.optionalField?.let {
+        if (diffNestedValue(given.getOptionalField()!!, it) != "") { result.add(diffNestedValue(given.getOptionalField()!!, it, "${path}optionalField.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )

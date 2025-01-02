@@ -521,4 +521,36 @@ namespace SomeModule.Api {
             return new SomeReferencingProperty(referenceId.Value);
         }
     }
+
+    public class NestedValue: ValueObject {
+        readonly string value;
+
+        public NestedValue(
+            string value
+        ) {
+            this.value = value;
+        }
+        public string GetValue() {
+            return value;
+        }
+        public static NestedValue Create(string value) {
+            return new NestedValue(value);
+        }
+    }
+
+    public class OptionalFieldProperty: ValueObject {
+        readonly NestedValue? optionalField;
+
+        public OptionalFieldProperty(
+            NestedValue? optionalField
+        ) {
+            this.optionalField = optionalField;
+        }
+        public Optional<NestedValue> GetOptionalField() {
+            return Optional<NestedValue>.Of(optionalField);
+        }
+        public static OptionalFieldProperty Create(Optional<NestedValue> optionalField) {
+            return new OptionalFieldProperty(optionalField.OrElse(null));
+        }
+    }
 }

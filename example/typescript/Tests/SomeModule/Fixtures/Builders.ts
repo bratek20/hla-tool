@@ -312,6 +312,28 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface NestedValueDef {
+        value?: string,
+    }
+    export function nestedValue(def?: NestedValueDef): NestedValue {
+        const final_value = def?.value ?? "someValue"
+
+        return NestedValue.create(
+            final_value,
+        )
+    }
+
+    export interface OptionalFieldPropertyDef {
+        optionalField?: NestedValueDef,
+    }
+    export function optionalFieldProperty(def?: OptionalFieldPropertyDef): OptionalFieldProperty {
+        const final_optionalField = def?.optionalField ?? undefined
+
+        return OptionalFieldProperty.create(
+            Optional.of(final_optionalField).map(it => nestedValue(it)),
+        )
+    }
+
     export interface DateRangeWrapperDef {
         range?: TypesModule.Builder.DateRangeDef,
     }

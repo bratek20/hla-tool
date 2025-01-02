@@ -123,6 +123,16 @@ fun assertSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: 
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertNestedValue(given: NestedValue, expectedInit: ExpectedNestedValue.() -> Unit) {
+    val diff = diffNestedValue(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertOptionalFieldProperty(given: OptionalFieldProperty, expectedInit: ExpectedOptionalFieldProperty.() -> Unit) {
+    val diff = diffOptionalFieldProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

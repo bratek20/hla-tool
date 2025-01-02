@@ -477,6 +477,37 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedNestedValue {
+        value?: string,
+    }
+    export function diffNestedValue(given: NestedValue, expected: ExpectedNestedValue, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.value !== undefined) {
+            if (given.getValue() != expected.value) { result.push(`${path}value ${given.getValue()} != ${expected.value}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedOptionalFieldProperty {
+        optionalFieldEmpty?: boolean,
+        optionalField?: ExpectedNestedValue,
+    }
+    export function diffOptionalFieldProperty(given: OptionalFieldProperty, expected: ExpectedOptionalFieldProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optionalFieldEmpty !== undefined) {
+            if (given.getOptionalField().isEmpty() != expected.optionalFieldEmpty) { result.push(`${path}optionalField empty ${given.getOptionalField().isEmpty()} != ${expected.optionalFieldEmpty}`) }
+        }
+
+        if (expected.optionalField !== undefined) {
+            if (diffNestedValue(given.getOptionalField().get(), expected.optionalField) != "") { result.push(diffNestedValue(given.getOptionalField().get(), expected.optionalField, `${path}optionalField.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedDateRangeWrapper {
         range?: TypesModule.ExpectedDateRange,
     }

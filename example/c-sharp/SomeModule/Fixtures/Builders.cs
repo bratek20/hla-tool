@@ -117,6 +117,14 @@ namespace SomeModule.Fixtures {
         public string ReferenceId { get; set; } = "someValue";
     }
 
+    public class NestedValueDef {
+        public string Value { get; set; } = "someValue";
+    }
+
+    public class OptionalFieldPropertyDef {
+        public Action<NestedValueDef>? OptionalField { get; set; } = null;
+    }
+
     public class DateRangeWrapperDef {
         public Action<DateRangeDef> Range { get; set; } = (_) => {};
     }
@@ -261,6 +269,18 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeReferencingProperty.Create(new SomeId(def.ReferenceId));
+        }
+        public static NestedValue BuildNestedValue(Action<NestedValueDef> init = null) {
+            var def = new NestedValueDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return NestedValue.Create(def.Value);
+        }
+        public static OptionalFieldProperty BuildOptionalFieldProperty(Action<OptionalFieldPropertyDef> init = null) {
+            var def = new OptionalFieldPropertyDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return OptionalFieldProperty.Create(Optional<Action<NestedValueDef>>.Of(def.OptionalField).Map(it => BuildNestedValue(it)));
         }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();
