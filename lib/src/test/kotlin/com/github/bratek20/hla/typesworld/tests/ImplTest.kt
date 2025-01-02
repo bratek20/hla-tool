@@ -362,7 +362,45 @@ class TypesWorldImplTest {
         @Test
         fun `should support optional fields syntax`() {
             api.ensureType(worldType {
-                name = "OtherClass"
+                name = "ValueClass"
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "OtherClass"
+                }
+                fields = listOf {
+                    name = "value"
+                    type = {
+                        name = "ValueClass"
+                    }
+                }
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "NestedClass"
+                }
+                fields = listOf (
+                    {
+                        name = "normalField"
+                        type = {
+                            name = "OtherClass"
+                        }
+                    },
+                    {
+                        name = "optionalField"
+                        type = {
+                            name = "Optional<OtherClass>"
+                        }
+                    },
+                    {
+                        name = "listField"
+                        type = {
+                            name = "List<OtherClass>"
+                        }
+                    }
+                )
             })
 
             api.addClassType(worldClassType {
@@ -370,9 +408,9 @@ class TypesWorldImplTest {
                     name = "SomeClass"
                 }
                 fields = listOf {
-                    name = "field"
+                    name = "nestedField"
                     type = {
-                        name = "Optional<OtherClass>"
+                        name = "NestedClass"
                     }
                 }
             })
@@ -382,12 +420,14 @@ class TypesWorldImplTest {
                     name = "SomeClass"
                 },
                 worldType {
-                    name = "OtherClass"
+                    name = "ValueClass"
                 }
             )
 
-            assertThat(references).hasSize(1)
-            assertStructPath(references[0], "field?")
+            assertThat(references).hasSize(3)
+            assertStructPath(references[0], "nestedField/normalField/value")
+            assertStructPath(references[1], "nestedField/optionalField?/value")
+            assertStructPath(references[2], "nestedField/listField/[*]/value")
         }
     }
 }

@@ -86,24 +86,39 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
+       return getAllReferencesOfFor(target, searchFor, "").map {
+           if (it.endsWith("/")) {
+               StructPath(it.dropLast(1))
+           }
+           else {
+               StructPath(it)
+           }
+       }
+    }
+
+    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPath: String): List<String> {
         if (target == searchFor) {
-            return listOf(StructPath(""))
+            return listOf(traversedPath)
         }
 
         val kind = getTypeInfo(target).getKind()
 
         if (kind == WorldTypeKind.ClassType) {
             return getClassType(target).getFields().flatMap { field ->
-                getAllReferencesOf(field.getType(), searchFor).map {
-                    toStructPath("${field.getName()}/$it")
-                }
+                getAllReferencesOfFor(field.getType(), searchFor, "$traversedPath${field.getName()}/")
             }
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
             return getConcreteWrapper(target).getWrappedType().let { wrappedType ->
-                getAllReferencesOf(wrappedType, searchFor).map {
-                    toStructPath("[*]/$it")
+                getAllReferencesOfFor(wrappedType, searchFor, traversedPath).map {
+                    if (isListWrapper(target)) {
+                        "[*]/$it"
+                    } else if(isOptionalWrapper(target)) {
+                        "$it?"
+                    } else {
+                        throw IllegalStateException("Unknown wrapper type: $target")
+                    }
                 }
             }
         }
@@ -111,11 +126,12 @@ class TypesWorldApiLogic: TypesWorldApi {
         return emptyList()
     }
 
-    private fun toStructPath(path: String): StructPath {
-        if (path.endsWith("/")) {
-            return StructPath(path.dropLast(1))
-        }
-        return StructPath(path)
+    private fun isListWrapper(type: WorldType): Boolean {
+        return type.getName().value.startsWith("List<")
+    }
+
+    private fun isOptionalWrapper(type: WorldType): Boolean {
+        return type.getName().value.startsWith("Optional<")
     }
 
     override fun addPrimitiveType(type: WorldType) {
