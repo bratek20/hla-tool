@@ -2,6 +2,7 @@ package com.github.bratek20.hla.typesworld.tests
 
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
+import com.github.bratek20.architecture.structs.fixtures.assertStructPath
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
@@ -354,5 +355,39 @@ class TypesWorldImplTest {
                 "Does not have ${type.getName()}"
             }
             .isTrue()
+    }
+
+    @Nested
+    inner class GetAllReferencesOf {
+        @Test
+        fun `should support optional fields syntax`() {
+            api.ensureType(worldType {
+                name = "OtherClass"
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SomeClass"
+                }
+                fields = listOf {
+                    name = "field"
+                    type = {
+                        name = "Optional<OtherClass>"
+                    }
+                }
+            })
+
+            val references = api.getAllReferencesOf(
+                worldType {
+                    name = "SomeClass"
+                },
+                worldType {
+                    name = "OtherClass"
+                }
+            )
+
+            assertThat(references).hasSize(1)
+            assertStructPath(references[0], "field?")
+        }
     }
 }
