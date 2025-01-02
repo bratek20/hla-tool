@@ -102,12 +102,18 @@ Properties
     SomeReferencingProperty
         referenceId: SomeId
 
+    NestedValue
+        value: string
+    OptionalFieldProperty
+        optionalField: NestedValue?
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
 
     "ReferencingOtherProperty" -> OtherProperty
+    "OptionalFieldProperties" -> OptionalFieldProperty[]
 
 Data
     SomeData

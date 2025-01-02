@@ -86,24 +86,43 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
+        return getAllReferencesOfFor(target, searchFor, "").map {
+            StructPath(dropSlashIfPresent(it))
+        }
+    }
+
+    private fun dropSlashIfPresent(path: String): String {
+        return if (path.endsWith("/")) {
+            path.dropLast(1)
+        } else {
+            path
+        }
+    }
+
+    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPath: String): List<String> {
         if (target == searchFor) {
-            return listOf(StructPath(""))
+            return listOf(traversedPath)
         }
 
         val kind = getTypeInfo(target).getKind()
 
         if (kind == WorldTypeKind.ClassType) {
             return getClassType(target).getFields().flatMap { field ->
-                getAllReferencesOf(field.getType(), searchFor).map {
-                    toStructPath("${field.getName()}/$it")
-                }
+                getAllReferencesOfFor(field.getType(), searchFor, "$traversedPath${field.getName()}/")
             }
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
-            return getConcreteWrapper(target).getWrappedType().let { wrappedType ->
-                getAllReferencesOf(wrappedType, searchFor).map {
-                    toStructPath("[*]/$it")
+            val wrappedType = getConcreteWrapper(target).getWrappedType()
+            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, "")
+
+            return innerPaths.map { innerPath ->
+                when {
+                    isListWrapper(target) -> "$traversedPath[*]/$innerPath"
+                    isOptionalWrapper(target) -> {
+                        dropSlashIfPresent(traversedPath) + "?/$innerPath"
+                    }
+                    else -> throw IllegalStateException("Unknown wrapper type: ${target.getName().value}")
                 }
             }
         }
@@ -111,12 +130,14 @@ class TypesWorldApiLogic: TypesWorldApi {
         return emptyList()
     }
 
-    private fun toStructPath(path: String): StructPath {
-        if (path.endsWith("/")) {
-            return StructPath(path.dropLast(1))
-        }
-        return StructPath(path)
+    private fun isListWrapper(type: WorldType): Boolean {
+        return type.getName().value.startsWith("List<")
     }
+
+    private fun isOptionalWrapper(type: WorldType): Boolean {
+        return type.getName().value.startsWith("Optional<")
+    }
+
 
     override fun addPrimitiveType(type: WorldType) {
         primitives.add(type)

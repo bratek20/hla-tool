@@ -111,6 +111,16 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function nestedValue(given: NestedValue, expected: ExpectedNestedValue) {
+        const diff = diffNestedValue(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function optionalFieldProperty(given: OptionalFieldProperty, expected: ExpectedOptionalFieldProperty) {
+        const diff = diffOptionalFieldProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
         const diff = diffDateRangeWrapper(given, expected)
         AssertEquals(diff, "", diff)

@@ -28,6 +28,12 @@ import org.junit.jupiter.api.Test
 //"SomeReferencingPropertyObject" -> SomeReferencingProperty
 //"SomeReferencingPropertyList" -> SomeReferencingProperty[]
 
+//    NestedValue
+//        value: string
+//    OptionalFieldProperty
+//        optionalField: NestedValue?
+
+//    "OptionalFieldProperties" -> OptionalFieldProperty[]
 
 data class SomeId(
     val value: String
@@ -50,6 +56,24 @@ data class SomeReferencingProperty(
         ): SomeReferencingProperty {
             return SomeReferencingProperty(
                 referenceId = referenceId.value,
+            )
+        }
+    }
+}
+
+data class NestedValue(
+    private val value: String,
+) {
+    fun getValue(): String {
+        return this.value
+    }
+
+    companion object {
+        fun create(
+            value: String,
+        ): NestedValue {
+            return NestedValue(
+                value = value,
             )
         }
     }
@@ -80,6 +104,12 @@ class SomeIdFailValidator: TypeValidator<SomeId> {
 
 class SomeIdOkValidator: TypeValidator<SomeId> {
     override fun validate(property: SomeId): ValidationResult {
+        return ValidationResult.ok()
+    }
+}
+
+class NestedValueValidator: TypeValidator<NestedValue> {
+    override fun validate(property: NestedValue): ValidationResult {
         return ValidationResult.ok()
     }
 }
@@ -267,6 +297,35 @@ class ValidationsImplTest {
                 "Type validator failed at '\"SomeReferencingPropertyObject\"/referenceId', message: Error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[*]/referenceId', message: Error for 1",
             )
+        }
+    }
+
+    @Test
+    fun `should traverse optional fields without any errors`() {
+        setup {
+            typeValidatorsToInject = listOf(
+                NestedValueValidator::class.java
+            )
+        }
+
+        propertiesMock.set(com.github.bratek20.architecture.properties.api.ListPropertyKey(
+            "OptionalFieldProperties",
+            Struct::class
+        ), listOf(
+            struct {
+                "optionalField" to null
+            },
+            struct {
+                "optionalField" to struct {
+                    "value" to "some value"
+                }
+            }
+        ))
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = true
         }
     }
 

@@ -271,6 +271,26 @@ fun someReferencingProperty(init: SomeReferencingPropertyDef.() -> Unit = {}): S
     )
 }
 
+data class NestedValueDef(
+    var value: String = "someValue",
+)
+fun nestedValue(init: NestedValueDef.() -> Unit = {}): NestedValue {
+    val def = NestedValueDef().apply(init)
+    return NestedValue.create(
+        value = def.value,
+    )
+}
+
+data class OptionalFieldPropertyDef(
+    var optionalField: (NestedValueDef.() -> Unit)? = null,
+)
+fun optionalFieldProperty(init: OptionalFieldPropertyDef.() -> Unit = {}): OptionalFieldProperty {
+    val def = OptionalFieldPropertyDef().apply(init)
+    return OptionalFieldProperty.create(
+        optionalField = def.optionalField?.let { it -> nestedValue(it) },
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )

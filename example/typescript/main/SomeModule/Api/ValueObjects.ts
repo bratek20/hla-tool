@@ -579,3 +579,35 @@ class SomeReferencingProperty {
         return new SomeId(this.referenceId)
     }
 }
+
+class NestedValue {
+    private value = STRING
+
+    static create(
+        value: string,
+    ): NestedValue {
+        const instance = new NestedValue()
+        instance.value = value
+        return instance
+    }
+
+    getValue(): string {
+        return this.value
+    }
+}
+
+class OptionalFieldProperty {
+    private optionalField? = new NestedValue
+
+    static create(
+        optionalField: Optional<NestedValue>,
+    ): OptionalFieldProperty {
+        const instance = new OptionalFieldProperty()
+        instance.optionalField = optionalField.orElse(undefined)
+        return instance
+    }
+
+    getOptionalField(): Optional<NestedValue> {
+        return Optional.of(this.optionalField)
+    }
+}

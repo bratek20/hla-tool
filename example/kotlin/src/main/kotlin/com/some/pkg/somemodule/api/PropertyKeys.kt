@@ -29,3 +29,8 @@ val REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.p
     "ReferencingOtherProperty",
     OtherProperty::class
 )
+
+val OPTIONAL_FIELD_PROPERTIES_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "OptionalFieldProperties",
+    OptionalFieldProperty::class
+)

@@ -2,6 +2,7 @@ package com.github.bratek20.hla.typesworld.tests
 
 import com.github.bratek20.architecture.context.someContextBuilder
 import com.github.bratek20.architecture.exceptions.assertApiExceptionThrown
+import com.github.bratek20.architecture.structs.fixtures.assertStructPath
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
@@ -354,5 +355,79 @@ class TypesWorldImplTest {
                 "Does not have ${type.getName()}"
             }
             .isTrue()
+    }
+
+    @Nested
+    inner class GetAllReferencesOf {
+        @Test
+        fun `should work for normal, optional and list fields`() {
+            api.ensureType(worldType {
+                name = "ValueClass"
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "OtherClass"
+                }
+                fields = listOf {
+                    name = "value"
+                    type = {
+                        name = "ValueClass"
+                    }
+                }
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "NestedClass"
+                }
+                fields = listOf (
+                    {
+                        name = "normalField"
+                        type = {
+                            name = "OtherClass"
+                        }
+                    },
+                    {
+                        name = "optionalField"
+                        type = {
+                            name = "Optional<OtherClass>"
+                        }
+                    },
+                    {
+                        name = "listField"
+                        type = {
+                            name = "List<OtherClass>"
+                        }
+                    }
+                )
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SomeClass"
+                }
+                fields = listOf {
+                    name = "nestedField"
+                    type = {
+                        name = "NestedClass"
+                    }
+                }
+            })
+
+            val references = api.getAllReferencesOf(
+                worldType {
+                    name = "SomeClass"
+                },
+                worldType {
+                    name = "ValueClass"
+                }
+            )
+
+            assertThat(references).hasSize(3)
+            assertStructPath(references[0], "nestedField/normalField/value")
+            assertStructPath(references[1], "nestedField/optionalField?/value")
+            assertStructPath(references[2], "nestedField/listField/[*]/value")
+        }
     }
 }
