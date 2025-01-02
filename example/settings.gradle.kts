@@ -4,7 +4,7 @@ include("kotlin")
 include("kotlin2")
 include("tests")
 
-val b20Version = "1.0.82"
+val b20Version = "1.0.84"
 
 pluginManagement {
     repositories {

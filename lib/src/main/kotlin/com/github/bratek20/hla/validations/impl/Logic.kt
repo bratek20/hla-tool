@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.validations.impl
 
 import com.github.bratek20.architecture.properties.api.Properties
+import com.github.bratek20.architecture.properties.api.Property
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
 import com.github.bratek20.architecture.structs.api.AnyStruct
 import com.github.bratek20.architecture.structs.api.StructConversionException
@@ -37,7 +38,7 @@ data class PropertyValuePath(
 }
 
 private class PropertiesTraverser(
-    private val properties: Properties,
+    private val properties: List<Property>,
     private val typesWorldApi: TypesWorldApi,
     private val logger: Logger
 ) {
@@ -69,7 +70,7 @@ private class PropertiesTraverser(
     }
 
     private fun getValuesAt(path: PropertyValuePath): List<AnyStruct> {
-        val propertyValue = properties.getAll().firstOrNull { it.keyName == path.keyName }?.value ?: return emptyList()
+        val propertyValue = properties.firstOrNull { it.keyName == path.keyName }?.value ?: return emptyList()
         return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath)
     }
 
@@ -159,18 +160,26 @@ class HlaValidatorLogic(
     private val typesWorldApi: TypesWorldApi,
     private val typeValidators: Set<TypeValidator<*>>
 ): HlaValidator {
+    private lateinit var traverser: PropertiesTraverser
+
     override fun validateProperties(hlaFolderPath: Path, profileName: ProfileName, properties: Properties): ValidationResult {
+        traverser = PropertiesTraverser(
+            properties = properties.getAll(),
+            typesWorldApi = typesWorldApi,
+            logger = logger
+        )
+
         val group = parser.parse(hlaFolderPath, profileName)
 
         hlaTypesWorldApi.populate(group)
 
-        val idSourceValidationResult = validateIdSources(group, properties)
-        val typeValidatorsResult = executeTypeValidators(properties, group)
+        val idSourceValidationResult = validateIdSources(group)
+        val typeValidatorsResult = executeTypeValidators(group)
 
         return idSourceValidationResult.merge(typeValidatorsResult)
     }
 
-    private fun validateIdSources(group: ModuleGroup, properties: Properties): ValidationResult {
+    private fun validateIdSources(group: ModuleGroup): ValidationResult {
         val sourceInfos = extraInfo.getAllIdSourceInfo()
 
         logger.info("Source infos: $sourceInfos")
@@ -180,27 +189,14 @@ class HlaValidatorLogic(
                 info = it,
                 logger = logger,
                 group = group,
-                traverser = PropertiesTraverser(
-                    properties = properties,
-                    typesWorldApi = typesWorldApi,
-                    logger = logger
-                )
+                traverser = traverser
             )
         }
 
         return sourceValidators.map { it.validate() }.reduce(ValidationResult::merge)
     }
 
-    private fun createTraverser(properties: Properties): PropertiesTraverser {
-        return PropertiesTraverser(
-            properties = properties,
-            typesWorldApi = typesWorldApi,
-            logger = logger
-        )
-    }
-
-    private fun executeTypeValidators(properties: Properties, group: ModuleGroup): ValidationResult {
-        val traverser = createTraverser(properties)
+    private fun executeTypeValidators(group: ModuleGroup): ValidationResult {
         return typeValidators.flatMap { validator ->
             val typeToValidate =  (validator::class.java.genericInterfaces
                 .first { it is ParameterizedType } as ParameterizedType)
@@ -243,5 +239,4 @@ class HlaValidatorLogic(
             })
         }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
     }
-
 }
