@@ -44,7 +44,7 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterfaceOptMethodRequest {
-        private optId = STRING
+        private optId = OPTIONAL_STRING
         getOptId(): Optional<SomeId> {
             return Optional.of(this.optId).map(it => new SomeId(it))
         }
@@ -56,7 +56,7 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterfaceOptMethodResponse {
-        private value = new SomeClass
+        private value = OptionalClass(SomeClass)
         getValue(): Optional<SomeClass> {
             return Optional.of(this.value)
         }
@@ -101,7 +101,7 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterfaceMethodReturningOptSimpleVoResponse {
-        private value = STRING
+        private value = OPTIONAL_STRING
         getValue(): Optional<SomeId> {
             return Optional.of(this.value).map(it => new SomeId(it))
         }

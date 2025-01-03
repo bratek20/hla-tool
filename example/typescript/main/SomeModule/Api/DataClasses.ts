@@ -3,7 +3,7 @@
 class SomeData {
     private other = new OtherData
     private custom = ANY
-    private customOpt? = ANY
+    private customOpt? = OPTIONAL_ANY
     private gDN = STRING
 
     static create(
@@ -61,8 +61,8 @@ class SomeData {
 }
 
 class SomeData2 {
-    private optEnum? = STRING
-    private optCustomType? = STRING
+    private optEnum? = OPTIONAL_STRING
+    private optCustomType? = OPTIONAL_STRING
 
     static create(
         optEnum: Optional<SomeEnum>,

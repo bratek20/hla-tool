@@ -240,8 +240,8 @@ class SomeClass5 {
 class SomeClass6 {
     private someClassOpt? = OptionalClass(SomeClass)
     private optString? = OPTIONAL_STRING
-    private class2List = [OptionalClass(SomeClass2)]
-    private sameClassList = [OptionalClass(SomeClass6)]
+    private class2List = [new SomeClass2]
+    private sameClassList = [new SomeClass6]
 
     static create(
         someClassOpt: Optional<SomeClass>,
@@ -275,7 +275,7 @@ class SomeClass6 {
 }
 
 class ClassHavingOptList {
-    private optList? = [new SomeClass]
+    private optList? = [OptionalClass(SomeClass)]
 
     static create(
         optList: Optional<SomeClass[]>,
@@ -291,7 +291,7 @@ class ClassHavingOptList {
 }
 
 class ClassHavingOptSimpleVo {
-    private optSimpleVo? = STRING
+    private optSimpleVo? = OPTIONAL_STRING
 
     static create(
         optSimpleVo: Optional<SomeId>,
@@ -330,8 +330,8 @@ class RecordClass {
 }
 
 class ClassWithOptExamples {
-    private optInt? = NUMBER
-    private optIntWrapper? = NUMBER
+    private optInt? = OPTIONAL_NUMBER
+    private optIntWrapper? = OPTIONAL_NUMBER
 
     static create(
         optInt: Optional<number>,
@@ -455,8 +455,8 @@ class SomeHandlerOutput {
 
 class SomeProperty {
     private other = new OtherProperty
-    private id2? = NUMBER
-    private range? = new SerializedDateRange
+    private id2? = OPTIONAL_NUMBER
+    private range? = OptionalClass(SerializedDateRange)
     private doubleExample = NUMBER
     private longExample = NUMBER
     private gN = STRING
@@ -515,7 +515,7 @@ class SomeProperty2 {
     value = STRING
     private custom = ANY
     private someEnum = STRING
-    private customOpt? = ANY
+    private customOpt? = OPTIONAL_ANY
 
     static create(
         value: string,
@@ -597,7 +597,7 @@ class NestedValue {
 }
 
 class OptionalFieldProperty {
-    private optionalField? = new NestedValue
+    private optionalField? = OptionalClass(NestedValue)
 
     static create(
         optionalField: Optional<NestedValue>,
