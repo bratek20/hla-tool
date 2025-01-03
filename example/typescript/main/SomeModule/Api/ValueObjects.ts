@@ -238,10 +238,10 @@ class SomeClass5 {
 }
 
 class SomeClass6 {
-    private someClassOpt? = new SomeClass
-    private optString? = STRING
-    private class2List = [new SomeClass2]
-    private sameClassList = [new SomeClass6]
+    private someClassOpt? = OptionalClass(SomeClass)
+    private optString? = OPTIONAL_STRING
+    private class2List = [OptionalClass(SomeClass2)]
+    private sameClassList = [OptionalClass(SomeClass6)]
 
     static create(
         someClassOpt: Optional<SomeClass>,
