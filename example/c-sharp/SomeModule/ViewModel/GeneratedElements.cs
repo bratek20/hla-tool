@@ -25,6 +25,11 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class SecondSomeClassVm: UiElement<SomeClass> {
+        protected override void OnUpdate() {
+        }
+    }
+
     public partial class SomeClass2Vm: UiElement<SomeClass2> {
         public BoolSwitch Enabled { get; set; }
         protected override void OnUpdate() {
