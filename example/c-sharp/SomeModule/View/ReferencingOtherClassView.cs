@@ -14,6 +14,6 @@ using OtherModule.View;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class ReferencingOtherClassVmView: ElementView<ReferencingOtherClassVm> {
+    public class ReferencingOtherClassView: ElementView<ReferencingOtherClassVm> {
     }
 }

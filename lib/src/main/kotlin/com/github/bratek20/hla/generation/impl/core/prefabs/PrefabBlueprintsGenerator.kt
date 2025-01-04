@@ -100,11 +100,11 @@ class PrefabComplexElementBlueprintLogic(
     typesWorldApi: TypesWorldApi
 ): PrefabContainerBlueprintLogic(view, typesWorldApi) {
     override fun getName(): String {
-        val model = getModelTypeForEnsuredUiElement(typesWorldApi, view.getViewModelTypeName())
-        if(model.getName().value == "EmptyModel") {
-            return view.getViewModelTypeName()
+        val viewClassName = view.getViewClassName()
+        if (viewClassName.endsWith("View")) {
+            return viewClassName.dropLast(4)
         }
-        return model.getName().value
+        return viewClassName
     }
 
     override fun blueprintType(): BlueprintType {

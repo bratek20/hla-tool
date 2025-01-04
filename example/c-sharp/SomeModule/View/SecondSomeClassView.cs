@@ -14,6 +14,6 @@ using OtherModule.View;
 using TypesModule.Api;
 
 namespace SomeModule.View {
-    public class OptionalReferencingOtherClassVmView: OptionalUiElementView<ReferencingOtherClassVmView, ReferencingOtherClassVm, OtherClass> {
+    public class SecondSomeClassView: ElementView<SecondSomeClassVm> {
     }
 }

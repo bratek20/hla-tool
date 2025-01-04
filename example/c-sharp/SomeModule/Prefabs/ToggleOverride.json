@@ -1,7 +1,7 @@
 {
   "blueprintType": "ComplexElement",
-  "name": "ClassWithBoolField",
-  "viewType": "SomeModule.View.ClassWithBoolFieldView",
+  "name": "ToggleOverride",
+  "viewType": "SomeModule.View.ToggleOverrideView",
   "creationOrder": 1,
   "children": [
     {

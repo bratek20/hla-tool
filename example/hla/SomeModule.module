@@ -223,6 +223,9 @@ ViewModel
             boolSwitch: BoolSwitch
             optLabel: Label?
 
+        SecondSomeClassVm
+            SomeClass
+
         SomeClass2Vm
             SomeClass2
                 enabled
