@@ -1,6 +1,6 @@
 {
   "blueprintType": "ComplexElement",
-  "name": "OtherClass",
+  "name": "ReferencingOtherClass",
   "viewType": "SomeModule.View.ReferencingOtherClassView",
   "creationOrder": 1,
   "children": [ ],
