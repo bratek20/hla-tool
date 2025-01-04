@@ -26,7 +26,7 @@
     },
     {
       "name": "optReferencing",
-      "viewType": "SomeModule.View.OptionalReferencingOtherClassVmView"
+      "viewType": "SomeModule.View.OptionalReferencingOtherClassView"
     }
   ],
   "elementViewType": null
