@@ -17,6 +17,8 @@ namespace SomeModule.ViewModel {
         public Button Button { get; set; }
         public BoolSwitch BoolSwitch { get; set; }
         public OptionalLabel OptLabel { get; set; }
+        public Animation SomeAnimation { get; set; }
+        public InputField SomeInputField { get; set; }
         protected override List<Type> GetTraitTypes() {
             return new List<Type>() { typeof(Clickable), typeof(Draggable), typeof(WithRect) };
         }

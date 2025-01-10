@@ -39,6 +39,17 @@ class B20FrontendTypesPopulator(
             SubmoduleName.Api,
             PatternName.Undefined
         ).asWorld()
+
+        val b20ViewModelTypes = listOf(
+            "Label",
+            "LabelGroup",
+            "OptionalLabel",
+            "Button",
+            "BoolSwitch",
+            "Toggle",
+            "Animation",
+            "InputField"
+        )
     }
 
     override fun getOrder(): Int {
@@ -53,15 +64,7 @@ class B20FrontendTypesPopulator(
             )
         )
 
-        listOf(
-            "Label",
-            "BoolSwitch",
-            "Button",
-            "BoolSwitch",
-            "Toggle",
-            "Animation",
-            "InputField"
-        ).forEach {
+        b20ViewModelTypes.forEach {
             add(it)
         }
     }

@@ -4,10 +4,14 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
-import com.github.bratek20.hla.mvvmtypesmappers.api.*
-import com.github.bratek20.hla.mvvmtypesmappers.impl.BaseViewModelTypesMapper.Companion.b20ViewModelTypes
-
-import com.github.bratek20.hla.typesworld.api.*
+import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
+import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator.Companion.b20ViewModelTypes
+import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelToViewMapper
+import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelTypesCalculator
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldType
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.WorldTypePath
 
 class ViewModelToViewMapperLogic(
     private val typesWorldApi: TypesWorldApi
