@@ -39,11 +39,6 @@ class B20FrontendTypesPopulator(
             SubmoduleName.Api,
             PatternName.Undefined
         ).asWorld()
-
-        val labelType = WorldType.create(
-            name = WorldTypeName("Label"),
-            path = pathForUndefinedPattern
-        )
     }
 
     override fun getOrder(): Int {
@@ -58,37 +53,24 @@ class B20FrontendTypesPopulator(
             )
         )
 
-        api.addClassType(
-            WorldClassType.create(
-                type = labelType,
-                fields = emptyList()
-            )
-        )
+        listOf(
+            "Label",
+            "BoolSwitch",
+            "Button",
+            "BoolSwitch",
+            "Toggle",
+            "Animation",
+            "InputField"
+        ).forEach {
+            add(it)
+        }
+    }
 
+    private fun add(typeName: String) {
         api.addClassType(
             WorldClassType.create(
                 type = WorldType.create(
-                    name = WorldTypeName("Button"),
-                    path = pathForUndefinedPattern
-                ),
-                fields = emptyList()
-            )
-        )
-
-        api.addClassType(
-            WorldClassType.create(
-                type = WorldType.create(
-                    name = WorldTypeName("BoolSwitch"),
-                    path = pathForUndefinedPattern
-                ),
-                fields = emptyList()
-            )
-        )
-
-        api.addClassType(
-            WorldClassType.create(
-                type = WorldType.create(
-                    name = WorldTypeName("Toggle"),
+                    name = WorldTypeName(typeName),
                     path = pathForUndefinedPattern
                 ),
                 fields = emptyList()

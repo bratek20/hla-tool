@@ -38,7 +38,7 @@ internal class BaseViewModelTypesMapper {
         if (b20ViewModelTypes.contains(viewModelTypeName)) {
             return WorldType.create(
                 name = WorldTypeName(viewModelTypeName),
-                path = B20FrontendTypesPopulator.labelType.getPath()
+                path = B20FrontendTypesPopulator.pathForUndefinedPattern
             )
         }
         return WorldType.create(
