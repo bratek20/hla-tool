@@ -199,7 +199,9 @@ class HlaTypesWorldImplTest {
                     type = {
                         name = "OptionalLabel"
                     }
-                }
+                },
+                {},
+                {}
             )
         }
 
