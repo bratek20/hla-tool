@@ -222,6 +222,8 @@ ViewModel
             button: Button
             boolSwitch: BoolSwitch
             optLabel: Label?
+            someAnimation: Animation
+            someInputField: InputField
 
         SecondSomeClassVm
             SomeClass

@@ -75,6 +75,8 @@ class HlaTypesWorldImplTest {
         assertHasType("Button", "B20/ViewModel/UiElements/Api/Undefined")
         assertHasType("BoolSwitch", "B20/ViewModel/UiElements/Api/Undefined")
         assertHasType("Toggle", "B20/ViewModel/UiElements/Api/Undefined")
+        assertHasType("Animation", "B20/ViewModel/UiElements/Api/Undefined")
+        assertHasType("InputField", "B20/ViewModel/UiElements/Api/Undefined")
     }
 
     @Test
@@ -197,7 +199,9 @@ class HlaTypesWorldImplTest {
                     type = {
                         name = "OptionalLabel"
                     }
-                }
+                },
+                {},
+                {}
             )
         }
 

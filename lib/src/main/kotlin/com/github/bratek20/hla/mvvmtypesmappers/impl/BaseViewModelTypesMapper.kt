@@ -7,6 +7,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
+import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator.Companion.b20ViewModelTypes
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
@@ -38,7 +39,7 @@ internal class BaseViewModelTypesMapper {
         if (b20ViewModelTypes.contains(viewModelTypeName)) {
             return WorldType.create(
                 name = WorldTypeName(viewModelTypeName),
-                path = B20FrontendTypesPopulator.labelType.getPath()
+                path = B20FrontendTypesPopulator.pathForUndefinedPattern
             )
         }
         return WorldType.create(
@@ -83,13 +84,6 @@ internal class BaseViewModelTypesMapper {
     }
 
     companion object {
-        val b20ViewModelTypes = listOf(
-            "Label",
-            "LabelGroup",
-            "OptionalLabel",
-            "Button",
-            "BoolSwitch",
-            "Toggle"
-        )
+
     }
 }

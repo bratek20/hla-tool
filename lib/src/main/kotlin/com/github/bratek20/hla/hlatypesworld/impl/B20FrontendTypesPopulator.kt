@@ -40,9 +40,15 @@ class B20FrontendTypesPopulator(
             PatternName.Undefined
         ).asWorld()
 
-        val labelType = WorldType.create(
-            name = WorldTypeName("Label"),
-            path = pathForUndefinedPattern
+        val b20ViewModelTypes = listOf(
+            "Label",
+            "LabelGroup",
+            "OptionalLabel",
+            "Button",
+            "BoolSwitch",
+            "Toggle",
+            "Animation",
+            "InputField"
         )
     }
 
@@ -58,37 +64,16 @@ class B20FrontendTypesPopulator(
             )
         )
 
-        api.addClassType(
-            WorldClassType.create(
-                type = labelType,
-                fields = emptyList()
-            )
-        )
+        b20ViewModelTypes.forEach {
+            add(it)
+        }
+    }
 
+    private fun add(typeName: String) {
         api.addClassType(
             WorldClassType.create(
                 type = WorldType.create(
-                    name = WorldTypeName("Button"),
-                    path = pathForUndefinedPattern
-                ),
-                fields = emptyList()
-            )
-        )
-
-        api.addClassType(
-            WorldClassType.create(
-                type = WorldType.create(
-                    name = WorldTypeName("BoolSwitch"),
-                    path = pathForUndefinedPattern
-                ),
-                fields = emptyList()
-            )
-        )
-
-        api.addClassType(
-            WorldClassType.create(
-                type = WorldType.create(
-                    name = WorldTypeName("Toggle"),
+                    name = WorldTypeName(typeName),
                     path = pathForUndefinedPattern
                 ),
                 fields = emptyList()

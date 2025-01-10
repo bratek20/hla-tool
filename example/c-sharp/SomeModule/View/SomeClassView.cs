@@ -23,12 +23,18 @@ namespace SomeModule.View {
         BoolSwitchView boolSwitch;
         [SerializeField]
         OptionalLabelView optLabel;
+        [SerializeField]
+        AnimationView someAnimation;
+        [SerializeField]
+        InputFieldView someInputField;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
             button.Bind(ViewModel.Button);
             boolSwitch.Bind(ViewModel.BoolSwitch);
             optLabel.Bind(ViewModel.OptLabel);
+            someAnimation.Bind(ViewModel.SomeAnimation);
+            someInputField.Bind(ViewModel.SomeInputField);
         }
     }
 }

@@ -19,6 +19,14 @@
     {
       "name": "optLabel",
       "viewType": "B20.View.UiElements.OptionalLabelView"
+    },
+    {
+      "name": "someAnimation",
+      "viewType": "B20.View.UiElements.AnimationView"
+    },
+    {
+      "name": "someInputField",
+      "viewType": "B20.View.UiElements.InputFieldView"
     }
   ],
   "elementViewType": null
