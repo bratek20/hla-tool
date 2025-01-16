@@ -141,6 +141,17 @@ class DateFailValidator: SimpleCustomTypeValidator<Date, String> {
     }
 }
 
+class DateRangeFailValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
+    override fun createFunction(): (value: SerializedDateRange) -> DateRange = SerializedDateRange::toCustomType
+
+    override fun validate(property: DateRange): ValidationResult {
+        return ValidationResult.createFor(
+            "Error for ${property.from.value2}",
+            "Error for ${property.to.value2}"
+        )
+    }
+}
+
 val SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeSourcePropertyList",
     Struct::class
@@ -394,6 +405,7 @@ class ValidationsImplTest {
             setup {
                 typeValidatorsToInject = listOf(
                     DateFailValidator::class.java,
+                    DateRangeFailValidator::class.java
                 )
             }
 
@@ -401,7 +413,7 @@ class ValidationsImplTest {
                 "date" to "2021-01-01"
                 "dateRange" to struct {
                     "from" to "2021-01-01"
-                    "to" to "2021-01-01"
+                    "to" to "2021-01-02"
                 }
             })
 
@@ -411,7 +423,9 @@ class ValidationsImplTest {
                 errors = listOf(
                     "Type validator failed at '\"CustomTypesProperty\"/date', message: Error for 2021-01-01",
                     "Type validator failed at '\"CustomTypesProperty\"/dateRange/from', message: Error for 2021-01-01",
-                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/to', message: Error for 2021-01-01",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/to', message: Error for 2021-01-02",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-01",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-02"
                 )
             }
         }
