@@ -196,10 +196,7 @@ class HlaValidatorLogic(
 
     private fun executeTypeValidators(group: ModuleGroup): ValidationResult {
         return typeValidators.flatMap { validator ->
-            val typeToValidate =  (validator::class.java.genericInterfaces
-                .first { it is ParameterizedType } as ParameterizedType)
-                .actualTypeArguments[0]
-                .let { it as Class<*> }
+            val typeToValidate = getTypeToValidate(validator, 0)
 
             val typeName = typeToValidate.simpleName
             logger.info("Validating type '$typeName'")
@@ -211,7 +208,7 @@ class HlaValidatorLogic(
                 // Find references for the current property key
                 traverser.findReferences(worldType, propertyKey).map { ref ->
                     if(worldType.getPath().asHla().getPatternName() == PatternName.CustomTypes) {
-                        validateCustomTypeForRef(traverser, ref, validator)
+                        validateCustomTypeForRef(ref, validator)
                     }
                     else {
                         validateTypeForRef(traverser, typeToValidate, ref, validator)
@@ -219,6 +216,13 @@ class HlaValidatorLogic(
                 }
             }
         }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+    }
+
+    private fun getTypeToValidate(validator: TypeValidator<*>, actualTypeIndex: Int): Class<*> {
+        return (validator::class.java.genericInterfaces
+            .first { it is ParameterizedType } as ParameterizedType)
+            .actualTypeArguments[actualTypeIndex]
+            .let { it as Class<*> }
     }
 
     private fun validateTypeForRef(
@@ -242,31 +246,34 @@ class HlaValidatorLogic(
     }
 
     private fun validateCustomTypeForRef(
-        traverser: PropertiesTraverser,
         ref: PropertyValuePath,
         validator: TypeValidator<*>
     ): ValidationResult {
+        return validationResult(
+            getValuesToValidate(validator, ref),
+            validator,
+            ref
+        )
+    }
+
+    private fun getValuesToValidate(validator: TypeValidator<*>, ref: PropertyValuePath): List<Any> {
+        val createFunction = getCreateFunction(validator)
         if(validator is SimpleCustomTypeValidator<*, *>) {
-            val customTypeValidator = validator as SimpleCustomTypeValidator<*, *>
-            val createFunction = customTypeValidator.createFunction() as (Any) -> Any
-
             val primitiveValues = traverser.getPrimitiveValuesAt(ref)
-            val objectValues = primitiveValues.map { createFunction(it) }
-
-            return validationResult(objectValues, validator, ref)
+            return primitiveValues.map { createFunction(it) }
         }else {
-            val customTypeValidator = validator as ComplexCustomTypeValidator<*, *>
-            val createFunction = customTypeValidator.createFunction() as (Any) -> Any
-
-            val typeToValidate = (validator::class.java.genericInterfaces
-                .first { it is ParameterizedType } as ParameterizedType)
-                .actualTypeArguments[1]
-                .let { it as Class<*> }
+            val typeToValidate = getTypeToValidate(validator, 1)
             val objectValues = traverser.getStructValuesAtAsObject(ref, typeToValidate)
-            val y = objectValues.map { createFunction(it!!)}
-            return validationResult(y, validator, ref)
+            return objectValues.map { createFunction(it!!)}
         }
+    }
 
+    private fun getCreateFunction(validator: TypeValidator<*>): (Any) -> Any {
+        return when (validator) {
+            is SimpleCustomTypeValidator<*, *> -> validator.createFunction() as (Any) -> Any
+            is ComplexCustomTypeValidator<*, *> -> validator.createFunction() as (Any) -> Any
+            else -> throw IllegalArgumentException("Unsupported validator type: ${validator::class}")
+        }
     }
 
     private fun validationResult(
