@@ -46,11 +46,14 @@ class ModuleGroupParserLogic(
     }
 
     private fun parseModuleGroup(hlaFolder: Path, profileName: ProfileName): ModuleGroup {
+        val modulesDir = directories.read(hlaFolder)
+        val groupName = GroupName(modulesDir.getName().value)
+        log.info("Parsing group $groupName")
+
         val properties = PropertiesLogic(emptySet())
         properties.addSource(YamlPropertiesSource(hlaFolder.add(FileName("properties.yaml")).value))
         val profile = properties.get(PROFILES_PROPERTY_KEY).find { it.getName() == profileName } ?: throw IllegalArgumentException("Profile $profileName not found")
 
-        val modulesDir = directories.read(hlaFolder)
         val modules = modulesDir.getFiles()
             .filter { it.getName().value.endsWith(".module") }
             .map { parseModuleFile(it) }

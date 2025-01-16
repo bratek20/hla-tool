@@ -192,6 +192,7 @@ class ValidationsImplTest {
         val result = validateCall()
 
         loggerMock.assertInfos(
+            "Parsing group hla",
             "Parsing module NoInterfacesModule",
             "Parsing module OtherModule",
             "Parsing module SimpleModule",

@@ -384,6 +384,7 @@ class ModuleGroupParserTest {
         ))
 
         loggerMock.assertInfos(
+            "Parsing group two-modules",
             "Parsing module OtherModule",
             "Parsing module SomeModule"
         )

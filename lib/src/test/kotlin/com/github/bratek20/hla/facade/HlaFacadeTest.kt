@@ -501,6 +501,7 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Starting module SomeModule with profile kotlin",
+                "Parsing group hla",
                 "Parsing module NoInterfacesModule",
                 "Parsing module OtherModule",
                 "Parsing module SimpleModule",
@@ -540,6 +541,7 @@ class HlaFacadeTest {
             //then
             loggerMock.assertInfos(
                 "Updating module SomeModule with profile kotlin",
+                "Parsing group hla",
                 "Parsing module NoInterfacesModule",
                 "Parsing module OtherModule",
                 "Parsing module SimpleModule",
