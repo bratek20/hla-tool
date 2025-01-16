@@ -114,6 +114,12 @@ class NestedValueValidator: TypeValidator<NestedValue> {
     }
 }
 
+class DateOkValidator: TypeValidator<Date> {
+    override fun validate(property: Date): ValidationResult {
+        return ValidationResult.ok()
+    }
+}
+
 val SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeSourcePropertyList",
     Struct::class
@@ -126,6 +132,11 @@ val SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY = com.github.bratek20.architec
 
 val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeReferencingPropertyList",
+    Struct::class
+)
+
+val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "CustomTypesProperty",
     Struct::class
 )
 
@@ -322,6 +333,30 @@ class ValidationsImplTest {
                 }
             }
         ))
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = true
+        }
+    }
+
+
+    @Test
+    fun `should support custom types validator`() {
+        setup {
+            typeValidatorsToInject = listOf(
+                DateOkValidator::class.java
+            )
+        }
+
+        propertiesMock.set(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, struct {
+            "date" to "2021-01-01"
+            "dateRange" to struct {
+                "from" to "2021-01-01"
+                "to" to "2021-01-01"
+            }
+        })
 
         val result = validateCall()
 

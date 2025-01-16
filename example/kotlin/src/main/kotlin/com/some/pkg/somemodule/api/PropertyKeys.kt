@@ -34,3 +34,8 @@ val OPTIONAL_FIELD_PROPERTIES_PROPERTY_KEY = com.github.bratek20.architecture.pr
     "OptionalFieldProperties",
     OptionalFieldProperty::class
 )
+
+val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "CustomTypesProperty",
+    CustomTypesProperty::class
+)

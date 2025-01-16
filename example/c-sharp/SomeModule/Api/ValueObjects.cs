@@ -553,4 +553,26 @@ namespace SomeModule.Api {
             return new OptionalFieldProperty(optionalField.OrElse(null));
         }
     }
+
+    public class CustomTypesProperty: ValueObject {
+        readonly string date;
+        readonly SerializedDateRange dateRange;
+
+        public CustomTypesProperty(
+            string date,
+            SerializedDateRange dateRange
+        ) {
+            this.date = date;
+            this.dateRange = dateRange;
+        }
+        public Date GetDate() {
+            return TODO(date);
+        }
+        public DateRange GetDateRange() {
+            return dateRange.ToCustomType();
+        }
+        public static CustomTypesProperty Create(Date date, DateRange dateRange) {
+            return new CustomTypesProperty(TODO(date), SerializedDateRange.FromCustomType(dateRange));
+        }
+    }
 }

@@ -30,4 +30,9 @@ namespace SomeModule {
         "OptionalFieldProperties",
         OptionalFieldProperty
     )
+
+    export const CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = new ObjectPropertyKey(
+        "CustomTypesProperty",
+        CustomTypesProperty
+    )
 }
