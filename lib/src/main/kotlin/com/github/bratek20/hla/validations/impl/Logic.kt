@@ -3,10 +3,7 @@ package com.github.bratek20.hla.validations.impl
 import com.github.bratek20.architecture.properties.api.Properties
 import com.github.bratek20.architecture.properties.api.Property
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
-import com.github.bratek20.architecture.structs.api.AnyStruct
-import com.github.bratek20.architecture.structs.api.StructConversionException
-import com.github.bratek20.architecture.structs.api.StructPath
-import com.github.bratek20.architecture.structs.api.struct
+import com.github.bratek20.architecture.structs.api.*
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.facade.api.ProfileName
@@ -249,13 +246,27 @@ class HlaValidatorLogic(
         ref: PropertyValuePath,
         validator: TypeValidator<*>
     ): ValidationResult {
-        val customTypeValidator = validator as SimpleCustomTypeValidator<*, *>
-        val createFunction = customTypeValidator.createMapper() as (Any) -> Any
+        if(validator is SimpleCustomTypeValidator<*, *>) {
+            val customTypeValidator = validator as SimpleCustomTypeValidator<*, *>
+            val createFunction = customTypeValidator.createFunction() as (Any) -> Any
 
-        val primitiveValues = traverser.getPrimitiveValuesAt(ref)
-        val objectValues = primitiveValues.map { createFunction(it) }
+            val primitiveValues = traverser.getPrimitiveValuesAt(ref)
+            val objectValues = primitiveValues.map { createFunction(it) }
 
-        return validationResult(objectValues, validator, ref)
+            return validationResult(objectValues, validator, ref)
+        }else {
+            val customTypeValidator = validator as ComplexCustomTypeValidator<*, *>
+            val createFunction = customTypeValidator.createFunction() as (Any) -> Any
+
+            val typeToValidate = (validator::class.java.genericInterfaces
+                .first { it is ParameterizedType } as ParameterizedType)
+                .actualTypeArguments[1]
+                .let { it as Class<*> }
+            val objectValues = traverser.getStructValuesAtAsObject(ref, typeToValidate)
+            val y = objectValues.map { createFunction(it!!)}
+            return validationResult(y, validator, ref)
+        }
+
     }
 
     private fun validationResult(

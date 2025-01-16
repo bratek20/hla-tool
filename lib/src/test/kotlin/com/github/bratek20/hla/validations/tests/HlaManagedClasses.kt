@@ -8,10 +8,10 @@ class Date(
 }
 
 //example of complex custom type
-class DateRange {
-    init {
-        TODO()
-    }
+class DateRange (
+    val from: Date,
+    val to: Date
+){
 }
 
 data class SerializedDateRange(
@@ -44,14 +44,17 @@ fun dateGetValue(it: Date): String {
 }
 
 fun dateRangeCreate(from: Date, to: Date): DateRange {
-    TODO()
+    return DateRange(
+        from = from,
+        to = to
+    )
 }
 
 fun dateRangeGetFrom(it: DateRange): Date {
-    TODO()
+    return it.from
 }
 
 fun dateRangeGetTo(it: DateRange): Date {
-    TODO()
+    return it.to
 }
 

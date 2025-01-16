@@ -116,15 +116,23 @@ class NestedValueValidator: TypeValidator<NestedValue> {
 }
 
 class DateOkValidator: SimpleCustomTypeValidator<Date, String> {
-    override fun createMapper(): (value: String) -> Date = ::dateCreate
+    override fun createFunction(): (value: String) -> Date = ::dateCreate
 
     override fun validate(property: Date): ValidationResult {
         return ValidationResult.ok()
     }
 }
 
+class DateRangeOkValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
+    override fun createFunction(): (value: SerializedDateRange) -> DateRange = SerializedDateRange::toCustomType
+
+    override fun validate(property: DateRange): ValidationResult {
+        return ValidationResult.ok()
+    }
+}
+
 class DateFailValidator: SimpleCustomTypeValidator<Date, String> {
-    override fun createMapper(): (value: String) -> Date = ::dateCreate
+    override fun createFunction(): (value: String) -> Date = ::dateCreate
 
     override fun validate(property: Date): ValidationResult {
         return ValidationResult.createFor(
@@ -361,7 +369,8 @@ class ValidationsImplTest {
         fun `should pass custom types validation`() {
             setup {
                 typeValidatorsToInject = listOf(
-                    DateOkValidator::class.java
+                    DateOkValidator::class.java,
+                    DateRangeOkValidator::class.java
                 )
             }
 
@@ -384,7 +393,7 @@ class ValidationsImplTest {
         fun `should fail custom types validation`() {
             setup {
                 typeValidatorsToInject = listOf(
-                    DateFailValidator::class.java
+                    DateFailValidator::class.java,
                 )
             }
 

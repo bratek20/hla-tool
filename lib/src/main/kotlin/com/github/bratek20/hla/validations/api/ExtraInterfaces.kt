@@ -5,5 +5,9 @@ interface TypeValidator<T> {
 }
 
 interface SimpleCustomTypeValidator<T, BaseType>: TypeValidator<T> {
-    fun createMapper(): (value: BaseType) -> T
+    fun createFunction(): (value: BaseType) -> T
+}
+
+interface ComplexCustomTypeValidator<T, SerializedT>: TypeValidator<T> {
+    fun createFunction(): (value: SerializedT) -> T
 }
