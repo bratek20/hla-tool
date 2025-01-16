@@ -16,6 +16,7 @@ import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
 import com.github.bratek20.utils.directory.fixtures.path
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 //SomePropertyEntry
@@ -114,15 +115,21 @@ class NestedValueValidator: TypeValidator<NestedValue> {
     }
 }
 
-interface SimpleCustomTypeValidator<T, BaseType>: TypeValidator<T> {
-    fun createMapper(): (value: BaseType) -> T
-}
-
 class DateOkValidator: SimpleCustomTypeValidator<Date, String> {
     override fun createMapper(): (value: String) -> Date = ::dateCreate
 
     override fun validate(property: Date): ValidationResult {
         return ValidationResult.ok()
+    }
+}
+
+class DateFailValidator: SimpleCustomTypeValidator<Date, String> {
+    override fun createMapper(): (value: String) -> Date = ::dateCreate
+
+    override fun validate(property: Date): ValidationResult {
+        return ValidationResult.createFor(
+            "Error for ${property.value2}"
+        )
     }
 }
 
@@ -348,28 +355,59 @@ class ValidationsImplTest {
     }
 
 
-    @Test
-    fun `should support custom types validator`() {
-        setup {
-            typeValidatorsToInject = listOf(
-                DateOkValidator::class.java
-            )
+    @Nested
+    inner class CustomTypesScope {
+        @Test
+        fun `should pass custom types validation`() {
+            setup {
+                typeValidatorsToInject = listOf(
+                    DateOkValidator::class.java
+                )
+            }
+
+            propertiesMock.set(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, struct {
+                "date" to "2021-01-01"
+                "dateRange" to struct {
+                    "from" to "2021-01-01"
+                    "to" to "2021-01-01"
+                }
+            })
+
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                ok = true
+            }
         }
 
-        propertiesMock.set(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, struct {
-            "date" to "2021-01-01"
-            "dateRange" to struct {
-                "from" to "2021-01-01"
-                "to" to "2021-01-01"
+        @Test
+        fun `should fail custom types validation`() {
+            setup {
+                typeValidatorsToInject = listOf(
+                    DateFailValidator::class.java
+                )
             }
-        })
 
-        val result = validateCall()
+            propertiesMock.set(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, struct {
+                "date" to "2021-01-01"
+                "dateRange" to struct {
+                    "from" to "2021-01-01"
+                    "to" to "2021-01-01"
+                }
+            })
 
-        assertValidationResult(result) {
-            ok = true
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                errors = listOf(
+                    "Type validator failed at '\"CustomTypesProperty\"/date', message: Error for 2021-01-01",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/from', message: Error for 2021-01-01",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/to', message: Error for 2021-01-01",
+                )
+            }
         }
     }
+
 
     private fun validateCall(): ValidationResult {
         return validator.validateProperties(

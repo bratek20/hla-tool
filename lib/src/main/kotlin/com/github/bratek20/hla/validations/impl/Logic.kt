@@ -10,6 +10,7 @@ import com.github.bratek20.architecture.structs.api.struct
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.facade.api.ProfileName
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
 import com.github.bratek20.hla.hlatypesworld.api.IdSourceInfo
@@ -212,7 +213,12 @@ class HlaValidatorLogic(
             group.getAllPropertyKeys().flatMap { propertyKey ->
                 // Find references for the current property key
                 traverser.findReferences(worldType, propertyKey).map { ref ->
-                    validateTypeForRef(traverser, typeToValidate, ref, validator)
+                    if(worldType.getPath().asHla().getPatternName() == PatternName.CustomTypes) {
+                        validateCustomTypeForRef(traverser, ref, validator)
+                    }
+                    else {
+                        validateTypeForRef(traverser, typeToValidate, ref, validator)
+                    }
                 }
             }
         }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
@@ -230,13 +236,37 @@ class HlaValidatorLogic(
             traverser.getPrimitiveValuesAtAsSimpleVO(ref, typeToValidate)
         }
 
-        return objectValues.map { value ->
-            val castValue = typeToValidate.cast(value)
-            (validator as TypeValidator<Any>).validate(castValue!!)
-        }.map {
-            ValidationResult.createFor(it.getErrors().map {
-                "Type validator failed at '$ref', message: $it"
-            })
-        }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+        val castedValues = objectValues
+            .map {
+                typeToValidate.cast(it)
+            }
+
+        return validationResult(castedValues, validator, ref)
     }
+
+    private fun validateCustomTypeForRef(
+        traverser: PropertiesTraverser,
+        ref: PropertyValuePath,
+        validator: TypeValidator<*>
+    ): ValidationResult {
+        val customTypeValidator = validator as SimpleCustomTypeValidator<*, *>
+        val createFunction = customTypeValidator.createMapper() as (Any) -> Any
+
+        val primitiveValues = traverser.getPrimitiveValuesAt(ref)
+        val objectValues = primitiveValues.map { createFunction(it) }
+
+        return validationResult(objectValues, validator, ref)
+    }
+
+    private fun validationResult(
+        objectValues: List<Any>,
+        validator: TypeValidator<*>,
+        ref: PropertyValuePath
+    ) = objectValues.map { value ->
+        (validator as TypeValidator<Any>).validate(value)
+    }.map {
+        ValidationResult.createFor(it.getErrors().map {
+            "Type validator failed at '$ref', message: $it"
+        })
+    }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
 }
