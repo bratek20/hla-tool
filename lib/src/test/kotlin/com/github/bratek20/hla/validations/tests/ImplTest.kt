@@ -114,7 +114,13 @@ class NestedValueValidator: TypeValidator<NestedValue> {
     }
 }
 
-class DateOkValidator: TypeValidator<Date> {
+interface SimpleCustomTypeValidator<T, BaseType>: TypeValidator<T> {
+    fun createMapper(): (value: BaseType) -> T
+}
+
+class DateOkValidator: SimpleCustomTypeValidator<Date, String> {
+    override fun createMapper(): (value: String) -> Date = ::dateCreate
+
     override fun validate(property: Date): ValidationResult {
         return ValidationResult.ok()
     }
