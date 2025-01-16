@@ -2,7 +2,7 @@ package com.github.bratek20.hla.validations.tests
 
 // example of simple custom type
 class Date(
-    val value: String,
+    val value2: String, // to test that value field is not assumed for simple custom types
 ) {
 
 }
@@ -40,7 +40,7 @@ fun dateCreate(value: String): Date {
 }
 
 fun dateGetValue(it: Date): String {
-    return it.value
+    return it.value2
 }
 
 fun dateRangeCreate(from: Date, to: Date): DateRange {
