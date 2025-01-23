@@ -144,7 +144,7 @@ class DateRangeFailValidator: ComplexCustomTypeValidator<DateRange, SerializedDa
 
     override fun validate(property: DateRange): ValidationResult {
         return ValidationResult.createFor(
-            "Error for ${property.from.value2}"
+            "Error for ${property.from.value2}, ${property.to.value2}"
         )
     }
 }
@@ -421,7 +421,7 @@ class ValidationsImplTest {
                     "Type validator failed at '\"CustomTypesProperty\"/date', message: Error for 2021-01-02",
                     "Type validator failed at '\"CustomTypesProperty\"/dateRange/from', message: Error for 2021-01-03",
                     "Type validator failed at '\"CustomTypesProperty\"/dateRange/to', message: Error for 2021-01-04",
-                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-03"
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-03, 2021-01-04"
                 )
             }
         }
