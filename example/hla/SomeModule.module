@@ -107,6 +107,10 @@ Properties
     OptionalFieldProperty
         optionalField: NestedValue?
 
+    CustomTypesProperty
+        date: Date
+        dateRange: DateRange
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
@@ -114,6 +118,8 @@ Properties
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]
+
+    "CustomTypesProperty" -> CustomTypesProperty
 
 Data
     SomeData

@@ -611,3 +611,26 @@ class OptionalFieldProperty {
         return Optional.of(this.optionalField)
     }
 }
+
+class CustomTypesProperty {
+    private date = STRING
+    private dateRange = new SerializedDateRange
+
+    static create(
+        date: Date,
+        dateRange: DateRange,
+    ): CustomTypesProperty {
+        const instance = new CustomTypesProperty()
+        instance.date = TypesModule.CustomTypesMapper.dateGetValue(date)
+        instance.dateRange = SerializedDateRange.fromCustomType(dateRange)
+        return instance
+    }
+
+    getDate(): Date {
+        return TypesModule.CustomTypesMapper.dateCreate(this.date)
+    }
+
+    getDateRange(): DateRange {
+        return this.dateRange.toCustomType()
+    }
+}

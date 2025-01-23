@@ -3,13 +3,11 @@ package com.github.bratek20.hla.validations.impl
 import com.github.bratek20.architecture.properties.api.Properties
 import com.github.bratek20.architecture.properties.api.Property
 import com.github.bratek20.architecture.serialization.context.SerializationFactory
-import com.github.bratek20.architecture.structs.api.AnyStruct
-import com.github.bratek20.architecture.structs.api.StructConversionException
-import com.github.bratek20.architecture.structs.api.StructPath
-import com.github.bratek20.architecture.structs.api.struct
+import com.github.bratek20.architecture.structs.api.*
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.facade.api.ProfileName
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
 import com.github.bratek20.hla.hlatypesworld.api.IdSourceInfo
@@ -198,10 +196,7 @@ class HlaValidatorLogic(
 
     private fun executeTypeValidators(group: ModuleGroup): ValidationResult {
         return typeValidators.flatMap { validator ->
-            val typeToValidate =  (validator::class.java.genericInterfaces
-                .first { it is ParameterizedType } as ParameterizedType)
-                .actualTypeArguments[0]
-                .let { it as Class<*> }
+            val typeToValidate = getTypeToValidate(validator, 0)
 
             val typeName = typeToValidate.simpleName
             logger.info("Validating type '$typeName'")
@@ -212,10 +207,22 @@ class HlaValidatorLogic(
             group.getAllPropertyKeys().flatMap { propertyKey ->
                 // Find references for the current property key
                 traverser.findReferences(worldType, propertyKey).map { ref ->
-                    validateTypeForRef(traverser, typeToValidate, ref, validator)
+                    if(worldType.getPath().asHla().getPatternName() == PatternName.CustomTypes) {
+                        validateCustomTypeForRef(ref, validator)
+                    }
+                    else {
+                        validateTypeForRef(traverser, typeToValidate, ref, validator)
+                    }
                 }
             }
         }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+    }
+
+    private fun getTypeToValidate(validator: TypeValidator<*>, actualTypeIndex: Int): Class<*> {
+        return (validator::class.java.genericInterfaces
+            .first { it is ParameterizedType } as ParameterizedType)
+            .actualTypeArguments[actualTypeIndex]
+            .let { it as Class<*> }
     }
 
     private fun validateTypeForRef(
@@ -230,13 +237,56 @@ class HlaValidatorLogic(
             traverser.getPrimitiveValuesAtAsSimpleVO(ref, typeToValidate)
         }
 
-        return objectValues.map { value ->
-            val castValue = typeToValidate.cast(value)
-            (validator as TypeValidator<Any>).validate(castValue!!)
-        }.map {
-            ValidationResult.createFor(it.getErrors().map {
-                "Type validator failed at '$ref', message: $it"
-            })
-        }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+        val castedValues = objectValues
+            .map {
+                typeToValidate.cast(it)
+            }
+
+        return validationResult(castedValues, validator, ref)
     }
+
+    private fun validateCustomTypeForRef(
+        ref: PropertyValuePath,
+        validator: TypeValidator<*>
+    ): ValidationResult {
+        return validationResult(
+            getValuesToValidate(validator, ref),
+            validator,
+            ref
+        )
+    }
+
+    private fun getValuesToValidate(validator: TypeValidator<*>, ref: PropertyValuePath): List<Any> {
+        if(validator is SimpleCustomTypeValidator<*, *>) {
+            val primitiveValues = traverser.getPrimitiveValuesAt(ref)
+            val createFunction = validator.createFunction() as (Any) -> Any
+            return primitiveValues.map { createFunction(it) }
+        }else {
+            val serializedType = getTypeToValidate(validator, 1)
+            val objectValues = traverser.getStructValuesAtAsObject(ref, serializedType)
+            return objectValues.map { callMethodByName(it!!, "toCustomType") }
+        }
+    }
+
+
+    fun <T : Any> callMethodByName(target: T, methodName: String, vararg args: Any?): Any {
+        val kClass = target::class
+
+        val method = kClass.members.firstOrNull { it.name == methodName }
+            ?: throw NoSuchMethodException("Method '$methodName' not found in class '${kClass.qualifiedName}'")
+
+        return method.call(target, *args)!!
+    }
+
+    private fun validationResult(
+        objectValues: List<Any>,
+        validator: TypeValidator<*>,
+        ref: PropertyValuePath
+    ) = objectValues.map { value ->
+        (validator as TypeValidator<Any>).validate(value)
+    }.map {
+        ValidationResult.createFor(it.getErrors().map {
+            "Type validator failed at '$ref', message: $it"
+        })
+    }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
 }

@@ -334,6 +334,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface CustomTypesPropertyDef {
+        date?: string,
+        dateRange?: TypesModule.Builder.DateRangeDef,
+    }
+    export function customTypesProperty(def?: CustomTypesPropertyDef): CustomTypesProperty {
+        const final_date = def?.date ?? "01/01/1970 00:00"
+        const final_dateRange = def?.dateRange ?? {}
+
+        return CustomTypesProperty.create(
+            TypesModule.CustomTypesMapper.dateCreate(final_date),
+            TypesModule.Builder.dateRange(final_dateRange),
+        )
+    }
+
     export interface DateRangeWrapperDef {
         range?: TypesModule.Builder.DateRangeDef,
     }

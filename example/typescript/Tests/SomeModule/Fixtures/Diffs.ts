@@ -508,6 +508,24 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedCustomTypesProperty {
+        date?: string,
+        dateRange?: TypesModule.ExpectedDateRange,
+    }
+    export function diffCustomTypesProperty(given: CustomTypesProperty, expected: ExpectedCustomTypesProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.date !== undefined) {
+            if (TypesModule.diffDate(given.getDate(), expected.date) != "") { result.push(TypesModule.diffDate(given.getDate(), expected.date, `${path}date.`)) }
+        }
+
+        if (expected.dateRange !== undefined) {
+            if (TypesModule.diffDateRange(given.getDateRange(), expected.dateRange) != "") { result.push(TypesModule.diffDateRange(given.getDateRange(), expected.dateRange, `${path}dateRange.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedDateRangeWrapper {
         range?: TypesModule.ExpectedDateRange,
     }

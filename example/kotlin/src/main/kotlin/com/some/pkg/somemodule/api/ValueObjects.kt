@@ -640,3 +640,28 @@ data class OptionalFieldProperty(
         }
     }
 }
+
+data class CustomTypesProperty(
+    private val date: String,
+    private val dateRange: SerializedDateRange,
+) {
+    fun getDate(): Date {
+        return dateCreate(this.date)
+    }
+
+    fun getDateRange(): DateRange {
+        return this.dateRange.toCustomType()
+    }
+
+    companion object {
+        fun create(
+            date: Date,
+            dateRange: DateRange,
+        ): CustomTypesProperty {
+            return CustomTypesProperty(
+                date = dateGetValue(date),
+                dateRange = SerializedDateRange.fromCustomType(dateRange),
+            )
+        }
+    }
+}

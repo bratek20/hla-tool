@@ -291,6 +291,18 @@ fun optionalFieldProperty(init: OptionalFieldPropertyDef.() -> Unit = {}): Optio
     )
 }
 
+data class CustomTypesPropertyDef(
+    var date: String = "01/01/1970 00:00",
+    var dateRange: (DateRangeDef.() -> Unit) = {},
+)
+fun customTypesProperty(init: CustomTypesPropertyDef.() -> Unit = {}): CustomTypesProperty {
+    val def = CustomTypesPropertyDef().apply(init)
+    return CustomTypesProperty.create(
+        date = dateCreate(def.date),
+        dateRange = dateRange(def.dateRange),
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )

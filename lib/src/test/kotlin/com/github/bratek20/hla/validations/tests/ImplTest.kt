@@ -16,6 +16,7 @@ import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
 import com.github.bratek20.utils.directory.fixtures.path
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 //SomePropertyEntry
@@ -114,6 +115,40 @@ class NestedValueValidator: TypeValidator<NestedValue> {
     }
 }
 
+class DateOkValidator: SimpleCustomTypeValidator<Date, String> {
+    override fun createFunction(): (value: String) -> Date = ::dateCreate
+
+    override fun validate(property: Date): ValidationResult {
+        return ValidationResult.ok()
+    }
+}
+
+class DateRangeOkValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
+
+    override fun validate(property: DateRange): ValidationResult {
+        return ValidationResult.ok()
+    }
+}
+
+class DateFailValidator: SimpleCustomTypeValidator<Date, String> {
+    override fun createFunction(): (value: String) -> Date = ::dateCreate
+
+    override fun validate(property: Date): ValidationResult {
+        return ValidationResult.createFor(
+            "Error for ${property.value2}"
+        )
+    }
+}
+
+class DateRangeFailValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
+
+    override fun validate(property: DateRange): ValidationResult {
+        return ValidationResult.createFor(
+            "Error for ${property.from.value2}, ${property.to.value2}"
+        )
+    }
+}
+
 val SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeSourcePropertyList",
     Struct::class
@@ -126,6 +161,11 @@ val SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY = com.github.bratek20.architec
 
 val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeReferencingPropertyList",
+    Struct::class
+)
+
+val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "CustomTypesProperty",
     Struct::class
 )
 
@@ -329,6 +369,64 @@ class ValidationsImplTest {
             ok = true
         }
     }
+
+
+    @Nested
+    inner class CustomTypesScope {
+        @Test
+        fun `should pass custom types validation`() {
+            setup {
+                typeValidatorsToInject = listOf(
+                    DateOkValidator::class.java,
+                    DateRangeOkValidator::class.java
+                )
+            }
+
+            propertiesMock.set(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, struct {
+                "date" to "2021-01-01"
+                "dateRange" to struct {
+                    "from" to "2021-01-01"
+                    "to" to "2021-01-01"
+                }
+            })
+
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                ok = true
+            }
+        }
+
+        @Test
+        fun `should fail custom types validation`() {
+            setup {
+                typeValidatorsToInject = listOf(
+                    DateFailValidator::class.java,
+                    DateRangeFailValidator::class.java
+                )
+            }
+
+            propertiesMock.set(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, struct {
+                "date" to "2021-01-02"
+                "dateRange" to struct {
+                    "from" to "2021-01-03"
+                    "to" to "2021-01-04"
+                }
+            })
+
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                errors = listOf(
+                    "Type validator failed at '\"CustomTypesProperty\"/date', message: Error for 2021-01-02",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/from', message: Error for 2021-01-03",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/to', message: Error for 2021-01-04",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-03, 2021-01-04"
+                )
+            }
+        }
+    }
+
 
     private fun validateCall(): ValidationResult {
         return validator.validateProperties(

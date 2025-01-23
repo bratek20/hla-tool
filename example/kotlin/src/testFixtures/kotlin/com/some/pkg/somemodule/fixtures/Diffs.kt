@@ -537,6 +537,25 @@ fun diffOptionalFieldProperty(given: OptionalFieldProperty, expectedInit: Expect
     return result.joinToString("\n")
 }
 
+data class ExpectedCustomTypesProperty(
+    var date: String? = null,
+    var dateRange: (ExpectedDateRange.() -> Unit)? = null,
+)
+fun diffCustomTypesProperty(given: CustomTypesProperty, expectedInit: ExpectedCustomTypesProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedCustomTypesProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.date?.let {
+        if (diffDate(given.getDate(), it) != "") { result.add(diffDate(given.getDate(), it, "${path}date.")) }
+    }
+
+    expected.dateRange?.let {
+        if (diffDateRange(given.getDateRange(), it) != "") { result.add(diffDateRange(given.getDateRange(), it, "${path}dateRange.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )

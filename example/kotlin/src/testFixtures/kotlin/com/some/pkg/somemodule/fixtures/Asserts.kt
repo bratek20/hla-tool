@@ -133,6 +133,11 @@ fun assertOptionalFieldProperty(given: OptionalFieldProperty, expectedInit: Expe
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertCustomTypesProperty(given: CustomTypesProperty, expectedInit: ExpectedCustomTypesProperty.() -> Unit) {
+    val diff = diffCustomTypesProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
