@@ -9,5 +9,4 @@ interface SimpleCustomTypeValidator<T, BaseType>: TypeValidator<T> {
 }
 
 interface ComplexCustomTypeValidator<T, SerializedT>: TypeValidator<T> {
-    fun createFunction(): (value: SerializedT) -> T
 }

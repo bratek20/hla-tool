@@ -257,23 +257,25 @@ class HlaValidatorLogic(
     }
 
     private fun getValuesToValidate(validator: TypeValidator<*>, ref: PropertyValuePath): List<Any> {
-        val createFunction = getCreateFunction(validator)
         if(validator is SimpleCustomTypeValidator<*, *>) {
             val primitiveValues = traverser.getPrimitiveValuesAt(ref)
+            val createFunction = validator.createFunction() as (Any) -> Any
             return primitiveValues.map { createFunction(it) }
         }else {
-            val typeToValidate = getTypeToValidate(validator, 1)
-            val objectValues = traverser.getStructValuesAtAsObject(ref, typeToValidate)
-            return objectValues.map { createFunction(it!!)}
+            val serializedType = getTypeToValidate(validator, 1)
+            val objectValues = traverser.getStructValuesAtAsObject(ref, serializedType)
+            return objectValues.map { callMethodByName(it!!, "toCustomType") }
         }
     }
 
-    private fun getCreateFunction(validator: TypeValidator<*>): (Any) -> Any {
-        return when (validator) {
-            is SimpleCustomTypeValidator<*, *> -> validator.createFunction() as (Any) -> Any
-            is ComplexCustomTypeValidator<*, *> -> validator.createFunction() as (Any) -> Any
-            else -> throw IllegalArgumentException("Unsupported validator type: ${validator::class}")
-        }
+
+    fun <T : Any> callMethodByName(target: T, methodName: String, vararg args: Any?): Any {
+        val kClass = target::class
+
+        val method = kClass.members.firstOrNull { it.name == methodName }
+            ?: throw NoSuchMethodException("Method '$methodName' not found in class '${kClass.qualifiedName}'")
+
+        return method.call(target, *args)!!
     }
 
     private fun validationResult(

@@ -124,7 +124,6 @@ class DateOkValidator: SimpleCustomTypeValidator<Date, String> {
 }
 
 class DateRangeOkValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
-    override fun createFunction(): (value: SerializedDateRange) -> DateRange = SerializedDateRange::toCustomType
 
     override fun validate(property: DateRange): ValidationResult {
         return ValidationResult.ok()
@@ -142,12 +141,10 @@ class DateFailValidator: SimpleCustomTypeValidator<Date, String> {
 }
 
 class DateRangeFailValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
-    override fun createFunction(): (value: SerializedDateRange) -> DateRange = SerializedDateRange::toCustomType
 
     override fun validate(property: DateRange): ValidationResult {
         return ValidationResult.createFor(
-            "Error for ${property.from.value2}",
-            "Error for ${property.to.value2}"
+            "Error for ${property.from.value2}"
         )
     }
 }
@@ -410,10 +407,10 @@ class ValidationsImplTest {
             }
 
             propertiesMock.set(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, struct {
-                "date" to "2021-01-01"
+                "date" to "2021-01-02"
                 "dateRange" to struct {
-                    "from" to "2021-01-01"
-                    "to" to "2021-01-02"
+                    "from" to "2021-01-03"
+                    "to" to "2021-01-04"
                 }
             })
 
@@ -421,11 +418,10 @@ class ValidationsImplTest {
 
             assertValidationResult(result) {
                 errors = listOf(
-                    "Type validator failed at '\"CustomTypesProperty\"/date', message: Error for 2021-01-01",
-                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/from', message: Error for 2021-01-01",
-                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/to', message: Error for 2021-01-02",
-                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-01",
-                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-02"
+                    "Type validator failed at '\"CustomTypesProperty\"/date', message: Error for 2021-01-02",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/from', message: Error for 2021-01-03",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange/to', message: Error for 2021-01-04",
+                    "Type validator failed at '\"CustomTypesProperty\"/dateRange', message: Error for 2021-01-03"
                 )
             }
         }
