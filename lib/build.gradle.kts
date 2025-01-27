@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.github.bratek20.hla"
-version = "1.0.5"
+version = "1.0.6"
 
 val velocityVersion = "2.3"
 
@@ -21,4 +21,5 @@ dependencies {
     testImplementation(testFixtures(libs.bratek20.utils))
 
     implementation(project(":code-builder"))
+    implementation(kotlin("reflect"))
 }
