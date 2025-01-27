@@ -72,6 +72,11 @@ private class PropertiesTraverser(
         return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath)
     }
 
+    fun getPathWithIndexForValue(value: String, path: PropertyValuePath): String {
+        val values = getPrimitiveValuesAt(path)
+        return path.toString().replace("[*]", "[${values.indexOf(value)}]")
+    }
+
     fun findReferences(searchFor: WorldType, propertyKey: KeyDefinition): List<PropertyValuePath> {
         val propertyType = typesWorldApi.getTypeByName(propertyKey.getType().asWorldTypeName())
         val referencePaths = typesWorldApi.getAllReferencesOf(propertyType, searchFor)
@@ -132,10 +137,10 @@ private class IdSourceValidator(
         refs.forEach {
             val values = traverser.getPrimitiveValuesAt(it)
             logger.info("Values for '$it': $values")
-
-            for (value in values) {
+            values.forEach { value ->
                 if (value !in allowedValues) {
-                    errors.add("Value '$value' at '$it' not found in source values from '${idSourcePath}'")
+                    val pathWithIndex = traverser.getPathWithIndexForValue(value, it)
+                    errors.add("Value '$value' at '$pathWithIndex' not found in source values from '${idSourcePath}'")
                 }
             }
         }
