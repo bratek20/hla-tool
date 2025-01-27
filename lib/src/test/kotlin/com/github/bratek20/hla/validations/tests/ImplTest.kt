@@ -283,6 +283,9 @@ class ValidationsImplTest {
 
         propertiesMock.set(SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
             struct {
+                "referenceId" to "1"
+            },
+            struct {
                 "referenceId" to "3"
             }
         ))
@@ -294,7 +297,7 @@ class ValidationsImplTest {
             errors = listOf(
                 "Value '1' at '\"SomeSourcePropertyList\"/[*]/id' is not unique",
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
-                "Value '3' at '\"SomeReferencingPropertyList\"/[*]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
+                "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
             )
         }
     }
@@ -331,12 +334,12 @@ class ValidationsImplTest {
             errors = listOf(
                 "Type validator failed at '\"SomeReferencingPropertyObject\"/', message: Error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyObject\"/', message: Other error for 1",
-                "Type validator failed at '\"SomeReferencingPropertyList\"/[*]', message: Error for 1",
-                "Type validator failed at '\"SomeReferencingPropertyList\"/[*]', message: Other error for 1",
+                "Type validator failed at '\"SomeReferencingPropertyList\"/[0]', message: Error for 1",
+                "Type validator failed at '\"SomeReferencingPropertyList\"/[0]', message: Other error for 1",
 
-                "Type validator failed at '\"SomeSourcePropertyList\"/[*]/id', message: Error for 1",
+                "Type validator failed at '\"SomeSourcePropertyList\"/[0]/id', message: Error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyObject\"/referenceId', message: Error for 1",
-                "Type validator failed at '\"SomeReferencingPropertyList\"/[*]/referenceId', message: Error for 1",
+                "Type validator failed at '\"SomeReferencingPropertyList\"/[0]/referenceId', message: Error for 1",
             )
         }
     }
