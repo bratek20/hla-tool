@@ -287,11 +287,15 @@ class HlaValidatorLogic(
         objectValues: List<Any>,
         validator: TypeValidator<*>,
         ref: PropertyValuePath
-    ) = objectValues.map { value ->
-        (validator as TypeValidator<Any>).validate(value)
-    }.map {
-        ValidationResult.createFor(it.getErrors().map {
-            "Type validator failed at '$ref', message: $it"
-        })
-    }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+    ): ValidationResult {
+        val validationResults = objectValues.map { value ->
+            (validator as TypeValidator<Any>).validate(value)
+        }
+      return validationResults.mapIndexed { index, it ->
+          val refWithIndex = ref.toString().replace("[*]", "[$index]")
+          ValidationResult.createFor(it.getErrors().map {
+              "Type validator failed at '$refWithIndex', message: $it"
+          })
+      }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+    }
 }
