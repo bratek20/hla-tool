@@ -5,6 +5,32 @@ package com.github.bratek20.hla.validations.api
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.utils.directory.api.*
 
+data class PropertyValuePath(
+    val value: String
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
+
+data class ValidationContext(
+    private val path: String,
+) {
+    fun getPath(): PropertyValuePath {
+        return PropertyValuePath(this.path)
+    }
+
+    companion object {
+        fun create(
+            path: PropertyValuePath,
+        ): ValidationContext {
+            return ValidationContext(
+                path = path.value,
+            )
+        }
+    }
+}
+
 data class ValidationResult(
     private val ok: Boolean,
     private val errors: List<String>,

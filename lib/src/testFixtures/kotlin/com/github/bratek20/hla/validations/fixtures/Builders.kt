@@ -9,6 +9,20 @@ import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.validations.api.*
 
+fun propertyValuePath(value: String = "\"propertyName\"/path/to/value"): PropertyValuePath {
+    return PropertyValuePath(value)
+}
+
+data class ValidationContextDef(
+    var path: String = "\"propertyName\"/path/to/value",
+)
+fun validationContext(init: ValidationContextDef.() -> Unit = {}): ValidationContext {
+    val def = ValidationContextDef().apply(init)
+    return ValidationContext.create(
+        path = PropertyValuePath(def.path),
+    )
+}
+
 data class ValidationResultDef(
     var ok: Boolean = false,
     var errors: List<String> = emptyList(),
