@@ -33,48 +33,50 @@ data class PropertyValuePathLogic(
     override fun toString(): String {
         return "\"$keyName\"/$structPath"
     }
+
+    fun toApi(): PropertyValuePath {
+        return PropertyValuePath(toString())
+    }
 }
 
+private data class ValueWithPath(
+    val value: Any,
+    val path: PropertyValuePathLogic
+)
 private class PropertiesTraverser(
     private val properties: List<Property>,
     private val typesWorldApi: TypesWorldApi,
     private val logger: Logger
 ) {
-    fun getPrimitiveValuesAt(path: PropertyValuePathLogic): List<String> {
-        return getValuesAt(path).map { it.asPrimitive().value }
+    companion object {
+        private val serializer = SerializationFactory.createSerializer()
     }
 
-    fun getStructValuesAtAsObject(path: PropertyValuePathLogic, type: Class<*>): List<*> {
-        val rawStructs = getValuesAt(path).map { it.asObject() }
-        val serializer = SerializationFactory.createSerializer()
-        return rawStructs.map {
-            serializer.fromStruct(it, type)
+    fun getPrimitiveValuesWithPathAt(path: PropertyValuePathLogic): List<ValueWithPath> {
+        return getValuesAt(path).map { ValueWithPath(it.value.asPrimitive().value, PropertyValuePathLogic(path.keyName, it.path)) }
+    }
+
+    fun getStructValuesWithPathAtAsObject(path: PropertyValuePathLogic, type: Class<*>): List<ValueWithPath> {
+        return getValuesAt(path).map {
+            val rawStruct = it.value.asObject()
+            val obj = serializer.fromStruct(rawStruct, type)
+            ValueWithPath(obj, PropertyValuePathLogic(path.keyName, it.path))
         }
     }
 
-    fun getPrimitiveValuesAtAsSimpleVO(path: PropertyValuePathLogic, type: Class<*>): List<*> {
-        val rawStructs = getValuesAt(path)
-            .map { it.asPrimitive() }
-            .map {
-                struct {
-                    "value" to it.value
-                }
-            }
-
-        val serializer = SerializationFactory.createSerializer()
-        return rawStructs.map {
-            serializer.fromStruct(it, type)
+    fun getPrimitiveValuesWithPathAtAsSimpleVO(path: PropertyValuePathLogic, type: Class<*>): List<ValueWithPath> {
+        return getValuesAt(path).map {
+            val rawValue = it.value.asPrimitive().value
+            val simpleVO = serializer.fromStruct(struct {
+                "value" to rawValue
+            }, type)
+            ValueWithPath(simpleVO, PropertyValuePathLogic(path.keyName, it.path))
         }
     }
 
-    private fun getValuesAt(path: PropertyValuePathLogic): List<AnyStruct> {
+    private fun getValuesAt(path: PropertyValuePathLogic): List<AnyStructWithPath> {
         val propertyValue = properties.firstOrNull { it.keyName == path.keyName }?.value ?: return emptyList()
         return StructsFactory.createAnyStructHelper().getValues(propertyValue, path.structPath)
-    }
-
-    fun getPathWithIndexForValue(value: String, path: PropertyValuePathLogic): String {
-        val values = getPrimitiveValuesAt(path)
-        return path.toString().replace("[*]", "[${values.indexOf(value)}]")
     }
 
     fun findReferences(searchFor: WorldType, propertyKey: KeyDefinition): List<PropertyValuePathLogic> {
@@ -135,12 +137,13 @@ private class IdSourceValidator(
         val errors = mutableListOf<String>()
         val refs = traverser.findReferences(info.getType(), propertyKey)
         refs.forEach {
-            val values = traverser.getPrimitiveValuesAt(it)
+            val valuesWithPath = traverser.getPrimitiveValuesWithPathAt(it)
+            val values = valuesWithPath.map { it.value }
             logger.info("Values for '$it': $values")
-            values.forEach { value ->
+            valuesWithPath.forEach {
+                val value = it.value
                 if (value !in allowedValues) {
-                    val pathWithIndex = traverser.getPathWithIndexForValue(value, it)
-                    errors.add("Value '$value' at '$pathWithIndex' not found in source values from '${idSourcePath}'")
+                    errors.add("Value '$value' at '${it.path}' not found in source values from '${idSourcePath}'")
                 }
             }
         }
@@ -149,7 +152,7 @@ private class IdSourceValidator(
     }
 
     private fun getAllowedValues(): List<String> {
-        val values = traverser.getPrimitiveValuesAt(idSourcePath)
+        val values = traverser.getPrimitiveValuesWithPathAt(idSourcePath).map { it.value as String }
         logger.info("Allowed values for '${info.getType().getName()}' from source '$idSourcePath': $values")
         return values
     }
@@ -237,17 +240,17 @@ class HlaValidatorLogic(
         validator: TypeValidator<*>
     ): ValidationResult {
         val objectValues = try {
-            traverser.getStructValuesAtAsObject(ref, typeToValidate)
+            traverser.getStructValuesWithPathAtAsObject(ref, typeToValidate)
         } catch (e: StructConversionException) {
-            traverser.getPrimitiveValuesAtAsSimpleVO(ref, typeToValidate)
+            traverser.getPrimitiveValuesWithPathAtAsSimpleVO(ref, typeToValidate)
         }
 
         val castedValues = objectValues
             .map {
-                typeToValidate.cast(it)
+                ValueWithPath(typeToValidate.cast(it.value), it.path)
             }
 
-        return validationResult(castedValues, validator, ref)
+        return validationResult(castedValues, validator)
     }
 
     private fun validateCustomTypeForRef(
@@ -256,20 +259,19 @@ class HlaValidatorLogic(
     ): ValidationResult {
         return validationResult(
             getValuesToValidate(validator, ref),
-            validator,
-            ref
+            validator
         )
     }
 
-    private fun getValuesToValidate(validator: TypeValidator<*>, ref: PropertyValuePathLogic): List<Any> {
+    private fun getValuesToValidate(validator: TypeValidator<*>, ref: PropertyValuePathLogic): List<ValueWithPath> {
         if(validator is SimpleCustomTypeValidator<*, *>) {
-            val primitiveValues = traverser.getPrimitiveValuesAt(ref)
+            val primitiveValues = traverser.getPrimitiveValuesWithPathAt(ref)
             val createFunction = validator.createFunction() as (Any) -> Any
-            return primitiveValues.map { createFunction(it) }
+            return primitiveValues.map { ValueWithPath(createFunction(it.value), it.path) }
         }else {
             val serializedType = getTypeToValidate(validator, 1)
-            val objectValues = traverser.getStructValuesAtAsObject(ref, serializedType)
-            return objectValues.map { callMethodByName(it!!, "toCustomType") }
+            val objectValues = traverser.getStructValuesWithPathAtAsObject(ref, serializedType)
+            return objectValues.map { ValueWithPath(callMethodByName(it.value, "toCustomType"), it.path) }
         }
     }
 
@@ -284,13 +286,13 @@ class HlaValidatorLogic(
     }
 
     private fun validationResult(
-        objectValues: List<Any>,
+        objectValues: List<ValueWithPath>,
         validator: TypeValidator<*>,
-        ref: PropertyValuePathLogic
     ): ValidationResult {
-      return objectValues.mapIndexed { index, value ->
-          val refWithIndex = ref.toString().replace("[*]", "[$index]")
-          val result = (validator as TypeValidator<Any>).validate(value, ValidationContext.create(PropertyValuePath(refWithIndex)))
+      return objectValues.map {
+          val value = it.value
+          val refWithIndex = it.path
+          val result = (validator as TypeValidator<Any>).validate(value, ValidationContext.create(refWithIndex.toApi()))
           ValidationResult.createFor(result.getErrors().map {
               "Type validator failed at '$refWithIndex', message: $it"
           })
