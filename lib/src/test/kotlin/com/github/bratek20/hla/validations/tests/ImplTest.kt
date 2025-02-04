@@ -81,7 +81,7 @@ data class NestedValue(
 }
 
 class SomeReferencingPropertyFailingValidator: TypeValidator<SomeReferencingProperty> {
-    override fun validate(property: SomeReferencingProperty): ValidationResult {
+    override fun validate(property: SomeReferencingProperty, c: ValidationContext): ValidationResult {
         return ValidationResult.createFor(
             "Error for ${property.getReferenceId()}",
             "Other error for ${property.getReferenceId()}"
@@ -90,27 +90,27 @@ class SomeReferencingPropertyFailingValidator: TypeValidator<SomeReferencingProp
 }
 
 class SomeReferencingPropertyOkValidator: TypeValidator<SomeReferencingProperty> {
-    override fun validate(property: SomeReferencingProperty): ValidationResult {
+    override fun validate(property: SomeReferencingProperty, c: ValidationContext): ValidationResult {
         return ValidationResult.ok()
     }
 }
 
 class SomeIdFailValidator: TypeValidator<SomeId> {
-    override fun validate(property: SomeId): ValidationResult {
+    override fun validate(property: SomeId, c: ValidationContext): ValidationResult {
         return ValidationResult.createFor(
-            "Error for ${property.value}"
+            "Error for ${property.value} at ${c.getPath()}"
         )
     }
 }
 
 class SomeIdOkValidator: TypeValidator<SomeId> {
-    override fun validate(property: SomeId): ValidationResult {
+    override fun validate(property: SomeId, c: ValidationContext): ValidationResult {
         return ValidationResult.ok()
     }
 }
 
 class NestedValueValidator: TypeValidator<NestedValue> {
-    override fun validate(property: NestedValue): ValidationResult {
+    override fun validate(property: NestedValue, c: ValidationContext): ValidationResult {
         return ValidationResult.ok()
     }
 }
@@ -118,14 +118,14 @@ class NestedValueValidator: TypeValidator<NestedValue> {
 class DateOkValidator: SimpleCustomTypeValidator<Date, String> {
     override fun createFunction(): (value: String) -> Date = ::dateCreate
 
-    override fun validate(property: Date): ValidationResult {
+    override fun validate(property: Date, c: ValidationContext): ValidationResult {
         return ValidationResult.ok()
     }
 }
 
 class DateRangeOkValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
 
-    override fun validate(property: DateRange): ValidationResult {
+    override fun validate(property: DateRange, c: ValidationContext): ValidationResult {
         return ValidationResult.ok()
     }
 }
@@ -133,7 +133,7 @@ class DateRangeOkValidator: ComplexCustomTypeValidator<DateRange, SerializedDate
 class DateFailValidator: SimpleCustomTypeValidator<Date, String> {
     override fun createFunction(): (value: String) -> Date = ::dateCreate
 
-    override fun validate(property: Date): ValidationResult {
+    override fun validate(property: Date, c: ValidationContext): ValidationResult {
         return ValidationResult.createFor(
             "Error for ${property.value2}"
         )
@@ -142,7 +142,7 @@ class DateFailValidator: SimpleCustomTypeValidator<Date, String> {
 
 class DateRangeFailValidator: ComplexCustomTypeValidator<DateRange, SerializedDateRange> {
 
-    override fun validate(property: DateRange): ValidationResult {
+    override fun validate(property: DateRange, c: ValidationContext): ValidationResult {
         return ValidationResult.createFor(
             "Error for ${property.from.value2}, ${property.to.value2}"
         )
@@ -337,9 +337,9 @@ class ValidationsImplTest {
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[0]', message: Error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[0]', message: Other error for 1",
 
-                "Type validator failed at '\"SomeSourcePropertyList\"/[0]/id', message: Error for 1",
-                "Type validator failed at '\"SomeReferencingPropertyObject\"/referenceId', message: Error for 1",
-                "Type validator failed at '\"SomeReferencingPropertyList\"/[0]/referenceId', message: Error for 1",
+                """Type validator failed at '"SomeSourcePropertyList"/[0]/id', message: Error for 1 at "SomeSourcePropertyList"/[*]/id""",
+                """Type validator failed at '"SomeReferencingPropertyObject"/referenceId', message: Error for 1 at "SomeReferencingPropertyObject"/referenceId""",
+                """Type validator failed at '"SomeReferencingPropertyList"/[0]/referenceId', message: Error for 1 at "SomeReferencingPropertyList"/[*]/referenceId""",
             )
         }
     }
