@@ -9,6 +9,25 @@ import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.validations.api.*
 
+fun diffPropertyValuePath(given: PropertyValuePath, expected: String, path: String = ""): String {
+    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}
+
+data class ExpectedValidationContext(
+    var path: String? = null,
+)
+fun diffValidationContext(given: ValidationContext, expectedInit: ExpectedValidationContext.() -> Unit, path: String = ""): String {
+    val expected = ExpectedValidationContext().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.path?.let {
+        if (diffPropertyValuePath(given.getPath(), it) != "") { result.add(diffPropertyValuePath(given.getPath(), it, "${path}path.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedValidationResult(
     var ok: Boolean? = null,
     var errors: List<String>? = null,

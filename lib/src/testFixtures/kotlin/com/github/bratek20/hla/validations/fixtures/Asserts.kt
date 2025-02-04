@@ -11,6 +11,16 @@ import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.validations.api.*
 
+fun assertPropertyValuePath(given: PropertyValuePath, expected: String) {
+    val diff = diffPropertyValuePath(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertValidationContext(given: ValidationContext, expectedInit: ExpectedValidationContext.() -> Unit) {
+    val diff = diffValidationContext(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertValidationResult(given: ValidationResult, expectedInit: ExpectedValidationResult.() -> Unit) {
     val diff = diffValidationResult(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

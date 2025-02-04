@@ -1,3 +1,9 @@
+ValueObjects
+    PropertyValuePath: string (example: "\"propertyName\"/path/to/value")
+
+    ValidationContext
+        path: PropertyValuePath
+
 Interfaces
     HlaValidator
         ValidationResult
