@@ -33,10 +33,6 @@ data class PropertyValuePathLogic(
     override fun toString(): String {
         return "\"$keyName\"/$structPath"
     }
-
-    fun toApi(): PropertyValuePath {
-        return PropertyValuePath(toString())
-    }
 }
 
 private class PropertiesTraverser(
@@ -292,12 +288,10 @@ class HlaValidatorLogic(
         validator: TypeValidator<*>,
         ref: PropertyValuePathLogic
     ): ValidationResult {
-        val validationResults = objectValues.map { value ->
-            (validator as TypeValidator<Any>).validate(value, ValidationContext.create(ref.toApi()))
-        }
-      return validationResults.mapIndexed { index, it ->
+      return objectValues.mapIndexed { index, value ->
           val refWithIndex = ref.toString().replace("[*]", "[$index]")
-          ValidationResult.createFor(it.getErrors().map {
+          val result = (validator as TypeValidator<Any>).validate(value, ValidationContext.create(PropertyValuePath(refWithIndex)))
+          ValidationResult.createFor(result.getErrors().map {
               "Type validator failed at '$refWithIndex', message: $it"
           })
       }.fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }

@@ -337,9 +337,9 @@ class ValidationsImplTest {
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[0]', message: Error for 1",
                 "Type validator failed at '\"SomeReferencingPropertyList\"/[0]', message: Other error for 1",
 
-                """Type validator failed at '"SomeSourcePropertyList"/[0]/id', message: Error for 1 at "SomeSourcePropertyList"/[*]/id""",
+                """Type validator failed at '"SomeSourcePropertyList"/[0]/id', message: Error for 1 at "SomeSourcePropertyList"/[0]/id""",
                 """Type validator failed at '"SomeReferencingPropertyObject"/referenceId', message: Error for 1 at "SomeReferencingPropertyObject"/referenceId""",
-                """Type validator failed at '"SomeReferencingPropertyList"/[0]/referenceId', message: Error for 1 at "SomeReferencingPropertyList"/[*]/referenceId""",
+                """Type validator failed at '"SomeReferencingPropertyList"/[0]/referenceId', message: Error for 1 at "SomeReferencingPropertyList"/[0]/referenceId""",
             )
         }
     }
