@@ -4,14 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
-using B20.View.UiElements;
 using UnityEngine;
-using SomeModule.Api;
 using SomeModule.ViewModel;
-using OtherModule.Api;
-using OtherModule.ViewModel;
+using B20.View.UiElements.View;
+using SomeModule.Api;
 using OtherModule.View;
-using TypesModule.Api;
+using B20.ViewModel.UiElements.Api;
+using OtherModule.Api;
 
 namespace SomeModule.View {
     public class OptionalSomeClass6View: OptionalUiElementView<SomeClass6View, SomeClass6Vm, SomeClass6> {

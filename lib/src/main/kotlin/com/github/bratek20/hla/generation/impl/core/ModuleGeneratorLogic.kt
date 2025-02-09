@@ -34,6 +34,7 @@ class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
     private val apiGenerator: ApiGenerator,
     private val viewModelGenerator: ViewModelGenerator,
+    private val viewGenerator: ViewGenerator,
     private val prefabsGenerator: PrefabsGenerator,
     private val typesWorldApi: TypesWorldApi,
     private val hlaTypesWorldApi: HlaTypesWorldApi,
@@ -44,6 +45,7 @@ class ModuleGeneratorLogic(
         private val context: ModuleGenerationContext,
         private val apiGenerator: ApiGenerator,
         private val viewModelGenerator: ViewModelGenerator,
+        private val viewGenerator: ViewGenerator,
         private val prefabsGenerator: PrefabsGenerator,
         private val typesWorldApi: TypesWorldApi
     ) {
@@ -53,7 +55,7 @@ class ModuleGeneratorLogic(
                 ImplGenerator(),
                 WebGenerator(),
                 viewModelGenerator,
-                ViewGenerator(),
+                viewGenerator,
                 prefabsGenerator,
                 ContextGenerator(),
                 FixturesGenerator(),
@@ -103,6 +105,7 @@ class ModuleGeneratorLogic(
                 context,
                 apiGenerator,
                 viewModelGenerator,
+                viewGenerator,
                 prefabsGenerator,
                 typesWorldApi
             ).generate()

@@ -136,8 +136,11 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
 
     override fun extraCSharpUsings(): List<String> {
         return listOf(
-            "B20.View.UiElements",
             "UnityEngine"
         )
+    }
+
+    override fun useImportsCalculator(): Boolean {
+        return true
     }
 }

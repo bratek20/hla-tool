@@ -1,13 +1,16 @@
 package com.github.bratek20.hla.mvvmtypesmappers.impl
 
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator.Companion.b20ViewModelTypes
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelToViewMapper
 import com.github.bratek20.hla.mvvmtypesmappers.api.ViewModelTypesCalculator
+import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
@@ -21,7 +24,12 @@ class ViewModelToViewMapperLogic(
         if (b20ViewModelTypes.contains(viewModelType)) {
             return WorldType.create(
                 name = WorldTypeName(viewModelType + "View"),
-                path = WorldTypePath("B20/View/UiElements")
+                path = HlaTypePath.create(
+                    listOf(GroupName("B20"), GroupName("View")),
+                    ModuleName("UiElements"),
+                    SubmoduleName.View,
+                    PatternName.Undefined
+                ).asWorld()
             )
         }
 

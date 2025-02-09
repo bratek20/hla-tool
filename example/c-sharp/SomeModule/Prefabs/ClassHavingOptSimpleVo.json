@@ -6,7 +6,7 @@
   "children": [
     {
       "name": "optSimpleVo",
-      "viewType": "B20.View.UiElements.OptionalLabelView"
+      "viewType": "B20.View.UiElements.View.OptionalLabelView"
     }
   ],
   "elementViewType": null
