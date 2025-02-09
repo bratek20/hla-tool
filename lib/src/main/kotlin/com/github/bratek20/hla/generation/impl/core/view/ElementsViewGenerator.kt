@@ -140,4 +140,8 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
             "UnityEngine"
         )
     }
+
+    override fun useImportsCalculator(): Boolean {
+        return true
+    }
 }

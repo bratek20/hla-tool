@@ -5,7 +5,9 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 
-class ViewGenerator: SubmoduleGenerator() {
+class ViewGenerator(
+    private val elementsViewGenerator: ElementsViewGenerator
+): SubmoduleGenerator() {
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.View
     }
@@ -16,7 +18,7 @@ class ViewGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            ElementsViewGenerator()
+            elementsViewGenerator
         )
     }
 }
