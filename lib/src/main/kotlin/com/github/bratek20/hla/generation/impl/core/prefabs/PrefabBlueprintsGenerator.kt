@@ -18,9 +18,6 @@ import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
 
 private fun asFullViewType(type: WorldType): String {
-    if (type.getPath().value.startsWith("B20")) {
-        return type.getPath().value.replace("/", ".") + "." + type.getName()
-    }
     return type.getPath().asHla().dropPatternPart().replace("/", ".") + "." + type.getName()
 }
 

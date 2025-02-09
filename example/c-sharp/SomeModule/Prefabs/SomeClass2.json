@@ -6,7 +6,7 @@
   "children": [
     {
       "name": "enabled",
-      "viewType": "B20.View.UiElements.BoolSwitchView"
+      "viewType": "B20.View.UiElements.View.BoolSwitchView"
     }
   ],
   "elementViewType": null

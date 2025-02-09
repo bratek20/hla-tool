@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
-using B20.View.UiElements;
 using UnityEngine;
-using OtherModule.Api;
 using OtherModule.ViewModel;
+using B20.View.UiElements.View;
+using OtherModule.Api;
 
 namespace OtherModule.View {
     public class OtherClassView: ElementView<OtherClassVm> {
