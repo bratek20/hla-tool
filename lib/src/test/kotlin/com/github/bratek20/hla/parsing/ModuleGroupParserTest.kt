@@ -904,4 +904,43 @@ class ModuleGroupParserTest {
             }
         }
     }
+
+    @Test
+    fun `should parse tracking`() {
+        val modules = parseSingleGroup("tracking-submodule")
+
+        assertModules(modules, listOf {
+            trackingSubmodule = {
+                attributes = listOf {
+                    name = "migrationNumber"
+                    value = "011"
+                }
+
+                dimensions = listOf {
+                    name = "SomeDimension"
+                    attributes = listOf {
+                        name = "table"
+                        value = "trade_shop_event_table"
+                    }
+                    exposedClasses = listOf {
+                        name = "SomeExposedClass"
+                        mappedFields = listOf {
+                            name = "someFieldName"
+                            mappedName = "someMappedFieldName"
+                        }
+                    }
+                    fields = listOf {
+                        name = "someExtraField"
+                        type = {
+                            name = "int"
+                        }
+                    }
+                }
+
+                events = listOf {
+                    name = "SomeEvent"
+                }
+            }
+        })
+    }
 }
