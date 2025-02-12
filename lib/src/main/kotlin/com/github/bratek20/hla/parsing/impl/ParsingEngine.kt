@@ -137,7 +137,7 @@ class ParsingEngine {
                 return EqualsAssignment(indent, it[0].trim(), it[1].trim())
             }
         }
-        else if(noIndentLine.contains(":"))  {
+        else if(containsNotInsideBrackets(noIndentLine, ":"))  {
             val name = noIndentLine.substringBefore(":").trim()
             var rest = noIndentLine.substringAfter(":").trim()
             var defaultValue: String? = null
@@ -179,6 +179,22 @@ class ParsingEngine {
             return Section(indent, result.beforeAttributes, result.attributes)
         }
     }
+
+    private fun containsNotInsideBrackets(str: String, toCheck: String): Boolean {
+        val filtered = StringBuilder()
+        var insideBrackets = false
+
+        for (char in str) {
+            when {
+                char == '(' -> insideBrackets = true
+                char == ')' -> insideBrackets = false
+                !insideBrackets -> filtered.append(char)
+            }
+        }
+
+        return filtered.contains(toCheck)
+    }
+
 
     class ExtractionResult(
         val beforeAttributes: String,

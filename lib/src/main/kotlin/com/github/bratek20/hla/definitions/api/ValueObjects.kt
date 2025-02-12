@@ -453,7 +453,7 @@ data class ModuleDefinition(
     private val implSubmodule: ImplSubmoduleDefinition?,
     private val webSubmodule: WebSubmoduleDefinition?,
     private val viewModelSubmodule: ViewModelSubmoduleDefinition?,
-    private val trackingSubmodule: TrackingSubmoduleDefinition,
+    private val trackingSubmodule: TrackingSubmoduleDefinition?,
     private val kotlinConfig: KotlinConfig?,
 ) {
     fun getName(): ModuleName {
@@ -520,7 +520,7 @@ data class ModuleDefinition(
         return this.viewModelSubmodule
     }
 
-    fun getTrackingSubmodule(): TrackingSubmoduleDefinition {
+    fun getTrackingSubmodule(): TrackingSubmoduleDefinition? {
         return this.trackingSubmodule
     }
 
@@ -546,7 +546,7 @@ data class ModuleDefinition(
             implSubmodule: ImplSubmoduleDefinition?,
             webSubmodule: WebSubmoduleDefinition?,
             viewModelSubmodule: ViewModelSubmoduleDefinition?,
-            trackingSubmodule: TrackingSubmoduleDefinition,
+            trackingSubmodule: TrackingSubmoduleDefinition?,
             kotlinConfig: KotlinConfig?,
         ): ModuleDefinition {
             return ModuleDefinition(

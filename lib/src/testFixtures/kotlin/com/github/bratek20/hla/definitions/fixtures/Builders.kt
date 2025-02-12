@@ -222,7 +222,7 @@ data class ModuleDefinitionDef(
     var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit)? = null,
     var webSubmodule: (WebSubmoduleDefinitionDef.() -> Unit)? = null,
     var viewModelSubmodule: (ViewModelSubmoduleDefinitionDef.() -> Unit)? = null,
-    var trackingSubmodule: (TrackingSubmoduleDefinitionDef.() -> Unit) = {},
+    var trackingSubmodule: (TrackingSubmoduleDefinitionDef.() -> Unit)? = null,
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
@@ -244,7 +244,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         implSubmodule = def.implSubmodule?.let { it -> implSubmoduleDefinition(it) },
         webSubmodule = def.webSubmodule?.let { it -> webSubmoduleDefinition(it) },
         viewModelSubmodule = def.viewModelSubmodule?.let { it -> viewModelSubmoduleDefinition(it) },
-        trackingSubmodule = trackingSubmoduleDefinition(def.trackingSubmodule),
+        trackingSubmodule = def.trackingSubmodule?.let { it -> trackingSubmoduleDefinition(it) },
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
     )
 }

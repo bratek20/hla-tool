@@ -14,6 +14,7 @@ import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
+import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.tracking.api.TrackingSubmoduleDefinition
 import com.github.bratek20.logs.api.Logger
 
@@ -36,7 +37,8 @@ class ModuleGroupParserLogic(
         "Data",
         "Properties",
         "Web",
-        "ViewModel"
+        "ViewModel",
+        "Tracking"
     )
 
     private val directories = DirectoriesLogic()
@@ -113,11 +115,7 @@ class ModuleGroupParserLogic(
             viewModelSubmodule = parseViewModelSubmodule(elements),
             exceptions = parseExceptions("Exceptions", elements),
             events = parseStructures("Events", elements).complex,
-            trackingSubmodule = TrackingSubmoduleDefinition(
-                emptyList(),
-                emptyList(),
-                emptyList(),
-            )
+            trackingSubmodule = parseTrackingSubmodule(elements)
         )
     }
 
@@ -159,23 +157,7 @@ class ModuleGroupParserLogic(
         return findSection(elements, "ViewModel")?.let { viewModel ->
             val vmElements = findSection(viewModel.elements, "Elements")?.elements
                 ?.filterIsInstance<Section>()?.map { vm ->
-                    val model = vm.elements.filterIsInstance<Section>().map { m ->
-                        val mappedFields = m.elements.filterIsInstance<Section>().map {
-                            MappedField(
-                                name = it.name
-                            )
-                        }
-                        val mappedFieldsWithOverrides = m.elements.filterIsInstance<ParsedMapping>().map {
-                            MappedField(
-                                name = it.key,
-                                mappedType = it.value
-                            )
-                        }
-                        DependencyConceptDefinition(
-                            name = m.name,
-                            mappedFields = mappedFields + mappedFieldsWithOverrides
-                        )
-                    }
+                    val model = parseDependencyConceptDefinition(vm.elements)
                     UiElementDefinition(
                         name = vm.name,
                         attributes = vm.attributes,
@@ -188,6 +170,56 @@ class ModuleGroupParserLogic(
                 elements = vmElements,
                 windows = parseUiContainers(viewModel.elements, "Windows"),
                 popups = parseUiContainers(viewModel.elements, "Popups")
+            )
+        }
+    }
+
+    private fun parseTrackingSubmodule(elements: List<ParsedElement>): TrackingSubmoduleDefinition? {
+        return findSection(elements, "Tracking")?.let { section ->
+            return TrackingSubmoduleDefinition(
+                attributes = section.attributes,
+                dimensions = parseTableDefinition(section.elements, "Dimensions"),
+                events = parseTableDefinition(section.elements, "Events")
+            )
+        }
+    }
+
+    private fun parseTableDefinition(elements: List<ParsedElement>, tableSectionName: String): List<TableDefinition> {
+        return findSection(elements, tableSectionName)?.elements
+            ?.filterIsInstance<Section>()?.map { vm ->
+                TableDefinition(
+                    name = vm.name,
+                    attributes = vm.attributes,
+                    exposedClasses = parseDependencyConceptDefinition(vm.elements),
+                    fields = parseFields(vm.elements)
+                )
+            } ?: emptyList()
+    }
+
+    private fun parseDependencyConceptDefinition(elements: List<ParsedElement>): List<DependencyConceptDefinition> {
+        return elements.filterIsInstance<Section>().map { m ->
+            val mappedFields = m.elements.filterIsInstance<Section>().map {
+                MappedField(
+                    name = it.name
+                )
+            }
+            val mappedFieldsWithOverrides = m.elements.filterIsInstance<ParsedMapping>().map {
+                if (it.value.first().isUpperCase()) {
+                    MappedField(
+                        name = it.key,
+                        mappedType = it.value
+                    )
+                }
+                else {
+                    MappedField(
+                        name = it.key,
+                        mappedName = it.value
+                    )
+                }
+            }
+            DependencyConceptDefinition(
+                name = m.name,
+                mappedFields = mappedFields + mappedFieldsWithOverrides
             )
         }
     }
