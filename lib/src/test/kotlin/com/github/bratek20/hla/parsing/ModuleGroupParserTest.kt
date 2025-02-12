@@ -920,13 +920,13 @@ class ModuleGroupParserTest {
                     name = "SomeDimension"
                     attributes = listOf {
                         name = "table"
-                        value = "trade_shop_event_table"
+                        value = "\"trade_shop_event_table\""
                     }
                     exposedClasses = listOf {
                         name = "SomeExposedClass"
                         mappedFields = listOf {
                             name = "someFieldName"
-                            mappedName = "someMappedFieldName"
+                            //mappedName = "someMappedFieldName"
                         }
                     }
                     fields = listOf {

@@ -430,6 +430,7 @@ data class ExpectedModuleDefinition(
     var webSubmodule: (ExpectedWebSubmoduleDefinition.() -> Unit)? = null,
     var viewModelSubmoduleEmpty: Boolean? = null,
     var viewModelSubmodule: (ExpectedViewModelSubmoduleDefinition.() -> Unit)? = null,
+    var trackingSubmoduleEmpty: Boolean? = null,
     var trackingSubmodule: (ExpectedTrackingSubmoduleDefinition.() -> Unit)? = null,
     var kotlinConfigEmpty: Boolean? = null,
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
@@ -526,8 +527,12 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
         if (diffViewModelSubmoduleDefinition(given.getViewModelSubmodule()!!, it) != "") { result.add(diffViewModelSubmoduleDefinition(given.getViewModelSubmodule()!!, it, "${path}viewModelSubmodule.")) }
     }
 
+    expected.trackingSubmoduleEmpty?.let {
+        if ((given.getTrackingSubmodule() == null) != it) { result.add("${path}trackingSubmodule empty ${(given.getTrackingSubmodule() == null)} != ${it}") }
+    }
+
     expected.trackingSubmodule?.let {
-        if (diffTrackingSubmoduleDefinition(given.getTrackingSubmodule(), it) != "") { result.add(diffTrackingSubmoduleDefinition(given.getTrackingSubmodule(), it, "${path}trackingSubmodule.")) }
+        if (diffTrackingSubmoduleDefinition(given.getTrackingSubmodule()!!, it) != "") { result.add(diffTrackingSubmoduleDefinition(given.getTrackingSubmodule()!!, it, "${path}trackingSubmodule.")) }
     }
 
     expected.kotlinConfigEmpty?.let {
