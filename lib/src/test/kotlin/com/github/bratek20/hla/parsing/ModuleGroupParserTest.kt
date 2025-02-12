@@ -926,7 +926,7 @@ class ModuleGroupParserTest {
                         name = "SomeExposedClass"
                         mappedFields = listOf {
                             name = "someFieldName"
-                            //mappedName = "someMappedFieldName"
+                            mappedName = "someMappedFieldName"
                         }
                     }
                     fields = listOf {

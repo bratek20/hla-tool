@@ -204,10 +204,18 @@ class ModuleGroupParserLogic(
                 )
             }
             val mappedFieldsWithOverrides = m.elements.filterIsInstance<ParsedMapping>().map {
-                MappedField(
-                    name = it.key,
-                    mappedType = it.value
-                )
+                if (it.value.first().isUpperCase()) {
+                    MappedField(
+                        name = it.key,
+                        mappedType = it.value
+                    )
+                }
+                else {
+                    MappedField(
+                        name = it.key,
+                        mappedName = it.value
+                    )
+                }
             }
             DependencyConceptDefinition(
                 name = m.name,
