@@ -4,6 +4,8 @@ package com.github.bratek20.hla.definitions.fixtures
 
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.fixtures.*
+import com.github.bratek20.hla.tracking.api.*
+import com.github.bratek20.hla.tracking.fixtures.*
 
 import com.github.bratek20.hla.definitions.api.*
 
@@ -109,34 +111,36 @@ fun webSubmoduleDefinition(init: WebSubmoduleDefinitionDef.() -> Unit = {}): Web
     )
 }
 
-data class ViewModelMappedFieldDef(
+data class MappedFieldDef(
     var name: String = "someValue",
-    var overriddenViewModelType: String? = null,
+    var mappedName: String? = null,
+    var mappedType: String? = null,
 )
-fun viewModelMappedField(init: ViewModelMappedFieldDef.() -> Unit = {}): ViewModelMappedField {
-    val def = ViewModelMappedFieldDef().apply(init)
-    return ViewModelMappedField.create(
+fun mappedField(init: MappedFieldDef.() -> Unit = {}): MappedField {
+    val def = MappedFieldDef().apply(init)
+    return MappedField.create(
         name = def.name,
-        overriddenViewModelType = def.overriddenViewModelType,
+        mappedName = def.mappedName,
+        mappedType = def.mappedType,
     )
 }
 
-data class ElementModelDefinitionDef(
+data class DependentConceptDefinitionDef(
     var name: String = "someValue",
-    var mappedFields: List<(ViewModelMappedFieldDef.() -> Unit)> = emptyList(),
+    var mappedFields: List<(MappedFieldDef.() -> Unit)> = emptyList(),
 )
-fun elementModelDefinition(init: ElementModelDefinitionDef.() -> Unit = {}): ElementModelDefinition {
-    val def = ElementModelDefinitionDef().apply(init)
-    return ElementModelDefinition.create(
+fun dependentConceptDefinition(init: DependentConceptDefinitionDef.() -> Unit = {}): DependentConceptDefinition {
+    val def = DependentConceptDefinitionDef().apply(init)
+    return DependentConceptDefinition.create(
         name = def.name,
-        mappedFields = def.mappedFields.map { it -> viewModelMappedField(it) },
+        mappedFields = def.mappedFields.map { it -> mappedField(it) },
     )
 }
 
 data class UiElementDefinitionDef(
     var name: String = "someValue",
     var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
-    var model: (ElementModelDefinitionDef.() -> Unit)? = null,
+    var model: (DependentConceptDefinitionDef.() -> Unit)? = null,
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun uiElementDefinition(init: UiElementDefinitionDef.() -> Unit = {}): UiElementDefinition {
@@ -144,7 +148,7 @@ fun uiElementDefinition(init: UiElementDefinitionDef.() -> Unit = {}): UiElement
     return UiElementDefinition.create(
         name = def.name,
         attributes = def.attributes.map { it -> attribute(it) },
-        model = def.model?.let { it -> elementModelDefinition(it) },
+        model = def.model?.let { it -> dependentConceptDefinition(it) },
         fields = def.fields.map { it -> fieldDefinition(it) },
     )
 }
@@ -218,6 +222,7 @@ data class ModuleDefinitionDef(
     var implSubmodule: (ImplSubmoduleDefinitionDef.() -> Unit)? = null,
     var webSubmodule: (WebSubmoduleDefinitionDef.() -> Unit)? = null,
     var viewModelSubmodule: (ViewModelSubmoduleDefinitionDef.() -> Unit)? = null,
+    var trackingSubmodule: (TrackingSubmoduleDefinitionDef.() -> Unit) = {},
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
@@ -239,6 +244,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         implSubmodule = def.implSubmodule?.let { it -> implSubmoduleDefinition(it) },
         webSubmodule = def.webSubmodule?.let { it -> webSubmoduleDefinition(it) },
         viewModelSubmodule = def.viewModelSubmodule?.let { it -> viewModelSubmoduleDefinition(it) },
+        trackingSubmodule = trackingSubmoduleDefinition(def.trackingSubmodule),
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
     )
 }

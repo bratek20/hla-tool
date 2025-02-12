@@ -6,6 +6,8 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.fixtures.*
+import com.github.bratek20.hla.tracking.api.*
+import com.github.bratek20.hla.tracking.fixtures.*
 
 import com.github.bratek20.hla.definitions.api.*
 
@@ -49,13 +51,13 @@ fun assertWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Ex
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertViewModelMappedField(given: ViewModelMappedField, expectedInit: ExpectedViewModelMappedField.() -> Unit) {
-    val diff = diffViewModelMappedField(given, expectedInit)
+fun assertMappedField(given: MappedField, expectedInit: ExpectedMappedField.() -> Unit) {
+    val diff = diffMappedField(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertElementModelDefinition(given: ElementModelDefinition, expectedInit: ExpectedElementModelDefinition.() -> Unit) {
-    val diff = diffElementModelDefinition(given, expectedInit)
+fun assertDependentConceptDefinition(given: DependentConceptDefinition, expectedInit: ExpectedDependentConceptDefinition.() -> Unit) {
+    val diff = diffDependentConceptDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

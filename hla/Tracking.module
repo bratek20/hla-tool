@@ -1,0 +1,11 @@
+ValueObjects
+    TableDefinition
+        name: string
+        attributes: Attribute[]
+        exposedClasses: DependentConceptDefinition[]
+        fields: FieldDefinition[]
+
+    TrackingSubmoduleDefinition
+        attributes: Attribute[]
+        dimensions: TableDefinition
+        events: TableDefinition

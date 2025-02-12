@@ -3,6 +3,7 @@
 package com.github.bratek20.hla.definitions.api
 
 import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.tracking.api.*
 
 enum class BaseType {
     STRING,
