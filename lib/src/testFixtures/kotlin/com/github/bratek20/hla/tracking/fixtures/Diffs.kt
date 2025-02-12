@@ -10,7 +10,7 @@ import com.github.bratek20.hla.tracking.api.*
 data class ExpectedTableDefinition(
     var name: String? = null,
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
-    var exposedClasses: List<(ExpectedDependentConceptDefinition.() -> Unit)>? = null,
+    var exposedClasses: List<(ExpectedDependencyConceptDefinition.() -> Unit)>? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
 )
 fun diffTableDefinition(given: TableDefinition, expectedInit: ExpectedTableDefinition.() -> Unit, path: String = ""): String {
@@ -28,7 +28,7 @@ fun diffTableDefinition(given: TableDefinition, expectedInit: ExpectedTableDefin
 
     expected.exposedClasses?.let {
         if (given.getExposedClasses().size != it.size) { result.add("${path}exposedClasses size ${given.getExposedClasses().size} != ${it.size}"); return@let }
-        given.getExposedClasses().forEachIndexed { idx, entry -> if (diffDependentConceptDefinition(entry, it[idx]) != "") { result.add(diffDependentConceptDefinition(entry, it[idx], "${path}exposedClasses[${idx}].")) } }
+        given.getExposedClasses().forEachIndexed { idx, entry -> if (diffDependencyConceptDefinition(entry, it[idx]) != "") { result.add(diffDependencyConceptDefinition(entry, it[idx], "${path}exposedClasses[${idx}].")) } }
     }
 
     expected.fields?.let {
@@ -41,8 +41,8 @@ fun diffTableDefinition(given: TableDefinition, expectedInit: ExpectedTableDefin
 
 data class ExpectedTrackingSubmoduleDefinition(
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
-    var dimensions: (ExpectedTableDefinition.() -> Unit)? = null,
-    var events: (ExpectedTableDefinition.() -> Unit)? = null,
+    var dimensions: List<(ExpectedTableDefinition.() -> Unit)>? = null,
+    var events: List<(ExpectedTableDefinition.() -> Unit)>? = null,
 )
 fun diffTrackingSubmoduleDefinition(given: TrackingSubmoduleDefinition, expectedInit: ExpectedTrackingSubmoduleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedTrackingSubmoduleDefinition().apply(expectedInit)
@@ -54,11 +54,13 @@ fun diffTrackingSubmoduleDefinition(given: TrackingSubmoduleDefinition, expected
     }
 
     expected.dimensions?.let {
-        if (diffTableDefinition(given.getDimensions(), it) != "") { result.add(diffTableDefinition(given.getDimensions(), it, "${path}dimensions.")) }
+        if (given.getDimensions().size != it.size) { result.add("${path}dimensions size ${given.getDimensions().size} != ${it.size}"); return@let }
+        given.getDimensions().forEachIndexed { idx, entry -> if (diffTableDefinition(entry, it[idx]) != "") { result.add(diffTableDefinition(entry, it[idx], "${path}dimensions[${idx}].")) } }
     }
 
     expected.events?.let {
-        if (diffTableDefinition(given.getEvents(), it) != "") { result.add(diffTableDefinition(given.getEvents(), it, "${path}events.")) }
+        if (given.getEvents().size != it.size) { result.add("${path}events size ${given.getEvents().size} != ${it.size}"); return@let }
+        given.getEvents().forEachIndexed { idx, entry -> if (diffTableDefinition(entry, it[idx]) != "") { result.add(diffTableDefinition(entry, it[idx], "${path}events[${idx}].")) } }
     }
 
     return result.joinToString("\n")

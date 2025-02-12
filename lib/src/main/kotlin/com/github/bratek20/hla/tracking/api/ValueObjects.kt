@@ -7,7 +7,7 @@ import com.github.bratek20.hla.definitions.api.*
 data class TableDefinition(
     private val name: String,
     private val attributes: List<Attribute>,
-    private val exposedClasses: List<DependentConceptDefinition>,
+    private val exposedClasses: List<DependencyConceptDefinition>,
     private val fields: List<FieldDefinition>,
 ) {
     fun getName(): String {
@@ -18,7 +18,7 @@ data class TableDefinition(
         return this.attributes
     }
 
-    fun getExposedClasses(): List<DependentConceptDefinition> {
+    fun getExposedClasses(): List<DependencyConceptDefinition> {
         return this.exposedClasses
     }
 
@@ -30,7 +30,7 @@ data class TableDefinition(
         fun create(
             name: String,
             attributes: List<Attribute>,
-            exposedClasses: List<DependentConceptDefinition>,
+            exposedClasses: List<DependencyConceptDefinition>,
             fields: List<FieldDefinition>,
         ): TableDefinition {
             return TableDefinition(
@@ -45,26 +45,26 @@ data class TableDefinition(
 
 data class TrackingSubmoduleDefinition(
     private val attributes: List<Attribute>,
-    private val dimensions: TableDefinition,
-    private val events: TableDefinition,
+    private val dimensions: List<TableDefinition>,
+    private val events: List<TableDefinition>,
 ) {
     fun getAttributes(): List<Attribute> {
         return this.attributes
     }
 
-    fun getDimensions(): TableDefinition {
+    fun getDimensions(): List<TableDefinition> {
         return this.dimensions
     }
 
-    fun getEvents(): TableDefinition {
+    fun getEvents(): List<TableDefinition> {
         return this.events
     }
 
     companion object {
         fun create(
             attributes: List<Attribute>,
-            dimensions: TableDefinition,
-            events: TableDefinition,
+            dimensions: List<TableDefinition>,
+            events: List<TableDefinition>,
         ): TrackingSubmoduleDefinition {
             return TrackingSubmoduleDefinition(
                 attributes = attributes,

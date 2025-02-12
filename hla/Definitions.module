@@ -53,17 +53,17 @@ ValueObjects
 
     MappedField
         name: string
-        mappedName: string?
-        mappedType: string?
+        mappedName: string? = empty
+        mappedType: string? = empty
 
-    DependentConceptDefinition
+    DependencyConceptDefinition
         name: string
         mappedFields: MappedField[]
 
     UiElementDefinition
         name: string
         attributes: Attribute[]
-        model: DependentConceptDefinition?
+        model: DependencyConceptDefinition?
         fields: FieldDefinition[]
 
     UiContainerDefinition

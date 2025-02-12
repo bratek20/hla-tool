@@ -228,8 +228,8 @@ data class WebSubmoduleDefinition(
 
 data class MappedField(
     private val name: String,
-    private val mappedName: String?,
-    private val mappedType: String?,
+    private val mappedName: String? = null,
+    private val mappedType: String? = null,
 ) {
     fun getName(): String {
         return this.name
@@ -246,8 +246,8 @@ data class MappedField(
     companion object {
         fun create(
             name: String,
-            mappedName: String?,
-            mappedType: String?,
+            mappedName: String? = null,
+            mappedType: String? = null,
         ): MappedField {
             return MappedField(
                 name = name,
@@ -258,7 +258,7 @@ data class MappedField(
     }
 }
 
-data class DependentConceptDefinition(
+data class DependencyConceptDefinition(
     private val name: String,
     private val mappedFields: List<MappedField>,
 ) {
@@ -274,8 +274,8 @@ data class DependentConceptDefinition(
         fun create(
             name: String,
             mappedFields: List<MappedField>,
-        ): DependentConceptDefinition {
-            return DependentConceptDefinition(
+        ): DependencyConceptDefinition {
+            return DependencyConceptDefinition(
                 name = name,
                 mappedFields = mappedFields,
             )
@@ -286,7 +286,7 @@ data class DependentConceptDefinition(
 data class UiElementDefinition(
     private val name: String,
     private val attributes: List<Attribute>,
-    private val model: DependentConceptDefinition?,
+    private val model: DependencyConceptDefinition?,
     private val fields: List<FieldDefinition>,
 ) {
     fun getName(): String {
@@ -297,7 +297,7 @@ data class UiElementDefinition(
         return this.attributes
     }
 
-    fun getModel(): DependentConceptDefinition? {
+    fun getModel(): DependencyConceptDefinition? {
         return this.model
     }
 
@@ -309,7 +309,7 @@ data class UiElementDefinition(
         fun create(
             name: String,
             attributes: List<Attribute>,
-            model: DependentConceptDefinition?,
+            model: DependencyConceptDefinition?,
             fields: List<FieldDefinition>,
         ): UiElementDefinition {
             return UiElementDefinition(

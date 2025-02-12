@@ -799,7 +799,7 @@ class ModuleGroupParserTest {
                                 },
                                 {
                                     name = "field"
-                                    overriddenViewModelType = "OverriddenVm"
+                                    mappedType = "OverriddenVm"
                                 }
                             )
                         }

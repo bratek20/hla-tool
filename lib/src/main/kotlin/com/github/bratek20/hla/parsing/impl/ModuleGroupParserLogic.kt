@@ -14,6 +14,7 @@ import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
+import com.github.bratek20.hla.tracking.api.TrackingSubmoduleDefinition
 import com.github.bratek20.logs.api.Logger
 
 class ModuleGroupParserLogic(
@@ -111,7 +112,12 @@ class ModuleGroupParserLogic(
             webSubmodule = parseWebSubmodule(elements),
             viewModelSubmodule = parseViewModelSubmodule(elements),
             exceptions = parseExceptions("Exceptions", elements),
-            events = parseStructures("Events", elements).complex
+            events = parseStructures("Events", elements).complex,
+            trackingSubmodule = TrackingSubmoduleDefinition(
+                emptyList(),
+                emptyList(),
+                emptyList(),
+            )
         )
     }
 
@@ -155,12 +161,17 @@ class ModuleGroupParserLogic(
                 ?.filterIsInstance<Section>()?.map { vm ->
                     val model = vm.elements.filterIsInstance<Section>().map { m ->
                         val mappedFields = m.elements.filterIsInstance<Section>().map {
-                            ViewModelMappedField(it.name, null)
+                            MappedField(
+                                name = it.name
+                            )
                         }
                         val mappedFieldsWithOverrides = m.elements.filterIsInstance<ParsedMapping>().map {
-                            ViewModelMappedField(it.key, it.value)
+                            MappedField(
+                                name = it.key,
+                                mappedType = it.value
+                            )
                         }
-                        ElementModelDefinition(
+                        DependencyConceptDefinition(
                             name = m.name,
                             mappedFields = mappedFields + mappedFieldsWithOverrides
                         )

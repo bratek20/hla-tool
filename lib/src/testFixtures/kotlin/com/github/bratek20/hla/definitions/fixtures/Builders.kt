@@ -125,13 +125,13 @@ fun mappedField(init: MappedFieldDef.() -> Unit = {}): MappedField {
     )
 }
 
-data class DependentConceptDefinitionDef(
+data class DependencyConceptDefinitionDef(
     var name: String = "someValue",
     var mappedFields: List<(MappedFieldDef.() -> Unit)> = emptyList(),
 )
-fun dependentConceptDefinition(init: DependentConceptDefinitionDef.() -> Unit = {}): DependentConceptDefinition {
-    val def = DependentConceptDefinitionDef().apply(init)
-    return DependentConceptDefinition.create(
+fun dependencyConceptDefinition(init: DependencyConceptDefinitionDef.() -> Unit = {}): DependencyConceptDefinition {
+    val def = DependencyConceptDefinitionDef().apply(init)
+    return DependencyConceptDefinition.create(
         name = def.name,
         mappedFields = def.mappedFields.map { it -> mappedField(it) },
     )
@@ -140,7 +140,7 @@ fun dependentConceptDefinition(init: DependentConceptDefinitionDef.() -> Unit = 
 data class UiElementDefinitionDef(
     var name: String = "someValue",
     var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
-    var model: (DependentConceptDefinitionDef.() -> Unit)? = null,
+    var model: (DependencyConceptDefinitionDef.() -> Unit)? = null,
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun uiElementDefinition(init: UiElementDefinitionDef.() -> Unit = {}): UiElementDefinition {
@@ -148,7 +148,7 @@ fun uiElementDefinition(init: UiElementDefinitionDef.() -> Unit = {}): UiElement
     return UiElementDefinition.create(
         name = def.name,
         attributes = def.attributes.map { it -> attribute(it) },
-        model = def.model?.let { it -> dependentConceptDefinition(it) },
+        model = def.model?.let { it -> dependencyConceptDefinition(it) },
         fields = def.fields.map { it -> fieldDefinition(it) },
     )
 }

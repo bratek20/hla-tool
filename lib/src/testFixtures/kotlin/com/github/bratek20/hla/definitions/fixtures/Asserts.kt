@@ -56,8 +56,8 @@ fun assertMappedField(given: MappedField, expectedInit: ExpectedMappedField.() -
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
-fun assertDependentConceptDefinition(given: DependentConceptDefinition, expectedInit: ExpectedDependentConceptDefinition.() -> Unit) {
-    val diff = diffDependentConceptDefinition(given, expectedInit)
+fun assertDependencyConceptDefinition(given: DependencyConceptDefinition, expectedInit: ExpectedDependencyConceptDefinition.() -> Unit) {
+    val diff = diffDependencyConceptDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

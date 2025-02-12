@@ -257,12 +257,12 @@ fun diffMappedField(given: MappedField, expectedInit: ExpectedMappedField.() -> 
     return result.joinToString("\n")
 }
 
-data class ExpectedDependentConceptDefinition(
+data class ExpectedDependencyConceptDefinition(
     var name: String? = null,
     var mappedFields: List<(ExpectedMappedField.() -> Unit)>? = null,
 )
-fun diffDependentConceptDefinition(given: DependentConceptDefinition, expectedInit: ExpectedDependentConceptDefinition.() -> Unit, path: String = ""): String {
-    val expected = ExpectedDependentConceptDefinition().apply(expectedInit)
+fun diffDependencyConceptDefinition(given: DependencyConceptDefinition, expectedInit: ExpectedDependencyConceptDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedDependencyConceptDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
@@ -281,7 +281,7 @@ data class ExpectedUiElementDefinition(
     var name: String? = null,
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
     var modelEmpty: Boolean? = null,
-    var model: (ExpectedDependentConceptDefinition.() -> Unit)? = null,
+    var model: (ExpectedDependencyConceptDefinition.() -> Unit)? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
 )
 fun diffUiElementDefinition(given: UiElementDefinition, expectedInit: ExpectedUiElementDefinition.() -> Unit, path: String = ""): String {
@@ -302,7 +302,7 @@ fun diffUiElementDefinition(given: UiElementDefinition, expectedInit: ExpectedUi
     }
 
     expected.model?.let {
-        if (diffDependentConceptDefinition(given.getModel()!!, it) != "") { result.add(diffDependentConceptDefinition(given.getModel()!!, it, "${path}model.")) }
+        if (diffDependencyConceptDefinition(given.getModel()!!, it) != "") { result.add(diffDependencyConceptDefinition(given.getModel()!!, it, "${path}model.")) }
     }
 
     expected.fields?.let {
