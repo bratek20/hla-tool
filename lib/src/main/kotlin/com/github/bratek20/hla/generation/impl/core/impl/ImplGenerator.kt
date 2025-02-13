@@ -113,6 +113,7 @@ class ImplGenerator: SubmoduleGenerator() {
         return listOf(
             ImplDataClassesGenerator(),
             ImplDataKeysGenerator(),
+            TrackGenerator(),
             LogicGenerator(),
         )
     }

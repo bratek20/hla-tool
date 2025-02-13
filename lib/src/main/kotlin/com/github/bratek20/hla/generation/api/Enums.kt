@@ -33,6 +33,7 @@ enum class PatternName {
     SerializedCustomTypes,
     Undefined,
     Logic,
+    Track,
     WebCommon,
     WebServer,
     WebClient,
