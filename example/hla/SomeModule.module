@@ -230,6 +230,7 @@ ViewModel
             optLabel: Label?
             someAnimation: Animation
             someInputField: InputField
+            someImage: Image
 
         SecondSomeClassVm
             SomeClass

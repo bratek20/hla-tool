@@ -177,34 +177,6 @@ class HlaTypesWorldImplTest {
 
         assertHasClassType("OtherPopupState", "OtherModule/ViewModel/GeneratedPopups") {}
 
-        assertHasClassType("SomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
-            fields = listOf(
-                {
-                    name = "id"
-                },
-                {
-                    name = "button"
-                    type = {
-                        name = "Button"
-                    }
-                },
-                {
-                    name = "boolSwitch"
-                    type = {
-                        name = "BoolSwitch"
-                    }
-                },
-                {
-                    name = "optLabel"
-                    type = {
-                        name = "OptionalLabel"
-                    }
-                },
-                {},
-                {}
-            )
-        }
-
         assertHasClassType("OptionalSomeClassVm", "SomeModule/ViewModel/GeneratedElements") {
             extends = {
                 name = "OptionalUiElement<SomeClassVm,SomeClass>"

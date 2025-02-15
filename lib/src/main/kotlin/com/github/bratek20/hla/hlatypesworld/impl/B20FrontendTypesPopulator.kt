@@ -48,7 +48,8 @@ class B20FrontendTypesPopulator(
             "BoolSwitch",
             "Toggle",
             "Animation",
-            "InputField"
+            "InputField",
+            "Image"
         )
     }
 

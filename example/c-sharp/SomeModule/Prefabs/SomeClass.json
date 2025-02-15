@@ -27,6 +27,10 @@
     {
       "name": "someInputField",
       "viewType": "B20.View.UiElements.View.InputFieldView"
+    },
+    {
+      "name": "someImage",
+      "viewType": "B20.View.UiElements.View.ImageView"
     }
   ],
   "elementViewType": null

@@ -26,6 +26,8 @@ namespace SomeModule.View {
         AnimationView someAnimation;
         [SerializeField]
         InputFieldView someInputField;
+        [SerializeField]
+        ImageView someImage;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
@@ -34,6 +36,7 @@ namespace SomeModule.View {
             optLabel.Bind(ViewModel.OptLabel);
             someAnimation.Bind(ViewModel.SomeAnimation);
             someInputField.Bind(ViewModel.SomeInputField);
+            someImage.Bind(ViewModel.SomeImage);
         }
     }
 }
