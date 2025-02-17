@@ -3,12 +3,10 @@ package com.github.bratek20.hla.generation.impl.core.impl
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.attributes.getAttributeValue
-import com.github.bratek20.hla.attributes.hasAttribute
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.tracking.api.TableDefinition
-import com.github.bratek20.hla.tracking.api.TrackingSubmoduleDefinition
 
 private enum class TableType {
     DIMENSION,
@@ -25,19 +23,41 @@ private class TrackingTableLogic(
             className = if (type == TableType.DIMENSION) "TrackingDimension" else "TrackingEvent"
         }
 
-        addMethod {
-            name = "getTableName"
-            returnType = typeName("TrackingTableName")
-            setBody {
-                add(returnStatement {
-                    constructorCall {
-                        className = "TrackingTableName"
-                        addArg {
-                            variable(getAttributeValue(def.getAttributes(), "table"))
-                        }
-                    }
-                })
+        if (type == TableType.DIMENSION) {
+            addField {
+                name = "name"
+                type = typeName("string")
             }
+            addField {
+                name = "amount"
+                type = typeName("int")
+            }
+            addField {
+                name = "date_range"
+                type = typeName("SerializedDateRange")
+            }
+        }
+        if (type == TableType.EVENT) {
+            addField {
+                name = "some_dimension_id"
+                type = typeName("SomeDimension")
+            }
+        }
+        addMethod(getTableNameMethod())
+    }
+
+    private fun getTableNameMethod(): MethodBuilderOps = {
+        name = "getTableName"
+        returnType = typeName("TrackingTableName")
+        setBody {
+            add(returnStatement {
+                constructorCall {
+                    className = "TrackingTableName"
+                    addArg {
+                        variable(getAttributeValue(def.getAttributes(), "table"))
+                    }
+                }
+            })
         }
     }
 }
