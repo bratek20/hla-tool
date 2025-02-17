@@ -1,13 +1,46 @@
 package com.github.bratek20.hla.generation.impl.core.impl
 
-import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
-import com.github.bratek20.codebuilder.builders.constructorCall
-import com.github.bratek20.codebuilder.builders.returnStatement
-import com.github.bratek20.codebuilder.builders.string
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.attributes.getAttributeValue
+import com.github.bratek20.hla.attributes.hasAttribute
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.tracking.api.TableDefinition
+import com.github.bratek20.hla.tracking.api.TrackingSubmoduleDefinition
+
+private enum class TableType {
+    DIMENSION,
+    EVENT
+}
+
+private class TrackingTableLogic(
+    private val def: TableDefinition,
+    private val type: TableType
+) {
+    fun getClassOps(): ClassBuilderOps = {
+        name = def.getName()
+        extends {
+            className = if (type == TableType.DIMENSION) "TrackingDimension" else "TrackingEvent"
+        }
+
+        addMethod {
+            name = "getTableName"
+            returnType = typeName("TrackingTableName")
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = "TrackingTableName"
+                        addArg {
+                            variable(getAttributeValue(def.getAttributes(), "table"))
+                        }
+                    }
+                })
+            }
+        }
+    }
+}
 
 class TrackGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -22,48 +55,11 @@ class TrackGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        addClass {
-            name = "SomeDimension"
-            extends {
-                className = "TrackingDimension"
-            }
-
-            addMethod {
-                name = "getTableName"
-                returnType = typeName("TrackingTableName")
-                setBody {
-                    add(returnStatement {
-                        constructorCall {
-                            className = "TrackingTableName"
-                            addArg {
-                                string("some_dimension")
-                            }
-                        }
-                    })
-                }
-            }
+        module.getTrackingSubmodule()!!.getDimensions().forEach {
+            addClass(TrackingTableLogic(it, TableType.DIMENSION).getClassOps())
         }
-
-        addClass {
-            name = "SomeTrackingEvent"
-            extends {
-                className = "TrackingEvent"
-            }
-
-            addMethod {
-                name = "getTableName"
-                returnType = typeName("TrackingTableName")
-                setBody {
-                    add(returnStatement {
-                        constructorCall {
-                            className = "TrackingTableName"
-                            addArg {
-                                string("some_tracking_event")
-                            }
-                        }
-                    })
-                }
-            }
+        module.getTrackingSubmodule()!!.getEvents().forEach {
+            addClass(TrackingTableLogic(it, TableType.EVENT).getClassOps())
         }
     }
 }
