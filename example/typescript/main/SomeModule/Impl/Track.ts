@@ -3,13 +3,13 @@
 namespace SomeModule.Impl {
     export class SomeDimension extends TrackingDimension {
         getTableName(): TrackingTableName {
-            return new TrackingTableName("some_dimension");
+            return new TrackingTableName("some_dimension")
         }
     }
 
     export class SomeTrackingEvent extends TrackingEvent {
         getTableName(): TrackingTableName {
-            return new TrackingTableName("some_tracking_event");
+            return new TrackingTableName("some_tracking_event")
         }
     }
 }
