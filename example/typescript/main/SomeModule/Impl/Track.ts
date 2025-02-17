@@ -2,6 +2,15 @@
 
 namespace SomeModule.Impl {
     export class SomeDimension extends TrackingDimension {
+        constructor(
+            someClass: SomeClass,
+            dateRange: DateRange
+        ) {
+            super()
+            this.name = someClass.getId().value
+            this.amount = someClass.getAmount()
+            this.date_range = SerializedDateRange.fromCustomType(dateRange)
+        }
         private readonly name: string
         private readonly amount: number
         private readonly date_range: SerializedDateRange
@@ -11,6 +20,12 @@ namespace SomeModule.Impl {
     }
 
     export class SomeTrackingEvent extends TrackingEvent {
+        constructor(
+            some_dimension_id: SomeDimension
+        ) {
+            super()
+            this.some_dimension_id = some_dimension_id
+        }
         private readonly some_dimension_id: SomeDimension
         getTableName(): TrackingTableName {
             return new TrackingTableName("some_tracking_event")

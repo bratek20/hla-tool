@@ -23,6 +23,33 @@ private enum class TableType {
     EVENT
 }
 
+//namespace SomeModule.Impl {
+//    export class SomeDimension extends TrackingDimension {
+//        private readonly name: string
+//        private readonly amount: number
+//        private readonly date_range: SerializedDateRange
+//        constructor(someClass: SomeClass, dateRange: DateRange) {
+//            super();
+//            this.name = someClass.getId().value;
+//            this.amount = someClass.getAmount();
+//            this.date_range = SerializedDateRange.fromCustomType(dateRange);
+//        }
+//        getTableName(): TrackingTableName {
+//        return new TrackingTableName("some_dimension")
+//    }
+//    }
+//
+//    export class SomeTrackingEvent extends TrackingEvent {
+//        private readonly some_dimension_id: SomeDimension
+//        constructor(some_dimension_id: SomeDimension) {
+//            super();
+//            this.some_dimension_id = some_dimension_id;
+//        }
+//        getTableName(): TrackingTableName {
+//        return new TrackingTableName("some_tracking_event")
+//    }
+//    }
+//}
 private class TrackingTableLogic(
     private val def: TableDefinition,
     private val type: TableType,
@@ -33,6 +60,49 @@ private class TrackingTableLogic(
         name = def.getName()
         extends {
             className = if (type == TableType.DIMENSION) "TrackingDimension" else "TrackingEvent"
+        }
+
+        if (type == TableType.DIMENSION) {
+            setConstructor {
+                addArg {
+                    name = "someClass"
+                    type = typeName("SomeClass")
+                }
+                addArg {
+                    name = "dateRange"
+                    type = typeName("DateRange")
+                }
+                setBody {
+                    add(hardcodedExpression("super()").asStatement())
+                    add(assignment {
+                        left = instanceVariable("name")
+                        right = hardcodedExpression("someClass.getId().value")
+                    })
+                    add(assignment {
+                        left = instanceVariable("amount")
+                        right = hardcodedExpression("someClass.getAmount()")
+                    })
+                    add(assignment {
+                        left = instanceVariable("date_range")
+                        right = hardcodedExpression("SerializedDateRange.fromCustomType(dateRange)")
+                    })
+                }
+            }
+        }
+        else {
+            setConstructor {
+                addArg {
+                    name = "some_dimension_id"
+                    type = typeName("SomeDimension")
+                }
+                setBody {
+                    add(hardcodedExpression("super()").asStatement())
+                    add(assignment {
+                        left = instanceVariable("some_dimension_id")
+                        right = hardcodedExpression("some_dimension_id")
+                    })
+                }
+            }
         }
 
         getFieldsOps().forEach {
