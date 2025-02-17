@@ -23,33 +23,6 @@ private enum class TableType {
     EVENT
 }
 
-//namespace SomeModule.Impl {
-//    export class SomeDimension extends TrackingDimension {
-//        private readonly name: string
-//        private readonly amount: number
-//        private readonly date_range: SerializedDateRange
-//        constructor(someClass: SomeClass, dateRange: DateRange) {
-//            super();
-//            this.name = someClass.getId().value;
-//            this.amount = someClass.getAmount();
-//            this.date_range = SerializedDateRange.fromCustomType(dateRange);
-//        }
-//        getTableName(): TrackingTableName {
-//        return new TrackingTableName("some_dimension")
-//    }
-//    }
-//
-//    export class SomeTrackingEvent extends TrackingEvent {
-//        private readonly some_dimension_id: SomeDimension
-//        constructor(some_dimension_id: SomeDimension) {
-//            super();
-//            this.some_dimension_id = some_dimension_id;
-//        }
-//        getTableName(): TrackingTableName {
-//        return new TrackingTableName("some_tracking_event")
-//    }
-//    }
-//}
 private class TrackingTableLogic(
     private val def: TableDefinition,
     private val type: TableType,
@@ -62,39 +35,14 @@ private class TrackingTableLogic(
             className = if (type == TableType.DIMENSION) "TrackingDimension" else "TrackingEvent"
         }
 
-        if (type == TableType.DIMENSION) {
-            setConstructor {
-                getConstructorArgs().forEach {
-                    addArg(it)
-                }
-                setBody {
-                    add(hardcodedExpression("super()").asStatement())
-                    add(assignment {
-                        left = instanceVariable("name")
-                        right = hardcodedExpression("someClass.getId().value")
-                    })
-                    add(assignment {
-                        left = instanceVariable("amount")
-                        right = hardcodedExpression("someClass.getAmount()")
-                    })
-                    add(assignment {
-                        left = instanceVariable("date_range")
-                        right = hardcodedExpression("SerializedDateRange.fromCustomType(date_range)")
-                    })
-                }
+        setConstructor {
+            getConstructorArgs().forEach {
+                addArg(it)
             }
-        }
-        else {
-            setConstructor {
-                getConstructorArgs().forEach {
-                    addArg(it)
-                }
-                setBody {
-                    add(hardcodedExpression("super()").asStatement())
-                    add(assignment {
-                        left = instanceVariable("some_dimension_id")
-                        right = hardcodedExpression("some_dimension_id")
-                    })
+            setBody {
+                add(hardcodedExpression("super()").asStatement())
+                getAssignmentOps().forEach {
+                    add(assignment(it))
                 }
             }
         }
@@ -129,6 +77,14 @@ private class TrackingTableLogic(
         }
     }
 
+    private fun getAssignmentOps(): List<AssignmentBuilderOps> {
+        return def.getExposedClasses().flatMap {
+            getAssignmentOpsForExposedClass(it)
+        } + def.getFields().map {
+            getAssignmentOpsForMyField(it)
+        }
+    }
+
     private fun getFieldsOpsForExposedClass(exposedClassDef: DependencyConceptDefinition): List<FieldBuilderOps> {
         val exposedClassWorldType = typesWorldApi.getTypeByName(WorldTypeName(exposedClassDef.getName()))
         val exposedClass = typesWorldApi.getClassType(exposedClassWorldType)
@@ -149,6 +105,26 @@ private class TrackingTableLogic(
         }
     }
 
+    private fun getAssignmentOpsForExposedClass(exposedClassDef: DependencyConceptDefinition): List<AssignmentBuilderOps> {
+        val exposedClassWorldType = typesWorldApi.getTypeByName(WorldTypeName(exposedClassDef.getName()))
+        val exposedClass = typesWorldApi.getClassType(exposedClassWorldType)
+
+        return exposedClassDef.getMappedFields().map { mappedField ->
+            val typeName = exposedClass.getFields().first { it.getName() == mappedField.getName() }.getType().getName().value
+            {
+                left = instanceVariable(mappedField.getMappedName() ?: mappedField.getName())
+                right = getX(mappedField.getName(), typeName)
+            }
+        }
+    }
+
+    private fun getAssignmentOpsForMyField(def: FieldDefinition): AssignmentBuilderOps {
+        return {
+            left = instanceVariable(def.getName())
+            right = getX(def.getName(), def.getType().getName())
+        }
+    }
+
     private fun getFieldType(typeName: String, serializable: Boolean = true): TypeBuilder {
         val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
@@ -156,6 +132,15 @@ private class TrackingTableLogic(
             if (serializable) x.serializableBuilder() else x.builder()
         } else {
             typeName(worldType.getName().value)
+        }
+    }
+
+    private fun getX(variableName: String, typeName: String): ExpressionBuilder {
+        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
+            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).modernSerialize(variable(variableName))
+        } else {
+            variable(variableName)
         }
     }
 
