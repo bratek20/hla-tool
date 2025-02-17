@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.impl
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.attributes.getAttributeValue
+import com.github.bratek20.hla.definitions.api.DependencyConceptDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -23,26 +24,10 @@ private class TrackingTableLogic(
             className = if (type == TableType.DIMENSION) "TrackingDimension" else "TrackingEvent"
         }
 
-        if (type == TableType.DIMENSION) {
-            addField {
-                name = "name"
-                type = typeName("string")
-            }
-            addField {
-                name = "amount"
-                type = typeName("int")
-            }
-            addField {
-                name = "date_range"
-                type = typeName("SerializedDateRange")
-            }
+        getFieldsOps().forEach {
+            addField(it)
         }
-        if (type == TableType.EVENT) {
-            addField {
-                name = "some_dimension_id"
-                type = typeName("SomeDimension")
-            }
-        }
+
         addMethod(getTableNameMethod())
     }
 
@@ -58,6 +43,49 @@ private class TrackingTableLogic(
                     }
                 }
             })
+        }
+    }
+
+    private fun getFieldsOps(): List<FieldBuilderOps> {
+        return def.getExposedClasses().flatMap {
+            getFieldsOpsForExposedClass(it)
+        } + getFieldsOpsForMyFields()
+    }
+
+    private fun getFieldsOpsForExposedClass(exposedClass: DependencyConceptDefinition): List<FieldBuilderOps> {
+        if (type == TableType.DIMENSION) {
+            return listOf(
+                {
+                    name = "name"
+                    type = typeName("string")
+                },
+                {
+                    name = "amount"
+                    type = typeName("int")
+                }
+            )
+        }
+        else {
+            return listOf(
+            )
+        }
+    }
+
+    private fun getFieldsOpsForMyFields(): List<FieldBuilderOps> {
+        if (type == TableType.DIMENSION) {
+            return listOf(
+                {
+                    name = "date_range"
+                    type = typeName("SerializedDateRange")
+                }
+            )
+        } else {
+            return listOf(
+                {
+                    name = "some_dimension_id"
+                    type = typeName("SomeDimension")
+                }
+            )
         }
     }
 }
