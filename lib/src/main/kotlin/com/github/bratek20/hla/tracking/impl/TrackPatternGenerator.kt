@@ -13,10 +13,10 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
-import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.utils.pascalToCamelCase
 
 private enum class TableType {
     DIMENSION,
@@ -64,13 +64,8 @@ private class TrackingTableLogic(
 
         if (type == TableType.DIMENSION) {
             setConstructor {
-                addArg {
-                    name = "someClass"
-                    type = typeName("SomeClass")
-                }
-                addArg {
-                    name = "dateRange"
-                    type = typeName("DateRange")
+                getConstructorArgs().forEach {
+                    addArg(it)
                 }
                 setBody {
                     add(hardcodedExpression("super()").asStatement())
@@ -84,16 +79,15 @@ private class TrackingTableLogic(
                     })
                     add(assignment {
                         left = instanceVariable("date_range")
-                        right = hardcodedExpression("SerializedDateRange.fromCustomType(dateRange)")
+                        right = hardcodedExpression("SerializedDateRange.fromCustomType(date_range)")
                     })
                 }
             }
         }
         else {
             setConstructor {
-                addArg {
-                    name = "some_dimension_id"
-                    type = typeName("SomeDimension")
+                getConstructorArgs().forEach {
+                    addArg(it)
                 }
                 setBody {
                     add(hardcodedExpression("super()").asStatement())
@@ -155,13 +149,30 @@ private class TrackingTableLogic(
         }
     }
 
-    private fun getFieldType(typeName: String): TypeBuilder {
+    private fun getFieldType(typeName: String, serializable: Boolean = true): TypeBuilder {
         val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).serializableBuilder()
+            val x = apiTypeFactory.create(TypeDefinition(typeName, emptyList()))
+            if (serializable) x.serializableBuilder() else x.builder()
         } else {
             typeName(worldType.getName().value)
         }
+    }
+
+    private fun getConstructorArgs(): List<ArgumentBuilderOps> {
+        val exposedClassesArgs: List<ArgumentBuilderOps> = def.getExposedClasses().map {
+            {
+                name = pascalToCamelCase(it.getName())
+                type = typeName(it.getName())
+            }
+        }
+        val myFieldsArgs: List<ArgumentBuilderOps> = def.getFields().map {
+            {
+                name = it.getName()
+                type = getFieldType(it.getType().getName(), false)
+            }
+        }
+        return exposedClassesArgs + myFieldsArgs
     }
 }
 

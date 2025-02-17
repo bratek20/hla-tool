@@ -4,12 +4,12 @@ namespace SomeModule.Impl {
     export class SomeDimension extends TrackingDimension {
         constructor(
             someClass: SomeClass,
-            dateRange: DateRange
+            date_range: DateRange
         ) {
             super()
             this.name = someClass.getId().value
             this.amount = someClass.getAmount()
-            this.date_range = SerializedDateRange.fromCustomType(dateRange)
+            this.date_range = SerializedDateRange.fromCustomType(date_range)
         }
         private readonly name: string
         private readonly amount: number
