@@ -924,10 +924,16 @@ class ModuleGroupParserTest {
                     }
                     exposedClasses = listOf {
                         name = "SomeExposedClass"
-                        mappedFields = listOf {
-                            name = "someFieldName"
-                            mappedName = "someMappedFieldName"
-                        }
+                        mappedFields = listOf (
+                            {
+                                name = "someFieldName"
+                                mappedName = "someMappedFieldName"
+                            },
+                            {
+                                name = "notMappedFieldName"
+                                mappedNameEmpty = true
+                            }
+                        )
                     }
                     fields = listOf {
                         name = "someExtraField"

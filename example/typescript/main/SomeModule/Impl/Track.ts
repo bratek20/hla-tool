@@ -3,7 +3,7 @@
 namespace SomeModule.Impl {
     export class SomeDimension extends TrackingDimension {
         private readonly name: string
-        private readonly amount: int
+        private readonly amount: number
         private readonly date_range: SerializedDateRange
         getTableName(): TrackingTableName {
             return new TrackingTableName("some_dimension")

@@ -1,11 +1,13 @@
 package com.github.bratek20.hla.tracking.impl
 
 import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.attributes.getAttributeValue
 import com.github.bratek20.hla.definitions.api.DependencyConceptDefinition
 import com.github.bratek20.hla.definitions.api.FieldDefinition
+import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -14,6 +16,7 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 private enum class TableType {
     DIMENSION,
@@ -62,40 +65,37 @@ private class TrackingTableLogic(
         }
     }
 
-    private fun getFieldsOpsForExposedClass(exposedClass: DependencyConceptDefinition): List<FieldBuilderOps> {
-        if (type == TableType.DIMENSION) {
-            return listOf(
-                {
-                    name = "name"
-                    type = typeName("string")
-                },
-                {
-                    name = "amount"
-                    type = typeName("int")
-                }
-            )
-        }
-        else {
-            return listOf(
-            )
+    private fun getFieldsOpsForExposedClass(exposedClassDef: DependencyConceptDefinition): List<FieldBuilderOps> {
+        val exposedClassWorldType = typesWorldApi.getTypeByName(WorldTypeName(exposedClassDef.getName()))
+        val exposedClass = typesWorldApi.getClassType(exposedClassWorldType)
+
+        return exposedClassDef.getMappedFields().map { mappedField ->
+            val typeName = exposedClass.getFields().first { it.getName() == mappedField.getName() }.getType().getName().value
+            {
+                name = mappedField.getMappedName() ?: mappedField.getName()
+                type = getFieldType(typeName)
+            }
         }
     }
 
     private fun getFieldOpsForMyField(def: FieldDefinition): FieldBuilderOps {
-        val worldType = typesWorldApi.getTypeByName(def.getType().asWorldTypeName())
-        val fieldType = if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(def.getType()).serializableBuilder()
-        } else {
-            typeName(worldType.getName().value)
-        }
         return {
             name = def.getName()
-            type = fieldType
+            type = getFieldType(def.getType().getName())
+        }
+    }
+
+    private fun getFieldType(typeName: String): TypeBuilder {
+        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
+            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).serializableBuilder()
+        } else {
+            typeName(worldType.getName().value)
         }
     }
 }
 
-class TrackGenerator: PatternGenerator() {
+class TrackPatternGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.Track
     }

@@ -3,6 +3,7 @@ Tracking (migrationNumber: 011)
         SomeDimension (table: "trade_shop_event_table")
             SomeExposedClass
                 someFieldName -> someMappedFieldName
+                notMappedFieldName
             someExtraField: int
 
     Events
