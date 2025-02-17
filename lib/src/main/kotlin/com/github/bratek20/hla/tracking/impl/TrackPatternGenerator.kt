@@ -4,6 +4,7 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
+import com.github.bratek20.hla.apitypes.impl.ComplexStructureApiType
 import com.github.bratek20.hla.attributes.getAttributeValue
 import com.github.bratek20.hla.definitions.api.DependencyConceptDefinition
 import com.github.bratek20.hla.definitions.api.FieldDefinition
@@ -110,10 +111,12 @@ private class TrackingTableLogic(
         val exposedClass = typesWorldApi.getClassType(exposedClassWorldType)
 
         return exposedClassDef.getMappedFields().map { mappedField ->
-            val typeName = exposedClass.getFields().first { it.getName() == mappedField.getName() }.getType().getName().value
+            val apiType = apiTypeFactory.create(TypeDefinition(exposedClassDef.getName(), emptyList())) as ComplexStructureApiType<*>
+            val field = apiType.fields.first { it.name == mappedField.getName() }
+            val type = exposedClass.getFields().first { it.getName() == mappedField.getName() }.getType().getName().value
             {
                 left = instanceVariable(mappedField.getMappedName() ?: mappedField.getName())
-                right = getX(mappedField.getName(), typeName)
+                right = getX(field.access(pascalToCamelCase(exposedClassDef.getName())), type)
             }
         }
     }
