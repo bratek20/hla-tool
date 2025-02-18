@@ -14,9 +14,7 @@ import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.tracking.api.TableDefinition
-import com.github.bratek20.hla.typesworld.api.TypesWorldApi
-import com.github.bratek20.hla.typesworld.api.WorldTypeName
-import com.github.bratek20.hla.typesworld.api.getField
+import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.utils.pascalToCamelCase
 import com.github.bratek20.utils.stringify
 
@@ -27,6 +25,7 @@ enum class TableType {
 
 interface TablePart {
     fun getFieldsOps(): List<FieldBuilderOps>
+    fun getWorldFields(): List<WorldClassField>
     fun getConstructorArgs(): List<ArgumentBuilderOps>
     fun getAssignmentOps(): List<AssignmentBuilderOps>
 }
@@ -45,13 +44,17 @@ private class TrackingTypesLogic(
     }
 
     fun getTypeBuilder(typeName: String, serializable: Boolean): TypeBuilder {
-        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        val worldType = getWorldType(typeName)
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
             val x = apiTypeFactory.create(TypeDefinition(typeName, emptyList()))
             if (serializable) x.serializableBuilder() else x.builder()
         } else {
             typeName(worldType.getName().value)
         }
+    }
+
+    fun getWorldType(typeName: String): WorldType {
+        return typesWorldApi.getTypeByName(WorldTypeName(typeName))
     }
 }
 
@@ -66,6 +69,13 @@ private class MyFieldsLogic(
                 type = types.getTypeBuilder(it.getType().getName(), serializable = true)
             }
         }
+    }
+
+    override fun getWorldFields(): List<WorldClassField> {
+        return defs.map { WorldClassField.create(
+            name = it.getName(),
+            type = types.getWorldType(it.getType().getName())
+        ) }
     }
 
     override fun getConstructorArgs(): List<ArgumentBuilderOps> {
@@ -102,6 +112,15 @@ private class ExposedClassLogic(
                 name = finalFieldName(mappedField)
                 type = types.getTypeBuilder(getWorldFieldTypeName(mappedField), serializable = true)
             }
+        }
+    }
+
+    override fun getWorldFields(): List<WorldClassField> {
+        return def.getMappedFields().map { mappedField ->
+            WorldClassField.create(
+                name = finalFieldName(mappedField),
+                type = types.getWorldType(getWorldFieldTypeName(mappedField))
+            )
         }
     }
 
@@ -142,12 +161,12 @@ class TrackingTableLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun getClassOps(): ClassBuilderOps {
-        val types = TrackingTypesLogic(apiTypeFactory, typesWorldApi)
-        val parts = def.getExposedClasses().map {
+    private val types = TrackingTypesLogic(apiTypeFactory, typesWorldApi)
+    private val parts = def.getExposedClasses().map {
             ExposedClassLogic(it, apiTypeFactory, typesWorldApi, types)
         } + listOf(MyFieldsLogic(def.getFields(), types))
 
+    fun getClassOps(): ClassBuilderOps {
         return {
             name = def.getName()
             extends {
@@ -192,8 +211,28 @@ class TrackingTableLogic(
     private fun trackingTableName() = getAttributeValue(def.getAttributes(), "table").replace("\"", "")
 
     fun populateInitSql(builder: CodeBuilder) {
-        builder
-            .line("CREATE TABLE ${trackingTableName()} (")
+        builder.line("CREATE TABLE ${trackingTableName()} (")
+
+        builder.tab()
+
+        //primary key
+        if (type == TableType.DIMENSION) {
+            builder.line("${trackingTableName()}_id BIGINT DEFAULT NEXTVAL('common.the_sequence'::regclass) CONSTRAINT ${trackingTableName()}_id PRIMARY KEY,")
+        }
+        if (type == TableType.EVENT)  {
+            builder.line("CONSTRAINT ${trackingTableName()}_id PRIMARY KEY (event_id),")
+        }
+
+        //fields
+        val worldFields = parts.flatMap { it.getWorldFields() }
+        worldFields.forEachIndexed { index, field ->
+            val endLineSeparator = if (index < worldFields.size - 1) "," else ""
+            builder.line("${field.getName()} ${toSqlType(field.getType())} NOT NULL" + endLineSeparator)
+        }
+
+        builder.untab()
+
+        //ending
         if (type == TableType.DIMENSION) {
             builder
                 .line(");")
@@ -203,6 +242,10 @@ class TrackingTableLogic(
                 .line(") INHERITS (event);")
                 .line("ALTER TYPE event_type ADD VALUE '${trackingTableName()}';")
         }
+    }
+
+    private fun toSqlType(type: WorldType): String {
+        return "VARCHAR(256)"
     }
 }
 
