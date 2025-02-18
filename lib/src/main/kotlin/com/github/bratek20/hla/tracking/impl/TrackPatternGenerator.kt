@@ -8,6 +8,7 @@ import com.github.bratek20.hla.apitypes.impl.ComplexStructureApiType
 import com.github.bratek20.hla.attributes.getAttributeValue
 import com.github.bratek20.hla.definitions.api.DependencyConceptDefinition
 import com.github.bratek20.hla.definitions.api.FieldDefinition
+import com.github.bratek20.hla.definitions.api.MappedField
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -17,6 +18,7 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.getField
 import com.github.bratek20.utils.pascalToCamelCase
 
 private enum class TableType {
@@ -43,7 +45,7 @@ private class TrackingTypesLogic(
         }
     }
 
-    fun getTypeBuilder(typeName: String, serializable: Boolean = true): TypeBuilder {
+    fun getTypeBuilder(typeName: String, serializable: Boolean): TypeBuilder {
         val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
             val x = apiTypeFactory.create(TypeDefinition(typeName, emptyList()))
@@ -62,7 +64,7 @@ private class MyFieldsLogic(
         return defs.map {
             {
                 name = it.getName()
-                type = types.getTypeBuilder(it.getType().getName())
+                type = types.getTypeBuilder(it.getType().getName(), serializable = true)
             }
         }
     }
@@ -84,49 +86,54 @@ private class MyFieldsLogic(
             }
         }
     }
-
-
 }
 
 private class ExposedClassLogic(
     private val def: DependencyConceptDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    private val typesWorldApi: TypesWorldApi,
+    typesWorldApi: TypesWorldApi,
     private val types: TrackingTypesLogic
 ): TablePart {
-    override fun getFieldsOps(): List<FieldBuilderOps> {
-        val exposedClassWorldType = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
-        val exposedClass = typesWorldApi.getClassType(exposedClassWorldType)
+    private val worldClassType = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
+    private val worldClass = typesWorldApi.getClassType(worldClassType)
 
+    override fun getFieldsOps(): List<FieldBuilderOps> {
         return def.getMappedFields().map { mappedField ->
-            val typeName = exposedClass.getFields().first { it.getName() == mappedField.getName() }.getType().getName().value
             {
-                name = mappedField.getMappedName() ?: mappedField.getName()
-                type = types.getTypeBuilder(typeName)
+                name = finalFieldName(mappedField)
+                type = types.getTypeBuilder(getWorldFieldTypeName(mappedField), serializable = true)
             }
         }
     }
 
     override fun getConstructorArgs(): List<ArgumentBuilderOps> {
         return listOf {
-            name = pascalToCamelCase(def.getName())
+            name = argVariableName()
             type = typeName(def.getName())
         }
     }
 
     override fun getAssignmentOps(): List<AssignmentBuilderOps> {
-        val exposedClassWorldType = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
-        val exposedClass = typesWorldApi.getClassType(exposedClassWorldType)
-
         return def.getMappedFields().map { mappedField ->
             val apiType = apiTypeFactory.create(TypeDefinition(def.getName(), emptyList())) as ComplexStructureApiType<*>
-            val field = apiType.fields.first { it.name == mappedField.getName() }
-            val type = exposedClass.getFields().first { it.getName() == mappedField.getName() }.getType().getName().value
-            {
-                left = instanceVariable(mappedField.getMappedName() ?: mappedField.getName())
-                right = types.getSerializationExpression(field.access(pascalToCamelCase(def.getName())), type)
+            val field = apiType.getField(mappedField.getName())
+            return@map {
+                left = instanceVariable(finalFieldName(mappedField))
+                right = types.getSerializationExpression(field.access(argVariableName()), getWorldFieldTypeName(mappedField))
             }
         }
+    }
+
+    private fun argVariableName(): String {
+        return pascalToCamelCase(def.getName())
+    }
+
+    private fun finalFieldName(mappedField: MappedField): String {
+        return mappedField.getMappedName() ?: mappedField.getName()
+    }
+
+    private fun getWorldFieldTypeName(mappedField: MappedField): String {
+        return worldClass.getField(mappedField.getName()).getType().getName().value
     }
 }
 
