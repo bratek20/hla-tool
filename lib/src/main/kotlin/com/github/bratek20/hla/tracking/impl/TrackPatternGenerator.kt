@@ -18,6 +18,7 @@ import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.typesworld.api.getField
 import com.github.bratek20.utils.pascalToCamelCase
+import com.github.bratek20.utils.stringify
 
 enum class TableType {
     DIMENSION,
@@ -181,24 +182,26 @@ class TrackingTableLogic(
                 constructorCall {
                     className = "TrackingTableName"
                     addArg {
-                        variable(getAttributeValue(def.getAttributes(), "table"))
+                        string(trackingTableName())
                     }
                 }
             })
         }
     }
 
+    private fun trackingTableName() = getAttributeValue(def.getAttributes(), "table").replace("\"", "")
+
     fun populateInitSql(builder: CodeBuilder) {
+        builder
+            .line("CREATE TABLE ${trackingTableName()} (")
         if (type == TableType.DIMENSION) {
             builder
-                .line("CREATE TABLE some_dimension (")
                 .line(");")
         }
         if (type == TableType.EVENT) {
             builder
-                .line("CREATE TABLE some_tracking_event (")
                 .line(") INHERITS (event);")
-                .line("ALTER TYPE event_type ADD VALUE 'some_tracking_event';")
+                .line("ALTER TYPE event_type ADD VALUE '${trackingTableName()}';")
         }
     }
 }
