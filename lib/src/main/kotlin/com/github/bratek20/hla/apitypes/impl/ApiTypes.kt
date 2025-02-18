@@ -299,6 +299,10 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
     open fun accessField(fieldName: String, variableName: String): String {
         return "$variableName.$fieldName"
     }
+
+    fun getField(fieldName: String): T {
+        return fields.first { it.name == fieldName }
+    }
 }
 
 class ComplexCustomApiType(

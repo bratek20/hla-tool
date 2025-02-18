@@ -3,6 +3,7 @@
 package com.github.bratek20.hla.definitions.api
 
 import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.tracking.api.*
 
 data class KeyDefinition(
     private val name: String,
@@ -225,49 +226,56 @@ data class WebSubmoduleDefinition(
     }
 }
 
-data class ViewModelMappedField(
+data class MappedField(
     private val name: String,
-    private val overriddenViewModelType: String?,
+    private val mappedName: String? = null,
+    private val mappedType: String? = null,
 ) {
     fun getName(): String {
         return this.name
     }
 
-    fun getOverriddenViewModelType(): String? {
-        return this.overriddenViewModelType
+    fun getMappedName(): String? {
+        return this.mappedName
+    }
+
+    fun getMappedType(): String? {
+        return this.mappedType
     }
 
     companion object {
         fun create(
             name: String,
-            overriddenViewModelType: String?,
-        ): ViewModelMappedField {
-            return ViewModelMappedField(
+            mappedName: String? = null,
+            mappedType: String? = null,
+        ): MappedField {
+            return MappedField(
                 name = name,
-                overriddenViewModelType = overriddenViewModelType,
+                mappedName = mappedName,
+                mappedType = mappedType,
             )
         }
     }
 }
 
-data class ElementModelDefinition(
+data class DependencyConceptDefinition(
     private val name: String,
-    private val mappedFields: List<ViewModelMappedField>,
+    private val mappedFields: List<MappedField>,
 ) {
     fun getName(): String {
         return this.name
     }
 
-    fun getMappedFields(): List<ViewModelMappedField> {
+    fun getMappedFields(): List<MappedField> {
         return this.mappedFields
     }
 
     companion object {
         fun create(
             name: String,
-            mappedFields: List<ViewModelMappedField>,
-        ): ElementModelDefinition {
-            return ElementModelDefinition(
+            mappedFields: List<MappedField>,
+        ): DependencyConceptDefinition {
+            return DependencyConceptDefinition(
                 name = name,
                 mappedFields = mappedFields,
             )
@@ -278,7 +286,7 @@ data class ElementModelDefinition(
 data class UiElementDefinition(
     private val name: String,
     private val attributes: List<Attribute>,
-    private val model: ElementModelDefinition?,
+    private val model: DependencyConceptDefinition?,
     private val fields: List<FieldDefinition>,
 ) {
     fun getName(): String {
@@ -289,7 +297,7 @@ data class UiElementDefinition(
         return this.attributes
     }
 
-    fun getModel(): ElementModelDefinition? {
+    fun getModel(): DependencyConceptDefinition? {
         return this.model
     }
 
@@ -301,7 +309,7 @@ data class UiElementDefinition(
         fun create(
             name: String,
             attributes: List<Attribute>,
-            model: ElementModelDefinition?,
+            model: DependencyConceptDefinition?,
             fields: List<FieldDefinition>,
         ): UiElementDefinition {
             return UiElementDefinition(
@@ -445,6 +453,7 @@ data class ModuleDefinition(
     private val implSubmodule: ImplSubmoduleDefinition?,
     private val webSubmodule: WebSubmoduleDefinition?,
     private val viewModelSubmodule: ViewModelSubmoduleDefinition?,
+    private val trackingSubmodule: TrackingSubmoduleDefinition?,
     private val kotlinConfig: KotlinConfig?,
 ) {
     fun getName(): ModuleName {
@@ -511,6 +520,10 @@ data class ModuleDefinition(
         return this.viewModelSubmodule
     }
 
+    fun getTrackingSubmodule(): TrackingSubmoduleDefinition? {
+        return this.trackingSubmodule
+    }
+
     fun getKotlinConfig(): KotlinConfig? {
         return this.kotlinConfig
     }
@@ -533,6 +546,7 @@ data class ModuleDefinition(
             implSubmodule: ImplSubmoduleDefinition?,
             webSubmodule: WebSubmoduleDefinition?,
             viewModelSubmodule: ViewModelSubmoduleDefinition?,
+            trackingSubmodule: TrackingSubmoduleDefinition?,
             kotlinConfig: KotlinConfig?,
         ): ModuleDefinition {
             return ModuleDefinition(
@@ -552,6 +566,7 @@ data class ModuleDefinition(
                 implSubmodule = implSubmodule,
                 webSubmodule = webSubmodule,
                 viewModelSubmodule = viewModelSubmodule,
+                trackingSubmodule = trackingSubmodule,
                 kotlinConfig = kotlinConfig,
             )
         }

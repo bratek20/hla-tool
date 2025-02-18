@@ -374,11 +374,14 @@ open class ClassBuilder: CodeBlockBuilder {
 
     private fun getFieldsAndArgsOps(): CodeBuilderOps = {
         fieldOps.forEachIndexed { idx, field ->
-            add(FieldBuilder(false).apply(field))
-            if (idx != fieldOps.size - 1 || constructorArgs.isNotEmpty()) {
-                linePart(",")
+            val builder = FieldBuilder(false).apply(field)
+            if (builder.fromConstructor) {
+                add(builder)
+                if (idx != fieldOps.size - 1 || constructorArgs.isNotEmpty()) {
+                    linePart(",")
+                }
+                lineEnd()
             }
-            lineEnd()
         }
         constructorArgs.forEachIndexed { idx, arg ->
             add(arg)

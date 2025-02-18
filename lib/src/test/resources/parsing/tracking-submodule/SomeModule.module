@@ -1,0 +1,11 @@
+Tracking (migrationNumber: 011)
+    Dimensions
+        SomeDimension (table: "trade_shop_event_table")
+            SomeExposedClass
+                someFieldName -> someMappedFieldName
+                notMappedFieldName
+            someExtraField: int
+
+    Events
+        SomeEvent
+

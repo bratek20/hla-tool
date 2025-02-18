@@ -51,18 +51,19 @@ ValueObjects
 
     // ViewModel start
 
-    ViewModelMappedField
+    MappedField
         name: string
-        overriddenViewModelType: string?
+        mappedName: string? = empty
+        mappedType: string? = empty
 
-    ElementModelDefinition
+    DependencyConceptDefinition
         name: string
-        mappedFields: ViewModelMappedField[]
+        mappedFields: MappedField[]
 
     UiElementDefinition
         name: string
         attributes: Attribute[]
-        model: ElementModelDefinition?
+        model: DependencyConceptDefinition?
         fields: FieldDefinition[]
 
     UiContainerDefinition
@@ -103,6 +104,7 @@ ValueObjects
         implSubmodule: ImplSubmoduleDefinition?
         webSubmodule: WebSubmoduleDefinition?
         viewModelSubmodule: ViewModelSubmoduleDefinition?
+        trackingSubmodule: TrackingSubmoduleDefinition?
         kotlinConfig: KotlinConfig?
 
     TypeDefinition

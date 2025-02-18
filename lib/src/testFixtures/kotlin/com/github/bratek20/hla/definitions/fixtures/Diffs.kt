@@ -4,6 +4,8 @@ package com.github.bratek20.hla.definitions.fixtures
 
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.fixtures.*
+import com.github.bratek20.hla.tracking.api.*
+import com.github.bratek20.hla.tracking.fixtures.*
 
 import com.github.bratek20.hla.definitions.api.*
 
@@ -221,36 +223,46 @@ fun diffWebSubmoduleDefinition(given: WebSubmoduleDefinition, expectedInit: Expe
     return result.joinToString("\n")
 }
 
-data class ExpectedViewModelMappedField(
+data class ExpectedMappedField(
     var name: String? = null,
-    var overriddenViewModelTypeEmpty: Boolean? = null,
-    var overriddenViewModelType: String? = null,
+    var mappedNameEmpty: Boolean? = null,
+    var mappedName: String? = null,
+    var mappedTypeEmpty: Boolean? = null,
+    var mappedType: String? = null,
 )
-fun diffViewModelMappedField(given: ViewModelMappedField, expectedInit: ExpectedViewModelMappedField.() -> Unit, path: String = ""): String {
-    val expected = ExpectedViewModelMappedField().apply(expectedInit)
+fun diffMappedField(given: MappedField, expectedInit: ExpectedMappedField.() -> Unit, path: String = ""): String {
+    val expected = ExpectedMappedField().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
         if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
     }
 
-    expected.overriddenViewModelTypeEmpty?.let {
-        if ((given.getOverriddenViewModelType() == null) != it) { result.add("${path}overriddenViewModelType empty ${(given.getOverriddenViewModelType() == null)} != ${it}") }
+    expected.mappedNameEmpty?.let {
+        if ((given.getMappedName() == null) != it) { result.add("${path}mappedName empty ${(given.getMappedName() == null)} != ${it}") }
     }
 
-    expected.overriddenViewModelType?.let {
-        if (given.getOverriddenViewModelType()!! != it) { result.add("${path}overriddenViewModelType ${given.getOverriddenViewModelType()!!} != ${it}") }
+    expected.mappedName?.let {
+        if (given.getMappedName()!! != it) { result.add("${path}mappedName ${given.getMappedName()!!} != ${it}") }
+    }
+
+    expected.mappedTypeEmpty?.let {
+        if ((given.getMappedType() == null) != it) { result.add("${path}mappedType empty ${(given.getMappedType() == null)} != ${it}") }
+    }
+
+    expected.mappedType?.let {
+        if (given.getMappedType()!! != it) { result.add("${path}mappedType ${given.getMappedType()!!} != ${it}") }
     }
 
     return result.joinToString("\n")
 }
 
-data class ExpectedElementModelDefinition(
+data class ExpectedDependencyConceptDefinition(
     var name: String? = null,
-    var mappedFields: List<(ExpectedViewModelMappedField.() -> Unit)>? = null,
+    var mappedFields: List<(ExpectedMappedField.() -> Unit)>? = null,
 )
-fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: ExpectedElementModelDefinition.() -> Unit, path: String = ""): String {
-    val expected = ExpectedElementModelDefinition().apply(expectedInit)
+fun diffDependencyConceptDefinition(given: DependencyConceptDefinition, expectedInit: ExpectedDependencyConceptDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedDependencyConceptDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.name?.let {
@@ -259,7 +271,7 @@ fun diffElementModelDefinition(given: ElementModelDefinition, expectedInit: Expe
 
     expected.mappedFields?.let {
         if (given.getMappedFields().size != it.size) { result.add("${path}mappedFields size ${given.getMappedFields().size} != ${it.size}"); return@let }
-        given.getMappedFields().forEachIndexed { idx, entry -> if (diffViewModelMappedField(entry, it[idx]) != "") { result.add(diffViewModelMappedField(entry, it[idx], "${path}mappedFields[${idx}].")) } }
+        given.getMappedFields().forEachIndexed { idx, entry -> if (diffMappedField(entry, it[idx]) != "") { result.add(diffMappedField(entry, it[idx], "${path}mappedFields[${idx}].")) } }
     }
 
     return result.joinToString("\n")
@@ -269,7 +281,7 @@ data class ExpectedUiElementDefinition(
     var name: String? = null,
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
     var modelEmpty: Boolean? = null,
-    var model: (ExpectedElementModelDefinition.() -> Unit)? = null,
+    var model: (ExpectedDependencyConceptDefinition.() -> Unit)? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
 )
 fun diffUiElementDefinition(given: UiElementDefinition, expectedInit: ExpectedUiElementDefinition.() -> Unit, path: String = ""): String {
@@ -290,7 +302,7 @@ fun diffUiElementDefinition(given: UiElementDefinition, expectedInit: ExpectedUi
     }
 
     expected.model?.let {
-        if (diffElementModelDefinition(given.getModel()!!, it) != "") { result.add(diffElementModelDefinition(given.getModel()!!, it, "${path}model.")) }
+        if (diffDependencyConceptDefinition(given.getModel()!!, it) != "") { result.add(diffDependencyConceptDefinition(given.getModel()!!, it, "${path}model.")) }
     }
 
     expected.fields?.let {
@@ -418,6 +430,8 @@ data class ExpectedModuleDefinition(
     var webSubmodule: (ExpectedWebSubmoduleDefinition.() -> Unit)? = null,
     var viewModelSubmoduleEmpty: Boolean? = null,
     var viewModelSubmodule: (ExpectedViewModelSubmoduleDefinition.() -> Unit)? = null,
+    var trackingSubmoduleEmpty: Boolean? = null,
+    var trackingSubmodule: (ExpectedTrackingSubmoduleDefinition.() -> Unit)? = null,
     var kotlinConfigEmpty: Boolean? = null,
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
 )
@@ -511,6 +525,14 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
     expected.viewModelSubmodule?.let {
         if (diffViewModelSubmoduleDefinition(given.getViewModelSubmodule()!!, it) != "") { result.add(diffViewModelSubmoduleDefinition(given.getViewModelSubmodule()!!, it, "${path}viewModelSubmodule.")) }
+    }
+
+    expected.trackingSubmoduleEmpty?.let {
+        if ((given.getTrackingSubmodule() == null) != it) { result.add("${path}trackingSubmodule empty ${(given.getTrackingSubmodule() == null)} != ${it}") }
+    }
+
+    expected.trackingSubmodule?.let {
+        if (diffTrackingSubmoduleDefinition(given.getTrackingSubmodule()!!, it) != "") { result.add(diffTrackingSubmoduleDefinition(given.getTrackingSubmodule()!!, it, "${path}trackingSubmodule.")) }
     }
 
     expected.kotlinConfigEmpty?.let {
