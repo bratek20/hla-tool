@@ -1,6 +1,7 @@
 Interfaces
     ApiType
         asWorldType(): WorldType
+        serializableWorldType(): WorldType
 
         builder(): TypeBuilder
         serializableBuilder(): TypeBuilder

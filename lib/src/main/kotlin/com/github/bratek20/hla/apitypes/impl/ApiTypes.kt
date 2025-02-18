@@ -16,6 +16,7 @@ import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
+import com.github.bratek20.hla.hlatypesworld.impl.PrimitiveTypesPopulator
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.hla.typesworld.api.WorldTypePath
@@ -41,8 +42,8 @@ abstract class ApiTypeLogic: ApiType {
         //TODO-REF
         if (this is BaseApiType) {
             return WorldType.create(
-                name = WorldTypeName(name().lowercase()),
-                path = WorldTypePath("Language/Types/Api/Primitives")
+                name = WorldTypeName(this.name.name.lowercase()),
+                path = PrimitiveTypesPopulator.path
             )
         }
         //TODO-FIX it should not be needed to hardcode it like that
@@ -63,6 +64,10 @@ abstract class ApiTypeLogic: ApiType {
                 ).asWorld()
             )
         }
+    }
+
+    override fun serializableWorldType(): WorldType {
+        return asWorldType()
     }
 
     @Deprecated("Use builder instead", ReplaceWith("builder()"))
@@ -199,6 +204,9 @@ abstract class SimpleStructureApiType(
     val def: SimpleStructureDefinition,
     val boxedType: BaseApiType
 ) : StructureApiType(def.getName()) {
+    override fun serializableWorldType(): WorldType {
+        return boxedType.asWorldType()
+    }
 
     fun unbox(variableName: String): String {
         return serialize(variableName)

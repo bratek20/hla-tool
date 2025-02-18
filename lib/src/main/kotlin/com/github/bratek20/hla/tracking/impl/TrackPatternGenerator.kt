@@ -16,7 +16,6 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.utils.pascalToCamelCase
-import com.github.bratek20.utils.stringify
 
 enum class TableType {
     DIMENSION,
@@ -44,7 +43,7 @@ private class TrackingTypesLogic(
     }
 
     fun getTypeBuilder(typeName: String, serializable: Boolean): TypeBuilder {
-        val worldType = getWorldType(typeName)
+        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
             val x = apiTypeFactory.create(TypeDefinition(typeName, emptyList()))
             if (serializable) x.serializableBuilder() else x.builder()
@@ -53,8 +52,13 @@ private class TrackingTypesLogic(
         }
     }
 
-    fun getWorldType(typeName: String): WorldType {
-        return typesWorldApi.getTypeByName(WorldTypeName(typeName))
+    fun getSerializableWorldType(typeName: String): WorldType {
+        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
+            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).serializableWorldType()
+        } else {
+            worldType
+        }
     }
 }
 
@@ -74,7 +78,7 @@ private class MyFieldsLogic(
     override fun getWorldFields(): List<WorldClassField> {
         return defs.map { WorldClassField.create(
             name = it.getName(),
-            type = types.getWorldType(it.getType().getName())
+            type = types.getSerializableWorldType(it.getType().getName())
         ) }
     }
 
@@ -119,7 +123,7 @@ private class ExposedClassLogic(
         return def.getMappedFields().map { mappedField ->
             WorldClassField.create(
                 name = finalFieldName(mappedField),
-                type = types.getWorldType(getWorldFieldTypeName(mappedField))
+                type = types.getSerializableWorldType(getWorldFieldTypeName(mappedField))
             )
         }
     }
@@ -245,7 +249,30 @@ class TrackingTableLogic(
     }
 
     private fun toSqlType(type: WorldType): String {
-        return "VARCHAR(256)"
+        val hlaPath = type.getPath().asHla()
+        if (hlaPath.getPatternName() == PatternName.Primitives) {
+            return primitiveToSqlType(BaseType.valueOf(type.getName().value.uppercase()))
+        }
+        if (hlaPath.getPatternName() == PatternName.Track) { // it is dimension
+            return "BIGINT"
+        }
+        if (hlaPath.getSubmoduleName() == SubmoduleName.Api) {
+            return "jsonb"
+        }
+        return "???"
+    }
+
+    private fun primitiveToSqlType(type: BaseType): String {
+        return when (type) {
+            BaseType.STRING -> "VARCHAR(256)"
+            BaseType.INT -> "INTEGER"
+            BaseType.BOOL -> "BOOLEAN"
+            BaseType.VOID -> TODO()
+            BaseType.ANY -> TODO()
+            BaseType.DOUBLE -> TODO()
+            BaseType.LONG -> "BIGINT"
+            BaseType.STRUCT -> TODO()
+        }
     }
 }
 
