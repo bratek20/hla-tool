@@ -29,6 +29,7 @@ Enums
         //impl
         Logic
         Track
+        InitSql
         //DataClasses - declared in api
         //DataKeys - declared in api
 
