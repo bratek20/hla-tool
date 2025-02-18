@@ -4,14 +4,17 @@ import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.utils.directory.api.FileName
 
-
-
 class InitSqlGenerator: PatternGenerator() {
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
+    }
+
     override fun patternName(): PatternName {
         return PatternName.InitSql
     }
