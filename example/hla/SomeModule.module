@@ -291,7 +291,7 @@ ViewModel
             someClassVm: SomeClassVm
 
 
-Tracking (migrationNumber: 012)
+Tracking
     Dimensions
         SomeDimension (table: "some_dimension")
             SomeClass

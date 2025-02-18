@@ -6,6 +6,5 @@ ValueObjects
         fields: FieldDefinition[]
 
     TrackingSubmoduleDefinition
-        attributes: Attribute[]
         dimensions: TableDefinition[]
         events: TableDefinition[]

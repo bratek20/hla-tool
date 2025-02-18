@@ -911,11 +911,6 @@ class ModuleGroupParserTest {
 
         assertModules(modules, listOf {
             trackingSubmodule = {
-                attributes = listOf {
-                    name = "migrationNumber"
-                    value = "011"
-                }
-
                 dimensions = listOf {
                     name = "SomeDimension"
                     attributes = listOf {

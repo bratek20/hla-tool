@@ -44,14 +44,9 @@ data class TableDefinition(
 }
 
 data class TrackingSubmoduleDefinition(
-    private val attributes: List<Attribute>,
     private val dimensions: List<TableDefinition>,
     private val events: List<TableDefinition>,
 ) {
-    fun getAttributes(): List<Attribute> {
-        return this.attributes
-    }
-
     fun getDimensions(): List<TableDefinition> {
         return this.dimensions
     }
@@ -62,12 +57,10 @@ data class TrackingSubmoduleDefinition(
 
     companion object {
         fun create(
-            attributes: List<Attribute>,
             dimensions: List<TableDefinition>,
             events: List<TableDefinition>,
         ): TrackingSubmoduleDefinition {
             return TrackingSubmoduleDefinition(
-                attributes = attributes,
                 dimensions = dimensions,
                 events = events,
             )
