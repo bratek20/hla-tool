@@ -198,28 +198,31 @@ class ModuleGroupParserLogic(
 
     private fun parseDependencyConceptDefinition(elements: List<ParsedElement>): List<DependencyConceptDefinition> {
         return elements.filterIsInstance<Section>().map { m ->
-            val mappedFields = m.elements.filterIsInstance<Section>().map {
-                MappedField(
-                    name = it.name
-                )
-            }
-            val mappedFieldsWithOverrides = m.elements.filterIsInstance<ParsedMapping>().map {
-                if (it.value.first().isUpperCase()) {
+            val mappedFields = m.elements.filter { it is Section || it is ParsedMapping }.map {
+                if (it is Section) {
                     MappedField(
-                        name = it.key,
-                        mappedType = it.value
+                        name = it.name
                     )
                 }
                 else {
-                    MappedField(
-                        name = it.key,
-                        mappedName = it.value
-                    )
+                    val m = it as ParsedMapping
+                    if (m.value.first().isUpperCase()) {
+                        MappedField(
+                            name = m.key,
+                            mappedType = m.value
+                        )
+                    }
+                    else {
+                        MappedField(
+                            name = m.key,
+                            mappedName = m.value
+                        )
+                    }
                 }
             }
             DependencyConceptDefinition(
                 name = m.name,
-                mappedFields = mappedFields + mappedFieldsWithOverrides
+                mappedFields = mappedFields
             )
         }
     }

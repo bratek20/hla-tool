@@ -288,3 +288,16 @@ ViewModel
             State
                 someId: SomeId
             someClassVm: SomeClassVm
+
+
+Tracking (migrationNumber: 012)
+    Dimensions
+        SomeDimension (table: "some_dimension")
+            SomeClass
+                id -> name // name mapping
+                amount // keeping same name
+            date_range: DateRange // field + custom type
+
+    Events
+        SomeTrackingEvent (table: "some_tracking_event")
+            some_dimension_id: SomeDimension // referencing other

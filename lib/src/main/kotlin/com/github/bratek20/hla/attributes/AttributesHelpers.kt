@@ -11,3 +11,7 @@ class KnownAttribute {
 fun hasAttribute(attributes: List<Attribute>, name: String): Boolean {
     return attributes.any { it.getName() == name }
 }
+
+fun getAttributeValue(attributes: List<Attribute>, name: String): String {
+    return attributes.first { it.getName() == name }.getValue()
+}

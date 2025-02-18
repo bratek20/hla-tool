@@ -12,6 +12,7 @@ import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.api.patterns.DataClassesGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
+import com.github.bratek20.hla.tracking.impl.TrackPatternGenerator
 
 class LogicGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -113,6 +114,7 @@ class ImplGenerator: SubmoduleGenerator() {
         return listOf(
             ImplDataClassesGenerator(),
             ImplDataKeysGenerator(),
+            TrackPatternGenerator(),
             LogicGenerator(),
         )
     }

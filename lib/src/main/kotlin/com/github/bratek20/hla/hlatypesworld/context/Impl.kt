@@ -2,6 +2,7 @@ package com.github.bratek20.hla.hlatypesworld.context
 
 import com.github.bratek20.architecture.context.api.ContextBuilder
 import com.github.bratek20.architecture.context.api.ContextModule
+import com.github.bratek20.hla.tracking.impl.TrackingTypesPopulator
 
 import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.hlatypesworld.impl.*
@@ -24,5 +25,6 @@ class HlaTypesWorldPopulators: ContextModule {
             .addImpl(HlaTypesWorldPopulator::class.java, ApiTypesPopulator::class.java)
             .addImpl(HlaTypesWorldPopulator::class.java, ViewModelTypesPopulator::class.java)
             .addImpl(HlaTypesWorldPopulator::class.java, ViewTypesPopulator::class.java)
+            .addImpl(HlaTypesWorldPopulator::class.java, TrackingTypesPopulator::class.java)
     }
 }
