@@ -433,7 +433,7 @@ namespace SomeModule {
         }
 
         if (expected.custom !== undefined) {
-            if (given.getCustom() != expected.custom) { result.push(`${path}custom ${given.getCustom()} != ${expected.custom}`) }
+            if (JSON.stringify(given.getCustom()) != JSON.stringify(expected.custom)) { result.push(`${path}custom ${JSON.stringify(given.getCustom())} != ${JSON.stringify(expected.custom)}`) }
         }
 
         if (expected.someEnum !== undefined) {
@@ -445,7 +445,7 @@ namespace SomeModule {
         }
 
         if (expected.customOpt !== undefined) {
-            if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
+            if (JSON.stringify(given.getCustomOpt().get()) != JSON.stringify(expected.customOpt)) { result.push(`${path}customOpt ${JSON.stringify(given.getCustomOpt().get())} != ${JSON.stringify(expected.customOpt)}`) }
         }
 
         return result.join("\n")
@@ -554,7 +554,7 @@ namespace SomeModule {
         }
 
         if (expected.custom !== undefined) {
-            if (given.getCustom() != expected.custom) { result.push(`${path}custom ${given.getCustom()} != ${expected.custom}`) }
+            if (JSON.stringify(given.getCustom()) != JSON.stringify(expected.custom)) { result.push(`${path}custom ${JSON.stringify(given.getCustom())} != ${JSON.stringify(expected.custom)}`) }
         }
 
         if (expected.customOptEmpty !== undefined) {
@@ -562,7 +562,7 @@ namespace SomeModule {
         }
 
         if (expected.customOpt !== undefined) {
-            if (given.getCustomOpt().get() != expected.customOpt) { result.push(`${path}customOpt ${given.getCustomOpt().get()} != ${expected.customOpt}`) }
+            if (JSON.stringify(given.getCustomOpt().get()) != JSON.stringify(expected.customOpt)) { result.push(`${path}customOpt ${JSON.stringify(given.getCustomOpt().get())} != ${JSON.stringify(expected.customOpt)}`) }
         }
 
         if (expected.goodDataName !== undefined) {

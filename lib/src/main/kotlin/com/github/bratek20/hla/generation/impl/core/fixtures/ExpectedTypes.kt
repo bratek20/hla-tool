@@ -46,7 +46,7 @@ class BaseExpectedType(
     api: BaseApiType,
 ) : ExpectedType<BaseApiType>(api) {
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        if (api.name == BaseType.STRUCT && languageTypes is TypeScriptTypes) {
+        if (shouldUseJsonStringify()) {
             return languageTypes.wrapWithString("$path \${JSON.stringify($givenVariable)} != \${JSON.stringify($expectedVariable)}")
 
         }
@@ -54,10 +54,14 @@ class BaseExpectedType(
     }
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
-        if (api.name == BaseType.STRUCT && languageTypes is TypeScriptTypes) {
+        if (shouldUseJsonStringify()) {
             return "JSON.stringify($givenVariable) != JSON.stringify($expectedVariable)"
         }
         return "$givenVariable != $expectedVariable"
+    }
+
+    private fun shouldUseJsonStringify(): Boolean {
+        return (api.name == BaseType.STRUCT || api.name == BaseType.ANY) && languageTypes is TypeScriptTypes
     }
 }
 
