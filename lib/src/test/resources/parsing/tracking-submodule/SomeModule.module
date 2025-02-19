@@ -1,4 +1,4 @@
-Tracking (migrationNumber: 011)
+Tracking
     Dimensions
         SomeDimension (table: "trade_shop_event_table")
             SomeExposedClass

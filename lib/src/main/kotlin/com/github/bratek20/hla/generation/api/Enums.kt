@@ -34,6 +34,7 @@ enum class PatternName {
     Undefined,
     Logic,
     Track,
+    InitSql,
     WebCommon,
     WebServer,
     WebClient,

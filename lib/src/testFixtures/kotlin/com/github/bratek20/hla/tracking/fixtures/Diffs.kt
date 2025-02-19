@@ -40,18 +40,12 @@ fun diffTableDefinition(given: TableDefinition, expectedInit: ExpectedTableDefin
 }
 
 data class ExpectedTrackingSubmoduleDefinition(
-    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
     var dimensions: List<(ExpectedTableDefinition.() -> Unit)>? = null,
     var events: List<(ExpectedTableDefinition.() -> Unit)>? = null,
 )
 fun diffTrackingSubmoduleDefinition(given: TrackingSubmoduleDefinition, expectedInit: ExpectedTrackingSubmoduleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedTrackingSubmoduleDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
-
-    expected.attributes?.let {
-        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
-        given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
-    }
 
     expected.dimensions?.let {
         if (given.getDimensions().size != it.size) { result.add("${path}dimensions size ${given.getDimensions().size} != ${it.size}"); return@let }

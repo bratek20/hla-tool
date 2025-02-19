@@ -141,6 +141,7 @@ abstract class PatternGenerator
 
     open fun getOperations(): TopLevelCodeBuilderOps? = null
     open fun getOperationsPerFile(): List<PerFileOperations> = emptyList()
+    open fun getFiles(): List<File> = emptyList()
 
     open fun extraKotlinImports(): List<String> {
         return emptyList()
@@ -288,6 +289,10 @@ abstract class PatternGenerator
         getOperationsPerFile().forEach {
             val c = generateFileContent(it.ops)
             generatedPatterns.add(generatePatternFile(c, it.fileName))
+        }
+
+        getFiles().forEach {
+            generatedPatterns.add(GeneratedPattern.create(patternName(), it))
         }
 
         return generatedPatterns

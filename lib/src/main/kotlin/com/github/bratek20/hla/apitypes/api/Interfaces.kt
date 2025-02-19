@@ -8,6 +8,8 @@ import com.github.bratek20.hla.typesworld.api.*
 interface ApiType {
     fun asWorldType(): WorldType
 
+    fun serializableWorldType(): WorldType
+
     fun builder(): com.github.bratek20.codebuilder.types.TypeBuilder
 
     fun serializableBuilder(): com.github.bratek20.codebuilder.types.TypeBuilder

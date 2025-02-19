@@ -19,16 +19,17 @@ class PrimitiveTypesPopulator(
     override fun getOrder(): Int {
         return 0
     }
+    companion object {
+        val path = HlaTypePath.create(
+            GroupName("Language"),
+            ModuleName("Types"),
+            SubmoduleName.Api,
+            PatternName.Primitives
+        ).asWorld()
+    }
 
     override fun populate(modules: List<ModuleDefinition>) {
         BaseType.entries.forEach {
-            val path = HlaTypePath.create(
-                GroupName("Language"),
-                ModuleName("Types"),
-                SubmoduleName.Api,
-                PatternName.Primitives
-            ).asWorld()
-
             api.addPrimitiveType(
                 WorldType.create(
                     name = WorldTypeName(it.name.lowercase()),

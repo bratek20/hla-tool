@@ -24,14 +24,12 @@ fun tableDefinition(init: TableDefinitionDef.() -> Unit = {}): TableDefinition {
 }
 
 data class TrackingSubmoduleDefinitionDef(
-    var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
     var dimensions: List<(TableDefinitionDef.() -> Unit)> = emptyList(),
     var events: List<(TableDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun trackingSubmoduleDefinition(init: TrackingSubmoduleDefinitionDef.() -> Unit = {}): TrackingSubmoduleDefinition {
     val def = TrackingSubmoduleDefinitionDef().apply(init)
     return TrackingSubmoduleDefinition.create(
-        attributes = def.attributes.map { it -> attribute(it) },
         dimensions = def.dimensions.map { it -> tableDefinition(it) },
         events = def.events.map { it -> tableDefinition(it) },
     )

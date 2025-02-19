@@ -177,7 +177,6 @@ class ModuleGroupParserLogic(
     private fun parseTrackingSubmodule(elements: List<ParsedElement>): TrackingSubmoduleDefinition? {
         return findSection(elements, "Tracking")?.let { section ->
             return TrackingSubmoduleDefinition(
-                attributes = section.attributes,
                 dimensions = parseTableDefinition(section.elements, "Dimensions"),
                 events = parseTableDefinition(section.elements, "Events")
             )
