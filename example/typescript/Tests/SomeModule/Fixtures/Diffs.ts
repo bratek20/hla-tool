@@ -477,6 +477,20 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeReferencingPropertyFieldList {
+        referenceIdList?: string[],
+    }
+    export function diffSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList, expected: ExpectedSomeReferencingPropertyFieldList, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.referenceIdList !== undefined) {
+            if (given.getReferenceIdList().length != expected.referenceIdList.length) { result.push(`${path}referenceIdList size ${given.getReferenceIdList().length} != ${expected.referenceIdList.length}`) }
+            given.getReferenceIdList().forEach((entry, idx) => { if (diffSomeId(entry, expected.referenceIdList[idx]) != "") { result.push(diffSomeId(entry, expected.referenceIdList[idx], `${path}referenceIdList[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedNestedValue {
         value?: string,
     }
