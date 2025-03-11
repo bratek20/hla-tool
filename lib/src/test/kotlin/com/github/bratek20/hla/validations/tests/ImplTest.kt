@@ -234,6 +234,13 @@ class ValidationsImplTest {
             }
         ))
 
+        propertiesMock.set(SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY,
+            struct {
+                "referenceIdList" to listOf("1")
+            }
+        )
+
+
         val result = validateCall()
 
         loggerMock.assertInfos(
@@ -252,6 +259,8 @@ class ValidationsImplTest {
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]",
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
+            "Values for '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]': [1]",
 
             "Validating type 'SomeReferencingProperty'",
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyObject\"/'",
@@ -260,7 +269,8 @@ class ValidationsImplTest {
             "Validating type 'SomeId'",
             "Found reference for 'SomeId' at '\"SomeSourcePropertyList\"/[*]/id'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
-            "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'"
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'"
         )
 
 
