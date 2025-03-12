@@ -101,13 +101,21 @@ abstract class ComplexStructuresPopulator(
             ))
 
             def.getFields()
-                .filter { hasAttribute(it.getAttributes(), KnownAttribute.ID_SOURCE) }
                 .forEach { field ->
-                    extraInfo.markAsIdSource(IdSourceInfo(
-                        type = field.asClassField(world).getType(),
-                        fieldName = field.getName(),
-                        parent = getMyPatternType(def.getName())
-                    ))
+                    if(hasAttribute(field.getAttributes(), KnownAttribute.ID_SOURCE)) {
+                        extraInfo.markAsIdSource(IdSourceInfo(
+                            type = field.asClassField(world).getType(),
+                            fieldName = field.getName(),
+                            parent = getMyPatternType(def.getName())
+                        ))
+                    }
+                    if(hasAttribute(field.getAttributes(), KnownAttribute.UNIQUE)) {
+                        extraInfo.markAsUniqueId(UniqueIdInfo(
+                            type = field.asClassField(world).getType(),
+                            fieldName = field.getName(),
+                            parent = getMyPatternType(def.getName())
+                        ))
+                    }
                 }
         }
     }

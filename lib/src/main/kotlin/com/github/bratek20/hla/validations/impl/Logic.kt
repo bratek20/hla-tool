@@ -8,10 +8,7 @@ import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
-import com.github.bratek20.hla.hlatypesworld.api.IdSourceInfo
-import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
@@ -158,6 +155,29 @@ private class IdSourceValidator(
     }
 }
 
+private class UniqueIdValidator(
+    private val info: UniqueIdInfo,
+    private val logger: Logger,
+    private val group: ModuleGroup,
+    private val traverser: PropertiesTraverser
+) {
+    private val idPath: List<PropertyValuePathLogic>
+
+    init {
+        val parentType = info.getParent()
+        val parentModule = parentType.getPath().asHla().getModuleName()
+        val complexVO = BaseModuleGroupQueries(group).get(parentModule).getComplexValueObjects()
+        val complexVoWithUniqueIdFields = complexVO.filter { complex -> complex.getFields().find { f -> f.getType().getName() == parentType.getName().value }  != null  }
+
+        idPath = complexVoWithUniqueIdFields.map { vo -> PropertyValuePathLogic(vo.getName(), StructPath("[*]/${info.getFieldName()}")) }
+    }
+
+    fun validate(): ValidationResult {
+
+        return ValidationResult.ok()
+    }
+}
+
 class HlaValidatorLogic(
     private val parser: ModuleGroupParser,
     private val hlaTypesWorldApi: HlaTypesWorldApi,
@@ -181,8 +201,9 @@ class HlaValidatorLogic(
 
         val idSourceValidationResult = validateIdSources(group)
         val typeValidatorsResult = executeTypeValidators(group)
+        val uniqueIdValidationResult = validateUniqueIds(group)
 
-        return idSourceValidationResult.merge(typeValidatorsResult)
+        return idSourceValidationResult.merge(typeValidatorsResult).merge(uniqueIdValidationResult)
     }
 
     private fun validateIdSources(group: ModuleGroup): ValidationResult {
@@ -200,6 +221,23 @@ class HlaValidatorLogic(
         }
 
         return sourceValidators.map { it.validate() }.reduce(ValidationResult::merge)
+    }
+
+    private fun validateUniqueIds(group: ModuleGroup): ValidationResult {
+        val uniqueIdInfos = extraInfo.getAllUniqueIdInfos()
+
+        logger.info("Unique id infos: $uniqueIdInfos")
+
+        val uniqueIdsValidator = uniqueIdInfos.map {
+            UniqueIdValidator(
+                info = it,
+                logger = logger,
+                group = group,
+                traverser = traverser
+            )
+        }
+
+        return uniqueIdsValidator.map { it.validate() }.reduce(ValidationResult::merge)
     }
 
     private fun executeTypeValidators(group: ModuleGroup): ValidationResult {
