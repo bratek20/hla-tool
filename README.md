@@ -14,3 +14,18 @@ As an alternative you can create environment variables
 GITHUB_ACTOR (your_github_username) 
 GITHUB_TOKEN (your_github_token)
 ```
+
+## Tool Publishing
+To publish HLA tool used by other projects to generate code
+
+1. tag branch and it will be pushed automatically
+2. update tool version in project submodule HLA
+
+## Lib Publishing
+To publish new version of HLA lib to be used by other projectsù
+
+1. update version manually in `lib/build.gradle.kts`
+2. Open console in `bash` folder
+3. execute `libPublish.sh`
+4. update HLA version in other projects to use new version of lib
+

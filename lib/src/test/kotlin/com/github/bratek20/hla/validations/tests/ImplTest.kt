@@ -319,7 +319,7 @@ class ValidationsImplTest {
                 "Value '1' at '\"SomeSourcePropertyList\"/[*]/id' is not unique",
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
-                "Value '4' "
+                "Value '4' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[0]' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'"
             )
         }
     }
