@@ -22,7 +22,7 @@ To publish HLA tool used by other projects to generate code
 2. update tool version in project submodule HLA
 
 ## Lib Publishing
-To publish new version of HLA lib to be used by other projectsù
+To publish new version of HLA lib to be used by other projects
 
 1. update version manually in `lib/build.gradle.kts`
 2. Open console in `bash` folder
