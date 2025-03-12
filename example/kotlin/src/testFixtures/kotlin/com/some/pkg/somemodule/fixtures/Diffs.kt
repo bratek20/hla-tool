@@ -504,6 +504,21 @@ fun diffSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: Ex
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeReferencingPropertyFieldList(
+    var referenceIdList: List<String>? = null,
+)
+fun diffSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList, expectedInit: ExpectedSomeReferencingPropertyFieldList.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeReferencingPropertyFieldList().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.referenceIdList?.let {
+        if (given.getReferenceIdList().size != it.size) { result.add("${path}referenceIdList size ${given.getReferenceIdList().size} != ${it.size}"); return@let }
+        given.getReferenceIdList().forEachIndexed { idx, entry -> if (diffSomeId(entry, it[idx]) != "") { result.add(diffSomeId(entry, it[idx], "${path}referenceIdList[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedNestedValue(
     var value: String? = null,
 )

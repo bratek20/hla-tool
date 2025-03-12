@@ -580,6 +580,22 @@ class SomeReferencingProperty {
     }
 }
 
+class SomeReferencingPropertyFieldList {
+    private referenceIdList = [STRING]
+
+    static create(
+        referenceIdList: SomeId[],
+    ): SomeReferencingPropertyFieldList {
+        const instance = new SomeReferencingPropertyFieldList()
+        instance.referenceIdList = referenceIdList.map(it => it.value)
+        return instance
+    }
+
+    getReferenceIdList(): SomeId[] {
+        return this.referenceIdList.map(it => new SomeId(it))
+    }
+}
+
 class NestedValue {
     private value = STRING
 

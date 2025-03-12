@@ -312,6 +312,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeReferencingPropertyFieldListDef {
+        referenceIdList?: string[],
+    }
+    export function someReferencingPropertyFieldList(def?: SomeReferencingPropertyFieldListDef): SomeReferencingPropertyFieldList {
+        const final_referenceIdList = def?.referenceIdList ?? []
+
+        return SomeReferencingPropertyFieldList.create(
+            final_referenceIdList.map(it => new SomeId(it)),
+        )
+    }
+
     export interface NestedValueDef {
         value?: string,
     }

@@ -522,6 +522,22 @@ namespace SomeModule.Api {
         }
     }
 
+    public class SomeReferencingPropertyFieldList: ValueObject {
+        readonly List<string> referenceIdList;
+
+        public SomeReferencingPropertyFieldList(
+            List<string> referenceIdList
+        ) {
+            this.referenceIdList = referenceIdList;
+        }
+        public List<SomeId> GetReferenceIdList() {
+            return referenceIdList.Select(it => new SomeId(it)).ToList();
+        }
+        public static SomeReferencingPropertyFieldList Create(List<SomeId> referenceIdList) {
+            return new SomeReferencingPropertyFieldList(referenceIdList.Select(it => it.Value).ToList());
+        }
+    }
+
     public class NestedValue: ValueObject {
         readonly string value;
 

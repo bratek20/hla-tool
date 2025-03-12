@@ -102,6 +102,9 @@ Properties
     SomeReferencingProperty
         referenceId: SomeId
 
+    SomeReferencingPropertyFieldList
+        referenceIdList: SomeId[]
+
     NestedValue
         value: string
     OptionalFieldProperty
@@ -115,6 +118,7 @@ Properties
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
+    "SomeReferencingPropertyFieldList" -> SomeReferencingPropertyFieldList
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]

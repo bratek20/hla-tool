@@ -164,6 +164,11 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
     Struct::class
 )
 
+val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "SomeReferencingPropertyFieldList",
+    Struct::class
+)
+
 val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "CustomTypesProperty",
     Struct::class
@@ -229,6 +234,13 @@ class ValidationsImplTest {
             }
         ))
 
+        propertiesMock.set(SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY,
+            struct {
+                "referenceIdList" to listOf("1")
+            }
+        )
+
+
         val result = validateCall()
 
         loggerMock.assertInfos(
@@ -247,6 +259,8 @@ class ValidationsImplTest {
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]",
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
+            "Values for '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]': [1]",
 
             "Validating type 'SomeReferencingProperty'",
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyObject\"/'",
@@ -255,7 +269,8 @@ class ValidationsImplTest {
             "Validating type 'SomeId'",
             "Found reference for 'SomeId' at '\"SomeSourcePropertyList\"/[*]/id'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
-            "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'"
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'"
         )
 
 
@@ -290,6 +305,12 @@ class ValidationsImplTest {
             }
         ))
 
+        propertiesMock.set(SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY,
+            struct {
+                "referenceIdList" to listOf("4")
+            }
+        )
+
         val result = validateCall()
 
         assertValidationResult(result) {
@@ -298,6 +319,7 @@ class ValidationsImplTest {
                 "Value '1' at '\"SomeSourcePropertyList\"/[*]/id' is not unique",
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
+                "Value '4' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[0]' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'"
             )
         }
     }

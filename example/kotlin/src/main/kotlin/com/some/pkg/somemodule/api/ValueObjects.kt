@@ -605,6 +605,24 @@ data class SomeReferencingProperty(
     }
 }
 
+data class SomeReferencingPropertyFieldList(
+    private val referenceIdList: List<String>,
+) {
+    fun getReferenceIdList(): List<SomeId> {
+        return this.referenceIdList.map { it -> SomeId(it) }
+    }
+
+    companion object {
+        fun create(
+            referenceIdList: List<SomeId>,
+        ): SomeReferencingPropertyFieldList {
+            return SomeReferencingPropertyFieldList(
+                referenceIdList = referenceIdList.map { it -> it.value },
+            )
+        }
+    }
+}
+
 data class NestedValue(
     private val value: String,
 ) {

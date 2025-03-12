@@ -271,6 +271,16 @@ fun someReferencingProperty(init: SomeReferencingPropertyDef.() -> Unit = {}): S
     )
 }
 
+data class SomeReferencingPropertyFieldListDef(
+    var referenceIdList: List<String> = emptyList(),
+)
+fun someReferencingPropertyFieldList(init: SomeReferencingPropertyFieldListDef.() -> Unit = {}): SomeReferencingPropertyFieldList {
+    val def = SomeReferencingPropertyFieldListDef().apply(init)
+    return SomeReferencingPropertyFieldList.create(
+        referenceIdList = def.referenceIdList.map { it -> SomeId(it) },
+    )
+}
+
 data class NestedValueDef(
     var value: String = "someValue",
 )
