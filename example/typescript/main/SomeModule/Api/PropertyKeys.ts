@@ -26,6 +26,11 @@ namespace SomeModule {
         SomeReferencingPropertyFieldList
     )
 
+    export const SOME_STRUCTURE_WITH_UNIQUE_IDS_PROPERTY_KEY = new ListPropertyKey(
+        "SomeStructureWithUniqueIds",
+        SomeStructureWithUniqueIds
+    )
+
     export const REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = new ObjectPropertyKey(
         "ReferencingOtherProperty",
         OtherProperty

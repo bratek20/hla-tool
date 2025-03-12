@@ -116,6 +116,16 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function uniqueIdEntry(given: UniqueIdEntry, expected: ExpectedUniqueIdEntry) {
+        const diff = diffUniqueIdEntry(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expected: ExpectedSomeStructureWithUniqueIds) {
+        const diff = diffSomeStructureWithUniqueIds(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function nestedValue(given: NestedValue, expected: ExpectedNestedValue) {
         const diff = diffNestedValue(given, expected)
         AssertEquals(diff, "", diff)

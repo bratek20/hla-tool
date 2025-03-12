@@ -538,6 +538,38 @@ namespace SomeModule.Api {
         }
     }
 
+    public class UniqueIdEntry: ValueObject {
+        readonly string id;
+
+        public UniqueIdEntry(
+            string id
+        ) {
+            this.id = id;
+        }
+        public string GetId() {
+            return id;
+        }
+        public static UniqueIdEntry Create(string id) {
+            return new UniqueIdEntry(id);
+        }
+    }
+
+    public class SomeStructureWithUniqueIds: ValueObject {
+        readonly List<UniqueIdEntry> entries;
+
+        public SomeStructureWithUniqueIds(
+            List<UniqueIdEntry> entries
+        ) {
+            this.entries = entries;
+        }
+        public List<UniqueIdEntry> GetEntries() {
+            return entries;
+        }
+        public static SomeStructureWithUniqueIds Create(List<UniqueIdEntry> entries) {
+            return new SomeStructureWithUniqueIds(entries);
+        }
+    }
+
     public class NestedValue: ValueObject {
         readonly string value;
 

@@ -596,6 +596,38 @@ class SomeReferencingPropertyFieldList {
     }
 }
 
+class UniqueIdEntry {
+    private id = STRING
+
+    static create(
+        id: string,
+    ): UniqueIdEntry {
+        const instance = new UniqueIdEntry()
+        instance.id = id
+        return instance
+    }
+
+    getId(): string {
+        return this.id
+    }
+}
+
+class SomeStructureWithUniqueIds {
+    private entries = [new UniqueIdEntry]
+
+    static create(
+        entries: UniqueIdEntry[],
+    ): SomeStructureWithUniqueIds {
+        const instance = new SomeStructureWithUniqueIds()
+        instance.entries = entries
+        return instance
+    }
+
+    getEntries(): UniqueIdEntry[] {
+        return this.entries
+    }
+}
+
 class NestedValue {
     private value = STRING
 

@@ -323,6 +323,28 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface UniqueIdEntryDef {
+        id?: string,
+    }
+    export function uniqueIdEntry(def?: UniqueIdEntryDef): UniqueIdEntry {
+        const final_id = def?.id ?? "someValue"
+
+        return UniqueIdEntry.create(
+            final_id,
+        )
+    }
+
+    export interface SomeStructureWithUniqueIdsDef {
+        entries?: UniqueIdEntryDef[],
+    }
+    export function someStructureWithUniqueIds(def?: SomeStructureWithUniqueIdsDef): SomeStructureWithUniqueIds {
+        const final_entries = def?.entries ?? []
+
+        return SomeStructureWithUniqueIds.create(
+            final_entries.map(it => uniqueIdEntry(it)),
+        )
+    }
+
     export interface NestedValueDef {
         value?: string,
     }
