@@ -128,6 +128,16 @@ fun assertSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldLi
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertUniqueIdEntry(given: UniqueIdEntry, expectedInit: ExpectedUniqueIdEntry.() -> Unit) {
+    val diff = diffUniqueIdEntry(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expectedInit: ExpectedSomeStructureWithUniqueIds.() -> Unit) {
+    val diff = diffSomeStructureWithUniqueIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertNestedValue(given: NestedValue, expectedInit: ExpectedNestedValue.() -> Unit) {
     val diff = diffNestedValue(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

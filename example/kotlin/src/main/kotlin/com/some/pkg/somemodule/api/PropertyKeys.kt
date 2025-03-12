@@ -30,6 +30,11 @@ val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.arch
     SomeReferencingPropertyFieldList::class
 )
 
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIds",
+    SomeStructureWithUniqueIds::class
+)
+
 val REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "ReferencingOtherProperty",
     OtherProperty::class

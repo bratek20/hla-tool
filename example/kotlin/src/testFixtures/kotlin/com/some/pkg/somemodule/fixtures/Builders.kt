@@ -281,6 +281,26 @@ fun someReferencingPropertyFieldList(init: SomeReferencingPropertyFieldListDef.(
     )
 }
 
+data class UniqueIdEntryDef(
+    var id: String = "someValue",
+)
+fun uniqueIdEntry(init: UniqueIdEntryDef.() -> Unit = {}): UniqueIdEntry {
+    val def = UniqueIdEntryDef().apply(init)
+    return UniqueIdEntry.create(
+        id = def.id,
+    )
+}
+
+data class SomeStructureWithUniqueIdsDef(
+    var entries: List<(UniqueIdEntryDef.() -> Unit)> = emptyList(),
+)
+fun someStructureWithUniqueIds(init: SomeStructureWithUniqueIdsDef.() -> Unit = {}): SomeStructureWithUniqueIds {
+    val def = SomeStructureWithUniqueIdsDef().apply(init)
+    return SomeStructureWithUniqueIds.create(
+        entries = def.entries.map { it -> uniqueIdEntry(it) },
+    )
+}
+
 data class NestedValueDef(
     var value: String = "someValue",
 )

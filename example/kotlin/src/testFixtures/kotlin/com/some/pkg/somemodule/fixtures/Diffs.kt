@@ -519,6 +519,35 @@ fun diffSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList
     return result.joinToString("\n")
 }
 
+data class ExpectedUniqueIdEntry(
+    var id: String? = null,
+)
+fun diffUniqueIdEntry(given: UniqueIdEntry, expectedInit: ExpectedUniqueIdEntry.() -> Unit, path: String = ""): String {
+    val expected = ExpectedUniqueIdEntry().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (given.getId() != it) { result.add("${path}id ${given.getId()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeStructureWithUniqueIds(
+    var entries: List<(ExpectedUniqueIdEntry.() -> Unit)>? = null,
+)
+fun diffSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expectedInit: ExpectedSomeStructureWithUniqueIds.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeStructureWithUniqueIds().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.entries?.let {
+        if (given.getEntries().size != it.size) { result.add("${path}entries size ${given.getEntries().size} != ${it.size}"); return@let }
+        given.getEntries().forEachIndexed { idx, entry -> if (diffUniqueIdEntry(entry, it[idx]) != "") { result.add(diffUniqueIdEntry(entry, it[idx], "${path}entries[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedNestedValue(
     var value: String? = null,
 )

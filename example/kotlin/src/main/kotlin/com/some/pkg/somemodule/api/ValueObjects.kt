@@ -623,6 +623,42 @@ data class SomeReferencingPropertyFieldList(
     }
 }
 
+data class UniqueIdEntry(
+    private val id: String,
+) {
+    fun getId(): String {
+        return this.id
+    }
+
+    companion object {
+        fun create(
+            id: String,
+        ): UniqueIdEntry {
+            return UniqueIdEntry(
+                id = id,
+            )
+        }
+    }
+}
+
+data class SomeStructureWithUniqueIds(
+    private val entries: List<UniqueIdEntry>,
+) {
+    fun getEntries(): List<UniqueIdEntry> {
+        return this.entries
+    }
+
+    companion object {
+        fun create(
+            entries: List<UniqueIdEntry>,
+        ): SomeStructureWithUniqueIds {
+            return SomeStructureWithUniqueIds(
+                entries = entries,
+            )
+        }
+    }
+}
+
 data class NestedValue(
     private val value: String,
 ) {
