@@ -169,6 +169,11 @@ val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.arch
     Struct::class
 )
 
+val SOME_STRUCTURE_WITH_UNIQUE_IDS = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIds",
+    Struct::class
+)
+
 val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "CustomTypesProperty",
     Struct::class
@@ -320,6 +325,35 @@ class ValidationsImplTest {
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '4' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[0]' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'"
+            )
+        }
+    }
+
+    @Test
+    fun `should fail if unique id in structure is not unique`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS, listOf(
+                struct {
+                    "entries" to listOf(
+                        struct {
+                            "id" to "1"
+                        },
+                        struct {
+                            "id" to "1"
+                        }
+                    )
+                }
+            )
+        )
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '1' at '\"SomeStructureWithUniqueIds\"' is not unique"
             )
         }
     }

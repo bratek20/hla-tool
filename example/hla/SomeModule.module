@@ -105,6 +105,12 @@ Properties
     SomeReferencingPropertyFieldList
         referenceIdList: SomeId[]
 
+    UniqueIdEntry
+        id: string (unique)
+
+    SomeStructureWithUniqueIds
+        entries: UniqueIdEntry[]
+
     NestedValue
         value: string
     OptionalFieldProperty
@@ -119,6 +125,7 @@ Properties
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
     "SomeReferencingPropertyFieldList" -> SomeReferencingPropertyFieldList
+    "SomeStructureWithUniqueIds" -> SomeStructureWithUniqueIds[]
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]
