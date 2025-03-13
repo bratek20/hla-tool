@@ -6,6 +6,7 @@ import com.github.bratek20.architecture.serialization.context.SerializationFacto
 import com.github.bratek20.architecture.structs.api.*
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
+import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.hlatypesworld.api.*
@@ -159,17 +160,31 @@ private class UniqueIdValidator(
     private val info: UniqueIdInfo,
     private val logger: Logger,
     private val group: ModuleGroup,
-    private val traverser: PropertiesTraverser
+    private val traverser: PropertiesTraverser,
+    private val typesWorldApi: TypesWorldApi
 ) {
     private val idPaths: List<PropertyValuePathLogic>
 
     init {
         val parentType = info.getParent()
-        val parentModule = parentType.getPath().asHla().getModuleName()
-        val complexVOs = BaseModuleGroupQueries(group).get(parentModule).getComplexValueObjects()
-        val complexVosWithUniqueIdFields = complexVOs.filter { complex -> complex.getFields().find { f -> f.getType().getName() == parentType.getName().value }  != null  }
+        idPaths = findReferences(parentType)
+    }
 
-        idPaths = complexVosWithUniqueIdFields.map { vo -> PropertyValuePathLogic(vo.getName(), StructPath("[*]/entries/[*]/${info.getFieldName()}")) }
+    private fun findReferences(parentType: WorldType): List<PropertyValuePathLogic> {
+        val references = mutableListOf<PropertyValuePathLogic>()
+        val types = typesWorldApi.getAllTypes()
+        val propertyKeys = BaseModuleGroupQueries(group).get(parentType.getPath().asHla().getModuleName()).getPropertyKeys()
+        types.forEach { vo ->
+            if(vo.getName() != parentType.getName() /*&& vo.getName().value == "SomeStructureWithUniqueIds"*/) {
+                val referencesForClass = typesWorldApi.getAllReferencesOf(vo, parentType)
+                if(referencesForClass.isNotEmpty()) {
+                    val propertyKey = propertyKeys.find { it.getType().getName() == vo.getName().value }!!
+                    val initialPathString = if (propertyKey.getType().getWrappers().contains(TypeWrapper.LIST))  "[*]/" else ""
+                    references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(vo.getName().value, StructPath(initialPathString + ref.value + "/${info.getFieldName()}")) })
+                }
+            }
+        }
+        return references
     }
 
     fun validate(): ValidationResult {
@@ -242,7 +257,8 @@ class HlaValidatorLogic(
                 info = it,
                 logger = logger,
                 group = group,
-                traverser = traverser
+                traverser = traverser,
+                typesWorldApi = typesWorldApi
             )
         }
 
