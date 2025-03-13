@@ -355,7 +355,7 @@ class ValidationsImplTest {
         assertValidationResult(result) {
             ok = false
             errors = listOf(
-                "Value '1' at '\"SomeStructureWithUniqueIds\"' is not unique"
+                "Value '1' at '\"SomeStructureWithUniqueIds\"/[*]/entries/[*]/id' is not unique"
             )
         }
     }

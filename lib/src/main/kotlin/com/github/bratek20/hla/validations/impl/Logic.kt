@@ -161,19 +161,28 @@ private class UniqueIdValidator(
     private val group: ModuleGroup,
     private val traverser: PropertiesTraverser
 ) {
-    private val idPath: List<PropertyValuePathLogic>
+    private val idPaths: List<PropertyValuePathLogic>
 
     init {
         val parentType = info.getParent()
         val parentModule = parentType.getPath().asHla().getModuleName()
-        val complexVO = BaseModuleGroupQueries(group).get(parentModule).getComplexValueObjects()
-        val complexVoWithUniqueIdFields = complexVO.filter { complex -> complex.getFields().find { f -> f.getType().getName() == parentType.getName().value }  != null  }
+        val complexVOs = BaseModuleGroupQueries(group).get(parentModule).getComplexValueObjects()
+        val complexVosWithUniqueIdFields = complexVOs.filter { complex -> complex.getFields().find { f -> f.getType().getName() == parentType.getName().value }  != null  }
 
-        idPath = complexVoWithUniqueIdFields.map { vo -> PropertyValuePathLogic(vo.getName(), StructPath("[*]/${info.getFieldName()}")) }
+        idPaths = complexVosWithUniqueIdFields.map { vo -> PropertyValuePathLogic(vo.getName(), StructPath("[*]/entries/[*]/${info.getFieldName()}")) }
     }
 
     fun validate(): ValidationResult {
-
+        val errors = mutableListOf<String>()
+        idPaths.forEach { idPath ->
+            val valuesWithPath = traverser.getPrimitiveValuesWithPathAt(idPath)
+            val countPerValue = valuesWithPath.groupingBy { it.value }.eachCount()
+            errors.addAll(countPerValue.filter { it.value > 1 }
+                .map { "Value '${it.key}' at '${idPath}' is not unique" })
+        }
+        if(errors.isNotEmpty()) {
+            return ValidationResult.createFor(errors)
+        }
         return ValidationResult.ok()
     }
 }
