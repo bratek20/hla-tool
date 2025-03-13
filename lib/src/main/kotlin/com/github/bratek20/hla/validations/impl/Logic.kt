@@ -172,15 +172,16 @@ private class UniqueIdValidator(
 
     private fun findReferences(parentType: WorldType): List<PropertyValuePathLogic> {
         val references = mutableListOf<PropertyValuePathLogic>()
-        val types = typesWorldApi.getAllTypes()
+        val classTypes = typesWorldApi.getAllClassTypes()
         val propertyKeys = BaseModuleGroupQueries(group).get(parentType.getPath().asHla().getModuleName()).getPropertyKeys()
-        types.forEach { vo ->
-            if(vo.getName() != parentType.getName() /*&& vo.getName().value == "SomeStructureWithUniqueIds"*/) {
-                val referencesForClass = typesWorldApi.getAllReferencesOf(vo, parentType)
+        classTypes.forEach { classType ->
+            val type = classType.getType()
+            if(type.getName() != parentType.getName() /*&& type.getName().value == "SomeStructureWithUniqueIds"*/) {
+                val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                 if(referencesForClass.isNotEmpty()) {
-                    val propertyKey = propertyKeys.find { it.getType().getName() == vo.getName().value }!!
+                    val propertyKey = propertyKeys.find { it.getType().getName() == type.getName().value }!!
                     val initialPathString = if (propertyKey.getType().getWrappers().contains(TypeWrapper.LIST))  "[*]/" else ""
-                    references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(vo.getName().value, StructPath(initialPathString + ref.value + "/${info.getFieldName()}")) })
+                    references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(type.getName().value, StructPath(initialPathString + ref.value + "/${info.getFieldName()}")) })
                 }
             }
         }

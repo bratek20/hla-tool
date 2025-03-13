@@ -91,6 +91,8 @@ Interfaces
 
         getAllReferencesOf(target: WorldType, searchFor: WorldType): StructPath[]
 
+        getAllClassTypes(): WorldClassType[]
+
 Kotlin
     ExternalTypePackages
         StructPath -> com.github.bratek20.architecture.structs.api
