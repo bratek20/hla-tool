@@ -343,7 +343,7 @@ class ValidationsImplTest {
     }
 
     @Test
-    fun `should fail if unique id in structure list is not unique`() {
+    fun `should fail if unique id in structures is not unique`() {
         setup()
 
         propertiesMock.set(
@@ -361,21 +361,6 @@ class ValidationsImplTest {
             )
         )
 
-
-        val result = validateCall()
-
-        assertValidationResult(result) {
-            ok = false
-            errors = listOf(
-                "Value '1' at '\"SomeStructureWithUniqueIdsList\"/[0]/entries/[*]/id' is not unique",
-            )
-        }
-    }
-
-    @Test
-    fun `should fail if unique id in structure object is not unique`() {
-        setup()
-
         propertiesMock.set(
             SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT,
             struct {
@@ -390,21 +375,6 @@ class ValidationsImplTest {
             }
         )
 
-
-        val result = validateCall()
-
-        assertValidationResult(result) {
-            ok = false
-            errors = listOf(
-                "Value '1' at '\"SomeStructureWithUniqueIdsObject\"/entries/[*]/id' is not unique"
-            )
-        }
-    }
-
-    @Test
-    fun `should fail if unique id in nested structure is not unique`() {
-        setup()
-
         propertiesMock.set(
             SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, listOf(
                 struct {
@@ -434,54 +404,17 @@ class ValidationsImplTest {
             )
         )
 
+
         val result = validateCall()
 
         assertValidationResult(result) {
             ok = false
             errors = listOf(
+                "Value '1' at '\"SomeStructureWithUniqueIdsList\"/[0]/entries/[*]/id' is not unique",
+                "Value '1' at '\"SomeStructureWithUniqueIdsObject\"/entries/[*]/id' is not unique",
                 "Value '1' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
                 "Value '2' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique"
             )
-        }
-    }
-
-    @Test
-    fun `should not fail if unique id in nested structure is correct`() {
-        setup()
-
-        propertiesMock.set(
-            SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, listOf(
-                struct {
-                    "nestedUniqueIds" to listOf(
-                        struct {
-                            "entries" to listOf(
-                                struct {
-                                    "id" to "1"
-                                },
-                                struct {
-                                    "id" to "2"
-                                }
-                            )
-                        },
-                        struct {
-                            "entries" to listOf(
-                                struct {
-                                    "id" to "1"
-                                },
-                                struct {
-                                    "id" to "2"
-                                }
-                            )
-                        }
-                    )
-                }
-            )
-        )
-
-        val result = validateCall()
-
-        assertValidationResult(result) {
-            ok = true
         }
     }
 
@@ -513,6 +446,49 @@ class ValidationsImplTest {
                 }
             )
         )
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, listOf(
+                struct {
+                    "nestedUniqueIds" to listOf(
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        },
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT,
+            struct {
+                "entries" to listOf(
+                    struct {
+                        "id" to "1"
+                    },
+                    struct {
+                        "id" to "2"
+                    }
+                )
+            }
+        )
+
 
         val result = validateCall()
 

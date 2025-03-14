@@ -202,12 +202,12 @@ private class UniqueIdValidator(
         return references
     }
 
-    private fun replaceListWithIndex(referencesForClass: List<StructPath>, propertyKey: KeyDefinition, i: Int? = null): List<PropertyValuePathLogic> {
+    private fun replaceListWithIndex(referencesForClass: List<StructPath>, propertyKey: KeyDefinition, initialPathIndex: Int? = null): List<PropertyValuePathLogic> {
         val finalReferences = mutableListOf<PropertyValuePathLogic>()
         for(ref in referencesForClass) {
             val regex = Regex("\\[\\*\\]")
             val count = regex.findAll(ref.value).count()
-            val initialPath = if(i != null) "[${i}]/" else ""
+            val initialPath = if(initialPathIndex != null) "[${initialPathIndex}]/" else ""
             if(count > 1) {
                 val newRef = ref.value.substringBefore("[*]") + "[*]"
                 val sizeNewRef = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath+newRef)))
