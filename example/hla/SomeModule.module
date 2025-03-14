@@ -131,8 +131,9 @@ Properties
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
     "SomeReferencingPropertyFieldList" -> SomeReferencingPropertyFieldList
-    "SomeStructureWithUniqueIds" -> SomeStructureWithUniqueIds[]
+    "SomeStructureWithUniqueIdsList" -> SomeStructureWithUniqueIds[]
     "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]
+    "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]

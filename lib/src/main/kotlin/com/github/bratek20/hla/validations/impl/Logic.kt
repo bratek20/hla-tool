@@ -189,7 +189,7 @@ private class UniqueIdValidator(
                     if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
                         val propertySize = traverser.getPropertySize(propertyKey.getName())
                         for (i in 0 until propertySize) {
-                            references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(type.getName().value, StructPath("[${i}]/${ref.value}/${info.getFieldName()}")) })
+                            references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/${ref.value}/${info.getFieldName()}")) })
                         }
                     } else {
                         references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(type.getName().value, StructPath(ref.value + "/${info.getFieldName()}")) })

@@ -169,10 +169,16 @@ val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.arch
     Struct::class
 )
 
-val SOME_STRUCTURE_WITH_UNIQUE_IDS = com.github.bratek20.architecture.properties.api.ListPropertyKey(
-    "SomeStructureWithUniqueIds",
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIdsList",
     Struct::class
 )
+
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "SomeStructureWithUniqueIdsObject",
+    Struct::class
+)
+
 
 val SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeStructureWithUniqueNestedIds",
@@ -337,11 +343,11 @@ class ValidationsImplTest {
     }
 
     @Test
-    fun `should fail if unique id in structure is not unique`() {
+    fun `should fail if unique id in structure list is not unique`() {
         setup()
 
         propertiesMock.set(
-            SOME_STRUCTURE_WITH_UNIQUE_IDS, listOf(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST, listOf(
                 struct {
                     "entries" to listOf(
                         struct {
@@ -355,12 +361,42 @@ class ValidationsImplTest {
             )
         )
 
+
         val result = validateCall()
 
         assertValidationResult(result) {
             ok = false
             errors = listOf(
-                "Value '1' at '\"SomeStructureWithUniqueIds\"/[0]/entries/[*]/id' is not unique"
+                "Value '1' at '\"SomeStructureWithUniqueIdsList\"/[0]/entries/[*]/id' is not unique",
+            )
+        }
+    }
+
+    @Test
+    fun `should fail if unique id in structure object is not unique`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT,
+            struct {
+                "entries" to listOf(
+                    struct {
+                        "id" to "1"
+                    },
+                    struct {
+                        "id" to "1"
+                    }
+                )
+            }
+        )
+
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '1' at '\"SomeStructureWithUniqueIdsObject\"/entries/[*]/id' is not unique"
             )
         }
     }
@@ -414,7 +450,7 @@ class ValidationsImplTest {
         setup()
 
         propertiesMock.set(
-            SOME_STRUCTURE_WITH_UNIQUE_IDS, listOf(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST, listOf(
                 struct {
                     "entries" to listOf(
                         struct {
