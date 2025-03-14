@@ -433,8 +433,8 @@ class TypesWorldImplTest {
             assertStructPath(references[2], "nestedField/listField/[*]/value")
         }
 
-        @Disabled("Fix not needed for now, if the issue reappear uncomment test")
-        fun `should work for class referencing its self`() {
+        @Test
+        fun `should throw exception for class referencing its self`() {
             api.ensureType(worldType {
                 name = "ValueClass"
             })
@@ -471,18 +471,20 @@ class TypesWorldImplTest {
                 )
             })
 
-
-            val references = api.getAllReferencesOf(
-                worldType {
-                    name = "SomeClass"
-                },
-                worldType {
-                    name = "ValueClass"
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SomeClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = ""
                 }
             )
-
-            assertThat(references).hasSize(1)
-            //TODO: assert SelfReferenceDetectedException
         }
     }
 }
