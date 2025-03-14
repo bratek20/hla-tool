@@ -139,7 +139,7 @@ class ClassConstructorBuilder {
 typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
 class ExtendsBuilder: LinePartBuilder {
-    lateinit var className: String
+    lateinit var name: String
     private var generics: MutableList<TypeBuilder> = mutableListOf()
 
     fun addGeneric(block: TypeBuilderProvider) {
@@ -153,7 +153,7 @@ class ExtendsBuilder: LinePartBuilder {
         else {
             ""
         }
-        return "$className$genericPart"
+        return "$name$genericPart"
     }
 }
 typealias ExtendsBuilderOps = ExtendsBuilder.() -> Unit

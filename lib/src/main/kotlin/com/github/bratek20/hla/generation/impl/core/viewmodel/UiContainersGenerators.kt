@@ -53,7 +53,7 @@ abstract class GeneratedUiContainerLogic(
         name = def.getName()
         partial = true
         extends {
-            className = getContainerName()
+            name = getContainerName()
             addGeneric {
                 typeName(def.getName() + "State")
             }

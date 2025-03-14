@@ -10,7 +10,6 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
-import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asHla
@@ -19,7 +18,6 @@ import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
 import com.github.bratek20.hla.hlatypesworld.impl.PrimitiveTypesPopulator
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
-import com.github.bratek20.hla.typesworld.api.WorldTypePath
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiTypeLogic: ApiType {
@@ -258,7 +256,7 @@ class SimpleValueObjectApiType(
         name = this@SimpleValueObjectApiType.name
         if (c.lang is CSharp) {
             extends {
-                className = "ValueObject"
+                name = "ValueObject"
             }
         }
 
@@ -407,7 +405,7 @@ open class SerializableApiType(
         this.name = name()
         if (c.lang is CSharp) {
             extends {
-                className = "ValueObject"
+                name = "ValueObject"
             }
         }
         fields.forEach {

@@ -134,7 +134,7 @@ class ElementGroupViewModelLogic(
 
         name = listTypeName
         extends {
-            className = "UiElementGroup"
+            name = "UiElementGroup"
             addGeneric {
                 typeName(elementTypeName)
             }
@@ -167,7 +167,7 @@ class OptionalElementViewModelLogic(
 
         name = optionalTypeName
         extends {
-            className = "OptionalUiElement"
+            name = "OptionalUiElement"
             addGeneric {
                 typeName(elementTypeName)
             }
@@ -202,7 +202,7 @@ class ViewModelEnumElementLogic(
     override fun getClass(): ClassBuilderOps = {
         name = getTypeName()
         extends {
-            className = "EnumSwitch"
+            name = "EnumSwitch"
             addGeneric {
                 typeName(getModelTypeForEnsuredUiElement(typesWorldApi, getTypeName()).getName().value)
             }
@@ -303,7 +303,7 @@ class ViewModelComplexElementLogic(
         name = def.getName()
         partial = true
         extends {
-            className = "UiElement"
+            name = "UiElement"
             addGeneric {
                 modelType.builder()
             }

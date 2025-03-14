@@ -174,7 +174,7 @@ class TrackingTableLogic(
         return {
             name = def.getName()
             extends {
-                className = if (type == TableType.DIMENSION) "TrackingDimension" else "TrackingEvent"
+                name = if (type == TableType.DIMENSION) "TrackingDimension" else "TrackingEvent"
             }
 
             setConstructor {

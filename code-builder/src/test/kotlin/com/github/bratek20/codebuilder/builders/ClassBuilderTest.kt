@@ -72,7 +72,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     extends {
-                        className = "SomeParent"
+                        name = "SomeParent"
                     }
                 })
             }
@@ -541,7 +541,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     extends {
-                        className = "SomeParent"
+                        name = "SomeParent"
                     }
                     setConstructor {
                         addArg {
@@ -596,7 +596,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     extends {
-                        className = "SomeParent"
+                        name = "SomeParent"
                         addGeneric {
                             typeName("SomeType")
                         }

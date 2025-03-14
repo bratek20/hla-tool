@@ -26,7 +26,7 @@ class EnumsGenerator: PatternGenerator() {
                 addClass {
                     name = enumName
                     extends {
-                        className = "StringEnumClass"
+                        name = "StringEnumClass"
                     }
                     it.getValues().forEach {
                         addField {
