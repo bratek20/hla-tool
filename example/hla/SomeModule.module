@@ -105,9 +105,6 @@ Properties
     SomeReferencingPropertyFieldList
         referenceIdList: SomeId[]
 
-    UniqueIdEntry
-        id: string (unique)
-
     SomeStructureWithUniqueIds
         entries: UniqueIdEntry[]
 

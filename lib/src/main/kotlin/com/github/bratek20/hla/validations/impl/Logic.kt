@@ -50,7 +50,7 @@ private class PropertiesTraverser(
         private val serializer = SerializationFactory.createSerializer()
     }
 
-    fun getPropertySize(propertyPath: PropertyValuePathLogic): Int {
+    fun getListSizeAt(propertyPath: PropertyValuePathLogic): Int {
         return getValuesAt(propertyPath).size
     }
 
@@ -177,8 +177,7 @@ private class UniqueIdValidator(
     private fun findReferences(parentType: WorldType): List<PropertyValuePathLogic> {
         val references = mutableListOf<PropertyValuePathLogic>()
         val classTypes = typesWorldApi.getAllClassTypes()
-        val parentModule = parentType.getPath().asHla().getModuleName()
-        val propertyKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
+        val propertyKeys = group.getAllPropertyKeys()
         classTypes.forEach { classType ->
             val type = classType.getType()
             val propertyKeysFiltered = propertyKeys.filter { it.getType().getName() == type.getName().value }
@@ -187,8 +186,7 @@ private class UniqueIdValidator(
                     val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                     if(referencesForClass.isNotEmpty()) {
                         if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
-
-                            val propertySize = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
+                            val propertySize = traverser.getListSizeAt(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
                             for (i in 0 until propertySize) {
                                 references.addAll(processReferences(referencesForClass, propertyKey, i))
                             }
@@ -209,13 +207,13 @@ private class UniqueIdValidator(
     ): List<PropertyValuePathLogic> {
         val initialPath = if(initialPathIndex != null) "[${initialPathIndex}]/" else ""
         return references.flatMap { ref ->
-            expandPath(ref.value, propertyKey, initialPath).map { expandedPath ->
+            expandPathExceptLastListEntry(ref.value, propertyKey, initialPath).map { expandedPath ->
                 PropertyValuePathLogic(propertyKey.getName(), StructPath("$initialPath$expandedPath/${info.getFieldName()}"))
             }
         }
     }
 
-    private fun expandPath(path: String, propertyKey: KeyDefinition, initialPath: String): List<String> {
+    private fun expandPathExceptLastListEntry(path: String, propertyKey: KeyDefinition, initialPath: String): List<String> {
         val regex = Regex("\\[\\*\\]")
         val count = regex.findAll(path).count()
 
@@ -223,11 +221,11 @@ private class UniqueIdValidator(
             val match = regex.find(path) ?: return listOf(path)
 
             val baseRef = path.substringBefore(match.value) + "[*]"
-            val size = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath + baseRef)))
+            val size = traverser.getListSizeAt(PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath + baseRef)))
 
             (0 until size).flatMap { index ->
                 val resolvedPath = path.replaceFirst("[*]", "[$index]")
-                expandPath(resolvedPath, propertyKey, initialPath)
+                expandPathExceptLastListEntry(resolvedPath, propertyKey, initialPath)
             }
         } else {
             listOf(path)

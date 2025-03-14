@@ -7,6 +7,8 @@ using B20.Ext;
 using SomeModule.Api;
 using OtherModule.Api;
 using OtherModule.Fixtures;
+using SimpleModule.Api;
+using SimpleModule.Fixtures;
 using TypesModule.Api;
 using TypesModule.Fixtures;
 
@@ -119,10 +121,6 @@ namespace SomeModule.Fixtures {
 
     public class SomeReferencingPropertyFieldListDef {
         public List<string> ReferenceIdList { get; set; } = new List<string>();
-    }
-
-    public class UniqueIdEntryDef {
-        public string Id { get; set; } = "someValue";
     }
 
     public class SomeStructureWithUniqueIdsDef {
@@ -305,23 +303,17 @@ namespace SomeModule.Fixtures {
             init.Invoke(def);
             return SomeReferencingPropertyFieldList.Create(def.ReferenceIdList.Select(it => new SomeId(it)).ToList());
         }
-        public static UniqueIdEntry BuildUniqueIdEntry(Action<UniqueIdEntryDef> init = null) {
-            var def = new UniqueIdEntryDef();
-            init = init ?? ((_) => {});
-            init.Invoke(def);
-            return UniqueIdEntry.Create(def.Id);
-        }
         public static SomeStructureWithUniqueIds BuildSomeStructureWithUniqueIds(Action<SomeStructureWithUniqueIdsDef> init = null) {
             var def = new SomeStructureWithUniqueIdsDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeStructureWithUniqueIds.Create(def.Entries.Select(it => BuildUniqueIdEntry(it)).ToList());
+            return SomeStructureWithUniqueIds.Create(def.Entries.Select(it => SimpleModuleBuilders.BuildUniqueIdEntry(it)).ToList());
         }
         public static NestedUniqueIds BuildNestedUniqueIds(Action<NestedUniqueIdsDef> init = null) {
             var def = new NestedUniqueIdsDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return NestedUniqueIds.Create(def.Entries.Select(it => BuildUniqueIdEntry(it)).ToList());
+            return NestedUniqueIds.Create(def.Entries.Select(it => SimpleModuleBuilders.BuildUniqueIdEntry(it)).ToList());
         }
         public static SomeStructureWithUniqueNestedIds BuildSomeStructureWithUniqueNestedIds(Action<SomeStructureWithUniqueNestedIdsDef> init = null) {
             var def = new SomeStructureWithUniqueNestedIdsDef();

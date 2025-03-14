@@ -4,6 +4,8 @@ package com.some.pkg.somemodule.fixtures
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.simplemodule.api.*
+import com.some.pkg.simplemodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
@@ -514,20 +516,6 @@ fun diffSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList
     expected.referenceIdList?.let {
         if (given.getReferenceIdList().size != it.size) { result.add("${path}referenceIdList size ${given.getReferenceIdList().size} != ${it.size}"); return@let }
         given.getReferenceIdList().forEachIndexed { idx, entry -> if (diffSomeId(entry, it[idx]) != "") { result.add(diffSomeId(entry, it[idx], "${path}referenceIdList[${idx}].")) } }
-    }
-
-    return result.joinToString("\n")
-}
-
-data class ExpectedUniqueIdEntry(
-    var id: String? = null,
-)
-fun diffUniqueIdEntry(given: UniqueIdEntry, expectedInit: ExpectedUniqueIdEntry.() -> Unit, path: String = ""): String {
-    val expected = ExpectedUniqueIdEntry().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.id?.let {
-        if (given.getId() != it) { result.add("${path}id ${given.getId()} != ${it}") }
     }
 
     return result.joinToString("\n")

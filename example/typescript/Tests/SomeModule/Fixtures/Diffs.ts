@@ -491,42 +491,29 @@ namespace SomeModule {
         return result.join("\n")
     }
 
-    export interface ExpectedUniqueIdEntry {
-        id?: string,
-    }
-    export function diffUniqueIdEntry(given: UniqueIdEntry, expected: ExpectedUniqueIdEntry, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.id !== undefined) {
-            if (given.getId() != expected.id) { result.push(`${path}id ${given.getId()} != ${expected.id}`) }
-        }
-
-        return result.join("\n")
-    }
-
     export interface ExpectedSomeStructureWithUniqueIds {
-        entries?: ExpectedUniqueIdEntry[],
+        entries?: SimpleModule.ExpectedUniqueIdEntry[],
     }
     export function diffSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expected: ExpectedSomeStructureWithUniqueIds, path: string = ""): string {
         const result: string[] = []
 
         if (expected.entries !== undefined) {
             if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`) }
-            given.getEntries().forEach((entry, idx) => { if (diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
+            given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
         }
 
         return result.join("\n")
     }
 
     export interface ExpectedNestedUniqueIds {
-        entries?: ExpectedUniqueIdEntry[],
+        entries?: SimpleModule.ExpectedUniqueIdEntry[],
     }
     export function diffNestedUniqueIds(given: NestedUniqueIds, expected: ExpectedNestedUniqueIds, path: string = ""): string {
         const result: string[] = []
 
         if (expected.entries !== undefined) {
             if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`) }
-            given.getEntries().forEach((entry, idx) => { if (diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
+            given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
         }
 
         return result.join("\n")

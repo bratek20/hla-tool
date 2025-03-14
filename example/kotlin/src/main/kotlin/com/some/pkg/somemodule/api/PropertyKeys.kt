@@ -3,6 +3,7 @@
 package com.some.pkg.somemodule.api
 
 import com.some.pkg.othermodule.api.*
+import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 val SOME_KEY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(

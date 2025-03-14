@@ -3,6 +3,7 @@
 package com.some.pkg.somemodule.api
 
 import com.some.pkg.othermodule.api.*
+import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 data class SomeId(
@@ -618,24 +619,6 @@ data class SomeReferencingPropertyFieldList(
         ): SomeReferencingPropertyFieldList {
             return SomeReferencingPropertyFieldList(
                 referenceIdList = referenceIdList.map { it -> it.value },
-            )
-        }
-    }
-}
-
-data class UniqueIdEntry(
-    private val id: String,
-) {
-    fun getId(): String {
-        return this.id
-    }
-
-    companion object {
-        fun create(
-            id: String,
-        ): UniqueIdEntry {
-            return UniqueIdEntry(
-                id = id,
             )
         }
     }

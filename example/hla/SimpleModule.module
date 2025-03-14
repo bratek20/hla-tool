@@ -1,3 +1,5 @@
 ValueObjects
     SimpleId: string
     SomeLongWrapper: long
+    UniqueIdEntry
+        id: string (unique)

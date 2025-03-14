@@ -291,7 +291,7 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
-            "Unique id infos: [UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SomeModule/Api/ValueObjects))]"
+            "Unique id infos: [UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SimpleModule/Api/ValueObjects))]"
 
         )
 

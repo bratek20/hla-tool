@@ -29,3 +29,21 @@ data class SomeLongWrapper(
         return SomeLongWrapper(this.value * amount)
     }
 }
+
+data class UniqueIdEntry(
+    private val id: String,
+) {
+    fun getId(): String {
+        return this.id
+    }
+
+    companion object {
+        fun create(
+            id: String,
+        ): UniqueIdEntry {
+            return UniqueIdEntry(
+                id = id,
+            )
+        }
+    }
+}

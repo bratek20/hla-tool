@@ -6,6 +6,8 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.simplemodule.api.*
+import com.some.pkg.simplemodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
@@ -125,11 +127,6 @@ fun assertSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: 
 
 fun assertSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList, expectedInit: ExpectedSomeReferencingPropertyFieldList.() -> Unit) {
     val diff = diffSomeReferencingPropertyFieldList(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
-fun assertUniqueIdEntry(given: UniqueIdEntry, expectedInit: ExpectedUniqueIdEntry.() -> Unit) {
-    val diff = diffUniqueIdEntry(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

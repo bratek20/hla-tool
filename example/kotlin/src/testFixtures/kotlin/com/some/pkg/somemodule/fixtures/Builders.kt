@@ -4,6 +4,8 @@ package com.some.pkg.somemodule.fixtures
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.simplemodule.api.*
+import com.some.pkg.simplemodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
@@ -278,16 +280,6 @@ fun someReferencingPropertyFieldList(init: SomeReferencingPropertyFieldListDef.(
     val def = SomeReferencingPropertyFieldListDef().apply(init)
     return SomeReferencingPropertyFieldList.create(
         referenceIdList = def.referenceIdList.map { it -> SomeId(it) },
-    )
-}
-
-data class UniqueIdEntryDef(
-    var id: String = "someValue",
-)
-fun uniqueIdEntry(init: UniqueIdEntryDef.() -> Unit = {}): UniqueIdEntry {
-    val def = UniqueIdEntryDef().apply(init)
-    return UniqueIdEntry.create(
-        id = def.id,
     )
 }
 
