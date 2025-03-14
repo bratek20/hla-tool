@@ -50,9 +50,8 @@ private class PropertiesTraverser(
         private val serializer = SerializationFactory.createSerializer()
     }
 
-    fun getPropertySize(propertyKeyName: String): Int {
-        val first = properties.firstOrNull { it.keyName == propertyKeyName } ?: return 0
-        return first.value.asList().size
+    fun getPropertySize(propertyPath: PropertyValuePathLogic): Int {
+        return getValuesAt(propertyPath).size
     }
 
     fun getPrimitiveValuesWithPathAt(path: PropertyValuePathLogic): List<ValueWithPath> {
