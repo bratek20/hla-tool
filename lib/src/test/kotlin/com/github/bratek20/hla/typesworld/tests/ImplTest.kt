@@ -441,7 +441,47 @@ class TypesWorldImplTest {
 
             api.addClassType(worldClassType {
                 type = {
-                    name = "SomeClass"
+                    name = "SelfReferenceListClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReferenceList"
+                        type = {
+                            name = "List<SelfReferenceListClass>"
+                        }
+                    }
+                )
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceOptionalClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReferenceOptional"
+                        type = {
+                            name = "Optional<SelfReferenceOptionalClass>"
+                        }
+                    }
+                )
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceClass"
                 }
                 fields = listOf (
                     {
@@ -453,19 +493,7 @@ class TypesWorldImplTest {
                     {
                         name = "selfReference"
                         type = {
-                            name = "SomeClass"
-                        }
-                    },
-                    {
-                        name = "selfReferenceList"
-                        type = {
-                            name = "List<SomeClass>"
-                        }
-                    },
-                    {
-                        name = "selfReferenceOptional"
-                        type = {
-                            name = "Optional<SomeClass>"
+                            name = "SelfReferenceClass"
                         }
                     }
                 )
@@ -474,7 +502,7 @@ class TypesWorldImplTest {
             assertApiExceptionThrown(
                 { api.getAllReferencesOf(
                     worldType {
-                        name = "SomeClass"
+                        name = "SelfReferenceListClass"
                     },
                     worldType {
                         name = "ValueClass"
@@ -482,7 +510,37 @@ class TypesWorldImplTest {
                 ) },
                 {
                     type = SelfReferenceDetectedException::class
-                    message = ""
+                    message = "Self reference detected for type 'SelfReferenceListClass'"
+                }
+            )
+
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceOptionalClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'SelfReferenceOptionalClass'"
+                }
+            )
+
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'SelfReferenceClass'"
                 }
             )
         }
