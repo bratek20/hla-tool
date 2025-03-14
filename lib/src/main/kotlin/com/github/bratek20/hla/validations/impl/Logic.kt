@@ -190,10 +190,10 @@ private class UniqueIdValidator(
 
                             val propertySize = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
                             for (i in 0 until propertySize) {
-                                references.addAll(replaceListWithIndex(referencesForClass, propertyKey, i))
+                                references.addAll(processReferences(referencesForClass, propertyKey, i))
                             }
                         } else {
-                            references.addAll(replaceListWithIndex(referencesForClass, propertyKey))
+                            references.addAll(processReferences(referencesForClass, propertyKey))
                         }
                     }
                 }
@@ -202,26 +202,36 @@ private class UniqueIdValidator(
         return references
     }
 
-    private fun replaceListWithIndex(referencesForClass: List<StructPath>, propertyKey: KeyDefinition, initialPathIndex: Int? = null): List<PropertyValuePathLogic> {
-        val finalReferences = mutableListOf<PropertyValuePathLogic>()
-        for(ref in referencesForClass) {
-            val regex = Regex("\\[\\*\\]")
-            val count = regex.findAll(ref.value).count()
-            val initialPath = if(initialPathIndex != null) "[${initialPathIndex}]/" else ""
-            if(count > 1) {
-                val newRef = ref.value.substringBefore("[*]") + "[*]"
-                val sizeNewRef = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath+newRef)))
-                for(j in 0 until sizeNewRef) {
-                    val finalRef = newRef.replaceFirst("[*]", "[${j}]")
-                    val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath+finalRef+ref.value.substringAfter("[*]")+ "/${info.getFieldName()}"))
-                    finalReferences.add(finalPath)
-                }
-            }else {
-                val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath+ref.value + "/${info.getFieldName()}"))
-                finalReferences.add(finalPath)
+    private fun processReferences(
+        references: List<StructPath>,
+        propertyKey: KeyDefinition,
+        initialPathIndex: Int? = null
+    ): List<PropertyValuePathLogic> {
+        val initialPath = if(initialPathIndex != null) "[${initialPathIndex}]/" else ""
+        return references.flatMap { ref ->
+            expandPath(ref.value, propertyKey, initialPath).map { expandedPath ->
+                PropertyValuePathLogic(propertyKey.getName(), StructPath("$initialPath$expandedPath/${info.getFieldName()}"))
             }
         }
-        return finalReferences
+    }
+
+    private fun expandPath(path: String, propertyKey: KeyDefinition, initialPath: String): List<String> {
+        val regex = Regex("\\[\\*\\]")
+        val count = regex.findAll(path).count()
+
+        return if (count > 1) {
+            val match = regex.find(path) ?: return listOf(path)
+
+            val baseRef = path.substringBefore(match.value) + "[*]"
+            val size = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath + baseRef)))
+
+            (0 until size).flatMap { index ->
+                val resolvedPath = path.replaceFirst("[*]", "[$index]")
+                expandPath(resolvedPath, propertyKey, initialPath)
+            }
+        } else {
+            listOf(path)
+        }
     }
 
     fun validate(): ValidationResult {
