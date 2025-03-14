@@ -187,9 +187,25 @@ private class UniqueIdValidator(
                     val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                     if(referencesForClass.isNotEmpty()) {
                         if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
+
                             val propertySize = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
                             for (i in 0 until propertySize) {
-                                references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/${ref.value}/${info.getFieldName()}")) })
+                                for(ref in referencesForClass) {
+                                    val regex = Regex("\\[\\*\\]")
+                                    val count = regex.findAll(ref.value).count()
+                                    if(count > 1) {
+                                        val newRef = ref.value.substringBefore("[*]") + "[*]"
+                                        val sizeNewRef = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+newRef)))
+                                        for(j in 0 until sizeNewRef) {
+                                            val finalRef = newRef.replace("[*]", "[${j}]")
+                                            val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+finalRef+ref.value.substringAfter("[*]")+ "/${info.getFieldName()}"))
+                                            references.add(finalPath)
+                                        }
+                                    }else {
+                                        val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+ref.value + "/${info.getFieldName()}"))
+                                        references.add(finalPath)
+                                    }
+                                }
                             }
                         } else {
                             references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(propertyKey.getName(), StructPath(ref.value + "/${info.getFieldName()}")) })
