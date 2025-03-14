@@ -187,7 +187,7 @@ private class UniqueIdValidator(
                     val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                     if(referencesForClass.isNotEmpty()) {
                         if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
-                            val propertySize = traverser.getPropertySize(propertyKey.getName())
+                            val propertySize = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
                             for (i in 0 until propertySize) {
                                 references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/${ref.value}/${info.getFieldName()}")) })
                             }
