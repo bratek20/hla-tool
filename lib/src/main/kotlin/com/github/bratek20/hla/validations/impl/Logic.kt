@@ -173,10 +173,11 @@ private class UniqueIdValidator(
     private fun findReferences(parentType: WorldType): List<PropertyValuePathLogic> {
         val references = mutableListOf<PropertyValuePathLogic>()
         val classTypes = typesWorldApi.getAllClassTypes()
-        val propertyKeys = BaseModuleGroupQueries(group).get(parentType.getPath().asHla().getModuleName()).getPropertyKeys()
+        val parentModule = parentType.getPath().asHla().getModuleName()
+        val propertyKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
         classTypes.forEach { classType ->
             val type = classType.getType()
-            if(type.getName() != parentType.getName() /*&& type.getName().value == "SomeStructureWithUniqueIds"*/) {
+            if(type.getName() != parentType.getName()) {
                 val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                 if(referencesForClass.isNotEmpty()) {
                     val propertyKey = propertyKeys.find { it.getType().getName() == type.getName().value }!!
