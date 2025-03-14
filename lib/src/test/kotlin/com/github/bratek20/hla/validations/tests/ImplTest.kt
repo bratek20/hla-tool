@@ -402,7 +402,7 @@ class ValidationsImplTest {
     }
 
     @Test
-    fun `should fail if unique id in structure is not unique in nested`() {
+    fun `should fail if unique id in nested structure is not unique`() {
         setup()
 
         propertiesMock.set(
@@ -442,6 +442,46 @@ class ValidationsImplTest {
                 "Value '1' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
                 "Value '2' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique"
             )
+        }
+    }
+
+    @Test
+    fun `should not fail if unique id in nested structure is correct`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, listOf(
+                struct {
+                    "nestedUniqueIds" to listOf(
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        },
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = true
         }
     }
 

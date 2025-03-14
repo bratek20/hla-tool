@@ -182,8 +182,8 @@ private class UniqueIdValidator(
         val propertyKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
         classTypes.forEach { classType ->
             val type = classType.getType()
-            val propertyKeys = propertyKeys.filter { it.getType().getName() == type.getName().value }
-            propertyKeys.forEach { propertyKey ->
+            val propertyKeysFiltered = propertyKeys.filter { it.getType().getName() == type.getName().value }
+            propertyKeysFiltered.forEach { propertyKey ->
                 if(type.getName() != parentType.getName()) {
                     val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                     if(referencesForClass.isNotEmpty()) {
@@ -198,7 +198,6 @@ private class UniqueIdValidator(
                     }
                 }
             }
-
         }
         return references
     }
