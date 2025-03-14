@@ -4,6 +4,8 @@ package com.some.pkg.somemodule.fixtures
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.simplemodule.api.*
+import com.some.pkg.simplemodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
@@ -278,6 +280,46 @@ fun someReferencingPropertyFieldList(init: SomeReferencingPropertyFieldListDef.(
     val def = SomeReferencingPropertyFieldListDef().apply(init)
     return SomeReferencingPropertyFieldList.create(
         referenceIdList = def.referenceIdList.map { it -> SomeId(it) },
+    )
+}
+
+data class SomeStructureWithUniqueIdsDef(
+    var entries: List<(UniqueIdEntryDef.() -> Unit)> = emptyList(),
+)
+fun someStructureWithUniqueIds(init: SomeStructureWithUniqueIdsDef.() -> Unit = {}): SomeStructureWithUniqueIds {
+    val def = SomeStructureWithUniqueIdsDef().apply(init)
+    return SomeStructureWithUniqueIds.create(
+        entries = def.entries.map { it -> uniqueIdEntry(it) },
+    )
+}
+
+data class NestedUniqueIdsDef(
+    var entries: List<(UniqueIdEntryDef.() -> Unit)> = emptyList(),
+)
+fun nestedUniqueIds(init: NestedUniqueIdsDef.() -> Unit = {}): NestedUniqueIds {
+    val def = NestedUniqueIdsDef().apply(init)
+    return NestedUniqueIds.create(
+        entries = def.entries.map { it -> uniqueIdEntry(it) },
+    )
+}
+
+data class SomeStructureWithUniqueNestedIdsDef(
+    var nestedUniqueIds: List<(NestedUniqueIdsDef.() -> Unit)> = emptyList(),
+)
+fun someStructureWithUniqueNestedIds(init: SomeStructureWithUniqueNestedIdsDef.() -> Unit = {}): SomeStructureWithUniqueNestedIds {
+    val def = SomeStructureWithUniqueNestedIdsDef().apply(init)
+    return SomeStructureWithUniqueNestedIds.create(
+        nestedUniqueIds = def.nestedUniqueIds.map { it -> nestedUniqueIds(it) },
+    )
+}
+
+data class SomeStructureWithMultipleUniqueNestedIdsDef(
+    var moreNestedFields: List<(SomeStructureWithUniqueNestedIdsDef.() -> Unit)> = emptyList(),
+)
+fun someStructureWithMultipleUniqueNestedIds(init: SomeStructureWithMultipleUniqueNestedIdsDef.() -> Unit = {}): SomeStructureWithMultipleUniqueNestedIds {
+    val def = SomeStructureWithMultipleUniqueNestedIdsDef().apply(init)
+    return SomeStructureWithMultipleUniqueNestedIds.create(
+        moreNestedFields = def.moreNestedFields.map { it -> someStructureWithUniqueNestedIds(it) },
     )
 }
 

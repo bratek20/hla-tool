@@ -32,3 +32,17 @@ fun idSourceInfo(init: IdSourceInfoDef.() -> Unit = {}): IdSourceInfo {
         parent = worldType(def.parent),
     )
 }
+
+data class UniqueIdInfoDef(
+    var type: (WorldTypeDef.() -> Unit) = {},
+    var fieldName: String = "someValue",
+    var parent: (WorldTypeDef.() -> Unit) = {},
+)
+fun uniqueIdInfo(init: UniqueIdInfoDef.() -> Unit = {}): UniqueIdInfo {
+    val def = UniqueIdInfoDef().apply(init)
+    return UniqueIdInfo.create(
+        type = worldType(def.type),
+        fieldName = def.fieldName,
+        parent = worldType(def.parent),
+    )
+}

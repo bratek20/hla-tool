@@ -25,4 +25,20 @@ namespace SimpleModule.Api {
             Value = value;
         }
     }
+
+    public class UniqueIdEntry: ValueObject {
+        readonly string id;
+
+        public UniqueIdEntry(
+            string id
+        ) {
+            this.id = id;
+        }
+        public string GetId() {
+            return id;
+        }
+        public static UniqueIdEntry Create(string id) {
+            return new UniqueIdEntry(id);
+        }
+    }
 }

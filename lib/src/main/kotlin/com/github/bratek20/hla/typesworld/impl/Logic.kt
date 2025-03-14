@@ -91,6 +91,10 @@ class TypesWorldApiLogic: TypesWorldApi {
         }
     }
 
+    override fun getAllClassTypes(): List<WorldClassType> {
+        return classTypes.toList()
+    }
+
     private fun dropSlashIfPresent(path: String): String {
         return if (path.endsWith("/")) {
             path.dropLast(1)

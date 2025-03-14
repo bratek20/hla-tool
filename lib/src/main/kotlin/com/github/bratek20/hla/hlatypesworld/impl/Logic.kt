@@ -43,6 +43,7 @@ class HlaTypesWorldQueriesLogic(
 
 class HlaTypesExtraInfoLogic: HlaTypesExtraInfo {
     private val idSources: MutableSet<IdSourceInfo> = mutableSetOf()
+    private val uniqueIds: MutableSet<UniqueIdInfo> = mutableSetOf()
 
     override fun markAsIdSource(info: IdSourceInfo) {
         idSources.add(info)
@@ -50,5 +51,13 @@ class HlaTypesExtraInfoLogic: HlaTypesExtraInfo {
 
     override fun getAllIdSourceInfo(): List<IdSourceInfo> {
         return idSources.toList()
+    }
+
+    override fun markAsUniqueId(info: UniqueIdInfo) {
+        uniqueIds.add(info)
+    }
+
+    override fun getAllUniqueIdInfos(): List<UniqueIdInfo> {
+        return uniqueIds.toList()
     }
 }

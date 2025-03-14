@@ -6,15 +6,14 @@ import com.github.bratek20.architecture.serialization.context.SerializationFacto
 import com.github.bratek20.architecture.structs.api.*
 import com.github.bratek20.architecture.structs.context.StructsFactory
 import com.github.bratek20.hla.definitions.api.KeyDefinition
+import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
-import com.github.bratek20.hla.hlatypesworld.api.IdSourceInfo
-import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
+import com.github.bratek20.hla.queries.api.asNonWrappedWorldTypeName
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.getAllPropertyKeys
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
@@ -50,6 +49,10 @@ private class PropertiesTraverser(
 ) {
     companion object {
         private val serializer = SerializationFactory.createSerializer()
+    }
+
+    fun getListSizeAt(propertyPath: PropertyValuePathLogic): Int {
+        return getValuesAt(propertyPath).size
     }
 
     fun getPrimitiveValuesWithPathAt(path: PropertyValuePathLogic): List<ValueWithPath> {
@@ -158,6 +161,87 @@ private class IdSourceValidator(
     }
 }
 
+private class UniqueIdValidator(
+    private val info: UniqueIdInfo,
+    private val logger: Logger,
+    private val group: ModuleGroup,
+    private val traverser: PropertiesTraverser,
+    private val typesWorldApi: TypesWorldApi
+) {
+    private val idPaths: List<PropertyValuePathLogic>
+
+    init {
+        val parentType = info.getParent()
+        idPaths = findReferences(parentType)
+    }
+
+    private fun findReferences(parentType: WorldType): List<PropertyValuePathLogic> {
+        val references = mutableListOf<PropertyValuePathLogic>()
+        val propertyKeys = group.getAllPropertyKeys()
+        propertyKeys.forEach { propertyKey ->
+            val type = typesWorldApi.getTypeByName(propertyKey.getType().asNonWrappedWorldTypeName())
+            if(type.getName() != parentType.getName()) {
+                val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
+                if(referencesForClass.isNotEmpty()) {
+                    if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
+                        val propertySize = traverser.getListSizeAt(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
+                        for (i in 0 until propertySize) {
+                            references.addAll(processReferences(referencesForClass, propertyKey, i))
+                        }
+                    } else {
+                        references.addAll(processReferences(referencesForClass, propertyKey))
+                    }
+                }
+            }
+        }
+        return references
+    }
+
+    private fun processReferences(
+        references: List<StructPath>,
+        propertyKey: KeyDefinition,
+        initialPathIndex: Int? = null
+    ): List<PropertyValuePathLogic> {
+        val initialPath = if(initialPathIndex != null) "[${initialPathIndex}]/" else ""
+        return references.flatMap { ref ->
+            expandPathExceptLastListEntry(ref.value, propertyKey, initialPath).map { expandedPath ->
+                PropertyValuePathLogic(propertyKey.getName(), StructPath("$initialPath$expandedPath/${info.getFieldName()}"))
+            }
+        }
+    }
+
+    private fun expandPathExceptLastListEntry(path: String, propertyKey: KeyDefinition, initialPath: String): List<String> {
+        val regex = Regex("\\[\\*\\]")
+        val count = regex.findAll(path).count()
+
+        return if (count > 1) {
+            val match = regex.find(path) ?: return listOf(path)
+
+            val baseRef = path.substringBefore(match.value) + "[*]"
+            val size = traverser.getListSizeAt(PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath + baseRef)))
+
+            (0 until size).flatMap { index ->
+                val resolvedPath = path.replaceFirst("[*]", "[$index]")
+                expandPathExceptLastListEntry(resolvedPath, propertyKey, initialPath)
+            }
+        } else {
+            listOf(path)
+        }
+    }
+
+    fun validate(): ValidationResult {
+        val errors = mutableListOf<String>()
+        idPaths.forEach { idPath ->
+            val valuesWithPath = traverser.getPrimitiveValuesWithPathAt(idPath)
+            val countPerValue = valuesWithPath.groupingBy { it.value }.eachCount()
+            errors.addAll(countPerValue.filter { it.value > 1 }
+                .map { "Value '${it.key}' at '${idPath}' is not unique" })
+        }
+
+        return ValidationResult.createFor(errors)
+    }
+}
+
 class HlaValidatorLogic(
     private val parser: ModuleGroupParser,
     private val hlaTypesWorldApi: HlaTypesWorldApi,
@@ -181,8 +265,9 @@ class HlaValidatorLogic(
 
         val idSourceValidationResult = validateIdSources(group)
         val typeValidatorsResult = executeTypeValidators(group)
+        val uniqueIdValidationResult = validateUniqueIds(group)
 
-        return idSourceValidationResult.merge(typeValidatorsResult)
+        return idSourceValidationResult.merge(typeValidatorsResult).merge(uniqueIdValidationResult)
     }
 
     private fun validateIdSources(group: ModuleGroup): ValidationResult {
@@ -200,6 +285,24 @@ class HlaValidatorLogic(
         }
 
         return sourceValidators.map { it.validate() }.reduce(ValidationResult::merge)
+    }
+
+    private fun validateUniqueIds(group: ModuleGroup): ValidationResult {
+        val uniqueIdInfos = extraInfo.getAllUniqueIdInfos()
+
+        logger.info("Unique id infos: $uniqueIdInfos")
+
+        val uniqueIdsValidator = uniqueIdInfos.map {
+            UniqueIdValidator(
+                info = it,
+                logger = logger,
+                group = group,
+                traverser = traverser,
+                typesWorldApi = typesWorldApi
+            )
+        }
+
+        return uniqueIdsValidator.map { it.validate() }.reduce(ValidationResult::merge)
     }
 
     private fun executeTypeValidators(group: ModuleGroup): ValidationResult {

@@ -13,3 +13,17 @@ fun diffSomeLongWrapper(given: SomeLongWrapper, expected: Long, path: String = "
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
 }
+
+data class ExpectedUniqueIdEntry(
+    var id: String? = null,
+)
+fun diffUniqueIdEntry(given: UniqueIdEntry, expectedInit: ExpectedUniqueIdEntry.() -> Unit, path: String = ""): String {
+    val expected = ExpectedUniqueIdEntry().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (given.getId() != it) { result.add("${path}id ${given.getId()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}

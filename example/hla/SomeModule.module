@@ -105,6 +105,18 @@ Properties
     SomeReferencingPropertyFieldList
         referenceIdList: SomeId[]
 
+    SomeStructureWithUniqueIds
+        entries: UniqueIdEntry[]
+
+    NestedUniqueIds
+        entries: UniqueIdEntry[]
+
+    SomeStructureWithUniqueNestedIds
+        nestedUniqueIds: NestedUniqueIds[]
+
+    SomeStructureWithMultipleUniqueNestedIds
+        moreNestedFields: SomeStructureWithUniqueNestedIds[]
+
     NestedValue
         value: string
     OptionalFieldProperty
@@ -119,6 +131,11 @@ Properties
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
     "SomeReferencingPropertyFieldList" -> SomeReferencingPropertyFieldList
+    "SomeStructureWithUniqueIdsList" -> SomeStructureWithUniqueIds[]
+    "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]
+    "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
+    "SomeStructureWithUniqueIdsMultipleNest" -> SomeStructureWithMultipleUniqueNestedIds[]
+
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]

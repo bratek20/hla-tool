@@ -26,3 +26,8 @@ fun assertIdSourceInfo(given: IdSourceInfo, expectedInit: ExpectedIdSourceInfo.(
     val diff = diffIdSourceInfo(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertUniqueIdInfo(given: UniqueIdInfo, expectedInit: ExpectedUniqueIdInfo.() -> Unit) {
+    val diff = diffUniqueIdInfo(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

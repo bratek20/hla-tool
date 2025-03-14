@@ -9,4 +9,14 @@ namespace SimpleModule.Builder {
         return new SomeLongWrapper(value)
     }
 
+    export interface UniqueIdEntryDef {
+        id?: string,
+    }
+    export function uniqueIdEntry(def?: UniqueIdEntryDef): UniqueIdEntry {
+        const final_id = def?.id ?? "someValue"
+
+        return UniqueIdEntry.create(
+            final_id,
+        )
+    }
 }

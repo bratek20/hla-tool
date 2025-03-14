@@ -5,6 +5,7 @@ import com.github.bratek20.hla.definitions.api.Attribute
 class KnownAttribute {
     companion object {
         const val ID_SOURCE = "idSource"
+        const val UNIQUE = "unique"
     }
 }
 

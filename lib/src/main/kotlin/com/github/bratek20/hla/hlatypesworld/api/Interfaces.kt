@@ -20,6 +20,10 @@ interface HlaTypesExtraInfo {
     fun markAsIdSource(info: IdSourceInfo): Unit
 
     fun getAllIdSourceInfo(): List<IdSourceInfo>
+
+    fun markAsUniqueId(info: UniqueIdInfo): Unit
+
+    fun getAllUniqueIdInfos(): List<UniqueIdInfo>
 }
 
 interface HlaTypesWorldPopulator {

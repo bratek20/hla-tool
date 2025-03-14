@@ -26,6 +26,26 @@ namespace SomeModule {
         SomeReferencingPropertyFieldList
     )
 
+    export const SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeStructureWithUniqueIdsList",
+        SomeStructureWithUniqueIds
+    )
+
+    export const SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS_PROPERTY_KEY = new ListPropertyKey(
+        "SomeStructureWithUniqueNestedIds",
+        SomeStructureWithUniqueNestedIds
+    )
+
+    export const SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT_PROPERTY_KEY = new ObjectPropertyKey(
+        "SomeStructureWithUniqueIdsObject",
+        SomeStructureWithUniqueIds
+    )
+
+    export const SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeStructureWithUniqueIdsMultipleNest",
+        SomeStructureWithMultipleUniqueNestedIds
+    )
+
     export const REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = new ObjectPropertyKey(
         "ReferencingOtherProperty",
         OtherProperty

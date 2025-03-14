@@ -23,6 +23,11 @@ fun TypeDefinition.asWorldTypeName(): WorldTypeName {
     return WorldTypeName(this.getName())
 }
 
+fun TypeDefinition.asNonWrappedWorldTypeName(): WorldTypeName {
+    return WorldTypeName(this.getName())
+}
+
+
 fun FieldDefinition.asClassField(world: TypesWorldApi): WorldClassField {
     return WorldClassField.create(
         this.getName(),

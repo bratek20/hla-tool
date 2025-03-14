@@ -7,6 +7,7 @@ using B20.ViewModel.Popups.Api;
 using SomeModule.Api;
 using OtherModule.Api;
 using OtherModule.ViewModel;
+using SimpleModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.ViewModel {

@@ -16,3 +16,8 @@ fun assertSomeLongWrapper(given: SomeLongWrapper, expected: Long) {
     val diff = diffSomeLongWrapper(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertUniqueIdEntry(given: UniqueIdEntry, expectedInit: ExpectedUniqueIdEntry.() -> Unit) {
+    val diff = diffUniqueIdEntry(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

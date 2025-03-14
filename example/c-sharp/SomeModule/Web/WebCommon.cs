@@ -7,6 +7,7 @@ using B20.Ext;
 using HttpClientModule.Api;
 using SomeModule.Api;
 using OtherModule.Api;
+using SimpleModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Web {

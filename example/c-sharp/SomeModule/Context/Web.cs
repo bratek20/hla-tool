@@ -9,6 +9,7 @@ using HttpClientModule.Api;
 using SomeModule.Api;
 using SomeModule.Web;
 using OtherModule.Api;
+using SimpleModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Context {

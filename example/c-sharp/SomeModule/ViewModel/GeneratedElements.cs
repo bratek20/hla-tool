@@ -9,6 +9,7 @@ using B20.ViewModel.Traits.Api;
 using SomeModule.Api;
 using OtherModule.Api;
 using OtherModule.ViewModel;
+using SimpleModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.ViewModel {

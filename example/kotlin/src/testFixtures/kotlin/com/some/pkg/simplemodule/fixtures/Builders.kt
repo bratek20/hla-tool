@@ -11,3 +11,13 @@ fun simpleId(value: String = "someValue"): SimpleId {
 fun someLongWrapper(value: Long = 0L): SomeLongWrapper {
     return SomeLongWrapper(value)
 }
+
+data class UniqueIdEntryDef(
+    var id: String = "someValue",
+)
+fun uniqueIdEntry(init: UniqueIdEntryDef.() -> Unit = {}): UniqueIdEntry {
+    val def = UniqueIdEntryDef().apply(init)
+    return UniqueIdEntry.create(
+        id = def.id,
+    )
+}
