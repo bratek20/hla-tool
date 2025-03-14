@@ -50,6 +50,11 @@ private class PropertiesTraverser(
         private val serializer = SerializationFactory.createSerializer()
     }
 
+    fun getPropertySize(propertyKeyName: String): Int {
+        val first = properties.firstOrNull { it.keyName == propertyKeyName } ?: return 0
+        return first.value.asList().size
+    }
+
     fun getPrimitiveValuesWithPathAt(path: PropertyValuePathLogic): List<ValueWithPath> {
         return getValuesAt(path).map { ValueWithPath(it.value.asPrimitive().value, PropertyValuePathLogic(path.keyName, it.path)) }
     }
@@ -181,8 +186,14 @@ private class UniqueIdValidator(
             if(type.getName() != parentType.getName() && propertyKey != null) {
                 val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                 if(referencesForClass.isNotEmpty()) {
-                    val initialPathString = if (propertyKey.getType().getWrappers().contains(TypeWrapper.LIST))  "[*]/" else ""
-                    references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(type.getName().value, StructPath(initialPathString + ref.value + "/${info.getFieldName()}")) })
+                    if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
+                        val propertySize = traverser.getPropertySize(propertyKey.getName())
+                        for (i in 0 until propertySize) {
+                            references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(type.getName().value, StructPath("[${i}]/${ref.value}/${info.getFieldName()}")) })
+                        }
+                    } else {
+                        references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(type.getName().value, StructPath(ref.value + "/${info.getFieldName()}")) })
+                    }
                 }
             }
         }
