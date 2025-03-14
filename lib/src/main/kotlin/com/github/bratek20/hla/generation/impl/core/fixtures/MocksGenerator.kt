@@ -1,12 +1,27 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
+class MockInterfaceLogic(
+    private val def: InterfaceDefinition
+) {
+    fun getClass(): ClassBuilderOps = {
+        name = "OtherInterfaceMock"
+        implements = "OtherInterface"
+
+        addMethod {
+            name = "otherMethod"
+            returnType = baseType(BaseType.VOID)
+        }
+    }
+}
 class MocksGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
         return PatternName.Mocks
@@ -24,14 +39,8 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        addClass {
-            name = "OtherInterfaceMock"
-            implements = "OtherInterface"
-
-            addMethod {
-                name = "otherMethod"
-                returnType = baseType(BaseType.VOID)
-            }
+        module.getInterfaces().forEach { def ->
+            addClass(MockInterfaceLogic(def).getClass())
         }
     }
 
