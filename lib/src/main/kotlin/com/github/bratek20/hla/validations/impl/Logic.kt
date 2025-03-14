@@ -177,10 +177,10 @@ private class UniqueIdValidator(
         val propertyKeys = BaseModuleGroupQueries(group).get(parentModule).getPropertyKeys()
         classTypes.forEach { classType ->
             val type = classType.getType()
-            if(type.getName() != parentType.getName()) {
+            val propertyKey = propertyKeys.find { it.getType().getName() == type.getName().value }
+            if(type.getName() != parentType.getName() && propertyKey != null) {
                 val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                 if(referencesForClass.isNotEmpty()) {
-                    val propertyKey = propertyKeys.find { it.getType().getName() == type.getName().value }!!
                     val initialPathString = if (propertyKey.getType().getWrappers().contains(TypeWrapper.LIST))  "[*]/" else ""
                     references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(type.getName().value, StructPath(initialPathString + ref.value + "/${info.getFieldName()}")) })
                 }
