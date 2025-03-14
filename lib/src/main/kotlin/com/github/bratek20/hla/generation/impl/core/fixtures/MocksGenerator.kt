@@ -13,12 +13,14 @@ class MockInterfaceLogic(
     private val def: InterfaceDefinition
 ) {
     fun getClass(): ClassBuilderOps = {
-        name = "OtherInterfaceMock"
-        implements = "OtherInterface"
+        name = def.getName() + "Mock"
+        implements = def.getName()
 
-        addMethod {
-            name = "otherMethod"
-            returnType = baseType(BaseType.VOID)
+        def.getMethods().forEach { method ->
+            addMethod {
+                name = method.getName()
+                returnType = baseType(BaseType.VOID)
+            }
         }
     }
 }
@@ -32,9 +34,6 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        if (moduleName != "OtherModule") {
-            return false
-        }
         return module.getInterfaces().isNotEmpty() && language.name() == ModuleLanguage.TYPE_SCRIPT
     }
 
