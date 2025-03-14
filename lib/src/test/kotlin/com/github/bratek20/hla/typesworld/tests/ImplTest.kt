@@ -433,15 +433,15 @@ class TypesWorldImplTest {
             assertStructPath(references[2], "nestedField/listField/[*]/value")
         }
 
-        @Disabled("Fix not needed for now, if the issue reappear uncomment test")
-        fun `should work for class referencing its self`() {
+        @Test
+        fun `should throw exception for class referencing its self`() {
             api.ensureType(worldType {
                 name = "ValueClass"
             })
 
             api.addClassType(worldClassType {
                 type = {
-                    name = "SomeClass"
+                    name = "NestedClass"
                 }
                 fields = listOf (
                     {
@@ -453,36 +453,150 @@ class TypesWorldImplTest {
                     {
                         name = "selfReference"
                         type = {
-                            name = "SomeClass"
-                        }
-                    },
-                    {
-                        name = "selfReferenceList"
-                        type = {
-                            name = "List<SomeClass>"
-                        }
-                    },
-                    {
-                        name = "selfReferenceOptional"
-                        type = {
-                            name = "Optional<SomeClass>"
+                            name = "SelfReferenceNestedClass"
                         }
                     }
                 )
             })
 
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceNestedClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReference"
+                        type = {
+                            name = "NestedClass"
+                        }
+                    }
+                )
+            })
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceListClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReferenceList"
+                        type = {
+                            name = "List<SelfReferenceListClass>"
+                        }
+                    }
+                )
+            })
 
-            val references = api.getAllReferencesOf(
-                worldType {
-                    name = "SomeClass"
-                },
-                worldType {
-                    name = "ValueClass"
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceOptionalClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReferenceOptional"
+                        type = {
+                            name = "Optional<SelfReferenceOptionalClass>"
+                        }
+                    }
+                )
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReference"
+                        type = {
+                            name = "SelfReferenceClass"
+                        }
+                    }
+                )
+            })
+
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceListClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'SelfReferenceListClass'"
                 }
             )
 
-            assertThat(references).hasSize(1)
-            //TODO: assert SelfReferenceDetectedException
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceOptionalClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'SelfReferenceOptionalClass'"
+                }
+            )
+
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'SelfReferenceClass'"
+                }
+            )
+
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceNestedClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'NestedClass'"
+                }
+            )
         }
     }
 }

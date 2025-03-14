@@ -111,7 +111,11 @@ class TypesWorldApiLogic: TypesWorldApi {
         val kind = getTypeInfo(target).getKind()
 
         if (kind == WorldTypeKind.ClassType) {
-            return getClassType(target).getFields().flatMap { field ->
+            val fields = getClassType(target).getFields()
+            if(fields.any{field -> field.getType().getName().value.contains(target.getName().value)}) {
+                throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
+            }
+            return fields.flatMap { field ->
                 getAllReferencesOfFor(field.getType(), searchFor, "$traversedPath${field.getName()}/")
             }
         }
