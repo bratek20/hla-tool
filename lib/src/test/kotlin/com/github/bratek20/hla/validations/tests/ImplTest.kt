@@ -174,6 +174,11 @@ val SOME_STRUCTURE_WITH_UNIQUE_IDS = com.github.bratek20.architecture.properties
     Struct::class
 )
 
+val SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueNestedIds",
+    Struct::class
+)
+
 val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "CustomTypesProperty",
     Struct::class
@@ -355,8 +360,88 @@ class ValidationsImplTest {
         assertValidationResult(result) {
             ok = false
             errors = listOf(
-                "Value '1' at '\"SomeStructureWithUniqueIds\"/[*]/entries/[*]/id' is not unique"
+                "Value '1' at '\"SomeStructureWithUniqueIds\"/[0]/entries/[*]/id' is not unique"
             )
+        }
+    }
+
+    @Test
+    fun `should fail if unique id in structure is not unique in nested`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, listOf(
+                struct {
+                    "nestedUniqueIds" to listOf(
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "1"
+                                }
+                            )
+                        },
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "2"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '1' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
+                "Value '2' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique"
+            )
+        }
+    }
+
+    @Test
+    fun `should not fail if unique is correct`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS, listOf(
+                struct {
+                    "entries" to listOf(
+                        struct {
+                            "id" to "1"
+                        },
+                        struct {
+                            "id" to "2"
+                        }
+                    )
+                },
+                struct {
+                    "entries" to listOf(
+                        struct {
+                            "id" to "1"
+                        },
+                        struct {
+                            "id" to "2"
+                        }
+                    )
+                }
+            )
+        )
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = true
         }
     }
 
