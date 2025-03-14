@@ -190,22 +190,7 @@ private class UniqueIdValidator(
 
                             val propertySize = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
                             for (i in 0 until propertySize) {
-                                for(ref in referencesForClass) {
-                                    val regex = Regex("\\[\\*\\]")
-                                    val count = regex.findAll(ref.value).count()
-                                    if(count > 1) {
-                                        val newRef = ref.value.substringBefore("[*]") + "[*]"
-                                        val sizeNewRef = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+newRef)))
-                                        for(j in 0 until sizeNewRef) {
-                                            val finalRef = newRef.replace("[*]", "[${j}]")
-                                            val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+finalRef+ref.value.substringAfter("[*]")+ "/${info.getFieldName()}"))
-                                            references.add(finalPath)
-                                        }
-                                    }else {
-                                        val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+ref.value + "/${info.getFieldName()}"))
-                                        references.add(finalPath)
-                                    }
-                                }
+                                references.addAll(replaceListWithIndex(referencesForClass, propertyKey, i))
                             }
                         } else {
                             references.addAll(referencesForClass.map { ref -> PropertyValuePathLogic(propertyKey.getName(), StructPath(ref.value + "/${info.getFieldName()}")) })
@@ -215,6 +200,27 @@ private class UniqueIdValidator(
             }
         }
         return references
+    }
+
+    private fun replaceListWithIndex(referencesForClass: List<StructPath>, propertyKey: KeyDefinition, i: Int): List<PropertyValuePathLogic> {
+        val finalReferences = mutableListOf<PropertyValuePathLogic>()
+        for(ref in referencesForClass) {
+            val regex = Regex("\\[\\*\\]")
+            val count = regex.findAll(ref.value).count()
+            if(count > 1) {
+                val newRef = ref.value.substringBefore("[*]") + "[*]"
+                val sizeNewRef = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+newRef)))
+                for(j in 0 until sizeNewRef) {
+                    val finalRef = newRef.replace("[*]", "[${j}]")
+                    val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+finalRef+ref.value.substringAfter("[*]")+ "/${info.getFieldName()}"))
+                    finalReferences.add(finalPath)
+                }
+            }else {
+                val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath("[${i}]/"+ref.value + "/${info.getFieldName()}"))
+                finalReferences.add(finalPath)
+            }
+        }
+        return finalReferences
     }
 
     fun validate(): ValidationResult {
