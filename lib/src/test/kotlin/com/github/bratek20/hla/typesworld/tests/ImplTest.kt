@@ -482,6 +482,7 @@ class TypesWorldImplTest {
             )
 
             assertThat(references).hasSize(1)
+            //TODO: assert SelfReferenceDetectedException
         }
     }
 }

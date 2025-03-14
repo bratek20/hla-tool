@@ -237,10 +237,8 @@ private class UniqueIdValidator(
             errors.addAll(countPerValue.filter { it.value > 1 }
                 .map { "Value '${it.key}' at '${idPath}' is not unique" })
         }
-        if(errors.isNotEmpty()) {
-            return ValidationResult.createFor(errors)
-        }
-        return ValidationResult.ok()
+
+        return ValidationResult.createFor(errors)
     }
 }
 
