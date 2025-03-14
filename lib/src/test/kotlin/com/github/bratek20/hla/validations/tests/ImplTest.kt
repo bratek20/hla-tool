@@ -448,9 +448,9 @@ class ValidationsImplTest {
             ok = false
             errors = listOf(
                 "Value '1' at '\"SomeStructureWithUniqueIdsList\"/[0]/entries/[*]/id' is not unique",
-                "Value '1' at '\"SomeStructureWithUniqueIdsObject\"/entries/[*]/id' is not unique",
                 "Value '1' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
                 "Value '2' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique",
+                "Value '1' at '\"SomeStructureWithUniqueIdsObject\"/entries/[*]/id' is not unique",
                 "Value '1' at '\"SomeStructureWithUniqueIdsMultipleNest\"/[0]/moreNestedFields/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
                 "Value '2' at '\"SomeStructureWithUniqueIdsMultipleNest\"/[0]/moreNestedFields/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique"
 

@@ -13,6 +13,7 @@ import com.github.bratek20.hla.hlatypesworld.api.*
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
+import com.github.bratek20.hla.queries.api.asNonWrappedWorldTypeName
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.getAllPropertyKeys
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
@@ -176,23 +177,19 @@ private class UniqueIdValidator(
 
     private fun findReferences(parentType: WorldType): List<PropertyValuePathLogic> {
         val references = mutableListOf<PropertyValuePathLogic>()
-        val classTypes = typesWorldApi.getAllClassTypes()
         val propertyKeys = group.getAllPropertyKeys()
-        classTypes.forEach { classType ->
-            val type = classType.getType()
-            val propertyKeysFiltered = propertyKeys.filter { it.getType().getName() == type.getName().value }
-            propertyKeysFiltered.forEach { propertyKey ->
-                if(type.getName() != parentType.getName()) {
-                    val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
-                    if(referencesForClass.isNotEmpty()) {
-                        if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
-                            val propertySize = traverser.getListSizeAt(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
-                            for (i in 0 until propertySize) {
-                                references.addAll(processReferences(referencesForClass, propertyKey, i))
-                            }
-                        } else {
-                            references.addAll(processReferences(referencesForClass, propertyKey))
+        propertyKeys.forEach { propertyKey ->
+            val type = typesWorldApi.getTypeByName(propertyKey.getType().asNonWrappedWorldTypeName())
+            if(type.getName() != parentType.getName()) {
+                val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
+                if(referencesForClass.isNotEmpty()) {
+                    if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
+                        val propertySize = traverser.getListSizeAt(PropertyValuePathLogic(propertyKey.getName(), StructPath("")))
+                        for (i in 0 until propertySize) {
+                            references.addAll(processReferences(referencesForClass, propertyKey, i))
                         }
+                    } else {
+                        references.addAll(processReferences(referencesForClass, propertyKey))
                     }
                 }
             }
