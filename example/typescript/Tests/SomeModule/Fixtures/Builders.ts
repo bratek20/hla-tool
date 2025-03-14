@@ -367,6 +367,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeStructureWithMultipleUniqueNestedIdsDef {
+        moreNestedFields?: SomeStructureWithUniqueNestedIdsDef[],
+    }
+    export function someStructureWithMultipleUniqueNestedIds(def?: SomeStructureWithMultipleUniqueNestedIdsDef): SomeStructureWithMultipleUniqueNestedIds {
+        const final_moreNestedFields = def?.moreNestedFields ?? []
+
+        return SomeStructureWithMultipleUniqueNestedIds.create(
+            final_moreNestedFields.map(it => someStructureWithUniqueNestedIds(it)),
+        )
+    }
+
     export interface NestedValueDef {
         value?: string,
     }

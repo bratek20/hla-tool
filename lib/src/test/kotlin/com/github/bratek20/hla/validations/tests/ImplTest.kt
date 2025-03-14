@@ -184,6 +184,10 @@ val SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS = com.github.bratek20.architecture.pro
     "SomeStructureWithUniqueNestedIds",
     Struct::class
 )
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIdsMultipleNest",
+    Struct::class
+)
 
 val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "CustomTypesProperty",
@@ -404,6 +408,39 @@ class ValidationsImplTest {
             )
         )
 
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST, listOf(
+                struct {
+                    "moreNestedFields" to listOf(
+                        struct {
+                            "nestedUniqueIds" to listOf(
+                                struct {
+                                    "entries" to listOf(
+                                        struct {
+                                            "id" to "1"
+                                        },
+                                        struct {
+                                            "id" to "1"
+                                        }
+                                    )
+                                },
+                                struct {
+                                    "entries" to listOf(
+                                        struct {
+                                            "id" to "2"
+                                        },
+                                        struct {
+                                            "id" to "2"
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+
 
         val result = validateCall()
 
@@ -413,7 +450,10 @@ class ValidationsImplTest {
                 "Value '1' at '\"SomeStructureWithUniqueIdsList\"/[0]/entries/[*]/id' is not unique",
                 "Value '1' at '\"SomeStructureWithUniqueIdsObject\"/entries/[*]/id' is not unique",
                 "Value '1' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
-                "Value '2' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique"
+                "Value '2' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique",
+                "Value '1' at '\"SomeStructureWithUniqueIdsMultipleNest\"/[0]/moreNestedFields/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
+                "Value '2' at '\"SomeStructureWithUniqueIdsMultipleNest\"/[0]/moreNestedFields/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique"
+
             )
         }
     }

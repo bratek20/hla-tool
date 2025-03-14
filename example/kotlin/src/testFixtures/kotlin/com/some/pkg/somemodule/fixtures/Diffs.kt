@@ -578,6 +578,21 @@ fun diffSomeStructureWithUniqueNestedIds(given: SomeStructureWithUniqueNestedIds
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeStructureWithMultipleUniqueNestedIds(
+    var moreNestedFields: List<(ExpectedSomeStructureWithUniqueNestedIds.() -> Unit)>? = null,
+)
+fun diffSomeStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMultipleUniqueNestedIds, expectedInit: ExpectedSomeStructureWithMultipleUniqueNestedIds.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeStructureWithMultipleUniqueNestedIds().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.moreNestedFields?.let {
+        if (given.getMoreNestedFields().size != it.size) { result.add("${path}moreNestedFields size ${given.getMoreNestedFields().size} != ${it.size}"); return@let }
+        given.getMoreNestedFields().forEachIndexed { idx, entry -> if (diffSomeStructureWithUniqueNestedIds(entry, it[idx]) != "") { result.add(diffSomeStructureWithUniqueNestedIds(entry, it[idx], "${path}moreNestedFields[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedNestedValue(
     var value: String? = null,
 )

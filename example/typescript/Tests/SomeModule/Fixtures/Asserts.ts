@@ -136,6 +136,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMultipleUniqueNestedIds, expected: ExpectedSomeStructureWithMultipleUniqueNestedIds) {
+        const diff = diffSomeStructureWithMultipleUniqueNestedIds(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function nestedValue(given: NestedValue, expected: ExpectedNestedValue) {
         const diff = diffNestedValue(given, expected)
         AssertEquals(diff, "", diff)

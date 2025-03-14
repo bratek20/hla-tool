@@ -602,6 +602,22 @@ namespace SomeModule.Api {
         }
     }
 
+    public class SomeStructureWithMultipleUniqueNestedIds: ValueObject {
+        readonly List<SomeStructureWithUniqueNestedIds> moreNestedFields;
+
+        public SomeStructureWithMultipleUniqueNestedIds(
+            List<SomeStructureWithUniqueNestedIds> moreNestedFields
+        ) {
+            this.moreNestedFields = moreNestedFields;
+        }
+        public List<SomeStructureWithUniqueNestedIds> GetMoreNestedFields() {
+            return moreNestedFields;
+        }
+        public static SomeStructureWithMultipleUniqueNestedIds Create(List<SomeStructureWithUniqueNestedIds> moreNestedFields) {
+            return new SomeStructureWithMultipleUniqueNestedIds(moreNestedFields);
+        }
+    }
+
     public class NestedValue: ValueObject {
         readonly string value;
 

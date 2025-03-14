@@ -660,6 +660,22 @@ class SomeStructureWithUniqueNestedIds {
     }
 }
 
+class SomeStructureWithMultipleUniqueNestedIds {
+    private moreNestedFields = [new SomeStructureWithUniqueNestedIds]
+
+    static create(
+        moreNestedFields: SomeStructureWithUniqueNestedIds[],
+    ): SomeStructureWithMultipleUniqueNestedIds {
+        const instance = new SomeStructureWithMultipleUniqueNestedIds()
+        instance.moreNestedFields = moreNestedFields
+        return instance
+    }
+
+    getMoreNestedFields(): SomeStructureWithUniqueNestedIds[] {
+        return this.moreNestedFields
+    }
+}
+
 class NestedValue {
     private value = STRING
 

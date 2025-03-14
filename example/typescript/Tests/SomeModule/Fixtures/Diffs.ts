@@ -546,6 +546,20 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeStructureWithMultipleUniqueNestedIds {
+        moreNestedFields?: ExpectedSomeStructureWithUniqueNestedIds[],
+    }
+    export function diffSomeStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMultipleUniqueNestedIds, expected: ExpectedSomeStructureWithMultipleUniqueNestedIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.moreNestedFields !== undefined) {
+            if (given.getMoreNestedFields().length != expected.moreNestedFields.length) { result.push(`${path}moreNestedFields size ${given.getMoreNestedFields().length} != ${expected.moreNestedFields.length}`) }
+            given.getMoreNestedFields().forEach((entry, idx) => { if (diffSomeStructureWithUniqueNestedIds(entry, expected.moreNestedFields[idx]) != "") { result.push(diffSomeStructureWithUniqueNestedIds(entry, expected.moreNestedFields[idx], `${path}moreNestedFields[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedNestedValue {
         value?: string,
     }

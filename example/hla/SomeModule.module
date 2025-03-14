@@ -117,6 +117,9 @@ Properties
     SomeStructureWithUniqueNestedIds
         nestedUniqueIds: NestedUniqueIds[]
 
+    SomeStructureWithMultipleUniqueNestedIds
+        moreNestedFields: SomeStructureWithUniqueNestedIds[]
+
     NestedValue
         value: string
     OptionalFieldProperty
@@ -134,6 +137,8 @@ Properties
     "SomeStructureWithUniqueIdsList" -> SomeStructureWithUniqueIds[]
     "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]
     "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
+    "SomeStructureWithUniqueIdsMultipleNest" -> SomeStructureWithMultipleUniqueNestedIds[]
+
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]

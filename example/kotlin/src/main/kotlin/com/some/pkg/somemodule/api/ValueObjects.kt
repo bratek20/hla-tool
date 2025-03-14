@@ -695,6 +695,24 @@ data class SomeStructureWithUniqueNestedIds(
     }
 }
 
+data class SomeStructureWithMultipleUniqueNestedIds(
+    private val moreNestedFields: List<SomeStructureWithUniqueNestedIds>,
+) {
+    fun getMoreNestedFields(): List<SomeStructureWithUniqueNestedIds> {
+        return this.moreNestedFields
+    }
+
+    companion object {
+        fun create(
+            moreNestedFields: List<SomeStructureWithUniqueNestedIds>,
+        ): SomeStructureWithMultipleUniqueNestedIds {
+            return SomeStructureWithMultipleUniqueNestedIds(
+                moreNestedFields = moreNestedFields,
+            )
+        }
+    }
+}
+
 data class NestedValue(
     private val value: String,
 ) {
