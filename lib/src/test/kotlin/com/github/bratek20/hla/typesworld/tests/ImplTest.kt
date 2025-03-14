@@ -441,6 +441,45 @@ class TypesWorldImplTest {
 
             api.addClassType(worldClassType {
                 type = {
+                    name = "NestedClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReference"
+                        type = {
+                            name = "SelfReferenceNestedClass"
+                        }
+                    }
+                )
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceNestedClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReference"
+                        type = {
+                            name = "NestedClass"
+                        }
+                    }
+                )
+            })
+            api.addClassType(worldClassType {
+                type = {
                     name = "SelfReferenceListClass"
                 }
                 fields = listOf (
@@ -541,6 +580,21 @@ class TypesWorldImplTest {
                 {
                     type = SelfReferenceDetectedException::class
                     message = "Self reference detected for type 'SelfReferenceClass'"
+                }
+            )
+
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceNestedClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'NestedClass'"
                 }
             )
         }
