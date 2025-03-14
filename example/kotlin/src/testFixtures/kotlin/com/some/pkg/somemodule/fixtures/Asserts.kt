@@ -138,6 +138,16 @@ fun assertSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expected
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertNestedUniqueIds(given: NestedUniqueIds, expectedInit: ExpectedNestedUniqueIds.() -> Unit) {
+    val diff = diffNestedUniqueIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeStructureWithUniqueNestedIds(given: SomeStructureWithUniqueNestedIds, expectedInit: ExpectedSomeStructureWithUniqueNestedIds.() -> Unit) {
+    val diff = diffSomeStructureWithUniqueNestedIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertNestedValue(given: NestedValue, expectedInit: ExpectedNestedValue.() -> Unit) {
     val diff = diffNestedValue(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

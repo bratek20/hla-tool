@@ -659,6 +659,42 @@ data class SomeStructureWithUniqueIds(
     }
 }
 
+data class NestedUniqueIds(
+    private val entries: List<UniqueIdEntry>,
+) {
+    fun getEntries(): List<UniqueIdEntry> {
+        return this.entries
+    }
+
+    companion object {
+        fun create(
+            entries: List<UniqueIdEntry>,
+        ): NestedUniqueIds {
+            return NestedUniqueIds(
+                entries = entries,
+            )
+        }
+    }
+}
+
+data class SomeStructureWithUniqueNestedIds(
+    private val nestedUniqueIds: List<NestedUniqueIds>,
+) {
+    fun getNestedUniqueIds(): List<NestedUniqueIds> {
+        return this.nestedUniqueIds
+    }
+
+    companion object {
+        fun create(
+            nestedUniqueIds: List<NestedUniqueIds>,
+        ): SomeStructureWithUniqueNestedIds {
+            return SomeStructureWithUniqueNestedIds(
+                nestedUniqueIds = nestedUniqueIds,
+            )
+        }
+    }
+}
+
 data class NestedValue(
     private val value: String,
 ) {

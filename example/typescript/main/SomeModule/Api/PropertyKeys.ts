@@ -31,6 +31,11 @@ namespace SomeModule {
         SomeStructureWithUniqueIds
     )
 
+    export const SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS_PROPERTY_KEY = new ListPropertyKey(
+        "SomeStructureWithUniqueNestedIds",
+        SomeStructureWithUniqueNestedIds
+    )
+
     export const REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = new ObjectPropertyKey(
         "ReferencingOtherProperty",
         OtherProperty

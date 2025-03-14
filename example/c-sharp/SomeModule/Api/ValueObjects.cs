@@ -570,6 +570,38 @@ namespace SomeModule.Api {
         }
     }
 
+    public class NestedUniqueIds: ValueObject {
+        readonly List<UniqueIdEntry> entries;
+
+        public NestedUniqueIds(
+            List<UniqueIdEntry> entries
+        ) {
+            this.entries = entries;
+        }
+        public List<UniqueIdEntry> GetEntries() {
+            return entries;
+        }
+        public static NestedUniqueIds Create(List<UniqueIdEntry> entries) {
+            return new NestedUniqueIds(entries);
+        }
+    }
+
+    public class SomeStructureWithUniqueNestedIds: ValueObject {
+        readonly List<NestedUniqueIds> nestedUniqueIds;
+
+        public SomeStructureWithUniqueNestedIds(
+            List<NestedUniqueIds> nestedUniqueIds
+        ) {
+            this.nestedUniqueIds = nestedUniqueIds;
+        }
+        public List<NestedUniqueIds> GetNestedUniqueIds() {
+            return nestedUniqueIds;
+        }
+        public static SomeStructureWithUniqueNestedIds Create(List<NestedUniqueIds> nestedUniqueIds) {
+            return new SomeStructureWithUniqueNestedIds(nestedUniqueIds);
+        }
+    }
+
     public class NestedValue: ValueObject {
         readonly string value;
 

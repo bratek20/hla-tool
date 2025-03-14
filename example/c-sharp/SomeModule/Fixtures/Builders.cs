@@ -129,6 +129,14 @@ namespace SomeModule.Fixtures {
         public List<Action<UniqueIdEntryDef>> Entries { get; set; } = new List<Action<UniqueIdEntryDef>>();
     }
 
+    public class NestedUniqueIdsDef {
+        public List<Action<UniqueIdEntryDef>> Entries { get; set; } = new List<Action<UniqueIdEntryDef>>();
+    }
+
+    public class SomeStructureWithUniqueNestedIdsDef {
+        public List<Action<NestedUniqueIdsDef>> NestedUniqueIds { get; set; } = new List<Action<NestedUniqueIdsDef>>();
+    }
+
     public class NestedValueDef {
         public string Value { get; set; } = "someValue";
     }
@@ -304,6 +312,18 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeStructureWithUniqueIds.Create(def.Entries.Select(it => BuildUniqueIdEntry(it)).ToList());
+        }
+        public static NestedUniqueIds BuildNestedUniqueIds(Action<NestedUniqueIdsDef> init = null) {
+            var def = new NestedUniqueIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return NestedUniqueIds.Create(def.Entries.Select(it => BuildUniqueIdEntry(it)).ToList());
+        }
+        public static SomeStructureWithUniqueNestedIds BuildSomeStructureWithUniqueNestedIds(Action<SomeStructureWithUniqueNestedIdsDef> init = null) {
+            var def = new SomeStructureWithUniqueNestedIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeStructureWithUniqueNestedIds.Create(def.NestedUniqueIds.Select(it => BuildNestedUniqueIds(it)).ToList());
         }
         public static NestedValue BuildNestedValue(Action<NestedValueDef> init = null) {
             var def = new NestedValueDef();

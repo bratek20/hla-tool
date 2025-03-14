@@ -548,6 +548,36 @@ fun diffSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expectedIn
     return result.joinToString("\n")
 }
 
+data class ExpectedNestedUniqueIds(
+    var entries: List<(ExpectedUniqueIdEntry.() -> Unit)>? = null,
+)
+fun diffNestedUniqueIds(given: NestedUniqueIds, expectedInit: ExpectedNestedUniqueIds.() -> Unit, path: String = ""): String {
+    val expected = ExpectedNestedUniqueIds().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.entries?.let {
+        if (given.getEntries().size != it.size) { result.add("${path}entries size ${given.getEntries().size} != ${it.size}"); return@let }
+        given.getEntries().forEachIndexed { idx, entry -> if (diffUniqueIdEntry(entry, it[idx]) != "") { result.add(diffUniqueIdEntry(entry, it[idx], "${path}entries[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeStructureWithUniqueNestedIds(
+    var nestedUniqueIds: List<(ExpectedNestedUniqueIds.() -> Unit)>? = null,
+)
+fun diffSomeStructureWithUniqueNestedIds(given: SomeStructureWithUniqueNestedIds, expectedInit: ExpectedSomeStructureWithUniqueNestedIds.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeStructureWithUniqueNestedIds().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.nestedUniqueIds?.let {
+        if (given.getNestedUniqueIds().size != it.size) { result.add("${path}nestedUniqueIds size ${given.getNestedUniqueIds().size} != ${it.size}"); return@let }
+        given.getNestedUniqueIds().forEachIndexed { idx, entry -> if (diffNestedUniqueIds(entry, it[idx]) != "") { result.add(diffNestedUniqueIds(entry, it[idx], "${path}nestedUniqueIds[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedNestedValue(
     var value: String? = null,
 )

@@ -301,6 +301,26 @@ fun someStructureWithUniqueIds(init: SomeStructureWithUniqueIdsDef.() -> Unit = 
     )
 }
 
+data class NestedUniqueIdsDef(
+    var entries: List<(UniqueIdEntryDef.() -> Unit)> = emptyList(),
+)
+fun nestedUniqueIds(init: NestedUniqueIdsDef.() -> Unit = {}): NestedUniqueIds {
+    val def = NestedUniqueIdsDef().apply(init)
+    return NestedUniqueIds.create(
+        entries = def.entries.map { it -> uniqueIdEntry(it) },
+    )
+}
+
+data class SomeStructureWithUniqueNestedIdsDef(
+    var nestedUniqueIds: List<(NestedUniqueIdsDef.() -> Unit)> = emptyList(),
+)
+fun someStructureWithUniqueNestedIds(init: SomeStructureWithUniqueNestedIdsDef.() -> Unit = {}): SomeStructureWithUniqueNestedIds {
+    val def = SomeStructureWithUniqueNestedIdsDef().apply(init)
+    return SomeStructureWithUniqueNestedIds.create(
+        nestedUniqueIds = def.nestedUniqueIds.map { it -> nestedUniqueIds(it) },
+    )
+}
+
 data class NestedValueDef(
     var value: String = "someValue",
 )

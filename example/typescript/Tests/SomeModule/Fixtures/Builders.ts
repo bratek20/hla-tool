@@ -345,6 +345,28 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface NestedUniqueIdsDef {
+        entries?: UniqueIdEntryDef[],
+    }
+    export function nestedUniqueIds(def?: NestedUniqueIdsDef): NestedUniqueIds {
+        const final_entries = def?.entries ?? []
+
+        return NestedUniqueIds.create(
+            final_entries.map(it => uniqueIdEntry(it)),
+        )
+    }
+
+    export interface SomeStructureWithUniqueNestedIdsDef {
+        nestedUniqueIds?: NestedUniqueIdsDef[],
+    }
+    export function someStructureWithUniqueNestedIds(def?: SomeStructureWithUniqueNestedIdsDef): SomeStructureWithUniqueNestedIds {
+        const final_nestedUniqueIds = def?.nestedUniqueIds ?? []
+
+        return SomeStructureWithUniqueNestedIds.create(
+            final_nestedUniqueIds.map(it => nestedUniqueIds(it)),
+        )
+    }
+
     export interface NestedValueDef {
         value?: string,
     }
