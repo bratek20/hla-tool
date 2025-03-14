@@ -212,7 +212,7 @@ private class UniqueIdValidator(
                 val newRef = ref.value.substringBefore("[*]") + "[*]"
                 val sizeNewRef = traverser.getPropertySize(PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath+newRef)))
                 for(j in 0 until sizeNewRef) {
-                    val finalRef = newRef.replace("[*]", "[${j}]")
+                    val finalRef = newRef.replaceFirst("[*]", "[${j}]")
                     val finalPath = PropertyValuePathLogic(propertyKey.getName(), StructPath(initialPath+finalRef+ref.value.substringAfter("[*]")+ "/${info.getFieldName()}"))
                     finalReferences.add(finalPath)
                 }
