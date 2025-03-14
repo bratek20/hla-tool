@@ -59,6 +59,10 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
     fun addComment(comment: StringProvider) {
         addOpNoEmptyLineAfter(lineBlock("// ${comment()}"))
     }
+
+    fun add(other: TopLevelCodeBuilder) {
+        addOp(other)
+    }
 }
 typealias TopLevelCodeBuilderOps = TopLevelCodeBuilder.() -> Unit
 fun CodeBuilder.file(block: TopLevelCodeBuilderOps) = add(TopLevelCodeBuilder().apply(block))

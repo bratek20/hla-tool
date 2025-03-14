@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.web.http
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.*
-import com.github.bratek20.codebuilder.languages.typescript.namespace
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.api.PatternName
@@ -254,7 +254,7 @@ class WebCommonGenerator: PatternGenerator() {
         val view = CodeBuilder(c.language.base())
             .addOps {
                 if (c.lang is TypeScript) {
-                    namespace {
+                    typeScriptNamespace {
                         name = "$moduleName.Web"
 
                         classes.forEach(::addClass)

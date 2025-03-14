@@ -2,8 +2,13 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.ClassBuilderOps
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
+import com.github.bratek20.codebuilder.builders.constructorCall
+import com.github.bratek20.codebuilder.builders.returnStatement
 import com.github.bratek20.codebuilder.core.BaseType
+import com.github.bratek20.codebuilder.languages.typescript.TypeScriptNamespaceBuilder
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.baseType
+import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -38,9 +43,26 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        module.getInterfaces().forEach { def ->
-            addClass(MockInterfaceLogic(def).getClass())
+        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it) }
+
+        mockInterfacesLogic.forEach { logic ->
+            addClass(logic.getClass())
         }
+
+        add(typeScriptNamespace {
+            name = "OtherModule.Mocks"
+            addFunction {
+                name = "createOtherInterfaceMock"
+                returnType = typeName("OtherInterfaceMock")
+                setBody {
+                    add(returnStatement {
+                       constructorCall {
+                            className = "OtherInterfaceMock"
+                       }
+                    })
+                }
+            }
+        })
     }
 
     override fun doNotGenerateTypeScriptNamespace(): Boolean {
