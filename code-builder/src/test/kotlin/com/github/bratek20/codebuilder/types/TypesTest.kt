@@ -484,6 +484,26 @@ class TypesTest {
         }
 
         @Test
+        fun `single expression lambda`() {
+            testLinePartOps {
+                ops {
+                    add(singleExpressionLambda {
+                        methodCall {
+                            target = variable("mock")
+                            methodName = "someMethod"
+                        }
+                    })
+                }
+                langExpected {
+                    lang = TypeScript()
+                    expected = """
+                    () => { mock.someMethod() }
+                    """
+                }
+            }
+        }
+
+        @Test
         fun `lambda type`() {
             testLinePartOps {
                 ops {

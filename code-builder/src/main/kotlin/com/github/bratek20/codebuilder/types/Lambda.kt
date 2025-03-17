@@ -19,6 +19,10 @@ fun emptyLambda(argsNumber: Int = 0) = expression { c ->
     }
 }
 
+fun singleExpressionLambda(expr: ExpressionBuilderProvider) = expression { c ->
+    "() => { " + expr().build(c) + " }"
+}
+
 fun lambdaType(type: TypeBuilder) = typeName { c ->
     "Action<${type.build(c)}>"
 }
