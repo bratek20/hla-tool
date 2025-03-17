@@ -8,43 +8,43 @@ class SomeInterfaceMock implements SomeInterface {
     }
     someCommand(id: SomeId, amount: number): void {
     }
-    someQuery(): void {
+    someQuery(query: SomeQueryInput): SomeClass {
     }
-    optMethod(): void {
+    optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
     }
-    methodWithListOfSimpleVO(): void {
+    methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
     }
-    methodWithAny(): void {
+    methodWithAny(i: any): any {
     }
-    methodReturningOptSimpleVo(): void {
+    methodReturningOptSimpleVo(): Optional<SomeId> {
     }
 }
 
 class SomeInterface2Mock implements SomeInterface2 {
-    referenceOtherClass(): void {
+    referenceOtherClass(other: OtherClass): OtherClass {
     }
-    referenceLegacyType(): void {
+    referenceLegacyType(legacyType: LegacyType): LegacyType {
     }
 }
 
 class SomeInterface3Mock implements SomeInterface3 {
-    referenceInterface(): void {
+    referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
     }
-    referenceOtherInterface(): void {
+    referenceOtherInterface(other: OtherInterface): OtherInterface {
     }
 }
 
 class SomeModuleHandlersMock implements SomeModuleHandlers {
-    someHandler(): void {
+    someHandler(i: SomeHandlerInput): SomeHandlerOutput {
     }
-    someHandler2(): void {
+    someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
     }
 }
 
 class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
-    someDebugHandler(): void {
+    someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
     }
-    someDebugHandler2(): void {
+    someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
     }
 }
 

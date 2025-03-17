@@ -5,6 +5,7 @@ import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.languages.typescript.TypeScriptNamespaceBuilder
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
+import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.ModuleName
@@ -13,7 +14,8 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
 class MockInterfaceLogic(
     private val def: InterfaceDefinition,
-    private val moduleName: String
+    private val moduleName: String,
+    private val apiTypeFactory: ApiTypeFactory
 ) {
     fun getClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
@@ -22,7 +24,13 @@ class MockInterfaceLogic(
         def.getMethods().forEach { method ->
             addMethod {
                 name = method.getName()
-                returnType = baseType(BaseType.VOID)
+                method.getArgs().forEach { arg ->
+                    addArg {
+                        name = arg.getName()
+                        type = apiTypeFactory.create(arg.getType()).builder()
+                    }
+                }
+                returnType = apiTypeFactory.create(method.getReturnType()).builder()
             }
         }
     }
@@ -94,7 +102,7 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it, moduleName) }
+        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory) }
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.getClass())
