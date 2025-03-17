@@ -364,6 +364,7 @@ open class ClassBuilder: CodeBlockBuilder {
         } + (constructor?.getArgs() ?: emptyList())
 
         finalArgs.forEachIndexed { idx, arg ->
+            lineSoftStart()
             add(arg)
             if (idx != finalArgs.size - 1) {
                 linePart(",")
@@ -384,6 +385,7 @@ open class ClassBuilder: CodeBlockBuilder {
             }
         }
         constructorArgs.forEachIndexed { idx, arg ->
+            lineSoftStart()
             add(arg)
             if (idx != constructorArgs.size - 1) {
                 linePart(",")
