@@ -7,11 +7,13 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
 class MockInterfaceLogic(
-    private val def: InterfaceDefinition
+    private val def: InterfaceDefinition,
+    private val moduleName: String
 ) {
     fun getClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
@@ -22,6 +24,59 @@ class MockInterfaceLogic(
                 name = method.getName()
                 returnType = baseType(BaseType.VOID)
             }
+        }
+    }
+
+    fun getCreateMockFunction(): FunctionBuilderOps = {
+        name = "create${def.getName()}Mock"
+        returnType = typeName(def.getName() + "Mock")
+        setBody {
+            add(returnStatement {
+                constructorCall {
+                    className = def.getName() + "Mock"
+                }
+            })
+        }
+    }
+
+    fun getSetupFunction(): FunctionBuilderOps = {
+        name = "setup${def.getName()}"
+        returnType = typeName(def.getName() + "Mock")
+        setBody {
+            add(assignment {
+                left = variableDeclaration {
+                    name = "mock"
+                }
+                right = functionCall {
+                    name = "$moduleName.Mocks.create${def.getName()}Mock"
+                }
+            })
+
+            def.getMethods().forEach { method ->
+                add(assignment {
+                    val apiMethodName = "$moduleName.Api.${method.getName()}"
+
+                    left = variable(apiMethodName)
+                    right = functionCall {
+                        name = "CreateMock"
+                        addArg {
+                            variable(apiMethodName)
+                        }
+                        addArg {
+                            singleExpressionLambda {
+                                methodCall {
+                                    target = variable("mock")
+                                    methodName = method.getName()
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            add(returnStatement {
+                variable("mock")
+            })
         }
     }
 }
@@ -39,61 +94,17 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it) }
+        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it, moduleName) }
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.getClass())
         }
-        
+
         add(typeScriptNamespace {
-            name = "OtherModule.Mocks"
-            addFunction {
-                name = "createOtherInterfaceMock"
-                returnType = typeName("OtherInterfaceMock")
-                setBody {
-                    add(returnStatement {
-                       constructorCall {
-                            className = "OtherInterfaceMock"
-                       }
-                    })
-                }
-            }
-
-            addFunction {
-                name = "setupOtherInterface"
-                returnType = typeName("OtherInterfaceMock")
-                setBody {
-                    add(assignment {
-                        left = variableDeclaration {
-                            name = "mock"
-                        }
-                        right = functionCall {
-                            name = "OtherModule.Mocks.createOtherInterfaceMock"
-                        }
-                    })
-
-                    add(assignment {
-                        left = variable("OtherModule.Api.otherMethod")
-                        right = functionCall {
-                            name = "CreateMock"
-                            addArg {
-                                variable("OtherModule.Api.otherMethod")
-                            }
-                            addArg {
-                                singleExpressionLambda {
-                                    methodCall {
-                                        target = variable("mock")
-                                        methodName = "otherMethod"
-                                    }
-                                }
-                            }
-                        }
-                    })
-
-                    add(returnStatement {
-                        variable("mock")
-                    })
-                }
+            name = "$moduleName.Mocks"
+            mockInterfacesLogic.forEach { logic ->
+                addFunction(logic.getCreateMockFunction())
+                addFunction(logic.getSetupFunction())
             }
         })
     }
