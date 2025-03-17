@@ -6,7 +6,7 @@ class SomeEmptyInterfaceMock implements SomeEmptyInterface {
 class SomeInterfaceMock implements SomeInterface {
     someEmptyMethod(): void {
     }
-    someCommand(): void {
+    someCommand(id: SomeId, amount: number): void {
     }
     someQuery(): void {
     }
@@ -65,7 +65,7 @@ namespace SomeModule.Mocks {
     export function setupSomeInterface(): SomeInterfaceMock {
         const mock = SomeModule.Mocks.createSomeInterfaceMock()
         SomeModule.Api.someEmptyMethod = CreateMock(SomeModule.Api.someEmptyMethod, () => { mock.someEmptyMethod() })
-        SomeModule.Api.someCommand = CreateMock(SomeModule.Api.someCommand, () => { mock.someCommand() })
+        SomeModule.Api.someCommand = CreateMock(SomeModule.Api.someCommand, (id: SomeId, amount: number) => { mock.someCommand(id, amount) })
         SomeModule.Api.someQuery = CreateMock(SomeModule.Api.someQuery, () => { mock.someQuery() })
         SomeModule.Api.optMethod = CreateMock(SomeModule.Api.optMethod, () => { mock.optMethod() })
         SomeModule.Api.methodWithListOfSimpleVO = CreateMock(SomeModule.Api.methodWithListOfSimpleVO, () => { mock.methodWithListOfSimpleVO() })
