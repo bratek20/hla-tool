@@ -10,7 +10,7 @@ class TypeScriptNamespaceBuilderTest {
     fun `should work`() {
         testOp {
             op = {
-                namespace {
+                add(typeScriptNamespace {
                     name = "SomeNamespace"
                     addClass {
                         name = "SomeClass"
@@ -29,7 +29,7 @@ class TypeScriptNamespaceBuilderTest {
                     addFunctionCall {
                         name = "someFunction"
                     }
-                }
+                })
             }
             langExpected {
                 lang = TypeScript()
