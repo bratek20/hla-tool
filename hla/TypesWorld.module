@@ -90,6 +90,10 @@ Interfaces
         getAllTypes(): WorldType[]
 
         getAllReferencesOf(target: WorldType, searchFor: WorldType): StructPath[]
+            throws
+                SelfReferenceDetectedException
+
+        getAllClassTypes(): WorldClassType[]
 
 Kotlin
     ExternalTypePackages

@@ -39,3 +39,19 @@ class SomeLongWrapper {
         return new SomeLongWrapper(this.value * amount);
     }
 }
+
+class UniqueIdEntry {
+    private id = STRING
+
+    static create(
+        id: string,
+    ): UniqueIdEntry {
+        const instance = new UniqueIdEntry()
+        instance.id = id
+        return instance
+    }
+
+    getId(): string {
+        return this.id
+    }
+}

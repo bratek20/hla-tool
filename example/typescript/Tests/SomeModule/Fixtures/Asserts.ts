@@ -111,6 +111,31 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList, expected: ExpectedSomeReferencingPropertyFieldList) {
+        const diff = diffSomeReferencingPropertyFieldList(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expected: ExpectedSomeStructureWithUniqueIds) {
+        const diff = diffSomeStructureWithUniqueIds(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function nestedUniqueIds(given: NestedUniqueIds, expected: ExpectedNestedUniqueIds) {
+        const diff = diffNestedUniqueIds(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someStructureWithUniqueNestedIds(given: SomeStructureWithUniqueNestedIds, expected: ExpectedSomeStructureWithUniqueNestedIds) {
+        const diff = diffSomeStructureWithUniqueNestedIds(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMultipleUniqueNestedIds, expected: ExpectedSomeStructureWithMultipleUniqueNestedIds) {
+        const diff = diffSomeStructureWithMultipleUniqueNestedIds(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function nestedValue(given: NestedValue, expected: ExpectedNestedValue) {
         const diff = diffNestedValue(given, expected)
         AssertEquals(diff, "", diff)

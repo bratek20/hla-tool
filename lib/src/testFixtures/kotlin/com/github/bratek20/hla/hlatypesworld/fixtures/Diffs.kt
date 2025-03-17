@@ -43,3 +43,27 @@ fun diffIdSourceInfo(given: IdSourceInfo, expectedInit: ExpectedIdSourceInfo.() 
 
     return result.joinToString("\n")
 }
+
+data class ExpectedUniqueIdInfo(
+    var type: (ExpectedWorldType.() -> Unit)? = null,
+    var fieldName: String? = null,
+    var parent: (ExpectedWorldType.() -> Unit)? = null,
+)
+fun diffUniqueIdInfo(given: UniqueIdInfo, expectedInit: ExpectedUniqueIdInfo.() -> Unit, path: String = ""): String {
+    val expected = ExpectedUniqueIdInfo().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.type?.let {
+        if (diffWorldType(given.getType(), it) != "") { result.add(diffWorldType(given.getType(), it, "${path}type.")) }
+    }
+
+    expected.fieldName?.let {
+        if (given.getFieldName() != it) { result.add("${path}fieldName ${given.getFieldName()} != ${it}") }
+    }
+
+    expected.parent?.let {
+        if (diffWorldType(given.getParent(), it) != "") { result.add(diffWorldType(given.getParent(), it, "${path}parent.")) }
+    }
+
+    return result.joinToString("\n")
+}

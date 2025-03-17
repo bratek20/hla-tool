@@ -8,6 +8,7 @@ import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -359,6 +360,8 @@ class TypesWorldImplTest {
 
     @Nested
     inner class GetAllReferencesOf {
+
+
         @Test
         fun `should work for normal, optional and list fields`() {
             api.ensureType(worldType {
@@ -428,6 +431,48 @@ class TypesWorldImplTest {
             assertStructPath(references[0], "nestedField/normalField/value")
             assertStructPath(references[1], "nestedField/optionalField?/value")
             assertStructPath(references[2], "nestedField/listField/[*]/value")
+        }
+
+        @Test
+        fun `should throw exception for class referencing its self`() {
+            api.ensureType(worldType {
+                name = "ValueClass"
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReference"
+                        type = {
+                            name = "SelfReferenceClass"
+                        }
+                    }
+                )
+            })
+
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'SelfReferenceClass'"
+                }
+            )
         }
     }
 }

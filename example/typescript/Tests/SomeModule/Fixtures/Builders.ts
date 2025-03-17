@@ -312,6 +312,61 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeReferencingPropertyFieldListDef {
+        referenceIdList?: string[],
+    }
+    export function someReferencingPropertyFieldList(def?: SomeReferencingPropertyFieldListDef): SomeReferencingPropertyFieldList {
+        const final_referenceIdList = def?.referenceIdList ?? []
+
+        return SomeReferencingPropertyFieldList.create(
+            final_referenceIdList.map(it => new SomeId(it)),
+        )
+    }
+
+    export interface SomeStructureWithUniqueIdsDef {
+        entries?: SimpleModule.Builder.UniqueIdEntryDef[],
+    }
+    export function someStructureWithUniqueIds(def?: SomeStructureWithUniqueIdsDef): SomeStructureWithUniqueIds {
+        const final_entries = def?.entries ?? []
+
+        return SomeStructureWithUniqueIds.create(
+            final_entries.map(it => SimpleModule.Builder.uniqueIdEntry(it)),
+        )
+    }
+
+    export interface NestedUniqueIdsDef {
+        entries?: SimpleModule.Builder.UniqueIdEntryDef[],
+    }
+    export function nestedUniqueIds(def?: NestedUniqueIdsDef): NestedUniqueIds {
+        const final_entries = def?.entries ?? []
+
+        return NestedUniqueIds.create(
+            final_entries.map(it => SimpleModule.Builder.uniqueIdEntry(it)),
+        )
+    }
+
+    export interface SomeStructureWithUniqueNestedIdsDef {
+        nestedUniqueIds?: NestedUniqueIdsDef[],
+    }
+    export function someStructureWithUniqueNestedIds(def?: SomeStructureWithUniqueNestedIdsDef): SomeStructureWithUniqueNestedIds {
+        const final_nestedUniqueIds = def?.nestedUniqueIds ?? []
+
+        return SomeStructureWithUniqueNestedIds.create(
+            final_nestedUniqueIds.map(it => nestedUniqueIds(it)),
+        )
+    }
+
+    export interface SomeStructureWithMultipleUniqueNestedIdsDef {
+        moreNestedFields?: SomeStructureWithUniqueNestedIdsDef[],
+    }
+    export function someStructureWithMultipleUniqueNestedIds(def?: SomeStructureWithMultipleUniqueNestedIdsDef): SomeStructureWithMultipleUniqueNestedIds {
+        const final_moreNestedFields = def?.moreNestedFields ?? []
+
+        return SomeStructureWithMultipleUniqueNestedIds.create(
+            final_moreNestedFields.map(it => someStructureWithUniqueNestedIds(it)),
+        )
+    }
+
     export interface NestedValueDef {
         value?: string,
     }

@@ -18,6 +18,14 @@ Interfaces
 
         getAllIdSourceInfo(): IdSourceInfo[]
 
+        UniqueIdInfo
+            type: WorldType
+            fieldName: string
+            parent: WorldType
+        markAsUniqueId(info: UniqueIdInfo)
+
+        getAllUniqueIdInfos(): UniqueIdInfo[]
+
     HlaTypesWorldPopulator
         getOrder(): int
         populate(modules: ModuleDefinition[])

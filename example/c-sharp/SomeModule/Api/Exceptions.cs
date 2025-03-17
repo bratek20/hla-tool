@@ -6,6 +6,7 @@ using System.Linq;
 using B20.Ext;
 using B20.Architecture.Exceptions;
 using OtherModule.Api;
+using SimpleModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Api {

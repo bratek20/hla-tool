@@ -6,6 +6,8 @@ import org.assertj.core.api.Assertions.assertThat
 
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.simplemodule.api.*
+import com.some.pkg.simplemodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
@@ -120,6 +122,31 @@ fun assertSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSome
 
 fun assertSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: ExpectedSomeReferencingProperty.() -> Unit) {
     val diff = diffSomeReferencingProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList, expectedInit: ExpectedSomeReferencingPropertyFieldList.() -> Unit) {
+    val diff = diffSomeReferencingPropertyFieldList(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expectedInit: ExpectedSomeStructureWithUniqueIds.() -> Unit) {
+    val diff = diffSomeStructureWithUniqueIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertNestedUniqueIds(given: NestedUniqueIds, expectedInit: ExpectedNestedUniqueIds.() -> Unit) {
+    val diff = diffNestedUniqueIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeStructureWithUniqueNestedIds(given: SomeStructureWithUniqueNestedIds, expectedInit: ExpectedSomeStructureWithUniqueNestedIds.() -> Unit) {
+    val diff = diffSomeStructureWithUniqueNestedIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMultipleUniqueNestedIds, expectedInit: ExpectedSomeStructureWithMultipleUniqueNestedIds.() -> Unit) {
+    val diff = diffSomeStructureWithMultipleUniqueNestedIds(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

@@ -13,3 +13,8 @@ class WorldTypeNotFoundException(
     message: String = ""
 ): ApiException(message) {
 }
+
+class SelfReferenceDetectedException(
+    message: String = ""
+): ApiException(message) {
+}

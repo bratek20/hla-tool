@@ -580,6 +580,86 @@ class SomeReferencingProperty {
     }
 }
 
+class SomeReferencingPropertyFieldList {
+    private referenceIdList = [STRING]
+
+    static create(
+        referenceIdList: SomeId[],
+    ): SomeReferencingPropertyFieldList {
+        const instance = new SomeReferencingPropertyFieldList()
+        instance.referenceIdList = referenceIdList.map(it => it.value)
+        return instance
+    }
+
+    getReferenceIdList(): SomeId[] {
+        return this.referenceIdList.map(it => new SomeId(it))
+    }
+}
+
+class SomeStructureWithUniqueIds {
+    private entries = [new UniqueIdEntry]
+
+    static create(
+        entries: UniqueIdEntry[],
+    ): SomeStructureWithUniqueIds {
+        const instance = new SomeStructureWithUniqueIds()
+        instance.entries = entries
+        return instance
+    }
+
+    getEntries(): UniqueIdEntry[] {
+        return this.entries
+    }
+}
+
+class NestedUniqueIds {
+    private entries = [new UniqueIdEntry]
+
+    static create(
+        entries: UniqueIdEntry[],
+    ): NestedUniqueIds {
+        const instance = new NestedUniqueIds()
+        instance.entries = entries
+        return instance
+    }
+
+    getEntries(): UniqueIdEntry[] {
+        return this.entries
+    }
+}
+
+class SomeStructureWithUniqueNestedIds {
+    private nestedUniqueIds = [new NestedUniqueIds]
+
+    static create(
+        nestedUniqueIds: NestedUniqueIds[],
+    ): SomeStructureWithUniqueNestedIds {
+        const instance = new SomeStructureWithUniqueNestedIds()
+        instance.nestedUniqueIds = nestedUniqueIds
+        return instance
+    }
+
+    getNestedUniqueIds(): NestedUniqueIds[] {
+        return this.nestedUniqueIds
+    }
+}
+
+class SomeStructureWithMultipleUniqueNestedIds {
+    private moreNestedFields = [new SomeStructureWithUniqueNestedIds]
+
+    static create(
+        moreNestedFields: SomeStructureWithUniqueNestedIds[],
+    ): SomeStructureWithMultipleUniqueNestedIds {
+        const instance = new SomeStructureWithMultipleUniqueNestedIds()
+        instance.moreNestedFields = moreNestedFields
+        return instance
+    }
+
+    getMoreNestedFields(): SomeStructureWithUniqueNestedIds[] {
+        return this.moreNestedFields
+    }
+}
+
 class NestedValue {
     private value = STRING
 

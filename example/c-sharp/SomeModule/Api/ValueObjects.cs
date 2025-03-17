@@ -6,6 +6,7 @@ using System.Linq;
 using B20.Ext;
 using OtherModule.Api;
 using TypesModule.Api;
+using SimpleModule.Api;
 
 namespace SomeModule.Api {
     public class SomeId: ValueObject {
@@ -519,6 +520,86 @@ namespace SomeModule.Api {
         }
         public static SomeReferencingProperty Create(SomeId referenceId) {
             return new SomeReferencingProperty(referenceId.Value);
+        }
+    }
+
+    public class SomeReferencingPropertyFieldList: ValueObject {
+        readonly List<string> referenceIdList;
+
+        public SomeReferencingPropertyFieldList(
+            List<string> referenceIdList
+        ) {
+            this.referenceIdList = referenceIdList;
+        }
+        public List<SomeId> GetReferenceIdList() {
+            return referenceIdList.Select(it => new SomeId(it)).ToList();
+        }
+        public static SomeReferencingPropertyFieldList Create(List<SomeId> referenceIdList) {
+            return new SomeReferencingPropertyFieldList(referenceIdList.Select(it => it.Value).ToList());
+        }
+    }
+
+    public class SomeStructureWithUniqueIds: ValueObject {
+        readonly List<UniqueIdEntry> entries;
+
+        public SomeStructureWithUniqueIds(
+            List<UniqueIdEntry> entries
+        ) {
+            this.entries = entries;
+        }
+        public List<UniqueIdEntry> GetEntries() {
+            return entries;
+        }
+        public static SomeStructureWithUniqueIds Create(List<UniqueIdEntry> entries) {
+            return new SomeStructureWithUniqueIds(entries);
+        }
+    }
+
+    public class NestedUniqueIds: ValueObject {
+        readonly List<UniqueIdEntry> entries;
+
+        public NestedUniqueIds(
+            List<UniqueIdEntry> entries
+        ) {
+            this.entries = entries;
+        }
+        public List<UniqueIdEntry> GetEntries() {
+            return entries;
+        }
+        public static NestedUniqueIds Create(List<UniqueIdEntry> entries) {
+            return new NestedUniqueIds(entries);
+        }
+    }
+
+    public class SomeStructureWithUniqueNestedIds: ValueObject {
+        readonly List<NestedUniqueIds> nestedUniqueIds;
+
+        public SomeStructureWithUniqueNestedIds(
+            List<NestedUniqueIds> nestedUniqueIds
+        ) {
+            this.nestedUniqueIds = nestedUniqueIds;
+        }
+        public List<NestedUniqueIds> GetNestedUniqueIds() {
+            return nestedUniqueIds;
+        }
+        public static SomeStructureWithUniqueNestedIds Create(List<NestedUniqueIds> nestedUniqueIds) {
+            return new SomeStructureWithUniqueNestedIds(nestedUniqueIds);
+        }
+    }
+
+    public class SomeStructureWithMultipleUniqueNestedIds: ValueObject {
+        readonly List<SomeStructureWithUniqueNestedIds> moreNestedFields;
+
+        public SomeStructureWithMultipleUniqueNestedIds(
+            List<SomeStructureWithUniqueNestedIds> moreNestedFields
+        ) {
+            this.moreNestedFields = moreNestedFields;
+        }
+        public List<SomeStructureWithUniqueNestedIds> GetMoreNestedFields() {
+            return moreNestedFields;
+        }
+        public static SomeStructureWithMultipleUniqueNestedIds Create(List<SomeStructureWithUniqueNestedIds> moreNestedFields) {
+            return new SomeStructureWithMultipleUniqueNestedIds(moreNestedFields);
         }
     }
 
