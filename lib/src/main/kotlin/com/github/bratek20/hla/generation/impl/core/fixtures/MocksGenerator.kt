@@ -1,14 +1,13 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
-import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.languages.typescript.TypeScriptNamespaceBuilder
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
+import com.github.bratek20.hla.apitypes.impl.BaseApiType
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
+import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
-import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
@@ -31,8 +30,19 @@ class MockInterfaceLogic(
                     }
                 }
                 returnType = apiTypeFactory.create(method.getReturnType()).builder()
+                if (!hasVoidReturnType(method)) {
+                    setBody {
+                        add(returnStatement {
+                            hardcodedExpression("SomeModule.Builder.someClass()")
+                        })
+                    }
+                }
             }
         }
+    }
+
+    private fun hasVoidReturnType(method: MethodDefinition): Boolean {
+        return BaseApiType.isVoid(apiTypeFactory.create(method.getReturnType()))
     }
 
     fun getCreateMockFunction(): FunctionBuilderOps = {
@@ -78,7 +88,7 @@ class MockInterfaceLogic(
                                         type = apiTypeFactory.create(it.getType()).builder()
                                     }
                                 }
-                                body = methodCall {
+                                val mockMethodCall = methodCall {
                                     target = variable("mock")
                                     methodName = method.getName()
                                     method.getArgs().forEach { arg ->
@@ -86,6 +96,11 @@ class MockInterfaceLogic(
                                             variable(arg.getName())
                                         }
                                     }
+                                }
+                                body = if (hasVoidReturnType(method)) {
+                                    mockMethodCall
+                                } else {
+                                    returnExpression(mockMethodCall)
                                 }
                             }
                         }

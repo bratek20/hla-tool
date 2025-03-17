@@ -28,18 +28,11 @@ fun expressionToStatement(value: ExpressionBuilder) = statement {{
 
 fun expressionToStatement(value: ExpressionBuilderProvider) = expressionToStatement(value.invoke())
 
-class ReturnBuilder(
-    private val value: ExpressionBuilder
-): StatementBuilder {
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        lineStart("return ")
-        add(value)
-        statementLineEnd()
-    }
+fun returnExpression(value: ExpressionBuilder) = expression { c ->
+    "return ${value.build(c)}"
 }
-fun returnStatement(value: ExpressionBuilderProvider): ReturnBuilder {
-    return ReturnBuilder(value.invoke())
-}
+fun returnStatement(value: ExpressionBuilderProvider) = returnExpression(value.invoke()).asStatement()
+
 class VariableDeclarationBuilder: ExpressionBuilder {
     lateinit var name: String
     var mutable: Boolean = false

@@ -125,6 +125,12 @@ class BaseApiType(
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         return variable
     }
+
+    companion object {
+        fun isVoid(type: ApiType): Boolean {
+            return type is BaseApiType && type.name == BaseType.VOID
+        }
+    }
 }
 
 class InterfaceApiType(
