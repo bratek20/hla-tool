@@ -31,7 +31,7 @@ class WebClientGenerator: PatternGenerator() {
         val interfs = exposedInterfaces(c)
         return CodeBuilder(c.language.base())
             .addOps {
-                typeScriptNamespace {
+                add(typeScriptNamespace {
                     name = "${moduleName}.Web"
                     interfs.forEach { interf ->
                         addClass {
@@ -79,7 +79,7 @@ class WebClientGenerator: PatternGenerator() {
                             }
                         }
                     }
-                }
+                })
             }
             .build()
     }

@@ -254,11 +254,11 @@ class WebCommonGenerator: PatternGenerator() {
         val view = CodeBuilder(c.language.base())
             .addOps {
                 if (c.lang is TypeScript) {
-                    typeScriptNamespace {
+                    add(typeScriptNamespace {
                         name = "$moduleName.Web"
 
                         classes.forEach(::addClass)
-                    }
+                    })
                 }
                 if (c.lang is Kotlin) {
                     classes.forEach(::legacyClassBlock)

@@ -37,7 +37,7 @@ class WebContextGenerator: PatternGenerator() {
         val interfs = factory.create(interfDefs)
         return CodeBuilder(c.language.base())
             .addOps {
-                typeScriptNamespace {
+                add(typeScriptNamespace {
                     name = "${this@WebContextGenerator.c.module.getName()}.Api"
                     interfs.forEach { interf ->
                         interf.methods.forEach { m ->
@@ -61,7 +61,7 @@ class WebContextGenerator: PatternGenerator() {
                             }
                         }
                     }
-                }
+                })
             }
             .build()
     }
