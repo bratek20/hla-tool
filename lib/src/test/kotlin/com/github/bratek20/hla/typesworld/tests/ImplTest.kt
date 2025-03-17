@@ -433,15 +433,15 @@ class TypesWorldImplTest {
             assertStructPath(references[2], "nestedField/listField/[*]/value")
         }
 
-        @Disabled("Fix not needed for now, if the issue reappear uncomment test")
-        fun `should work for class referencing its self`() {
+        @Test
+        fun `should throw exception for class referencing its self`() {
             api.ensureType(worldType {
                 name = "ValueClass"
             })
 
             api.addClassType(worldClassType {
                 type = {
-                    name = "SomeClass"
+                    name = "SelfReferenceClass"
                 }
                 fields = listOf (
                     {
@@ -453,36 +453,26 @@ class TypesWorldImplTest {
                     {
                         name = "selfReference"
                         type = {
-                            name = "SomeClass"
-                        }
-                    },
-                    {
-                        name = "selfReferenceList"
-                        type = {
-                            name = "List<SomeClass>"
-                        }
-                    },
-                    {
-                        name = "selfReferenceOptional"
-                        type = {
-                            name = "Optional<SomeClass>"
+                            name = "SelfReferenceClass"
                         }
                     }
                 )
             })
 
-
-            val references = api.getAllReferencesOf(
-                worldType {
-                    name = "SomeClass"
-                },
-                worldType {
-                    name = "ValueClass"
+            assertApiExceptionThrown(
+                { api.getAllReferencesOf(
+                    worldType {
+                        name = "SelfReferenceClass"
+                    },
+                    worldType {
+                        name = "ValueClass"
+                    }
+                ) },
+                {
+                    type = SelfReferenceDetectedException::class
+                    message = "Self reference detected for type 'SelfReferenceClass'"
                 }
             )
-
-            assertThat(references).hasSize(1)
-            //TODO: assert SelfReferenceDetectedException
         }
     }
 }
