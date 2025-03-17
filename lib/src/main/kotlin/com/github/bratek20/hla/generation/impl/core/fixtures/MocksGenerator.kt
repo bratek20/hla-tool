@@ -71,8 +71,14 @@ class MockInterfaceLogic(
                             variable(apiMethodName)
                         }
                         addArg {
-                            singleExpressionLambda {
-                                methodCall {
+                            lambda {
+                                method.getArgs().forEach {
+                                    addArg {
+                                        name = it.getName()
+                                        type = apiTypeFactory.create(it.getType()).builder()
+                                    }
+                                }
+                                body = methodCall {
                                     target = variable("mock")
                                     methodName = method.getName()
                                     method.getArgs().forEach { arg ->

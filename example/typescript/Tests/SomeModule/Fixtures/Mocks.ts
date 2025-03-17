@@ -66,10 +66,10 @@ namespace SomeModule.Mocks {
         const mock = SomeModule.Mocks.createSomeInterfaceMock()
         SomeModule.Api.someEmptyMethod = CreateMock(SomeModule.Api.someEmptyMethod, () => { mock.someEmptyMethod() })
         SomeModule.Api.someCommand = CreateMock(SomeModule.Api.someCommand, (id: SomeId, amount: number) => { mock.someCommand(id, amount) })
-        SomeModule.Api.someQuery = CreateMock(SomeModule.Api.someQuery, () => { mock.someQuery() })
-        SomeModule.Api.optMethod = CreateMock(SomeModule.Api.optMethod, () => { mock.optMethod() })
-        SomeModule.Api.methodWithListOfSimpleVO = CreateMock(SomeModule.Api.methodWithListOfSimpleVO, () => { mock.methodWithListOfSimpleVO() })
-        SomeModule.Api.methodWithAny = CreateMock(SomeModule.Api.methodWithAny, () => { mock.methodWithAny() })
+        SomeModule.Api.someQuery = CreateMock(SomeModule.Api.someQuery, (query: SomeQueryInput) => { mock.someQuery(query) })
+        SomeModule.Api.optMethod = CreateMock(SomeModule.Api.optMethod, (optId: Optional<SomeId>) => { mock.optMethod(optId) })
+        SomeModule.Api.methodWithListOfSimpleVO = CreateMock(SomeModule.Api.methodWithListOfSimpleVO, (list: SomeId[]) => { mock.methodWithListOfSimpleVO(list) })
+        SomeModule.Api.methodWithAny = CreateMock(SomeModule.Api.methodWithAny, (i: any) => { mock.methodWithAny(i) })
         SomeModule.Api.methodReturningOptSimpleVo = CreateMock(SomeModule.Api.methodReturningOptSimpleVo, () => { mock.methodReturningOptSimpleVo() })
         return mock
     }
@@ -80,8 +80,8 @@ namespace SomeModule.Mocks {
 
     export function setupSomeInterface2(): SomeInterface2Mock {
         const mock = SomeModule.Mocks.createSomeInterface2Mock()
-        SomeModule.Api.referenceOtherClass = CreateMock(SomeModule.Api.referenceOtherClass, () => { mock.referenceOtherClass() })
-        SomeModule.Api.referenceLegacyType = CreateMock(SomeModule.Api.referenceLegacyType, () => { mock.referenceLegacyType() })
+        SomeModule.Api.referenceOtherClass = CreateMock(SomeModule.Api.referenceOtherClass, (other: OtherClass) => { mock.referenceOtherClass(other) })
+        SomeModule.Api.referenceLegacyType = CreateMock(SomeModule.Api.referenceLegacyType, (legacyType: LegacyType) => { mock.referenceLegacyType(legacyType) })
         return mock
     }
 
@@ -91,8 +91,8 @@ namespace SomeModule.Mocks {
 
     export function setupSomeInterface3(): SomeInterface3Mock {
         const mock = SomeModule.Mocks.createSomeInterface3Mock()
-        SomeModule.Api.referenceInterface = CreateMock(SomeModule.Api.referenceInterface, () => { mock.referenceInterface() })
-        SomeModule.Api.referenceOtherInterface = CreateMock(SomeModule.Api.referenceOtherInterface, () => { mock.referenceOtherInterface() })
+        SomeModule.Api.referenceInterface = CreateMock(SomeModule.Api.referenceInterface, (empty: SomeEmptyInterface) => { mock.referenceInterface(empty) })
+        SomeModule.Api.referenceOtherInterface = CreateMock(SomeModule.Api.referenceOtherInterface, (other: OtherInterface) => { mock.referenceOtherInterface(other) })
         return mock
     }
 
@@ -102,8 +102,8 @@ namespace SomeModule.Mocks {
 
     export function setupSomeModuleHandlers(): SomeModuleHandlersMock {
         const mock = SomeModule.Mocks.createSomeModuleHandlersMock()
-        SomeModule.Api.someHandler = CreateMock(SomeModule.Api.someHandler, () => { mock.someHandler() })
-        SomeModule.Api.someHandler2 = CreateMock(SomeModule.Api.someHandler2, () => { mock.someHandler2() })
+        SomeModule.Api.someHandler = CreateMock(SomeModule.Api.someHandler, (i: SomeHandlerInput) => { mock.someHandler(i) })
+        SomeModule.Api.someHandler2 = CreateMock(SomeModule.Api.someHandler2, (i: SomeHandlerInput) => { mock.someHandler2(i) })
         return mock
     }
 
@@ -113,8 +113,8 @@ namespace SomeModule.Mocks {
 
     export function setupSomeModuleDebugHandlers(): SomeModuleDebugHandlersMock {
         const mock = SomeModule.Mocks.createSomeModuleDebugHandlersMock()
-        SomeModule.Api.someDebugHandler = CreateMock(SomeModule.Api.someDebugHandler, () => { mock.someDebugHandler() })
-        SomeModule.Api.someDebugHandler2 = CreateMock(SomeModule.Api.someDebugHandler2, () => { mock.someDebugHandler2() })
+        SomeModule.Api.someDebugHandler = CreateMock(SomeModule.Api.someDebugHandler, (i: SomeHandlerInput) => { mock.someDebugHandler(i) })
+        SomeModule.Api.someDebugHandler2 = CreateMock(SomeModule.Api.someDebugHandler2, (i: SomeHandlerInput) => { mock.someDebugHandler2(i) })
         return mock
     }
 }
