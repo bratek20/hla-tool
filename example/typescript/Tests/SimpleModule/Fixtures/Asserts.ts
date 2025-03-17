@@ -10,4 +10,9 @@ namespace SimpleModule.Assert {
         const diff = diffSomeLongWrapper(given, expected)
         AssertEquals(diff, "", diff)
     }
+
+    export function uniqueIdEntry(given: UniqueIdEntry, expected: ExpectedUniqueIdEntry) {
+        const diff = diffUniqueIdEntry(given, expected)
+        AssertEquals(diff, "", diff)
+    }
 }

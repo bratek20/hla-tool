@@ -51,4 +51,6 @@ interface TypesWorldApi {
     fun getAllTypes(): List<WorldType>
 
     fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<com.github.bratek20.architecture.structs.api.StructPath>
+
+    fun getAllClassTypes(): List<WorldClassType>
 }

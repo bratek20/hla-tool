@@ -3,6 +3,7 @@
 package com.some.pkg.somemodule.api
 
 import com.some.pkg.othermodule.api.*
+import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 data class SomeId(
@@ -618,6 +619,78 @@ data class SomeReferencingPropertyFieldList(
         ): SomeReferencingPropertyFieldList {
             return SomeReferencingPropertyFieldList(
                 referenceIdList = referenceIdList.map { it -> it.value },
+            )
+        }
+    }
+}
+
+data class SomeStructureWithUniqueIds(
+    private val entries: List<UniqueIdEntry>,
+) {
+    fun getEntries(): List<UniqueIdEntry> {
+        return this.entries
+    }
+
+    companion object {
+        fun create(
+            entries: List<UniqueIdEntry>,
+        ): SomeStructureWithUniqueIds {
+            return SomeStructureWithUniqueIds(
+                entries = entries,
+            )
+        }
+    }
+}
+
+data class NestedUniqueIds(
+    private val entries: List<UniqueIdEntry>,
+) {
+    fun getEntries(): List<UniqueIdEntry> {
+        return this.entries
+    }
+
+    companion object {
+        fun create(
+            entries: List<UniqueIdEntry>,
+        ): NestedUniqueIds {
+            return NestedUniqueIds(
+                entries = entries,
+            )
+        }
+    }
+}
+
+data class SomeStructureWithUniqueNestedIds(
+    private val nestedUniqueIds: List<NestedUniqueIds>,
+) {
+    fun getNestedUniqueIds(): List<NestedUniqueIds> {
+        return this.nestedUniqueIds
+    }
+
+    companion object {
+        fun create(
+            nestedUniqueIds: List<NestedUniqueIds>,
+        ): SomeStructureWithUniqueNestedIds {
+            return SomeStructureWithUniqueNestedIds(
+                nestedUniqueIds = nestedUniqueIds,
+            )
+        }
+    }
+}
+
+data class SomeStructureWithMultipleUniqueNestedIds(
+    private val moreNestedFields: List<SomeStructureWithUniqueNestedIds>,
+) {
+    fun getMoreNestedFields(): List<SomeStructureWithUniqueNestedIds> {
+        return this.moreNestedFields
+    }
+
+    companion object {
+        fun create(
+            moreNestedFields: List<SomeStructureWithUniqueNestedIds>,
+        ): SomeStructureWithMultipleUniqueNestedIds {
+            return SomeStructureWithMultipleUniqueNestedIds(
+                moreNestedFields = moreNestedFields,
             )
         }
     }

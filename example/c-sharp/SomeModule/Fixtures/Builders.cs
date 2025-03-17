@@ -7,6 +7,8 @@ using B20.Ext;
 using SomeModule.Api;
 using OtherModule.Api;
 using OtherModule.Fixtures;
+using SimpleModule.Api;
+using SimpleModule.Fixtures;
 using TypesModule.Api;
 using TypesModule.Fixtures;
 
@@ -119,6 +121,22 @@ namespace SomeModule.Fixtures {
 
     public class SomeReferencingPropertyFieldListDef {
         public List<string> ReferenceIdList { get; set; } = new List<string>();
+    }
+
+    public class SomeStructureWithUniqueIdsDef {
+        public List<Action<UniqueIdEntryDef>> Entries { get; set; } = new List<Action<UniqueIdEntryDef>>();
+    }
+
+    public class NestedUniqueIdsDef {
+        public List<Action<UniqueIdEntryDef>> Entries { get; set; } = new List<Action<UniqueIdEntryDef>>();
+    }
+
+    public class SomeStructureWithUniqueNestedIdsDef {
+        public List<Action<NestedUniqueIdsDef>> NestedUniqueIds { get; set; } = new List<Action<NestedUniqueIdsDef>>();
+    }
+
+    public class SomeStructureWithMultipleUniqueNestedIdsDef {
+        public List<Action<SomeStructureWithUniqueNestedIdsDef>> MoreNestedFields { get; set; } = new List<Action<SomeStructureWithUniqueNestedIdsDef>>();
     }
 
     public class NestedValueDef {
@@ -284,6 +302,30 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeReferencingPropertyFieldList.Create(def.ReferenceIdList.Select(it => new SomeId(it)).ToList());
+        }
+        public static SomeStructureWithUniqueIds BuildSomeStructureWithUniqueIds(Action<SomeStructureWithUniqueIdsDef> init = null) {
+            var def = new SomeStructureWithUniqueIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeStructureWithUniqueIds.Create(def.Entries.Select(it => SimpleModuleBuilders.BuildUniqueIdEntry(it)).ToList());
+        }
+        public static NestedUniqueIds BuildNestedUniqueIds(Action<NestedUniqueIdsDef> init = null) {
+            var def = new NestedUniqueIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return NestedUniqueIds.Create(def.Entries.Select(it => SimpleModuleBuilders.BuildUniqueIdEntry(it)).ToList());
+        }
+        public static SomeStructureWithUniqueNestedIds BuildSomeStructureWithUniqueNestedIds(Action<SomeStructureWithUniqueNestedIdsDef> init = null) {
+            var def = new SomeStructureWithUniqueNestedIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeStructureWithUniqueNestedIds.Create(def.NestedUniqueIds.Select(it => BuildNestedUniqueIds(it)).ToList());
+        }
+        public static SomeStructureWithMultipleUniqueNestedIds BuildSomeStructureWithMultipleUniqueNestedIds(Action<SomeStructureWithMultipleUniqueNestedIdsDef> init = null) {
+            var def = new SomeStructureWithMultipleUniqueNestedIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeStructureWithMultipleUniqueNestedIds.Create(def.MoreNestedFields.Select(it => BuildSomeStructureWithUniqueNestedIds(it)).ToList());
         }
         public static NestedValue BuildNestedValue(Action<NestedValueDef> init = null) {
             var def = new NestedValueDef();

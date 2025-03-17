@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
 using OtherModule.Api;
+using SimpleModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Api {

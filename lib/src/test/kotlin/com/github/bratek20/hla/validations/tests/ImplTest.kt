@@ -169,6 +169,26 @@ val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.arch
     Struct::class
 )
 
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIdsList",
+    Struct::class
+)
+
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "SomeStructureWithUniqueIdsObject",
+    Struct::class
+)
+
+
+val SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueNestedIds",
+    Struct::class
+)
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIdsMultipleNest",
+    Struct::class
+)
+
 val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "CustomTypesProperty",
     Struct::class
@@ -270,7 +290,9 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeSourcePropertyList\"/[*]/id'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
-            "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'"
+            "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
+            "Unique id infos: [UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SimpleModule/Api/ValueObjects))]"
+
         )
 
 
@@ -321,6 +343,197 @@ class ValidationsImplTest {
                 "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '4' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[0]' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'"
             )
+        }
+    }
+
+    @Test
+    fun `should fail if unique id in structures is not unique`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST, listOf(
+                struct {
+                    "entries" to listOf(
+                        struct {
+                            "id" to "1"
+                        },
+                        struct {
+                            "id" to "1"
+                        }
+                    )
+                }
+            )
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT,
+            struct {
+                "entries" to listOf(
+                    struct {
+                        "id" to "1"
+                    },
+                    struct {
+                        "id" to "1"
+                    }
+                )
+            }
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, listOf(
+                struct {
+                    "nestedUniqueIds" to listOf(
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "1"
+                                }
+                            )
+                        },
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "2"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST, listOf(
+                struct {
+                    "moreNestedFields" to listOf(
+                        struct {
+                            "nestedUniqueIds" to listOf(
+                                struct {
+                                    "entries" to listOf(
+                                        struct {
+                                            "id" to "1"
+                                        },
+                                        struct {
+                                            "id" to "1"
+                                        }
+                                    )
+                                },
+                                struct {
+                                    "entries" to listOf(
+                                        struct {
+                                            "id" to "2"
+                                        },
+                                        struct {
+                                            "id" to "2"
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '1' at '\"SomeStructureWithUniqueIdsList\"/[0]/entries/[*]/id' is not unique",
+                "Value '1' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
+                "Value '2' at '\"SomeStructureWithUniqueNestedIds\"/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique",
+                "Value '1' at '\"SomeStructureWithUniqueIdsObject\"/entries/[*]/id' is not unique",
+                "Value '1' at '\"SomeStructureWithUniqueIdsMultipleNest\"/[0]/moreNestedFields/[0]/nestedUniqueIds/[0]/entries/[*]/id' is not unique",
+                "Value '2' at '\"SomeStructureWithUniqueIdsMultipleNest\"/[0]/moreNestedFields/[0]/nestedUniqueIds/[1]/entries/[*]/id' is not unique"
+
+            )
+        }
+    }
+
+    @Test
+    fun `should not fail if unique is correct`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST, listOf(
+                struct {
+                    "entries" to listOf(
+                        struct {
+                            "id" to "1"
+                        },
+                        struct {
+                            "id" to "2"
+                        }
+                    )
+                },
+                struct {
+                    "entries" to listOf(
+                        struct {
+                            "id" to "1"
+                        },
+                        struct {
+                            "id" to "2"
+                        }
+                    )
+                }
+            )
+        )
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, listOf(
+                struct {
+                    "nestedUniqueIds" to listOf(
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        },
+                        struct {
+                            "entries" to listOf(
+                                struct {
+                                    "id" to "1"
+                                },
+                                struct {
+                                    "id" to "2"
+                                }
+                            )
+                        }
+                    )
+                }
+            )
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT,
+            struct {
+                "entries" to listOf(
+                    struct {
+                        "id" to "1"
+                    },
+                    struct {
+                        "id" to "2"
+                    }
+                )
+            }
+        )
+
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = true
         }
     }
 

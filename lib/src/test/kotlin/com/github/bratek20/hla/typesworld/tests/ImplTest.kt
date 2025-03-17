@@ -8,6 +8,7 @@ import com.github.bratek20.hla.typesworld.context.TypesWorldImpl
 import com.github.bratek20.hla.typesworld.fixtures.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -359,6 +360,8 @@ class TypesWorldImplTest {
 
     @Nested
     inner class GetAllReferencesOf {
+
+
         @Test
         fun `should work for normal, optional and list fields`() {
             api.ensureType(worldType {
@@ -428,6 +431,58 @@ class TypesWorldImplTest {
             assertStructPath(references[0], "nestedField/normalField/value")
             assertStructPath(references[1], "nestedField/optionalField?/value")
             assertStructPath(references[2], "nestedField/listField/[*]/value")
+        }
+
+        @Disabled("Fix not needed for now, if the issue reappear uncomment test")
+        fun `should work for class referencing its self`() {
+            api.ensureType(worldType {
+                name = "ValueClass"
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SomeClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "selfReference"
+                        type = {
+                            name = "SomeClass"
+                        }
+                    },
+                    {
+                        name = "selfReferenceList"
+                        type = {
+                            name = "List<SomeClass>"
+                        }
+                    },
+                    {
+                        name = "selfReferenceOptional"
+                        type = {
+                            name = "Optional<SomeClass>"
+                        }
+                    }
+                )
+            })
+
+
+            val references = api.getAllReferencesOf(
+                worldType {
+                    name = "SomeClass"
+                },
+                worldType {
+                    name = "ValueClass"
+                }
+            )
+
+            assertThat(references).hasSize(1)
+            //TODO: assert SelfReferenceDetectedException
         }
     }
 }

@@ -3,6 +3,7 @@
 package com.some.pkg.somemodule.api
 
 import com.some.pkg.othermodule.api.*
+import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 val SOME_KEY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
@@ -28,6 +29,26 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
 val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeReferencingPropertyFieldList",
     SomeReferencingPropertyFieldList::class
+)
+
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIdsList",
+    SomeStructureWithUniqueIds::class
+)
+
+val SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueNestedIds",
+    SomeStructureWithUniqueNestedIds::class
+)
+
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+    "SomeStructureWithUniqueIdsObject",
+    SomeStructureWithUniqueIds::class
+)
+
+val SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructureWithUniqueIdsMultipleNest",
+    SomeStructureWithMultipleUniqueNestedIds::class
 )
 
 val REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(

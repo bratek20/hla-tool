@@ -491,6 +491,62 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeStructureWithUniqueIds {
+        entries?: SimpleModule.ExpectedUniqueIdEntry[],
+    }
+    export function diffSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expected: ExpectedSomeStructureWithUniqueIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.entries !== undefined) {
+            if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`) }
+            given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedNestedUniqueIds {
+        entries?: SimpleModule.ExpectedUniqueIdEntry[],
+    }
+    export function diffNestedUniqueIds(given: NestedUniqueIds, expected: ExpectedNestedUniqueIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.entries !== undefined) {
+            if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`) }
+            given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeStructureWithUniqueNestedIds {
+        nestedUniqueIds?: ExpectedNestedUniqueIds[],
+    }
+    export function diffSomeStructureWithUniqueNestedIds(given: SomeStructureWithUniqueNestedIds, expected: ExpectedSomeStructureWithUniqueNestedIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.nestedUniqueIds !== undefined) {
+            if (given.getNestedUniqueIds().length != expected.nestedUniqueIds.length) { result.push(`${path}nestedUniqueIds size ${given.getNestedUniqueIds().length} != ${expected.nestedUniqueIds.length}`) }
+            given.getNestedUniqueIds().forEach((entry, idx) => { if (diffNestedUniqueIds(entry, expected.nestedUniqueIds[idx]) != "") { result.push(diffNestedUniqueIds(entry, expected.nestedUniqueIds[idx], `${path}nestedUniqueIds[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeStructureWithMultipleUniqueNestedIds {
+        moreNestedFields?: ExpectedSomeStructureWithUniqueNestedIds[],
+    }
+    export function diffSomeStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMultipleUniqueNestedIds, expected: ExpectedSomeStructureWithMultipleUniqueNestedIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.moreNestedFields !== undefined) {
+            if (given.getMoreNestedFields().length != expected.moreNestedFields.length) { result.push(`${path}moreNestedFields size ${given.getMoreNestedFields().length} != ${expected.moreNestedFields.length}`) }
+            given.getMoreNestedFields().forEach((entry, idx) => { if (diffSomeStructureWithUniqueNestedIds(entry, expected.moreNestedFields[idx]) != "") { result.push(diffSomeStructureWithUniqueNestedIds(entry, expected.moreNestedFields[idx], `${path}moreNestedFields[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedNestedValue {
         value?: string,
     }
