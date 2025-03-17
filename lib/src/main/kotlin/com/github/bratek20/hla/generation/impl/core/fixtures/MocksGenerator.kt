@@ -75,6 +75,11 @@ class MockInterfaceLogic(
                                 methodCall {
                                     target = variable("mock")
                                     methodName = method.getName()
+                                    method.getArgs().forEach { arg ->
+                                        addArg {
+                                            variable(arg.getName())
+                                        }
+                                    }
                                 }
                             }
                         }

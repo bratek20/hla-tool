@@ -19,9 +19,19 @@ fun emptyLambda(argsNumber: Int = 0) = expression { c ->
     }
 }
 
-fun singleExpressionLambda(expr: ExpressionBuilderProvider) = expression { c ->
-    "() => { " + expr().build(c) + " }"
+class LambdaBuilder: ExpressionBuilder {
+    private val args: ArgumentListBuilder = ArgumentListBuilder()
+    fun addArg(arg: ArgumentBuilderOps) {
+        args.add(arg)
+    }
+
+    lateinit var body: ExpressionBuilder
+
+    override fun build(c: CodeBuilderContext): String {
+        return "${args.build(c)} => { " + body.build(c) + " }"
+    }
 }
+fun lambda(block: LambdaBuilder.() -> Unit) = LambdaBuilder().apply(block)
 
 fun lambdaType(type: TypeBuilder) = typeName { c ->
     "Action<${type.build(c)}>"

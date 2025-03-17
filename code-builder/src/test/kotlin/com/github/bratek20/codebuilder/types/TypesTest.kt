@@ -484,20 +484,27 @@ class TypesTest {
         }
 
         @Test
-        fun `single expression lambda`() {
+        fun `lambda builder`() {
             testLinePartOps {
                 ops {
-                    add(singleExpressionLambda {
-                        methodCall {
+                    add(lambda {
+                        addArg {
+                            name = "arg"
+                            type = baseType(BaseType.INT)
+                        }
+                        body = methodCall {
                             target = variable("mock")
                             methodName = "someMethod"
+                            addArg {
+                                variable("arg")
+                            }
                         }
                     })
                 }
                 langExpected {
                     lang = TypeScript()
                     expected = """
-                    () => { mock.someMethod() }
+                    (arg: number) => { mock.someMethod(arg) }
                     """
                 }
             }
