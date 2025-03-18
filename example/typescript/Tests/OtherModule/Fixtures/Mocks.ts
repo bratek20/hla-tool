@@ -5,6 +5,9 @@ class OtherInterfaceMock implements OtherInterface {
     otherMethod(): void {
         this.otherMethodCalls = this.otherMethodCalls + 1
     }
+    assertOtherMethodCalls(expectedNumber: number) {
+        AssertEquals(this.otherMethodCalls, expectedNumber, "Expected 'otherMethod' to be called " + expectedNumber + " times but was called " + this.otherMethodCalls + " times")
+    }
     reset() {
         this.otherMethodCalls = 0
     }

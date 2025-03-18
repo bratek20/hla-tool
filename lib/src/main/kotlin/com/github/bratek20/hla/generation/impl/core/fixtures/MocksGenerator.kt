@@ -13,8 +13,8 @@ import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.utils.camelToPascalCase
 
 class MockInterfaceLogic(
     private val def: InterfaceDefinition,
@@ -32,43 +32,82 @@ class MockInterfaceLogic(
                 name = callsVariableName(method)
                 value = const("0")
             }
-            addMethod {
-                name = method.getName()
-                method.getArgs().forEach { arg ->
-                    addArg {
-                        name = arg.getName()
-                        type = apiTypeFactory.create(arg.getType()).builder()
-                    }
-                }
-                val returnType = apiTypeFactory.create(method.getReturnType())
-                this.returnType = returnType.builder()
-
-                setBody {
-                    add(assignment {
-                        left = instanceVariable(callsVariableName(method))
-                        right = plus {
-                            left = instanceVariable(callsVariableName(method))
-                            right = const("1")
-                        }
-                    })
-                    if (!hasVoidReturnType(method)) {
-                        add(returnStatement {
-                            defaultBuilderCall(returnType)
-                        })
-                    }
-                }
-            }
+            addMethod(mockedMethod(method))
+            addMethod(callsAssertion(method))
         }
 
-        addMethod {
-            name = "reset"
-            setBody {
-                def.getMethods().forEach { method ->
-                    add(assignment {
-                        left = instanceVariable(callsVariableName(method))
-                        right = const("0")
-                    })
+        addMethod(resetMethod())
+    }
+
+    private fun mockedMethod(method: MethodDefinition): MethodBuilderOps = {
+        name = method.getName()
+        method.getArgs().forEach { arg ->
+            addArg {
+                name = arg.getName()
+                type = apiTypeFactory.create(arg.getType()).builder()
+            }
+        }
+        val returnType = apiTypeFactory.create(method.getReturnType())
+        this.returnType = returnType.builder()
+
+        setBody {
+            add(assignment {
+                left = instanceVariable(callsVariableName(method))
+                right = plus {
+                    left = instanceVariable(callsVariableName(method))
+                    right = const("1")
                 }
+            })
+            if (!hasVoidReturnType(method)) {
+                add(returnStatement {
+                    defaultBuilderCall(returnType)
+                })
+            }
+        }
+    }
+
+    private fun callsAssertion(method: MethodDefinition): MethodBuilderOps = {
+        name = "assert${camelToPascalCase(method.getName())}Calls"
+        addArg {
+            name = "expectedNumber"
+            type = baseType(BaseType.INT)
+        }
+        setBody {
+            add(functionCallStatement {
+                name = "AssertEquals"
+                addArg {
+                    instanceVariable(callsVariableName(method))
+                }
+                addArg {
+                    variable("expectedNumber")
+                }
+                addArg {
+                    plus {
+                        left = string("Expected '${method.getName()}' to be called ")
+                        right = plus {
+                            left = variable("expectedNumber")
+                            right = plus {
+                                left = string(" times but was called ")
+                                right = plus {
+                                    left = instanceVariable(callsVariableName(method))
+                                    right = string(" times")
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    private fun resetMethod(): MethodBuilderOps = {
+        name = "reset"
+        setBody {
+            def.getMethods().forEach { method ->
+                add(assignment {
+                    left = instanceVariable(callsVariableName(method))
+                    right = const("0")
+                })
             }
         }
     }
