@@ -30,7 +30,7 @@ class MockInterfaceLogic(
             addField {
                 type = baseType(BaseType.INT)
                 name = callsVariableName(method)
-                defaultValue = const("0")
+                value = const("0")
             }
             addMethod {
                 name = method.getName()

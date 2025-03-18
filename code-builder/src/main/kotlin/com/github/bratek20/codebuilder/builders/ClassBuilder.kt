@@ -22,8 +22,6 @@ class FieldBuilder(
     var setter = false
     var fromConstructor = false
 
-    var defaultValue: ExpressionBuilder? = null
-
     private val annotations: MutableList<String> = mutableListOf()
     fun addAnnotation(name: String) {
         annotations.add(name)
@@ -49,7 +47,7 @@ class FieldBuilder(
         val setPart = if (setter) "set; " else ""
         linePart(" ${camelToPascalCase(name)} { $getPart$setPart}")
 
-        defaultValue?.let {
+        value?.let {
             linePart(" = ")
             add(it)
             statementLineEnd()

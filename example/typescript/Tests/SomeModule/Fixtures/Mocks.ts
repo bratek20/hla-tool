@@ -6,13 +6,13 @@ class SomeEmptyInterfaceMock implements SomeEmptyInterface {
 }
 
 class SomeInterfaceMock implements SomeInterface {
-    private readonly someEmptyMethodCalls: number
-    private readonly someCommandCalls: number
-    private readonly someQueryCalls: number
-    private readonly optMethodCalls: number
-    private readonly methodWithListOfSimpleVOCalls: number
-    private readonly methodWithAnyCalls: number
-    private readonly methodReturningOptSimpleVoCalls: number
+    private readonly someEmptyMethodCalls: number = 0
+    private readonly someCommandCalls: number = 0
+    private readonly someQueryCalls: number = 0
+    private readonly optMethodCalls: number = 0
+    private readonly methodWithListOfSimpleVOCalls: number = 0
+    private readonly methodWithAnyCalls: number = 0
+    private readonly methodReturningOptSimpleVoCalls: number = 0
     someEmptyMethod(): void {
         this.someEmptyMethodCalls = this.someEmptyMethodCalls + 1
     }
@@ -51,8 +51,8 @@ class SomeInterfaceMock implements SomeInterface {
 }
 
 class SomeInterface2Mock implements SomeInterface2 {
-    private readonly referenceOtherClassCalls: number
-    private readonly referenceLegacyTypeCalls: number
+    private readonly referenceOtherClassCalls: number = 0
+    private readonly referenceLegacyTypeCalls: number = 0
     referenceOtherClass(other: OtherClass): OtherClass {
         this.referenceOtherClassCalls = this.referenceOtherClassCalls + 1
         return OtherModule.Builder.otherClass(undefined)
@@ -68,8 +68,8 @@ class SomeInterface2Mock implements SomeInterface2 {
 }
 
 class SomeInterface3Mock implements SomeInterface3 {
-    private readonly referenceInterfaceCalls: number
-    private readonly referenceOtherInterfaceCalls: number
+    private readonly referenceInterfaceCalls: number = 0
+    private readonly referenceOtherInterfaceCalls: number = 0
     referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
         this.referenceInterfaceCalls = this.referenceInterfaceCalls + 1
         return TODO()
@@ -85,8 +85,8 @@ class SomeInterface3Mock implements SomeInterface3 {
 }
 
 class SomeModuleHandlersMock implements SomeModuleHandlers {
-    private readonly someHandlerCalls: number
-    private readonly someHandler2Calls: number
+    private readonly someHandlerCalls: number = 0
+    private readonly someHandler2Calls: number = 0
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandlerCalls = this.someHandlerCalls + 1
         return SomeModule.Builder.someHandlerOutput(undefined)
@@ -102,8 +102,8 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
 }
 
 class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
-    private readonly someDebugHandlerCalls: number
-    private readonly someDebugHandler2Calls: number
+    private readonly someDebugHandlerCalls: number = 0
+    private readonly someDebugHandler2Calls: number = 0
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandlerCalls = this.someDebugHandlerCalls + 1
         return SomeModule.Builder.someHandlerOutput(undefined)
