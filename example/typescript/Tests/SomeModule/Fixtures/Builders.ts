@@ -58,9 +58,9 @@ namespace SomeModule.Builder {
         const final_class2List = def?.class2List ?? []
 
         return SomeClass3.create(
-            someClass2(final_class2Object),
+            SomeModule.Builder.someClass2(final_class2Object),
             SomeEnum.fromName(final_someEnum).get(),
-            final_class2List.map(it => someClass2(it)),
+            final_class2List.map(it => SomeModule.Builder.someClass2(it)),
         )
     }
 
@@ -101,8 +101,8 @@ namespace SomeModule.Builder {
         return SomeClass5.create(
             TypesModule.CustomTypesMapper.dateCreate(final_date),
             TypesModule.Builder.dateRange(final_dateRange),
-            dateRangeWrapper(final_dateRangeWrapper),
-            someProperty(final_someProperty),
+            SomeModule.Builder.dateRangeWrapper(final_dateRangeWrapper),
+            SomeModule.Builder.someProperty(final_someProperty),
             OtherModule.Builder.otherProperty(final_otherProperty),
         )
     }
@@ -120,10 +120,10 @@ namespace SomeModule.Builder {
         const final_sameClassList = def?.sameClassList ?? []
 
         return SomeClass6.create(
-            Optional.of(final_someClassOpt).map(it => someClass(it)),
+            Optional.of(final_someClassOpt).map(it => SomeModule.Builder.someClass(it)),
             Optional.of(final_optString),
-            final_class2List.map(it => someClass2(it)),
-            final_sameClassList.map(it => someClass6(it)),
+            final_class2List.map(it => SomeModule.Builder.someClass2(it)),
+            final_sameClassList.map(it => SomeModule.Builder.someClass6(it)),
         )
     }
 
@@ -134,7 +134,7 @@ namespace SomeModule.Builder {
         const final_optList = def?.optList ?? undefined
 
         return ClassHavingOptList.create(
-            Optional.of(final_optList).map(it => it.map(it => someClass(it))),
+            Optional.of(final_optList).map(it => it.map(it => SomeModule.Builder.someClass(it))),
         )
     }
 
@@ -352,7 +352,7 @@ namespace SomeModule.Builder {
         const final_nestedUniqueIds = def?.nestedUniqueIds ?? []
 
         return SomeStructureWithUniqueNestedIds.create(
-            final_nestedUniqueIds.map(it => nestedUniqueIds(it)),
+            final_nestedUniqueIds.map(it => SomeModule.Builder.nestedUniqueIds(it)),
         )
     }
 
@@ -363,7 +363,7 @@ namespace SomeModule.Builder {
         const final_moreNestedFields = def?.moreNestedFields ?? []
 
         return SomeStructureWithMultipleUniqueNestedIds.create(
-            final_moreNestedFields.map(it => someStructureWithUniqueNestedIds(it)),
+            final_moreNestedFields.map(it => SomeModule.Builder.someStructureWithUniqueNestedIds(it)),
         )
     }
 
@@ -385,7 +385,7 @@ namespace SomeModule.Builder {
         const final_optionalField = def?.optionalField ?? undefined
 
         return OptionalFieldProperty.create(
-            Optional.of(final_optionalField).map(it => nestedValue(it)),
+            Optional.of(final_optionalField).map(it => SomeModule.Builder.nestedValue(it)),
         )
     }
 

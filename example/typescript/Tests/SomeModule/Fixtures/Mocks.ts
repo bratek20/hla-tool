@@ -7,10 +7,10 @@ class SomeInterfaceMock implements SomeInterface {
     someCommand(id: SomeId, amount: number): void {
     }
     someQuery(query: SomeQueryInput): SomeClass {
-        return someClass(undefined)
+        return SomeModule.Builder.someClass(undefined)
     }
     optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
-        return Optional.of(undefined).map(it => someClass(it))
+        return Optional.of(undefined).map(it => SomeModule.Builder.someClass(it))
     }
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
         return [].map(it => new SomeId(it))
@@ -43,19 +43,19 @@ class SomeInterface3Mock implements SomeInterface3 {
 
 class SomeModuleHandlersMock implements SomeModuleHandlers {
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
-        return someHandlerOutput(undefined)
+        return SomeModule.Builder.someHandlerOutput(undefined)
     }
     someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-        return someHandlerOutput(undefined)
+        return SomeModule.Builder.someHandlerOutput(undefined)
     }
 }
 
 class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
-        return someHandlerOutput(undefined)
+        return SomeModule.Builder.someHandlerOutput(undefined)
     }
     someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-        return someHandlerOutput(undefined)
+        return SomeModule.Builder.someHandlerOutput(undefined)
     }
 }
 
