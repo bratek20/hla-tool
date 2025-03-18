@@ -31,6 +31,7 @@ class MockInterfaceLogic(
                 type = baseType(BaseType.INT)
                 name = callsVariableName(method)
                 value = const("0")
+                mutable = true
             }
 
             addMethod(mockedMethod(method))
@@ -47,6 +48,7 @@ class MockInterfaceLogic(
                     type = x
                     name = method.getName() + "Response"
                     value = emptyValue
+                    mutable = true
                 }
                 addMethod {
                     name = "set${camelToPascalCase(method.getName())}Response"

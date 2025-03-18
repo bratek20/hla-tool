@@ -6,18 +6,18 @@ class SomeEmptyInterfaceMock implements SomeEmptyInterface {
 }
 
 class SomeInterfaceMock implements SomeInterface {
-    private readonly someEmptyMethodCalls: number = 0
-    private readonly someCommandCalls: number = 0
-    private readonly someQueryCalls: number = 0
-    private readonly someQueryResponse: SomeModule.Builder.SomeClassDef = undefined
-    private readonly optMethodCalls: number = 0
-    private readonly optMethodResponse: SomeModule.Builder.SomeClassDef | undefined = undefined
-    private readonly methodWithListOfSimpleVOCalls: number = 0
-    private readonly methodWithListOfSimpleVOResponse: string[] = []
-    private readonly methodWithAnyCalls: number = 0
-    private readonly methodWithAnyResponse: any = undefined
-    private readonly methodReturningOptSimpleVoCalls: number = 0
-    private readonly methodReturningOptSimpleVoResponse: string | undefined = undefined
+    private someEmptyMethodCalls: number = 0
+    private someCommandCalls: number = 0
+    private someQueryCalls: number = 0
+    private someQueryResponse: SomeModule.Builder.SomeClassDef = undefined
+    private optMethodCalls: number = 0
+    private optMethodResponse: SomeModule.Builder.SomeClassDef | undefined = undefined
+    private methodWithListOfSimpleVOCalls: number = 0
+    private methodWithListOfSimpleVOResponse: string[] = []
+    private methodWithAnyCalls: number = 0
+    private methodWithAnyResponse: any = undefined
+    private methodReturningOptSimpleVoCalls: number = 0
+    private methodReturningOptSimpleVoResponse: string | undefined = undefined
     someEmptyMethod(): void {
         this.someEmptyMethodCalls = this.someEmptyMethodCalls + 1
     }
@@ -92,10 +92,10 @@ class SomeInterfaceMock implements SomeInterface {
 }
 
 class SomeInterface2Mock implements SomeInterface2 {
-    private readonly referenceOtherClassCalls: number = 0
-    private readonly referenceOtherClassResponse: OtherModule.Builder.OtherClassDef = undefined
-    private readonly referenceLegacyTypeCalls: number = 0
-    private readonly referenceLegacyTypeResponse: LegacyType = undefined
+    private referenceOtherClassCalls: number = 0
+    private referenceOtherClassResponse: OtherModule.Builder.OtherClassDef = undefined
+    private referenceLegacyTypeCalls: number = 0
+    private referenceLegacyTypeResponse: LegacyType = undefined
     referenceOtherClass(other: OtherClass): OtherClass {
         this.referenceOtherClassCalls = this.referenceOtherClassCalls + 1
         return OtherModule.Builder.otherClass(this.referenceOtherClassResponse)
@@ -123,10 +123,10 @@ class SomeInterface2Mock implements SomeInterface2 {
 }
 
 class SomeInterface3Mock implements SomeInterface3 {
-    private readonly referenceInterfaceCalls: number = 0
-    private readonly referenceInterfaceResponse: SomeEmptyInterface = undefined
-    private readonly referenceOtherInterfaceCalls: number = 0
-    private readonly referenceOtherInterfaceResponse: OtherInterface = undefined
+    private referenceInterfaceCalls: number = 0
+    private referenceInterfaceResponse: SomeEmptyInterface = undefined
+    private referenceOtherInterfaceCalls: number = 0
+    private referenceOtherInterfaceResponse: OtherInterface = undefined
     referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
         this.referenceInterfaceCalls = this.referenceInterfaceCalls + 1
         return TODO()
@@ -154,10 +154,10 @@ class SomeInterface3Mock implements SomeInterface3 {
 }
 
 class SomeModuleHandlersMock implements SomeModuleHandlers {
-    private readonly someHandlerCalls: number = 0
-    private readonly someHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
-    private readonly someHandler2Calls: number = 0
-    private readonly someHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
+    private someHandlerCalls: number = 0
+    private someHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
+    private someHandler2Calls: number = 0
+    private someHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandlerCalls = this.someHandlerCalls + 1
         return SomeModule.Builder.someHandlerOutput(this.someHandlerResponse)
@@ -185,10 +185,10 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
 }
 
 class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
-    private readonly someDebugHandlerCalls: number = 0
-    private readonly someDebugHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
-    private readonly someDebugHandler2Calls: number = 0
-    private readonly someDebugHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
+    private someDebugHandlerCalls: number = 0
+    private someDebugHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
+    private someDebugHandler2Calls: number = 0
+    private someDebugHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandlerCalls = this.someDebugHandlerCalls + 1
         return SomeModule.Builder.someHandlerOutput(this.someDebugHandlerResponse)
