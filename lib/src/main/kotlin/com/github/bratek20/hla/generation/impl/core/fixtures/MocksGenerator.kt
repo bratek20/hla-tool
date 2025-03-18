@@ -36,10 +36,17 @@ class MockInterfaceLogic(
             addMethod(mockedMethod(method))
             addMethod(callsAssertion(method))
             if (!hasVoidReturnType(method)) {
-                val x = defTypeFactory.create(apiTypeFactory.create(method.getReturnType()) as ApiTypeLogic).builder()
+                val returnType = apiTypeFactory.create(method.getReturnType())
+                val x = defTypeFactory.create(returnType as ApiTypeLogic).builder()
+                val emptyValue = if (returnType is ListApiType) {
+                    emptyImmutableList(returnType.wrappedType.builder())
+                } else {
+                    nullValue()
+                }
                 addField {
                     type = x
                     name = method.getName() + "Response"
+                    value = emptyValue
                 }
                 addMethod {
                     name = "set${camelToPascalCase(method.getName())}Response"
@@ -81,7 +88,7 @@ class MockInterfaceLogic(
             })
             if (!hasVoidReturnType(method)) {
                 add(returnStatement {
-                    defaultBuilderCall(returnType)
+                    defaultBuilderCall(returnType, method)
                 })
             }
         }
@@ -141,18 +148,8 @@ class MockInterfaceLogic(
         return BaseApiType.isVoid(apiTypeFactory.create(method.getReturnType()))
     }
 
-    private fun defaultBuilderCall(type: ApiType): ExpressionBuilder {
-        try {
-            val emptyValue = if (type is ListApiType) {
-                emptyImmutableList(type.wrappedType.builder())
-            } else {
-                nullValue()
-            }
-            return defTypeFactory.create(type as ApiTypeLogic).modernBuild(emptyValue)
-        }
-        catch (e: Exception) {
-            return hardcodedExpression("TODO()")
-        }
+    private fun defaultBuilderCall(type: ApiType, method: MethodDefinition): ExpressionBuilder {
+        return defTypeFactory.create(type as ApiTypeLogic).modernBuild(instanceVariable(method.getName() + "Response"))
     }
 
     fun getCreateMockFunction(): FunctionBuilderOps = {
