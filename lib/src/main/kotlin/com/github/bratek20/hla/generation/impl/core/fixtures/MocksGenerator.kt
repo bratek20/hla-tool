@@ -32,8 +32,29 @@ class MockInterfaceLogic(
                 name = callsVariableName(method)
                 value = const("0")
             }
+
             addMethod(mockedMethod(method))
             addMethod(callsAssertion(method))
+            if (!hasVoidReturnType(method)) {
+                val x = defTypeFactory.create(apiTypeFactory.create(method.getReturnType()) as ApiTypeLogic).builder()
+                addField {
+                    type = x
+                    name = method.getName() + "Response"
+                }
+                addMethod {
+                    name = "set${camelToPascalCase(method.getName())}Response"
+                    addArg {
+                        name = "response"
+                        type = x
+                    }
+                    setBody {
+                        add(assignment {
+                            left = instanceVariable(method.getName() + "Response")
+                            right = variable("response")
+                        })
+                    }
+                }
+            }
         }
 
         addMethod(resetMethod())

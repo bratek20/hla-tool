@@ -256,6 +256,34 @@ class EnumDefType(
     }
 }
 
+open class ToDoDefType<T: ApiTypeLogic>(
+    api: T
+) : DefType<T>(api) {
+    override fun name(): String {
+        return api.name()
+    }
+
+    override fun builder(): TypeBuilder {
+        return api.builder()
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return hardcodedExpression("TODO()")
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        return hardcodedExpression("TODO()")
+    }
+}
+
+class ExternalDefType(
+    api: ExternalApiType
+) : ToDoDefType<ExternalApiType>(api)
+
+class InterfaceDefType(
+    api: InterfaceApiType
+) : ToDoDefType<InterfaceApiType>(api)
+
 class DefTypeFactory(
     private val pattern: LanguageBuildersPattern
 ) {
@@ -269,6 +297,8 @@ class DefTypeFactory(
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))
             is SerializableApiType -> ComplexStructureDefType(type, createFields(type.fields))
+            is ExternalApiType -> ExternalDefType(type)
+            is InterfaceApiType -> InterfaceDefType(type)
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
