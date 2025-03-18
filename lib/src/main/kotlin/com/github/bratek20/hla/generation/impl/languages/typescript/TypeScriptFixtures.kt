@@ -29,7 +29,7 @@ class TypeScriptAssertsPattern(private val modules: ModuleGroupQueries) : Langua
 class TypeScriptBuildersPattern(private val modules: ModuleGroupQueries) : LanguageBuildersPattern {
     override fun defClassType(name: String): String {
         val base = "${name}Def"
-        return handleReferencing(modules, name, base, "Builder")
+        return handleReferencingAlways(modules, name, base, "Builder")
     }
 
     override fun defOptionalComplexType(name: String): String {
