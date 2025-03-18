@@ -151,18 +151,8 @@ class MocksGenerator: PatternGenerator() {
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.getClass())
+            addFunction(logic.getCreateMockFunction())
+            addFunction(logic.getSetupFunction())
         }
-
-        add(typeScriptNamespace {
-            name = "$moduleName.Mocks"
-            mockInterfacesLogic.forEach { logic ->
-                addFunction(logic.getCreateMockFunction())
-                addFunction(logic.getSetupFunction())
-            }
-        })
-    }
-
-    override fun doNotGenerateTypeScriptNamespace(): Boolean {
-        return true
     }
 }
