@@ -42,7 +42,7 @@ open class ViewLogic(
             addClass {
                 name = type.getName().value
                 extends {
-                    className = extendedParamType.getType().getName().value.replaceAfter("<", "").dropLast(1)
+                    name = extendedParamType.getType().getName().value.replaceAfter("<", "").dropLast(1)
                     extendedParamType.getTypeArguments().forEach {
                         addGeneric {
                             typeName(it.getName().value)

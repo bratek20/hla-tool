@@ -82,7 +82,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
             addFunction {
                 name = "RegisterDebugHandlers"
                 setBody {
-                    addFunctionCall(registerCall(debugExposedInterfaces, true))
+                    add(functionCallStatement(registerCall(debugExposedInterfaces, true)))
                 }
             }
         }
@@ -149,7 +149,7 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                                 })
                             }
                             else {
-                                addFunctionCall(apiCall)
+                                add(functionCallStatement(apiCall))
                             }
 
                             add(returnStatement {

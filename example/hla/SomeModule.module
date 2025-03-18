@@ -241,6 +241,13 @@ Web
             SomeException -> "EC1"
             Some2Exception -> "EC2"
 
+Fixtures
+    MockedInterfaces
+        SomeInterface
+        SomeInterface2
+        SomeModuleHandlers
+        SomeModuleDebugHandlers
+
 ViewModel
     Elements
         SomeClassVm (clickable, draggable, withRect)

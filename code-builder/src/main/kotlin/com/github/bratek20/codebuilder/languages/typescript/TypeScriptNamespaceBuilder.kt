@@ -55,4 +55,4 @@ class TypeScriptNamespaceBuilder: TopLevelCodeBuilder() {
     }
 }
 typealias TypeScriptNamespaceBuilderOps = TypeScriptNamespaceBuilder.() -> Unit
-fun CodeBuilder.namespace(block: TypeScriptNamespaceBuilderOps) = add(TypeScriptNamespaceBuilder().apply(block))
+fun typeScriptNamespace(block: TypeScriptNamespaceBuilderOps) = TypeScriptNamespaceBuilder().apply(block)

@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.context
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.languages.typescript.namespace
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -37,7 +37,7 @@ class WebContextGenerator: PatternGenerator() {
         val interfs = factory.create(interfDefs)
         return CodeBuilder(c.language.base())
             .addOps {
-                namespace {
+                add(typeScriptNamespace {
                     name = "${this@WebContextGenerator.c.module.getName()}.Api"
                     interfs.forEach { interf ->
                         interf.methods.forEach { m ->
@@ -61,7 +61,7 @@ class WebContextGenerator: PatternGenerator() {
                             }
                         }
                     }
-                }
+                })
             }
             .build()
     }

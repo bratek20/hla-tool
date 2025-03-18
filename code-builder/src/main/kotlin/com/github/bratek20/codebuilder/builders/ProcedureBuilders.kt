@@ -4,48 +4,49 @@ import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.utils.camelToPascalCase
 
-class ArgumentBuilder: CodeBlockBuilder {
+class ArgumentBuilder: ExpressionBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilder
 
     var defaultValue: ExpressionBuilder? = null
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps {
-        return {
-            if (c.lang is CSharp) {
-                lineSoftStart()
-                add(type)
-                linePart(" $name")
-            }
-            else {
-                lineSoftStart("$name: ")
-                add(type)
-            }
-
-            defaultValue?.let {
-                linePart(" = ${it.build(c)}")
-            }
+    override fun build(c: CodeBuilderContext): String {
+        val b = StringBuilder()
+        if (c.lang is CSharp) {
+            b.append("${type.build(c)} $name")
         }
+        else {
+            b.append("$name: ${type.build(c)}")
+        }
+
+        defaultValue?.let {
+            b.append(" = ${it.build(c)}")
+        }
+
+        return b.toString()
     }
 }
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
-class ArgumentListBuilder: CodeBlockBuilder {
+class ArgumentListBuilder: ExpressionBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun add(block: ArgumentBuilderOps) {
         args.add(ArgumentBuilder().apply(block))
     }
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
-        linePart("(")
+    override fun build(c: CodeBuilderContext): String {
+        val b = StringBuilder()
+        b.append("(")
         args.forEachIndexed { index, arg ->
-            add(arg)
+            b.append(arg.build(c))
             if (index != args.size - 1) {
-                linePart(", ")
+                b.append(", ")
             }
         }
-        linePart(")")
+        b.append(")")
+
+        return b.toString()
     }
 }
 

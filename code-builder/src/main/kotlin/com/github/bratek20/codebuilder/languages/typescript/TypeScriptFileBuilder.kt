@@ -12,7 +12,7 @@ class TypeScriptFileBuilder: TopLevelCodeBuilder() {
     }
 
     override fun beforeOperations(): CodeBuilderOps = {
-        namespace?.let { namespace(it) }
+        namespace?.let { add(typeScriptNamespace(it)) }
     }
 }
 

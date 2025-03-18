@@ -22,8 +22,6 @@ class FieldBuilder(
     var setter = false
     var fromConstructor = false
 
-    var defaultValue: ExpressionBuilder? = null
-
     private val annotations: MutableList<String> = mutableListOf()
     fun addAnnotation(name: String) {
         annotations.add(name)
@@ -49,7 +47,7 @@ class FieldBuilder(
         val setPart = if (setter) "set; " else ""
         linePart(" ${camelToPascalCase(name)} { $getPart$setPart}")
 
-        defaultValue?.let {
+        value?.let {
             linePart(" = ")
             add(it)
             statementLineEnd()
@@ -139,7 +137,7 @@ class ClassConstructorBuilder {
 typealias ClassConstructorBuilderOps = ClassConstructorBuilder.() -> Unit
 
 class ExtendsBuilder: LinePartBuilder {
-    lateinit var className: String
+    lateinit var name: String
     private var generics: MutableList<TypeBuilder> = mutableListOf()
 
     fun addGeneric(block: TypeBuilderProvider) {
@@ -153,7 +151,7 @@ class ExtendsBuilder: LinePartBuilder {
         else {
             ""
         }
-        return "$className$genericPart"
+        return "$name$genericPart"
     }
 }
 typealias ExtendsBuilderOps = ExtendsBuilder.() -> Unit
@@ -364,6 +362,7 @@ open class ClassBuilder: CodeBlockBuilder {
         } + (constructor?.getArgs() ?: emptyList())
 
         finalArgs.forEachIndexed { idx, arg ->
+            lineSoftStart()
             add(arg)
             if (idx != finalArgs.size - 1) {
                 linePart(",")
@@ -384,6 +383,7 @@ open class ClassBuilder: CodeBlockBuilder {
             }
         }
         constructorArgs.forEachIndexed { idx, arg ->
+            lineSoftStart()
             add(arg)
             if (idx != constructorArgs.size - 1) {
                 linePart(",")

@@ -72,7 +72,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     extends {
-                        className = "SomeParent"
+                        name = "SomeParent"
                     }
                 })
             }
@@ -541,7 +541,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     extends {
-                        className = "SomeParent"
+                        name = "SomeParent"
                     }
                     setConstructor {
                         addArg {
@@ -596,7 +596,7 @@ class ClassBuilderTest {
                 add(classBlock {
                     name = "SomeClass"
                     extends {
-                        className = "SomeParent"
+                        name = "SomeParent"
                         addGeneric {
                             typeName("SomeType")
                         }
@@ -687,7 +687,7 @@ class ClassBuilderTest {
     }
 
     @Test
-    fun `class field with default value`() {
+    fun `class getter field with default value`() {
         testOp {
             op = {
                 add(classBlock {
@@ -696,7 +696,7 @@ class ClassBuilderTest {
                         name = "someField"
                         type = baseType(BaseType.INT)
                         getter = true
-                        defaultValue = const(1)
+                        value = const(1)
                     }
                 })
             }

@@ -5,7 +5,7 @@ import com.github.bratek20.codebuilder.core.AccessModifier
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilder
-import com.github.bratek20.codebuilder.languages.typescript.namespace
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -31,7 +31,7 @@ class WebClientGenerator: PatternGenerator() {
         val interfs = exposedInterfaces(c)
         return CodeBuilder(c.language.base())
             .addOps {
-                namespace {
+                add(typeScriptNamespace {
                     name = "${moduleName}.Web"
                     interfs.forEach { interf ->
                         addClass {
@@ -79,7 +79,7 @@ class WebClientGenerator: PatternGenerator() {
                             }
                         }
                     }
-                }
+                })
             }
             .build()
     }

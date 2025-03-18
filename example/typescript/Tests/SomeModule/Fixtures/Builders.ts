@@ -48,9 +48,9 @@ namespace SomeModule.Builder {
     }
 
     export interface SomeClass3Def {
-        class2Object?: SomeClass2Def,
+        class2Object?: SomeModule.Builder.SomeClass2Def,
         someEnum?: string,
-        class2List?: SomeClass2Def[],
+        class2List?: SomeModule.Builder.SomeClass2Def[],
     }
     export function someClass3(def?: SomeClass3Def): SomeClass3 {
         const final_class2Object = def?.class2Object ?? {}
@@ -58,9 +58,9 @@ namespace SomeModule.Builder {
         const final_class2List = def?.class2List ?? []
 
         return SomeClass3.create(
-            someClass2(final_class2Object),
+            SomeModule.Builder.someClass2(final_class2Object),
             SomeEnum.fromName(final_someEnum).get(),
-            final_class2List.map(it => someClass2(it)),
+            final_class2List.map(it => SomeModule.Builder.someClass2(it)),
         )
     }
 
@@ -87,8 +87,8 @@ namespace SomeModule.Builder {
     export interface SomeClass5Def {
         date?: string,
         dateRange?: TypesModule.Builder.DateRangeDef,
-        dateRangeWrapper?: DateRangeWrapperDef,
-        someProperty?: SomePropertyDef,
+        dateRangeWrapper?: SomeModule.Builder.DateRangeWrapperDef,
+        someProperty?: SomeModule.Builder.SomePropertyDef,
         otherProperty?: OtherModule.Builder.OtherPropertyDef,
     }
     export function someClass5(def?: SomeClass5Def): SomeClass5 {
@@ -101,17 +101,17 @@ namespace SomeModule.Builder {
         return SomeClass5.create(
             TypesModule.CustomTypesMapper.dateCreate(final_date),
             TypesModule.Builder.dateRange(final_dateRange),
-            dateRangeWrapper(final_dateRangeWrapper),
-            someProperty(final_someProperty),
+            SomeModule.Builder.dateRangeWrapper(final_dateRangeWrapper),
+            SomeModule.Builder.someProperty(final_someProperty),
             OtherModule.Builder.otherProperty(final_otherProperty),
         )
     }
 
     export interface SomeClass6Def {
-        someClassOpt?: SomeClassDef,
+        someClassOpt?: SomeModule.Builder.SomeClassDef,
         optString?: string,
-        class2List?: SomeClass2Def[],
-        sameClassList?: SomeClass6Def[],
+        class2List?: SomeModule.Builder.SomeClass2Def[],
+        sameClassList?: SomeModule.Builder.SomeClass6Def[],
     }
     export function someClass6(def?: SomeClass6Def): SomeClass6 {
         const final_someClassOpt = def?.someClassOpt ?? undefined
@@ -120,21 +120,21 @@ namespace SomeModule.Builder {
         const final_sameClassList = def?.sameClassList ?? []
 
         return SomeClass6.create(
-            Optional.of(final_someClassOpt).map(it => someClass(it)),
+            Optional.of(final_someClassOpt).map(it => SomeModule.Builder.someClass(it)),
             Optional.of(final_optString),
-            final_class2List.map(it => someClass2(it)),
-            final_sameClassList.map(it => someClass6(it)),
+            final_class2List.map(it => SomeModule.Builder.someClass2(it)),
+            final_sameClassList.map(it => SomeModule.Builder.someClass6(it)),
         )
     }
 
     export interface ClassHavingOptListDef {
-        optList?: SomeClassDef[],
+        optList?: SomeModule.Builder.SomeClassDef[],
     }
     export function classHavingOptList(def?: ClassHavingOptListDef): ClassHavingOptList {
         const final_optList = def?.optList ?? undefined
 
         return ClassHavingOptList.create(
-            Optional.of(final_optList).map(it => it.map(it => someClass(it))),
+            Optional.of(final_optList).map(it => it.map(it => SomeModule.Builder.someClass(it))),
         )
     }
 
@@ -346,24 +346,24 @@ namespace SomeModule.Builder {
     }
 
     export interface SomeStructureWithUniqueNestedIdsDef {
-        nestedUniqueIds?: NestedUniqueIdsDef[],
+        nestedUniqueIds?: SomeModule.Builder.NestedUniqueIdsDef[],
     }
     export function someStructureWithUniqueNestedIds(def?: SomeStructureWithUniqueNestedIdsDef): SomeStructureWithUniqueNestedIds {
         const final_nestedUniqueIds = def?.nestedUniqueIds ?? []
 
         return SomeStructureWithUniqueNestedIds.create(
-            final_nestedUniqueIds.map(it => nestedUniqueIds(it)),
+            final_nestedUniqueIds.map(it => SomeModule.Builder.nestedUniqueIds(it)),
         )
     }
 
     export interface SomeStructureWithMultipleUniqueNestedIdsDef {
-        moreNestedFields?: SomeStructureWithUniqueNestedIdsDef[],
+        moreNestedFields?: SomeModule.Builder.SomeStructureWithUniqueNestedIdsDef[],
     }
     export function someStructureWithMultipleUniqueNestedIds(def?: SomeStructureWithMultipleUniqueNestedIdsDef): SomeStructureWithMultipleUniqueNestedIds {
         const final_moreNestedFields = def?.moreNestedFields ?? []
 
         return SomeStructureWithMultipleUniqueNestedIds.create(
-            final_moreNestedFields.map(it => someStructureWithUniqueNestedIds(it)),
+            final_moreNestedFields.map(it => SomeModule.Builder.someStructureWithUniqueNestedIds(it)),
         )
     }
 
@@ -379,13 +379,13 @@ namespace SomeModule.Builder {
     }
 
     export interface OptionalFieldPropertyDef {
-        optionalField?: NestedValueDef,
+        optionalField?: SomeModule.Builder.NestedValueDef,
     }
     export function optionalFieldProperty(def?: OptionalFieldPropertyDef): OptionalFieldProperty {
         const final_optionalField = def?.optionalField ?? undefined
 
         return OptionalFieldProperty.create(
-            Optional.of(final_optionalField).map(it => nestedValue(it)),
+            Optional.of(final_optionalField).map(it => SomeModule.Builder.nestedValue(it)),
         )
     }
 

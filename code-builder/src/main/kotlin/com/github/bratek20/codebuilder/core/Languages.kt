@@ -353,7 +353,7 @@ class TypeScript: CodeBuilderLanguage {
     }
 
     override fun softOptionalType(elementType: String): String {
-        return "$elementType?"
+        return "$elementType | undefined"
     }
 
     override fun hardOptionalType(elementType: String): String {

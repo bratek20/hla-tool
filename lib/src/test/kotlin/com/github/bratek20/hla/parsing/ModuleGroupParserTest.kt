@@ -944,4 +944,17 @@ class ModuleGroupParserTest {
             }
         })
     }
+
+    @Test
+    fun `should parse fixtures`() {
+        val modules = parseSingleGroup("fixtures-submodule")
+
+        assertModules(modules, listOf {
+            fixturesSubmodule = {
+                mockedInterfaces = listOf(
+                    "SomeInterface"
+                )
+            }
+        })
+    }
 }
