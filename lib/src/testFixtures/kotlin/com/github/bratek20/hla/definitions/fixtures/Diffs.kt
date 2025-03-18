@@ -432,6 +432,8 @@ data class ExpectedModuleDefinition(
     var viewModelSubmodule: (ExpectedViewModelSubmoduleDefinition.() -> Unit)? = null,
     var trackingSubmoduleEmpty: Boolean? = null,
     var trackingSubmodule: (ExpectedTrackingSubmoduleDefinition.() -> Unit)? = null,
+    var fixturesSubmoduleEmpty: Boolean? = null,
+    var fixturesSubmodule: (ExpectedFixturesSubmoduleDefinition.() -> Unit)? = null,
     var kotlinConfigEmpty: Boolean? = null,
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
 )
@@ -535,12 +537,35 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
         if (diffTrackingSubmoduleDefinition(given.getTrackingSubmodule()!!, it) != "") { result.add(diffTrackingSubmoduleDefinition(given.getTrackingSubmodule()!!, it, "${path}trackingSubmodule.")) }
     }
 
+    expected.fixturesSubmoduleEmpty?.let {
+        if ((given.getFixturesSubmodule() == null) != it) { result.add("${path}fixturesSubmodule empty ${(given.getFixturesSubmodule() == null)} != ${it}") }
+    }
+
+    expected.fixturesSubmodule?.let {
+        if (diffFixturesSubmoduleDefinition(given.getFixturesSubmodule()!!, it) != "") { result.add(diffFixturesSubmoduleDefinition(given.getFixturesSubmodule()!!, it, "${path}fixturesSubmodule.")) }
+    }
+
     expected.kotlinConfigEmpty?.let {
         if ((given.getKotlinConfig() == null) != it) { result.add("${path}kotlinConfig empty ${(given.getKotlinConfig() == null)} != ${it}") }
     }
 
     expected.kotlinConfig?.let {
         if (diffKotlinConfig(given.getKotlinConfig()!!, it) != "") { result.add(diffKotlinConfig(given.getKotlinConfig()!!, it, "${path}kotlinConfig.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedFixturesSubmoduleDefinition(
+    var mockedInterfaces: List<String>? = null,
+)
+fun diffFixturesSubmoduleDefinition(given: FixturesSubmoduleDefinition, expectedInit: ExpectedFixturesSubmoduleDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedFixturesSubmoduleDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.mockedInterfaces?.let {
+        if (given.getMockedInterfaces().size != it.size) { result.add("${path}mockedInterfaces size ${given.getMockedInterfaces().size} != ${it.size}"); return@let }
+        given.getMockedInterfaces().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}mockedInterfaces[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     return result.joinToString("\n")

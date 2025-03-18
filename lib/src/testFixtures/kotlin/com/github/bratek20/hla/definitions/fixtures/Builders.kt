@@ -223,6 +223,7 @@ data class ModuleDefinitionDef(
     var webSubmodule: (WebSubmoduleDefinitionDef.() -> Unit)? = null,
     var viewModelSubmodule: (ViewModelSubmoduleDefinitionDef.() -> Unit)? = null,
     var trackingSubmodule: (TrackingSubmoduleDefinitionDef.() -> Unit)? = null,
+    var fixturesSubmodule: (FixturesSubmoduleDefinitionDef.() -> Unit)? = null,
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
@@ -245,7 +246,18 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         webSubmodule = def.webSubmodule?.let { it -> webSubmoduleDefinition(it) },
         viewModelSubmodule = def.viewModelSubmodule?.let { it -> viewModelSubmoduleDefinition(it) },
         trackingSubmodule = def.trackingSubmodule?.let { it -> trackingSubmoduleDefinition(it) },
+        fixturesSubmodule = def.fixturesSubmodule?.let { it -> fixturesSubmoduleDefinition(it) },
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
+    )
+}
+
+data class FixturesSubmoduleDefinitionDef(
+    var mockedInterfaces: List<String> = emptyList(),
+)
+fun fixturesSubmoduleDefinition(init: FixturesSubmoduleDefinitionDef.() -> Unit = {}): FixturesSubmoduleDefinition {
+    val def = FixturesSubmoduleDefinitionDef().apply(init)
+    return FixturesSubmoduleDefinition.create(
+        mockedInterfaces = def.mockedInterfaces,
     )
 }
 

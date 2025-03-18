@@ -454,6 +454,7 @@ data class ModuleDefinition(
     private val webSubmodule: WebSubmoduleDefinition?,
     private val viewModelSubmodule: ViewModelSubmoduleDefinition?,
     private val trackingSubmodule: TrackingSubmoduleDefinition?,
+    private val fixturesSubmodule: FixturesSubmoduleDefinition?,
     private val kotlinConfig: KotlinConfig?,
 ) {
     fun getName(): ModuleName {
@@ -524,6 +525,10 @@ data class ModuleDefinition(
         return this.trackingSubmodule
     }
 
+    fun getFixturesSubmodule(): FixturesSubmoduleDefinition? {
+        return this.fixturesSubmodule
+    }
+
     fun getKotlinConfig(): KotlinConfig? {
         return this.kotlinConfig
     }
@@ -547,6 +552,7 @@ data class ModuleDefinition(
             webSubmodule: WebSubmoduleDefinition?,
             viewModelSubmodule: ViewModelSubmoduleDefinition?,
             trackingSubmodule: TrackingSubmoduleDefinition?,
+            fixturesSubmodule: FixturesSubmoduleDefinition?,
             kotlinConfig: KotlinConfig?,
         ): ModuleDefinition {
             return ModuleDefinition(
@@ -567,7 +573,26 @@ data class ModuleDefinition(
                 webSubmodule = webSubmodule,
                 viewModelSubmodule = viewModelSubmodule,
                 trackingSubmodule = trackingSubmodule,
+                fixturesSubmodule = fixturesSubmodule,
                 kotlinConfig = kotlinConfig,
+            )
+        }
+    }
+}
+
+data class FixturesSubmoduleDefinition(
+    private val mockedInterfaces: List<String>,
+) {
+    fun getMockedInterfaces(): List<String> {
+        return this.mockedInterfaces
+    }
+
+    companion object {
+        fun create(
+            mockedInterfaces: List<String>,
+        ): FixturesSubmoduleDefinition {
+            return FixturesSubmoduleDefinition(
+                mockedInterfaces = mockedInterfaces,
             )
         }
     }

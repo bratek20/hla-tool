@@ -105,7 +105,11 @@ ValueObjects
         webSubmodule: WebSubmoduleDefinition?
         viewModelSubmodule: ViewModelSubmoduleDefinition?
         trackingSubmodule: TrackingSubmoduleDefinition?
+        fixturesSubmodule: FixturesSubmoduleDefinition?
         kotlinConfig: KotlinConfig?
+
+    FixturesSubmoduleDefinition
+        mockedInterfaces: string[]
 
     TypeDefinition
         name: string

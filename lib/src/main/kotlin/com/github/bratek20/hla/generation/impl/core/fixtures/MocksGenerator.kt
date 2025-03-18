@@ -233,11 +233,16 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return module.getInterfaces().isNotEmpty() && language.name() == ModuleLanguage.TYPE_SCRIPT
+        return getMockedInterfaces().isNotEmpty() && language.name() == ModuleLanguage.TYPE_SCRIPT
+    }
+
+    private fun getMockedInterfaces(): List<InterfaceDefinition> {
+        return (module.getFixturesSubmodule()?.getMockedInterfaces() ?: emptyList())
+            .map { module.getInterfaces().first { i -> i.getName() == it } }
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture())) }
+        val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture())) }
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.getClass())

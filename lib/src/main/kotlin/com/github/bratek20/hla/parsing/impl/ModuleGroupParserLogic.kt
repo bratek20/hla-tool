@@ -38,7 +38,8 @@ class ModuleGroupParserLogic(
         "Properties",
         "Web",
         "ViewModel",
-        "Tracking"
+        "Tracking",
+        "Fixtures"
     )
 
     private val directories = DirectoriesLogic()
@@ -115,7 +116,8 @@ class ModuleGroupParserLogic(
             viewModelSubmodule = parseViewModelSubmodule(elements),
             exceptions = parseExceptions("Exceptions", elements),
             events = parseStructures("Events", elements).complex,
-            trackingSubmodule = parseTrackingSubmodule(elements)
+            trackingSubmodule = parseTrackingSubmodule(elements),
+            fixturesSubmodule = parseFixturesSubmodule(elements)
         )
     }
 
@@ -179,6 +181,15 @@ class ModuleGroupParserLogic(
             return TrackingSubmoduleDefinition(
                 dimensions = parseTableDefinition(section.elements, "Dimensions"),
                 events = parseTableDefinition(section.elements, "Events")
+            )
+        }
+    }
+
+    private fun parseFixturesSubmodule(elements: List<ParsedElement>): FixturesSubmoduleDefinition? {
+        return findSection(elements, "Fixtures")?.let { section ->
+            return FixturesSubmoduleDefinition(
+                mockedInterfaces = findSection(section.elements, "MockedInterfaces")?.elements
+                    ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList(),
             )
         }
     }

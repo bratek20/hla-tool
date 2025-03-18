@@ -91,6 +91,11 @@ fun assertModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModule
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertFixturesSubmoduleDefinition(given: FixturesSubmoduleDefinition, expectedInit: ExpectedFixturesSubmoduleDefinition.() -> Unit) {
+    val diff = diffFixturesSubmoduleDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertTypeDefinition(given: TypeDefinition, expectedInit: ExpectedTypeDefinition.() -> Unit) {
     val diff = diffTypeDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
