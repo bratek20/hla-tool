@@ -65,9 +65,9 @@ class ProcedureBuildersTest {
                 add(function {
                     name = "someFunction"
                     setBody {
-                        addFunctionCall {
+                        add(functionCallStatement {
                             name = "someOtherFunction"
-                        }
+                        })
                         add(assignment {
                             left = variable("a")
                             right = variable("1")
