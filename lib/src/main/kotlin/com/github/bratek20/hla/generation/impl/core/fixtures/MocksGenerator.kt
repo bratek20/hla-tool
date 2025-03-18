@@ -22,51 +22,71 @@ class MockInterfaceLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val defTypeFactory: DefTypeFactory
 ) {
-    fun getClass(): ClassBuilderOps = {
+    fun mockClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
         implements = def.getName()
 
         def.getMethods().forEach { method ->
-            addField {
-                type = baseType(BaseType.INT)
-                name = callsVariableName(method)
-                value = const("0")
-                mutable = true
-            }
+            addField(callsField(method))
 
             addMethod(mockedMethod(method))
             addMethod(callsAssertion(method))
+
             if (!hasVoidReturnType(method)) {
-                val returnType = apiTypeFactory.create(method.getReturnType())
-                val x = defTypeFactory.create(returnType as ApiTypeLogic).builder()
-                val emptyValue = if (returnType is ListApiType) {
-                    emptyImmutableList(returnType.wrappedType.builder())
-                } else {
-                    nullValue()
-                }
-                addField {
-                    type = x
-                    name = method.getName() + "Response"
-                    value = emptyValue
-                    mutable = true
-                }
-                addMethod {
-                    name = "set${camelToPascalCase(method.getName())}Response"
-                    addArg {
-                        name = "response"
-                        type = x
-                    }
-                    setBody {
-                        add(assignment {
-                            left = instanceVariable(method.getName() + "Response")
-                            right = variable("response")
-                        })
-                    }
-                }
+                addField(responseField(method))
+                addMethod(setResponse(method))
             }
         }
 
         addMethod(resetMethod())
+    }
+
+    private fun callsField(method: MethodDefinition): FieldBuilderOps {
+        return {
+            type = baseType(BaseType.INT)
+            name = callsVariableName(method)
+            value = const("0")
+            mutable = true
+        }
+    }
+
+    private fun responseField(method: MethodDefinition): FieldBuilderOps {
+        val returnType = returnApiType(method)
+
+        val emptyValue = if (returnType is ListApiType) {
+            emptyImmutableList(returnType.wrappedType.builder())
+        } else {
+            nullValue()
+        }
+
+        return {
+            type = returnDefType(method).builder()
+            name = method.getName() + "Response"
+            value = emptyValue
+            mutable = true
+        }
+    }
+
+    private fun setResponse(method: MethodDefinition): MethodBuilderOps = {
+        name = "set${camelToPascalCase(method.getName())}Response"
+        addArg {
+            name = "response"
+            type = returnDefType(method).builder()
+        }
+        setBody {
+            add(assignment {
+                left = instanceVariable(method.getName() + "Response")
+                right = variable("response")
+            })
+        }
+    }
+
+    private fun returnApiType(method: MethodDefinition): ApiType {
+        return apiTypeFactory.create(method.getReturnType())
+    }
+
+    private fun returnDefType(method: MethodDefinition): DefType<*> {
+        return defTypeFactory.create(returnApiType(method) as ApiTypeLogic)
     }
 
     private fun mockedMethod(method: MethodDefinition): MethodBuilderOps = {
@@ -77,7 +97,7 @@ class MockInterfaceLogic(
                 type = apiTypeFactory.create(arg.getType()).builder()
             }
         }
-        val returnType = apiTypeFactory.create(method.getReturnType())
+        val returnType = returnApiType(method)
         this.returnType = returnType.builder()
 
         setBody {
@@ -154,7 +174,7 @@ class MockInterfaceLogic(
         return defTypeFactory.create(type as ApiTypeLogic).modernBuild(instanceVariable(method.getName() + "Response"))
     }
 
-    fun getCreateMockFunction(): FunctionBuilderOps = {
+    fun createMock(): FunctionBuilderOps = {
         name = "create${def.getName()}Mock"
         returnType = typeName(def.getName() + "Mock")
         setBody {
@@ -166,7 +186,7 @@ class MockInterfaceLogic(
         }
     }
 
-    fun getSetupFunction(): FunctionBuilderOps = {
+    fun setup(): FunctionBuilderOps = {
         name = "setup${def.getName()}"
         returnType = typeName(def.getName() + "Mock")
         setBody {
@@ -245,14 +265,14 @@ class MocksGenerator: PatternGenerator() {
         val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture())) }
 
         mockInterfacesLogic.forEach { logic ->
-            addClass(logic.getClass())
+            addClass(logic.mockClass())
         }
 
         add(typeScriptNamespace {
             name = "$moduleName.Mocks"
             mockInterfacesLogic.forEach { logic ->
-                addFunction(logic.getCreateMockFunction())
-                addFunction(logic.getSetupFunction())
+                addFunction(logic.createMock())
+                addFunction(logic.setup())
             }
         })
     }
