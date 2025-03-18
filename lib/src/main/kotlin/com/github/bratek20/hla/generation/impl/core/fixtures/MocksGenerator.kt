@@ -3,8 +3,11 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
+import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
+import com.github.bratek20.hla.apitypes.impl.ApiTypeLogic
 import com.github.bratek20.hla.apitypes.impl.BaseApiType
+import com.github.bratek20.hla.apitypes.impl.ListApiType
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -14,7 +17,8 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 class MockInterfaceLogic(
     private val def: InterfaceDefinition,
     private val moduleName: String,
-    private val apiTypeFactory: ApiTypeFactory
+    private val apiTypeFactory: ApiTypeFactory,
+    private val defTypeFactory: DefTypeFactory
 ) {
     fun getClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
@@ -29,11 +33,12 @@ class MockInterfaceLogic(
                         type = apiTypeFactory.create(arg.getType()).builder()
                     }
                 }
-                returnType = apiTypeFactory.create(method.getReturnType()).builder()
+                val returnType = apiTypeFactory.create(method.getReturnType())
+                this.returnType = returnType.builder()
                 if (!hasVoidReturnType(method)) {
                     setBody {
                         add(returnStatement {
-                            hardcodedExpression("SomeModule.Builder.someClass()")
+                            defaultBuilderCall(returnType)
                         })
                     }
                 }
@@ -43,6 +48,20 @@ class MockInterfaceLogic(
 
     private fun hasVoidReturnType(method: MethodDefinition): Boolean {
         return BaseApiType.isVoid(apiTypeFactory.create(method.getReturnType()))
+    }
+
+    private fun defaultBuilderCall(type: ApiType): ExpressionBuilder {
+        try {
+            val emptyValue = if (type is ListApiType) {
+                emptyImmutableList(type.wrappedType.builder())
+            } else {
+                nullValue()
+            }
+            return defTypeFactory.create(type as ApiTypeLogic).modernBuild(emptyValue)
+        }
+        catch (e: Exception) {
+            return hardcodedExpression("TODO()")
+        }
     }
 
     fun getCreateMockFunction(): FunctionBuilderOps = {
@@ -128,7 +147,7 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory) }
+        val mockInterfacesLogic = module.getInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture())) }
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.getClass())

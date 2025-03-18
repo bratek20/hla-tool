@@ -9,55 +9,55 @@ class SomeInterfaceMock implements SomeInterface {
     someCommand(id: SomeId, amount: number): void {
     }
     someQuery(query: SomeQueryInput): SomeClass {
-        return SomeModule.Builder.someClass()
+        return someClass(undefined)
     }
     optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
-        return SomeModule.Builder.someClass()
+        return Optional.of(undefined).map(it => someClass(it))
     }
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
-        return SomeModule.Builder.someClass()
+        return [].map(it => new SomeId(it))
     }
     methodWithAny(i: any): any {
-        return SomeModule.Builder.someClass()
+        return undefined
     }
     methodReturningOptSimpleVo(): Optional<SomeId> {
-        return SomeModule.Builder.someClass()
+        return Optional.of(undefined).map(it => new SomeId(it))
     }
 }
 
 class SomeInterface2Mock implements SomeInterface2 {
     referenceOtherClass(other: OtherClass): OtherClass {
-        return SomeModule.Builder.someClass()
+        return OtherModule.Builder.otherClass(undefined)
     }
     referenceLegacyType(legacyType: LegacyType): LegacyType {
-        return SomeModule.Builder.someClass()
+        return TODO()
     }
 }
 
 class SomeInterface3Mock implements SomeInterface3 {
     referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
-        return SomeModule.Builder.someClass()
+        return TODO()
     }
     referenceOtherInterface(other: OtherInterface): OtherInterface {
-        return SomeModule.Builder.someClass()
+        return TODO()
     }
 }
 
 class SomeModuleHandlersMock implements SomeModuleHandlers {
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
-        return SomeModule.Builder.someClass()
+        return someHandlerOutput(undefined)
     }
     someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-        return SomeModule.Builder.someClass()
+        return someHandlerOutput(undefined)
     }
 }
 
 class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
-        return SomeModule.Builder.someClass()
+        return someHandlerOutput(undefined)
     }
     someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-        return SomeModule.Builder.someClass()
+        return someHandlerOutput(undefined)
     }
 }
 
