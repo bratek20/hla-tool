@@ -29,7 +29,7 @@ class TypeScriptAssertsPattern(private val modules: ModuleGroupQueries) : Langua
 class TypeScriptBuildersPattern(private val modules: ModuleGroupQueries) : LanguageBuildersPattern {
     override fun defClassType(name: String): String {
         val base = "${name}Def"
-        return handleReferencingAlways(modules, name, base, "Builder")
+        return addModulePrefix(modules, name, base, "Builder")
     }
 
     override fun defOptionalComplexType(name: String): String {
@@ -46,7 +46,7 @@ class TypeScriptBuildersPattern(private val modules: ModuleGroupQueries) : Langu
 
     override fun complexVoDefConstructor(name: String, arg: String): String {
         val base = pascalToCamelCase(name)
-        return handleReferencingAlways(modules, name, base, "Builder")
+        return addModulePrefix(modules, name, base, "Builder")
     }
 }
 

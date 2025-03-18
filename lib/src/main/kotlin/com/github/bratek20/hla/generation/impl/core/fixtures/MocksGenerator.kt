@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
+import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
@@ -26,6 +27,11 @@ class MockInterfaceLogic(
         implements = def.getName()
 
         def.getMethods().forEach { method ->
+            addField {
+                type = baseType(BaseType.INT)
+                name = callsVariableName(method)
+                defaultValue = const("0")
+            }
             addMethod {
                 name = method.getName()
                 method.getArgs().forEach { arg ->
@@ -36,8 +42,16 @@ class MockInterfaceLogic(
                 }
                 val returnType = apiTypeFactory.create(method.getReturnType())
                 this.returnType = returnType.builder()
-                if (!hasVoidReturnType(method)) {
-                    setBody {
+
+                setBody {
+                    add(assignment {
+                        left = instanceVariable(callsVariableName(method))
+                        right = plus {
+                            left = instanceVariable(callsVariableName(method))
+                            right = const("1")
+                        }
+                    })
+                    if (!hasVoidReturnType(method)) {
                         add(returnStatement {
                             defaultBuilderCall(returnType)
                         })
@@ -45,6 +59,22 @@ class MockInterfaceLogic(
                 }
             }
         }
+
+        addMethod {
+            name = "reset"
+            setBody {
+                def.getMethods().forEach { method ->
+                    add(assignment {
+                        left = instanceVariable(callsVariableName(method))
+                        right = const("0")
+                    })
+                }
+            }
+        }
+    }
+
+    private fun callsVariableName(method: MethodDefinition): String {
+        return method.getName() + "Calls"
     }
 
     private fun hasVoidReturnType(method: MethodDefinition): Boolean {
@@ -135,10 +165,6 @@ class MockInterfaceLogic(
     }
 }
 class MocksGenerator: PatternGenerator() {
-    override fun mode(): GeneratorMode {
-        return GeneratorMode.ONLY_START
-    }
-
     override fun patternName(): PatternName {
         return PatternName.Mocks
     }

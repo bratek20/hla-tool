@@ -13,7 +13,7 @@ fun handleReferencing(modules: ModuleGroupQueries, typeName: String, base: Strin
     }
 }
 
-fun handleReferencingAlways(modules: ModuleGroupQueries, typeName: String, base: String, submodule: String?): String {
+fun addModulePrefix(modules: ModuleGroupQueries, typeName: String, base: String, submodule: String?): String {
     return addPrefix(modules, typeName, base) {
         if (submodule == null) {
             "${it.value}."
