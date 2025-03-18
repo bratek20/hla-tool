@@ -420,12 +420,12 @@ class TypesTest {
             langExpected {
                 lang = TypeScript()
                 expected = """
-                   const softOptional: string? = someVariable
+                   const softOptional: string | undefined = someVariable
                    const hardOptional: Optional<string> = Optional.of(someVariable)
                    const emptyHardOptional: Optional<string> = Optional.empty()
                    const unpacked: string = optional.get()
-                   const unpackedToSoft: number? = optional.orElse(1)
-                   const unpackedToSoftDefaultNull: string? = optional.orElse(undefined)
+                   const unpackedToSoft: number | undefined = optional.orElse(1)
+                   const unpackedToSoftDefaultNull: string | undefined = optional.orElse(undefined)
                    const plusOne: number = optional.map(it => it + 1)
                    x = y ?? (1)
                 """

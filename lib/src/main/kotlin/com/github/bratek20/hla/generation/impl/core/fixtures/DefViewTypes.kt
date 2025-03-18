@@ -154,6 +154,9 @@ open class ComplexStructureDefType(
     }
 
     override fun builder(): TypeBuilder {
+        if (languageTypes is TypeScriptTypes) {
+            return typeName(pattern.defClassType(api.name()))
+        }
         return lambdaType(typeName(defName()))
     }
 

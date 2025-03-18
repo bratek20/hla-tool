@@ -12,8 +12,8 @@ class ObjectCreationMapper {
         if (type.contains("[]")) {
             return "[" + map(type.replace("[]", "")) + "]"
         }
-        if (type.endsWith("?")) {
-            val innerType = type.replace("?", "")
+        if (type.contains(" | undefined")) {
+            val innerType = type.replace(" | undefined", "")
             return map(innerType, true)
         }
         val prefix = if (isOptional) "OPTIONAL_" else ""
@@ -34,7 +34,7 @@ class ObjectCreationMapper {
     }
 
     fun adjustAssignment(type: String): String {
-        if (type.endsWith("?")) {
+        if (type.contains("| undefined")) {
             return "?"
         }
         return ""

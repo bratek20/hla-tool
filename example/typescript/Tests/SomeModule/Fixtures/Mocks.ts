@@ -9,15 +9,15 @@ class SomeInterfaceMock implements SomeInterface {
     private readonly someEmptyMethodCalls: number = 0
     private readonly someCommandCalls: number = 0
     private readonly someQueryCalls: number = 0
-    private readonly someQueryResponse: Action<SomeClassDef> = undefined
+    private readonly someQueryResponse: SomeModule.Builder.SomeClassDef = undefined
     private readonly optMethodCalls: number = 0
-    private readonly optMethodResponse: Action<SomeClassDef>? = undefined
+    private readonly optMethodResponse: SomeModule.Builder.SomeClassDef | undefined = undefined
     private readonly methodWithListOfSimpleVOCalls: number = 0
     private readonly methodWithListOfSimpleVOResponse: string[] = []
     private readonly methodWithAnyCalls: number = 0
     private readonly methodWithAnyResponse: any = undefined
     private readonly methodReturningOptSimpleVoCalls: number = 0
-    private readonly methodReturningOptSimpleVoResponse: string? = undefined
+    private readonly methodReturningOptSimpleVoResponse: string | undefined = undefined
     someEmptyMethod(): void {
         this.someEmptyMethodCalls = this.someEmptyMethodCalls + 1
     }
@@ -37,7 +37,7 @@ class SomeInterfaceMock implements SomeInterface {
     assertSomeQueryCalls(expectedNumber: number) {
         AssertEquals(this.someQueryCalls, expectedNumber, "Expected 'someQuery' to be called " + expectedNumber + " times but was called " + this.someQueryCalls + " times")
     }
-    setSomeQueryResponse(response: Action<SomeClassDef>) {
+    setSomeQueryResponse(response: SomeModule.Builder.SomeClassDef) {
         this.someQueryResponse = response
     }
     optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
@@ -47,7 +47,7 @@ class SomeInterfaceMock implements SomeInterface {
     assertOptMethodCalls(expectedNumber: number) {
         AssertEquals(this.optMethodCalls, expectedNumber, "Expected 'optMethod' to be called " + expectedNumber + " times but was called " + this.optMethodCalls + " times")
     }
-    setOptMethodResponse(response: Action<SomeClassDef>?) {
+    setOptMethodResponse(response: SomeModule.Builder.SomeClassDef | undefined) {
         this.optMethodResponse = response
     }
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
@@ -77,7 +77,7 @@ class SomeInterfaceMock implements SomeInterface {
     assertMethodReturningOptSimpleVoCalls(expectedNumber: number) {
         AssertEquals(this.methodReturningOptSimpleVoCalls, expectedNumber, "Expected 'methodReturningOptSimpleVo' to be called " + expectedNumber + " times but was called " + this.methodReturningOptSimpleVoCalls + " times")
     }
-    setMethodReturningOptSimpleVoResponse(response: string?) {
+    setMethodReturningOptSimpleVoResponse(response: string | undefined) {
         this.methodReturningOptSimpleVoResponse = response
     }
     reset() {
@@ -93,7 +93,7 @@ class SomeInterfaceMock implements SomeInterface {
 
 class SomeInterface2Mock implements SomeInterface2 {
     private readonly referenceOtherClassCalls: number = 0
-    private readonly referenceOtherClassResponse: Action<OtherClassDef> = undefined
+    private readonly referenceOtherClassResponse: OtherModule.Builder.OtherClassDef = undefined
     private readonly referenceLegacyTypeCalls: number = 0
     private readonly referenceLegacyTypeResponse: LegacyType = undefined
     referenceOtherClass(other: OtherClass): OtherClass {
@@ -103,7 +103,7 @@ class SomeInterface2Mock implements SomeInterface2 {
     assertReferenceOtherClassCalls(expectedNumber: number) {
         AssertEquals(this.referenceOtherClassCalls, expectedNumber, "Expected 'referenceOtherClass' to be called " + expectedNumber + " times but was called " + this.referenceOtherClassCalls + " times")
     }
-    setReferenceOtherClassResponse(response: Action<OtherClassDef>) {
+    setReferenceOtherClassResponse(response: OtherModule.Builder.OtherClassDef) {
         this.referenceOtherClassResponse = response
     }
     referenceLegacyType(legacyType: LegacyType): LegacyType {
@@ -155,9 +155,9 @@ class SomeInterface3Mock implements SomeInterface3 {
 
 class SomeModuleHandlersMock implements SomeModuleHandlers {
     private readonly someHandlerCalls: number = 0
-    private readonly someHandlerResponse: Action<SomeHandlerOutputDef> = undefined
+    private readonly someHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
     private readonly someHandler2Calls: number = 0
-    private readonly someHandler2Response: Action<SomeHandlerOutputDef> = undefined
+    private readonly someHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandlerCalls = this.someHandlerCalls + 1
         return SomeModule.Builder.someHandlerOutput(this.someHandlerResponse)
@@ -165,7 +165,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     assertSomeHandlerCalls(expectedNumber: number) {
         AssertEquals(this.someHandlerCalls, expectedNumber, "Expected 'someHandler' to be called " + expectedNumber + " times but was called " + this.someHandlerCalls + " times")
     }
-    setSomeHandlerResponse(response: Action<SomeHandlerOutputDef>) {
+    setSomeHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someHandlerResponse = response
     }
     someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
@@ -175,7 +175,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     assertSomeHandler2Calls(expectedNumber: number) {
         AssertEquals(this.someHandler2Calls, expectedNumber, "Expected 'someHandler2' to be called " + expectedNumber + " times but was called " + this.someHandler2Calls + " times")
     }
-    setSomeHandler2Response(response: Action<SomeHandlerOutputDef>) {
+    setSomeHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someHandler2Response = response
     }
     reset() {
@@ -186,9 +186,9 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
 
 class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     private readonly someDebugHandlerCalls: number = 0
-    private readonly someDebugHandlerResponse: Action<SomeHandlerOutputDef> = undefined
+    private readonly someDebugHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
     private readonly someDebugHandler2Calls: number = 0
-    private readonly someDebugHandler2Response: Action<SomeHandlerOutputDef> = undefined
+    private readonly someDebugHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandlerCalls = this.someDebugHandlerCalls + 1
         return SomeModule.Builder.someHandlerOutput(this.someDebugHandlerResponse)
@@ -196,7 +196,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     assertSomeDebugHandlerCalls(expectedNumber: number) {
         AssertEquals(this.someDebugHandlerCalls, expectedNumber, "Expected 'someDebugHandler' to be called " + expectedNumber + " times but was called " + this.someDebugHandlerCalls + " times")
     }
-    setSomeDebugHandlerResponse(response: Action<SomeHandlerOutputDef>) {
+    setSomeDebugHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someDebugHandlerResponse = response
     }
     someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
@@ -206,7 +206,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     assertSomeDebugHandler2Calls(expectedNumber: number) {
         AssertEquals(this.someDebugHandler2Calls, expectedNumber, "Expected 'someDebugHandler2' to be called " + expectedNumber + " times but was called " + this.someDebugHandler2Calls + " times")
     }
-    setSomeDebugHandler2Response(response: Action<SomeHandlerOutputDef>) {
+    setSomeDebugHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someDebugHandler2Response = response
     }
     reset() {
