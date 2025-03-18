@@ -12,6 +12,7 @@ import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
+import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
 class MockInterfaceLogic(
@@ -134,6 +135,10 @@ class MockInterfaceLogic(
     }
 }
 class MocksGenerator: PatternGenerator() {
+    override fun mode(): GeneratorMode {
+        return GeneratorMode.ONLY_START
+    }
+
     override fun patternName(): PatternName {
         return PatternName.Mocks
     }
