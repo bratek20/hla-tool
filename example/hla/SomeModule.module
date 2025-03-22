@@ -259,6 +259,7 @@ ViewModel
             someAnimation: Animation
             someInputField: InputField
             someImage: Image
+            someScroll: Scroll
 
         SecondSomeClassVm
             SomeClass

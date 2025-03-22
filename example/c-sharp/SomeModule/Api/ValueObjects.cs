@@ -17,6 +17,9 @@ namespace SomeModule.Api {
         ) {
             Value = value;
         }
+        public override string ToString() {
+            return Value.ToString();
+        }
     }
 
     public class SomeIntWrapper: ValueObject {
@@ -27,6 +30,9 @@ namespace SomeModule.Api {
         ) {
             Value = value;
         }
+        public override string ToString() {
+            return Value.ToString();
+        }
     }
 
     public class SomeId2: ValueObject {
@@ -36,6 +42,9 @@ namespace SomeModule.Api {
             int value
         ) {
             Value = value;
+        }
+        public override string ToString() {
+            return Value.ToString();
         }
     }
 

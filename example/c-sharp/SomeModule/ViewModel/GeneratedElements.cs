@@ -21,6 +21,7 @@ namespace SomeModule.ViewModel {
         public Animation SomeAnimation { get; set; }
         public InputField SomeInputField { get; set; }
         public Image SomeImage { get; set; }
+        public Scroll SomeScroll { get; set; }
         protected override List<Type> GetTraitTypes() {
             return new List<Type>() { typeof(Clickable), typeof(Draggable), typeof(WithRect) };
         }
