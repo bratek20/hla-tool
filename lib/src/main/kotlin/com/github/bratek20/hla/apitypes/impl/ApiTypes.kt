@@ -267,12 +267,13 @@ class SimpleValueObjectApiType(
 
             addMethod {
                 overridesClassMethod = true
+                returnType = baseType(com.github.bratek20.codebuilder.core.BaseType.STRING)
                 name = "toString"
                 setBody {
                     add(returnStatement {
                         methodCall {
-                            target = instanceVariable("value")
-                            name = "toString"
+                            target = getterField("value")
+                            methodName = "toString"
                         }
                     })
                 }

@@ -14,6 +14,9 @@ namespace SimpleModule.Api {
         ) {
             Value = value;
         }
+        public override string ToString() {
+            return Value.ToString();
+        }
     }
 
     public class SomeLongWrapper: ValueObject {
@@ -23,6 +26,9 @@ namespace SimpleModule.Api {
             long value
         ) {
             Value = value;
+        }
+        public override string ToString() {
+            return Value.ToString();
         }
     }
 
