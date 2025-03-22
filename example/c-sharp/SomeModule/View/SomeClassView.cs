@@ -28,6 +28,8 @@ namespace SomeModule.View {
         InputFieldView someInputField;
         [SerializeField]
         ImageView someImage;
+        [SerializeField]
+        ScrollView someScroll;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
@@ -37,6 +39,7 @@ namespace SomeModule.View {
             someAnimation.Bind(ViewModel.SomeAnimation);
             someInputField.Bind(ViewModel.SomeInputField);
             someImage.Bind(ViewModel.SomeImage);
+            someScroll.Bind(ViewModel.SomeScroll);
         }
     }
 }

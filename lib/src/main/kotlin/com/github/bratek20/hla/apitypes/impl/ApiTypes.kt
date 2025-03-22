@@ -264,6 +264,19 @@ class SimpleValueObjectApiType(
             extends {
                 name = "ValueObject"
             }
+
+            addMethod {
+                overridesClassMethod = true
+                name = "toString"
+                setBody {
+                    add(returnStatement {
+                        methodCall {
+                            target = instanceVariable("value")
+                            name = "toString"
+                        }
+                    })
+                }
+            }
         }
 
         addField {

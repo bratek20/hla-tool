@@ -31,6 +31,10 @@
     {
       "name": "someImage",
       "viewType": "B20.View.UiElements.View.ImageView"
+    },
+    {
+      "name": "someScroll",
+      "viewType": "B20.View.UiElements.View.ScrollView"
     }
   ],
   "elementViewType": null
