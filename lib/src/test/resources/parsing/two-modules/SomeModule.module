@@ -37,6 +37,9 @@ Events
     SomeEvent
         someField: string
 
+Notifications // same as Events
+    SomeNotification
+
 Interfaces
     SomeInterface
         someCommand(id: SomeId, amount: int)

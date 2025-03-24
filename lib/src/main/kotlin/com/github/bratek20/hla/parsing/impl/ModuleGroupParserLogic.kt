@@ -26,6 +26,7 @@ class ModuleGroupParserLogic(
         "DataClasses",
         "Exceptions",
         "Events",
+        "Notifications",
         "Interfaces",
         "PropertyKeys",
         "Enums",
@@ -115,7 +116,7 @@ class ModuleGroupParserLogic(
             webSubmodule = parseWebSubmodule(elements),
             viewModelSubmodule = parseViewModelSubmodule(elements),
             exceptions = parseExceptions("Exceptions", elements),
-            events = parseStructures("Events", elements).complex,
+            events = parseStructures("Events", elements).complex + parseStructures("Notifications", elements).complex,
             trackingSubmodule = parseTrackingSubmodule(elements),
             fixturesSubmodule = parseFixturesSubmodule(elements)
         )
