@@ -371,15 +371,20 @@ class ModuleGroupParserTest {
                 exceptions = listOf {
                     name = "SomeExtraException"
                 }
-                events = listOf {
-                    name = "SomeEvent"
-                    fields = listOf {
-                        name = "someField"
-                        type = {
-                            name = "string"
+                events = listOf(
+                    {
+                        name = "SomeEvent"
+                        fields = listOf {
+                            name = "someField"
+                            type = {
+                                name = "string"
+                            }
                         }
+                    },
+                    {
+                        name = "SomeNotification"
                     }
-                }
+                )
             }
         ))
 
