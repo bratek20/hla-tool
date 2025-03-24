@@ -2,6 +2,7 @@ package com.github.bratek20.hla.apitypes.impl
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
+import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.definitions.api.*
@@ -32,7 +33,7 @@ abstract class ApiTypeLogic: ApiType {
         this.typeModule = typeModule
     }
 
-    private fun moduleName(): String {
+    protected fun moduleName(): String {
         return typeModule?.getName()?.value ?: throw IllegalStateException("No module set for type $this")
     }
 
@@ -488,7 +489,40 @@ class EventApiType(
         val ops: ClassBuilderOps = super.getClassOps()
         return {
             this.apply(ops)
-            implements = "Event"
+            if (c.lang is TypeScript) {
+                extends {
+                    name = "EventBusNotification"
+                }
+                setConstructor {
+                    setBody {
+                        add(hardcodedExpression("super()").asStatement())
+                    }
+                }
+
+                val className = name
+                addMethod {
+                    name = "getName"
+                    returnType = baseType(com.github.bratek20.codebuilder.core.BaseType.STRING)
+                    setBody {
+                        add(returnStatement {
+                            string(className)
+                        })
+                    }
+                }
+                addMethod {
+                    name = "getNotifier"
+                    returnType = typeName("DependencyName")
+                    setBody {
+                        add(returnStatement {
+                            hardcodedExpression("DependencyName.${moduleName()}")
+                        })
+                    }
+                }
+            }
+            else {
+                implements = "Event"
+            }
+
         }
     }
 }
