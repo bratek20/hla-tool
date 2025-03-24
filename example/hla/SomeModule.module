@@ -17,6 +17,7 @@ ExternalTypes
 ValueObjects
     SomeId: string
     SomeIntWrapper: int (startsFrom: 5)
+    SomeStructWithIdSourceNamePartiallyEqualToClassNameId: string
 
     SomeClass
         id: SomeId
@@ -126,6 +127,9 @@ Properties
         date: Date
         dateRange: DateRange
 
+    SomeStructWithIdSourceNamePartiallyEqualToClassName
+        id: SomeStructWithIdSourceNamePartiallyEqualToClassNameId (idSource)
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
@@ -135,7 +139,7 @@ Properties
     "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]
     "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
     "SomeStructureWithUniqueIdsMultipleNest" -> SomeStructureWithMultipleUniqueNestedIds[]
-
+    "SomeStructWithIdSourceNamePartiallyEqualToClassName" -> SomeStructWithIdSourceNamePartiallyEqualToClassName[]
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]
