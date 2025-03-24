@@ -8,10 +8,10 @@ class SomeEvent extends EventBusNotification {
         super()
     }
     getSomeField(): string {
-        return someField
+        return this.someField
     }
     getOtherClass(): OtherClass {
-        return otherClass
+        return this.otherClass
     }
     getName(): string {
         return "SomeEvent"

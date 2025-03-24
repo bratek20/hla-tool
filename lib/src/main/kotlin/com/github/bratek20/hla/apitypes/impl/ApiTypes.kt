@@ -443,7 +443,7 @@ open class SerializableApiType(
                 returnType = it.type.builder()
                 setBody {
                     add(returnStatement {
-                        it.type.modernDeserialize(variable(it.name))
+                        it.type.modernDeserialize(instanceVariable(it.name))
                     })
                 }
             }
