@@ -34,6 +34,14 @@ data class SomeIntWrapper(
     }
 }
 
+data class SomeStructWithIdSourceNamePartiallyEqualToClassNameId(
+    val value: String
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
+
 data class SomeId2(
     val value: Int
 ) {
@@ -752,6 +760,24 @@ data class CustomTypesProperty(
             return CustomTypesProperty(
                 date = dateGetValue(date),
                 dateRange = SerializedDateRange.fromCustomType(dateRange),
+            )
+        }
+    }
+}
+
+data class SomeStructWithIdSourceNamePartiallyEqualToClassName(
+    private val id: String,
+) {
+    fun getId(): SomeStructWithIdSourceNamePartiallyEqualToClassNameId {
+        return SomeStructWithIdSourceNamePartiallyEqualToClassNameId(this.id)
+    }
+
+    companion object {
+        fun create(
+            id: SomeStructWithIdSourceNamePartiallyEqualToClassNameId,
+        ): SomeStructWithIdSourceNamePartiallyEqualToClassName {
+            return SomeStructWithIdSourceNamePartiallyEqualToClassName(
+                id = id.value,
             )
         }
     }

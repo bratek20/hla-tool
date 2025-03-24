@@ -25,6 +25,12 @@ fun assertSomeIntWrapper(given: SomeIntWrapper, expected: Int) {
 }
 
 
+fun assertSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given: SomeStructWithIdSourceNamePartiallyEqualToClassNameId, expected: String) {
+    val diff = diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+
 fun assertSomeId2(given: SomeId2, expected: Int) {
     val diff = diffSomeId2(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -162,6 +168,11 @@ fun assertOptionalFieldProperty(given: OptionalFieldProperty, expectedInit: Expe
 
 fun assertCustomTypesProperty(given: CustomTypesProperty, expectedInit: ExpectedCustomTypesProperty.() -> Unit) {
     val diff = diffCustomTypesProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeStructWithIdSourceNamePartiallyEqualToClassName(given: SomeStructWithIdSourceNamePartiallyEqualToClassName, expectedInit: ExpectedSomeStructWithIdSourceNamePartiallyEqualToClassName.() -> Unit) {
+    val diff = diffSomeStructWithIdSourceNamePartiallyEqualToClassName(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

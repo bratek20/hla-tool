@@ -11,6 +11,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given: SomeStructWithIdSourceNamePartiallyEqualToClassNameId, expected: string, path: string = ""): string {
+        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        return ""
+    }
+
     export function diffSomeId2(given: SomeId2, expected: number, path: string = ""): string {
         if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
         return ""
@@ -591,6 +596,19 @@ namespace SomeModule {
 
         if (expected.dateRange !== undefined) {
             if (TypesModule.diffDateRange(given.getDateRange(), expected.dateRange) != "") { result.push(TypesModule.diffDateRange(given.getDateRange(), expected.dateRange, `${path}dateRange.`)) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeStructWithIdSourceNamePartiallyEqualToClassName {
+        id?: string,
+    }
+    export function diffSomeStructWithIdSourceNamePartiallyEqualToClassName(given: SomeStructWithIdSourceNamePartiallyEqualToClassName, expected: ExpectedSomeStructWithIdSourceNamePartiallyEqualToClassName, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given.getId(), expected.id) != "") { result.push(diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given.getId(), expected.id, `${path}id.`)) }
         }
 
         return result.join("\n")

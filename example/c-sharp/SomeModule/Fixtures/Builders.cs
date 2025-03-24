@@ -152,6 +152,10 @@ namespace SomeModule.Fixtures {
         public Action<DateRangeDef> DateRange { get; set; } = (_) => {};
     }
 
+    public class SomeStructWithIdSourceNamePartiallyEqualToClassNameDef {
+        public string Id { get; set; } = "someValue";
+    }
+
     public class DateRangeWrapperDef {
         public Action<DateRangeDef> Range { get; set; } = (_) => {};
     }
@@ -179,6 +183,9 @@ namespace SomeModule.Fixtures {
         }
         public static SomeIntWrapper BuildSomeIntWrapper(int value = 5) {
             return new SomeIntWrapper(value);
+        }
+        public static SomeStructWithIdSourceNamePartiallyEqualToClassNameId BuildSomeStructWithIdSourceNamePartiallyEqualToClassNameId(string value = "someValue") {
+            return new SomeStructWithIdSourceNamePartiallyEqualToClassNameId(value);
         }
         public static SomeId2 BuildSomeId2(int value = 0) {
             return new SomeId2(value);
@@ -344,6 +351,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return CustomTypesProperty.Create(TODO(def.Date), TypesModuleBuilders.BuildDateRange(def.DateRange));
+        }
+        public static SomeStructWithIdSourceNamePartiallyEqualToClassName BuildSomeStructWithIdSourceNamePartiallyEqualToClassName(Action<SomeStructWithIdSourceNamePartiallyEqualToClassNameDef> init = null) {
+            var def = new SomeStructWithIdSourceNamePartiallyEqualToClassNameDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeStructWithIdSourceNamePartiallyEqualToClassName.Create(new SomeStructWithIdSourceNamePartiallyEqualToClassNameId(def.Id));
         }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();

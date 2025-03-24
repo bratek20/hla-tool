@@ -9,6 +9,10 @@ namespace SomeModule.Builder {
         return new SomeIntWrapper(value)
     }
 
+    export function someStructWithIdSourceNamePartiallyEqualToClassNameId(value: string = "someValue"): SomeStructWithIdSourceNamePartiallyEqualToClassNameId {
+        return new SomeStructWithIdSourceNamePartiallyEqualToClassNameId(value)
+    }
+
     export function someId2(value: number = 0): SomeId2 {
         return new SomeId2(value)
     }
@@ -400,6 +404,17 @@ namespace SomeModule.Builder {
         return CustomTypesProperty.create(
             TypesModule.CustomTypesMapper.dateCreate(final_date),
             TypesModule.Builder.dateRange(final_dateRange),
+        )
+    }
+
+    export interface SomeStructWithIdSourceNamePartiallyEqualToClassNameDef {
+        id?: string,
+    }
+    export function someStructWithIdSourceNamePartiallyEqualToClassName(def?: SomeStructWithIdSourceNamePartiallyEqualToClassNameDef): SomeStructWithIdSourceNamePartiallyEqualToClassName {
+        const final_id = def?.id ?? "someValue"
+
+        return SomeStructWithIdSourceNamePartiallyEqualToClassName.create(
+            new SomeStructWithIdSourceNamePartiallyEqualToClassNameId(final_id),
         )
     }
 

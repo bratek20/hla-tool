@@ -46,6 +46,11 @@ namespace SomeModule {
         SomeStructureWithMultipleUniqueNestedIds
     )
 
+    export const SOME_STRUCT_WITH_ID_SOURCE_NAME_PARTIALLY_EQUAL_TO_CLASS_NAME_PROPERTY_KEY = new ListPropertyKey(
+        "SomeStructWithIdSourceNamePartiallyEqualToClassName",
+        SomeStructWithIdSourceNamePartiallyEqualToClassName
+    )
+
     export const REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = new ObjectPropertyKey(
         "ReferencingOtherProperty",
         OtherProperty

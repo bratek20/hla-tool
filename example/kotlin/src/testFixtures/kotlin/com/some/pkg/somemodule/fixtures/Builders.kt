@@ -19,6 +19,10 @@ fun someIntWrapper(value: Int = 5): SomeIntWrapper {
     return SomeIntWrapper(value)
 }
 
+fun someStructWithIdSourceNamePartiallyEqualToClassNameId(value: String = "someValue"): SomeStructWithIdSourceNamePartiallyEqualToClassNameId {
+    return SomeStructWithIdSourceNamePartiallyEqualToClassNameId(value)
+}
+
 fun someId2(value: Int = 0): SomeId2 {
     return SomeId2(value)
 }
@@ -352,6 +356,16 @@ fun customTypesProperty(init: CustomTypesPropertyDef.() -> Unit = {}): CustomTyp
     return CustomTypesProperty.create(
         date = dateCreate(def.date),
         dateRange = dateRange(def.dateRange),
+    )
+}
+
+data class SomeStructWithIdSourceNamePartiallyEqualToClassNameDef(
+    var id: String = "someValue",
+)
+fun someStructWithIdSourceNamePartiallyEqualToClassName(init: SomeStructWithIdSourceNamePartiallyEqualToClassNameDef.() -> Unit = {}): SomeStructWithIdSourceNamePartiallyEqualToClassName {
+    val def = SomeStructWithIdSourceNamePartiallyEqualToClassNameDef().apply(init)
+    return SomeStructWithIdSourceNamePartiallyEqualToClassName.create(
+        id = SomeStructWithIdSourceNamePartiallyEqualToClassNameId(def.id),
     )
 }
 
