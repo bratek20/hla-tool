@@ -26,15 +26,19 @@ class PrimitiveTypesPopulator(
             SubmoduleName.Api,
             PatternName.Primitives
         ).asWorld()
+
+        fun getWorldTypeFor(type: BaseType): WorldType {
+            return WorldType.create(
+                name = WorldTypeName(type.name.lowercase()),
+                path = path
+            )
+        }
     }
 
     override fun populate(modules: List<ModuleDefinition>) {
         BaseType.entries.forEach {
             api.addPrimitiveType(
-                WorldType.create(
-                    name = WorldTypeName(it.name.lowercase()),
-                    path = path
-                )
+                getWorldTypeFor(it)
             )
             api.ensureType(
                 WorldType.create(

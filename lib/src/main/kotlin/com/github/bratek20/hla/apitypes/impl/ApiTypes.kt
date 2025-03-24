@@ -647,6 +647,10 @@ class EnumApiType(
         val variableName = variable.build(c)
         return hardcodedExpression(languageTypes.serializeEnum(variableName))
     }
+
+    override fun serializableWorldType(): WorldType {
+        return PrimitiveTypesPopulator.getWorldTypeFor(BaseType.STRING)
+    }
 }
 
 data class ApiCustomTypes(
