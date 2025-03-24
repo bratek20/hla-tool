@@ -1,11 +1,9 @@
 package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
-import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.apitypes.impl.EventApiType
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
-import com.github.bratek20.hla.apitypes.impl.EventApiType
 
 class EventsGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -13,7 +11,7 @@ class EventsGenerator: PatternGenerator() {
     }
 
     override fun supportsCodeBuilder(): Boolean {
-        return c.language.name() == ModuleLanguage.KOTLIN || c.language.name() == ModuleLanguage.C_SHARP
+        return true
     }
 
     override fun shouldGenerate(): Boolean {
