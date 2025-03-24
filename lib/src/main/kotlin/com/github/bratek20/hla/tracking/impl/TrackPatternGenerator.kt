@@ -253,6 +253,10 @@ class TrackingTableLogic(
         if (hlaPath.getPatternName() == PatternName.Primitives) {
             return primitiveToSqlType(BaseType.valueOf(type.getName().value.uppercase()))
         }
+        if (hlaPath.getPatternName() == PatternName.Enums) {
+            return "VARCHAR(64)"
+        }
+
         if (hlaPath.getPatternName() == PatternName.Track) { // it is dimension
             return "BIGINT"
         }

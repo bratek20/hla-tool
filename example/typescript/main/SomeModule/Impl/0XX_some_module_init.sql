@@ -9,7 +9,7 @@ CREATE TABLE some_dimension (
 
 CREATE TABLE some_dimension_with_enum (
     some_dimension_with_enum_id BIGINT DEFAULT NEXTVAL('common.the_sequence'::regclass) CONSTRAINT some_dimension_with_enum_id PRIMARY KEY,
-    enum_string VARCHAR(256) NOT NULL
+    enum_string VARCHAR(64) NOT NULL
 );
 
 CREATE TABLE some_tracking_event (
