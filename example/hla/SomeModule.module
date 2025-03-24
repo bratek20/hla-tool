@@ -327,6 +327,9 @@ Tracking
                 id -> name // name mapping
                 amount // keeping same name
             date_range: DateRange // field + custom type
+        SomeDimensionWithEnum (table: "some_dimension_with_enum")
+            SomeClass3
+                someEnum -> enum_string // name mapping
 
     Events
         SomeTrackingEvent (table: "some_tracking_event")

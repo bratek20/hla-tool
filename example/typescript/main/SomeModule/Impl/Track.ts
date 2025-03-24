@@ -19,6 +19,19 @@ namespace SomeModule.Impl {
         }
     }
 
+    export class SomeDimensionWithEnum extends TrackingDimension {
+        constructor(
+            someClass3: SomeClass3
+        ) {
+            super()
+            this.enum_string = someClass3.getSomeEnum().getName()
+        }
+        private readonly enum_string: string
+        getTableName(): TrackingTableName {
+            return new TrackingTableName("some_dimension_with_enum")
+        }
+    }
+
     export class SomeTrackingEvent extends TrackingEvent {
         constructor(
             some_dimension_id: SomeDimension
