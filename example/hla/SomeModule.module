@@ -136,7 +136,6 @@ Properties
     "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
     "SomeStructureWithUniqueIdsMultipleNest" -> SomeStructureWithMultipleUniqueNestedIds[]
 
-
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]
 

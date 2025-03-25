@@ -474,5 +474,43 @@ class TypesWorldImplTest {
                 }
             )
         }
+
+        @Test
+        fun `should not throw exception for class with fields name partially equal to class name`() {
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceClassField"
+                }
+                fields = listOf {
+                    name = "id"
+                    type = {
+                        name = "String"
+                    }
+                }
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceClass"
+                }
+                fields = listOf {
+                    name = "classField"
+                    type = {
+                        name = "SelfReferenceClassField"
+                    }
+                }
+            })
+
+            val references = api.getAllReferencesOf(
+                worldType {
+                    name = "SelfReferenceClass"
+                },
+                worldType {
+                    name = "SelfReferenceClassField"
+                }
+            )
+            assertThat(references).hasSize(1)
+            assertStructPath(references[0], "classField")
+        }
     }
 }

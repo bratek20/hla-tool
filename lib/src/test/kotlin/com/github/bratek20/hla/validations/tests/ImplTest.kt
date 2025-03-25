@@ -274,7 +274,6 @@ class ValidationsImplTest {
             "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]",
 
             "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
-
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
@@ -283,6 +282,7 @@ class ValidationsImplTest {
             "Values for '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]': [1]",
 
             "Validating type 'SomeReferencingProperty'",
+
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyObject\"/'",
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyList\"/[*]'",
 
