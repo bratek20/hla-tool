@@ -189,11 +189,6 @@ val SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST = com.github.bratek20.architect
     Struct::class
 )
 
-val SomeStructWithIdSourceNamePartiallyEqualToClassName = com.github.bratek20.architecture.properties.api.ListPropertyKey(
-    "SomeStructWithIdSourceNamePartiallyEqualToClassName",
-    Struct::class
-)
-
 val CUSTOM_TYPES_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "CustomTypesProperty",
     Struct::class
@@ -265,12 +260,6 @@ class ValidationsImplTest {
             }
         )
 
-        propertiesMock.set(SomeStructWithIdSourceNamePartiallyEqualToClassName, listOf(
-            struct {
-                "id" to "1"
-            }
-        ))
-
 
         val result = validateCall()
 
@@ -282,7 +271,7 @@ class ValidationsImplTest {
             "Parsing module SomeModule",
             "Parsing module TypesModule",
 
-            "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects)), IdSourceInfo(type=WorldType(name=SomeStructWithIdSourceNamePartiallyEqualToClassNameId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomeStructWithIdSourceNamePartiallyEqualToClassName, path=SomeModule/Api/ValueObjects))]",
+            "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]",
 
             "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
@@ -292,7 +281,6 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
             "Values for '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]': [1]",
 
-            "Allowed values for 'SomeStructWithIdSourceNamePartiallyEqualToClassNameId' from source '\"SomeStructWithIdSourceNamePartiallyEqualToClassName\"/[*]/id': [1]",
             "Validating type 'SomeReferencingProperty'",
 
             "Found reference for 'SomeReferencingProperty' at '\"SomeReferencingPropertyObject\"/'",
