@@ -474,6 +474,13 @@ class ValidationsImplTest {
             SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST, emptyList<Struct>()
         )
 
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT,
+            struct {
+                "entries" to emptyList<Struct>()
+            }
+        )
+
         val result = validateCall()
 
         assertValidationResult(result) {
