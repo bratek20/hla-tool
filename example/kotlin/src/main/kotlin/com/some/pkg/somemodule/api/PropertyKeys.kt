@@ -51,11 +51,6 @@ val SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST_PROPERTY_KEY = com.github.brate
     SomeStructureWithMultipleUniqueNestedIds::class
 )
 
-val SOME_STRUCT_WITH_ID_SOURCE_NAME_PARTIALLY_EQUAL_TO_CLASS_NAME_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
-    "SomeStructWithIdSourceNamePartiallyEqualToClassName",
-    SomeStructWithIdSourceNamePartiallyEqualToClassName::class
-)
-
 val REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "ReferencingOtherProperty",
     OtherProperty::class

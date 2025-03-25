@@ -35,19 +35,6 @@ namespace SomeModule.Api {
         }
     }
 
-    public class SomeStructWithIdSourceNamePartiallyEqualToClassNameId: ValueObject {
-        public string Value { get; }
-
-        public SomeStructWithIdSourceNamePartiallyEqualToClassNameId(
-            string value
-        ) {
-            Value = value;
-        }
-        public override string ToString() {
-            return Value.ToString();
-        }
-    }
-
     public class SomeId2: ValueObject {
         public int Value { get; }
 
@@ -676,22 +663,6 @@ namespace SomeModule.Api {
         }
         public static CustomTypesProperty Create(Date date, DateRange dateRange) {
             return new CustomTypesProperty(TODO(date), SerializedDateRange.FromCustomType(dateRange));
-        }
-    }
-
-    public class SomeStructWithIdSourceNamePartiallyEqualToClassName: ValueObject {
-        readonly string id;
-
-        public SomeStructWithIdSourceNamePartiallyEqualToClassName(
-            string id
-        ) {
-            this.id = id;
-        }
-        public SomeStructWithIdSourceNamePartiallyEqualToClassNameId GetId() {
-            return new SomeStructWithIdSourceNamePartiallyEqualToClassNameId(id);
-        }
-        public static SomeStructWithIdSourceNamePartiallyEqualToClassName Create(SomeStructWithIdSourceNamePartiallyEqualToClassNameId id) {
-            return new SomeStructWithIdSourceNamePartiallyEqualToClassName(id.Value);
         }
     }
 }

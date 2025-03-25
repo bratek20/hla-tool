@@ -40,20 +40,6 @@ class SomeIntWrapper {
     }
 }
 
-class SomeStructWithIdSourceNamePartiallyEqualToClassNameId {
-    constructor(
-        public readonly value: string
-    ) {}
-
-    equals(other: SomeStructWithIdSourceNamePartiallyEqualToClassNameId): boolean {
-        return this.value === other.value
-    }
-
-    toString(): string {
-        return this.value.toString()
-    }
-}
-
 class SomeId2 {
     constructor(
         public readonly value: number
@@ -726,21 +712,5 @@ class CustomTypesProperty {
 
     getDateRange(): DateRange {
         return this.dateRange.toCustomType()
-    }
-}
-
-class SomeStructWithIdSourceNamePartiallyEqualToClassName {
-    private id = STRING
-
-    static create(
-        id: SomeStructWithIdSourceNamePartiallyEqualToClassNameId,
-    ): SomeStructWithIdSourceNamePartiallyEqualToClassName {
-        const instance = new SomeStructWithIdSourceNamePartiallyEqualToClassName()
-        instance.id = id.value
-        return instance
-    }
-
-    getId(): SomeStructWithIdSourceNamePartiallyEqualToClassNameId {
-        return new SomeStructWithIdSourceNamePartiallyEqualToClassNameId(this.id)
     }
 }

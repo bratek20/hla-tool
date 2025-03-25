@@ -21,11 +21,6 @@ fun diffSomeIntWrapper(given: SomeIntWrapper, expected: Int, path: String = ""):
     return ""
 }
 
-fun diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given: SomeStructWithIdSourceNamePartiallyEqualToClassNameId, expected: String, path: String = ""): String {
-    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
-    return ""
-}
-
 fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
@@ -633,20 +628,6 @@ fun diffCustomTypesProperty(given: CustomTypesProperty, expectedInit: ExpectedCu
 
     expected.dateRange?.let {
         if (diffDateRange(given.getDateRange(), it) != "") { result.add(diffDateRange(given.getDateRange(), it, "${path}dateRange.")) }
-    }
-
-    return result.joinToString("\n")
-}
-
-data class ExpectedSomeStructWithIdSourceNamePartiallyEqualToClassName(
-    var id: String? = null,
-)
-fun diffSomeStructWithIdSourceNamePartiallyEqualToClassName(given: SomeStructWithIdSourceNamePartiallyEqualToClassName, expectedInit: ExpectedSomeStructWithIdSourceNamePartiallyEqualToClassName.() -> Unit, path: String = ""): String {
-    val expected = ExpectedSomeStructWithIdSourceNamePartiallyEqualToClassName().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.id?.let {
-        if (diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given.getId(), it) != "") { result.add(diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given.getId(), it, "${path}id.")) }
     }
 
     return result.joinToString("\n")

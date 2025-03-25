@@ -11,11 +11,6 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
-    export function someStructWithIdSourceNamePartiallyEqualToClassNameId(given: SomeStructWithIdSourceNamePartiallyEqualToClassNameId, expected: string) {
-        const diff = diffSomeStructWithIdSourceNamePartiallyEqualToClassNameId(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
     export function someId2(given: SomeId2, expected: number) {
         const diff = diffSomeId2(given, expected)
         AssertEquals(diff, "", diff)
@@ -153,11 +148,6 @@ namespace SomeModule.Assert {
 
     export function customTypesProperty(given: CustomTypesProperty, expected: ExpectedCustomTypesProperty) {
         const diff = diffCustomTypesProperty(given, expected)
-        AssertEquals(diff, "", diff)
-    }
-
-    export function someStructWithIdSourceNamePartiallyEqualToClassName(given: SomeStructWithIdSourceNamePartiallyEqualToClassName, expected: ExpectedSomeStructWithIdSourceNamePartiallyEqualToClassName) {
-        const diff = diffSomeStructWithIdSourceNamePartiallyEqualToClassName(given, expected)
         AssertEquals(diff, "", diff)
     }
 
