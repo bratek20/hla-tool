@@ -459,6 +459,36 @@ class ValidationsImplTest {
     }
 
     @Test
+    fun `should not fail if unique id in structures is empty`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_LIST, listOf()
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_NESTED_IDS, emptyList<Struct>()
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST, emptyList<Struct>()
+        )
+
+        propertiesMock.set(
+            SOME_STRUCTURE_WITH_UNIQUE_IDS_OBJECT,
+            struct {
+                "entries" to emptyList<Struct>()
+            }
+        )
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = true
+        }
+    }
+
+    @Test
     fun `should not fail if unique is correct`() {
         setup()
 
