@@ -117,6 +117,22 @@ Properties
     SomeStructureWithMultipleUniqueNestedIds
         moreNestedFields: SomeStructureWithUniqueNestedIds[]
 
+    SomeClassWIthOtherClassUniqueIds
+        otherClass: OtherClassWIthUniqueId
+
+    SomeStructWithNestedOtherClassUniqueIds
+        someNestedWithUniqueIds: SomeClassWIthOtherClassUniqueIds[]
+
+    StageTD
+        tasks: OtherClassWIthUniqueId[]
+
+    SegmentTD
+        stages: StageTD[]
+
+    MilestoneEventTD
+        id: string
+        segments: SegmentTD[]
+
     NestedValue
         value: string
     OptionalFieldProperty
@@ -135,6 +151,8 @@ Properties
     "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]
     "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
     "SomeStructureWithUniqueIdsMultipleNest" -> SomeStructureWithMultipleUniqueNestedIds[]
+    "SomeStructWithNestedOtherClassUniqueIds" -> SomeStructWithNestedOtherClassUniqueIds[]
+    "MilestoneEventTD" -> MilestoneEventTD[]
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]
