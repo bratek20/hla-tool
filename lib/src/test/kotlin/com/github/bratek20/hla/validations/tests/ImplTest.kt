@@ -402,18 +402,23 @@ class ValidationsImplTest {
             },
             struct {
                 "id" to "2"
+                "segments" to emptyList<Struct>()
+            },
+            struct {
+                "id" to "3"
+                "segments" to structList(
+                    {
+                        "stages" to emptyList<Struct>()
+                    }
+                )
+            },
+            struct {
+                "id" to "1"
                 "segments" to structList(
                     {
                         "stages" to structList(
                             {
-                                "tasks" to structList(
-                                    {
-                                        "uniqueId" to "2"
-                                    },
-                                    {
-                                        "uniqueId" to "3"
-                                    }
-                                )
+                                "tasks" to emptyList<Struct>()
                             }
                         )
                     }
