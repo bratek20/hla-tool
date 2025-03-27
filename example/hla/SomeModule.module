@@ -123,15 +123,15 @@ Properties
     SomeStructWithNestedOtherClassUniqueIds
         someNestedWithUniqueIds: SomeClassWIthOtherClassUniqueIds[]
 
-    StageTD
-        tasks: OtherClassWIthUniqueId[]
+    NestedClassLevel2
+        uniqueIds: OtherClassWIthUniqueId[]
 
-    SegmentTD
-        stages: StageTD[]
+    NestedClassLevel1
+        nestLevel2: NestedClassLevel2[]
 
-    MilestoneEventTD
+    ComplexStructureWithNestedUniqueIds
         id: string
-        segments: SegmentTD[]
+        nestLevel1: NestedClassLevel1[]
 
     NestedValue
         value: string
@@ -152,7 +152,7 @@ Properties
     "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
     "SomeStructureWithUniqueIdsMultipleNest" -> SomeStructureWithMultipleUniqueNestedIds[]
     "SomeStructWithNestedOtherClassUniqueIds" -> SomeStructWithNestedOtherClassUniqueIds[]
-    "MilestoneEventTD" -> MilestoneEventTD[]
+    "ComplexStructureWithNestedUniqueIds" -> ComplexStructureWithNestedUniqueIds[]
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]

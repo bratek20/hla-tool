@@ -202,8 +202,8 @@ val SomeStructWithNestedOtherClassUniqueIds = com.github.bratek20.architecture.p
     Struct::class
 )
 
-val MilestoneEventTDs = com.github.bratek20.architecture.properties.api.ListPropertyKey(
-    "MilestoneEventTD",
+val COMPLEX_SRUCTURE_WITH_NESTED_UNIQUE_IDS = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "ComplexStructureWithNestedUniqueIds",
     Struct::class
 )
 
@@ -291,14 +291,14 @@ class ValidationsImplTest {
             }
         ))
 
-        propertiesMock.set(MilestoneEventTDs, listOf(
+        propertiesMock.set(COMPLEX_SRUCTURE_WITH_NESTED_UNIQUE_IDS, listOf(
             struct {
                 "id" to "1"
-                "segments" to structList(
+                "nestLevel1" to structList(
                     {
-                        "stages" to structList(
+                        "nestLevel2" to structList(
                             {
-                                "tasks" to structList(
+                                "uniqueIds" to structList(
                                     {
                                         "uniqueId" to "2"
                                     },
@@ -313,11 +313,11 @@ class ValidationsImplTest {
             },
             struct {
                 "id" to "2"
-                "segments" to structList(
+                "nestLevel1" to structList(
                     {
-                        "stages" to structList(
+                        "nestLevel2" to structList(
                             {
-                                "tasks" to structList(
+                                "uniqueIds" to structList(
                                     {
                                         "uniqueId" to "2"
                                     },
@@ -380,14 +380,14 @@ class ValidationsImplTest {
                 SomeIdOkValidator::class.java
             )
         }
-        propertiesMock.set(MilestoneEventTDs, listOf(
+        propertiesMock.set(COMPLEX_SRUCTURE_WITH_NESTED_UNIQUE_IDS, listOf(
             struct {
                 "id" to "1"
-                "segments" to structList(
+                "nestLevel1" to structList(
                     {
-                        "stages" to structList(
+                        "nestLevel2" to structList(
                             {
-                                "tasks" to structList(
+                                "uniqueIds" to structList(
                                     {
                                         "uniqueId" to "2"
                                     },
@@ -402,23 +402,23 @@ class ValidationsImplTest {
             },
             struct {
                 "id" to "2"
-                "segments" to emptyList<Struct>()
+                "nestLevel1" to emptyList<Struct>()
             },
             struct {
                 "id" to "3"
-                "segments" to structList(
+                "nestLevel1" to structList(
                     {
-                        "stages" to emptyList<Struct>()
+                        "nestLevel2" to emptyList<Struct>()
                     }
                 )
             },
             struct {
                 "id" to "1"
-                "segments" to structList(
+                "nestLevel1" to structList(
                     {
-                        "stages" to structList(
+                        "nestLevel2" to structList(
                             {
-                                "tasks" to emptyList<Struct>()
+                                "uniqueIds" to emptyList<Struct>()
                             }
                         )
                     }
