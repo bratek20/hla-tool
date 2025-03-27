@@ -7,6 +7,9 @@ ValueObjects
         id: OtherId
         amount: int
 
+    OtherClassWIthUniqueId
+        uniqueId: string (unique)
+
 
 DataClasses
     OtherData

@@ -62,4 +62,20 @@ namespace OtherModule.Api {
             return new OtherClass(id.Value, amount);
         }
     }
+
+    public class OtherClassWIthUniqueId: ValueObject {
+        readonly string uniqueId;
+
+        public OtherClassWIthUniqueId(
+            string uniqueId
+        ) {
+            this.uniqueId = uniqueId;
+        }
+        public string GetUniqueId() {
+            return uniqueId;
+        }
+        public static OtherClassWIthUniqueId Create(string uniqueId) {
+            return new OtherClassWIthUniqueId(uniqueId);
+        }
+    }
 }

@@ -139,6 +139,27 @@ namespace SomeModule.Fixtures {
         public List<Action<SomeStructureWithUniqueNestedIdsDef>> MoreNestedFields { get; set; } = new List<Action<SomeStructureWithUniqueNestedIdsDef>>();
     }
 
+    public class SomeClassWIthOtherClassUniqueIdsDef {
+        public Action<OtherClassWIthUniqueIdDef> OtherClass { get; set; } = (_) => {};
+    }
+
+    public class SomeStructWithNestedOtherClassUniqueIdsDef {
+        public List<Action<SomeClassWIthOtherClassUniqueIdsDef>> SomeNestedWithUniqueIds { get; set; } = new List<Action<SomeClassWIthOtherClassUniqueIdsDef>>();
+    }
+
+    public class NestedClassLevel2Def {
+        public List<Action<OtherClassWIthUniqueIdDef>> UniqueIds { get; set; } = new List<Action<OtherClassWIthUniqueIdDef>>();
+    }
+
+    public class NestedClassLevel1Def {
+        public List<Action<NestedClassLevel2Def>> NestLevel2 { get; set; } = new List<Action<NestedClassLevel2Def>>();
+    }
+
+    public class ComplexStructureWithNestedUniqueIdsDef {
+        public string Id { get; set; } = "someValue";
+        public List<Action<NestedClassLevel1Def>> NestLevel1 { get; set; } = new List<Action<NestedClassLevel1Def>>();
+    }
+
     public class NestedValueDef {
         public string Value { get; set; } = "someValue";
     }
@@ -326,6 +347,36 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeStructureWithMultipleUniqueNestedIds.Create(def.MoreNestedFields.Select(it => BuildSomeStructureWithUniqueNestedIds(it)).ToList());
+        }
+        public static SomeClassWIthOtherClassUniqueIds BuildSomeClassWIthOtherClassUniqueIds(Action<SomeClassWIthOtherClassUniqueIdsDef> init = null) {
+            var def = new SomeClassWIthOtherClassUniqueIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeClassWIthOtherClassUniqueIds.Create(OtherModuleBuilders.BuildOtherClassWIthUniqueId(def.OtherClass));
+        }
+        public static SomeStructWithNestedOtherClassUniqueIds BuildSomeStructWithNestedOtherClassUniqueIds(Action<SomeStructWithNestedOtherClassUniqueIdsDef> init = null) {
+            var def = new SomeStructWithNestedOtherClassUniqueIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeStructWithNestedOtherClassUniqueIds.Create(def.SomeNestedWithUniqueIds.Select(it => BuildSomeClassWIthOtherClassUniqueIds(it)).ToList());
+        }
+        public static NestedClassLevel2 BuildNestedClassLevel2(Action<NestedClassLevel2Def> init = null) {
+            var def = new NestedClassLevel2Def();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return NestedClassLevel2.Create(def.UniqueIds.Select(it => OtherModuleBuilders.BuildOtherClassWIthUniqueId(it)).ToList());
+        }
+        public static NestedClassLevel1 BuildNestedClassLevel1(Action<NestedClassLevel1Def> init = null) {
+            var def = new NestedClassLevel1Def();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return NestedClassLevel1.Create(def.NestLevel2.Select(it => BuildNestedClassLevel2(it)).ToList());
+        }
+        public static ComplexStructureWithNestedUniqueIds BuildComplexStructureWithNestedUniqueIds(Action<ComplexStructureWithNestedUniqueIdsDef> init = null) {
+            var def = new ComplexStructureWithNestedUniqueIdsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ComplexStructureWithNestedUniqueIds.Create(def.Id, def.NestLevel1.Select(it => BuildNestedClassLevel1(it)).ToList());
         }
         public static NestedValue BuildNestedValue(Action<NestedValueDef> init = null) {
             var def = new NestedValueDef();

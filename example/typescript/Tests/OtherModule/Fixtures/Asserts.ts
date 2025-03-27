@@ -16,6 +16,11 @@ namespace OtherModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function otherClassWIthUniqueId(given: OtherClassWIthUniqueId, expected: ExpectedOtherClassWIthUniqueId) {
+        const diff = diffOtherClassWIthUniqueId(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function otherData(given: OtherData, expected: ExpectedOtherData) {
         const diff = diffOtherData(given, expected)
         AssertEquals(diff, "", diff)

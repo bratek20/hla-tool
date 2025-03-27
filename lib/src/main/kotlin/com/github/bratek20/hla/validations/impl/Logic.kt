@@ -203,11 +203,9 @@ private class UniqueIdValidator(
         initialPathIndex: Int? = null
     ): List<PropertyValuePathLogic> {
         val initialPath = if(initialPathIndex != null) "[${initialPathIndex}]/" else ""
-        val pathToCheckSize = getInitialPathToCheckSize(initialPath)
 
         return references.flatMap { ref ->
-            expandPathExceptLastListEntry(ref.value, propertyKey, initialPath)
-                .filter { expandedPath -> traverser.getListSizeAt(createPropertyValuePathLogic(propertyKey,"$pathToCheckSize$expandedPath/${info.getFieldName()}") ) > 0 }
+            expandPathExceptLastListEntryCheckingInitialSize(ref.value, propertyKey, initialPath)
                 .map { expandedPath ->
                     PropertyValuePathLogic(propertyKey.getName(), StructPath("$initialPath$expandedPath/${info.getFieldName()}"))
                 }
@@ -218,16 +216,24 @@ private class UniqueIdValidator(
         return PropertyValuePathLogic(propertyKey.getName(), StructPath(structPath))
     }
 
+    private fun expandPathExceptLastListEntryCheckingInitialSize(path: String, propertyKey: KeyDefinition, initialPath: String) : List<String> {
+        val pathToCheckSize = getInitialPathToCheckSize(initialPath)
+        val size = traverser.getListSizeAt(createPropertyValuePathLogic(propertyKey, "$pathToCheckSize$path"))
+        if(size == 0) {
+            return emptyList()
+        }
+        return expandPathExceptLastListEntry(path, propertyKey, initialPath)
+    }
+
     private fun expandPathExceptLastListEntry(path: String, propertyKey: KeyDefinition, initialPath: String): List<String> {
         val regex = Regex("\\[\\*\\]")
         val count = regex.findAll(path).count()
-        val initialPathToCheckSize = getInitialPathToCheckSize(initialPath)
 
         return if (count > 1) {
             val match = regex.find(path) ?: return listOf(path)
 
             val baseRef = path.substringBefore(match.value) + "[*]"
-            val size = traverser.getListSizeAt(createPropertyValuePathLogic(propertyKey, "$initialPathToCheckSize$baseRef"))
+            val size = traverser.getListSizeAt(createPropertyValuePathLogic(propertyKey, "$initialPath$baseRef"))
 
             (0 until size).flatMap { index ->
                 val resolvedPath = path.replaceFirst("[*]", "[$index]")

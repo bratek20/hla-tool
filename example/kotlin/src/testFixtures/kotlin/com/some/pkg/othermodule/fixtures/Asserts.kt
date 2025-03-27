@@ -21,6 +21,11 @@ fun assertOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> U
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertOtherClassWIthUniqueId(given: OtherClassWIthUniqueId, expectedInit: ExpectedOtherClassWIthUniqueId.() -> Unit) {
+    val diff = diffOtherClassWIthUniqueId(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertOtherData(given: OtherData, expectedInit: ExpectedOtherData.() -> Unit) {
     val diff = diffOtherData(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

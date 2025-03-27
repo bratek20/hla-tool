@@ -51,6 +51,16 @@ val SOME_STRUCTURE_WITH_UNIQUE_IDS_MULTIPLE_NEST_PROPERTY_KEY = com.github.brate
     SomeStructureWithMultipleUniqueNestedIds::class
 )
 
+val SOME_STRUCT_WITH_NESTED_OTHER_CLASS_UNIQUE_IDS_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeStructWithNestedOtherClassUniqueIds",
+    SomeStructWithNestedOtherClassUniqueIds::class
+)
+
+val COMPLEX_STRUCTURE_WITH_NESTED_UNIQUE_IDS_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "ComplexStructureWithNestedUniqueIds",
+    ComplexStructureWithNestedUniqueIds::class
+)
+
 val REFERENCING_OTHER_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "ReferencingOtherProperty",
     OtherProperty::class

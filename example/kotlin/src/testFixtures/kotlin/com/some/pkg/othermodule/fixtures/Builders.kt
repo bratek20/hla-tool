@@ -32,6 +32,16 @@ fun otherClass(init: OtherClassDef.() -> Unit = {}): OtherClass {
     )
 }
 
+data class OtherClassWIthUniqueIdDef(
+    var uniqueId: String = "someValue",
+)
+fun otherClassWIthUniqueId(init: OtherClassWIthUniqueIdDef.() -> Unit = {}): OtherClassWIthUniqueId {
+    val def = OtherClassWIthUniqueIdDef().apply(init)
+    return OtherClassWIthUniqueId.create(
+        uniqueId = def.uniqueId,
+    )
+}
+
 data class OtherDataDef(
     var id: Int = 0,
 )

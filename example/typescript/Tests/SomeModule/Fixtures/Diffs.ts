@@ -547,6 +547,80 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeClassWIthOtherClassUniqueIds {
+        otherClass?: OtherModule.ExpectedOtherClassWIthUniqueId,
+    }
+    export function diffSomeClassWIthOtherClassUniqueIds(given: SomeClassWIthOtherClassUniqueIds, expected: ExpectedSomeClassWIthOtherClassUniqueIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.otherClass !== undefined) {
+            if (OtherModule.diffOtherClassWIthUniqueId(given.getOtherClass(), expected.otherClass) != "") { result.push(OtherModule.diffOtherClassWIthUniqueId(given.getOtherClass(), expected.otherClass, `${path}otherClass.`)) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeStructWithNestedOtherClassUniqueIds {
+        someNestedWithUniqueIds?: ExpectedSomeClassWIthOtherClassUniqueIds[],
+    }
+    export function diffSomeStructWithNestedOtherClassUniqueIds(given: SomeStructWithNestedOtherClassUniqueIds, expected: ExpectedSomeStructWithNestedOtherClassUniqueIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.someNestedWithUniqueIds !== undefined) {
+            if (given.getSomeNestedWithUniqueIds().length != expected.someNestedWithUniqueIds.length) { result.push(`${path}someNestedWithUniqueIds size ${given.getSomeNestedWithUniqueIds().length} != ${expected.someNestedWithUniqueIds.length}`) }
+            given.getSomeNestedWithUniqueIds().forEach((entry, idx) => { if (diffSomeClassWIthOtherClassUniqueIds(entry, expected.someNestedWithUniqueIds[idx]) != "") { result.push(diffSomeClassWIthOtherClassUniqueIds(entry, expected.someNestedWithUniqueIds[idx], `${path}someNestedWithUniqueIds[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedNestedClassLevel2 {
+        uniqueIds?: OtherModule.ExpectedOtherClassWIthUniqueId[],
+    }
+    export function diffNestedClassLevel2(given: NestedClassLevel2, expected: ExpectedNestedClassLevel2, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.uniqueIds !== undefined) {
+            if (given.getUniqueIds().length != expected.uniqueIds.length) { result.push(`${path}uniqueIds size ${given.getUniqueIds().length} != ${expected.uniqueIds.length}`) }
+            given.getUniqueIds().forEach((entry, idx) => { if (OtherModule.diffOtherClassWIthUniqueId(entry, expected.uniqueIds[idx]) != "") { result.push(OtherModule.diffOtherClassWIthUniqueId(entry, expected.uniqueIds[idx], `${path}uniqueIds[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedNestedClassLevel1 {
+        nestLevel2?: ExpectedNestedClassLevel2[],
+    }
+    export function diffNestedClassLevel1(given: NestedClassLevel1, expected: ExpectedNestedClassLevel1, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.nestLevel2 !== undefined) {
+            if (given.getNestLevel2().length != expected.nestLevel2.length) { result.push(`${path}nestLevel2 size ${given.getNestLevel2().length} != ${expected.nestLevel2.length}`) }
+            given.getNestLevel2().forEach((entry, idx) => { if (diffNestedClassLevel2(entry, expected.nestLevel2[idx]) != "") { result.push(diffNestedClassLevel2(entry, expected.nestLevel2[idx], `${path}nestLevel2[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedComplexStructureWithNestedUniqueIds {
+        id?: string,
+        nestLevel1?: ExpectedNestedClassLevel1[],
+    }
+    export function diffComplexStructureWithNestedUniqueIds(given: ComplexStructureWithNestedUniqueIds, expected: ExpectedComplexStructureWithNestedUniqueIds, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (given.getId() != expected.id) { result.push(`${path}id ${given.getId()} != ${expected.id}`) }
+        }
+
+        if (expected.nestLevel1 !== undefined) {
+            if (given.getNestLevel1().length != expected.nestLevel1.length) { result.push(`${path}nestLevel1 size ${given.getNestLevel1().length} != ${expected.nestLevel1.length}`) }
+            given.getNestLevel1().forEach((entry, idx) => { if (diffNestedClassLevel1(entry, expected.nestLevel1[idx]) != "") { result.push(diffNestedClassLevel1(entry, expected.nestLevel1[idx], `${path}nestLevel1[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedNestedValue {
         value?: string,
     }

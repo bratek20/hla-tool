@@ -367,6 +367,64 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeClassWIthOtherClassUniqueIdsDef {
+        otherClass?: OtherModule.Builder.OtherClassWIthUniqueIdDef,
+    }
+    export function someClassWIthOtherClassUniqueIds(def?: SomeClassWIthOtherClassUniqueIdsDef): SomeClassWIthOtherClassUniqueIds {
+        const final_otherClass = def?.otherClass ?? {}
+
+        return SomeClassWIthOtherClassUniqueIds.create(
+            OtherModule.Builder.otherClassWIthUniqueId(final_otherClass),
+        )
+    }
+
+    export interface SomeStructWithNestedOtherClassUniqueIdsDef {
+        someNestedWithUniqueIds?: SomeModule.Builder.SomeClassWIthOtherClassUniqueIdsDef[],
+    }
+    export function someStructWithNestedOtherClassUniqueIds(def?: SomeStructWithNestedOtherClassUniqueIdsDef): SomeStructWithNestedOtherClassUniqueIds {
+        const final_someNestedWithUniqueIds = def?.someNestedWithUniqueIds ?? []
+
+        return SomeStructWithNestedOtherClassUniqueIds.create(
+            final_someNestedWithUniqueIds.map(it => SomeModule.Builder.someClassWIthOtherClassUniqueIds(it)),
+        )
+    }
+
+    export interface NestedClassLevel2Def {
+        uniqueIds?: OtherModule.Builder.OtherClassWIthUniqueIdDef[],
+    }
+    export function nestedClassLevel2(def?: NestedClassLevel2Def): NestedClassLevel2 {
+        const final_uniqueIds = def?.uniqueIds ?? []
+
+        return NestedClassLevel2.create(
+            final_uniqueIds.map(it => OtherModule.Builder.otherClassWIthUniqueId(it)),
+        )
+    }
+
+    export interface NestedClassLevel1Def {
+        nestLevel2?: SomeModule.Builder.NestedClassLevel2Def[],
+    }
+    export function nestedClassLevel1(def?: NestedClassLevel1Def): NestedClassLevel1 {
+        const final_nestLevel2 = def?.nestLevel2 ?? []
+
+        return NestedClassLevel1.create(
+            final_nestLevel2.map(it => SomeModule.Builder.nestedClassLevel2(it)),
+        )
+    }
+
+    export interface ComplexStructureWithNestedUniqueIdsDef {
+        id?: string,
+        nestLevel1?: SomeModule.Builder.NestedClassLevel1Def[],
+    }
+    export function complexStructureWithNestedUniqueIds(def?: ComplexStructureWithNestedUniqueIdsDef): ComplexStructureWithNestedUniqueIds {
+        const final_id = def?.id ?? "someValue"
+        const final_nestLevel1 = def?.nestLevel1 ?? []
+
+        return ComplexStructureWithNestedUniqueIds.create(
+            final_id,
+            final_nestLevel1.map(it => SomeModule.Builder.nestedClassLevel1(it)),
+        )
+    }
+
     export interface NestedValueDef {
         value?: string,
     }

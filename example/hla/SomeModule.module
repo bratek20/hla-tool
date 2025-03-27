@@ -117,6 +117,22 @@ Properties
     SomeStructureWithMultipleUniqueNestedIds
         moreNestedFields: SomeStructureWithUniqueNestedIds[]
 
+    SomeClassWIthOtherClassUniqueIds
+        otherClass: OtherClassWIthUniqueId
+
+    SomeStructWithNestedOtherClassUniqueIds
+        someNestedWithUniqueIds: SomeClassWIthOtherClassUniqueIds[]
+
+    NestedClassLevel2
+        uniqueIds: OtherClassWIthUniqueId[]
+
+    NestedClassLevel1
+        nestLevel2: NestedClassLevel2[]
+
+    ComplexStructureWithNestedUniqueIds
+        id: string
+        nestLevel1: NestedClassLevel1[]
+
     NestedValue
         value: string
     OptionalFieldProperty
@@ -135,6 +151,8 @@ Properties
     "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]
     "SomeStructureWithUniqueIdsObject" -> SomeStructureWithUniqueIds
     "SomeStructureWithUniqueIdsMultipleNest" -> SomeStructureWithMultipleUniqueNestedIds[]
+    "SomeStructWithNestedOtherClassUniqueIds" -> SomeStructWithNestedOtherClassUniqueIds[]
+    "ComplexStructureWithNestedUniqueIds" -> ComplexStructureWithNestedUniqueIds[]
 
     "ReferencingOtherProperty" -> OtherProperty
     "OptionalFieldProperties" -> OptionalFieldProperty[]
