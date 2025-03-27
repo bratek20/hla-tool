@@ -7,6 +7,8 @@ import com.github.bratek20.architecture.properties.PropertiesMocks
 import com.github.bratek20.architecture.structs.api.Struct
 import com.github.bratek20.architecture.structs.api.struct
 import com.github.bratek20.architecture.structs.api.structList
+import com.github.bratek20.hla.definitions.api.KeyDefinition
+import com.github.bratek20.hla.definitions.fixtures.keyDefinition
 import com.github.bratek20.hla.facade.HlaFacadeTest
 import com.github.bratek20.hla.facade.fixtures.profileName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesExtraInfo
@@ -362,9 +364,64 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
             "Unique id infos: [UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=uniqueId, parent=WorldType(name=OtherClassWIthUniqueId, path=OtherModule/Api/ValueObjects)), UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SimpleModule/Api/ValueObjects))]"
-
         )
 
+
+        assertValidationResult(result) {
+            ok = true
+        }
+    }
+
+    @Test
+    fun `should pass unique validation for complex structures` () {
+        setup {
+            typeValidatorsToInject = listOf(
+                SomeReferencingPropertyOkValidator::class.java,
+                SomeIdOkValidator::class.java
+            )
+        }
+        propertiesMock.set(MilestoneEventTDs, listOf(
+            struct {
+                "id" to "1"
+                "segments" to structList(
+                    {
+                        "stages" to structList(
+                            {
+                                "tasks" to structList(
+                                    {
+                                        "uniqueId" to "2"
+                                    },
+                                    {
+                                        "uniqueId" to "3"
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+            },
+            struct {
+                "id" to "2"
+                "segments" to structList(
+                    {
+                        "stages" to structList(
+                            {
+                                "tasks" to structList(
+                                    {
+                                        "uniqueId" to "2"
+                                    },
+                                    {
+                                        "uniqueId" to "3"
+                                    }
+                                )
+                            }
+                        )
+                    }
+                )
+            }
+        ))
+
+        val result = validateCall()
 
         assertValidationResult(result) {
             ok = true
@@ -707,6 +764,15 @@ class ValidationsImplTest {
             ok = true
         }
     }
+
+//    fun getListSizeAt(path: PropertyValuePathLogic): Int {
+//        return 0
+//    }
+//
+//    @Test
+//    fun `XXX` () {
+//        expandPathExceptLastListEntry("", keyDefinition{name = ""}, "", this::getListSizeAt)
+//    }
 
 
     @Nested
