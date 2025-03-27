@@ -203,11 +203,9 @@ private class UniqueIdValidator(
         initialPathIndex: Int? = null
     ): List<PropertyValuePathLogic> {
         val initialPath = if(initialPathIndex != null) "[${initialPathIndex}]/" else ""
-        val pathToCheckSize = getInitialPathToCheckSize(initialPath)
 
         return references.flatMap { ref ->
             expandPathExceptLastListEntryCheckingInitialSize(ref.value, propertyKey, initialPath)
-                .filter { expandedPath -> traverser.getListSizeAt(createPropertyValuePathLogic(propertyKey,"$pathToCheckSize$expandedPath/${info.getFieldName()}") ) > 0 }
                 .map { expandedPath ->
                     PropertyValuePathLogic(propertyKey.getName(), StructPath("$initialPath$expandedPath/${info.getFieldName()}"))
                 }
