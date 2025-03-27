@@ -42,6 +42,19 @@ namespace OtherModule {
         return result.join("\n")
     }
 
+    export interface ExpectedOtherClassWIthUniqueId {
+        uniqueId?: string,
+    }
+    export function diffOtherClassWIthUniqueId(given: OtherClassWIthUniqueId, expected: ExpectedOtherClassWIthUniqueId, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.uniqueId !== undefined) {
+            if (given.getUniqueId() != expected.uniqueId) { result.push(`${path}uniqueId ${given.getUniqueId()} != ${expected.uniqueId}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedOtherData {
         id?: number,
     }

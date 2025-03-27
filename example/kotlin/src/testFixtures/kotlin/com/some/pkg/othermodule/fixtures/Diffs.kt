@@ -47,6 +47,20 @@ fun diffOtherClass(given: OtherClass, expectedInit: ExpectedOtherClass.() -> Uni
     return result.joinToString("\n")
 }
 
+data class ExpectedOtherClassWIthUniqueId(
+    var uniqueId: String? = null,
+)
+fun diffOtherClassWIthUniqueId(given: OtherClassWIthUniqueId, expectedInit: ExpectedOtherClassWIthUniqueId.() -> Unit, path: String = ""): String {
+    val expected = ExpectedOtherClassWIthUniqueId().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.uniqueId?.let {
+        if (given.getUniqueId() != it) { result.add("${path}uniqueId ${given.getUniqueId()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedOtherData(
     var id: Int? = null,
 )

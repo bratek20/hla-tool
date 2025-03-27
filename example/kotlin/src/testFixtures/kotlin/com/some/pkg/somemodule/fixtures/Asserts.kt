@@ -150,6 +150,31 @@ fun assertSomeStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMulti
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomeClassWIthOtherClassUniqueIds(given: SomeClassWIthOtherClassUniqueIds, expectedInit: ExpectedSomeClassWIthOtherClassUniqueIds.() -> Unit) {
+    val diff = diffSomeClassWIthOtherClassUniqueIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeStructWithNestedOtherClassUniqueIds(given: SomeStructWithNestedOtherClassUniqueIds, expectedInit: ExpectedSomeStructWithNestedOtherClassUniqueIds.() -> Unit) {
+    val diff = diffSomeStructWithNestedOtherClassUniqueIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertNestedClassLevel2(given: NestedClassLevel2, expectedInit: ExpectedNestedClassLevel2.() -> Unit) {
+    val diff = diffNestedClassLevel2(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertNestedClassLevel1(given: NestedClassLevel1, expectedInit: ExpectedNestedClassLevel1.() -> Unit) {
+    val diff = diffNestedClassLevel1(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertComplexStructureWithNestedUniqueIds(given: ComplexStructureWithNestedUniqueIds, expectedInit: ExpectedComplexStructureWithNestedUniqueIds.() -> Unit) {
+    val diff = diffComplexStructureWithNestedUniqueIds(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertNestedValue(given: NestedValue, expectedInit: ExpectedNestedValue.() -> Unit) {
     val diff = diffNestedValue(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

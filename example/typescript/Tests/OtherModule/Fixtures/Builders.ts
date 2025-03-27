@@ -33,6 +33,17 @@ namespace OtherModule.Builder {
         )
     }
 
+    export interface OtherClassWIthUniqueIdDef {
+        uniqueId?: string,
+    }
+    export function otherClassWIthUniqueId(def?: OtherClassWIthUniqueIdDef): OtherClassWIthUniqueId {
+        const final_uniqueId = def?.uniqueId ?? "someValue"
+
+        return OtherClassWIthUniqueId.create(
+            final_uniqueId,
+        )
+    }
+
     export interface OtherDataDef {
         id?: number,
     }

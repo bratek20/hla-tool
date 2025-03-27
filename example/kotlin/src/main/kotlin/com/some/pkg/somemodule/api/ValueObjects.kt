@@ -696,6 +696,103 @@ data class SomeStructureWithMultipleUniqueNestedIds(
     }
 }
 
+data class SomeClassWIthOtherClassUniqueIds(
+    private val otherClass: OtherClassWIthUniqueId,
+) {
+    fun getOtherClass(): OtherClassWIthUniqueId {
+        return this.otherClass
+    }
+
+    companion object {
+        fun create(
+            otherClass: OtherClassWIthUniqueId,
+        ): SomeClassWIthOtherClassUniqueIds {
+            return SomeClassWIthOtherClassUniqueIds(
+                otherClass = otherClass,
+            )
+        }
+    }
+}
+
+data class SomeStructWithNestedOtherClassUniqueIds(
+    private val someNestedWithUniqueIds: List<SomeClassWIthOtherClassUniqueIds>,
+) {
+    fun getSomeNestedWithUniqueIds(): List<SomeClassWIthOtherClassUniqueIds> {
+        return this.someNestedWithUniqueIds
+    }
+
+    companion object {
+        fun create(
+            someNestedWithUniqueIds: List<SomeClassWIthOtherClassUniqueIds>,
+        ): SomeStructWithNestedOtherClassUniqueIds {
+            return SomeStructWithNestedOtherClassUniqueIds(
+                someNestedWithUniqueIds = someNestedWithUniqueIds,
+            )
+        }
+    }
+}
+
+data class NestedClassLevel2(
+    private val uniqueIds: List<OtherClassWIthUniqueId>,
+) {
+    fun getUniqueIds(): List<OtherClassWIthUniqueId> {
+        return this.uniqueIds
+    }
+
+    companion object {
+        fun create(
+            uniqueIds: List<OtherClassWIthUniqueId>,
+        ): NestedClassLevel2 {
+            return NestedClassLevel2(
+                uniqueIds = uniqueIds,
+            )
+        }
+    }
+}
+
+data class NestedClassLevel1(
+    private val nestLevel2: List<NestedClassLevel2>,
+) {
+    fun getNestLevel2(): List<NestedClassLevel2> {
+        return this.nestLevel2
+    }
+
+    companion object {
+        fun create(
+            nestLevel2: List<NestedClassLevel2>,
+        ): NestedClassLevel1 {
+            return NestedClassLevel1(
+                nestLevel2 = nestLevel2,
+            )
+        }
+    }
+}
+
+data class ComplexStructureWithNestedUniqueIds(
+    private val id: String,
+    private val nestLevel1: List<NestedClassLevel1>,
+) {
+    fun getId(): String {
+        return this.id
+    }
+
+    fun getNestLevel1(): List<NestedClassLevel1> {
+        return this.nestLevel1
+    }
+
+    companion object {
+        fun create(
+            id: String,
+            nestLevel1: List<NestedClassLevel1>,
+        ): ComplexStructureWithNestedUniqueIds {
+            return ComplexStructureWithNestedUniqueIds(
+                id = id,
+                nestLevel1 = nestLevel1,
+            )
+        }
+    }
+}
+
 data class NestedValue(
     private val value: String,
 ) {

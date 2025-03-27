@@ -612,6 +612,92 @@ namespace SomeModule.Api {
         }
     }
 
+    public class SomeClassWIthOtherClassUniqueIds: ValueObject {
+        readonly OtherClassWIthUniqueId otherClass;
+
+        public SomeClassWIthOtherClassUniqueIds(
+            OtherClassWIthUniqueId otherClass
+        ) {
+            this.otherClass = otherClass;
+        }
+        public OtherClassWIthUniqueId GetOtherClass() {
+            return otherClass;
+        }
+        public static SomeClassWIthOtherClassUniqueIds Create(OtherClassWIthUniqueId otherClass) {
+            return new SomeClassWIthOtherClassUniqueIds(otherClass);
+        }
+    }
+
+    public class SomeStructWithNestedOtherClassUniqueIds: ValueObject {
+        readonly List<SomeClassWIthOtherClassUniqueIds> someNestedWithUniqueIds;
+
+        public SomeStructWithNestedOtherClassUniqueIds(
+            List<SomeClassWIthOtherClassUniqueIds> someNestedWithUniqueIds
+        ) {
+            this.someNestedWithUniqueIds = someNestedWithUniqueIds;
+        }
+        public List<SomeClassWIthOtherClassUniqueIds> GetSomeNestedWithUniqueIds() {
+            return someNestedWithUniqueIds;
+        }
+        public static SomeStructWithNestedOtherClassUniqueIds Create(List<SomeClassWIthOtherClassUniqueIds> someNestedWithUniqueIds) {
+            return new SomeStructWithNestedOtherClassUniqueIds(someNestedWithUniqueIds);
+        }
+    }
+
+    public class NestedClassLevel2: ValueObject {
+        readonly List<OtherClassWIthUniqueId> uniqueIds;
+
+        public NestedClassLevel2(
+            List<OtherClassWIthUniqueId> uniqueIds
+        ) {
+            this.uniqueIds = uniqueIds;
+        }
+        public List<OtherClassWIthUniqueId> GetUniqueIds() {
+            return uniqueIds;
+        }
+        public static NestedClassLevel2 Create(List<OtherClassWIthUniqueId> uniqueIds) {
+            return new NestedClassLevel2(uniqueIds);
+        }
+    }
+
+    public class NestedClassLevel1: ValueObject {
+        readonly List<NestedClassLevel2> nestLevel2;
+
+        public NestedClassLevel1(
+            List<NestedClassLevel2> nestLevel2
+        ) {
+            this.nestLevel2 = nestLevel2;
+        }
+        public List<NestedClassLevel2> GetNestLevel2() {
+            return nestLevel2;
+        }
+        public static NestedClassLevel1 Create(List<NestedClassLevel2> nestLevel2) {
+            return new NestedClassLevel1(nestLevel2);
+        }
+    }
+
+    public class ComplexStructureWithNestedUniqueIds: ValueObject {
+        readonly string id;
+        readonly List<NestedClassLevel1> nestLevel1;
+
+        public ComplexStructureWithNestedUniqueIds(
+            string id,
+            List<NestedClassLevel1> nestLevel1
+        ) {
+            this.id = id;
+            this.nestLevel1 = nestLevel1;
+        }
+        public string GetId() {
+            return id;
+        }
+        public List<NestedClassLevel1> GetNestLevel1() {
+            return nestLevel1;
+        }
+        public static ComplexStructureWithNestedUniqueIds Create(string id, List<NestedClassLevel1> nestLevel1) {
+            return new ComplexStructureWithNestedUniqueIds(id, nestLevel1);
+        }
+    }
+
     public class NestedValue: ValueObject {
         readonly string value;
 

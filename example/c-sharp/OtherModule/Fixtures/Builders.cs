@@ -17,6 +17,10 @@ namespace OtherModule.Fixtures {
         public int Amount { get; set; } = 0;
     }
 
+    public class OtherClassWIthUniqueIdDef {
+        public string UniqueId { get; set; } = "someValue";
+    }
+
     public class OtherDataDef {
         public int Id { get; set; } = 0;
     }
@@ -36,6 +40,12 @@ namespace OtherModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return OtherClass.Create(new OtherId(def.Id), def.Amount);
+        }
+        public static OtherClassWIthUniqueId BuildOtherClassWIthUniqueId(Action<OtherClassWIthUniqueIdDef> init = null) {
+            var def = new OtherClassWIthUniqueIdDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return OtherClassWIthUniqueId.Create(def.UniqueId);
         }
         public static OtherData BuildOtherData(Action<OtherDataDef> init = null) {
             var def = new OtherDataDef();

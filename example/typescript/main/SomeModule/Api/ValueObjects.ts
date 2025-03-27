@@ -660,6 +660,93 @@ class SomeStructureWithMultipleUniqueNestedIds {
     }
 }
 
+class SomeClassWIthOtherClassUniqueIds {
+    private otherClass = new OtherClassWIthUniqueId
+
+    static create(
+        otherClass: OtherClassWIthUniqueId,
+    ): SomeClassWIthOtherClassUniqueIds {
+        const instance = new SomeClassWIthOtherClassUniqueIds()
+        instance.otherClass = otherClass
+        return instance
+    }
+
+    getOtherClass(): OtherClassWIthUniqueId {
+        return this.otherClass
+    }
+}
+
+class SomeStructWithNestedOtherClassUniqueIds {
+    private someNestedWithUniqueIds = [new SomeClassWIthOtherClassUniqueIds]
+
+    static create(
+        someNestedWithUniqueIds: SomeClassWIthOtherClassUniqueIds[],
+    ): SomeStructWithNestedOtherClassUniqueIds {
+        const instance = new SomeStructWithNestedOtherClassUniqueIds()
+        instance.someNestedWithUniqueIds = someNestedWithUniqueIds
+        return instance
+    }
+
+    getSomeNestedWithUniqueIds(): SomeClassWIthOtherClassUniqueIds[] {
+        return this.someNestedWithUniqueIds
+    }
+}
+
+class NestedClassLevel2 {
+    private uniqueIds = [new OtherClassWIthUniqueId]
+
+    static create(
+        uniqueIds: OtherClassWIthUniqueId[],
+    ): NestedClassLevel2 {
+        const instance = new NestedClassLevel2()
+        instance.uniqueIds = uniqueIds
+        return instance
+    }
+
+    getUniqueIds(): OtherClassWIthUniqueId[] {
+        return this.uniqueIds
+    }
+}
+
+class NestedClassLevel1 {
+    private nestLevel2 = [new NestedClassLevel2]
+
+    static create(
+        nestLevel2: NestedClassLevel2[],
+    ): NestedClassLevel1 {
+        const instance = new NestedClassLevel1()
+        instance.nestLevel2 = nestLevel2
+        return instance
+    }
+
+    getNestLevel2(): NestedClassLevel2[] {
+        return this.nestLevel2
+    }
+}
+
+class ComplexStructureWithNestedUniqueIds {
+    private id = STRING
+    private nestLevel1 = [new NestedClassLevel1]
+
+    static create(
+        id: string,
+        nestLevel1: NestedClassLevel1[],
+    ): ComplexStructureWithNestedUniqueIds {
+        const instance = new ComplexStructureWithNestedUniqueIds()
+        instance.id = id
+        instance.nestLevel1 = nestLevel1
+        return instance
+    }
+
+    getId(): string {
+        return this.id
+    }
+
+    getNestLevel1(): NestedClassLevel1[] {
+        return this.nestLevel1
+    }
+}
+
 class NestedValue {
     private value = STRING
 

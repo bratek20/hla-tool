@@ -323,6 +323,58 @@ fun someStructureWithMultipleUniqueNestedIds(init: SomeStructureWithMultipleUniq
     )
 }
 
+data class SomeClassWIthOtherClassUniqueIdsDef(
+    var otherClass: (OtherClassWIthUniqueIdDef.() -> Unit) = {},
+)
+fun someClassWIthOtherClassUniqueIds(init: SomeClassWIthOtherClassUniqueIdsDef.() -> Unit = {}): SomeClassWIthOtherClassUniqueIds {
+    val def = SomeClassWIthOtherClassUniqueIdsDef().apply(init)
+    return SomeClassWIthOtherClassUniqueIds.create(
+        otherClass = otherClassWIthUniqueId(def.otherClass),
+    )
+}
+
+data class SomeStructWithNestedOtherClassUniqueIdsDef(
+    var someNestedWithUniqueIds: List<(SomeClassWIthOtherClassUniqueIdsDef.() -> Unit)> = emptyList(),
+)
+fun someStructWithNestedOtherClassUniqueIds(init: SomeStructWithNestedOtherClassUniqueIdsDef.() -> Unit = {}): SomeStructWithNestedOtherClassUniqueIds {
+    val def = SomeStructWithNestedOtherClassUniqueIdsDef().apply(init)
+    return SomeStructWithNestedOtherClassUniqueIds.create(
+        someNestedWithUniqueIds = def.someNestedWithUniqueIds.map { it -> someClassWIthOtherClassUniqueIds(it) },
+    )
+}
+
+data class NestedClassLevel2Def(
+    var uniqueIds: List<(OtherClassWIthUniqueIdDef.() -> Unit)> = emptyList(),
+)
+fun nestedClassLevel2(init: NestedClassLevel2Def.() -> Unit = {}): NestedClassLevel2 {
+    val def = NestedClassLevel2Def().apply(init)
+    return NestedClassLevel2.create(
+        uniqueIds = def.uniqueIds.map { it -> otherClassWIthUniqueId(it) },
+    )
+}
+
+data class NestedClassLevel1Def(
+    var nestLevel2: List<(NestedClassLevel2Def.() -> Unit)> = emptyList(),
+)
+fun nestedClassLevel1(init: NestedClassLevel1Def.() -> Unit = {}): NestedClassLevel1 {
+    val def = NestedClassLevel1Def().apply(init)
+    return NestedClassLevel1.create(
+        nestLevel2 = def.nestLevel2.map { it -> nestedClassLevel2(it) },
+    )
+}
+
+data class ComplexStructureWithNestedUniqueIdsDef(
+    var id: String = "someValue",
+    var nestLevel1: List<(NestedClassLevel1Def.() -> Unit)> = emptyList(),
+)
+fun complexStructureWithNestedUniqueIds(init: ComplexStructureWithNestedUniqueIdsDef.() -> Unit = {}): ComplexStructureWithNestedUniqueIds {
+    val def = ComplexStructureWithNestedUniqueIdsDef().apply(init)
+    return ComplexStructureWithNestedUniqueIds.create(
+        id = def.id,
+        nestLevel1 = def.nestLevel1.map { it -> nestedClassLevel1(it) },
+    )
+}
+
 data class NestedValueDef(
     var value: String = "someValue",
 )

@@ -71,3 +71,21 @@ data class OtherClass(
         }
     }
 }
+
+data class OtherClassWIthUniqueId(
+    private val uniqueId: String,
+) {
+    fun getUniqueId(): String {
+        return this.uniqueId
+    }
+
+    companion object {
+        fun create(
+            uniqueId: String,
+        ): OtherClassWIthUniqueId {
+            return OtherClassWIthUniqueId(
+                uniqueId = uniqueId,
+            )
+        }
+    }
+}

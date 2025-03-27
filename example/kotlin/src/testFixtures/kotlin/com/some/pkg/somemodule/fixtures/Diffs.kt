@@ -581,6 +581,85 @@ fun diffSomeStructureWithMultipleUniqueNestedIds(given: SomeStructureWithMultipl
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeClassWIthOtherClassUniqueIds(
+    var otherClass: (ExpectedOtherClassWIthUniqueId.() -> Unit)? = null,
+)
+fun diffSomeClassWIthOtherClassUniqueIds(given: SomeClassWIthOtherClassUniqueIds, expectedInit: ExpectedSomeClassWIthOtherClassUniqueIds.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeClassWIthOtherClassUniqueIds().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.otherClass?.let {
+        if (diffOtherClassWIthUniqueId(given.getOtherClass(), it) != "") { result.add(diffOtherClassWIthUniqueId(given.getOtherClass(), it, "${path}otherClass.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeStructWithNestedOtherClassUniqueIds(
+    var someNestedWithUniqueIds: List<(ExpectedSomeClassWIthOtherClassUniqueIds.() -> Unit)>? = null,
+)
+fun diffSomeStructWithNestedOtherClassUniqueIds(given: SomeStructWithNestedOtherClassUniqueIds, expectedInit: ExpectedSomeStructWithNestedOtherClassUniqueIds.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeStructWithNestedOtherClassUniqueIds().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.someNestedWithUniqueIds?.let {
+        if (given.getSomeNestedWithUniqueIds().size != it.size) { result.add("${path}someNestedWithUniqueIds size ${given.getSomeNestedWithUniqueIds().size} != ${it.size}"); return@let }
+        given.getSomeNestedWithUniqueIds().forEachIndexed { idx, entry -> if (diffSomeClassWIthOtherClassUniqueIds(entry, it[idx]) != "") { result.add(diffSomeClassWIthOtherClassUniqueIds(entry, it[idx], "${path}someNestedWithUniqueIds[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedNestedClassLevel2(
+    var uniqueIds: List<(ExpectedOtherClassWIthUniqueId.() -> Unit)>? = null,
+)
+fun diffNestedClassLevel2(given: NestedClassLevel2, expectedInit: ExpectedNestedClassLevel2.() -> Unit, path: String = ""): String {
+    val expected = ExpectedNestedClassLevel2().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.uniqueIds?.let {
+        if (given.getUniqueIds().size != it.size) { result.add("${path}uniqueIds size ${given.getUniqueIds().size} != ${it.size}"); return@let }
+        given.getUniqueIds().forEachIndexed { idx, entry -> if (diffOtherClassWIthUniqueId(entry, it[idx]) != "") { result.add(diffOtherClassWIthUniqueId(entry, it[idx], "${path}uniqueIds[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedNestedClassLevel1(
+    var nestLevel2: List<(ExpectedNestedClassLevel2.() -> Unit)>? = null,
+)
+fun diffNestedClassLevel1(given: NestedClassLevel1, expectedInit: ExpectedNestedClassLevel1.() -> Unit, path: String = ""): String {
+    val expected = ExpectedNestedClassLevel1().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.nestLevel2?.let {
+        if (given.getNestLevel2().size != it.size) { result.add("${path}nestLevel2 size ${given.getNestLevel2().size} != ${it.size}"); return@let }
+        given.getNestLevel2().forEachIndexed { idx, entry -> if (diffNestedClassLevel2(entry, it[idx]) != "") { result.add(diffNestedClassLevel2(entry, it[idx], "${path}nestLevel2[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedComplexStructureWithNestedUniqueIds(
+    var id: String? = null,
+    var nestLevel1: List<(ExpectedNestedClassLevel1.() -> Unit)>? = null,
+)
+fun diffComplexStructureWithNestedUniqueIds(given: ComplexStructureWithNestedUniqueIds, expectedInit: ExpectedComplexStructureWithNestedUniqueIds.() -> Unit, path: String = ""): String {
+    val expected = ExpectedComplexStructureWithNestedUniqueIds().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (given.getId() != it) { result.add("${path}id ${given.getId()} != ${it}") }
+    }
+
+    expected.nestLevel1?.let {
+        if (given.getNestLevel1().size != it.size) { result.add("${path}nestLevel1 size ${given.getNestLevel1().size} != ${it.size}"); return@let }
+        given.getNestLevel1().forEachIndexed { idx, entry -> if (diffNestedClassLevel1(entry, it[idx]) != "") { result.add(diffNestedClassLevel1(entry, it[idx], "${path}nestLevel1[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedNestedValue(
     var value: String? = null,
 )

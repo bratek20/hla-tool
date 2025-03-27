@@ -71,3 +71,19 @@ class OtherClass {
         return this.amount
     }
 }
+
+class OtherClassWIthUniqueId {
+    private uniqueId = STRING
+
+    static create(
+        uniqueId: string,
+    ): OtherClassWIthUniqueId {
+        const instance = new OtherClassWIthUniqueId()
+        instance.uniqueId = uniqueId
+        return instance
+    }
+
+    getUniqueId(): string {
+        return this.uniqueId
+    }
+}
