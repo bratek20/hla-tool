@@ -304,19 +304,14 @@ class ValidationsImplTest {
                                         "uniqueId" to "3"
                                     }
                                 )
-                            },
-                            {
-                                "tasks" to structList(
-                                    {
-                                        "uniqueId" to "2"
-                                    },
-                                    {
-                                        "uniqueId" to "3"
-                                    }
-                                )
                             }
                         )
-                    },
+                    }
+                )
+            },
+            struct {
+                "id" to "2"
+                "segments" to structList(
                     {
                         "stages" to structList(
                             {
@@ -328,19 +323,9 @@ class ValidationsImplTest {
                                         "uniqueId" to "3"
                                     }
                                 )
-                            },
-                            {
-                                "tasks" to structList(
-                                    {
-                                        "uniqueId" to "2"
-                                    },
-                                    {
-                                        "uniqueId" to "3"
-                                    }
-                                )
                             }
                         )
-                    },
+                    }
                 )
             }
         ))
