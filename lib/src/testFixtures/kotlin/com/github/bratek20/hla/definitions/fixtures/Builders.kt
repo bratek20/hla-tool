@@ -168,6 +168,7 @@ fun uiContainerDefinition(init: UiContainerDefinitionDef.() -> Unit = {}): UiCon
 }
 
 data class ViewModelSubmoduleDefinitionDef(
+    var enumSwitches: List<String> = emptyList(),
     var elements: List<(UiElementDefinitionDef.() -> Unit)> = emptyList(),
     var windows: List<(UiContainerDefinitionDef.() -> Unit)> = emptyList(),
     var popups: List<(UiContainerDefinitionDef.() -> Unit)> = emptyList(),
@@ -175,6 +176,7 @@ data class ViewModelSubmoduleDefinitionDef(
 fun viewModelSubmoduleDefinition(init: ViewModelSubmoduleDefinitionDef.() -> Unit = {}): ViewModelSubmoduleDefinition {
     val def = ViewModelSubmoduleDefinitionDef().apply(init)
     return ViewModelSubmoduleDefinition.create(
+        enumSwitches = def.enumSwitches,
         elements = def.elements.map { it -> uiElementDefinition(it) },
         windows = def.windows.map { it -> uiContainerDefinition(it) },
         popups = def.popups.map { it -> uiContainerDefinition(it) },

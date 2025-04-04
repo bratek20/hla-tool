@@ -32,6 +32,7 @@ class ViewModelTypesPopulator(
         //TODO-REF
         if (!::apiTypeFactory.isInitialized) return
 
+        modules.forEach { ensureDefinedEnumSwitches(it) }
         modules.forEach { populateElements(it) }
         modules.forEach { populateContainers(it) }
         modules.forEach { populateEnumSwitches(it) }
@@ -144,6 +145,21 @@ class ViewModelTypesPopulator(
                     )
                 )
             }
+        }
+    }
+
+    private fun ensureDefinedEnumSwitches(module: ModuleDefinition) {
+        val definedEnumSwitchesNames = module.getViewModelSubmodule()?.getEnumSwitches() ?: emptyList()
+        definedEnumSwitchesNames.forEach { enumSwitchName ->
+            val type = WorldType.create(
+                name = WorldTypeName(enumSwitchName),
+                path = HlaTypePath.create(
+                    module.getName(),
+                    SubmoduleName.ViewModel,
+                    PatternName.GeneratedElements
+                ).asWorld()
+            )
+            world.ensureType(type)
         }
     }
 

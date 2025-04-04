@@ -344,6 +344,7 @@ fun diffUiContainerDefinition(given: UiContainerDefinition, expectedInit: Expect
 }
 
 data class ExpectedViewModelSubmoduleDefinition(
+    var enumSwitches: List<String>? = null,
     var elements: List<(ExpectedUiElementDefinition.() -> Unit)>? = null,
     var windows: List<(ExpectedUiContainerDefinition.() -> Unit)>? = null,
     var popups: List<(ExpectedUiContainerDefinition.() -> Unit)>? = null,
@@ -351,6 +352,11 @@ data class ExpectedViewModelSubmoduleDefinition(
 fun diffViewModelSubmoduleDefinition(given: ViewModelSubmoduleDefinition, expectedInit: ExpectedViewModelSubmoduleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedViewModelSubmoduleDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
+
+    expected.enumSwitches?.let {
+        if (given.getEnumSwitches().size != it.size) { result.add("${path}enumSwitches size ${given.getEnumSwitches().size} != ${it.size}"); return@let }
+        given.getEnumSwitches().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}enumSwitches[${idx}] ${entry} != ${it[idx]}") } }
+    }
 
     expected.elements?.let {
         if (given.getElements().size != it.size) { result.add("${path}elements size ${given.getElements().size} != ${it.size}"); return@let }

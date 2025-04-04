@@ -170,6 +170,7 @@ class ModuleGroupParserLogic(
                 } ?: emptyList()
 
             return ViewModelSubmoduleDefinition(
+                enumSwitches = parseSectionAsStringList(viewModel.elements, "EnumSwitches"),
                 elements = vmElements,
                 windows = parseUiContainers(viewModel.elements, "Windows"),
                 popups = parseUiContainers(viewModel.elements, "Popups")
@@ -189,10 +190,14 @@ class ModuleGroupParserLogic(
     private fun parseFixturesSubmodule(elements: List<ParsedElement>): FixturesSubmoduleDefinition? {
         return findSection(elements, "Fixtures")?.let { section ->
             return FixturesSubmoduleDefinition(
-                mockedInterfaces = findSection(section.elements, "MockedInterfaces")?.elements
-                    ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList(),
+                mockedInterfaces = parseSectionAsStringList(section.elements, "MockedInterfaces"),
             )
         }
+    }
+
+    private fun parseSectionAsStringList(elements: List<ParsedElement>, sectionName: String): List<String> {
+        return findSection(elements, sectionName)?.elements
+            ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList()
     }
 
     private fun parseTableDefinition(elements: List<ParsedElement>, tableSectionName: String): List<TableDefinition> {
