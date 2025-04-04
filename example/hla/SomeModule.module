@@ -7,6 +7,10 @@ Enums
         VALUE_A
         VALUE_B
 
+    SomeEnum3
+        VALUE_A
+        VALUE_B
+
 CustomTypes
     DateRangeWrapper
         range: DateRange
@@ -266,6 +270,9 @@ Fixtures
         SomeModuleDebugHandlers
 
 ViewModel
+    EnumSwitches
+        SomeEnum3Switch
+
     Elements
         SomeClassVm (clickable, draggable, withRect)
             SomeClass
@@ -277,6 +284,7 @@ ViewModel
             someInputField: InputField
             someImage: Image
             someScroll: Scroll
+            someEnum3Switch: SomeEnum3Switch
 
         SecondSomeClassVm
             SomeClass

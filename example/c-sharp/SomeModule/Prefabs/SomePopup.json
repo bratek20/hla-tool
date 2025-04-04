@@ -2,7 +2,7 @@
   "blueprintType": "Popup",
   "name": "SomePopup",
   "viewType": "SomeModule.View.SomePopupView",
-  "creationOrder": 2,
+  "creationOrder": 3,
   "children": [
     {
       "name": "someClassVm",

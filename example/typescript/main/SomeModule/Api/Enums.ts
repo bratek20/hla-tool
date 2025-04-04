@@ -9,3 +9,8 @@ class SomeEnum2 extends StringEnumClass {
     static readonly VALUE_A = new SomeEnum2("VALUE_A")
     static readonly VALUE_B = new SomeEnum2("VALUE_B")
 }
+
+class SomeEnum3 extends StringEnumClass {
+    static readonly VALUE_A = new SomeEnum3("VALUE_A")
+    static readonly VALUE_B = new SomeEnum3("VALUE_B")
+}

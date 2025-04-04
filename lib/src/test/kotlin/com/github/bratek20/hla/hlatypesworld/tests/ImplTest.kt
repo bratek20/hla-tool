@@ -256,8 +256,9 @@ class HlaTypesWorldImplTest {
         assertCreationOrder("OtherClassView", 1)
         assertCreationOrder("OtherClassGroupView", 2)
 
-        assertCreationOrder("SomeClassView", 1)
-        assertCreationOrder("OptionalSomeClassView", 2)
+        assertCreationOrder("SomeEnum3SwitchView", 1)
+        assertCreationOrder("SomeClassView", 2)
+        assertCreationOrder("OptionalSomeClassView", 3)
     }
 
     private fun getTypeByName(name: String): WorldType {

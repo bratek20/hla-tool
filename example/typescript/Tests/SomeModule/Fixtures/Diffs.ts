@@ -26,6 +26,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffSomeEnum3(given: SomeEnum3, expected: string, path: string = ""): string {
+        if (given != SomeEnum3.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        return ""
+    }
+
     export interface ExpectedSomeClass {
         id?: string,
         amount?: number,
