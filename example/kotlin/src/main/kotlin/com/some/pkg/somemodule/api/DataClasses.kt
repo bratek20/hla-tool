@@ -7,11 +7,16 @@ import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
 
 data class SomeData(
+    private var id: String,
     private var other: OtherData,
     private var custom: Any,
     private var customOpt: Any?,
     private var gDN: String,
 ) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
     fun getOther(): OtherData {
         return this.other
     }
@@ -26,6 +31,10 @@ data class SomeData(
 
     fun getGoodDataName(): String {
         return this.gDN
+    }
+
+    fun setId(id: SomeId) {
+        this.id = id.value
     }
 
     fun setOther(other: OtherData) {
@@ -46,12 +55,14 @@ data class SomeData(
 
     companion object {
         fun create(
+            id: SomeId,
             other: OtherData,
             custom: Any,
             customOpt: Any?,
             goodDataName: String,
         ): SomeData {
             return SomeData(
+                id = id.value,
                 other = other,
                 custom = custom,
                 customOpt = customOpt,
@@ -61,6 +72,7 @@ data class SomeData(
     }
 
     fun update(other: SomeData) {
+        this.id = other.id
         this.other = other.other
         this.custom = other.custom
         this.customOpt = other.customOpt

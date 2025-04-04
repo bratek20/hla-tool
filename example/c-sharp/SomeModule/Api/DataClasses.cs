@@ -10,21 +10,27 @@ using TypesModule.Api;
 
 namespace SomeModule.Api {
     public class SomeData: ValueObject {
+        readonly string id;
         readonly OtherData other;
         readonly object custom;
         readonly object? customOpt;
         readonly string goodDataName;
 
         public SomeData(
+            string id,
             OtherData other,
             object custom,
             object? customOpt,
             string goodDataName
         ) {
+            this.id = id;
             this.other = other;
             this.custom = custom;
             this.customOpt = customOpt;
             this.goodDataName = goodDataName;
+        }
+        public SomeId GetId() {
+            return new SomeId(id);
         }
         public OtherData GetOther() {
             return other;
@@ -38,8 +44,8 @@ namespace SomeModule.Api {
         public string GetGoodDataName() {
             return goodDataName;
         }
-        public static SomeData Create(OtherData other, object custom, Optional<object> customOpt, string goodDataName) {
-            return new SomeData(other, custom, customOpt.OrElse(null), goodDataName);
+        public static SomeData Create(SomeId id, OtherData other, object custom, Optional<object> customOpt, string goodDataName) {
+            return new SomeData(id.Value, other, custom, customOpt.OrElse(null), goodDataName);
         }
     }
 

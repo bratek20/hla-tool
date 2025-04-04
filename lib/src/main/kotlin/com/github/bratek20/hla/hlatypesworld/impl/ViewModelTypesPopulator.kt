@@ -2,6 +2,7 @@ package com.github.bratek20.hla.hlatypesworld.impl
 
 import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
+import com.github.bratek20.hla.apitypes.impl.SerializableApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -303,7 +304,7 @@ class ViewModelTypesPopulator(
     }
 
     private fun mapModelField(modelTypeName: String, fieldName: String): WorldType {
-        val modelType = apiTypeFactory.create(createTypeDefinition(modelTypeName)) as ComplexValueObjectApiType
+        val modelType = apiTypeFactory.create(createTypeDefinition(modelTypeName)) as SerializableApiType
         val field = modelType.fields.find { it.name == fieldName }
             ?: throw IllegalStateException("Field $fieldName not found in model $modelTypeName")
         return mapper.mapModelToViewModelType(field.type)

@@ -473,18 +473,21 @@ namespace SomeModule.Builder {
     }
 
     export interface SomeDataDef {
+        id?: string,
         other?: OtherModule.Builder.OtherDataDef,
         custom?: any,
         customOpt?: any,
         goodDataName?: string,
     }
     export function someData(def?: SomeDataDef): SomeData {
+        const final_id = def?.id ?? "someValue"
         const final_other = def?.other ?? {}
         const final_custom = def?.custom ?? {}
         const final_customOpt = def?.customOpt ?? undefined
         const final_goodDataName = def?.goodDataName ?? "someValue"
 
         return SomeData.create(
+            new SomeId(final_id),
             OtherModule.Builder.otherData(final_other),
             final_custom,
             Optional.of(final_customOpt),

@@ -689,6 +689,7 @@ namespace SomeModule {
     }
 
     export interface ExpectedSomeData {
+        id?: string,
         other?: OtherModule.ExpectedOtherData,
         custom?: any,
         customOptEmpty?: boolean,
@@ -697,6 +698,10 @@ namespace SomeModule {
     }
     export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: string = ""): string {
         const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
 
         if (expected.other !== undefined) {
             if (OtherModule.diffOtherData(given.getOther(), expected.other) != "") { result.push(OtherModule.diffOtherData(given.getOther(), expected.other, `${path}other.`)) }

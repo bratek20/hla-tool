@@ -418,6 +418,7 @@ fun dateRangeWrapper(init: DateRangeWrapperDef.() -> Unit = {}): DateRangeWrappe
 }
 
 data class SomeDataDef(
+    var id: String = "someValue",
     var other: (OtherDataDef.() -> Unit) = {},
     var custom: Any = Any(),
     var customOpt: Any? = null,
@@ -426,6 +427,7 @@ data class SomeDataDef(
 fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
     val def = SomeDataDef().apply(init)
     return SomeData.create(
+        id = SomeId(def.id),
         other = otherData(def.other),
         custom = def.custom,
         customOpt = def.customOpt,

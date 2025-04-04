@@ -178,6 +178,7 @@ namespace SomeModule.Fixtures {
     }
 
     public class SomeDataDef {
+        public string Id { get; set; } = "someValue";
         public Action<OtherDataDef> Other { get; set; } = (_) => {};
         public object Custom { get; set; } = null;
         public object? CustomOpt { get; set; } = null;
@@ -406,7 +407,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeDataDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeData.Create(OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
+            return SomeData.Create(new SomeId(def.Id), OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
         }
         public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = null) {
             var def = new SomeData2Def();

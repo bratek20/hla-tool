@@ -43,4 +43,7 @@ namespace SomeModule.ViewModel {
 
     public partial class ToggleOverride {
     }
+
+    public partial class SomeDataVm {
+    }
 }

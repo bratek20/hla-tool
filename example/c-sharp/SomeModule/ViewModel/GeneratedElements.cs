@@ -105,6 +105,13 @@ namespace SomeModule.ViewModel {
         }
     }
 
+    public partial class SomeDataVm: UiElement<SomeData> {
+        public Label Id { get; set; }
+        protected override void OnUpdate() {
+            Id.Update(Model.GetId().Value);
+        }
+    }
+
     public class SomeEnum3Switch: EnumSwitch<SomeEnum3> {
     }
 

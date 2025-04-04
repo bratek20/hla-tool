@@ -165,6 +165,7 @@ Properties
 
 Data
     SomeData
+        id: SomeId
         other: OtherData
         custom: any
         customOpt: any?
@@ -326,6 +327,10 @@ ViewModel
         ToggleOverride
             ClassWithBoolField
                 boolField -> Toggle
+
+        SomeDataVm
+            SomeData
+                id
 
     Windows
         SomeWindow

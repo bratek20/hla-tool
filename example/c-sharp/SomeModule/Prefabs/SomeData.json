@@ -1,0 +1,13 @@
+{
+  "blueprintType": "ComplexElement",
+  "name": "SomeData",
+  "viewType": "SomeModule.View.SomeDataView",
+  "creationOrder": 1,
+  "children": [
+    {
+      "name": "id",
+      "viewType": "B20.View.UiElements.View.LabelView"
+    }
+  ],
+  "elementViewType": null
+}

@@ -732,6 +732,7 @@ fun diffDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRang
 }
 
 data class ExpectedSomeData(
+    var id: String? = null,
     var other: (ExpectedOtherData.() -> Unit)? = null,
     var custom: Any? = null,
     var customOptEmpty: Boolean? = null,
@@ -741,6 +742,10 @@ data class ExpectedSomeData(
 fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeData().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+    }
 
     expected.other?.let {
         if (diffOtherData(given.getOther(), it) != "") { result.add(diffOtherData(given.getOther(), it, "${path}other.")) }
