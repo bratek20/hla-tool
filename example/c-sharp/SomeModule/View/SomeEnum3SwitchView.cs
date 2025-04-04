@@ -13,12 +13,6 @@ using B20.ViewModel.UiElements.Api;
 using OtherModule.Api;
 
 namespace SomeModule.View {
-    public class ToggleOverrideView: ElementView<ToggleOverride> {
-        [SerializeField]
-        ToggleView boolField;
-        protected override void OnBind() {
-            base.OnBind();
-            boolField.Bind(ViewModel.BoolField);
-        }
+    public class SomeEnum3SwitchView: EnumSwitchView<SomeEnum3> {
     }
 }

@@ -36,6 +36,11 @@ fun diffSomeEnum2(given: SomeEnum2, expected: String, path: String = ""): String
     return ""
 }
 
+fun diffSomeEnum3(given: SomeEnum3, expected: String, path: String = ""): String {
+    if (given != SomeEnum3.valueOf(expected)) { return "${path}value ${given.name} != ${expected}" }
+    return ""
+}
+
 data class ExpectedSomeClass(
     var id: String? = null,
     var amount: Int? = null,

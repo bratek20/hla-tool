@@ -22,6 +22,7 @@ namespace SomeModule.ViewModel {
         public InputField SomeInputField { get; set; }
         public Image SomeImage { get; set; }
         public Scroll SomeScroll { get; set; }
+        public SomeEnum3Switch SomeEnum3Switch { get; set; }
         protected override List<Type> GetTraitTypes() {
             return new List<Type>() { typeof(Clickable), typeof(Draggable), typeof(WithRect) };
         }
@@ -102,6 +103,9 @@ namespace SomeModule.ViewModel {
         protected override void OnUpdate() {
             BoolField.Update(Model.GetBoolField());
         }
+    }
+
+    public class SomeEnum3Switch: EnumSwitch<SomeEnum3> {
     }
 
     public class SomeEnumSwitch: EnumSwitch<SomeEnum> {

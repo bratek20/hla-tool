@@ -2,7 +2,7 @@
   "blueprintType": "ComplexElement",
   "name": "SomeClass",
   "viewType": "SomeModule.View.SomeClassView",
-  "creationOrder": 1,
+  "creationOrder": 2,
   "children": [
     {
       "name": "id",
@@ -35,6 +35,10 @@
     {
       "name": "someScroll",
       "viewType": "B20.View.UiElements.View.ScrollView"
+    },
+    {
+      "name": "someEnum3Switch",
+      "viewType": "SomeModule.View.SomeEnum3SwitchView"
     }
   ],
   "elementViewType": null

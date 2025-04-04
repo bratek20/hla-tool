@@ -18,4 +18,9 @@ namespace SomeModule.Api {
         VALUE_A,
         VALUE_B,
     }
+
+    public enum SomeEnum3 {
+        VALUE_A,
+        VALUE_B,
+    }
 }

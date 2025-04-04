@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
 using UnityEngine;
+using SomeModule.Api;
 using SomeModule.ViewModel;
 using B20.View.UiElements.View;
-using SomeModule.Api;
 using OtherModule.View;
 using B20.ViewModel.UiElements.Api;
 using OtherModule.Api;
@@ -30,6 +30,8 @@ namespace SomeModule.View {
         ImageView someImage;
         [SerializeField]
         ScrollView someScroll;
+        [SerializeField]
+        SomeEnum3SwitchView someEnum3Switch;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
@@ -40,6 +42,7 @@ namespace SomeModule.View {
             someInputField.Bind(ViewModel.SomeInputField);
             someImage.Bind(ViewModel.SomeImage);
             someScroll.Bind(ViewModel.SomeScroll);
+            someEnum3Switch.Bind(ViewModel.SomeEnum3Switch);
         }
     }
 }

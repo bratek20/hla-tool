@@ -17,6 +17,7 @@ namespace SomeModule.Context {
     public class SomeModuleViewModel: ContextModule {
         public void Apply(ContextBuilder builder) {
             builder
+                .SetClass<SomeEnum3Switch>(InjectionMode.Prototype)
                 .SetClass<SomeClassVm>(InjectionMode.Prototype)
                 .SetClass<SecondSomeClassVm>(InjectionMode.Prototype)
                 .SetClass<SomeClass2Vm>(InjectionMode.Prototype)

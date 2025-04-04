@@ -15,3 +15,8 @@ enum class SomeEnum2 {
     VALUE_A,
     VALUE_B,
 }
+
+enum class SomeEnum3 {
+    VALUE_A,
+    VALUE_B,
+}
