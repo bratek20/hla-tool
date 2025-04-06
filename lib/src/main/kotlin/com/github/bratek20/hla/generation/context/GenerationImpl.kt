@@ -11,9 +11,7 @@ import com.github.bratek20.hla.generation.impl.core.prefabs.PrefabBlueprintsGene
 import com.github.bratek20.hla.generation.impl.core.prefabs.PrefabsGenerator
 import com.github.bratek20.hla.generation.impl.core.view.ElementsViewGenerator
 import com.github.bratek20.hla.generation.impl.core.view.ViewGenerator
-import com.github.bratek20.hla.generation.impl.core.viewmodel.GeneratedPopupsGenerator
-import com.github.bratek20.hla.generation.impl.core.viewmodel.GeneratedWindowsGenerator
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelGenerator
+import com.github.bratek20.hla.generation.impl.core.viewmodel.*
 import com.github.bratek20.hla.hlatypesworld.context.HlaTypesWorldImpl
 import com.github.bratek20.hla.importscalculation.context.ImportsCalculationImpl
 import com.github.bratek20.hla.mvvmtypesmappers.context.MvvmTypesMappersImpl
@@ -46,6 +44,8 @@ private class ViewModelGenerators: ContextModule {
     override fun apply(builder: ContextBuilder) {
         builder
             .addClass(ViewModelGenerator::class.java)
+            .addImpl(PatternGenerator::class.java, GeneratedElementsGenerator::class.java)
+            .addImpl(PatternGenerator::class.java, ElementsLogicGenerator::class.java)
             .addImpl(PatternGenerator::class.java, GeneratedPopupsGenerator::class.java)
             .addImpl(PatternGenerator::class.java, GeneratedWindowsGenerator::class.java)
 

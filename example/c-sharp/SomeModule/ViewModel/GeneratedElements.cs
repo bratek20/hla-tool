@@ -4,13 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
-using B20.ViewModel.UiElements.Api;
 using B20.ViewModel.Traits.Api;
 using SomeModule.Api;
-using OtherModule.Api;
+using B20.ViewModel.UiElements.Api;
 using OtherModule.ViewModel;
-using SimpleModule.Api;
-using TypesModule.Api;
+using OtherModule.Api;
 
 namespace SomeModule.ViewModel {
     public partial class SomeClassVm: UiElement<SomeClass> {
