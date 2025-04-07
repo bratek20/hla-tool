@@ -332,6 +332,7 @@ abstract class BaseElementsGenerator: BaseViewModelPatternGenerator() {
 
     override fun extraCSharpUsings(): List<String> {
         return listOf(
+            "B20.ViewModel.UiElements.Api",
             "B20.ViewModel.Traits.Api",
         )
     }

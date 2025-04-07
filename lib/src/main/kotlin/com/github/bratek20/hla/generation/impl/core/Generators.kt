@@ -202,21 +202,27 @@ abstract class PatternGenerator
                     addUsing("System.Linq")
                     addUsing("B20.Ext")
 
-                    extraCSharpUsings().forEach {
-                        addUsing(it)
-                    }
-
                     if (useImportsCalculator()) {
+                        val usingsToAdd = extraCSharpUsings().toMutableSet()
+
                         val patternPath = HlaTypePath.create(
                             c.module.getName(),
                             submodule,
                             patternName()
                         )
                         importsCalculator.calculate(patternPath).forEach {
+                            usingsToAdd.add(it)
+                        }
+
+                        usingsToAdd.forEach {
                             addUsing(it)
                         }
                     }
                     else {
+                        extraCSharpUsings().forEach {
+                            addUsing(it)
+                        }
+
                         if (submodule != SubmoduleName.Api) {
                             addUsing("$moduleName.Api")
                         }

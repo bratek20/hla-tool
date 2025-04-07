@@ -103,6 +103,27 @@ class ImportsCalculationImplTest {
         )
     }
 
+    @Test
+    fun `should import extended class module`() {
+        typesWorldApi.addClassType(worldClassType {
+            type = {
+                name = "SomeType"
+                path = "SomeModule/Api/ValueObjects"
+            }
+            extends = {
+                name = "SomeType2"
+                path = "OtherModule/Api/ValueObjects"
+            }
+        })
+
+        testCalculate(
+            "SomeModule/Api/ValueObjects",
+            listOf(
+                "OtherModule.Api"
+            )
+        )
+    }
+
     private fun testCalculate(
         path: String,
         expectedImports: List<String>
