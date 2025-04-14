@@ -253,7 +253,8 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return getMockedInterfaces().isNotEmpty() && language.name() == ModuleLanguage.TYPE_SCRIPT
+        return getMockedInterfaces().isNotEmpty()
+                && (language.name() == ModuleLanguage.TYPE_SCRIPT || language.name() == ModuleLanguage.KOTLIN)
     }
 
     private fun getMockedInterfaces(): List<InterfaceDefinition> {
