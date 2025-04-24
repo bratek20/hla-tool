@@ -22,7 +22,7 @@ enum class TableType {
     EVENT
 }
 
-data class TrackingWorldField(val name: String, val type: WorldType, val  serializableType: WorldType)
+data class TrackingWorldField(val name: String, val type: WorldType, val  serializableType: WorldType, val typeDefinition: TypeDefinition)
 
 interface TablePart {
     fun getFieldsOps(): List<FieldBuilderOps>
@@ -85,7 +85,8 @@ private class MyFieldsLogic(
         return defs.map { TrackingWorldField(
             name = it.getName(),
             serializableType = types.getSerializableWorldType(it.getType().getName()),
-            type = types.getWorldType(it.getType().getName())
+            type = types.getWorldType(it.getType().getName()),
+            typeDefinition = it.getType()
         ) }
     }
 
@@ -131,7 +132,8 @@ private class ExposedClassLogic(
             TrackingWorldField(
                 name = finalFieldName(mappedField),
                 serializableType = types.getSerializableWorldType(getWorldFieldTypeName(mappedField)),
-                type = types.getWorldType(getWorldFieldTypeName(mappedField))
+                type = types.getWorldType(getWorldFieldTypeName(mappedField)),
+                typeDefinition = TypeDefinition("", emptyList()) //TODO: add proper type definition
             )
         }
     }
@@ -239,7 +241,8 @@ class TrackingTableLogic(
         val worldFields = parts.flatMap { it.getTrackingWorldFields() }
         worldFields.forEachIndexed { index, field ->
             val endLineSeparator = if (index < worldFields.size - 1) "," else ""
-            builder.line("${field.name} ${toSqlType(field.type, field.serializableType)} NOT NULL" + endLineSeparator)
+            val nullability = if (field.typeDefinition.getWrappers().contains(TypeWrapper.OPTIONAL)) "" else " NOT NULL"
+            builder.line("${field.name} ${toSqlType(field.type, field.serializableType)}"+ nullability + endLineSeparator)
         }
 
         builder.untab()
