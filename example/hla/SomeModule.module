@@ -286,6 +286,7 @@ ViewModel
             someImage: Image
             someScroll: Scroll
             someEnum3Switch: SomeEnum3Switch
+            progressBar: ProgressBar
 
         SecondSomeClassVm
             SomeClass
