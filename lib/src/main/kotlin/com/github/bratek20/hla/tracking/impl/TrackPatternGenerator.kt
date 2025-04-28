@@ -13,6 +13,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.utils.pascalToCamelCase
@@ -44,10 +45,10 @@ private class TrackingTypesLogic(
         }
     }
 
-    fun getTypeBuilder(typeName: String, serializable: Boolean): TypeBuilder {
-        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+    fun getTypeBuilder(typeDef: TypeDefinition, serializable: Boolean): TypeBuilder {
+        val worldType = typesWorldApi.getTypeByName(typeDef.asWorldTypeName())
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            val x = apiTypeFactory.create(TypeDefinition(typeName, emptyList()))
+            val x = apiTypeFactory.create(typeDef)
             if (serializable) x.serializableBuilder() else x.builder()
         } else {
             typeName(worldType.getName().value)
@@ -76,7 +77,7 @@ private class MyFieldsLogic(
         return defs.map {
             {
                 name = it.getName()
-                type = types.getTypeBuilder(it.getType().getName(), serializable = true)
+                type = types.getTypeBuilder(it.getType(), serializable = true)
             }
         }
     }
@@ -94,7 +95,7 @@ private class MyFieldsLogic(
         return defs.map {
             {
                 name = it.getName()
-                type = types.getTypeBuilder(it.getType().getName(), serializable = false)
+                type = types.getTypeBuilder(it.getType(), serializable = false)
             }
         }
     }
@@ -122,7 +123,7 @@ private class ExposedClassLogic(
         return def.getMappedFields().map { mappedField ->
             {
                 name = finalFieldName(mappedField)
-                type = types.getTypeBuilder(getWorldFieldTypeName(mappedField), serializable = true)
+                type = types.getTypeBuilder(TypeDefinition(getWorldFieldTypeName(mappedField), emptyList()), serializable = true)
             }
         }
     }
@@ -133,7 +134,7 @@ private class ExposedClassLogic(
                 name = finalFieldName(mappedField),
                 serializableType = types.getSerializableWorldType(getWorldFieldTypeName(mappedField)),
                 type = types.getWorldType(getWorldFieldTypeName(mappedField)),
-                typeDefinition = TypeDefinition("", emptyList()) //TODO: add proper type definition
+                typeDefinition = TypeDefinition(finalFieldName(mappedField), emptyList())
             )
         }
     }
@@ -188,7 +189,7 @@ class TrackingTableLogic(
             }
 
             setConstructor {
-                parts.flatMap { it.getConstructorArgs() }.forEach {
+                parts.flatMap { tablePart -> tablePart.getConstructorArgs() }.forEach {
                     addArg(it)
                 }
                 setBody {
@@ -274,6 +275,9 @@ class TrackingTableLogic(
         }
         if (hlaSerializableTypePath.getSubmoduleName() == SubmoduleName.Api) {
             return "jsonb"
+        }
+        if(type == TrackingTypesPopulator.TRACKIN_DIMNESION_WORLD_TYPE) {
+            return "BIGINT"
         }
         return "???"
     }
