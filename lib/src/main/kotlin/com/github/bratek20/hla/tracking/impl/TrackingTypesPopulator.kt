@@ -18,7 +18,7 @@ class TrackingTypesPopulator(
 ): HlaTypesWorldPopulator {
     companion object {
         const val ORDER = ApiTypesPopulator.ORDER + 1
-        val TRACKIN_DIMNESION_WORLD_TYPE: WorldType = WorldType.create(
+        val TRACKING_DIMENSION_WORLD_TYPE: WorldType = WorldType.create(
             name = WorldTypeName("TrackingDimension"),
             path = HlaTypePath.create(
                 ModuleName("Tracking"),
@@ -33,7 +33,7 @@ class TrackingTypesPopulator(
 
     override fun populate(modules: List<ModuleDefinition>) {
         world.ensureType(
-            TRACKIN_DIMNESION_WORLD_TYPE
+            TRACKING_DIMENSION_WORLD_TYPE
         )
         modules.forEach { module ->
             module.getTrackingSubmodule()?.let { subModule ->

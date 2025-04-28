@@ -276,7 +276,7 @@ class TrackingTableLogic(
         if (hlaSerializableTypePath.getSubmoduleName() == SubmoduleName.Api) {
             return "jsonb"
         }
-        if(type == TrackingTypesPopulator.TRACKIN_DIMNESION_WORLD_TYPE) {
+        if(type == TrackingTypesPopulator.TRACKING_DIMENSION_WORLD_TYPE) {
             return "BIGINT"
         }
         return "???"

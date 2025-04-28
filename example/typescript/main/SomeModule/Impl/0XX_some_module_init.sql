@@ -15,6 +15,6 @@ CREATE TABLE some_dimension_with_enum (
 CREATE TABLE some_tracking_event (
     CONSTRAINT some_tracking_event_id PRIMARY KEY (event_id),
     some_dimension_id BIGINT NOT NULL,
-    some_dimension_id_optional BIGINT
+    generic_tracking_dimension_id BIGINT
 ) INHERITS (event);
 ALTER TYPE event_type ADD VALUE 'some_tracking_event';
