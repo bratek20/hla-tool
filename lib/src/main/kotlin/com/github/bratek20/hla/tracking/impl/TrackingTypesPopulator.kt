@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.tracking.impl
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
@@ -17,12 +18,23 @@ class TrackingTypesPopulator(
 ): HlaTypesWorldPopulator {
     companion object {
         const val ORDER = ApiTypesPopulator.ORDER + 1
+        val TRACKING_DIMENSION_WORLD_TYPE: WorldType = WorldType.create(
+            name = WorldTypeName("TrackingDimension"),
+            path = HlaTypePath.create(
+                ModuleName("Tracking"),
+                SubmoduleName.Impl,
+                PatternName.Interfaces
+            ).asWorld()
+        )
     }
     override fun getOrder(): Int {
         return ORDER
     }
 
     override fun populate(modules: List<ModuleDefinition>) {
+        world.ensureType(
+            TRACKING_DIMENSION_WORLD_TYPE
+        )
         modules.forEach { module ->
             module.getTrackingSubmodule()?.let { subModule ->
                 subModule.getDimensions().forEach { populateTable(module, it) }

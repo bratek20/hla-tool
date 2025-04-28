@@ -34,12 +34,15 @@ namespace SomeModule.Impl {
 
     export class SomeTrackingEvent extends TrackingEvent {
         constructor(
-            some_dimension_id: SomeDimension
+            some_dimension_id: SomeDimension,
+            generic_tracking_dimension_id: TrackingDimension
         ) {
             super()
             this.some_dimension_id = some_dimension_id
+            this.generic_tracking_dimension_id = generic_tracking_dimension_id
         }
         private readonly some_dimension_id: SomeDimension
+        private readonly generic_tracking_dimension_id: TrackingDimension
         getTableName(): TrackingTableName {
             return new TrackingTableName("some_tracking_event")
         }
