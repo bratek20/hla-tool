@@ -364,4 +364,4 @@ Tracking
     Events
         SomeTrackingEvent (table: "some_tracking_event")
             some_dimension_id: SomeDimension // referencing other
-            some_dimension_id_optional: TrackingDimension?
+            some_dimension_id_optional: TrackingDimension

@@ -35,11 +35,11 @@ namespace SomeModule.Impl {
     export class SomeTrackingEvent extends TrackingEvent {
         constructor(
             some_dimension_id: SomeDimension,
-            some_dimension_id_optional: Optional<TrackingDimension>
+            some_dimension_id_optional: TrackingDimension
         ) {
             super()
             this.some_dimension_id = some_dimension_id
-            this.some_dimension_id_optional = some_dimension_id_optional.orElse(null)
+            this.some_dimension_id_optional = some_dimension_id_optional
         }
         private readonly some_dimension_id: SomeDimension
         private readonly some_dimension_id_optional: TrackingDimension
