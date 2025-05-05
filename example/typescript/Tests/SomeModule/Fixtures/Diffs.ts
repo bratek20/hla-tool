@@ -316,6 +316,41 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedRecursiveClass {
+        meList?: ExpectedRecursiveClass[],
+        meOptEmpty?: boolean,
+        meOpt?: ExpectedRecursiveClass,
+        meOptListEmpty?: boolean,
+        meOptList?: ExpectedRecursiveClass[],
+    }
+    export function diffRecursiveClass(given: RecursiveClass, expected: ExpectedRecursiveClass, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.meList !== undefined) {
+            if (given.getMeList().length != expected.meList.length) { result.push(`${path}meList size ${given.getMeList().length} != ${expected.meList.length}`) }
+            given.getMeList().forEach((entry, idx) => { if (diffRecursiveClass(entry, expected.meList[idx]) != "") { result.push(diffRecursiveClass(entry, expected.meList[idx], `${path}meList[${idx}].`)) } })
+        }
+
+        if (expected.meOptEmpty !== undefined) {
+            if (given.getMeOpt().isEmpty() != expected.meOptEmpty) { result.push(`${path}meOpt empty ${given.getMeOpt().isEmpty()} != ${expected.meOptEmpty}`) }
+        }
+
+        if (expected.meOpt !== undefined) {
+            if (diffRecursiveClass(given.getMeOpt().get(), expected.meOpt) != "") { result.push(diffRecursiveClass(given.getMeOpt().get(), expected.meOpt, `${path}meOpt.`)) }
+        }
+
+        if (expected.meOptListEmpty !== undefined) {
+            if (given.getMeOptList().isEmpty() != expected.meOptListEmpty) { result.push(`${path}meOptList empty ${given.getMeOptList().isEmpty()} != ${expected.meOptListEmpty}`) }
+        }
+
+        if (expected.meOptList !== undefined) {
+            if (given.getMeOptList().get().length != expected.meOptList.length) { result.push(`${path}meOptList size ${given.getMeOptList().get().length} != ${expected.meOptList.length}`) }
+            given.getMeOptList().get().forEach((entry, idx) => { if (diffRecursiveClass(entry, expected.meOptList[idx]) != "") { result.push(diffRecursiveClass(entry, expected.meOptList[idx], `${path}meOptList[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeQueryInput {
         id?: string,
         amount?: number,

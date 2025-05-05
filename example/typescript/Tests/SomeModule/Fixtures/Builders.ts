@@ -199,6 +199,23 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface RecursiveClassDef {
+        meList?: SomeModule.Builder.RecursiveClassDef[],
+        meOpt?: SomeModule.Builder.RecursiveClassDef,
+        meOptList?: SomeModule.Builder.RecursiveClassDef[],
+    }
+    export function recursiveClass(def?: RecursiveClassDef): RecursiveClass {
+        const final_meList = def?.meList ?? []
+        const final_meOpt = def?.meOpt ?? undefined
+        const final_meOptList = def?.meOptList ?? undefined
+
+        return RecursiveClass.create(
+            final_meList.map(it => SomeModule.Builder.recursiveClass(it)),
+            Optional.of(final_meOpt).map(it => SomeModule.Builder.recursiveClass(it)),
+            Optional.of(final_meOptList).map(it => it.map(it => SomeModule.Builder.recursiveClass(it))),
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,

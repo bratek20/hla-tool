@@ -79,6 +79,12 @@ namespace SomeModule.Fixtures {
         public bool BoolField { get; set; } = false;
     }
 
+    public class RecursiveClassDef {
+        public List<Action<RecursiveClassDef>> MeList { get; set; } = new List<Action<RecursiveClassDef>>();
+        public Action<RecursiveClassDef>? MeOpt { get; set; } = null;
+        public List<Action<RecursiveClassDef>>? MeOptList { get; set; } = null;
+    }
+
     public class SomeQueryInputDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 0;
@@ -276,6 +282,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return ClassWithBoolField.Create(def.BoolField);
+        }
+        public static RecursiveClass BuildRecursiveClass(Action<RecursiveClassDef> init = null) {
+            var def = new RecursiveClassDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return RecursiveClass.Create(def.MeList.Select(it => BuildRecursiveClass(it)).ToList(), Optional<Action<RecursiveClassDef>>.Of(def.MeOpt).Map(it => BuildRecursiveClass(it)), Optional<List<Action<RecursiveClassDef>>>.Of(def.MeOptList).Map(it => it.Select(it => BuildRecursiveClass(it)).ToList()));
         }
         public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = null) {
             var def = new SomeQueryInputDef();
