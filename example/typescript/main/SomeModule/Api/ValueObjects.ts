@@ -384,6 +384,36 @@ class ClassWithBoolField {
     }
 }
 
+class RecursiveClass {
+    private meList = [new RecursiveClass]
+    private meOpt? = OptionalClass(RecursiveClass)
+    private meOptList? = [OptionalClass(RecursiveClass)]
+
+    static create(
+        meList: RecursiveClass[],
+        meOpt: Optional<RecursiveClass>,
+        meOptList: Optional<RecursiveClass[]>,
+    ): RecursiveClass {
+        const instance = new RecursiveClass()
+        instance.meList = meList
+        instance.meOpt = meOpt.orElse(undefined)
+        instance.meOptList = meOptList.orElse(undefined)
+        return instance
+    }
+
+    getMeList(): RecursiveClass[] {
+        return this.meList
+    }
+
+    getMeOpt(): Optional<RecursiveClass> {
+        return Optional.of(this.meOpt)
+    }
+
+    getMeOptList(): Optional<RecursiveClass[]> {
+        return Optional.of(this.meOptList)
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

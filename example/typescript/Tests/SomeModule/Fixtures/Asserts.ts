@@ -76,6 +76,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function recursiveClass(given: RecursiveClass, expected: ExpectedRecursiveClass) {
+        const diff = diffRecursiveClass(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
         const diff = diffSomeQueryInput(given, expected)
         AssertEquals(diff, "", diff)

@@ -76,6 +76,11 @@ ValueObjects
     ClassWithBoolField
         boolField: bool
 
+    RecursiveClass
+        meList: RecursiveClass[]
+        meOpt: RecursiveClass?
+        meOptList: RecursiveClass[]?
+
 Exceptions
     SomeExtraException
 

@@ -179,6 +179,20 @@ fun classWithBoolField(init: ClassWithBoolFieldDef.() -> Unit = {}): ClassWithBo
     )
 }
 
+data class RecursiveClassDef(
+    var meList: List<(RecursiveClassDef.() -> Unit)> = emptyList(),
+    var meOpt: (RecursiveClassDef.() -> Unit)? = null,
+    var meOptList: List<(RecursiveClassDef.() -> Unit)>? = null,
+)
+fun recursiveClass(init: RecursiveClassDef.() -> Unit = {}): RecursiveClass {
+    val def = RecursiveClassDef().apply(init)
+    return RecursiveClass.create(
+        meList = def.meList.map { it -> recursiveClass(it) },
+        meOpt = def.meOpt?.let { it -> recursiveClass(it) },
+        meOptList = def.meOptList?.let { it -> it.map { it -> recursiveClass(it) } },
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,

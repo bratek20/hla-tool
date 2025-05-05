@@ -90,6 +90,11 @@ fun assertClassWithBoolField(given: ClassWithBoolField, expectedInit: ExpectedCl
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertRecursiveClass(given: RecursiveClass, expectedInit: ExpectedRecursiveClass.() -> Unit) {
+    val diff = diffRecursiveClass(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
     val diff = diffSomeQueryInput(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
