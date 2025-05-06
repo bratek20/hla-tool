@@ -90,6 +90,7 @@ class ModuleGeneratorLogic(
             },
             onlyUpdate = args.getOnlyUpdate(),
             onlyPatterns = profile.getOnlyPatterns(),
+            typesWorldApi = typesWorldApi,
         )
 
         (hlaTypesWorldApi as HlaTypesWorldApiLogic).init(context.apiTypeFactory)

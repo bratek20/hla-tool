@@ -245,6 +245,9 @@ Interfaces
 
         someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
 
+    InterfaceForTracking
+        getDimension(): TrackingDimension
+
 Kotlin
     ExternalTypePackages
         LegacyType -> com.some.pkg.legacy
