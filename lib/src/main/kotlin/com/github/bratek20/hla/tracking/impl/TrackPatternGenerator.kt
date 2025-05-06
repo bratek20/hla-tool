@@ -36,12 +36,13 @@ private class TrackingTypesLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun getSerializationExpression(variableName: String, typeName: String): ExpressionBuilder {
+    fun getSerializationExpression(variableName: String, typeName: String, isOptional: Boolean): ExpressionBuilder {
         val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        val finalVariableName = if (isOptional) "$variableName.orElse(null)" else variableName
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).modernSerialize(variable(variableName))
+            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).modernSerialize(variable(finalVariableName))
         } else {
-            variable(variableName)
+            variable(finalVariableName)
         }
     }
 
@@ -106,10 +107,10 @@ private class MyFieldsLogic(
     }
 
     override fun getAssignmentOps(): List<AssignmentBuilderOps> {
-        return defs.map {
+        return defs.map {def ->
             {
-                left = instanceVariable(it.getName())
-                right = types.getSerializationExpression(it.getName(), it.getType().getName())
+                left = instanceVariable(def.getName())
+                right = types.getSerializationExpression(def.getName(), def.getType().getName(), def.getType().getWrappers().contains(TypeWrapper.OPTIONAL))
             }
         }
     }
@@ -157,7 +158,11 @@ private class ExposedClassLogic(
             val field = apiType.getField(mappedField.getName())
             return@map {
                 left = instanceVariable(finalFieldName(mappedField))
-                right = types.getSerializationExpression(field.access(argVariableName()), getWorldFieldTypeName(mappedField))
+                right = types.getSerializationExpression(
+                    field.access(argVariableName()),
+                    getWorldFieldTypeName(mappedField),
+                    false
+                )
             }
         }
     }
