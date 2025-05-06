@@ -39,6 +39,10 @@
     {
       "name": "someEnum3Switch",
       "viewType": "SomeModule.View.SomeEnum3SwitchView"
+    },
+    {
+      "name": "progressBar",
+      "viewType": "B20.View.UiElements.View.ProgressBarView"
     }
   ],
   "elementViewType": null

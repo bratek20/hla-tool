@@ -338,6 +338,42 @@ fun diffClassWithBoolField(given: ClassWithBoolField, expectedInit: ExpectedClas
     return result.joinToString("\n")
 }
 
+data class ExpectedRecursiveClass(
+    var meList: List<(ExpectedRecursiveClass.() -> Unit)>? = null,
+    var meOptEmpty: Boolean? = null,
+    var meOpt: (ExpectedRecursiveClass.() -> Unit)? = null,
+    var meOptListEmpty: Boolean? = null,
+    var meOptList: List<(ExpectedRecursiveClass.() -> Unit)>? = null,
+)
+fun diffRecursiveClass(given: RecursiveClass, expectedInit: ExpectedRecursiveClass.() -> Unit, path: String = ""): String {
+    val expected = ExpectedRecursiveClass().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.meList?.let {
+        if (given.getMeList().size != it.size) { result.add("${path}meList size ${given.getMeList().size} != ${it.size}"); return@let }
+        given.getMeList().forEachIndexed { idx, entry -> if (diffRecursiveClass(entry, it[idx]) != "") { result.add(diffRecursiveClass(entry, it[idx], "${path}meList[${idx}].")) } }
+    }
+
+    expected.meOptEmpty?.let {
+        if ((given.getMeOpt() == null) != it) { result.add("${path}meOpt empty ${(given.getMeOpt() == null)} != ${it}") }
+    }
+
+    expected.meOpt?.let {
+        if (diffRecursiveClass(given.getMeOpt()!!, it) != "") { result.add(diffRecursiveClass(given.getMeOpt()!!, it, "${path}meOpt.")) }
+    }
+
+    expected.meOptListEmpty?.let {
+        if ((given.getMeOptList() == null) != it) { result.add("${path}meOptList empty ${(given.getMeOptList() == null)} != ${it}") }
+    }
+
+    expected.meOptList?.let {
+        if (given.getMeOptList()!!.size != it.size) { result.add("${path}meOptList size ${given.getMeOptList()!!.size} != ${it.size}"); return@let }
+        given.getMeOptList()!!.forEachIndexed { idx, entry -> if (diffRecursiveClass(entry, it[idx]) != "") { result.add(diffRecursiveClass(entry, it[idx], "${path}meOptList[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,

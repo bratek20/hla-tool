@@ -57,4 +57,8 @@ namespace SomeModule.Api {
 
         SomeHandlerOutput SomeDebugHandler2(SomeHandlerInput i);
     }
+
+    public interface InterfaceForTracking {
+        TrackingDimension GetDimension();
+    }
 }

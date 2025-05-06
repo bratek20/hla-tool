@@ -2,7 +2,7 @@
 
 class SomeData {
     private id = STRING
-    private other = new OtherData
+    private other = Class(OtherData)
     private custom = ANY
     private customOpt? = OPTIONAL_ANY
     private gDN = STRING

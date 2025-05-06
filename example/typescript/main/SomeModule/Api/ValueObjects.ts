@@ -127,9 +127,9 @@ class SomeClass2 {
 }
 
 class SomeClass3 {
-    private class2Object = new SomeClass2
+    private class2Object = Class(SomeClass2)
     private someEnum = STRING
-    private class2List = [new SomeClass2]
+    private class2List = [Class(SomeClass2)]
 
     static create(
         class2Object: SomeClass2,
@@ -158,9 +158,9 @@ class SomeClass3 {
 
 class SomeClass4 {
     private otherId = NUMBER
-    private otherClass = new OtherClass
+    private otherClass = Class(OtherClass)
     private otherIdList = [NUMBER]
-    private otherClassList = [new OtherClass]
+    private otherClassList = [Class(OtherClass)]
 
     static create(
         otherId: OtherId,
@@ -195,10 +195,10 @@ class SomeClass4 {
 
 class SomeClass5 {
     private date = STRING
-    private dateRange = new SerializedDateRange
-    private dateRangeWrapper = new SerializedDateRangeWrapper
-    private someProperty = new SomeProperty
-    private otherProperty = new OtherProperty
+    private dateRange = Class(SerializedDateRange)
+    private dateRangeWrapper = Class(SerializedDateRangeWrapper)
+    private someProperty = Class(SomeProperty)
+    private otherProperty = Class(OtherProperty)
 
     static create(
         date: Date,
@@ -240,8 +240,8 @@ class SomeClass5 {
 class SomeClass6 {
     private someClassOpt? = OptionalClass(SomeClass)
     private optString? = OPTIONAL_STRING
-    private class2List = [new SomeClass2]
-    private sameClassList = [new SomeClass6]
+    private class2List = [Class(SomeClass2)]
+    private sameClassList = [Class(SomeClass6)]
 
     static create(
         someClassOpt: Optional<SomeClass>,
@@ -384,6 +384,36 @@ class ClassWithBoolField {
     }
 }
 
+class RecursiveClass {
+    private meList = [Class(RecursiveClass)]
+    private meOpt? = OptionalClass(RecursiveClass)
+    private meOptList? = [OptionalClass(RecursiveClass)]
+
+    static create(
+        meList: RecursiveClass[],
+        meOpt: Optional<RecursiveClass>,
+        meOptList: Optional<RecursiveClass[]>,
+    ): RecursiveClass {
+        const instance = new RecursiveClass()
+        instance.meList = meList
+        instance.meOpt = meOpt.orElse(undefined)
+        instance.meOptList = meOptList.orElse(undefined)
+        return instance
+    }
+
+    getMeList(): RecursiveClass[] {
+        return this.meList
+    }
+
+    getMeOpt(): Optional<RecursiveClass> {
+        return Optional.of(this.meOpt)
+    }
+
+    getMeOptList(): Optional<RecursiveClass[]> {
+        return Optional.of(this.meOptList)
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER
@@ -454,7 +484,7 @@ class SomeHandlerOutput {
 }
 
 class SomeProperty {
-    private other = new OtherProperty
+    private other = Class(OtherProperty)
     private id2? = OPTIONAL_NUMBER
     private range? = OptionalClass(SerializedDateRange)
     private doubleExample = NUMBER
@@ -597,7 +627,7 @@ class SomeReferencingPropertyFieldList {
 }
 
 class SomeStructureWithUniqueIds {
-    private entries = [new UniqueIdEntry]
+    private entries = [Class(UniqueIdEntry)]
 
     static create(
         entries: UniqueIdEntry[],
@@ -613,7 +643,7 @@ class SomeStructureWithUniqueIds {
 }
 
 class NestedUniqueIds {
-    private entries = [new UniqueIdEntry]
+    private entries = [Class(UniqueIdEntry)]
 
     static create(
         entries: UniqueIdEntry[],
@@ -629,7 +659,7 @@ class NestedUniqueIds {
 }
 
 class SomeStructureWithUniqueNestedIds {
-    private nestedUniqueIds = [new NestedUniqueIds]
+    private nestedUniqueIds = [Class(NestedUniqueIds)]
 
     static create(
         nestedUniqueIds: NestedUniqueIds[],
@@ -645,7 +675,7 @@ class SomeStructureWithUniqueNestedIds {
 }
 
 class SomeStructureWithMultipleUniqueNestedIds {
-    private moreNestedFields = [new SomeStructureWithUniqueNestedIds]
+    private moreNestedFields = [Class(SomeStructureWithUniqueNestedIds)]
 
     static create(
         moreNestedFields: SomeStructureWithUniqueNestedIds[],
@@ -661,7 +691,7 @@ class SomeStructureWithMultipleUniqueNestedIds {
 }
 
 class SomeClassWIthOtherClassUniqueIds {
-    private otherClass = new OtherClassWIthUniqueId
+    private otherClass = Class(OtherClassWIthUniqueId)
 
     static create(
         otherClass: OtherClassWIthUniqueId,
@@ -677,7 +707,7 @@ class SomeClassWIthOtherClassUniqueIds {
 }
 
 class SomeStructWithNestedOtherClassUniqueIds {
-    private someNestedWithUniqueIds = [new SomeClassWIthOtherClassUniqueIds]
+    private someNestedWithUniqueIds = [Class(SomeClassWIthOtherClassUniqueIds)]
 
     static create(
         someNestedWithUniqueIds: SomeClassWIthOtherClassUniqueIds[],
@@ -693,7 +723,7 @@ class SomeStructWithNestedOtherClassUniqueIds {
 }
 
 class NestedClassLevel2 {
-    private uniqueIds = [new OtherClassWIthUniqueId]
+    private uniqueIds = [Class(OtherClassWIthUniqueId)]
 
     static create(
         uniqueIds: OtherClassWIthUniqueId[],
@@ -709,7 +739,7 @@ class NestedClassLevel2 {
 }
 
 class NestedClassLevel1 {
-    private nestLevel2 = [new NestedClassLevel2]
+    private nestLevel2 = [Class(NestedClassLevel2)]
 
     static create(
         nestLevel2: NestedClassLevel2[],
@@ -726,7 +756,7 @@ class NestedClassLevel1 {
 
 class ComplexStructureWithNestedUniqueIds {
     private id = STRING
-    private nestLevel1 = [new NestedClassLevel1]
+    private nestLevel1 = [Class(NestedClassLevel1)]
 
     static create(
         id: string,
@@ -781,7 +811,7 @@ class OptionalFieldProperty {
 
 class CustomTypesProperty {
     private date = STRING
-    private dateRange = new SerializedDateRange
+    private dateRange = Class(SerializedDateRange)
 
     static create(
         date: Date,

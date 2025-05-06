@@ -348,6 +348,34 @@ namespace SomeModule.Api {
         }
     }
 
+    public class RecursiveClass: ValueObject {
+        readonly List<RecursiveClass> meList;
+        readonly RecursiveClass? meOpt;
+        readonly List<RecursiveClass>? meOptList;
+
+        public RecursiveClass(
+            List<RecursiveClass> meList,
+            RecursiveClass? meOpt,
+            List<RecursiveClass>? meOptList
+        ) {
+            this.meList = meList;
+            this.meOpt = meOpt;
+            this.meOptList = meOptList;
+        }
+        public List<RecursiveClass> GetMeList() {
+            return meList;
+        }
+        public Optional<RecursiveClass> GetMeOpt() {
+            return Optional<RecursiveClass>.Of(meOpt);
+        }
+        public Optional<List<RecursiveClass>> GetMeOptList() {
+            return Optional<List<RecursiveClass>>.Of(meOptList);
+        }
+        public static RecursiveClass Create(List<RecursiveClass> meList, Optional<RecursiveClass> meOpt, Optional<List<RecursiveClass>> meOptList) {
+            return new RecursiveClass(meList, meOpt.OrElse(null), meOptList.OrElse(null));
+        }
+    }
+
     public class SomeQueryInput: ValueObject {
         readonly string id;
         readonly int amount;

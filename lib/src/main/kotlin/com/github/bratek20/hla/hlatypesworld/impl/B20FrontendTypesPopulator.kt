@@ -50,7 +50,8 @@ class B20FrontendTypesPopulator(
             "Animation",
             "InputField",
             "Image",
-            "Scroll"
+            "Scroll",
+            "ProgressBar",
         )
     }
 

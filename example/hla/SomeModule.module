@@ -76,6 +76,11 @@ ValueObjects
     ClassWithBoolField
         boolField: bool
 
+    RecursiveClass
+        meList: RecursiveClass[]
+        meOpt: RecursiveClass?
+        meOptList: RecursiveClass[]?
+
 Exceptions
     SomeExtraException
 
@@ -240,6 +245,9 @@ Interfaces
 
         someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
 
+    InterfaceForTracking
+        getDimension(): TrackingDimension
+
 Kotlin
     ExternalTypePackages
         LegacyType -> com.some.pkg.legacy
@@ -286,6 +294,7 @@ ViewModel
             someImage: Image
             someScroll: Scroll
             someEnum3Switch: SomeEnum3Switch
+            progressBar: ProgressBar
 
         SecondSomeClassVm
             SomeClass

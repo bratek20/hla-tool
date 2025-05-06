@@ -31,13 +31,14 @@ class ModuleGenerationContext(
     val velocity: VelocityFacade,
     val language: LanguageSupport,
     val onlyUpdate: Boolean,
-    val onlyPatterns: List<String>
+    val onlyPatterns: List<String>,
+    val typesWorldApi: TypesWorldApi
 ) {
     val module: ModuleDefinition
         get() = domain.module
 
     val apiTypeFactory: ApiTypeFactoryLogic
-        get() = ApiTypeFactoryLogic(domain.queries, language.types())
+        get() = ApiTypeFactoryLogic(domain.queries, language.types(), typesWorldApi)
 }
 
 interface ContentBuilderExtension{
@@ -61,7 +62,7 @@ abstract class ModulePartGenerator {
 
     open fun legacyInit(c: ModuleGenerationContext, velocityPath: String, typesWorldApi: TypesWorldApi) {
         this.c = c
-        this.apiTypeFactory = ApiTypeFactoryLogic(c.domain.queries, c.language.types())
+        this.apiTypeFactory = ApiTypeFactoryLogic(c.domain.queries, c.language.types(), typesWorldApi)
         this.velocityPath = velocityPath
         this.typesWorldApi = typesWorldApi
     }

@@ -53,7 +53,8 @@ class HlaTypesWorldImplTest {
 
         (world as HlaTypesWorldApiLogic).init(ApiTypeFactoryLogic(
             BaseModuleGroupQueries(moduleGroup),
-            CSharpTypes()
+            CSharpTypes(),
+            typesWorldApi
         ))
         world.populate(moduleGroup)
     }

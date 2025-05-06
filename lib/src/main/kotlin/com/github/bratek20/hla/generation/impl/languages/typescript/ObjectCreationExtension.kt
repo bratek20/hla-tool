@@ -27,7 +27,7 @@ class ObjectCreationMapper {
                     "OptionalClass($type)"
                 }
                 else {
-                    "new $type"
+                    "Class($type)"
                 }
             }
         }

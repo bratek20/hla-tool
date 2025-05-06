@@ -396,6 +396,38 @@ data class ClassWithBoolField(
     }
 }
 
+data class RecursiveClass(
+    private val meList: List<RecursiveClass>,
+    private val meOpt: RecursiveClass?,
+    private val meOptList: List<RecursiveClass>?,
+) {
+    fun getMeList(): List<RecursiveClass> {
+        return this.meList
+    }
+
+    fun getMeOpt(): RecursiveClass? {
+        return this.meOpt
+    }
+
+    fun getMeOptList(): List<RecursiveClass>? {
+        return this.meOptList
+    }
+
+    companion object {
+        fun create(
+            meList: List<RecursiveClass>,
+            meOpt: RecursiveClass?,
+            meOptList: List<RecursiveClass>?,
+        ): RecursiveClass {
+            return RecursiveClass(
+                meList = meList,
+                meOpt = meOpt,
+                meOptList = meOptList,
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,

@@ -17,6 +17,7 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
 import com.github.bratek20.hla.hlatypesworld.impl.PrimitiveTypesPopulator
+import com.github.bratek20.hla.importscalculation.impl.mapToImport
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.pascalToCamelCase
@@ -182,6 +183,33 @@ class ExternalApiType(
             }
         }
         return rawName
+    }
+}
+
+class WorldApiType(
+    val type: WorldType
+) : ApiTypeLogic() {
+    override fun builder(): TypeBuilder {
+        return typeName(adjustedName())
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return builder()
+    }
+
+    override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
+        return variable
+    }
+
+    override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
+        return variable
+    }
+
+    private fun adjustedName(): String {
+        if (languageTypes is KotlinTypes) {
+            return mapToImport(type.getPath()).lowercase() + "." + type.getName().value
+        }
+        return type.getName().value
     }
 }
 

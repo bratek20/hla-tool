@@ -32,6 +32,8 @@ namespace SomeModule.View {
         ScrollView someScroll;
         [SerializeField]
         SomeEnum3SwitchView someEnum3Switch;
+        [SerializeField]
+        ProgressBarView progressBar;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
@@ -43,6 +45,7 @@ namespace SomeModule.View {
             someImage.Bind(ViewModel.SomeImage);
             someScroll.Bind(ViewModel.SomeScroll);
             someEnum3Switch.Bind(ViewModel.SomeEnum3Switch);
+            progressBar.Bind(ViewModel.ProgressBar);
         }
     }
 }

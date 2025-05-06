@@ -60,3 +60,7 @@ interface SomeModuleDebugHandlers {
 
     fun someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
 }
+
+interface InterfaceForTracking {
+    fun getDimension(): tracking.impl.TrackingDimension
+}
