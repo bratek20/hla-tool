@@ -15,5 +15,6 @@ class SomeModuleImpl: ContextModule {
             .setImpl(SomeInterface3::class.java, SomeInterface3Logic::class.java)
             .setImpl(SomeModuleHandlers::class.java, SomeModuleHandlersLogic::class.java)
             .setImpl(SomeModuleDebugHandlers::class.java, SomeModuleDebugHandlersLogic::class.java)
+            .setImpl(InterfaceForTracking::class.java, InterfaceForTrackingLogic::class.java)
     }
 }

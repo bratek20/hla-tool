@@ -5,12 +5,15 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
+import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
+import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 
 class ApiTypeFactoryLogic(
     val modules: BaseModuleGroupQueries,
-    val languageTypes: LanguageTypes
+    val languageTypes: LanguageTypes,
+    val typesWorldApi: TypesWorldApi
 ): ApiTypeFactory {
     override fun create(type: TypeDefinition?): ApiTypeLogic {
         if (type == null) {
@@ -29,6 +32,7 @@ class ApiTypeFactoryLogic(
         val interf = modules.findInterface(type)
         val externalTypeName = modules.findExternalType(type)
         val event = modules.findEvent(type)
+
 
         val apiType = when {
             isOptional -> OptionalApiType(create(withoutTypeWrapper(type, TypeWrapper.OPTIONAL)))
@@ -52,7 +56,13 @@ class ApiTypeFactoryLogic(
             interf != null -> InterfaceApiType(type.getName())
             externalTypeName != null -> ExternalApiType(externalTypeName)
             event != null -> EventApiType(type.getName(), createComplexStructureFields(event))
-            else -> throw IllegalArgumentException("Unknown type: $type")
+            else -> {
+                val worldName = type.asWorldTypeName()
+                if (!typesWorldApi.hasTypeByName(worldName)) {
+                    throw IllegalArgumentException("Unknown type: $type")
+                }
+                WorldApiType(typesWorldApi.getTypeByName(worldName))
+            }
         }
 
         apiType.init(languageTypes, modules.findTypeModule(type.getName()))

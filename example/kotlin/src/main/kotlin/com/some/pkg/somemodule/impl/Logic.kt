@@ -78,3 +78,9 @@ class SomeModuleDebugHandlersLogic: SomeModuleDebugHandlers {
         TODO("Not yet implemented")
     }
 }
+
+class InterfaceForTrackingLogic: InterfaceForTracking {
+    override fun getDimension(): tracking.impl.TrackingDimension {
+        TODO("Not yet implemented")
+    }
+}

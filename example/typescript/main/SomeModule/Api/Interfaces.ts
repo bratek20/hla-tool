@@ -54,3 +54,7 @@ interface SomeModuleDebugHandlers {
 
     someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput
 }
+
+interface InterfaceForTracking {
+    getDimension(): TrackingDimension
+}

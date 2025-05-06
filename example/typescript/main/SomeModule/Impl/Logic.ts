@@ -109,4 +109,15 @@ namespace SomeModule.Impl {
             return undefined
         }
     }
+
+    export class InterfaceForTrackingLogic implements InterfaceForTracking {
+        constructor(
+            private readonly c: HandlerContext,
+        ) {}
+
+        getDimension(): TrackingDimension {
+            // TODO
+            return undefined
+        }
+    }
 }

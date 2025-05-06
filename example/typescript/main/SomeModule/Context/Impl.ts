@@ -59,4 +59,8 @@ namespace SomeModule.Api {
     export function someDebugHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
         return new Impl.SomeModuleDebugHandlersLogic(c).someDebugHandler2(i)
     }
+
+    export function getDimension(c: HandlerContext): TrackingDimension {
+        return new Impl.InterfaceForTrackingLogic(c).getDimension()
+    }
 }

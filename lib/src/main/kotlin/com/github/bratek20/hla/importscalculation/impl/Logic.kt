@@ -6,6 +6,10 @@ import com.github.bratek20.hla.importscalculation.api.ImportsCalculator
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldTypePath
 
+fun mapToImport(path: WorldTypePath): String {
+    return path.asParts().dropLast(1).joinToString(".")
+}
+
 class ImportsCalculatorLogic(
     private val typesWorldApi: TypesWorldApi
 ): ImportsCalculator {
@@ -20,9 +24,5 @@ class ImportsCalculatorLogic(
             .distinct()
             .filter { !it.startsWith("Language.") }
             .filter { it != mapToImport(path.asWorld()) }
-    }
-
-    private fun mapToImport(path: WorldTypePath): String {
-        return path.asParts().dropLast(1).joinToString(".")
     }
 }
