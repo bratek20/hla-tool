@@ -74,10 +74,15 @@ private class MyFieldsLogic(
     private val types: TrackingTypesLogic
 ): TablePart {
     override fun getFieldsOps(): List<FieldBuilderOps> {
-        return defs.map {
+        return defs.map { def ->
+            var typeToUse = def.getType()
+            if(typeToUse.getWrappers().contains(TypeWrapper.OPTIONAL)) {
+                val wrappers = typeToUse.getWrappers().filter { it.name != TypeWrapper.OPTIONAL.name }.map { it.name }
+                typeToUse = TypeDefinition(typeToUse.getName(), wrappers)
+            }
             {
-                name = it.getName()
-                type = types.getTypeBuilder(it.getType(), serializable = true)
+                name = def.getName()
+                type = types.getTypeBuilder(typeToUse, serializable = true)
             }
         }
     }
@@ -194,13 +199,13 @@ class TrackingTableLogic(
                 }
                 setBody {
                     add(hardcodedExpression("super()").asStatement())
-                    parts.flatMap { it.getAssignmentOps() }.forEach {
+                    parts.flatMap { part -> part.getAssignmentOps() }.forEach {
                         add(assignment(it))
                     }
                 }
             }
 
-            parts.flatMap { it.getFieldsOps() }.forEach {
+            parts.flatMap {part -> part.getFieldsOps() }.forEach {
                 addField(it)
             }
 
