@@ -373,4 +373,5 @@ Tracking
     Events
         SomeTrackingEvent (table: "some_tracking_event")
             some_dimension_id: SomeDimension // referencing other
-            generic_tracking_dimension_id: TrackingDimension
+            optional_generic_tracking_dimension_id: TrackingDimension?
+            optional_int: int?

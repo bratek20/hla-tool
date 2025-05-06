@@ -36,12 +36,13 @@ private class TrackingTypesLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun getSerializationExpression(variableName: String, typeName: String): ExpressionBuilder {
+    fun getSerializationExpression(variableName: String, typeName: String, isOptional: Boolean): ExpressionBuilder {
         val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
+        val finalVariableName = if (isOptional) "$variableName.orElse(null)" else variableName
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).modernSerialize(variable(variableName))
+            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).modernSerialize(variable(finalVariableName))
         } else {
-            variable(variableName)
+            variable(finalVariableName)
         }
     }
 
@@ -74,10 +75,15 @@ private class MyFieldsLogic(
     private val types: TrackingTypesLogic
 ): TablePart {
     override fun getFieldsOps(): List<FieldBuilderOps> {
-        return defs.map {
+        return defs.map { def ->
+            var typeToUse = def.getType()
+            if(typeToUse.getWrappers().contains(TypeWrapper.OPTIONAL)) {
+                val wrappers = typeToUse.getWrappers().filter { it.name != TypeWrapper.OPTIONAL.name }.map { it.name }
+                typeToUse = TypeDefinition(typeToUse.getName(), wrappers)
+            }
             {
-                name = it.getName()
-                type = types.getTypeBuilder(it.getType(), serializable = true)
+                name = def.getName()
+                type = types.getTypeBuilder(typeToUse, serializable = true)
             }
         }
     }
@@ -101,10 +107,10 @@ private class MyFieldsLogic(
     }
 
     override fun getAssignmentOps(): List<AssignmentBuilderOps> {
-        return defs.map {
+        return defs.map {def ->
             {
-                left = instanceVariable(it.getName())
-                right = types.getSerializationExpression(it.getName(), it.getType().getName())
+                left = instanceVariable(def.getName())
+                right = types.getSerializationExpression(def.getName(), def.getType().getName(), def.getType().getWrappers().contains(TypeWrapper.OPTIONAL))
             }
         }
     }
@@ -152,7 +158,11 @@ private class ExposedClassLogic(
             val field = apiType.getField(mappedField.getName())
             return@map {
                 left = instanceVariable(finalFieldName(mappedField))
-                right = types.getSerializationExpression(field.access(argVariableName()), getWorldFieldTypeName(mappedField))
+                right = types.getSerializationExpression(
+                    field.access(argVariableName()),
+                    getWorldFieldTypeName(mappedField),
+                    false
+                )
             }
         }
     }
@@ -194,13 +204,13 @@ class TrackingTableLogic(
                 }
                 setBody {
                     add(hardcodedExpression("super()").asStatement())
-                    parts.flatMap { it.getAssignmentOps() }.forEach {
+                    parts.flatMap { part -> part.getAssignmentOps() }.forEach {
                         add(assignment(it))
                     }
                 }
             }
 
-            parts.flatMap { it.getFieldsOps() }.forEach {
+            parts.flatMap {part -> part.getFieldsOps() }.forEach {
                 addField(it)
             }
 
