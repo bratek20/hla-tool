@@ -25,7 +25,7 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterfaceSomeQueryRequest {
-        private query = new SomeQueryInput
+        private query = Class(SomeQueryInput)
         getQuery(): SomeQueryInput {
             return this.query
         }
@@ -37,7 +37,7 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterfaceSomeQueryResponse {
-        private value = new SomeClass
+        private value = Class(SomeClass)
         getValue(): SomeClass {
             return this.value
         }
@@ -108,7 +108,7 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterface2ReferenceOtherClassRequest {
-        private other = new OtherClass
+        private other = Class(OtherClass)
         getOther(): OtherClass {
             return this.other
         }
@@ -120,14 +120,14 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterface2ReferenceOtherClassResponse {
-        private value = new OtherClass
+        private value = Class(OtherClass)
         getValue(): OtherClass {
             return this.value
         }
     }
 
     export class SomeInterface2ReferenceLegacyTypeRequest {
-        private legacyType = new LegacyType
+        private legacyType = Class(LegacyType)
         getLegacyType(): LegacyType {
             return this.legacyType
         }
@@ -139,7 +139,7 @@ namespace SomeModule.Web {
     }
 
     export class SomeInterface2ReferenceLegacyTypeResponse {
-        private value = new LegacyType
+        private value = Class(LegacyType)
         getValue(): LegacyType {
             return this.value
         }
