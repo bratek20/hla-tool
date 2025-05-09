@@ -2,14 +2,18 @@
 
 class NoInterfaceId {
     constructor(
-        public readonly value: string
+        readonly valueNoInterfaceId: string
     ) {}
 
+    getValue(): string {
+        return this.valueNoInterfaceId
+    }
+
     equals(other: NoInterfaceId): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 }

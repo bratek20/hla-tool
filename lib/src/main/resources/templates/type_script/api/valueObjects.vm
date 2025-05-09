@@ -1,28 +1,32 @@
 #foreach($nt in $simpleValueObjects)
 class ${nt.name()} {
     constructor(
-        public readonly value: ${nt.boxedType.name()}
+        readonly value${nt.name()}: ${nt.boxedType.name()}
     ) {}
 
+    getValue(): ${nt.boxedType.name()} {
+        return this.value${nt.name()}
+    }
+
     equals(other: ${nt.name()}): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
     #if(${nt.boxedType.name()} == "number")
 
     plus(other: ${nt.name()}): ${nt.name()} {
-        return new ${nt.name()}(this.value + other.value);
+        return new ${nt.name()}(this.getValue() + other.getValue());
     }
 
     minus(other: ${nt.name()}): ${nt.name()} {
-        return new ${nt.name()}(this.value - other.value);
+        return new ${nt.name()}(this.getValue() - other.getValue());
     }
 
     times(amount: number): ${nt.name()} {
-        return new ${nt.name()}(this.value * amount);
+        return new ${nt.name()}(this.getValue() * amount);
     }
     #end
 }#if($foreach.hasNext || $complexValueObjects.size() > 0)

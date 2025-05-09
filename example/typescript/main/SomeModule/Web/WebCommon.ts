@@ -18,7 +18,7 @@ namespace SomeModule.Web {
         }
         static create(id: SomeId, amount: number): SomeInterfaceSomeCommandRequest {
             const instance = new SomeInterfaceSomeCommandRequest()
-            instance.id = id.value
+            instance.id = id.getValue()
             instance.amount = amount
             return instance
         }
@@ -50,7 +50,7 @@ namespace SomeModule.Web {
         }
         static create(optId: Optional<SomeId>): SomeInterfaceOptMethodRequest {
             const instance = new SomeInterfaceOptMethodRequest()
-            instance.optId = optId.map(it => it.value).orElse(undefined)
+            instance.optId = optId.map(it => it.getValue()).orElse(undefined)
             return instance
         }
     }
@@ -69,7 +69,7 @@ namespace SomeModule.Web {
         }
         static create(list: SomeId[]): SomeInterfaceMethodWithListOfSimpleVORequest {
             const instance = new SomeInterfaceMethodWithListOfSimpleVORequest()
-            instance.list = list.map(it => it.value)
+            instance.list = list.map(it => it.getValue())
             return instance
         }
     }
