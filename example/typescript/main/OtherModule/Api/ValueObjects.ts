@@ -2,8 +2,12 @@
 
 class OtherId {
     constructor(
-        public readonly value: number
+        readonly valueOtherId: number
     ) {}
+
+    getValue(): number {
+        return this.valueOtherId
+    }
 
     equals(other: OtherId): boolean {
         return this.value === other.value

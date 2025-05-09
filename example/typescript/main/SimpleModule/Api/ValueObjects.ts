@@ -2,8 +2,12 @@
 
 class SimpleId {
     constructor(
-        public readonly value: string
+        readonly valueSimpleId: string
     ) {}
+
+    getValue(): string {
+        return this.valueSimpleId
+    }
 
     equals(other: SimpleId): boolean {
         return this.value === other.value
@@ -16,8 +20,12 @@ class SimpleId {
 
 class SomeLongWrapper {
     constructor(
-        public readonly value: number
+        readonly valueSomeLongWrapper: number
     ) {}
+
+    getValue(): number {
+        return this.valueSomeLongWrapper
+    }
 
     equals(other: SomeLongWrapper): boolean {
         return this.value === other.value

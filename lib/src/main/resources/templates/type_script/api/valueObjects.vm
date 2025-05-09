@@ -1,8 +1,12 @@
 #foreach($nt in $simpleValueObjects)
 class ${nt.name()} {
     constructor(
-        public readonly value: ${nt.boxedType.name()}
+        readonly value${nt.name()}: ${nt.boxedType.name()}
     ) {}
+
+    getValue(): ${nt.boxedType.name()} {
+        return this.value${nt.name()}
+    }
 
     equals(other: ${nt.name()}): boolean {
         return this.value === other.value
