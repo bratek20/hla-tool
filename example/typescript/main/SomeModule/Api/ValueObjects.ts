@@ -87,7 +87,7 @@ class SomeClass {
         amount: number,
     ): SomeClass {
         const instance = new SomeClass()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.amount = amount
         return instance
     }
@@ -114,9 +114,9 @@ class SomeClass2 {
         enabled: boolean = true,
     ): SomeClass2 {
         const instance = new SomeClass2()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.names = names
-        instance.ids = ids.map(it => it.value)
+        instance.ids = ids.map(it => it.getValue())
         instance.enabled = enabled
         return instance
     }
@@ -181,9 +181,9 @@ class SomeClass4 {
         otherClassList: OtherClass[],
     ): SomeClass4 {
         const instance = new SomeClass4()
-        instance.otherId = otherId.value
+        instance.otherId = otherId.getValue()
         instance.otherClass = otherClass
-        instance.otherIdList = otherIdList.map(it => it.value)
+        instance.otherIdList = otherIdList.map(it => it.getValue())
         instance.otherClassList = otherClassList
         return instance
     }
@@ -309,7 +309,7 @@ class ClassHavingOptSimpleVo {
         optSimpleVo: Optional<SomeId>,
     ): ClassHavingOptSimpleVo {
         const instance = new ClassHavingOptSimpleVo()
-        instance.optSimpleVo = optSimpleVo.map(it => it.value).orElse(undefined)
+        instance.optSimpleVo = optSimpleVo.map(it => it.getValue()).orElse(undefined)
         return instance
     }
 
@@ -327,7 +327,7 @@ class RecordClass {
         amount: number,
     ): RecordClass {
         const instance = new RecordClass()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.amount = amount
         return instance
     }
@@ -351,7 +351,7 @@ class ClassWithOptExamples {
     ): ClassWithOptExamples {
         const instance = new ClassWithOptExamples()
         instance.optInt = optInt.orElse(undefined)
-        instance.optIntWrapper = optIntWrapper.map(it => it.value).orElse(undefined)
+        instance.optIntWrapper = optIntWrapper.map(it => it.getValue()).orElse(undefined)
         return instance
     }
 
@@ -435,7 +435,7 @@ class SomeQueryInput {
         amount: number,
     ): SomeQueryInput {
         const instance = new SomeQueryInput()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.amount = amount
         return instance
     }
@@ -458,7 +458,7 @@ class SomeHandlerInput {
         amount: number,
     ): SomeHandlerInput {
         const instance = new SomeHandlerInput()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.amount = amount
         return instance
     }
@@ -481,7 +481,7 @@ class SomeHandlerOutput {
         amount: number,
     ): SomeHandlerOutput {
         const instance = new SomeHandlerOutput()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.amount = amount
         return instance
     }
@@ -515,7 +515,7 @@ class SomeProperty {
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
-        instance.id2 = id2.map(it => it.value).orElse(undefined)
+        instance.id2 = id2.map(it => it.getValue()).orElse(undefined)
         instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
         instance.doubleExample = doubleExample
         instance.longExample = longExample
@@ -597,7 +597,7 @@ class SomePropertyEntry {
         id: SomeId,
     ): SomePropertyEntry {
         const instance = new SomePropertyEntry()
-        instance.id = id.value
+        instance.id = id.getValue()
         return instance
     }
 
@@ -613,7 +613,7 @@ class SomeReferencingProperty {
         referenceId: SomeId,
     ): SomeReferencingProperty {
         const instance = new SomeReferencingProperty()
-        instance.referenceId = referenceId.value
+        instance.referenceId = referenceId.getValue()
         return instance
     }
 
@@ -629,7 +629,7 @@ class SomeReferencingPropertyFieldList {
         referenceIdList: SomeId[],
     ): SomeReferencingPropertyFieldList {
         const instance = new SomeReferencingPropertyFieldList()
-        instance.referenceIdList = referenceIdList.map(it => it.value)
+        instance.referenceIdList = referenceIdList.map(it => it.getValue())
         return instance
     }
 

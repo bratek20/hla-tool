@@ -2,17 +2,17 @@
 
 namespace SomeModule {
     export function diffSomeId(given: SomeId, expected: string, path: string = ""): string {
-        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
     }
 
     export function diffSomeIntWrapper(given: SomeIntWrapper, expected: number, path: string = ""): string {
-        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
     }
 
     export function diffSomeId2(given: SomeId2, expected: number, path: string = ""): string {
-        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
     }
 

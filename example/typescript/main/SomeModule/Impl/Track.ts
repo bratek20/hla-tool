@@ -7,7 +7,7 @@ namespace SomeModule.Impl {
             date_range: DateRange
         ) {
             super()
-            this.name = someClass.getId().value
+            this.name = someClass.getId().getValue()
             this.amount = someClass.getAmount()
             this.date_range = SerializedDateRange.fromCustomType(date_range)
         }

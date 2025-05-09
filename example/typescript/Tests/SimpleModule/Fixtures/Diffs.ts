@@ -2,12 +2,12 @@
 
 namespace SimpleModule {
     export function diffSimpleId(given: SimpleId, expected: string, path: string = ""): string {
-        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
     }
 
     export function diffSomeLongWrapper(given: SomeLongWrapper, expected: number, path: string = ""): string {
-        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
     }
 

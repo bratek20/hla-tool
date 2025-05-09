@@ -26,6 +26,9 @@ abstract class ApiTypeLogic: ApiType {
     protected val c
         get() = languageTypes.context()
 
+    protected val language
+        get() = c.lang
+
     lateinit var languageTypes: LanguageTypes
     var typeModule: ModuleDefinition? = null
 
@@ -281,6 +284,13 @@ class SimpleValueObjectApiType(
     }
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
+        if (language is TypeScript) {
+            return methodCall {
+                target = variable
+                methodName = "getValue"
+            }
+        }
+
         return getterFieldAccess {
             objectRef = variable
             fieldName = "value"
