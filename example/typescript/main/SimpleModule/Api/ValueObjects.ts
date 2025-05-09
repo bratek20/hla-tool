@@ -14,7 +14,7 @@ class SimpleId {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 }
 
@@ -32,19 +32,19 @@ class SomeLongWrapper {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 
     plus(other: SomeLongWrapper): SomeLongWrapper {
-        return new SomeLongWrapper(this.value + other.value);
+        return new SomeLongWrapper(this.getValue() + other.getValue());
     }
 
     minus(other: SomeLongWrapper): SomeLongWrapper {
-        return new SomeLongWrapper(this.value - other.value);
+        return new SomeLongWrapper(this.getValue() - other.getValue());
     }
 
     times(amount: number): SomeLongWrapper {
-        return new SomeLongWrapper(this.value * amount);
+        return new SomeLongWrapper(this.getValue() * amount);
     }
 }
 

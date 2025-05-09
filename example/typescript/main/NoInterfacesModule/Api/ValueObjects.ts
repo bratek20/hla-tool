@@ -14,6 +14,6 @@ class NoInterfaceId {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 }

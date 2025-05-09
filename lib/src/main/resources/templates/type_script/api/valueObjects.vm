@@ -13,20 +13,20 @@ class ${nt.name()} {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
     #if(${nt.boxedType.name()} == "number")
 
     plus(other: ${nt.name()}): ${nt.name()} {
-        return new ${nt.name()}(this.value + other.value);
+        return new ${nt.name()}(this.getValue() + other.getValue());
     }
 
     minus(other: ${nt.name()}): ${nt.name()} {
-        return new ${nt.name()}(this.value - other.value);
+        return new ${nt.name()}(this.getValue() - other.getValue());
     }
 
     times(amount: number): ${nt.name()} {
-        return new ${nt.name()}(this.value * amount);
+        return new ${nt.name()}(this.getValue() * amount);
     }
     #end
 }#if($foreach.hasNext || $complexValueObjects.size() > 0)

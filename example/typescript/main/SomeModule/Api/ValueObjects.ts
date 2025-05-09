@@ -14,7 +14,7 @@ class SomeId {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 }
 
@@ -32,19 +32,19 @@ class SomeIntWrapper {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 
     plus(other: SomeIntWrapper): SomeIntWrapper {
-        return new SomeIntWrapper(this.value + other.value);
+        return new SomeIntWrapper(this.getValue() + other.getValue());
     }
 
     minus(other: SomeIntWrapper): SomeIntWrapper {
-        return new SomeIntWrapper(this.value - other.value);
+        return new SomeIntWrapper(this.getValue() - other.getValue());
     }
 
     times(amount: number): SomeIntWrapper {
-        return new SomeIntWrapper(this.value * amount);
+        return new SomeIntWrapper(this.getValue() * amount);
     }
 }
 
@@ -62,19 +62,19 @@ class SomeId2 {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 
     plus(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value + other.value);
+        return new SomeId2(this.getValue() + other.getValue());
     }
 
     minus(other: SomeId2): SomeId2 {
-        return new SomeId2(this.value - other.value);
+        return new SomeId2(this.getValue() - other.getValue());
     }
 
     times(amount: number): SomeId2 {
-        return new SomeId2(this.value * amount);
+        return new SomeId2(this.getValue() * amount);
     }
 }
 

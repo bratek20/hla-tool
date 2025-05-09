@@ -14,19 +14,19 @@ class OtherId {
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 
     plus(other: OtherId): OtherId {
-        return new OtherId(this.value + other.value);
+        return new OtherId(this.getValue() + other.getValue());
     }
 
     minus(other: OtherId): OtherId {
-        return new OtherId(this.value - other.value);
+        return new OtherId(this.getValue() - other.getValue());
     }
 
     times(amount: number): OtherId {
-        return new OtherId(this.value * amount);
+        return new OtherId(this.getValue() * amount);
     }
 }
 
