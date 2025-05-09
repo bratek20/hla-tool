@@ -39,7 +39,7 @@ class OtherProperty {
         name: string,
     ): OtherProperty {
         const instance = new OtherProperty()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.name = name
         return instance
     }
@@ -62,7 +62,7 @@ class OtherClass {
         amount: number,
     ): OtherClass {
         const instance = new OtherClass()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.amount = amount
         return instance
     }
