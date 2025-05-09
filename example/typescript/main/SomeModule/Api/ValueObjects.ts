@@ -10,7 +10,7 @@ class SomeId {
     }
 
     equals(other: SomeId): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
@@ -28,7 +28,7 @@ class SomeIntWrapper {
     }
 
     equals(other: SomeIntWrapper): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
@@ -58,7 +58,7 @@ class SomeId2 {
     }
 
     equals(other: SomeId2): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {

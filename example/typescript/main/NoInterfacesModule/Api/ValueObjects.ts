@@ -10,7 +10,7 @@ class NoInterfaceId {
     }
 
     equals(other: NoInterfaceId): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {

@@ -10,7 +10,7 @@ class SimpleId {
     }
 
     equals(other: SimpleId): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
@@ -28,7 +28,7 @@ class SomeLongWrapper {
     }
 
     equals(other: SomeLongWrapper): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {

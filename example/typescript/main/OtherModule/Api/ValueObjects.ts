@@ -10,7 +10,7 @@ class OtherId {
     }
 
     equals(other: OtherId): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {

@@ -9,7 +9,7 @@ class ${nt.name()} {
     }
 
     equals(other: ${nt.name()}): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
