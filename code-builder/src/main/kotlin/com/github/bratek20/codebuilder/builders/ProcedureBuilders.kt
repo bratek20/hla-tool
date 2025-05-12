@@ -174,7 +174,6 @@ abstract class ProcedureBuilder: ProcedureSignatureBuilder() {
 
 class MethodBuilder: ProcedureBuilder() {
     var overridesClassMethod: Boolean = false
-    var overridesInterfaceMethod: Boolean = false
     var static: Boolean = false
     var modifier: AccessModifier? = null
 

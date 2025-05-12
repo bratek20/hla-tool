@@ -87,7 +87,6 @@ class WebContextGenerator: PatternGenerator() {
 
             addMethod {
                 name = "apply"
-                overridesInterfaceMethod = true
                 addArg {
                     name = "builder"
                     type = typeName("ContextBuilder")

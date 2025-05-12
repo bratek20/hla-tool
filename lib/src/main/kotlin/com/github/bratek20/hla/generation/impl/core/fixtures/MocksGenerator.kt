@@ -20,7 +20,8 @@ class MockInterfaceLogic(
     private val def: InterfaceDefinition,
     private val moduleName: String,
     private val apiTypeFactory: ApiTypeFactory,
-    private val defTypeFactory: DefTypeFactory
+    private val defTypeFactory: DefTypeFactory,
+    private val languageName: ModuleLanguage
 ) {
     fun mockClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
@@ -91,6 +92,8 @@ class MockInterfaceLogic(
 
     private fun mockedMethod(method: MethodDefinition): MethodBuilderOps = {
         name = method.getName()
+        this.overridesClassMethod = languageName == ModuleLanguage.KOTLIN
+
         method.getArgs().forEach { arg ->
             addArg {
                 name = arg.getName()
@@ -248,6 +251,13 @@ class MocksGenerator: PatternGenerator() {
         return PatternName.Mocks
     }
 
+    override fun extraKotlinImports(): List<String> {
+        //Add here import from parent class
+        return listOf(
+            "org.assertj.core.api.Assertions.assertThat"
+        )
+    }
+
     override fun supportsCodeBuilder(): Boolean {
         return true
     }
@@ -262,7 +272,7 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture())) }
+        val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture()), language.name()) }
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.mockClass())
