@@ -14,6 +14,8 @@ import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
 class MockInterfaceLogic(
@@ -252,8 +254,11 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun extraKotlinImports(): List<String> {
-        //Add here import from parent class
+        val moduleName = module.getName().value.lowercase()
+        val modulePackage = profileToRootPackage(moduleGroup.getProfile())
+
         return listOf(
+            "$modulePackage.$moduleName.api.*",
             "org.assertj.core.api.Assertions.assertThat"
         )
     }
