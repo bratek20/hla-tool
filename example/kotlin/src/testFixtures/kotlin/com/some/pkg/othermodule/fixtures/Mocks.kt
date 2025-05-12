@@ -2,9 +2,8 @@
 
 package com.some.pkg.othermodule.fixtures
 
-import org.assertj.core.api.Assertions.assertThat
-
 import com.some.pkg.othermodule.api.*
+import org.assertj.core.api.Assertions.assertThat
 
 class OtherInterfaceMock: OtherInterface {
     private var otherMethodCalls: Int = 0
