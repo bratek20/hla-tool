@@ -123,7 +123,7 @@ class MockInterfaceLogic(
             type = baseType(BaseType.INT)
         }
         setBody {
-            add(functionCallStatement {
+            add(functionCallStatement { //TODO: FIX introduce AssertEqualsBuilder in CodeBuilder module
                 name = "AssertEquals"
                 addArg {
                     instanceVariable(callsVariableName(method))
@@ -253,7 +253,7 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return getMockedInterfaces().isNotEmpty() && language.name() == ModuleLanguage.TYPE_SCRIPT
+        return getMockedInterfaces().isNotEmpty() && language.name() != ModuleLanguage.C_SHARP
     }
 
     private fun getMockedInterfaces(): List<InterfaceDefinition> {
@@ -268,13 +268,15 @@ class MocksGenerator: PatternGenerator() {
             addClass(logic.mockClass())
         }
 
-        add(typeScriptNamespace {
-            name = "$moduleName.Mocks"
-            mockInterfacesLogic.forEach { logic ->
-                addFunction(logic.createMock())
-                addFunction(logic.setup())
-            }
-        })
+        if(language.name() == ModuleLanguage.TYPE_SCRIPT) {
+            add(typeScriptNamespace {
+                name = "$moduleName.Mocks"
+                mockInterfacesLogic.forEach { logic ->
+                    addFunction(logic.createMock())
+                    addFunction(logic.setup())
+                }
+            })
+        }
     }
 
     override fun doNotGenerateTypeScriptNamespace(): Boolean {
