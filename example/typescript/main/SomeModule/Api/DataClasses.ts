@@ -15,7 +15,7 @@ class SomeData {
         goodDataName: string,
     ): SomeData {
         const instance = new SomeData()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.other = other
         instance.custom = custom
         instance.customOpt = customOpt.orElse(undefined)
@@ -44,7 +44,7 @@ class SomeData {
     }
 
     setId(id: SomeId): void {
-        this.id = id.value
+        this.id = id.getValue()
     }
 
     setOther(other: OtherData): void {

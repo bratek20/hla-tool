@@ -10,7 +10,7 @@ namespace SomeModule.Impl {
             name: string,
         ): SomeImplData {
             const instance = new SomeImplData()
-            instance.id = id.value
+            instance.id = id.getValue()
             instance.name = name
             return instance
         }
@@ -24,7 +24,7 @@ namespace SomeModule.Impl {
         }
 
         setId(id: SomeId): void {
-            this.id = id.value
+            this.id = id.getValue()
         }
 
         setName(name: string): void {

@@ -7,7 +7,7 @@ class OtherData {
         id: OtherId,
     ): OtherData {
         const instance = new OtherData()
-        instance.id = id.value
+        instance.id = id.getValue()
         return instance
     }
 
@@ -16,7 +16,7 @@ class OtherData {
     }
 
     setId(id: OtherId): void {
-        this.id = id.value
+        this.id = id.getValue()
     }
 
     update(other: OtherData) {

@@ -2,27 +2,31 @@
 
 class OtherId {
     constructor(
-        public readonly value: number
+        readonly valueOtherId: number
     ) {}
 
+    getValue(): number {
+        return this.valueOtherId
+    }
+
     equals(other: OtherId): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 
     plus(other: OtherId): OtherId {
-        return new OtherId(this.value + other.value);
+        return new OtherId(this.getValue() + other.getValue());
     }
 
     minus(other: OtherId): OtherId {
-        return new OtherId(this.value - other.value);
+        return new OtherId(this.getValue() - other.getValue());
     }
 
     times(amount: number): OtherId {
-        return new OtherId(this.value * amount);
+        return new OtherId(this.getValue() * amount);
     }
 }
 
@@ -35,7 +39,7 @@ class OtherProperty {
         name: string,
     ): OtherProperty {
         const instance = new OtherProperty()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.name = name
         return instance
     }
@@ -58,7 +62,7 @@ class OtherClass {
         amount: number,
     ): OtherClass {
         const instance = new OtherClass()
-        instance.id = id.value
+        instance.id = id.getValue()
         instance.amount = amount
         return instance
     }

@@ -2,41 +2,49 @@
 
 class SimpleId {
     constructor(
-        public readonly value: string
+        readonly valueSimpleId: string
     ) {}
 
+    getValue(): string {
+        return this.valueSimpleId
+    }
+
     equals(other: SimpleId): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 }
 
 class SomeLongWrapper {
     constructor(
-        public readonly value: number
+        readonly valueSomeLongWrapper: number
     ) {}
 
+    getValue(): number {
+        return this.valueSomeLongWrapper
+    }
+
     equals(other: SomeLongWrapper): boolean {
-        return this.value === other.value
+        return this.getValue() === other.getValue()
     }
 
     toString(): string {
-        return this.value.toString()
+        return this.getValue().toString()
     }
 
     plus(other: SomeLongWrapper): SomeLongWrapper {
-        return new SomeLongWrapper(this.value + other.value);
+        return new SomeLongWrapper(this.getValue() + other.getValue());
     }
 
     minus(other: SomeLongWrapper): SomeLongWrapper {
-        return new SomeLongWrapper(this.value - other.value);
+        return new SomeLongWrapper(this.getValue() - other.getValue());
     }
 
     times(amount: number): SomeLongWrapper {
-        return new SomeLongWrapper(this.value * amount);
+        return new SomeLongWrapper(this.getValue() * amount);
     }
 }
 

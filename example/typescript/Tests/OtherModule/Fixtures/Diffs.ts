@@ -2,7 +2,7 @@
 
 namespace OtherModule {
     export function diffOtherId(given: OtherId, expected: number, path: string = ""): string {
-        if (given.value != expected) { return `${path}value ${given.value} != ${expected}` }
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
     }
 
