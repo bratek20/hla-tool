@@ -167,6 +167,11 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
     Struct::class
 )
 
+val SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeRenamedReferencingPropertyList",
+    Struct::class
+)
+
 val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeReferencingPropertyFieldList",
     Struct::class
@@ -474,6 +479,35 @@ class ValidationsImplTest {
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '4' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[0]' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'"
+            )
+        }
+    }
+
+    @Test
+    fun `should validate referred renamed property`() {
+        setup()
+
+        propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "id" to "1"
+            }
+        ))
+
+        propertiesMock.set(SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "rId" to "1"
+            },
+            struct {
+                "rId" to "3"
+            }
+        ))
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '3' at '\"SomeRenamedReferencingPropertyList\"/[1]/rId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
             )
         }
     }
