@@ -13,7 +13,6 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
-import com.github.bratek20.hla.typesworld.api.WorldTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
 class MockInterfaceLogic(
@@ -59,7 +58,7 @@ class MockInterfaceLogic(
         } else if(returnType is OptionalApiType) {
             nullValue()
         }else if(returnType is StructureApiType || BaseApiType.isAny(returnType)) {
-           emptyBuilder()
+           emptyBuilderValue()
         } else {
             nullValue()
         }

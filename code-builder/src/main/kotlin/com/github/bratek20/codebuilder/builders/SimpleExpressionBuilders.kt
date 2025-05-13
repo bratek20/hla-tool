@@ -65,7 +65,7 @@ fun const(value: String) = expression(value)
 fun nullValue() = expression { c -> c.lang.nullValue() }
 fun string(value: String) = expression("\"$value\"")
 fun emptyString() = string("")
-fun emptyBuilder() = expression { c -> c.lang.emptyBuilder() }
+fun emptyBuilderValue() = expression { c -> c.lang.emptyBuilderValue() }
 
 class PlusBuilder: ExpressionBuilder {
     lateinit var left: ExpressionBuilder

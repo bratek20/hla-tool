@@ -80,7 +80,7 @@ interface CodeBuilderLanguage {
 
     fun nullValue(): String = "null"
 
-    fun emptyBuilder(): String
+    fun emptyBuilderValue(): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -264,7 +264,7 @@ class Kotlin: CodeBuilderLanguage {
         return ""
     }
 
-    override fun emptyBuilder(): String {
+    override fun emptyBuilderValue(): String {
         return "{}"
     }
 }
@@ -454,7 +454,7 @@ class TypeScript: CodeBuilderLanguage {
         return "undefined"
     }
 
-    override fun emptyBuilder(): String {
+    override fun emptyBuilderValue(): String {
         return "undefined"
     }
 }
@@ -644,7 +644,7 @@ class CSharp: CodeBuilderLanguage {
         return true
     }
 
-    override fun emptyBuilder(): String {
+    override fun emptyBuilderValue(): String {
         return ""
     }
 }
