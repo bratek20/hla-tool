@@ -279,6 +279,12 @@ class ValidationsImplTest {
             }
         )
 
+        propertiesMock.set(SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "rId" to "1"
+            }
+        ))
+
         propertiesMock.set(SomeStructWithNestedOtherClassUniqueIds, listOf(
             struct {
                 "someNestedWithUniqueIds" to structList(
@@ -355,8 +361,11 @@ class ValidationsImplTest {
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]",
+            "Found reference for 'SomeId' at '\"SomeRenamedReferencingPropertyList\"/[*]/rId'",
+            "Values for '\"SomeRenamedReferencingPropertyList\"/[*]/rId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
             "Values for '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]': [1]",
+
 
             "Validating type 'SomeReferencingProperty'",
 
@@ -367,6 +376,7 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeSourcePropertyList\"/[*]/id'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
+            "Found reference for 'SomeId' at '\"SomeRenamedReferencingPropertyList\"/[*]/rId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
             "Unique id infos: [UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=uniqueId, parent=WorldType(name=OtherClassWIthUniqueId, path=OtherModule/Api/ValueObjects)), UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SimpleModule/Api/ValueObjects))]"
         )
