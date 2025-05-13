@@ -57,7 +57,7 @@ class MockInterfaceLogic(
             emptyImmutableList(returnType.wrappedType.builder())
         } else if(returnType is OptionalApiType) {
             nullValue()
-        }else if(returnType is StructureApiType || BaseApiType.isAny(returnType)) {
+        }else if(returnType is SerializableApiType || BaseApiType.isAny(returnType)) {
            emptyBuilderValue()
         } else {
             nullValue()
