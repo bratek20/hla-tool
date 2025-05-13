@@ -547,6 +547,20 @@ fun diffSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: Ex
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeRenamedReferencingProperty(
+    var referenceId: String? = null,
+)
+fun diffSomeRenamedReferencingProperty(given: SomeRenamedReferencingProperty, expectedInit: ExpectedSomeRenamedReferencingProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeRenamedReferencingProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.referenceId?.let {
+        if (diffSomeId(given.getReferenceId(), it) != "") { result.add(diffSomeId(given.getReferenceId(), it, "${path}referenceId.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeReferencingPropertyFieldList(
     var referenceIdList: List<String>? = null,
 )

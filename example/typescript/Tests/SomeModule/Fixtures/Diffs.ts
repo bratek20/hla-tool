@@ -517,6 +517,19 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeRenamedReferencingProperty {
+        referenceId?: string,
+    }
+    export function diffSomeRenamedReferencingProperty(given: SomeRenamedReferencingProperty, expected: ExpectedSomeRenamedReferencingProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.referenceId !== undefined) {
+            if (diffSomeId(given.getReferenceId(), expected.referenceId) != "") { result.push(diffSomeId(given.getReferenceId(), expected.referenceId, `${path}referenceId.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeReferencingPropertyFieldList {
         referenceIdList?: string[],
     }

@@ -26,6 +26,11 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
     SomeReferencingProperty::class
 )
 
+val SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeRenamedReferencingPropertyList",
+    SomeRenamedReferencingProperty::class
+)
+
 val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeReferencingPropertyFieldList",
     SomeReferencingPropertyFieldList::class

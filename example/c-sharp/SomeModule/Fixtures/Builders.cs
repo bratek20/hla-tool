@@ -125,6 +125,10 @@ namespace SomeModule.Fixtures {
         public string ReferenceId { get; set; } = "someValue";
     }
 
+    public class SomeRenamedReferencingPropertyDef {
+        public string ReferenceId { get; set; } = "someValue";
+    }
+
     public class SomeReferencingPropertyFieldListDef {
         public List<string> ReferenceIdList { get; set; } = new List<string>();
     }
@@ -330,6 +334,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeReferencingProperty.Create(new SomeId(def.ReferenceId));
+        }
+        public static SomeRenamedReferencingProperty BuildSomeRenamedReferencingProperty(Action<SomeRenamedReferencingPropertyDef> init = null) {
+            var def = new SomeRenamedReferencingPropertyDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeRenamedReferencingProperty.Create(new SomeId(def.ReferenceId));
         }
         public static SomeReferencingPropertyFieldList BuildSomeReferencingPropertyFieldList(Action<SomeReferencingPropertyFieldListDef> init = null) {
             var def = new SomeReferencingPropertyFieldListDef();

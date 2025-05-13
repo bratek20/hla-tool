@@ -638,6 +638,24 @@ data class SomeReferencingProperty(
     }
 }
 
+data class SomeRenamedReferencingProperty(
+    private val rId: String,
+) {
+    fun getReferenceId(): SomeId {
+        return SomeId(this.rId)
+    }
+
+    companion object {
+        fun create(
+            referenceId: SomeId,
+        ): SomeRenamedReferencingProperty {
+            return SomeRenamedReferencingProperty(
+                rId = referenceId.value,
+            )
+        }
+    }
+}
+
 data class SomeReferencingPropertyFieldList(
     private val referenceIdList: List<String>,
 ) {

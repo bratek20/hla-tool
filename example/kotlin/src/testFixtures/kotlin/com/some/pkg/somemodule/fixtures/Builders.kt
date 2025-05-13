@@ -287,6 +287,16 @@ fun someReferencingProperty(init: SomeReferencingPropertyDef.() -> Unit = {}): S
     )
 }
 
+data class SomeRenamedReferencingPropertyDef(
+    var referenceId: String = "someValue",
+)
+fun someRenamedReferencingProperty(init: SomeRenamedReferencingPropertyDef.() -> Unit = {}): SomeRenamedReferencingProperty {
+    val def = SomeRenamedReferencingPropertyDef().apply(init)
+    return SomeRenamedReferencingProperty.create(
+        referenceId = SomeId(def.referenceId),
+    )
+}
+
 data class SomeReferencingPropertyFieldListDef(
     var referenceIdList: List<String> = emptyList(),
 )
