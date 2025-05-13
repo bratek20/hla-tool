@@ -21,6 +21,11 @@ namespace SomeModule {
         SomeReferencingProperty
     )
 
+    export const SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeRenamedReferencingPropertyList",
+        SomeRenamedReferencingProperty
+    )
+
     export const SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = new ObjectPropertyKey(
         "SomeReferencingPropertyFieldList",
         SomeReferencingPropertyFieldList

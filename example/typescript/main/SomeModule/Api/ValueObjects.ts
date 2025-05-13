@@ -622,6 +622,22 @@ class SomeReferencingProperty {
     }
 }
 
+class SomeRenamedReferencingProperty {
+    private rId = STRING
+
+    static create(
+        referenceId: SomeId,
+    ): SomeRenamedReferencingProperty {
+        const instance = new SomeRenamedReferencingProperty()
+        instance.rId = referenceId.getValue()
+        return instance
+    }
+
+    getReferenceId(): SomeId {
+        return new SomeId(this.rId)
+    }
+}
+
 class SomeReferencingPropertyFieldList {
     private referenceIdList = [STRING]
 

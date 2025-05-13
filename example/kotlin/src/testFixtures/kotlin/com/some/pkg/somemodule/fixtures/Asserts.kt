@@ -130,6 +130,11 @@ fun assertSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: 
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomeRenamedReferencingProperty(given: SomeRenamedReferencingProperty, expectedInit: ExpectedSomeRenamedReferencingProperty.() -> Unit) {
+    val diff = diffSomeRenamedReferencingProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList, expectedInit: ExpectedSomeReferencingPropertyFieldList.() -> Unit) {
     val diff = diffSomeReferencingPropertyFieldList(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

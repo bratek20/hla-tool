@@ -329,6 +329,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeRenamedReferencingPropertyDef {
+        referenceId?: string,
+    }
+    export function someRenamedReferencingProperty(def?: SomeRenamedReferencingPropertyDef): SomeRenamedReferencingProperty {
+        const final_referenceId = def?.referenceId ?? "someValue"
+
+        return SomeRenamedReferencingProperty.create(
+            new SomeId(final_referenceId),
+        )
+    }
+
     export interface SomeReferencingPropertyFieldListDef {
         referenceIdList?: string[],
     }

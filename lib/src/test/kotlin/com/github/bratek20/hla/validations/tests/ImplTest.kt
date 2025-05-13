@@ -167,6 +167,11 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
     Struct::class
 )
 
+val SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeRenamedReferencingPropertyList",
+    Struct::class
+)
+
 val SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeReferencingPropertyFieldList",
     Struct::class
@@ -274,6 +279,12 @@ class ValidationsImplTest {
             }
         )
 
+        propertiesMock.set(SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "rId" to "1"
+            }
+        ))
+
         propertiesMock.set(SomeStructWithNestedOtherClassUniqueIds, listOf(
             struct {
                 "someNestedWithUniqueIds" to structList(
@@ -350,8 +361,11 @@ class ValidationsImplTest {
             "Values for '\"SomeReferencingPropertyObject\"/referenceId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Values for '\"SomeReferencingPropertyList\"/[*]/referenceId': [1]",
+            "Found reference for 'SomeId' at '\"SomeRenamedReferencingPropertyList\"/[*]/rId'",
+            "Values for '\"SomeRenamedReferencingPropertyList\"/[*]/rId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
             "Values for '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]': [1]",
+
 
             "Validating type 'SomeReferencingProperty'",
 
@@ -362,6 +376,7 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeSourcePropertyList\"/[*]/id'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
+            "Found reference for 'SomeId' at '\"SomeRenamedReferencingPropertyList\"/[*]/rId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
             "Unique id infos: [UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=uniqueId, parent=WorldType(name=OtherClassWIthUniqueId, path=OtherModule/Api/ValueObjects)), UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SimpleModule/Api/ValueObjects))]"
         )
@@ -474,6 +489,35 @@ class ValidationsImplTest {
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '4' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[0]' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'"
+            )
+        }
+    }
+
+    @Test
+    fun `should validate referred renamed property`() {
+        setup()
+
+        propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "id" to "1"
+            }
+        ))
+
+        propertiesMock.set(SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "rId" to "1"
+            },
+            struct {
+                "rId" to "3"
+            }
+        ))
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '3' at '\"SomeRenamedReferencingPropertyList\"/[1]/rId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
             )
         }
     }

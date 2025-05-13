@@ -29,8 +29,9 @@ fun TypeDefinition.asNonWrappedWorldTypeName(): WorldTypeName {
 
 
 fun FieldDefinition.asClassField(world: TypesWorldApi): WorldClassField {
+    val name = this.getAttributes().find { attribute -> attribute.getName() == "from" }?.getValue() ?: this.getName()
     return WorldClassField.create(
-        this.getName(),
+        name,
         world.getTypeByName(this.getType().asWorldTypeName())
     )
 }

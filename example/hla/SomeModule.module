@@ -111,6 +111,9 @@ Properties
     SomeReferencingProperty
         referenceId: SomeId
 
+    SomeRenamedReferencingProperty
+        referenceId: SomeId (from: rId)
+
     SomeReferencingPropertyFieldList
         referenceIdList: SomeId[]
 
@@ -155,6 +158,7 @@ Properties
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
+    "SomeRenamedReferencingPropertyList" -> SomeRenamedReferencingProperty[]
     "SomeReferencingPropertyFieldList" -> SomeReferencingPropertyFieldList
     "SomeStructureWithUniqueIdsList" -> SomeStructureWithUniqueIds[]
     "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]

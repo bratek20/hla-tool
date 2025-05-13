@@ -116,6 +116,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someRenamedReferencingProperty(given: SomeRenamedReferencingProperty, expected: ExpectedSomeRenamedReferencingProperty) {
+        const diff = diffSomeRenamedReferencingProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someReferencingPropertyFieldList(given: SomeReferencingPropertyFieldList, expected: ExpectedSomeReferencingPropertyFieldList) {
         const diff = diffSomeReferencingPropertyFieldList(given, expected)
         AssertEquals(diff, "", diff)

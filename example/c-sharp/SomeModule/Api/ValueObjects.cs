@@ -560,6 +560,22 @@ namespace SomeModule.Api {
         }
     }
 
+    public class SomeRenamedReferencingProperty: ValueObject {
+        readonly string referenceId;
+
+        public SomeRenamedReferencingProperty(
+            string referenceId
+        ) {
+            this.referenceId = referenceId;
+        }
+        public SomeId GetReferenceId() {
+            return new SomeId(referenceId);
+        }
+        public static SomeRenamedReferencingProperty Create(SomeId referenceId) {
+            return new SomeRenamedReferencingProperty(referenceId.Value);
+        }
+    }
+
     public class SomeReferencingPropertyFieldList: ValueObject {
         readonly List<string> referenceIdList;
 
