@@ -5,26 +5,39 @@ import com.github.bratek20.codebuilder.core.*
 class AssertEqualsBuilder: StatementBuilder {
     lateinit var given: ExpressionBuilder
     lateinit var expected: ExpressionBuilder
-    lateinit var message: String
+    lateinit var message: ExpressionBuilder
 
-    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
+    override fun getOperations(c: CodeBuilderContext): CodeBuilderOps  {
         val langName = c.lang.name()
-        lineStart()
-        linePart(if(langName == TypeScript().name()) {
-            "AssertEquals("
+        return if(langName == Kotlin().name()) {
+            buildKotlin()
+        } else if(langName == TypeScript().name()) {
+            buildTypeScript()
         } else {
-            "assertThat("
-        })
+            throw IllegalArgumentException("Unsupported language: $langName")
+        }
+    }
+
+    private fun buildKotlin(): CodeBuilderOps = {
+        lineStart()
+        linePart("assertThat(")
         add(given)
-        if(langName == Kotlin().name()) {
-            linePart(").withFailMessage(\"$message\").isEqualTo(")
-        }else if(langName == TypeScript().name()) {
-            linePart(", ")
-        }
+        linePart(").withFailMessage(")
+        add(message)
+        linePart(").isEqualTo(")
         add(expected)
-        if(langName == TypeScript().name()) {
-            linePart(", $message")
-        }
+        linePart(")")
+        statementLineEnd()
+    }
+
+    private fun buildTypeScript(): CodeBuilderOps = {
+        lineStart()
+        linePart("AssertEquals(")
+        add(given)
+        linePart(", ")
+        add(expected)
+        linePart(", ")
+        add(message)
         linePart(")")
         statementLineEnd()
     }

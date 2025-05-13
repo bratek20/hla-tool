@@ -125,8 +125,7 @@ class MockInterfaceLogic(
         name = "assert${camelToPascalCase(method.getName())}Calls"
         val expectedValue = "expectedNumber"
         val expectedValueExpression = expression { expectedValue }
-        val givenValueName = callsVariableName(method)
-        val givenExpression = instanceVariable(givenValueName)
+        val givenExpression = instanceVariable(callsVariableName(method))
         addArg {
             name = expectedValue
             type = baseType(BaseType.INT)
@@ -135,7 +134,19 @@ class MockInterfaceLogic(
             add(assertEquals {
                 given = givenExpression
                 expected = expectedValueExpression
-                message = "Expected '${method.getName()}' to be called \" + $expectedValue + \" times but was called \" + $givenValueName + \" times"
+                message = plus {
+                    left = string("Expected '${method.getName()}' to be called ")
+                    right = plus {
+                        left = variable(expectedValue)
+                        right = plus {
+                            left = string(" times but was called ")
+                            right = plus {
+                                left = givenExpression
+                                right = string(" times")
+                            }
+                        }
+                    }
+                }
             })
         }
     }
