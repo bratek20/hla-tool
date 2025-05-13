@@ -123,34 +123,17 @@ class MockInterfaceLogic(
 
     private fun callsAssertion(method: MethodDefinition): MethodBuilderOps = {
         name = "assert${camelToPascalCase(method.getName())}Calls"
+        val expectedValue = "expectedNumber"
+        val givenValue = callsVariableName(method)
         addArg {
-            name = "expectedNumber"
+            name = expectedValue
             type = baseType(BaseType.INT)
         }
         setBody {
-            add(functionCallStatement { //TODO: FIX introduce AssertEqualsBuilder in CodeBuilder module
-                name = "AssertEquals"
-                addArg {
-                    instanceVariable(callsVariableName(method))
-                }
-                addArg {
-                    variable("expectedNumber")
-                }
-                addArg {
-                    plus {
-                        left = string("Expected '${method.getName()}' to be called ")
-                        right = plus {
-                            left = variable("expectedNumber")
-                            right = plus {
-                                left = string(" times but was called ")
-                                right = plus {
-                                    left = instanceVariable(callsVariableName(method))
-                                    right = string(" times")
-                                }
-                            }
-                        }
-                    }
-                }
+            add(assertEquals {
+                given = givenValue
+                expected = expectedValue
+                message = "Expected '${method.getName()}' to be called \" + $expectedValue + \" times but was called \" + $givenValue + \" times"
             })
         }
     }
