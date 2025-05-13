@@ -543,7 +543,7 @@ class ValidationsImplTest {
             }
         ))
 
-        propertiesMock.set(SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+        propertiesMock.set(SOME_RENAMED_REFERENCING_RENAMED_PROPERTY_LIST_PROPERTY_KEY, listOf(
             struct {
                 "rId" to "1"
             },
