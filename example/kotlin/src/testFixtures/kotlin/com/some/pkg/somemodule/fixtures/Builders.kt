@@ -15,6 +15,10 @@ fun someId(value: String = "someValue"): SomeId {
     return SomeId(value)
 }
 
+fun someOtherId(value: String = "someValue"): SomeOtherId {
+    return SomeOtherId(value)
+}
+
 fun someIntWrapper(value: Int = 5): SomeIntWrapper {
     return SomeIntWrapper(value)
 }
@@ -277,6 +281,16 @@ fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyE
     )
 }
 
+data class SomeRenamedSourcePropertyEntryDef(
+    var id: String = "someValue",
+)
+fun someRenamedSourcePropertyEntry(init: SomeRenamedSourcePropertyEntryDef.() -> Unit = {}): SomeRenamedSourcePropertyEntry {
+    val def = SomeRenamedSourcePropertyEntryDef().apply(init)
+    return SomeRenamedSourcePropertyEntry.create(
+        id = SomeOtherId(def.id),
+    )
+}
+
 data class SomeReferencingPropertyDef(
     var referenceId: String = "someValue",
 )
@@ -294,6 +308,16 @@ fun someRenamedReferencingProperty(init: SomeRenamedReferencingPropertyDef.() ->
     val def = SomeRenamedReferencingPropertyDef().apply(init)
     return SomeRenamedReferencingProperty.create(
         referenceId = SomeId(def.referenceId),
+    )
+}
+
+data class SomeRenamedReferencingRenamedPropertyDef(
+    var referenceId: String = "someValue",
+)
+fun someRenamedReferencingRenamedProperty(init: SomeRenamedReferencingRenamedPropertyDef.() -> Unit = {}): SomeRenamedReferencingRenamedProperty {
+    val def = SomeRenamedReferencingRenamedPropertyDef().apply(init)
+    return SomeRenamedReferencingRenamedProperty.create(
+        referenceId = SomeOtherId(def.referenceId),
     )
 }
 

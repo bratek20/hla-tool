@@ -20,6 +20,7 @@ ExternalTypes
 
 ValueObjects
     SomeId: string
+    SomeOtherId: string
     SomeIntWrapper: int (startsFrom: 5)
 
     SomeClass
@@ -108,11 +109,17 @@ Properties
     SomePropertyEntry
         id: SomeId (idSource)
 
+    SomeRenamedSourcePropertyEntry
+        id: SomeOtherId (from: sId, idSource)
+
     SomeReferencingProperty
         referenceId: SomeId
 
     SomeRenamedReferencingProperty
         referenceId: SomeId (from: rId)
+
+    SomeRenamedReferencingRenamedProperty
+        referenceId: SomeOtherId (from: rId)
 
     SomeReferencingPropertyFieldList
         referenceIdList: SomeId[]
@@ -156,9 +163,11 @@ Properties
 
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
+    "SomeRenamedSourcePropertyEntryList" -> SomeRenamedSourcePropertyEntry[]
     "SomeReferencingPropertyObject" -> SomeReferencingProperty
     "SomeReferencingPropertyList" -> SomeReferencingProperty[]
     "SomeRenamedReferencingPropertyList" -> SomeRenamedReferencingProperty[]
+    "SomeRenamedReferencingRenamedPropertyList" -> SomeRenamedReferencingRenamedProperty[]
     "SomeReferencingPropertyFieldList" -> SomeReferencingPropertyFieldList
     "SomeStructureWithUniqueIdsList" -> SomeStructureWithUniqueIds[]
     "SomeStructureWithUniqueNestedIds" -> SomeStructureWithUniqueNestedIds[]

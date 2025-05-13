@@ -6,6 +6,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffSomeOtherId(given: SomeOtherId, expected: string, path: string = ""): string {
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
+        return ""
+    }
+
     export function diffSomeIntWrapper(given: SomeIntWrapper, expected: number, path: string = ""): string {
         if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
@@ -504,6 +509,19 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeRenamedSourcePropertyEntry {
+        id?: string,
+    }
+    export function diffSomeRenamedSourcePropertyEntry(given: SomeRenamedSourcePropertyEntry, expected: ExpectedSomeRenamedSourcePropertyEntry, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeOtherId(given.getId(), expected.id) != "") { result.push(diffSomeOtherId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeReferencingProperty {
         referenceId?: string,
     }
@@ -525,6 +543,19 @@ namespace SomeModule {
 
         if (expected.referenceId !== undefined) {
             if (diffSomeId(given.getReferenceId(), expected.referenceId) != "") { result.push(diffSomeId(given.getReferenceId(), expected.referenceId, `${path}referenceId.`)) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeRenamedReferencingRenamedProperty {
+        referenceId?: string,
+    }
+    export function diffSomeRenamedReferencingRenamedProperty(given: SomeRenamedReferencingRenamedProperty, expected: ExpectedSomeRenamedReferencingRenamedProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.referenceId !== undefined) {
+            if (diffSomeOtherId(given.getReferenceId(), expected.referenceId) != "") { result.push(diffSomeOtherId(given.getReferenceId(), expected.referenceId, `${path}referenceId.`)) }
         }
 
         return result.join("\n")

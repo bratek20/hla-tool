@@ -22,6 +22,19 @@ namespace SomeModule.Api {
         }
     }
 
+    public class SomeOtherId: ValueObject {
+        public string Value { get; }
+
+        public SomeOtherId(
+            string value
+        ) {
+            Value = value;
+        }
+        public override string ToString() {
+            return Value.ToString();
+        }
+    }
+
     public class SomeIntWrapper: ValueObject {
         public int Value { get; }
 
@@ -544,6 +557,22 @@ namespace SomeModule.Api {
         }
     }
 
+    public class SomeRenamedSourcePropertyEntry: ValueObject {
+        readonly string id;
+
+        public SomeRenamedSourcePropertyEntry(
+            string id
+        ) {
+            this.id = id;
+        }
+        public SomeOtherId GetId() {
+            return new SomeOtherId(id);
+        }
+        public static SomeRenamedSourcePropertyEntry Create(SomeOtherId id) {
+            return new SomeRenamedSourcePropertyEntry(id.Value);
+        }
+    }
+
     public class SomeReferencingProperty: ValueObject {
         readonly string referenceId;
 
@@ -573,6 +602,22 @@ namespace SomeModule.Api {
         }
         public static SomeRenamedReferencingProperty Create(SomeId referenceId) {
             return new SomeRenamedReferencingProperty(referenceId.Value);
+        }
+    }
+
+    public class SomeRenamedReferencingRenamedProperty: ValueObject {
+        readonly string referenceId;
+
+        public SomeRenamedReferencingRenamedProperty(
+            string referenceId
+        ) {
+            this.referenceId = referenceId;
+        }
+        public SomeOtherId GetReferenceId() {
+            return new SomeOtherId(referenceId);
+        }
+        public static SomeRenamedReferencingRenamedProperty Create(SomeOtherId referenceId) {
+            return new SomeRenamedReferencingRenamedProperty(referenceId.Value);
         }
     }
 

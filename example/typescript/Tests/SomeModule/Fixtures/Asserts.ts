@@ -6,6 +6,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someOtherId(given: SomeOtherId, expected: string) {
+        const diff = diffSomeOtherId(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someIntWrapper(given: SomeIntWrapper, expected: number) {
         const diff = diffSomeIntWrapper(given, expected)
         AssertEquals(diff, "", diff)
@@ -111,6 +116,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someRenamedSourcePropertyEntry(given: SomeRenamedSourcePropertyEntry, expected: ExpectedSomeRenamedSourcePropertyEntry) {
+        const diff = diffSomeRenamedSourcePropertyEntry(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someReferencingProperty(given: SomeReferencingProperty, expected: ExpectedSomeReferencingProperty) {
         const diff = diffSomeReferencingProperty(given, expected)
         AssertEquals(diff, "", diff)
@@ -118,6 +128,11 @@ namespace SomeModule.Assert {
 
     export function someRenamedReferencingProperty(given: SomeRenamedReferencingProperty, expected: ExpectedSomeRenamedReferencingProperty) {
         const diff = diffSomeRenamedReferencingProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someRenamedReferencingRenamedProperty(given: SomeRenamedReferencingRenamedProperty, expected: ExpectedSomeRenamedReferencingRenamedProperty) {
+        const diff = diffSomeRenamedReferencingRenamedProperty(given, expected)
         AssertEquals(diff, "", diff)
     }
 

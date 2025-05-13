@@ -5,6 +5,10 @@ namespace SomeModule.Builder {
         return new SomeId(value)
     }
 
+    export function someOtherId(value: string = "someValue"): SomeOtherId {
+        return new SomeOtherId(value)
+    }
+
     export function someIntWrapper(value: number = 5): SomeIntWrapper {
         return new SomeIntWrapper(value)
     }
@@ -318,6 +322,17 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeRenamedSourcePropertyEntryDef {
+        id?: string,
+    }
+    export function someRenamedSourcePropertyEntry(def?: SomeRenamedSourcePropertyEntryDef): SomeRenamedSourcePropertyEntry {
+        const final_id = def?.id ?? "someValue"
+
+        return SomeRenamedSourcePropertyEntry.create(
+            new SomeOtherId(final_id),
+        )
+    }
+
     export interface SomeReferencingPropertyDef {
         referenceId?: string,
     }
@@ -337,6 +352,17 @@ namespace SomeModule.Builder {
 
         return SomeRenamedReferencingProperty.create(
             new SomeId(final_referenceId),
+        )
+    }
+
+    export interface SomeRenamedReferencingRenamedPropertyDef {
+        referenceId?: string,
+    }
+    export function someRenamedReferencingRenamedProperty(def?: SomeRenamedReferencingRenamedPropertyDef): SomeRenamedReferencingRenamedProperty {
+        const final_referenceId = def?.referenceId ?? "someValue"
+
+        return SomeRenamedReferencingRenamedProperty.create(
+            new SomeOtherId(final_referenceId),
         )
     }
 

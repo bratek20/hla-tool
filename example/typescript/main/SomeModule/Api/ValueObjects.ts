@@ -18,6 +18,24 @@ class SomeId {
     }
 }
 
+class SomeOtherId {
+    constructor(
+        readonly valueSomeOtherId: string
+    ) {}
+
+    getValue(): string {
+        return this.valueSomeOtherId
+    }
+
+    equals(other: SomeOtherId): boolean {
+        return this.getValue() === other.getValue()
+    }
+
+    toString(): string {
+        return this.getValue().toString()
+    }
+}
+
 class SomeIntWrapper {
     constructor(
         readonly valueSomeIntWrapper: number
@@ -606,6 +624,22 @@ class SomePropertyEntry {
     }
 }
 
+class SomeRenamedSourcePropertyEntry {
+    private sId = STRING
+
+    static create(
+        id: SomeOtherId,
+    ): SomeRenamedSourcePropertyEntry {
+        const instance = new SomeRenamedSourcePropertyEntry()
+        instance.sId = id.getValue()
+        return instance
+    }
+
+    getId(): SomeOtherId {
+        return new SomeOtherId(this.sId)
+    }
+}
+
 class SomeReferencingProperty {
     private referenceId = STRING
 
@@ -635,6 +669,22 @@ class SomeRenamedReferencingProperty {
 
     getReferenceId(): SomeId {
         return new SomeId(this.rId)
+    }
+}
+
+class SomeRenamedReferencingRenamedProperty {
+    private rId = STRING
+
+    static create(
+        referenceId: SomeOtherId,
+    ): SomeRenamedReferencingRenamedProperty {
+        const instance = new SomeRenamedReferencingRenamedProperty()
+        instance.rId = referenceId.getValue()
+        return instance
+    }
+
+    getReferenceId(): SomeOtherId {
+        return new SomeOtherId(this.rId)
     }
 }
 
