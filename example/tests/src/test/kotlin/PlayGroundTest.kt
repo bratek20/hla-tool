@@ -1,8 +1,7 @@
+import com.some.pkg.somemodule.api.SomeId
 import com.some.pkg.somemodule.api.SomeIntWrapper
-import com.some.pkg.somemodule.fixtures.assertSomeClass6
-import com.some.pkg.somemodule.fixtures.assertSomeIntWrapper
-import com.some.pkg.somemodule.fixtures.someClass
-import com.some.pkg.somemodule.fixtures.someClass6
+import com.some.pkg.somemodule.fixtures.*
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 
@@ -28,5 +27,33 @@ class PlayGroundTest {
             someClassOptEmpty = false
             optStringEmpty = true
         }
+    }
+
+    @Test
+    fun mocksTests() {
+        val mocks = SomeInterfaceMock()
+
+        mocks.setSomeQueryResponse {
+            id = "someId"
+            amount = 14
+        }
+        assertSomeClass(mocks.someQuery(someQueryInput{})) {
+            id = "someId"
+            amount = 14
+        }
+
+        assertThat(mocks.optMethod(SomeId("1"))).isNull()
+
+        mocks.setOptMethodResponse {
+            id = "someId2"
+            amount = 15
+        }
+        assertSomeClass(mocks.optMethod(SomeId("1"))!!) {
+            id = "someId2"
+            amount = 15
+        }
+
+        mocks.setMethodWithAnyResponse("some response")
+        assertThat(mocks.methodWithAny("some input")).isEqualTo("some response")
     }
 }
