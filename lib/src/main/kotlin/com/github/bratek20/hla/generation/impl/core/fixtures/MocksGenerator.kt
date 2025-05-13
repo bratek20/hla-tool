@@ -6,9 +6,7 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
-import com.github.bratek20.hla.apitypes.impl.ApiTypeLogic
-import com.github.bratek20.hla.apitypes.impl.BaseApiType
-import com.github.bratek20.hla.apitypes.impl.ListApiType
+import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -58,6 +56,10 @@ class MockInterfaceLogic(
 
         val emptyValue = if (returnType is ListApiType) {
             emptyImmutableList(returnType.wrappedType.builder())
+        } else if(returnType is OptionalApiType) {
+            nullValue()
+        }else if(returnType is StructureApiType || BaseApiType.isAny(returnType)) {
+           emptyBuilder()
         } else {
             nullValue()
         }
