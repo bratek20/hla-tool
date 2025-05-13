@@ -157,6 +157,11 @@ val SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.pr
     Struct::class
 )
 
+val SOME_RENAMED_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeRenamedSourcePropertyEntryList",
+    Struct::class
+)
+
 val SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeReferencingPropertyObject",
     Struct::class
@@ -169,6 +174,11 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
 
 val SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeRenamedReferencingPropertyList",
+    Struct::class
+)
+
+val SOME_RENAMED_REFERENCING_RENAMED_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeRenamedReferencingRenamedPropertyList",
     Struct::class
 )
 
@@ -518,6 +528,36 @@ class ValidationsImplTest {
             ok = false
             errors = listOf(
                 "Value '3' at '\"SomeRenamedReferencingPropertyList\"/[1]/rId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
+            )
+        }
+    }
+
+    @Test
+    fun `should validate referred renamed source`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_RENAMED_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "sId" to "1"
+            }
+        ))
+
+        propertiesMock.set(SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "rId" to "1"
+            },
+            struct {
+                "rId" to "3"
+            }
+        ))
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '3' at '\"SomeRenamedReferencingRenamedPropertyList\"/[1]/rId' not found in source values from '\"SomeRenamedSourcePropertyEntryList\"/[*]/sId'",
             )
         }
     }
