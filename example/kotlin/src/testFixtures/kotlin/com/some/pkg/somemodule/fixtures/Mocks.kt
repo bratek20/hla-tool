@@ -12,7 +12,7 @@ class SomeInterfaceMock: SomeInterface {
     private var someEmptyMethodCalls: Int = 0
     private var someCommandCalls: Int = 0
     private var someQueryCalls: Int = 0
-    private var someQueryResponse: SomeClassDef.() -> Unit = {}
+    private var someQueryResponse: (SomeClassDef.() -> Unit) = {}
     private var optMethodCalls: Int = 0
     private var optMethodResponse: (SomeClassDef.() -> Unit)? = null
     private var methodWithListOfSimpleVOCalls: Int = 0
@@ -40,7 +40,7 @@ class SomeInterfaceMock: SomeInterface {
     fun assertSomeQueryCalls(expectedNumber: Int) {
         assertThat(someQueryCalls).withFailMessage("Expected 'someQuery' to be called " + expectedNumber + " times but was called " + someQueryCalls + " times").isEqualTo(expectedNumber)
     }
-    fun setSomeQueryResponse(response: SomeClassDef.() -> Unit) {
+    fun setSomeQueryResponse(response: (SomeClassDef.() -> Unit)) {
         someQueryResponse = response
     }
     override fun optMethod(optId: SomeId?): SomeClass? {
