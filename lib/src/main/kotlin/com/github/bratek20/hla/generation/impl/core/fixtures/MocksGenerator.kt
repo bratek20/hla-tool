@@ -63,7 +63,7 @@ class MockInterfaceLogic(
         } else if(returnType is OptionalApiType) {
             nullValue()
         }else if(returnType is SerializableApiType || BaseApiType.isAny(returnType)) {
-           emptyBuilderValue()
+           if(isKotlin()) emptyLambda() else nullValue()
         }else {
             nullValue()
         }
@@ -74,6 +74,10 @@ class MockInterfaceLogic(
             value = emptyValue
             mutable = true
         }
+    }
+
+    private fun isKotlin(): Boolean {
+        return languageName == ModuleLanguage.KOTLIN
     }
 
     private fun setResponse(method: MethodDefinition): MethodBuilderOps = {
@@ -100,7 +104,7 @@ class MockInterfaceLogic(
 
     private fun mockedMethod(method: MethodDefinition): MethodBuilderOps = {
         name = method.getName()
-        this.overridesClassMethod = languageName == ModuleLanguage.KOTLIN
+        this.overridesClassMethod = isKotlin()
 
         method.getArgs().forEach { arg ->
             addArg {
@@ -130,7 +134,7 @@ class MockInterfaceLogic(
     private fun callsAssertion(method: MethodDefinition): MethodBuilderOps = {
         name = "assert${camelToPascalCase(method.getName())}Calls"
         val expectedValue = "expectedNumber"
-        val expectedValueExpression = expression { expectedValue }
+        val expectedValueExpression = variable (expectedValue)
         val givenExpression = instanceVariable(callsVariableName(method))
         addArg {
             name = expectedValue

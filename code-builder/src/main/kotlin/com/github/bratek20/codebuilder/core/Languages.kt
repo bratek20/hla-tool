@@ -79,8 +79,6 @@ interface CodeBuilderLanguage {
     fun areMethodsPascalCase(): Boolean = false
 
     fun nullValue(): String = "null"
-
-    fun emptyBuilderValue(): String
 }
 
 class Kotlin: CodeBuilderLanguage {
@@ -262,10 +260,6 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun softThis(): String {
         return ""
-    }
-
-    override fun emptyBuilderValue(): String {
-        return "{}"
     }
 }
 
@@ -453,10 +447,6 @@ class TypeScript: CodeBuilderLanguage {
     override fun nullValue(): String {
         return "undefined"
     }
-
-    override fun emptyBuilderValue(): String {
-        return "undefined"
-    }
 }
 
 class CSharp: CodeBuilderLanguage {
@@ -642,9 +632,5 @@ class CSharp: CodeBuilderLanguage {
 
     override fun areMethodsPascalCase(): Boolean {
         return true
-    }
-
-    override fun emptyBuilderValue(): String {
-        return ""
     }
 }
