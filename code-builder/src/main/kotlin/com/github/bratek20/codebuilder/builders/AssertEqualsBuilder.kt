@@ -8,13 +8,10 @@ class AssertEqualsBuilder: StatementBuilder {
     lateinit var message: ExpressionBuilder
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps  {
-        val langName = c.lang.name()
-        return if(langName == Kotlin().name()) {
-            buildKotlin()
-        } else if(langName == TypeScript().name()) {
-            buildTypeScript()
-        } else {
-            throw IllegalArgumentException("Unsupported language: $langName")
+        return when(c.lang) {
+            is Kotlin -> buildKotlin()
+            is TypeScript -> buildTypeScript()
+            else -> throw IllegalArgumentException("Unsupported language: ${c.lang.name()}")
         }
     }
 
