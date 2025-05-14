@@ -12,8 +12,8 @@ class AssertEqualsBuilderTest {
             op = {
                 add(assertEquals {
                     message = string("someMessage")
-                    given = expression("otherMethodCalls")
-                    expected = expression("expectedNumber")
+                    given = variable("otherMethodCalls")
+                    expected = variable("expectedNumber")
                 })
             }
             langExpected {
