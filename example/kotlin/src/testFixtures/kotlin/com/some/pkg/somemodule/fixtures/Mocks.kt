@@ -2,6 +2,7 @@
 
 package com.some.pkg.somemodule.fixtures
 
+import com.some.pkg.othermodule.api.*
 import com.some.pkg.somemodule.api.*
 import org.assertj.core.api.Assertions.assertThat
 import com.some.pkg.othermodule.fixtures.*
@@ -98,7 +99,6 @@ class SomeInterface2Mock: SomeInterface2 {
     private var referenceOtherClassCalls: Int = 0
     private var referenceOtherClassResponse: (OtherClassDef.() -> Unit) = {}
     private var referenceLegacyTypeCalls: Int = 0
-    private var referenceLegacyTypeResponse: com.some.pkg.legacy.LegacyType = null
     override fun referenceOtherClass(other: OtherClass): OtherClass {
         referenceOtherClassCalls = referenceOtherClassCalls + 1
         return otherClass(referenceOtherClassResponse)
@@ -115,9 +115,6 @@ class SomeInterface2Mock: SomeInterface2 {
     }
     fun assertReferenceLegacyTypeCalls(expectedNumber: Int) {
         assertThat(referenceLegacyTypeCalls).withFailMessage("Expected 'referenceLegacyType' to be called " + expectedNumber + " times but was called " + referenceLegacyTypeCalls + " times").isEqualTo(expectedNumber)
-    }
-    fun setReferenceLegacyTypeResponse(response: com.some.pkg.legacy.LegacyType) {
-        referenceLegacyTypeResponse = response
     }
     fun reset() {
         referenceOtherClassCalls = 0

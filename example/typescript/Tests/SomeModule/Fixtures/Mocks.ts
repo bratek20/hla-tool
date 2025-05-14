@@ -90,7 +90,6 @@ class SomeInterface2Mock implements SomeInterface2 {
     private referenceOtherClassCalls: number = 0
     private referenceOtherClassResponse: OtherModule.Builder.OtherClassDef = undefined
     private referenceLegacyTypeCalls: number = 0
-    private referenceLegacyTypeResponse: LegacyType = undefined
     referenceOtherClass(other: OtherClass): OtherClass {
         this.referenceOtherClassCalls = this.referenceOtherClassCalls + 1
         return OtherModule.Builder.otherClass(this.referenceOtherClassResponse)
@@ -107,9 +106,6 @@ class SomeInterface2Mock implements SomeInterface2 {
     }
     assertReferenceLegacyTypeCalls(expectedNumber: number) {
         AssertEquals(this.referenceLegacyTypeCalls, expectedNumber, "Expected 'referenceLegacyType' to be called " + expectedNumber + " times but was called " + this.referenceLegacyTypeCalls + " times")
-    }
-    setReferenceLegacyTypeResponse(response: LegacyType) {
-        this.referenceLegacyTypeResponse = response
     }
     reset() {
         this.referenceOtherClassCalls = 0
