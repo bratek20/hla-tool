@@ -11,6 +11,11 @@ namespace SomeModule {
         SomePropertyEntry
     )
 
+    export const SOME_RENAMED_SOURCE_PROPERTY_ENTRY_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeRenamedSourcePropertyEntryList",
+        SomeRenamedSourcePropertyEntry
+    )
+
     export const SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY = new ObjectPropertyKey(
         "SomeReferencingPropertyObject",
         SomeReferencingProperty
@@ -24,6 +29,11 @@ namespace SomeModule {
     export const SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = new ListPropertyKey(
         "SomeRenamedReferencingPropertyList",
         SomeRenamedReferencingProperty
+    )
+
+    export const SOME_RENAMED_REFERENCING_RENAMED_PROPERTY_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeRenamedReferencingRenamedPropertyList",
+        SomeRenamedReferencingRenamedProperty
     )
 
     export const SOME_REFERENCING_PROPERTY_FIELD_LIST_PROPERTY_KEY = new ObjectPropertyKey(

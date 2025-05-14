@@ -121,11 +121,19 @@ namespace SomeModule.Fixtures {
         public string Id { get; set; } = "someValue";
     }
 
+    public class SomeRenamedSourcePropertyEntryDef {
+        public string Id { get; set; } = "someValue";
+    }
+
     public class SomeReferencingPropertyDef {
         public string ReferenceId { get; set; } = "someValue";
     }
 
     public class SomeRenamedReferencingPropertyDef {
+        public string ReferenceId { get; set; } = "someValue";
+    }
+
+    public class SomeRenamedReferencingRenamedPropertyDef {
         public string ReferenceId { get; set; } = "someValue";
     }
 
@@ -208,6 +216,9 @@ namespace SomeModule.Fixtures {
     public class SomeModuleBuilders {
         public static SomeId BuildSomeId(string value = "someValue") {
             return new SomeId(value);
+        }
+        public static SomeOtherId BuildSomeOtherId(string value = "someValue") {
+            return new SomeOtherId(value);
         }
         public static SomeIntWrapper BuildSomeIntWrapper(int value = 5) {
             return new SomeIntWrapper(value);
@@ -329,6 +340,12 @@ namespace SomeModule.Fixtures {
             init.Invoke(def);
             return SomePropertyEntry.Create(new SomeId(def.Id));
         }
+        public static SomeRenamedSourcePropertyEntry BuildSomeRenamedSourcePropertyEntry(Action<SomeRenamedSourcePropertyEntryDef> init = null) {
+            var def = new SomeRenamedSourcePropertyEntryDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeRenamedSourcePropertyEntry.Create(new SomeOtherId(def.Id));
+        }
         public static SomeReferencingProperty BuildSomeReferencingProperty(Action<SomeReferencingPropertyDef> init = null) {
             var def = new SomeReferencingPropertyDef();
             init = init ?? ((_) => {});
@@ -340,6 +357,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeRenamedReferencingProperty.Create(new SomeId(def.ReferenceId));
+        }
+        public static SomeRenamedReferencingRenamedProperty BuildSomeRenamedReferencingRenamedProperty(Action<SomeRenamedReferencingRenamedPropertyDef> init = null) {
+            var def = new SomeRenamedReferencingRenamedPropertyDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeRenamedReferencingRenamedProperty.Create(new SomeOtherId(def.ReferenceId));
         }
         public static SomeReferencingPropertyFieldList BuildSomeReferencingPropertyFieldList(Action<SomeReferencingPropertyFieldListDef> init = null) {
             var def = new SomeReferencingPropertyFieldListDef();

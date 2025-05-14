@@ -16,6 +16,11 @@ fun diffSomeId(given: SomeId, expected: String, path: String = ""): String {
     return ""
 }
 
+fun diffSomeOtherId(given: SomeOtherId, expected: String, path: String = ""): String {
+    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}
+
 fun diffSomeIntWrapper(given: SomeIntWrapper, expected: Int, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
@@ -533,6 +538,20 @@ fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePr
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeRenamedSourcePropertyEntry(
+    var id: String? = null,
+)
+fun diffSomeRenamedSourcePropertyEntry(given: SomeRenamedSourcePropertyEntry, expectedInit: ExpectedSomeRenamedSourcePropertyEntry.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeRenamedSourcePropertyEntry().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffSomeOtherId(given.getId(), it) != "") { result.add(diffSomeOtherId(given.getId(), it, "${path}id.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeReferencingProperty(
     var referenceId: String? = null,
 )
@@ -556,6 +575,20 @@ fun diffSomeRenamedReferencingProperty(given: SomeRenamedReferencingProperty, ex
 
     expected.referenceId?.let {
         if (diffSomeId(given.getReferenceId(), it) != "") { result.add(diffSomeId(given.getReferenceId(), it, "${path}referenceId.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeRenamedReferencingRenamedProperty(
+    var referenceId: String? = null,
+)
+fun diffSomeRenamedReferencingRenamedProperty(given: SomeRenamedReferencingRenamedProperty, expectedInit: ExpectedSomeRenamedReferencingRenamedProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeRenamedReferencingRenamedProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.referenceId?.let {
+        if (diffSomeOtherId(given.getReferenceId(), it) != "") { result.add(diffSomeOtherId(given.getReferenceId(), it, "${path}referenceId.")) }
     }
 
     return result.joinToString("\n")

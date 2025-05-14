@@ -14,6 +14,14 @@ data class SomeId(
     }
 }
 
+data class SomeOtherId(
+    val value: String
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
+
 data class SomeIntWrapper(
     val value: Int
 ) {
@@ -620,6 +628,24 @@ data class SomePropertyEntry(
     }
 }
 
+data class SomeRenamedSourcePropertyEntry(
+    private val sId: String,
+) {
+    fun getId(): SomeOtherId {
+        return SomeOtherId(this.sId)
+    }
+
+    companion object {
+        fun create(
+            id: SomeOtherId,
+        ): SomeRenamedSourcePropertyEntry {
+            return SomeRenamedSourcePropertyEntry(
+                sId = id.value,
+            )
+        }
+    }
+}
+
 data class SomeReferencingProperty(
     private val referenceId: String,
 ) {
@@ -650,6 +676,24 @@ data class SomeRenamedReferencingProperty(
             referenceId: SomeId,
         ): SomeRenamedReferencingProperty {
             return SomeRenamedReferencingProperty(
+                rId = referenceId.value,
+            )
+        }
+    }
+}
+
+data class SomeRenamedReferencingRenamedProperty(
+    private val rId: String,
+) {
+    fun getReferenceId(): SomeOtherId {
+        return SomeOtherId(this.rId)
+    }
+
+    companion object {
+        fun create(
+            referenceId: SomeOtherId,
+        ): SomeRenamedReferencingRenamedProperty {
+            return SomeRenamedReferencingRenamedProperty(
                 rId = referenceId.value,
             )
         }

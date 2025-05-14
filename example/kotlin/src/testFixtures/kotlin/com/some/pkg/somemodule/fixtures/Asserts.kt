@@ -19,6 +19,12 @@ fun assertSomeId(given: SomeId, expected: String) {
 }
 
 
+fun assertSomeOtherId(given: SomeOtherId, expected: String) {
+    val diff = diffSomeOtherId(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+
 fun assertSomeIntWrapper(given: SomeIntWrapper, expected: Int) {
     val diff = diffSomeIntWrapper(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -125,6 +131,11 @@ fun assertSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSome
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomeRenamedSourcePropertyEntry(given: SomeRenamedSourcePropertyEntry, expectedInit: ExpectedSomeRenamedSourcePropertyEntry.() -> Unit) {
+    val diff = diffSomeRenamedSourcePropertyEntry(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: ExpectedSomeReferencingProperty.() -> Unit) {
     val diff = diffSomeReferencingProperty(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -132,6 +143,11 @@ fun assertSomeReferencingProperty(given: SomeReferencingProperty, expectedInit: 
 
 fun assertSomeRenamedReferencingProperty(given: SomeRenamedReferencingProperty, expectedInit: ExpectedSomeRenamedReferencingProperty.() -> Unit) {
     val diff = diffSomeRenamedReferencingProperty(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeRenamedReferencingRenamedProperty(given: SomeRenamedReferencingRenamedProperty, expectedInit: ExpectedSomeRenamedReferencingRenamedProperty.() -> Unit) {
+    val diff = diffSomeRenamedReferencingRenamedProperty(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

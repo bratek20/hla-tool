@@ -105,7 +105,7 @@ abstract class ComplexStructuresPopulator(
                     if(hasAttribute(field.getAttributes(), KnownAttribute.ID_SOURCE)) {
                         extraInfo.markAsIdSource(IdSourceInfo(
                             type = field.asClassField(world).getType(),
-                            fieldName = field.getName(),
+                            fieldName = field.asClassField(world).getName(),
                             parent = getMyPatternType(def.getName())
                         ))
                     }

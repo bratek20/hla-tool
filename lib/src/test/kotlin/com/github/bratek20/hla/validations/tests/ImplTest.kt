@@ -157,6 +157,11 @@ val SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.pr
     Struct::class
 )
 
+val SOME_RENAMED_SOURCE_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeRenamedSourcePropertyEntryList",
+    Struct::class
+)
+
 val SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeReferencingPropertyObject",
     Struct::class
@@ -169,6 +174,11 @@ val SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architectu
 
 val SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "SomeRenamedReferencingPropertyList",
+    Struct::class
+)
+
+val SOME_RENAMED_REFERENCING_RENAMED_PROPERTY_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeRenamedReferencingRenamedPropertyList",
     Struct::class
 )
 
@@ -263,6 +273,12 @@ class ValidationsImplTest {
             }
         ))
 
+        propertiesMock.set(SOME_RENAMED_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "sId" to "1"
+            }
+        ))
+
         propertiesMock.set(SOME_REFERENCING_PROPERTY_OBJECT_PROPERTY_KEY, struct {
             "referenceId" to "1"
         })
@@ -280,6 +296,13 @@ class ValidationsImplTest {
         )
 
         propertiesMock.set(SOME_RENAMED_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "rId" to "1"
+            }
+        ))
+
+        propertiesMock.set(
+            SOME_RENAMED_REFERENCING_RENAMED_PROPERTY_LIST_PROPERTY_KEY, listOf(
             struct {
                 "rId" to "1"
             }
@@ -354,7 +377,7 @@ class ValidationsImplTest {
             "Parsing module SomeModule",
             "Parsing module TypesModule",
 
-            "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects))]",
+            "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects)), IdSourceInfo(type=WorldType(name=SomeOtherId, path=SomeModule/Api/ValueObjects), fieldName=sId, parent=WorldType(name=SomeRenamedSourcePropertyEntry, path=SomeModule/Api/ValueObjects))]",
 
             "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyObject\"/referenceId'",
@@ -365,7 +388,9 @@ class ValidationsImplTest {
             "Values for '\"SomeRenamedReferencingPropertyList\"/[*]/rId': [1]",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
             "Values for '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]': [1]",
-
+            "Allowed values for 'SomeOtherId' from source '\"SomeRenamedSourcePropertyEntryList\"/[*]/sId': [1]",
+            "Found reference for 'SomeOtherId' at '\"SomeRenamedReferencingRenamedPropertyList\"/[*]/rId'",
+            "Values for '\"SomeRenamedReferencingRenamedPropertyList\"/[*]/rId': [1]",
 
             "Validating type 'SomeReferencingProperty'",
 
@@ -518,6 +543,36 @@ class ValidationsImplTest {
             ok = false
             errors = listOf(
                 "Value '3' at '\"SomeRenamedReferencingPropertyList\"/[1]/rId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
+            )
+        }
+    }
+
+    @Test
+    fun `should validate referred renamed source`() {
+        setup()
+
+        propertiesMock.set(
+            SOME_RENAMED_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "sId" to "1"
+            }
+        ))
+
+        propertiesMock.set(SOME_RENAMED_REFERENCING_RENAMED_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "rId" to "1"
+            },
+            struct {
+                "rId" to "3"
+            }
+        ))
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '3' at '\"SomeRenamedReferencingRenamedPropertyList\"/[1]/rId' not found in source values from '\"SomeRenamedSourcePropertyEntryList\"/[*]/sId'",
             )
         }
     }
