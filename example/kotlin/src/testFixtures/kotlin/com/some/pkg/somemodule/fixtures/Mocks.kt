@@ -2,12 +2,14 @@
 
 package com.some.pkg.somemodule.fixtures
 
-import com.some.pkg.othermodule.api.*
 import com.some.pkg.somemodule.api.*
 import org.assertj.core.api.Assertions.assertThat
 import com.some.pkg.othermodule.fixtures.*
+import com.some.pkg.othermodule.api.*
 import com.some.pkg.simplemodule.fixtures.*
+import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
+import com.some.pkg.typesmodule.api.*
 
 class SomeInterfaceMock: SomeInterface {
     private var someEmptyMethodCalls: Int = 0

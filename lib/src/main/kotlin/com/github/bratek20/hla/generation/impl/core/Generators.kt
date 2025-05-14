@@ -177,8 +177,16 @@ abstract class PatternGenerator
                         addImport(it)
                     }
 
-                    modules.getCurrentDependencies().forEach {
-                        addImport(submodulePackageForModule(it.getGroup(), it.getModule().getName(), submodule, c) + ".*")
+                    modules.getCurrentDependencies().forEach { dep ->
+                        val submodules = mutableListOf(
+                            submodule
+                        )
+                        if (submodule == SubmoduleName.Fixtures) {
+                            submodules.add(SubmoduleName.Api)
+                        }
+                        submodules.forEach {
+                            addImport(submodulePackageForModule(dep.getGroup(), dep.getModule().getName(), it, c) + ".*")
+                        }
                     }
 
                     apply(ops)
