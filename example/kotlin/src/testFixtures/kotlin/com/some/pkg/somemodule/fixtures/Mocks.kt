@@ -93,3 +93,96 @@ class SomeInterfaceMock: SomeInterface {
         methodReturningOptSimpleVoCalls = 0
     }
 }
+
+class SomeInterface2Mock: SomeInterface2 {
+    private var referenceOtherClassCalls: Int = 0
+    private var referenceOtherClassResponse: (OtherClassDef.() -> Unit) = {}
+    private var referenceLegacyTypeCalls: Int = 0
+    private var referenceLegacyTypeResponse: com.some.pkg.legacy.LegacyType = null
+    override fun referenceOtherClass(other: OtherClass): OtherClass {
+        referenceOtherClassCalls = referenceOtherClassCalls + 1
+        return otherClass(referenceOtherClassResponse)
+    }
+    fun assertReferenceOtherClassCalls(expectedNumber: Int) {
+        assertThat(referenceOtherClassCalls).withFailMessage("Expected 'referenceOtherClass' to be called " + expectedNumber + " times but was called " + referenceOtherClassCalls + " times").isEqualTo(expectedNumber)
+    }
+    fun setReferenceOtherClassResponse(response: (OtherClassDef.() -> Unit)) {
+        referenceOtherClassResponse = response
+    }
+    override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
+        referenceLegacyTypeCalls = referenceLegacyTypeCalls + 1
+        return TODO()
+    }
+    fun assertReferenceLegacyTypeCalls(expectedNumber: Int) {
+        assertThat(referenceLegacyTypeCalls).withFailMessage("Expected 'referenceLegacyType' to be called " + expectedNumber + " times but was called " + referenceLegacyTypeCalls + " times").isEqualTo(expectedNumber)
+    }
+    fun setReferenceLegacyTypeResponse(response: com.some.pkg.legacy.LegacyType) {
+        referenceLegacyTypeResponse = response
+    }
+    fun reset() {
+        referenceOtherClassCalls = 0
+        referenceLegacyTypeCalls = 0
+    }
+}
+
+class SomeModuleHandlersMock: SomeModuleHandlers {
+    private var someHandlerCalls: Int = 0
+    private var someHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}
+    private var someHandler2Calls: Int = 0
+    private var someHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
+    override fun someHandler(i: SomeHandlerInput): SomeHandlerOutput {
+        someHandlerCalls = someHandlerCalls + 1
+        return someHandlerOutput(someHandlerResponse)
+    }
+    fun assertSomeHandlerCalls(expectedNumber: Int) {
+        assertThat(someHandlerCalls).withFailMessage("Expected 'someHandler' to be called " + expectedNumber + " times but was called " + someHandlerCalls + " times").isEqualTo(expectedNumber)
+    }
+    fun setSomeHandlerResponse(response: (SomeHandlerOutputDef.() -> Unit)) {
+        someHandlerResponse = response
+    }
+    override fun someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
+        someHandler2Calls = someHandler2Calls + 1
+        return someHandlerOutput(someHandler2Response)
+    }
+    fun assertSomeHandler2Calls(expectedNumber: Int) {
+        assertThat(someHandler2Calls).withFailMessage("Expected 'someHandler2' to be called " + expectedNumber + " times but was called " + someHandler2Calls + " times").isEqualTo(expectedNumber)
+    }
+    fun setSomeHandler2Response(response: (SomeHandlerOutputDef.() -> Unit)) {
+        someHandler2Response = response
+    }
+    fun reset() {
+        someHandlerCalls = 0
+        someHandler2Calls = 0
+    }
+}
+
+class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
+    private var someDebugHandlerCalls: Int = 0
+    private var someDebugHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}
+    private var someDebugHandler2Calls: Int = 0
+    private var someDebugHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
+    override fun someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
+        someDebugHandlerCalls = someDebugHandlerCalls + 1
+        return someHandlerOutput(someDebugHandlerResponse)
+    }
+    fun assertSomeDebugHandlerCalls(expectedNumber: Int) {
+        assertThat(someDebugHandlerCalls).withFailMessage("Expected 'someDebugHandler' to be called " + expectedNumber + " times but was called " + someDebugHandlerCalls + " times").isEqualTo(expectedNumber)
+    }
+    fun setSomeDebugHandlerResponse(response: (SomeHandlerOutputDef.() -> Unit)) {
+        someDebugHandlerResponse = response
+    }
+    override fun someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
+        someDebugHandler2Calls = someDebugHandler2Calls + 1
+        return someHandlerOutput(someDebugHandler2Response)
+    }
+    fun assertSomeDebugHandler2Calls(expectedNumber: Int) {
+        assertThat(someDebugHandler2Calls).withFailMessage("Expected 'someDebugHandler2' to be called " + expectedNumber + " times but was called " + someDebugHandler2Calls + " times").isEqualTo(expectedNumber)
+    }
+    fun setSomeDebugHandler2Response(response: (SomeHandlerOutputDef.() -> Unit)) {
+        someDebugHandler2Response = response
+    }
+    fun reset() {
+        someDebugHandlerCalls = 0
+        someDebugHandler2Calls = 0
+    }
+}
