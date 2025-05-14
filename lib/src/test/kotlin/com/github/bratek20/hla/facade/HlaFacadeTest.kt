@@ -499,7 +499,7 @@ class HlaFacadeTest {
             facade.startModule(args)
 
             //then
-            loggerMock.assertInfos(
+            assertThat(loggerMock.getInfos()).contains(
                 "Starting module SomeModule with profile kotlin",
                 "Parsing group hla",
                 "Parsing module NoInterfacesModule",
@@ -539,7 +539,7 @@ class HlaFacadeTest {
             facade.updateModule(args)
 
             //then
-            loggerMock.assertInfos(
+            assertThat(loggerMock.getInfos()).contains(
                 "Updating module SomeModule with profile kotlin",
                 "Parsing group hla",
                 "Parsing module NoInterfacesModule",

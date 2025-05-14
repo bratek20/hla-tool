@@ -6,21 +6,21 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
-import com.github.bratek20.hla.apitypes.impl.ApiTypeLogic
-import com.github.bratek20.hla.apitypes.impl.BaseApiType
-import com.github.bratek20.hla.apitypes.impl.ListApiType
+import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToPascalCase
 
 class MockInterfaceLogic(
     private val def: InterfaceDefinition,
     private val moduleName: String,
     private val apiTypeFactory: ApiTypeFactory,
-    private val defTypeFactory: DefTypeFactory
+    private val defTypeFactory: DefTypeFactory,
+    private val languageName: ModuleLanguage
 ) {
     fun mockClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
@@ -32,13 +32,18 @@ class MockInterfaceLogic(
             addMethod(mockedMethod(method))
             addMethod(callsAssertion(method))
 
-            if (!hasVoidReturnType(method)) {
+            if (!hasVoidReturnType(method) && !methodReturnExternalApiType(method)) {
                 addField(responseField(method))
                 addMethod(setResponse(method))
             }
         }
 
         addMethod(resetMethod())
+    }
+
+    private fun methodReturnExternalApiType(method: MethodDefinition): Boolean {
+        val returnType = returnApiType(method)
+        return returnType is ExternalApiType
     }
 
     private fun callsField(method: MethodDefinition): FieldBuilderOps {
@@ -55,7 +60,11 @@ class MockInterfaceLogic(
 
         val emptyValue = if (returnType is ListApiType) {
             emptyImmutableList(returnType.wrappedType.builder())
-        } else {
+        } else if(returnType is OptionalApiType) {
+            nullValue()
+        }else if(returnType is SerializableApiType || BaseApiType.isAny(returnType)) {
+           if(isKotlin()) emptyLambda() else nullValue()
+        }else {
             nullValue()
         }
 
@@ -65,6 +74,10 @@ class MockInterfaceLogic(
             value = emptyValue
             mutable = true
         }
+    }
+
+    private fun isKotlin(): Boolean {
+        return languageName == ModuleLanguage.KOTLIN
     }
 
     private fun setResponse(method: MethodDefinition): MethodBuilderOps = {
@@ -91,6 +104,8 @@ class MockInterfaceLogic(
 
     private fun mockedMethod(method: MethodDefinition): MethodBuilderOps = {
         name = method.getName()
+        this.overridesClassMethod = isKotlin()
+
         method.getArgs().forEach { arg ->
             addArg {
                 name = arg.getName()
@@ -118,30 +133,26 @@ class MockInterfaceLogic(
 
     private fun callsAssertion(method: MethodDefinition): MethodBuilderOps = {
         name = "assert${camelToPascalCase(method.getName())}Calls"
+        val expectedValue = "expectedNumber"
+        val expectedValueExpression = variable (expectedValue)
+        val givenExpression = instanceVariable(callsVariableName(method))
         addArg {
-            name = "expectedNumber"
+            name = expectedValue
             type = baseType(BaseType.INT)
         }
         setBody {
-            add(functionCallStatement {
-                name = "AssertEquals"
-                addArg {
-                    instanceVariable(callsVariableName(method))
-                }
-                addArg {
-                    variable("expectedNumber")
-                }
-                addArg {
-                    plus {
-                        left = string("Expected '${method.getName()}' to be called ")
+            add(assertEquals {
+                given = givenExpression
+                expected = expectedValueExpression
+                message = plus {
+                    left = string("Expected '${method.getName()}' to be called ")
+                    right = plus {
+                        left = variable(expectedValue)
                         right = plus {
-                            left = variable("expectedNumber")
+                            left = string(" times but was called ")
                             right = plus {
-                                left = string(" times but was called ")
-                                right = plus {
-                                    left = instanceVariable(callsVariableName(method))
-                                    right = string(" times")
-                                }
+                                left = givenExpression
+                                right = string(" times")
                             }
                         }
                     }
@@ -248,12 +259,22 @@ class MocksGenerator: PatternGenerator() {
         return PatternName.Mocks
     }
 
+    override fun extraKotlinImports(): List<String> {
+        val moduleName = module.getName().value.lowercase()
+        val modulePackage = profileToRootPackage(moduleGroup.getProfile())
+
+        return listOf(
+            "$modulePackage.$moduleName.api.*",
+            "org.assertj.core.api.Assertions.assertThat"
+        )
+    }
+
     override fun supportsCodeBuilder(): Boolean {
         return true
     }
 
     override fun shouldGenerate(): Boolean {
-        return getMockedInterfaces().isNotEmpty() && language.name() == ModuleLanguage.TYPE_SCRIPT
+        return getMockedInterfaces().isNotEmpty() && language.name() != ModuleLanguage.C_SHARP
     }
 
     private fun getMockedInterfaces(): List<InterfaceDefinition> {
@@ -262,19 +283,21 @@ class MocksGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture())) }
+        val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture()), language.name()) }
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.mockClass())
         }
 
-        add(typeScriptNamespace {
-            name = "$moduleName.Mocks"
-            mockInterfacesLogic.forEach { logic ->
-                addFunction(logic.createMock())
-                addFunction(logic.setup())
-            }
-        })
+        if(language.name() == ModuleLanguage.TYPE_SCRIPT) {
+            add(typeScriptNamespace {
+                name = "$moduleName.Mocks"
+                mockInterfacesLogic.forEach { logic ->
+                    addFunction(logic.createMock())
+                    addFunction(logic.setup())
+                }
+            })
+        }
     }
 
     override fun doNotGenerateTypeScriptNamespace(): Boolean {

@@ -19,6 +19,7 @@ import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSu
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldApi
 import com.github.bratek20.hla.hlatypesworld.impl.HlaTypesWorldApiLogic
 import com.github.bratek20.hla.importscalculation.api.ImportsCalculator
+import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 
@@ -28,6 +29,8 @@ data class DomainContext(
 ) {
     val module: ModuleDefinition
         get() = queries.currentModule
+    val moduleGroup: ModuleGroup
+        get() = queries.group
 }
 
 class ModuleGeneratorLogic(

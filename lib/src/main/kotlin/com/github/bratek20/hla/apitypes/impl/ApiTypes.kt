@@ -135,6 +135,10 @@ class BaseApiType(
         fun isVoid(type: ApiType): Boolean {
             return type is BaseApiType && type.name == BaseType.VOID
         }
+
+        fun isAny(type: ApiType): Boolean {
+            return type is BaseApiType && type.name == BaseType.ANY
+        }
     }
 }
 

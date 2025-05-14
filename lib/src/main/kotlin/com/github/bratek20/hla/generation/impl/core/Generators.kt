@@ -69,6 +69,8 @@ abstract class ModulePartGenerator {
 
     protected val module
         get() = c.module
+    protected val moduleGroup
+        get() = c.domain.queries.group
 
     protected val moduleName
         get() = module.getName().value
@@ -175,8 +177,16 @@ abstract class PatternGenerator
                         addImport(it)
                     }
 
-                    modules.getCurrentDependencies().forEach {
-                        addImport(submodulePackageForModule(it.getGroup(), it.getModule().getName(), submodule, c) + ".*")
+                    modules.getCurrentDependencies().forEach { dep ->
+                        val submodules = mutableListOf(
+                            submodule
+                        )
+                        if (submodule == SubmoduleName.Fixtures) {
+                            submodules.add(SubmoduleName.Api)
+                        }
+                        submodules.forEach {
+                            addImport(submodulePackageForModule(dep.getGroup(), dep.getModule().getName(), it, c) + ".*")
+                        }
                     }
 
                     apply(ops)

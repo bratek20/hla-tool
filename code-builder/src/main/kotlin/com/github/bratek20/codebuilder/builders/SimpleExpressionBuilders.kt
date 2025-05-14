@@ -9,6 +9,10 @@ interface ExpressionBuilder: LinePartBuilder {
 }
 
 typealias ExpressionBuilderProvider = () -> ExpressionBuilder
+/**
+ * helper function to easily define expressions like variable
+ * use it only to define other expressions
+ */
 fun expression(value: String) = object : ExpressionBuilder {
     override fun build(c: CodeBuilderContext): String {
         return value
