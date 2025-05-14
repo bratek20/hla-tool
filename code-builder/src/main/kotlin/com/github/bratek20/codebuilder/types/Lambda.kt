@@ -3,6 +3,7 @@ package com.github.bratek20.codebuilder.types
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.utils.camelToPascalCase
 
 fun emptyLambda(argsNumber: Int = 0) = expression { c ->
@@ -34,7 +35,11 @@ class LambdaBuilder: ExpressionBuilder {
 fun lambda(block: LambdaBuilder.() -> Unit) = LambdaBuilder().apply(block)
 
 fun lambdaType(type: TypeBuilder) = typeName { c ->
-    "Action<${type.build(c)}>"
+    when(c.lang) {
+        is Kotlin -> "(${type.build(c)}.() -> Unit)"
+        is CSharp -> "Action<${type.build(c)}>"
+        else -> throw IllegalStateException("Unsupported language: ${c.lang}")
+    }
 }
 
 class LambdaCallBuilder: CallBuilder() {

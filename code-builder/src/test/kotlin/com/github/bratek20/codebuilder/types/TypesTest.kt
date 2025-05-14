@@ -522,6 +522,12 @@ class TypesTest {
                     Action<SomeType>
                     """
                 }
+                langExpected {
+                    lang = Kotlin()
+                    expected = """
+                    (SomeType.() -> Unit)
+                    """
+                }
             }
         }
 
