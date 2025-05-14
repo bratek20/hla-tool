@@ -32,13 +32,18 @@ class MockInterfaceLogic(
             addMethod(mockedMethod(method))
             addMethod(callsAssertion(method))
 
-            if (!hasVoidReturnType(method)) {
+            if (!hasVoidReturnType(method) && !methodReturnExternalApiType(method)) {
                 addField(responseField(method))
                 addMethod(setResponse(method))
             }
         }
 
         addMethod(resetMethod())
+    }
+
+    private fun methodReturnExternalApiType(method: MethodDefinition): Boolean {
+        val returnType = returnApiType(method)
+        return returnType is ExternalApiType
     }
 
     private fun callsField(method: MethodDefinition): FieldBuilderOps {
@@ -59,7 +64,7 @@ class MockInterfaceLogic(
             nullValue()
         }else if(returnType is SerializableApiType || BaseApiType.isAny(returnType)) {
            emptyBuilderValue()
-        } else {
+        }else {
             nullValue()
         }
 
