@@ -194,6 +194,9 @@ class FilesModifiers(
     }
 
     private fun calculateFilePrefix(tsconfigPath: Path, codePath: Path): String {
+        if(!codePath.toString().contains(tsconfigPath.toString())) {
+            return "${codePath}/"
+        }
         val result = codePath.subtract(tsconfigPath).value
         return if (result.isEmpty()) {
             ""
