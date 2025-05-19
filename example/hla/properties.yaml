@@ -57,7 +57,7 @@ profiles:
           - submodule: "Fixtures"
             path: "Tests/fixtures"
     typeScript:
-      mainTsconfigPath: "tsconfig.json"
+      mainTsconfigPath: "Configs/tsconfig.json"
       testTsconfigPath: "Tests/tsconfig.json"
       launchJsonPath: ""
       packageJsonPath: ""
@@ -74,7 +74,7 @@ profiles:
           - submodule: "Fixtures"
             path: "Tests/fixtures"
     typeScript:
-      mainTsconfigPath: "tsconfig.json"
+      mainTsconfigPath: "Configs/tsconfig.json"
       testTsconfigPath: "Tests/tsconfig.json"
       launchJsonPath: ""
       packageJsonPath: ""
