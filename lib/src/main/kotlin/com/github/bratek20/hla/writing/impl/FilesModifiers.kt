@@ -1,7 +1,6 @@
 package com.github.bratek20.hla.writing.impl
 
 import com.github.bratek20.hla.facade.api.HlaProfile
-import com.github.bratek20.hla.facade.api.HlaSrcPaths
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.TypeScriptConfig
 import com.github.bratek20.hla.generation.api.GeneratedModule
@@ -153,21 +152,44 @@ class FilesModifiers(
 
     //TODO-REF a lot of duplication, similar methods etc
     private fun updateTsConfigFiles(rootPath: Path, info: TypeScriptConfig, generateResult: GenerateResult, profile: HlaProfile) {
+        val mainTsconfigPath = getPathWithoutConfig(info.getMainTsconfigPath())
+        val testTsconfigPath = getPathWithoutConfig(info.getTestTsconfigPath())
         val typeScriptPaths = TypeScriptPaths(
-            mainTsconfig = rootPath.add(info.getMainTsconfigPath()),
-            testTsconfig = rootPath.add(info.getTestTsconfigPath())
+            mainTsconfig = rootPath.add(mainTsconfigPath),
+            testTsconfig = rootPath.add(testTsconfigPath)
         )
+        val testConfigFileName = getConfigFileName(info.getTestTsconfigPath())
+        val mainConfigFileName = getConfigFileName(info.getMainTsconfigPath())
+
 
         val moduleName = generateResult.getMain().getName().value
-        updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(info.getMainTsconfigPath(), profile.getPaths().getSrc().getDefault())}${moduleName}/")
+        updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(mainTsconfigPath, profile.getPaths().getSrc().getDefault())}${moduleName}/", mainConfigFileName)
 
-        val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(FileName("tsconfig.json")))
-        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures()!!, "${calculateFilePrefix(info.getTestTsconfigPath(), getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
+        val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(testConfigFileName))
+        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures()!!, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
         generateResult.getTests()?.let {
-            testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(info.getTestTsconfigPath(), getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
+            testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
         }
         if (testFile != initialTestFile) {
             files.write(typeScriptPaths.testTsconfig, testFile!!)
+        }
+    }
+
+    private fun getPathWithoutConfig(path: Path): Path {
+        val stringPath = path.toString()
+        return if(stringPath.contains("/")) {
+            Path(stringPath.substringBeforeLast("/"))
+        }else {
+            Path("")
+        }
+    }
+
+    private fun getConfigFileName(path: Path): FileName {
+        val stringPath = path.toString()
+        return if(stringPath.contains("/")) {
+            FileName(stringPath.substringAfterLast("/"))
+        }else {
+            FileName(stringPath)
         }
     }
 
@@ -180,13 +202,23 @@ class FilesModifiers(
         }
     }
 
-    private fun updateTsConfigFileAndWrite(tsconfigPath: Path, directory: Directory, prefix: String) {
-        val x = updateTsConfigFileAndReturn(tsconfigPath, directory, prefix)
+    private fun updateTsConfigFileAndWrite(
+        tsconfigPath: Path,
+        directory: Directory,
+        prefix: String,
+        configFileName: FileName
+    ) {
+        val x = updateTsConfigFileAndReturn(tsconfigPath, directory, prefix, configFileName)
         x?.let { files.write(tsconfigPath, it) }
     }
 
-    private fun updateTsConfigFileAndReturn(tsconfigPath: Path, directory: Directory, prefix: String): File? {
-        return updateTsConfigFile(files.read(tsconfigPath.add(FileName("tsconfig.json"))), directory, prefix)
+    private fun updateTsConfigFileAndReturn(
+        tsconfigPath: Path,
+        directory: Directory,
+        prefix: String,
+        configFileName: FileName
+    ): File? {
+        return updateTsConfigFile(files.read(tsconfigPath.add(configFileName)), directory, prefix)
     }
 
     private fun updateTsConfigFile(file: File, directory: Directory, prefix: String): File? {
