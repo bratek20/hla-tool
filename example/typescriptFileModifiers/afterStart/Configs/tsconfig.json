@@ -1,21 +1,21 @@
 {
     "files": [
-        "main/SomeModule/SomeClass.ts",
-        "main/SomeModule/SomeClass2.ts",
+        "../main/SomeModule/SomeClass.ts",
+        "../main/SomeModule/SomeClass2.ts",
 
         //OtherModule start
-        "main/OtherModule/Api/ValueObjects.ts",
-        "main/OtherModule/Api/DataClasses.ts",
-        "main/OtherModule/Api/PropertyKeys.ts",
-        "main/OtherModule/Api/DataKeys.ts",
-        "main/OtherModule/Api/Exceptions.ts",
-        "main/OtherModule/Api/Interfaces.ts",
+        "../main/OtherModule/Api/ValueObjects.ts",
+        "../main/OtherModule/Api/DataClasses.ts",
+        "../main/OtherModule/Api/PropertyKeys.ts",
+        "../main/OtherModule/Api/DataKeys.ts",
+        "../main/OtherModule/Api/Exceptions.ts",
+        "../main/OtherModule/Api/Interfaces.ts",
 
-        "main/OtherModule/Impl/Logic.ts",
+        "../main/OtherModule/Impl/Logic.ts",
 
-        "main/OtherModule/Web/PlayFabHandlers.ts",
+        "../main/OtherModule/Web/PlayFabHandlers.ts",
 
-        "main/OtherModule/Context/Impl.ts",
+        "../main/OtherModule/Context/Impl.ts",
         //OtherModule end
     ]
 }
