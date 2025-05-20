@@ -161,7 +161,6 @@ class FilesModifiers(
         val testConfigFileName = getConfigFileName(info.getTestTsconfigPath())
         val mainConfigFileName = getConfigFileName(info.getMainTsconfigPath())
 
-
         val moduleName = generateResult.getMain().getName().value
         updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(mainTsconfigPath, profile.getPaths().getSrc().getDefault())}${moduleName}/", mainConfigFileName)
 
@@ -195,6 +194,10 @@ class FilesModifiers(
 
     private fun calculateFilePrefix(tsconfigPath: Path, codePath: Path): String {
         if(!codePath.toString().contains(tsconfigPath.toString())) {
+            if(tsconfigPath.toString().isNotEmpty()) {
+                val upperFolderCount = tsconfigPath.toString().count { it == '/' } + 1
+                return "../".repeat(upperFolderCount) + "${codePath}/"
+            }
             return "${codePath}/"
         }
         val result = codePath.subtract(tsconfigPath).value
