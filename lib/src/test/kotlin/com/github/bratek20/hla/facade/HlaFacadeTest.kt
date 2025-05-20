@@ -661,8 +661,8 @@ class HlaFacadeTest {
         assertFileModification(
             filesMock,
             1,
-            "../example/typescriptFileModifiers/afterStart/tsconfig.json",
-            "../example/hla/../typescriptFileModifiers/beforeStart",
+            "../example/typescriptFileModifiers/afterStart/Configs/tsconfig.json",
+            "../example/hla/../typescriptFileModifiers/beforeStart/Configs",
             "tsconfig.json"
         )
 
