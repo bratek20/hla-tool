@@ -1,7 +1,7 @@
 {
     "files": [
-        "main/SomeModule/SomeClass.ts",
-        "main/OtherModule/Api/DataClasses.ts", //will be moved to proper place after start
-        "main/SomeModule/SomeClass2.ts",
+        "../main/SomeModule/SomeClass.ts",
+        "../main/OtherModule/Api/DataClasses.ts", //will be moved to proper place after start
+        "../main/SomeModule/SomeClass2.ts",
     ]
 }
