@@ -173,9 +173,29 @@ fun diffErrorCodeMapping(given: ErrorCodeMapping, expectedInit: ExpectedErrorCod
     return result.joinToString("\n")
 }
 
+data class ExpectedHandlerNameMapping(
+    var methodPath: String? = null,
+    var handlerName: String? = null,
+)
+fun diffHandlerNameMapping(given: HandlerNameMapping, expectedInit: ExpectedHandlerNameMapping.() -> Unit, path: String = ""): String {
+    val expected = ExpectedHandlerNameMapping().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.methodPath?.let {
+        if (given.getMethodPath() != it) { result.add("${path}methodPath ${given.getMethodPath()} != ${it}") }
+    }
+
+    expected.handlerName?.let {
+        if (given.getHandlerName() != it) { result.add("${path}handlerName ${given.getHandlerName()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedPlayFabHandlersDefinition(
     var exposedInterfaces: List<(ExpectedExposedInterface.() -> Unit)>? = null,
     var errorCodesMapping: List<(ExpectedErrorCodeMapping.() -> Unit)>? = null,
+    var handlerNamesMapping: List<(ExpectedHandlerNameMapping.() -> Unit)>? = null,
 )
 fun diffPlayFabHandlersDefinition(given: PlayFabHandlersDefinition, expectedInit: ExpectedPlayFabHandlersDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedPlayFabHandlersDefinition().apply(expectedInit)
@@ -189,6 +209,11 @@ fun diffPlayFabHandlersDefinition(given: PlayFabHandlersDefinition, expectedInit
     expected.errorCodesMapping?.let {
         if (given.getErrorCodesMapping().size != it.size) { result.add("${path}errorCodesMapping size ${given.getErrorCodesMapping().size} != ${it.size}"); return@let }
         given.getErrorCodesMapping().forEachIndexed { idx, entry -> if (diffErrorCodeMapping(entry, it[idx]) != "") { result.add(diffErrorCodeMapping(entry, it[idx], "${path}errorCodesMapping[${idx}].")) } }
+    }
+
+    expected.handlerNamesMapping?.let {
+        if (given.getHandlerNamesMapping().size != it.size) { result.add("${path}handlerNamesMapping size ${given.getHandlerNamesMapping().size} != ${it.size}"); return@let }
+        given.getHandlerNamesMapping().forEachIndexed { idx, entry -> if (diffHandlerNameMapping(entry, it[idx]) != "") { result.add(diffHandlerNameMapping(entry, it[idx], "${path}handlerNamesMapping[${idx}].")) } }
     }
 
     return result.joinToString("\n")

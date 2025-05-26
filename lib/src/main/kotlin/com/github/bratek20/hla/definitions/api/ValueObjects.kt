@@ -176,9 +176,35 @@ data class ErrorCodeMapping(
     }
 }
 
+data class HandlerNameMapping(
+    private val methodPath: String,
+    private val handlerName: String,
+) {
+    fun getMethodPath(): String {
+        return this.methodPath
+    }
+
+    fun getHandlerName(): String {
+        return this.handlerName
+    }
+
+    companion object {
+        fun create(
+            methodPath: String,
+            handlerName: String,
+        ): HandlerNameMapping {
+            return HandlerNameMapping(
+                methodPath = methodPath,
+                handlerName = handlerName,
+            )
+        }
+    }
+}
+
 data class PlayFabHandlersDefinition(
     private val exposedInterfaces: List<ExposedInterface>,
     private val errorCodesMapping: List<ErrorCodeMapping>,
+    private val handlerNamesMapping: List<HandlerNameMapping>,
 ) {
     fun getExposedInterfaces(): List<ExposedInterface> {
         return this.exposedInterfaces
@@ -188,14 +214,20 @@ data class PlayFabHandlersDefinition(
         return this.errorCodesMapping
     }
 
+    fun getHandlerNamesMapping(): List<HandlerNameMapping> {
+        return this.handlerNamesMapping
+    }
+
     companion object {
         fun create(
             exposedInterfaces: List<ExposedInterface>,
             errorCodesMapping: List<ErrorCodeMapping>,
+            handlerNamesMapping: List<HandlerNameMapping>,
         ): PlayFabHandlersDefinition {
             return PlayFabHandlersDefinition(
                 exposedInterfaces = exposedInterfaces,
                 errorCodesMapping = errorCodesMapping,
+                handlerNamesMapping = handlerNamesMapping,
             )
         }
     }

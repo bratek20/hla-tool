@@ -283,6 +283,9 @@ Web
         ErrorCodesMapping
             SomeException -> "EC1"
             Some2Exception -> "EC2"
+        HandlerNamesMapping
+            SomeModuleHandlers.someHandler2 -> "MyHandlerName"
+            SomeModuleDebugHandlers.someDebugHandler2 -> "MyDebugHandlerName"
 
 Fixtures
     MockedInterfaces

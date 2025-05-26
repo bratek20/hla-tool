@@ -772,6 +772,10 @@ class ModuleGroupParserTest {
                                 code = "\"EC2\""
                             }
                         )
+                        handlerNamesMapping = listOf {
+                            methodPath = "SomeHandlers.someMethod"
+                            handlerName = "\"SomeHandlerName\""
+                        }
                     }
                 }
             },
