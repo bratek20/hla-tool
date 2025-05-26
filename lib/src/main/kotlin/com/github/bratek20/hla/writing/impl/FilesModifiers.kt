@@ -165,9 +165,14 @@ class FilesModifiers(
         updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(mainTsconfigPath, profile.getPaths().getSrc().getDefault())}${moduleName}/", mainConfigFileName)
 
         val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(testConfigFileName))
-        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures()!!, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
+        var testFile: File = initialTestFile
+        generateResult.getFixtures()?.let {
+            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
+            testFile = x ?: testFile
+        }
         generateResult.getTests()?.let {
-            testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
+            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
+            testFile = x ?: testFile
         }
         if (testFile != initialTestFile) {
             files.write(typeScriptPaths.testTsconfig, testFile!!)

@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "test SomeModule": "npm run build_testapp && npm run run_testapp \" SomeModule\"",
+    "test OtherModule": "npm run build_testapp && npm run run_testapp \" OtherModule\""
+  }
+}

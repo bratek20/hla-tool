@@ -22,6 +22,11 @@ profiles:
               - "Tests"
               - "Fixtures"
             path: "Tests"
+    typeScript:
+      mainTsconfigPath: "Configs/tsconfig.main.json"
+      testTsconfigPath: "Configs/tsconfig.test.json"
+      launchJsonPath: ""
+      packageJsonPath: ""
 
   - name: "cSharp"
     language: "C_SHARP"
