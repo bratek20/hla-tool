@@ -243,13 +243,15 @@ class FilesModifiers(
             if(index == 0) {
                newLines.add(moduleStartComment)
             }
-            item.fileNames.forEach { fileName ->
-                newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
-                val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName")}
-                if (result) {
-                    indexToAdd--
+            item.fileNames
+                .filter { it.endsWith(".ts") }
+                .forEach { fileName ->
+                    newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
+                    val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName")}
+                    if (result) {
+                        indexToAdd--
+                    }
                 }
-            }
         }
 
         newLines.add(moduleEndComment)

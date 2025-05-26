@@ -11,6 +11,7 @@
         "../main/OtherModule/Api/Exceptions.ts",
         "../main/OtherModule/Api/Interfaces.ts",
 
+        "../main/OtherModule/Impl/Track.ts",
         "../main/OtherModule/Impl/Logic.ts",
 
         "../main/OtherModule/Web/PlayFabHandlers.ts",
