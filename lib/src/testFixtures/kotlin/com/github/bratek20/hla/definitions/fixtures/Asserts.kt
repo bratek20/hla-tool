@@ -41,6 +41,11 @@ fun assertErrorCodeMapping(given: ErrorCodeMapping, expectedInit: ExpectedErrorC
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertHandlerNameMapping(given: HandlerNameMapping, expectedInit: ExpectedHandlerNameMapping.() -> Unit) {
+    val diff = diffHandlerNameMapping(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertPlayFabHandlersDefinition(given: PlayFabHandlersDefinition, expectedInit: ExpectedPlayFabHandlersDefinition.() -> Unit) {
     val diff = diffPlayFabHandlersDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

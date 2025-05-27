@@ -29,6 +29,10 @@ Interfaces
     OtherInterface
         otherMethod()
 
+Tracking
+    Dimensions
+        OtherDimension (table: "other_dimension")
+
 Web
     PlayFabHandlers
         ExposedInterfaces

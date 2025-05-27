@@ -87,15 +87,29 @@ fun errorCodeMapping(init: ErrorCodeMappingDef.() -> Unit = {}): ErrorCodeMappin
     )
 }
 
+data class HandlerNameMappingDef(
+    var methodPath: String = "someValue",
+    var handlerName: String = "someValue",
+)
+fun handlerNameMapping(init: HandlerNameMappingDef.() -> Unit = {}): HandlerNameMapping {
+    val def = HandlerNameMappingDef().apply(init)
+    return HandlerNameMapping.create(
+        methodPath = def.methodPath,
+        handlerName = def.handlerName,
+    )
+}
+
 data class PlayFabHandlersDefinitionDef(
     var exposedInterfaces: List<(ExposedInterfaceDef.() -> Unit)> = emptyList(),
     var errorCodesMapping: List<(ErrorCodeMappingDef.() -> Unit)> = emptyList(),
+    var handlerNamesMapping: List<(HandlerNameMappingDef.() -> Unit)> = emptyList(),
 )
 fun playFabHandlersDefinition(init: PlayFabHandlersDefinitionDef.() -> Unit = {}): PlayFabHandlersDefinition {
     val def = PlayFabHandlersDefinitionDef().apply(init)
     return PlayFabHandlersDefinition.create(
         exposedInterfaces = def.exposedInterfaces.map { it -> exposedInterface(it) },
         errorCodesMapping = def.errorCodesMapping.map { it -> errorCodeMapping(it) },
+        handlerNamesMapping = def.handlerNamesMapping.map { it -> handlerNameMapping(it) },
     )
 }
 

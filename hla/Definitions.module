@@ -41,9 +41,14 @@ ValueObjects
         exceptionName: string
         code: string
 
+    HandlerNameMapping
+        methodPath: string
+        handlerName: string
+
     PlayFabHandlersDefinition
         exposedInterfaces: ExposedInterface[]
         errorCodesMapping: ErrorCodeMapping[]
+        handlerNamesMapping: HandlerNameMapping[]
 
     WebSubmoduleDefinition
         http: HttpDefinition?

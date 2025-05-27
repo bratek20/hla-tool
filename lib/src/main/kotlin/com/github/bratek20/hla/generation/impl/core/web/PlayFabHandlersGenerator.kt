@@ -8,6 +8,8 @@ import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.newListOf
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.definitions.api.ExposedInterface
+import com.github.bratek20.hla.definitions.api.InterfaceDefinition
+import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -25,18 +27,30 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getWebSubmodule()?.getPlayFabHandlers() != null
     }
 
+    private fun handlerName(interf: InterfaceDefinition, method: MethodDefinition, addDebugToHandlerName: Boolean): String {
+        val mapping = getPlayFabHandlers().getHandlerNamesMapping().firstOrNull {
+            it.getMethodPath() == "${interf.getName()}.${method.getName()}"
+        }
+        if (mapping != null) {
+            return mapping.getHandlerName().replace("\"","")
+        }
+
+        val debugPart = if (addDebugToHandlerName) ".Debug" else ""
+        return "$moduleName$debugPart.${method.getName()}"
+    }
+
     private fun registerCall(
         exposedInterfaces: List<ExposedInterface>,
-        addDebugToHandlerName: Boolean = false
+        addDebugToHandlerName: Boolean
     ): FunctionCallBuilderOps = {
         val handlers: List<TypeScriptStructureBuilder> = exposedInterfaces.flatMap {
             module.getInterfaces().first { interf -> it.getName() == interf.getName() }.let { interf ->
                 interf.getMethods().map { method ->
-                    val debugPart = if (addDebugToHandlerName) ".Debug" else ""
+
                     typeScriptStructure {
                         addProperty {
                             key = "name"
-                            value = string("$moduleName$debugPart.${method.getName()}")
+                            value = string(handlerName(interf, method, addDebugToHandlerName))
                         }
                         addProperty {
                             key = "handler"
@@ -70,13 +84,16 @@ class PlayFabHandlersGenerator: PatternGenerator() {
             }
         }
     }
+
+    private fun getPlayFabHandlers() = c.module.getWebSubmodule()!!.getPlayFabHandlers()!!
+
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val playFabHandlers = c.module.getWebSubmodule()!!.getPlayFabHandlers()!!
+        val playFabHandlers = getPlayFabHandlers()
         val allExposedInterfaces = playFabHandlers.getExposedInterfaces()
         val normalExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } == null}
         val debugExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } != null }
 
-        addFunctionCall(registerCall(normalExposedInterfaces))
+        addFunctionCall(registerCall(normalExposedInterfaces, false))
 
         if (debugExposedInterfaces.isNotEmpty()) {
             addFunction {

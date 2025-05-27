@@ -21,3 +21,5 @@ Web
         ErrorCodesMapping
             SomeException -> "EC1"
             SomeException2 -> "EC2"
+        HandlerNamesMapping
+            SomeHandlers.someMethod -> "SomeHandlerName"

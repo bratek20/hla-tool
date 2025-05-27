@@ -147,6 +147,10 @@ class ModuleGroupParserLogic(
                         ?.filterIsInstance<ParsedMapping>()?.map {
                             ErrorCodeMapping(it.key, it.value)
                         } ?: emptyList(),
+                    handlerNamesMapping = findSection(s.elements, "HandlerNamesMapping")?.elements
+                        ?.filterIsInstance<ParsedMapping>()?.map {
+                            HandlerNameMapping(it.key, it.value)
+                        } ?: emptyList(),
                 )
             }
             return WebSubmoduleDefinition(

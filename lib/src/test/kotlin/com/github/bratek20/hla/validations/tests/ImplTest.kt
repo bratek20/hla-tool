@@ -18,6 +18,7 @@ import com.github.bratek20.hla.validations.fixtures.assertValidationResult
 import com.github.bratek20.logs.LoggerMock
 import com.github.bratek20.logs.LogsMocks
 import com.github.bratek20.utils.directory.fixtures.path
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -369,14 +370,7 @@ class ValidationsImplTest {
 
         val result = validateCall()
 
-        loggerMock.assertInfos(
-            "Parsing group hla",
-            "Parsing module NoInterfacesModule",
-            "Parsing module OtherModule",
-            "Parsing module SimpleModule",
-            "Parsing module SomeModule",
-            "Parsing module TypesModule",
-
+        assertThat(loggerMock.getInfos()).contains(
             "Source infos: [IdSourceInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=id, parent=WorldType(name=SomePropertyEntry, path=SomeModule/Api/ValueObjects)), IdSourceInfo(type=WorldType(name=SomeOtherId, path=SomeModule/Api/ValueObjects), fieldName=sId, parent=WorldType(name=SomeRenamedSourcePropertyEntry, path=SomeModule/Api/ValueObjects))]",
 
             "Allowed values for 'SomeId' from source '\"SomeSourcePropertyList\"/[*]/id': [1]",

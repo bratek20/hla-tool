@@ -157,6 +157,11 @@ class HlaFacadeTest {
                     TYPE_SCRIPT_2_PROFILE,
                     typescript2TestPaths("ImportingModule")
                 ),
+                Arguments.of(
+                    "OnlyInterfacesModule",
+                    TYPE_SCRIPT_PROFILE,
+                    typescriptTestPaths("OnlyInterfacesModule")
+                ),
             )
         }
     }
@@ -638,7 +643,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(10)
+        directoriesMock.assertWriteCount(11)
     }
 
     @Test
