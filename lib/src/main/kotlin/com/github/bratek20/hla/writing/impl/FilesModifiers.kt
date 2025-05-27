@@ -165,12 +165,17 @@ class FilesModifiers(
         updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(mainTsconfigPath, profile.getPaths().getSrc().getDefault())}${moduleName}/", mainConfigFileName)
 
         val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(testConfigFileName))
-        var testFile = updateTsConfigFile(initialTestFile, generateResult.getFixtures()!!, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
+        var testFile: File = initialTestFile
+        generateResult.getFixtures()?.let {
+            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
+            testFile = x ?: testFile
+        }
         generateResult.getTests()?.let {
-            testFile = updateTsConfigFile(testFile!!, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
+            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
+            testFile = x ?: testFile
         }
         if (testFile != initialTestFile) {
-            files.write(typeScriptPaths.testTsconfig, testFile!!)
+            files.write(typeScriptPaths.testTsconfig, testFile)
         }
     }
 
@@ -214,17 +219,8 @@ class FilesModifiers(
         prefix: String,
         configFileName: FileName
     ) {
-        val x = updateTsConfigFileAndReturn(tsconfigPath, directory, prefix, configFileName)
+        val x = updateTsConfigFile(files.read(tsconfigPath.add(configFileName)), directory, prefix)
         x?.let { files.write(tsconfigPath, it) }
-    }
-
-    private fun updateTsConfigFileAndReturn(
-        tsconfigPath: Path,
-        directory: Directory,
-        prefix: String,
-        configFileName: FileName
-    ): File? {
-        return updateTsConfigFile(files.read(tsconfigPath.add(configFileName)), directory, prefix)
     }
 
     private fun updateTsConfigFile(file: File, directory: Directory, prefix: String): File? {
