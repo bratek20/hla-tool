@@ -643,7 +643,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(10)
+        directoriesMock.assertWriteCount(11)
     }
 
     @Test

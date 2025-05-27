@@ -175,7 +175,7 @@ class FilesModifiers(
             testFile = x ?: testFile
         }
         if (testFile != initialTestFile) {
-            files.write(typeScriptPaths.testTsconfig, testFile!!)
+            files.write(typeScriptPaths.testTsconfig, testFile)
         }
     }
 
@@ -219,17 +219,8 @@ class FilesModifiers(
         prefix: String,
         configFileName: FileName
     ) {
-        val x = updateTsConfigFileAndReturn(tsconfigPath, directory, prefix, configFileName)
+        val x = updateTsConfigFile(files.read(tsconfigPath.add(configFileName)), directory, prefix)
         x?.let { files.write(tsconfigPath, it) }
-    }
-
-    private fun updateTsConfigFileAndReturn(
-        tsconfigPath: Path,
-        directory: Directory,
-        prefix: String,
-        configFileName: FileName
-    ): File? {
-        return updateTsConfigFile(files.read(tsconfigPath.add(configFileName)), directory, prefix)
     }
 
     private fun updateTsConfigFile(file: File, directory: Directory, prefix: String): File? {
