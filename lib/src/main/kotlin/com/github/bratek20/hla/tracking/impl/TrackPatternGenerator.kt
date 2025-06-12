@@ -284,7 +284,7 @@ class TrackingTableLogic(
             return "VARCHAR(64)"
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Primitives) {
-            return primitiveToSqlType(BaseType.valueOf(serializableType.getName().value.uppercase()))
+            return primitiveToSqlType(BaseType.valueOf(type.getName().value.uppercase()))
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Track) { // it is dimension
             return "BIGINT"
