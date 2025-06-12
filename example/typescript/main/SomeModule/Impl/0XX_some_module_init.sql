@@ -14,6 +14,7 @@ CREATE TABLE some_dimension_with_enum (
 
 CREATE TABLE some_tracking_event (
     CONSTRAINT some_tracking_event_id PRIMARY KEY (event_id),
+    optional_int_exposed INTEGER,
     some_dimension_id BIGINT NOT NULL,
     optional_generic_tracking_dimension_id BIGINT,
     optional_int INTEGER

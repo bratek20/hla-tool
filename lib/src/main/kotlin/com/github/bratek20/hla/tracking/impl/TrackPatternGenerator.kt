@@ -13,6 +13,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.queries.api.asNonWrappedWorldTypeName
 import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.tracking.api.TableDefinition
@@ -137,12 +138,13 @@ private class ExposedClassLogic(
     }
 
     override fun getTrackingWorldFields(): List<TrackingWorldField> {
+        val defApiType = apiTypeFactory.create(TypeDefinition(def.getName(), emptyList())) as ComplexStructureApiType<*>
         return def.getMappedFields().map { mappedField ->
             TrackingWorldField(
                 name = finalFieldName(mappedField),
                 serializableType = types.getSerializableWorldType(getWorldFieldTypeName(mappedField)),
                 type = types.getWorldType(getWorldFieldTypeName(mappedField)),
-                typeDefinition = TypeDefinition(finalFieldName(mappedField), emptyList())
+                typeDefinition = defApiType.getField(mappedField.getName()).def.getType()
             )
         }
     }
@@ -255,7 +257,9 @@ class TrackingTableLogic(
         worldFields.forEachIndexed { index, field ->
             val endLineSeparator = if (index < worldFields.size - 1) "," else ""
             val nullability = if (field.typeDefinition.getWrappers().contains(TypeWrapper.OPTIONAL)) "" else " NOT NULL"
-            builder.line("${field.name} ${toSqlType(field.type, field.serializableType)}"+ nullability + endLineSeparator)
+
+            val unwrappedFieldType = typesWorldApi.getTypeByName(field.typeDefinition.asNonWrappedWorldTypeName())
+            builder.line("${field.name} ${toSqlType(unwrappedFieldType, field.serializableType)}"+ nullability + endLineSeparator)
         }
 
         builder.untab()

@@ -34,15 +34,18 @@ namespace SomeModule.Impl {
 
     export class SomeTrackingEvent extends TrackingEvent {
         constructor(
+            classWithOptExamples: ClassWithOptExamples,
             some_dimension_id: SomeDimension,
             optional_generic_tracking_dimension_id: Optional<TrackingDimension>,
             optional_int: Optional<number>
         ) {
             super()
+            this.optional_int_exposed = classWithOptExamples.getOptInt().orElse(null)
             this.some_dimension_id = some_dimension_id
             this.optional_generic_tracking_dimension_id = optional_generic_tracking_dimension_id.orElse(null)
             this.optional_int = optional_int.orElse(null)
         }
+        private readonly optional_int_exposed: number
         private readonly some_dimension_id: SomeDimension
         private readonly optional_generic_tracking_dimension_id: TrackingDimension
         private readonly optional_int: number

@@ -10,6 +10,7 @@ import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.findByName
 
 class ApiTypeFactoryLogic(
     val modules: BaseModuleGroupQueries,
@@ -66,7 +67,7 @@ class ApiTypeFactoryLogic(
             }
         }
 
-        apiType.init(languageTypes, modules.findTypeModule(type.getName()), typesWorldApi.getTypeByName(type.asWorldTypeName()))
+        apiType.init(languageTypes, modules.findTypeModule(type.getName()), typesWorldApi.findByName(type.asWorldTypeName()))
 
         if (apiType is ComplexStructureApiType<*>) {
             apiType.fields.forEach { it.init(apiType) }

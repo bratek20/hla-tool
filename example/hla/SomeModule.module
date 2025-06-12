@@ -196,14 +196,6 @@ Data
 
     "SomeKey" -> SomeData
 
-Impl
-    Data
-        SomeImplData
-            id: SomeId
-            name: string
-
-        "someImplData" -> SomeImplData[]
-
 Interfaces
     SomeEmptyInterface
 

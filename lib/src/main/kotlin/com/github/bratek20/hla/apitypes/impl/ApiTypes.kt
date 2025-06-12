@@ -31,9 +31,9 @@ abstract class ApiTypeLogic: ApiType {
 
     lateinit var languageTypes: LanguageTypes
     var typeModule: ModuleDefinition? = null
-    lateinit var worldType: WorldType
+    var worldType: WorldType? = null
 
-    fun init(languageTypes: LanguageTypes, typeModule: ModuleDefinition?, worldType: WorldType) {
+    fun init(languageTypes: LanguageTypes, typeModule: ModuleDefinition?, worldType: WorldType?) {
         this.languageTypes = languageTypes
         this.typeModule = typeModule
         this.worldType = worldType
@@ -48,7 +48,7 @@ abstract class ApiTypeLogic: ApiType {
         if (name() == "EmptyModel") {
             return B20FrontendTypesPopulator.emptyModelType
         }
-        return worldType
+        return worldType ?: throw IllegalStateException("No world type set for type $this")
     }
 
     override fun serializableWorldType(): WorldType {

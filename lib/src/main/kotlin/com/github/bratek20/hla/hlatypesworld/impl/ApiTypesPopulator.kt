@@ -139,6 +139,12 @@ class DataClassesPopulator(
     override fun getPatternName() = PatternName.DataClasses
 }
 
+class EventsPopulator(
+    defs: List<ComplexStructureDefinition>
+): ComplexStructuresPopulator(defs) {
+    override fun getPatternName() = PatternName.Events
+}
+
 class EnumsPopulator(
     private val defs: List<EnumDefinition>
 ): ApiPatternPopulator() {
@@ -182,6 +188,7 @@ class ApiTypesPopulator(
             ComplexCustomTypesPopulator(module.getComplexCustomTypes()),
 
             DataClassesPopulator(module.getDataClasses()),
+            EventsPopulator(module.getEvents()),
 
             EnumsPopulator(module.getEnums()),
 
