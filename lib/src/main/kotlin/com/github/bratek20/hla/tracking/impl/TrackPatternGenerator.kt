@@ -13,6 +13,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.*
@@ -59,7 +60,8 @@ private class TrackingTypesLogic(
     fun getSerializableWorldType(typeName: String): WorldType {
         val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).serializableWorldType()
+            //worldType
+            apiTypeFactory.create(worldType.getName().asTypeDefinition()).serializableWorldType()
         } else {
             worldType
         }
