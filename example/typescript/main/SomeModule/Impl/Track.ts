@@ -40,10 +40,10 @@ namespace SomeModule.Impl {
             optional_int: Optional<number>
         ) {
             super()
-            this.optional_int_exposed = classWithOptExamples.getOptInt().orElse(null)
+            this.optional_int_exposed = classWithOptExamples.getOptInt().orElse(undefined)
             this.some_dimension_id = some_dimension_id
-            this.optional_generic_tracking_dimension_id = optional_generic_tracking_dimension_id.orElse(null)
-            this.optional_int = optional_int.orElse(null)
+            this.optional_generic_tracking_dimension_id = optional_generic_tracking_dimension_id.orElse(undefined)
+            this.optional_int = optional_int.orElse(undefined)
         }
         private readonly optional_int_exposed: number | undefined
         private readonly some_dimension_id: SomeDimension

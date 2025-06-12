@@ -39,13 +39,12 @@ private class TrackingTypesLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun getSerializationExpression(variableName: String, typeName: String, isOptional: Boolean): ExpressionBuilder {
-        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
-        val finalVariableName = if (isOptional) "$variableName.orElse(null)" else variableName
+    fun getSerializationExpression(variableName: String, typeDef: TypeDefinition): ExpressionBuilder {
+        val worldType = typesWorldApi.getTypeByName(typeDef.asWorldTypeName())
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).modernSerialize(variable(finalVariableName))
+            apiTypeFactory.create(typeDef).modernSerialize(variable(variableName))
         } else {
-            variable(finalVariableName)
+            variable(variableName)
         }
     }
 
@@ -114,7 +113,7 @@ private class MyFieldsLogic(
         return defs.map {def ->
             {
                 left = instanceVariable(def.getName())
-                right = types.getSerializationExpression(def.getName(), def.getType().getName(), def.getType().getWrappers().contains(TypeWrapper.OPTIONAL))
+                right = types.getSerializationExpression(def.getName(), def.getType())
             }
         }
     }
@@ -169,8 +168,7 @@ private class ExposedClassLogic(
                 left = instanceVariable(finalFieldName(mappedField))
                 right = types.getSerializationExpression(
                     field.access(argVariableName()),
-                    getWorldFieldTypeName(mappedField),
-                    field.type is OptionalApiType
+                    field.def.getType()
                 )
             }
         }
