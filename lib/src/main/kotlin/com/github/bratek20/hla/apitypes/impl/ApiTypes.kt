@@ -638,6 +638,10 @@ class OptionalApiType(
             nullValue()
         }
     }
+
+    override fun serializableWorldType(): WorldType {
+        return wrappedType.serializableWorldType();
+    }
 }
 
 class EnumApiType(

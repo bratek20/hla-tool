@@ -45,7 +45,7 @@ namespace SomeModule.Impl {
             this.optional_generic_tracking_dimension_id = optional_generic_tracking_dimension_id.orElse(null)
             this.optional_int = optional_int.orElse(null)
         }
-        private readonly optional_int_exposed: number
+        private readonly optional_int_exposed: number | undefined
         private readonly some_dimension_id: SomeDimension
         private readonly optional_generic_tracking_dimension_id: TrackingDimension
         private readonly optional_int: number

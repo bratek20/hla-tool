@@ -127,26 +127,30 @@ private class ExposedClassLogic(
 ): TablePart {
     private val worldClassType = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
     private val worldClass = typesWorldApi.getClassType(worldClassType)
+    private val defApiType = apiTypeFactory.create(TypeDefinition(def.getName(), emptyList())) as ComplexStructureApiType<*>
 
     override fun getFieldsOps(): List<FieldBuilderOps> {
         return def.getMappedFields().map { mappedField ->
             {
                 name = finalFieldName(mappedField)
-                type = types.getTypeBuilder(TypeDefinition(getWorldFieldTypeName(mappedField), emptyList()), serializable = true)
+                type = types.getTypeBuilder(getDefFieldTypeDef(mappedField), serializable = true)
             }
         }
     }
 
     override fun getTrackingWorldFields(): List<TrackingWorldField> {
-        val defApiType = apiTypeFactory.create(TypeDefinition(def.getName(), emptyList())) as ComplexStructureApiType<*>
         return def.getMappedFields().map { mappedField ->
             TrackingWorldField(
                 name = finalFieldName(mappedField),
                 serializableType = types.getSerializableWorldType(getWorldFieldTypeName(mappedField)),
                 type = types.getWorldType(getWorldFieldTypeName(mappedField)),
-                typeDefinition = defApiType.getField(mappedField.getName()).def.getType()
+                typeDefinition = getDefFieldTypeDef(mappedField)
             )
         }
+    }
+
+    private fun getDefFieldTypeDef(field: MappedField): TypeDefinition {
+        return defApiType.getField(field.getName()).def.getType()
     }
 
     override fun getConstructorArgs(): List<ArgumentBuilderOps> {
@@ -284,7 +288,13 @@ class TrackingTableLogic(
             return "VARCHAR(64)"
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Primitives) {
-            return primitiveToSqlType(BaseType.valueOf(type.getName().value.uppercase()))
+            try {
+                return primitiveToSqlType(BaseType.valueOf(serializableType.getName().value.uppercase()))
+            } catch (e: IllegalArgumentException) {
+                // If the type is not a primitive, we will handle it below
+                var x = 0
+                x++
+            }
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Track) { // it is dimension
             return "BIGINT"
