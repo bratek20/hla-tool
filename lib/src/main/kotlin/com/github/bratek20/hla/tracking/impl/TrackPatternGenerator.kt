@@ -6,6 +6,7 @@ import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.ComplexStructureApiType
+import com.github.bratek20.hla.apitypes.impl.OptionalApiType
 import com.github.bratek20.hla.attributes.getAttributeValue
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -169,7 +170,7 @@ private class ExposedClassLogic(
                 right = types.getSerializationExpression(
                     field.access(argVariableName()),
                     getWorldFieldTypeName(mappedField),
-                    false
+                    field.type is OptionalApiType
                 )
             }
         }
