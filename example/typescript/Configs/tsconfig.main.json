@@ -5,10 +5,14 @@
 
         //OtherModule start
         //NoInterfacesModule start
+        //OnlyInterfacesModule start
+
+        //SimpleModule start
+        //SomeModule start
+        //TypesModule start
         "../main/NoInterfacesModule/Api/ValueObjects.ts",
         //NoInterfacesModule end
 
-        //OnlyInterfacesModule start
         "../main/OnlyInterfacesModule/Api/Interfaces.ts",
 
         "../main/OnlyInterfacesModule/Impl/Logic.ts",
@@ -31,11 +35,9 @@
         "../main/OtherModule/Context/Impl.ts",
         //OtherModule end
 
-        //SimpleModule start
         "../main/SimpleModule/Api/ValueObjects.ts",
         //SimpleModule end
 
-        //SomeModule start
         "../main/SomeModule/Api/Enums.ts",
         "../main/SomeModule/Api/CustomTypes.ts",
         "../main/SomeModule/Api/CustomTypesMapper.ts",
@@ -59,7 +61,6 @@
         "../main/SomeModule/Context/Web.ts",
         //SomeModule end
 
-        //TypesModule start
         "../main/TypesModule/Api/CustomTypes.ts",
         "../main/TypesModule/Api/CustomTypesMapper.ts",
         "../main/TypesModule/Api/SerializedCustomTypes.ts",

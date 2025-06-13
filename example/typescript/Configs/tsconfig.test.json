@@ -11,6 +11,11 @@
         "test/OtherModule/Tests/ImplTest.ts",
 
         //NoInterfacesModule start
+        //OnlyInterfacesModule start
+
+        //SimpleModule start
+        //SomeModule start
+        //TypesModule start
         "../Tests/NoInterfacesModule/Fixtures/Builders.ts",
         "../Tests/NoInterfacesModule/Fixtures/Diffs.ts",
         "../Tests/NoInterfacesModule/Fixtures/Asserts.ts",
@@ -18,7 +23,6 @@
         "../Tests/NoInterfacesModule/Tests/ImplTest.ts",
         //NoInterfacesModule end
 
-        //OnlyInterfacesModule start
         "../Tests/OnlyInterfacesModule/Tests/ImplTest.ts",
         //OnlyInterfacesModule end
 
@@ -30,7 +34,6 @@
         "../Tests/OtherModule/Tests/ImplTest.ts",
         //OtherModule end
 
-        //SimpleModule start
         "../Tests/SimpleModule/Fixtures/Builders.ts",
         "../Tests/SimpleModule/Fixtures/Diffs.ts",
         "../Tests/SimpleModule/Fixtures/Asserts.ts",
@@ -38,7 +41,6 @@
         "../Tests/SimpleModule/Tests/ImplTest.ts",
         //SimpleModule end
 
-        //SomeModule start
         "../Tests/SomeModule/Fixtures/Builders.ts",
         "../Tests/SomeModule/Fixtures/Diffs.ts",
         "../Tests/SomeModule/Fixtures/Asserts.ts",
@@ -47,7 +49,6 @@
         "../Tests/SomeModule/Tests/ImplTest.ts",
         //SomeModule end
 
-        //TypesModule start
         "../Tests/TypesModule/Fixtures/Builders.ts",
         "../Tests/TypesModule/Fixtures/Diffs.ts",
         "../Tests/TypesModule/Fixtures/Asserts.ts",

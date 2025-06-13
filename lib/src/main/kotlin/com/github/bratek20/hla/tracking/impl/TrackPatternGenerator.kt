@@ -40,12 +40,7 @@ private class TrackingTypesLogic(
     private val typesWorldApi: TypesWorldApi
 ) {
     fun getSerializationExpression(variableName: String, typeDef: TypeDefinition): ExpressionBuilder {
-        val worldType = typesWorldApi.getTypeByName(typeDef.asWorldTypeName())
-        return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(typeDef).modernSerialize(variable(variableName))
-        } else {
-            variable(variableName)
-        }
+        return apiTypeFactory.create(typeDef).modernSerialize(variable(variableName))
     }
 
     fun getTypeBuilder(typeDef: TypeDefinition, serializable: Boolean): TypeBuilder {
