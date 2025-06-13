@@ -385,3 +385,5 @@ Tracking
             some_dimension_id: SomeDimension // referencing other
             optional_generic_tracking_dimension_id: TrackingDimension?
             optional_int: int?
+
+        SomeTrackingMultiplayerEvent (table: "some_tracking_mevent")
