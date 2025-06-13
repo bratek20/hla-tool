@@ -14,7 +14,7 @@ import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTy
 import com.github.bratek20.utils.camelToPascalCase
 
 open class ComplexStructureField(
-    protected val def: FieldDefinition,
+    val def: FieldDefinition,
     val factory: ApiTypeFactoryLogic
 ) {
     private lateinit var complexStructure: ComplexStructureApiType<*>

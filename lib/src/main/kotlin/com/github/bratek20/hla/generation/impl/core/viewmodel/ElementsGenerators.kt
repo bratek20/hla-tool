@@ -352,8 +352,9 @@ class ViewModelLogicFactory(
                 apiTypeFactory.create(TypeDefinition(model.getName(), emptyList())) as ComplexStructureApiType<*>
             } ?: ComplexValueObjectApiType("EmptyModel", emptyList())
 
-            modelType.init(apiTypeFactory.languageTypes, null)
-            ViewModelComplexElementLogic(element, modelType, typesWorldApi, typesWorldApi.getTypeByName(WorldTypeName(element.getName())))
+            val worldType = typesWorldApi.getTypeByName(WorldTypeName(element.getName()))
+            modelType.init(apiTypeFactory.languageTypes, null, worldType)
+            ViewModelComplexElementLogic(element, modelType, typesWorldApi, worldType)
         }
     }
 

@@ -196,14 +196,6 @@ Data
 
     "SomeKey" -> SomeData
 
-Impl
-    Data
-        SomeImplData
-            id: SomeId
-            name: string
-
-        "someImplData" -> SomeImplData[]
-
 Interfaces
     SomeEmptyInterface
 
@@ -388,6 +380,8 @@ Tracking
 
     Events
         SomeTrackingEvent (table: "some_tracking_event")
+            ClassWithOptExamples
+                optInt -> optional_int_exposed
             some_dimension_id: SomeDimension // referencing other
             optional_generic_tracking_dimension_id: TrackingDimension?
             optional_int: int?

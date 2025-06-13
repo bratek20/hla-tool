@@ -20,5 +20,55 @@
                 "${workspaceFolder}/**/*.js"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - NoInterfacesModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" NoInterfacesModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - OnlyInterfacesModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" OnlyInterfacesModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - SimpleModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" SimpleModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - SomeModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" SomeModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - TypesModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" TypesModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
     ]
 }

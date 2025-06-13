@@ -31,10 +31,12 @@ abstract class ApiTypeLogic: ApiType {
 
     lateinit var languageTypes: LanguageTypes
     var typeModule: ModuleDefinition? = null
+    var worldType: WorldType? = null
 
-    fun init(languageTypes: LanguageTypes, typeModule: ModuleDefinition?) {
+    fun init(languageTypes: LanguageTypes, typeModule: ModuleDefinition?, worldType: WorldType?) {
         this.languageTypes = languageTypes
         this.typeModule = typeModule
+        this.worldType = worldType
     }
 
     protected fun moduleName(): String {
@@ -42,31 +44,11 @@ abstract class ApiTypeLogic: ApiType {
     }
 
     override fun asWorldType(): WorldType {
-        //TODO-REF
-        if (this is BaseApiType) {
-            return WorldType.create(
-                name = WorldTypeName(this.name.name.lowercase()),
-                path = PrimitiveTypesPopulator.path
-            )
-        }
         //TODO-FIX it should not be needed to hardcode it like that
         if (name() == "EmptyModel") {
             return B20FrontendTypesPopulator.emptyModelType
         }
-        return asOptHlaType() ?: throw IllegalStateException("No HlaType for type $this")
-    }
-
-    private fun asOptHlaType(): WorldType? {
-        return typeModule?.let {
-            WorldType.create(
-                name = WorldTypeName(name()),
-                path = HlaTypePath.create(
-                    ModuleName(moduleName()),
-                    SubmoduleName.Api,
-                    PatternName.ValueObjects
-                ).asWorld()
-            )
-        }
+        return worldType ?: throw IllegalStateException("No world type set for type $this")
     }
 
     override fun serializableWorldType(): WorldType {
@@ -655,6 +637,10 @@ class OptionalApiType(
         return optionalOp(tmp).orElse {
             nullValue()
         }
+    }
+
+    override fun serializableWorldType(): WorldType {
+        return wrappedType.serializableWorldType();
     }
 }
 

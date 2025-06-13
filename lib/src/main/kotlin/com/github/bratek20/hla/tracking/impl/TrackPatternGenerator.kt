@@ -6,6 +6,7 @@ import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.ComplexStructureApiType
+import com.github.bratek20.hla.apitypes.impl.OptionalApiType
 import com.github.bratek20.hla.attributes.getAttributeValue
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -13,6 +14,8 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.hlatypesworld.api.asHla
+import com.github.bratek20.hla.queries.api.asNonWrappedWorldTypeName
+import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.*
@@ -36,14 +39,8 @@ private class TrackingTypesLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
 ) {
-    fun getSerializationExpression(variableName: String, typeName: String, isOptional: Boolean): ExpressionBuilder {
-        val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
-        val finalVariableName = if (isOptional) "$variableName.orElse(null)" else variableName
-        return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).modernSerialize(variable(finalVariableName))
-        } else {
-            variable(finalVariableName)
-        }
+    fun getSerializationExpression(variableName: String, typeDef: TypeDefinition): ExpressionBuilder {
+        return apiTypeFactory.create(typeDef).modernSerialize(variable(variableName))
     }
 
     fun getTypeBuilder(typeDef: TypeDefinition, serializable: Boolean): TypeBuilder {
@@ -59,7 +56,8 @@ private class TrackingTypesLogic(
     fun getSerializableWorldType(typeName: String): WorldType {
         val worldType = typesWorldApi.getTypeByName(WorldTypeName(typeName))
         return if (worldType.getPath().asHla().getSubmoduleName() == SubmoduleName.Api) {
-            apiTypeFactory.create(TypeDefinition(typeName, emptyList())).serializableWorldType()
+            //worldType
+            apiTypeFactory.create(worldType.getName().asTypeDefinition()).serializableWorldType()
         } else {
             worldType
         }
@@ -110,7 +108,7 @@ private class MyFieldsLogic(
         return defs.map {def ->
             {
                 left = instanceVariable(def.getName())
-                right = types.getSerializationExpression(def.getName(), def.getType().getName(), def.getType().getWrappers().contains(TypeWrapper.OPTIONAL))
+                right = types.getSerializationExpression(def.getName(), def.getType())
             }
         }
     }
@@ -124,12 +122,13 @@ private class ExposedClassLogic(
 ): TablePart {
     private val worldClassType = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
     private val worldClass = typesWorldApi.getClassType(worldClassType)
+    private val defApiType = apiTypeFactory.create(TypeDefinition(def.getName(), emptyList())) as ComplexStructureApiType<*>
 
     override fun getFieldsOps(): List<FieldBuilderOps> {
         return def.getMappedFields().map { mappedField ->
             {
                 name = finalFieldName(mappedField)
-                type = types.getTypeBuilder(TypeDefinition(getWorldFieldTypeName(mappedField), emptyList()), serializable = true)
+                type = types.getTypeBuilder(getDefFieldTypeDef(mappedField), serializable = true)
             }
         }
     }
@@ -140,9 +139,13 @@ private class ExposedClassLogic(
                 name = finalFieldName(mappedField),
                 serializableType = types.getSerializableWorldType(getWorldFieldTypeName(mappedField)),
                 type = types.getWorldType(getWorldFieldTypeName(mappedField)),
-                typeDefinition = TypeDefinition(finalFieldName(mappedField), emptyList())
+                typeDefinition = getDefFieldTypeDef(mappedField)
             )
         }
+    }
+
+    private fun getDefFieldTypeDef(field: MappedField): TypeDefinition {
+        return defApiType.getField(field.getName()).def.getType()
     }
 
     override fun getConstructorArgs(): List<ArgumentBuilderOps> {
@@ -160,8 +163,7 @@ private class ExposedClassLogic(
                 left = instanceVariable(finalFieldName(mappedField))
                 right = types.getSerializationExpression(
                     field.access(argVariableName()),
-                    getWorldFieldTypeName(mappedField),
-                    false
+                    field.def.getType()
                 )
             }
         }
@@ -253,7 +255,9 @@ class TrackingTableLogic(
         worldFields.forEachIndexed { index, field ->
             val endLineSeparator = if (index < worldFields.size - 1) "," else ""
             val nullability = if (field.typeDefinition.getWrappers().contains(TypeWrapper.OPTIONAL)) "" else " NOT NULL"
-            builder.line("${field.name} ${toSqlType(field.type, field.serializableType)}"+ nullability + endLineSeparator)
+
+            val unwrappedFieldType = typesWorldApi.getTypeByName(field.typeDefinition.asNonWrappedWorldTypeName())
+            builder.line("${field.name} ${toSqlType(unwrappedFieldType, field.serializableType)}"+ nullability + endLineSeparator)
         }
 
         builder.untab()
@@ -278,7 +282,13 @@ class TrackingTableLogic(
             return "VARCHAR(64)"
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Primitives) {
-            return primitiveToSqlType(BaseType.valueOf(serializableType.getName().value.uppercase()))
+            try {
+                return primitiveToSqlType(BaseType.valueOf(serializableType.getName().value.uppercase()))
+            } catch (e: IllegalArgumentException) {
+                // If the type is not a primitive, we will handle it below
+                var x = 0
+                x++
+            }
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Track) { // it is dimension
             return "BIGINT"

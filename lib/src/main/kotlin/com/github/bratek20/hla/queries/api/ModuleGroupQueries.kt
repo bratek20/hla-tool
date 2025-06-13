@@ -13,15 +13,7 @@ fun isBaseType(value: String): Boolean {
     return BaseType.entries.any { it.name == value.uppercase() }
 }
 
-fun TypeDefinition.asWorldTypeName(): WorldTypeName {
-    if (this.getWrappers().contains(TypeWrapper.LIST)) {
-        return WorldTypeName("List<${this.getName()}>")
-    }
-    if (this.getWrappers().contains(TypeWrapper.OPTIONAL)) {
-        return WorldTypeName("Optional<${this.getName()}>")
-    }
-    return WorldTypeName(this.getName())
-}
+
 
 fun TypeDefinition.asNonWrappedWorldTypeName(): WorldTypeName {
     return WorldTypeName(this.getName())

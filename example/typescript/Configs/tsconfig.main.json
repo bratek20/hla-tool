@@ -4,6 +4,21 @@
         "../main/SomeModule/SomeClass2.ts",
 
         //OtherModule start
+        //NoInterfacesModule start
+        //OnlyInterfacesModule start
+        //SimpleModule start
+        //SomeModule start
+        //TypesModule start
+        "../main/NoInterfacesModule/Api/ValueObjects.ts",
+        //NoInterfacesModule end
+
+        "../main/OnlyInterfacesModule/Api/Interfaces.ts",
+
+        "../main/OnlyInterfacesModule/Impl/Logic.ts",
+
+        "../main/OnlyInterfacesModule/Context/Impl.ts",
+        //OnlyInterfacesModule end
+
         "../main/OtherModule/Api/ValueObjects.ts",
         "../main/OtherModule/Api/DataClasses.ts",
         "../main/OtherModule/Api/PropertyKeys.ts",
@@ -18,5 +33,36 @@
 
         "../main/OtherModule/Context/Impl.ts",
         //OtherModule end
+
+        "../main/SimpleModule/Api/ValueObjects.ts",
+        //SimpleModule end
+
+        "../main/SomeModule/Api/Enums.ts",
+        "../main/SomeModule/Api/CustomTypes.ts",
+        "../main/SomeModule/Api/CustomTypesMapper.ts",
+        "../main/SomeModule/Api/SerializedCustomTypes.ts",
+        "../main/SomeModule/Api/ValueObjects.ts",
+        "../main/SomeModule/Api/DataClasses.ts",
+        "../main/SomeModule/Api/PropertyKeys.ts",
+        "../main/SomeModule/Api/DataKeys.ts",
+        "../main/SomeModule/Api/Exceptions.ts",
+        "../main/SomeModule/Api/Notifications.ts",
+        "../main/SomeModule/Api/Interfaces.ts",
+
+        "../main/SomeModule/Impl/Track.ts",
+        "../main/SomeModule/Impl/Logic.ts",
+
+        "../main/SomeModule/Web/WebCommon.ts",
+        "../main/SomeModule/Web/WebClient.ts",
+        "../main/SomeModule/Web/PlayFabHandlers.ts",
+
+        "../main/SomeModule/Context/Impl.ts",
+        "../main/SomeModule/Context/Web.ts",
+        //SomeModule end
+
+        "../main/TypesModule/Api/CustomTypes.ts",
+        "../main/TypesModule/Api/CustomTypesMapper.ts",
+        "../main/TypesModule/Api/SerializedCustomTypes.ts",
+        //TypesModule end
     ]
 }

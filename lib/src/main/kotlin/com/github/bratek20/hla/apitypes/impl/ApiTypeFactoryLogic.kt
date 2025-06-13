@@ -9,6 +9,8 @@ import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
+import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.findByName
 
 class ApiTypeFactoryLogic(
     val modules: BaseModuleGroupQueries,
@@ -17,7 +19,7 @@ class ApiTypeFactoryLogic(
 ): ApiTypeFactory {
     override fun create(type: TypeDefinition?): ApiTypeLogic {
         if (type == null) {
-            return createBaseApiType(BaseType.VOID)
+            return createBaseApiType(BaseType.VOID, typesWorldApi)
         }
 
         val simpleVO = modules.findSimpleValueObject(type)
@@ -39,11 +41,11 @@ class ApiTypeFactoryLogic(
             isList -> ListApiType(create(withoutTypeWrapper(type, TypeWrapper.LIST)))
             simpleVO != null -> SimpleValueObjectApiType(
                 simpleVO,
-                createBaseApiType(ofBaseType(simpleVO.getTypeName()))
+                createBaseApiType(ofBaseType(simpleVO.getTypeName()), typesWorldApi)
             )
             simpleCustomType != null -> SimpleCustomApiType(
                 simpleCustomType,
-                createBaseApiType(ofBaseType(simpleCustomType.getTypeName()))
+                createBaseApiType(ofBaseType(simpleCustomType.getTypeName()), typesWorldApi)
             )
             complexVO != null -> ComplexValueObjectApiType(type.getName(), createComplexStructureFields(complexVO))
             dataVO != null -> DataClassApiType(type.getName(), createComplexStructureFields(dataVO))
@@ -65,7 +67,7 @@ class ApiTypeFactoryLogic(
             }
         }
 
-        apiType.init(languageTypes, modules.findTypeModule(type.getName()))
+        apiType.init(languageTypes, modules.findTypeModule(type.getName()), typesWorldApi.findByName(type.asWorldTypeName()))
 
         if (apiType is ComplexStructureApiType<*>) {
             apiType.fields.forEach { it.init(apiType) }
@@ -90,9 +92,9 @@ class ApiTypeFactoryLogic(
         return create(TypeDefinition(def.getName(), emptyList())) as T
     }
 
-    private fun createBaseApiType(type: BaseType): BaseApiType {
+    private fun createBaseApiType(type: BaseType, typesWorldApi: TypesWorldApi): BaseApiType {
         val result = BaseApiType(type)
-        result.init(languageTypes, null)
+        result.init(languageTypes, null, typesWorldApi.getTypeByName(WorldTypeName(type.name.lowercase())))
         return result
     }
 
