@@ -20,3 +20,8 @@ CREATE TABLE some_tracking_event (
     optional_int INTEGER
 ) INHERITS (event);
 ALTER TYPE event_type ADD VALUE 'some_tracking_event';
+
+CREATE TABLE some_tracking_mevent (
+    CONSTRAINT some_tracking_mevent_id PRIMARY KEY (mevent_id),
+) INHERITS (mevent);
+ALTER TYPE mevent_type ADD VALUE 'some_tracking_mevent';
