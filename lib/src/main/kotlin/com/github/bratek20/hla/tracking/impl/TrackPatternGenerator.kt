@@ -188,6 +188,10 @@ class TrackingTableLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi
 ) {
+    fun isMultiplayerTable(): Boolean {
+        return trackingTableName().endsWith("_mevent")
+    }
+
     private val types = TrackingTypesLogic(apiTypeFactory, typesWorldApi)
     private val parts = def.getExposedClasses().map {
             ExposedClassLogic(it, apiTypeFactory, typesWorldApi, types)
@@ -247,7 +251,8 @@ class TrackingTableLogic(
             builder.line("${trackingTableName()}_id BIGINT DEFAULT NEXTVAL('common.the_sequence'::regclass) CONSTRAINT ${trackingTableName()}_id PRIMARY KEY,")
         }
         if (type == TableType.EVENT)  {
-            builder.line("CONSTRAINT ${trackingTableName()}_id PRIMARY KEY (event_id),")
+            val id = if (isMultiplayerTable()) "mevent_id" else "event_id"
+            builder.line("CONSTRAINT ${trackingTableName()}_id PRIMARY KEY ($id),")
         }
 
         //fields
@@ -268,9 +273,11 @@ class TrackingTableLogic(
                 .line(");")
         }
         if (type == TableType.EVENT) {
+            val eventBase = if (isMultiplayerTable()) "mevent" else "event"
+            val eventTypeName = if (isMultiplayerTable()) "mevent_type" else "event_type"
             builder
-                .line(") INHERITS (event);")
-                .line("ALTER TYPE event_type ADD VALUE '${trackingTableName()}';")
+                .line(") INHERITS ($eventBase);")
+                .line("ALTER TYPE $eventTypeName ADD VALUE '${trackingTableName()}';")
         }
     }
 
@@ -282,13 +289,7 @@ class TrackingTableLogic(
             return "VARCHAR(64)"
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Primitives) {
-            try {
-                return primitiveToSqlType(BaseType.valueOf(serializableType.getName().value.uppercase()))
-            } catch (e: IllegalArgumentException) {
-                // If the type is not a primitive, we will handle it below
-                var x = 0
-                x++
-            }
+            return primitiveToSqlType(BaseType.valueOf(serializableType.getName().value.uppercase()))
         }
         if (hlaSerializableTypePath.getPatternName() == PatternName.Track) { // it is dimension
             return "BIGINT"
@@ -330,7 +331,9 @@ class TrackPatternGenerator: PatternGenerator() {
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         createTableLogics(module, apiTypeFactory, typesWorldApi).forEach {
-            addClass(it.getClassOps())
+            if (!it.isMultiplayerTable()) {
+                addClass(it.getClassOps())
+            }
         }
     }
 }
