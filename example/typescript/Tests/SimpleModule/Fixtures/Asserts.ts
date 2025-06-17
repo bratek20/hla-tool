@@ -15,4 +15,9 @@ namespace SimpleModule.Assert {
         const diff = diffUniqueIdEntry(given, expected)
         AssertEquals(diff, "", diff)
     }
+
+    export function someSimpleProperty(given: SomeSimpleProperty, expected: ExpectedSomeSimpleProperty) {
+        const diff = diffSomeSimpleProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
 }

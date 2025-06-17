@@ -63,3 +63,33 @@ class UniqueIdEntry {
         return this.id
     }
 }
+
+class SomeSimpleProperty {
+    private id = STRING
+    private name = STRING
+    private entries = [Class(UniqueIdEntry)]
+
+    static create(
+        id: SimpleId,
+        name: string,
+        entries: UniqueIdEntry[],
+    ): SomeSimpleProperty {
+        const instance = new SomeSimpleProperty()
+        instance.id = id.getValue()
+        instance.name = name
+        instance.entries = entries
+        return instance
+    }
+
+    getId(): SimpleId {
+        return new SimpleId(this.id)
+    }
+
+    getName(): string {
+        return this.name
+    }
+
+    getEntries(): UniqueIdEntry[] {
+        return this.entries
+    }
+}

@@ -3,3 +3,34 @@ ValueObjects
     SomeLongWrapper: long
     UniqueIdEntry
         id: string (unique)
+//TODO REMOVE AFTER INITIAL IMPL
+Properties
+    SomeSimpleProperty
+        id: SimpleId
+        name: string
+        entries: UniqueIdEntry[]
+    "SimpleClasses" -> SomeSimpleProperty[]
+//Data
+//    SimpleInternalData
+//        id: SomeLongWrapper
+//        value: int
+//    SimpleData
+//        id: SimpleId
+//        name: string
+//        data: SimpleInternalData[]
+//
+//    "SimpleDataObj" -> SimpleData
+
+//Interfaces
+//    SomeSimpleInterface
+//        SomeMethodInput
+//            id: SimpleId
+//        someMethod(i: SomeMethodInput): SimpleData
+
+//    NotGeneratedInterface
+//        notAddedToExamples()
+
+//Web
+//    PlayFabHandlers
+//        ExposedInterfaces
+//            SomeSimpleInterface

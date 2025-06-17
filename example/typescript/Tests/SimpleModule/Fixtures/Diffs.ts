@@ -23,4 +23,28 @@ namespace SimpleModule {
 
         return result.join("\n")
     }
+
+    export interface ExpectedSomeSimpleProperty {
+        id?: string,
+        name?: string,
+        entries?: ExpectedUniqueIdEntry[],
+    }
+    export function diffSomeSimpleProperty(given: SomeSimpleProperty, expected: ExpectedSomeSimpleProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSimpleId(given.getId(), expected.id) != "") { result.push(diffSimpleId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.name !== undefined) {
+            if (given.getName() != expected.name) { result.push(`${path}name ${given.getName()} != ${expected.name}`) }
+        }
+
+        if (expected.entries !== undefined) {
+            if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`) }
+            given.getEntries().forEach((entry, idx) => { if (diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
 }

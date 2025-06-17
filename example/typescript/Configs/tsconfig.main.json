@@ -35,6 +35,7 @@
         //OtherModule end
 
         "../main/SimpleModule/Api/ValueObjects.ts",
+        "../main/SimpleModule/Api/PropertyKeys.ts",
         //SimpleModule end
 
         "../main/SomeModule/Api/Enums.ts",

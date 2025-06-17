@@ -19,4 +19,21 @@ namespace SimpleModule.Builder {
             final_id,
         )
     }
+
+    export interface SomeSimplePropertyDef {
+        id?: string,
+        name?: string,
+        entries?: SimpleModule.Builder.UniqueIdEntryDef[],
+    }
+    export function someSimpleProperty(def?: SomeSimplePropertyDef): SomeSimpleProperty {
+        const final_id = def?.id ?? "someValue"
+        const final_name = def?.name ?? "someValue"
+        const final_entries = def?.entries ?? []
+
+        return SomeSimpleProperty.create(
+            new SimpleId(final_id),
+            final_name,
+            final_entries.map(it => SimpleModule.Builder.uniqueIdEntry(it)),
+        )
+    }
 }
