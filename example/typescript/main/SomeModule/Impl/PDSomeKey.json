@@ -1,0 +1,13 @@
+{
+  "id": "someValue",
+  "other": {
+    "id": 0
+  },
+  "custom": {
+    "any": "This is any type can contain anything"
+  },
+  "customOpt": {
+    "any": "This is any type can contain anything"
+  },
+  "gDN": "someValue"
+}

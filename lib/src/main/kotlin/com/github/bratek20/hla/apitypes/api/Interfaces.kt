@@ -17,6 +17,8 @@ interface ApiType {
     fun modernDeserialize(variable: com.github.bratek20.codebuilder.builders.ExpressionBuilder): com.github.bratek20.codebuilder.builders.ExpressionBuilder
 
     fun modernSerialize(variable: com.github.bratek20.codebuilder.builders.ExpressionBuilder): com.github.bratek20.codebuilder.builders.ExpressionBuilder
+
+    fun getExample(): Any
 }
 
 interface ApiTypeFactory {

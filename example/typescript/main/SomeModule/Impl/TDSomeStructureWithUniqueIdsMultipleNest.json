@@ -1,0 +1,17 @@
+[
+  {
+    "moreNestedFields": [
+      {
+        "nestedUniqueIds": [
+          {
+            "entries": [
+              {
+                "id": "someValue"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

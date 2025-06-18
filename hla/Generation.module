@@ -67,6 +67,9 @@ Enums
         //tests
         ImplTest
 
+        //Examples
+        Examples
+
 ValueObjects
     GeneratedPattern
         name: PatternName
