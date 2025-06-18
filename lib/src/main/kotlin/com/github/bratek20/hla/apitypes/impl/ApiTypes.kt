@@ -380,6 +380,18 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
     fun getField(fieldName: String): T {
         return fields.first { it.name == fieldName }
     }
+
+    override fun getExample(): Any {
+        val fieldsMap: MutableMap<String, Any> = mutableMapOf()
+        fields.map { field ->
+            val builderValue = field.exampleValueBuilder()?.build(c)?.let {
+                destringify(it)
+            }
+            val finalValue = builderValue ?: field.type.getExample()
+            fieldsMap[field.privateName()] = finalValue
+        }
+        return fieldsMap
+    }
 }
 
 class ComplexCustomApiType(
@@ -427,18 +439,6 @@ class ComplexCustomApiType(
             }
         }
     }
-
-    override fun getExample(): Any {
-        val fieldsMap: MutableMap<String, Any> = mutableMapOf()
-        fields.map { field ->
-            val builderValue = field.exampleValueBuilder()?.build(c)?.let {
-                destringify(it)
-            }
-            val finalValue = builderValue ?: field.type.getExample()
-            fieldsMap[field.privateName()] = finalValue
-        }
-        return fieldsMap
-    }
 }
 
 data class ComplexStructureGetter(
@@ -478,18 +478,6 @@ open class SerializableApiType(
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         return variable
-    }
-
-    override fun getExample(): Any {
-        val fieldsMap: MutableMap<String, Any> = mutableMapOf()
-        fields.map { field ->
-            val builderValue = field.exampleValueBuilder()?.build(c)?.let {
-                destringify(it)
-            }
-            val finalValue = builderValue ?: field.type.getExample()
-            fieldsMap[field.privateName()] = finalValue
-        }
-        return fieldsMap
     }
 
     override fun serializableBuilder(): TypeBuilder {
