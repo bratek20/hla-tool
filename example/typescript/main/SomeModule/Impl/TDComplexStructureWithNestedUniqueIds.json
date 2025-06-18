@@ -1,0 +1,18 @@
+[
+  {
+    "id": "someValue",
+    "nestLevel1": [
+      {
+        "nestLevel2": [
+          {
+            "uniqueIds": [
+              {
+                "uniqueId": "someValue"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

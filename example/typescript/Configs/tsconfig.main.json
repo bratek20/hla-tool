@@ -35,16 +35,6 @@
         //OtherModule end
 
         "../main/SimpleModule/Api/ValueObjects.ts",
-        "../main/SimpleModule/Api/DataClasses.ts",
-        "../main/SimpleModule/Api/PropertyKeys.ts",
-        "../main/SimpleModule/Api/DataKeys.ts",
-        "../main/SimpleModule/Api/Interfaces.ts",
-
-        "../main/SimpleModule/Impl/Logic.ts",
-
-        "../main/SimpleModule/Web/PlayFabHandlers.ts",
-
-        "../main/SimpleModule/Context/Impl.ts",
         //SimpleModule end
 
         "../main/SomeModule/Api/Enums.ts",

@@ -28,13 +28,11 @@ class ExampleJsonLogic(
 
     fun createExampleJson(): String {
         val apiType = apiTypeFactory.create(def.getType())
-        //check api type and cast to listapitype if list
         val example = apiType.getExample()
         return anyToJson(example)
-
     }
 
-    fun anyToJson(example: Any): String {
+    private fun anyToJson(example: Any): String {
         val serializer = SerializationFactory.createSerializer(
             SerializerConfig.create(
                 readable = true
@@ -64,7 +62,7 @@ class ExampleGenerator: PatternGenerator() {
         val exampleLogics = createExampleLogics(c.module, c.apiTypeFactory, c.typesWorldApi)
         return exampleLogics.map {
             File.create(
-                name = FileName("${it.getPropertyName()}.json"),
+                name = FileName("TD${it.getPropertyName()}.json"),
                 content = FileContent.fromString(it.createExampleJson())
             )
         }
