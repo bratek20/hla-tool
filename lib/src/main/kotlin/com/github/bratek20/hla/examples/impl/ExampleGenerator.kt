@@ -20,10 +20,15 @@ fun KeyDefinition.isList(): Boolean {
     return this.getType().getWrappers().contains(TypeWrapper.LIST)
 }
 
+enum class ExampleType {
+    PROPERTY,
+    DATA
+}
+
 class ExampleJsonLogic(
     private val def: KeyDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    private val typesWorldApi: TypesWorldApi
+    val exampleType: ExampleType
 ) {
 
     fun createExampleJson(): String {
@@ -55,24 +60,31 @@ class ExampleGenerator: PatternGenerator() {
 
     override fun shouldGenerate(): Boolean {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT &&
-                c.module.getPropertyKeys().isNotEmpty()
+                (c.module.getPropertyKeys().isNotEmpty() || c.module.getDataKeys().isNotEmpty())
     }
 
     override fun getFiles(): List<File> {
-        val exampleLogics = createExampleLogics(c.module, c.apiTypeFactory, c.typesWorldApi)
+        val exampleLogics = createExampleLogics(c.module, c.apiTypeFactory)
         return exampleLogics.map {
+            val filePrefix = when (it.exampleType) {
+                ExampleType.DATA -> "PD"
+                ExampleType.PROPERTY -> "TD"
+            }
             File.create(
-                name = FileName("TD${it.getPropertyName()}.json"),
+                name = FileName("$filePrefix${it.getPropertyName()}.json"),
                 content = FileContent.fromString(it.createExampleJson())
             )
         }
     }
 }
-fun createExampleLogics(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory, typesWorldApi: TypesWorldApi): List<ExampleJsonLogic> {
-    val createExampleLogic = { def: KeyDefinition ->
-        ExampleJsonLogic(def, apiTypeFactory, typesWorldApi)
+fun createExampleLogics(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleJsonLogic> {
+    val createExampleLogic = { def: KeyDefinition, exampleType: ExampleType ->
+        ExampleJsonLogic(def, apiTypeFactory, exampleType)
     }
-    return module.getPropertyKeys().map {
-        createExampleLogic(it)
+
+    return module.getDataKeys().map {
+        createExampleLogic(it, ExampleType.DATA)
+    } +module.getPropertyKeys().map {
+        createExampleLogic(it, ExampleType.PROPERTY)
     }
 }
