@@ -16,8 +16,23 @@ namespace SimpleModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someMethodInput(given: SomeMethodInput, expected: ExpectedSomeMethodInput) {
+        const diff = diffSomeMethodInput(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someSimpleProperty(given: SomeSimpleProperty, expected: ExpectedSomeSimpleProperty) {
         const diff = diffSomeSimpleProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function simpleInternalData(given: SimpleInternalData, expected: ExpectedSimpleInternalData) {
+        const diff = diffSimpleInternalData(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function simpleData(given: SimpleData, expected: ExpectedSimpleData) {
+        const diff = diffSimpleData(given, expected)
         AssertEquals(diff, "", diff)
     }
 }

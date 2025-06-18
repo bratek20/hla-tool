@@ -55,4 +55,5 @@ enum class PatternName {
     Asserts,
     Mocks,
     ImplTest,
+    Examples,
 }

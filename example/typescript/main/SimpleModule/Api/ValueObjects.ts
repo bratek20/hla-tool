@@ -64,6 +64,22 @@ class UniqueIdEntry {
     }
 }
 
+class SomeMethodInput {
+    private id = STRING
+
+    static create(
+        id: SimpleId,
+    ): SomeMethodInput {
+        const instance = new SomeMethodInput()
+        instance.id = id.getValue()
+        return instance
+    }
+
+    getId(): SimpleId {
+        return new SimpleId(this.id)
+    }
+}
+
 class SomeSimpleProperty {
     private id = STRING
     private name = STRING

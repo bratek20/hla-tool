@@ -10,27 +10,27 @@ Properties
         name: string
         entries: UniqueIdEntry[]
     "SimpleClasses" -> SomeSimpleProperty[]
-//Data
-//    SimpleInternalData
-//        id: SomeLongWrapper
-//        value: int
-//    SimpleData
-//        id: SimpleId
-//        name: string
-//        data: SimpleInternalData[]
-//
-//    "SimpleDataObj" -> SimpleData
+Data
+    SimpleInternalData
+        id: SomeLongWrapper
+        value: int
+    SimpleData
+        id: SimpleId
+        name: string
+        data: SimpleInternalData[]
 
-//Interfaces
-//    SomeSimpleInterface
-//        SomeMethodInput
-//            id: SimpleId
-//        someMethod(i: SomeMethodInput): SimpleData
+    "SimpleDataObj" -> SimpleData
 
-//    NotGeneratedInterface
-//        notAddedToExamples()
+Interfaces
+    SomeSimpleInterface
+        SomeMethodInput
+            id: SimpleId
+        someMethod(i: SomeMethodInput): SimpleData
 
-//Web
-//    PlayFabHandlers
-//        ExposedInterfaces
-//            SomeSimpleInterface
+    NotGeneratedInterface
+        notAddedToExamples()
+
+Web
+    PlayFabHandlers
+        ExposedInterfaces
+            SomeSimpleInterface
