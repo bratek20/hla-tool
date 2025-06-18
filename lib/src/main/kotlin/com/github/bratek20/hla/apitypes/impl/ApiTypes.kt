@@ -74,6 +74,10 @@ abstract class ApiTypeLogic: ApiType {
     override fun toString(): String {
         return "$javaClass(name=${name()})"
     }
+
+    override fun getExample(): Any {
+        return 1
+    }
 }
 
 class BaseApiType(
@@ -589,6 +593,10 @@ class ListApiType(
         return listOp(variable).map {
             wrappedType.modernSerialize(variable("it"))
         }
+    }
+
+    override fun getExample(): Any {
+        return listOf(wrappedType.getExample())
     }
 }
 

@@ -7,7 +7,7 @@ ValueObjects
 Properties
     SomeSimpleProperty
         id: SimpleId
-        name: string
+        name: string (example: "ExampleName")
         entries: UniqueIdEntry[]
     "SimpleClasses" -> SomeSimpleProperty[]
 Data

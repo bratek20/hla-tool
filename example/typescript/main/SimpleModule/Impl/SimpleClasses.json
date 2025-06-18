@@ -1,14 +1,11 @@
-{
-  "key": "SimpleClasses",
-  "value": [
-    {
-      "id": "someValue",
-      "name": "someValue",
-      "entries": [
-        {
-          "id": "someValue"
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "id": "someValue",
+    "name": "someValue",
+    "entries": [
+      {
+        "id": "someValue"
+      }
+    ]
+  }
+]

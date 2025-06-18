@@ -38,7 +38,7 @@ namespace SimpleModule.Builder {
     }
     export function someSimpleProperty(def?: SomeSimplePropertyDef): SomeSimpleProperty {
         const final_id = def?.id ?? "someValue"
-        const final_name = def?.name ?? "someValue"
+        const final_name = def?.name ?? "ExampleName"
         const final_entries = def?.entries ?? []
 
         return SomeSimpleProperty.create(
