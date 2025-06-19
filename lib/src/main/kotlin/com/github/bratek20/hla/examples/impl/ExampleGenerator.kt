@@ -67,8 +67,8 @@ class ExampleGenerator: PatternGenerator() {
         val exampleLogics = createExampleLogics(c.module, c.apiTypeFactory)
         return exampleLogics.map {
             val filePrefix = when (it.exampleType) {
-                ExampleType.DATA -> "PD"
-                ExampleType.PROPERTY -> "TD"
+                ExampleType.DATA -> "PD."
+                ExampleType.PROPERTY -> "TD."
             }
             File.create(
                 name = FileName("$filePrefix${it.getPropertyName()}.json"),
