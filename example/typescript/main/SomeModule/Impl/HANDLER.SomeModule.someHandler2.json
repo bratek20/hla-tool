@@ -1,0 +1,11 @@
+{
+  "input": {
+    "id": "someValue",
+    "amount": 0
+  },
+  "output": {
+    "id": "someValue",
+    "amount": 0
+  },
+  "exceptions": "No exceptions for this method"
+}
