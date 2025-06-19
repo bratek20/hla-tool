@@ -1,0 +1,16 @@
+{
+  "input": [
+    {
+      "id": "someValue",
+      "amount": 0
+    }
+  ],
+  "output": {
+    "id": "someValue",
+    "amount": 0
+  },
+  "exceptions": [
+    "SomeException",
+    "Some2Exception"
+  ]
+}

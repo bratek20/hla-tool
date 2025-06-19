@@ -1,6 +1,5 @@
 package com.github.bratek20.hla.apitypes.impl
 
-import com.github.bratek20.architecture.structs.api.Struct
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.TypeScript
@@ -177,7 +176,7 @@ class ExternalApiType(
     }
 
     override fun getExample(): Any {
-        TODO("Not yet implemented")
+        return "This is an external type, no example available"
     }
 
     private fun adjustedName(): String {
@@ -723,7 +722,7 @@ class EnumApiType(
     }
 
     override fun getExample(): Any {
-        TODO("Not yet implemented")
+        return def.getValues().first()
     }
 
     override fun serializableWorldType(): WorldType {
