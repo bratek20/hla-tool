@@ -45,10 +45,18 @@ class ExampleInterfaceMethodLogic(
         valuesMap["input"] = "No input for this method"
 
         if(def.getArgs().isNotEmpty()) {
-            valuesMap["input"] = def.getArgs().map { arg ->
-                val apiType = apiTypeFactory.create(arg.getType())
-                apiType.getExample()
+            if(def.getArgs().size == 1){
+                valuesMap["input"] = def.getArgs().first().let { arg ->
+                    val apiType = apiTypeFactory.create(arg.getType())
+                    apiType.getExample()
+                }
+            } else {
+                valuesMap["input"] = def.getArgs().map { arg ->
+                    val apiType = apiTypeFactory.create(arg.getType())
+                    apiType.getExample()
+                }
             }
+
         }
 
         valuesMap["output"] = "No output for this method"
