@@ -41,9 +41,9 @@ class ModuleWriterLogic(
 
         filesModifiers.modify(args, rootPath)
 
-        if (shouldHandleDebug(args)) {
-            handleDebug(args.getModule())
-        }
+//        if (shouldHandleDebug(args)) {
+//            handleDebug(args.getModule())
+//        }
     }
 
     private fun writeDirectories(
@@ -66,11 +66,26 @@ class ModuleWriterLogic(
                 Directory.create(name = DirectoryName("/PlayFab"))
             }
 
-            val finalDir = examplesDir.copy(
-                directories = examplesDir.getDirectories() + Directory.create(
-                    name = DirectoryName("${module.getName()}"),
-                    files = examplesSubModulePatterns?.map { it.getFile() } ?: emptyList()
+            val dire = mutableListOf<Directory>()
+
+            examplesSubModulePatterns.forEach { pattern ->
+                val fileName = pattern.getFile().getName().value
+                val dirName = fileName.split("/").firstOrNull() ?: ""
+                val suffix = fileName.split("/").lastOrNull() ?: fileName
+                val file = File(
+                    name = suffix,
+                    content = pattern.getFile().getContent().toString(),
                 )
+                dire.add(
+                    Directory.create(
+                        name = DirectoryName("${module.getName().value}/$dirName"),
+                        files = listOf(file)
+                    )
+                )
+            }
+
+            val finalDir = examplesDir.copy(
+                directories = examplesDir.getDirectories() + dire
             )
             toWriteExamples[exampleFinalPath] = finalDir
         }
