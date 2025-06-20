@@ -109,11 +109,7 @@ class ExampleGenerator: PatternGenerator() {
     override fun getFiles(): List<File> {
         val exampleLogics = createExampleLogics(c.module, c.apiTypeFactory)
         return exampleLogics.map {
-            val filePrefix = when (it.exampleType) {
-                ExampleType.DATA -> "PD."
-                ExampleType.PROPERTY -> "TD."
-                ExampleType.INTERFACE -> "HANDLER.${c.module.getName()}."
-            }
+            val filePrefix = if(it.exampleType == ExampleType.INTERFACE) "${c.module.getName()}." else ""
             File.create(
                 name = FileName("$filePrefix${it.getName()}.json"),
                 content = FileContent.fromString(it.createExampleJson())

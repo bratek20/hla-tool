@@ -16,6 +16,7 @@ enum class SubmoduleName {
     Context,
     Fixtures,
     Tests,
+    Examples
 }
 
 enum class PatternName {

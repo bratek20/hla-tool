@@ -149,6 +149,8 @@ fun diffHlaSrcPaths(given: HlaSrcPaths, expectedInit: ExpectedHlaSrcPaths.() -> 
 data class ExpectedHlaPaths(
     var project: String? = null,
     var src: (ExpectedHlaSrcPaths.() -> Unit)? = null,
+    var examplesEmpty: Boolean? = null,
+    var examples: String? = null,
 )
 fun diffHlaPaths(given: HlaPaths, expectedInit: ExpectedHlaPaths.() -> Unit, path: String = ""): String {
     val expected = ExpectedHlaPaths().apply(expectedInit)
@@ -160,6 +162,14 @@ fun diffHlaPaths(given: HlaPaths, expectedInit: ExpectedHlaPaths.() -> Unit, pat
 
     expected.src?.let {
         if (diffHlaSrcPaths(given.getSrc(), it) != "") { result.add(diffHlaSrcPaths(given.getSrc(), it, "${path}src.")) }
+    }
+
+    expected.examplesEmpty?.let {
+        if ((given.getExamples() == null) != it) { result.add("${path}examples empty ${(given.getExamples() == null)} != ${it}") }
+    }
+
+    expected.examples?.let {
+        if (diffPath(given.getExamples()!!, it) != "") { result.add(diffPath(given.getExamples()!!, it, "${path}examples.")) }
     }
 
     return result.joinToString("\n")

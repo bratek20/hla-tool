@@ -22,7 +22,7 @@ profiles:
               - "Tests"
               - "Fixtures"
             path: "Tests"
-      examples: "./examples/PlayFab"
+      examples: "examples"
     typeScript:
       mainTsconfigPath: "Configs/tsconfig.main.json"
       testTsconfigPath: "Configs/tsconfig.test.json"

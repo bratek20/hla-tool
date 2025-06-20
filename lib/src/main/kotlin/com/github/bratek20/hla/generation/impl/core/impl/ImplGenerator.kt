@@ -118,7 +118,27 @@ class ImplGenerator: SubmoduleGenerator() {
             ImplDataKeysGenerator(),
             TrackPatternGenerator(),
             InitSqlGenerator(),
-            LogicGenerator(),
+            LogicGenerator()
+        )
+    }
+}
+
+
+class ExamplesGenerator: SubmoduleGenerator() {
+    override fun submoduleName(): SubmoduleName {
+        return SubmoduleName.Examples
+    }
+
+    override fun velocityDirPath(): String {
+        return "examples"
+    }
+
+    override fun shouldGenerateSubmodule(): Boolean {
+        return module.getWebSubmodule() != null || module.getDataKeys().isNotEmpty() || module.getPropertyKeys().isNotEmpty()
+    }
+
+    override fun getPatternGenerators(): List<PatternGenerator> {
+        return listOf(
             ExampleGenerator()
         )
     }
