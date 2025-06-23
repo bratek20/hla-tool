@@ -41,9 +41,9 @@ class ModuleWriterLogic(
 
         filesModifiers.modify(args, rootPath)
 
-//        if (shouldHandleDebug(args)) {
-//            handleDebug(args.getModule())
-//        }
+        if (shouldHandleDebug(args)) {
+            handleDebug(args.getModule())
+        }
     }
 
     private fun writeDirectories(

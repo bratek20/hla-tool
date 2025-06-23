@@ -26,7 +26,6 @@ Properties
     HlaPaths
        project: Path
        src: HlaSrcPaths
-       examples: Path? = empty
 
     HlaProfileImport
         hlaFolderPath: Path

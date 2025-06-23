@@ -16,7 +16,7 @@ enum class SubmoduleName {
     Context,
     Fixtures,
     Tests,
-    Examples
+    Examples,
 }
 
 enum class PatternName {
@@ -56,5 +56,7 @@ enum class PatternName {
     Asserts,
     Mocks,
     ImplTest,
-    Examples,
+    HandlersExamples,
+    TitleDataExamples,
+    PlayerDataExamples,
 }

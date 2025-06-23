@@ -177,7 +177,6 @@ data class HlaSrcPaths(
 data class HlaPaths(
     private val project: String,
     private val src: HlaSrcPaths,
-    private val examples: String? = null,
 ) {
     fun getProject(): Path {
         return pathCreate(this.project)
@@ -187,20 +186,14 @@ data class HlaPaths(
         return this.src
     }
 
-    fun getExamples(): Path? {
-        return this.examples?.let { it -> pathCreate(it) }
-    }
-
     companion object {
         fun create(
             project: Path,
             src: HlaSrcPaths,
-            examples: Path? = null,
         ): HlaPaths {
             return HlaPaths(
                 project = pathGetValue(project),
                 src = src,
-                examples = examples?.let { it -> pathGetValue(it) },
             )
         }
     }

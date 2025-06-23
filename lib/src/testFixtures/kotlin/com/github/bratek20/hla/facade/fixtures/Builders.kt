@@ -88,14 +88,12 @@ fun hlaSrcPaths(init: HlaSrcPathsDef.() -> Unit = {}): HlaSrcPaths {
 data class HlaPathsDef(
     var project: String = "someValue",
     var src: (HlaSrcPathsDef.() -> Unit) = {},
-    var examples: String? = null,
 )
 fun hlaPaths(init: HlaPathsDef.() -> Unit = {}): HlaPaths {
     val def = HlaPathsDef().apply(init)
     return HlaPaths.create(
         project = pathCreate(def.project),
         src = hlaSrcPaths(def.src),
-        examples = def.examples?.let { it -> pathCreate(it) },
     )
 }
 

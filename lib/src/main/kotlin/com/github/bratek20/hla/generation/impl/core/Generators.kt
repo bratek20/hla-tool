@@ -23,6 +23,7 @@ import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
 import com.github.bratek20.hla.velocity.api.VelocityFacade
 import com.github.bratek20.hla.velocity.api.VelocityFileContentBuilder
+import com.github.bratek20.utils.directory.api.Directory
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileContent
 
@@ -145,6 +146,7 @@ abstract class PatternGenerator
     open fun getOperations(): TopLevelCodeBuilderOps? = null
     open fun getOperationsPerFile(): List<PerFileOperations> = emptyList()
     open fun getFiles(): List<File> = emptyList()
+    open fun getDirectory(): Directory? = null
 
     open fun extraKotlinImports(): List<String> {
         return emptyList()
