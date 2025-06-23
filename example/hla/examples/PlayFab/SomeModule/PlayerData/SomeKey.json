@@ -3,11 +3,7 @@
   "other": {
     "id": 0
   },
-  "custom": {
-    "any": "This is any type can contain anything"
-  },
-  "customOpt": {
-    "any": "This is any type can contain anything"
-  },
+  "custom": "This is any type - it can contain anything",
+  "customOpt": "This is any type - it can contain anything",
   "gDN": "someValue"
 }
