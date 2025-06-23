@@ -63,14 +63,15 @@ class ModuleWriterLogic(
                 Directory.create(name = calcModuleDirectoryName(module.getName(), profile))
             }
 
-            val directoriesToAdd = sub.getPatterns().mapNotNull { it.getDirectory() } + sub.getPatterns().mapNotNull { it.getFile()?.let { file ->
-                    Directory.create(
-                        name = calcSubmoduleDirectoryName(sub.getName(), profile),
-                        files = listOf(file)
-                    )
-                }
-            }
+            val filesToAdd =  sub.getPatterns().mapNotNull { it.getFile() }
 
+            val directoriesFromFiles = if (filesToAdd.isEmpty()) emptyList() else listOf(Directory.create(
+                name = calcSubmoduleDirectoryName(sub.getName(), profile),
+                files = sub.getPatterns().mapNotNull { it.getFile() }
+            ))
+
+
+            val directoriesToAdd = sub.getPatterns().mapNotNull { it.getDirectory() } + directoriesFromFiles
             val updatedDir = currentDir.copy(
                 directories = currentDir.getDirectories() + directoriesToAdd
             )
