@@ -2,7 +2,9 @@ package com.github.bratek20.hla.generation.impl.core.impl
 
 import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.KeyDefinition
-import com.github.bratek20.hla.examples.impl.ExampleGenerator
+import com.github.bratek20.hla.examples.impl.HandlersExamplesGenerator
+import com.github.bratek20.hla.examples.impl.PlayerDataExamplesGenerator
+import com.github.bratek20.hla.examples.impl.TitledataExamplesGenerator
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -139,7 +141,9 @@ class ExamplesGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            ExampleGenerator()
+            TitledataExamplesGenerator(),
+            PlayerDataExamplesGenerator(),
+            HandlersExamplesGenerator(),
         )
     }
 }

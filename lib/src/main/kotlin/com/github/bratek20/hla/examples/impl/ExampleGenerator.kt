@@ -8,21 +8,12 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.utils.directory.api.File
-import com.github.bratek20.utils.directory.api.FileContent
-import com.github.bratek20.utils.directory.api.FileName
-
-enum class ExampleType {
-    PROPERTY,
-    DATA,
-    INTERFACE
-}
+import com.github.bratek20.utils.directory.api.*
 
 class ExampleKeyDefinitionLogic(
     private val def: KeyDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    exampleType: ExampleType
-): ExampleJsonLogic(exampleType) {
+): ExampleJsonLogic() {
 
     override fun createExampleJson(): String {
         val apiType = apiTypeFactory.create(def.getType())
@@ -38,8 +29,7 @@ class ExampleKeyDefinitionLogic(
 class ExampleInterfaceMethodLogic(
     private val def: MethodDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    exampleType: ExampleType
-): ExampleJsonLogic(exampleType) {
+): ExampleJsonLogic() {
     override fun createExampleJson(): String {
         val valuesMap = mutableMapOf<String, Any>()
         valuesMap["input"] = "No input for this method"
@@ -80,7 +70,7 @@ class ExampleInterfaceMethodLogic(
 
 }
 
-abstract class ExampleJsonLogic(val exampleType: ExampleType) {
+abstract class ExampleJsonLogic() {
     abstract fun createExampleJson(): String
     abstract fun getName(): String
     fun anyToJson(example: Any): String {
@@ -93,59 +83,111 @@ abstract class ExampleJsonLogic(val exampleType: ExampleType) {
     }
 }
 
-class ExampleGenerator: PatternGenerator() {
+class HandlersExamplesGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
-        return PatternName.Examples
+        return PatternName.HandlersExamples
     }
 
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
         val exposedInterfaces = getExposedInterfaces(c.module.getWebSubmodule())
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT &&
-                (c.module.getPropertyKeys().isNotEmpty() || c.module.getDataKeys().isNotEmpty() || !exposedInterfaces.isNullOrEmpty())
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && !exposedInterfaces.isNullOrEmpty()
     }
 
-    override fun getFiles(): List<File> {
-        val exampleLogics = createExampleLogics(c.module, c.apiTypeFactory)
-        return exampleLogics.map {
-            val filePrefix = when (it.exampleType) {
-                ExampleType.DATA -> "PlayerData/"
-                ExampleType.PROPERTY -> "TitleData/"
-                ExampleType.INTERFACE -> "Handlers/${c.module.getName()}."
+    override fun getDirectory(): Directory? {
+        val exampleInterfaceMethodsLogic = createExampleInterfaceMethodLogic(c.module, c.apiTypeFactory)
+
+        if( exampleInterfaceMethodsLogic.isEmpty() ) {
+            return null
+        }
+
+        return Directory.create(
+            name = DirectoryName("Handlers"),
+            files = exampleInterfaceMethodsLogic.map { logic ->
+                File.create(
+                    name = FileName("${c.module.getName()}.${logic.getName()}.json"),
+                    content = FileContent.fromString(logic.createExampleJson())
+                )
             }
-            File.create(
-                name = FileName("$filePrefix${it.getName()}.json"),
+        )
+    }
+
+    private fun createExampleInterfaceMethodLogic(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleInterfaceMethodLogic> {
+        val exposedInterfacesNames = getExposedInterfaces(module.getWebSubmodule()).map { it.getName() }
+        val interfacesToMap = module.getInterfaces().filter { exposedInterfacesNames.contains(it.getName()) }
+        val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
+        interfacesToMap.forEach { interfaceToMap ->
+            interfaceToMap.getMethods().map {
+                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory))
+            }
+        }
+
+        return interfacesMethodsLogic
+    }
+
+    private fun getExposedInterfaces(web: WebSubmoduleDefinition?): List<ExposedInterface> {
+        if(web == null) {
+            return emptyList()
+        }
+        val handlers = web.getPlayFabHandlers() ?: return emptyList()
+        return handlers.getExposedInterfaces()
+    }
+}
+
+class TitledataExamplesGenerator: PatternGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.TitleDataExamples
+    }
+
+    override fun supportsCodeBuilder() = true
+
+    override fun shouldGenerate(): Boolean {
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getPropertyKeys().isNotEmpty()
+    }
+
+    override fun getDirectory(): Directory? {
+        val dataKeysExamplesLogic = module.getDataKeys().map {
+            ExampleKeyDefinitionLogic(it, apiTypeFactory)
+        }
+        if (dataKeysExamplesLogic.isEmpty()) {
+            return null
+        }
+        return Directory.create(
+            name = DirectoryName("PlayerData"),
+            files = dataKeysExamplesLogic.map { File.create(
+                name = FileName("${it.getName()}.json"),
                 content = FileContent.fromString(it.createExampleJson())
-            )
+            ) }
+        )
+    }
+}
+
+class PlayerDataExamplesGenerator: PatternGenerator() {
+    override fun patternName(): PatternName {
+        return PatternName.PlayerDataExamples
+    }
+
+    override fun supportsCodeBuilder() = true
+
+    override fun shouldGenerate(): Boolean {
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getDataKeys().isNotEmpty()
+    }
+
+    override fun getDirectory(): Directory? {
+        val dataKeysExamplesLogic = module.getPropertyKeys().map {
+            ExampleKeyDefinitionLogic(it, apiTypeFactory)
         }
-    }
-}
-fun createExampleLogics(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleJsonLogic> {
-    return module.getDataKeys().map {
-        ExampleKeyDefinitionLogic(it, apiTypeFactory, ExampleType.DATA)
-    } + module.getPropertyKeys().map {
-        ExampleKeyDefinitionLogic(it, apiTypeFactory, ExampleType.PROPERTY)
-    } + createExampleInterfaceMethodLogic(module, apiTypeFactory)
-}
-
-fun getExposedInterfaces(web: WebSubmoduleDefinition?): List<ExposedInterface> {
-    if(web == null) {
-        return emptyList()
-    }
-    val handlers = web.getPlayFabHandlers() ?: return emptyList()
-    return handlers.getExposedInterfaces()
-}
-
-fun createExampleInterfaceMethodLogic(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleInterfaceMethodLogic> {
-    val exposedInterfacesNames = getExposedInterfaces(module.getWebSubmodule()).map { it.getName() }
-    val interfacesToMap = module.getInterfaces().filter { exposedInterfacesNames.contains(it.getName()) }
-    val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
-    interfacesToMap.forEach { interfaceToMap ->
-        interfaceToMap.getMethods().map {
-            interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, ExampleType.INTERFACE))
+        if( dataKeysExamplesLogic.isEmpty() ) {
+            return null
         }
+        return Directory.create(
+            name = DirectoryName("TitleData"),
+            files = dataKeysExamplesLogic.map { File.create(
+                name = FileName("${it.getName()}.json"),
+                content = FileContent.fromString(it.createExampleJson())
+            ) }
+        )
     }
-
-    return interfacesMethodsLogic
 }
+

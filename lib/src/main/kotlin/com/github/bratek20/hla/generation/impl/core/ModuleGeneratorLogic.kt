@@ -1,7 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core
 
 import com.github.bratek20.hla.definitions.api.ModuleDefinition
-import com.github.bratek20.hla.examples.impl.ExampleGenerator
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.*

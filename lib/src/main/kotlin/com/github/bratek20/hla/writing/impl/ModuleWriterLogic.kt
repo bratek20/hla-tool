@@ -56,39 +56,6 @@ class ModuleWriterLogic(
         val paths = args.getProfile().getPaths().getSrc()
         val toWriteModules: MutableMap<Path, Directory> = mutableMapOf()
 
-        val examplePath = args.getProfile().getPaths().getExamples()
-        val toWriteExamples: MutableMap<Path, Directory> = mutableMapOf()
-        val examplesSubModulePatterns = module.getSubmodules().find{subModule -> subModule.getName() == SubmoduleName.Examples }?.getPatterns()
-        if(examplesSubModulePatterns != null && examplePath != null) {
-            val exampleFinalPath = args.getHlaFolderPath().add(examplePath)
-
-            val examplesDir = toWriteExamples.computeIfAbsent(exampleFinalPath) {
-                Directory.create(name = DirectoryName("/PlayFab"))
-            }
-
-            val dire = mutableListOf<Directory>()
-
-            examplesSubModulePatterns.forEach { pattern ->
-                val fileName = pattern.getFile().getName().value
-                val dirName = fileName.split("/").firstOrNull() ?: ""
-                val suffix = fileName.split("/").lastOrNull() ?: fileName
-                val file = File(
-                    name = suffix,
-                    content = pattern.getFile().getContent().toString(),
-                )
-                dire.add(
-                    Directory.create(
-                        name = DirectoryName("${module.getName().value}/$dirName"),
-                        files = listOf(file)
-                    )
-                )
-            }
-
-            val finalDir = examplesDir.copy(
-                directories = examplesDir.getDirectories() + dire
-            )
-            toWriteExamples[exampleFinalPath] = finalDir
-        }
         module.getSubmodules().forEach { sub ->
             val path = paths.getPathForSubmodule(sub.getName())
 
@@ -96,18 +63,20 @@ class ModuleWriterLogic(
                 Directory.create(name = calcModuleDirectoryName(module.getName(), profile))
             }
 
-            val patternsToMap = sub.getPatterns().filter { it.getName().name != SubmoduleName.Examples.name }
+            val directoriesToAdd = sub.getPatterns().mapNotNull { it.getDirectory() } + sub.getPatterns().mapNotNull { it.getFile()?.let { file ->
+                    Directory.create(
+                        name = calcSubmoduleDirectoryName(sub.getName(), profile),
+                        files = listOf(file)
+                    )
+                }
+            }
 
             val updatedDir = currentDir.copy(
-                directories = currentDir.getDirectories() + Directory.create(
-                    name = calcSubmoduleDirectoryName(sub.getName(), profile),
-                    files = patternsToMap.map { it.getFile() }
-                )
+                directories = currentDir.getDirectories() + directoriesToAdd
             )
             toWriteModules[path] = updatedDir
         }
 
         toWriteModules.forEach { (path, dir) -> directories.write(rootPath.add(path), dir) }
-        toWriteExamples.forEach { (path, dir) -> directories.write(path, dir) }
     }
 }

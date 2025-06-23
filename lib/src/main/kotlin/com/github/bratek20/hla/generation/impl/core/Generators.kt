@@ -278,7 +278,8 @@ abstract class PatternGenerator
             return files.map {
                 GeneratedPattern.create(
                     name = patternName(),
-                    file = it
+                    file = it,
+                    directory = null
                 )
             }
         }
@@ -311,7 +312,12 @@ abstract class PatternGenerator
         }
 
         getFiles().forEach {
-            generatedPatterns.add(GeneratedPattern.create(patternName(), it))
+            generatedPatterns.add(GeneratedPattern.create(patternName(), it, null))
+        }
+
+        val directory = getDirectory()
+        if(directory != null) {
+            generatedPatterns.add(GeneratedPattern.create(patternName(), null, directory))
         }
 
         return generatedPatterns
@@ -332,7 +338,8 @@ abstract class PatternGenerator
             file = File(
                 name = fileName + "." + language.filesExtension(),
                 content = finalContent.toString()
-            )
+            ),
+            directory = null
         )
     }
 
