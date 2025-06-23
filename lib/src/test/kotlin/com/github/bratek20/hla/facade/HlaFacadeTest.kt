@@ -44,6 +44,8 @@ class HlaFacadeTest {
         val expectedMainPath: String,
         val expectedFixturesPath: String,
         val expectedTestsPath: String,
+        val exampleJsonsPath: String? = null,
+        val expectedExampleJsonsPath: String? = null,
         val hlaFolderPath: String = HLA_FOLDER_PATH
     )
 
@@ -111,7 +113,20 @@ class HlaFacadeTest {
                 exampleTestsPath = "../example/typescript/Tests/$moduleName",
                 expectedMainPath = "../example/hla/../typescript/main",
                 expectedFixturesPath = "../example/hla/../typescript/Tests",
+                expectedTestsPath = "../example/hla/../typescript/Tests"
+            )
+        }
+
+        fun typescriptTestPathsWithExamplesJsons(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/typescript/main/$moduleName",
+                exampleFixturesPath = "../example/typescript/Tests/$moduleName",
+                exampleTestsPath = "../example/typescript/Tests/$moduleName",
+                expectedMainPath = "../example/hla/../typescript/main",
+                expectedFixturesPath = "../example/hla/../typescript/Tests",
                 expectedTestsPath = "../example/hla/../typescript/Tests",
+                exampleJsonsPath = "../example/typescript/Examples/$moduleName",
+                expectedExampleJsonsPath = "../example/hla/../typescript/Examples",
             )
         }
 
@@ -135,12 +150,12 @@ class HlaFacadeTest {
                 Arguments.of(
                     "OtherModule",
                     TYPE_SCRIPT_PROFILE,
-                    typescriptTestPaths("OtherModule")
+                    typescriptTestPathsWithExamplesJsons("OtherModule")
                 ),
                 Arguments.of(
                     "SomeModule",
                     TYPE_SCRIPT_PROFILE,
-                    typescriptTestPaths("SomeModule")
+                    typescriptTestPathsWithExamplesJsons("SomeModule")
                 ),
                 Arguments.of(
                     "TypesModule",
@@ -161,7 +176,7 @@ class HlaFacadeTest {
                     "OnlyInterfacesModule",
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("OnlyInterfacesModule")
-                ),
+                )
             )
         }
     }
@@ -298,7 +313,12 @@ class HlaFacadeTest {
         )
 
         //then
-        directoriesMock.assertWriteCount(2)
+        if(paths.expectedExampleJsonsPath != null) {
+            directoriesMock.assertWriteCount(3)
+        } else {
+            directoriesMock.assertWriteCount(2)
+        }
+
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath
@@ -310,6 +330,14 @@ class HlaFacadeTest {
 
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
         assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
+
+        if(paths.expectedExampleJsonsPath != null) {
+            val jsonsDirectory = directoriesMock.assertWriteAndGetDirectory(
+                3,
+                paths.expectedExampleJsonsPath
+            )
+            assertWrittenDirectoryWithExample(jsonsDirectory, paths.exampleJsonsPath!!)
+        }
     }
 
     @ParameterizedTest(name = "{0} ({1})")

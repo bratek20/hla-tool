@@ -10,6 +10,19 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.utils.directory.api.*
 
+abstract class ExampleJsonLogic() {
+    abstract fun createExampleJson(): String
+    abstract fun getName(): String
+    fun anyToJson(example: Any): String {
+        val serializer = SerializationFactory.createSerializer(
+            SerializerConfig.create(
+                readable = true
+            )
+        )
+        return serializer.serialize(example).getValue()
+    }
+}
+
 class ExampleKeyDefinitionLogic(
     private val def: KeyDefinition,
     private val apiTypeFactory: ApiTypeFactory,
@@ -68,19 +81,6 @@ class ExampleInterfaceMethodLogic(
         return def.getName()
     }
 
-}
-
-abstract class ExampleJsonLogic() {
-    abstract fun createExampleJson(): String
-    abstract fun getName(): String
-    fun anyToJson(example: Any): String {
-        val serializer = SerializationFactory.createSerializer(
-            SerializerConfig.create(
-                readable = true
-            )
-        )
-        return serializer.serialize(example).getValue()
-    }
 }
 
 class HandlersExamplesGenerator: PatternGenerator() {
