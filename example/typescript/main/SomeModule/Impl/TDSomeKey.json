@@ -1,0 +1,17 @@
+{
+  "other": {
+    "id": 0,
+    "name": "someValue"
+  },
+  "id2": 0,
+  "range": {
+    "from": "01/01/1970 00:00",
+    "to": "01/01/2030 00:00"
+  },
+  "doubleExample": 0.0,
+  "longExample": 0,
+  "gN": "someValue",
+  "customData": {
+    "struct": "This is struct type can contain anything"
+  }
+}
