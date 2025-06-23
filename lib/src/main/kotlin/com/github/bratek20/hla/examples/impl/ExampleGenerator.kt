@@ -135,59 +135,52 @@ class HandlersExamplesGenerator: PatternGenerator() {
     }
 }
 
-class TitledataExamplesGenerator: PatternGenerator() {
+abstract class KeyExamplesGenerator: PatternGenerator() {
+    override fun supportsCodeBuilder() = true
+
+    fun getDirectoryForKeysWithName(keys: List<KeyDefinition>, directoryName: DirectoryName): Directory? {
+        val keysExamplesLogic = keys.map {
+            ExampleKeyDefinitionLogic(it, apiTypeFactory)
+        }
+        if (keysExamplesLogic.isEmpty()) {
+            return null
+        }
+        return Directory.create(
+            name = directoryName,
+            files = keysExamplesLogic.map { File.create(
+                name = FileName("${it.getName()}.json"),
+                content = FileContent.fromString(it.createExampleJson())
+            ) }
+        )
+    }
+
+}
+
+class TitleDataExamplesGenerator: KeyExamplesGenerator() {
     override fun patternName(): PatternName {
         return PatternName.TitleDataExamples
     }
-
-    override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getPropertyKeys().isNotEmpty()
     }
 
     override fun getDirectory(): Directory? {
-        val dataKeysExamplesLogic = module.getDataKeys().map {
-            ExampleKeyDefinitionLogic(it, apiTypeFactory)
-        }
-        if (dataKeysExamplesLogic.isEmpty()) {
-            return null
-        }
-        return Directory.create(
-            name = DirectoryName("PlayerData"),
-            files = dataKeysExamplesLogic.map { File.create(
-                name = FileName("${it.getName()}.json"),
-                content = FileContent.fromString(it.createExampleJson())
-            ) }
-        )
+        return getDirectoryForKeysWithName(module.getPropertyKeys(), DirectoryName("TitleData"))
     }
 }
 
-class PlayerDataExamplesGenerator: PatternGenerator() {
+class PlayerDataExamplesGenerator: KeyExamplesGenerator() {
     override fun patternName(): PatternName {
         return PatternName.PlayerDataExamples
     }
-
-    override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getDataKeys().isNotEmpty()
     }
 
     override fun getDirectory(): Directory? {
-        val dataKeysExamplesLogic = module.getPropertyKeys().map {
-            ExampleKeyDefinitionLogic(it, apiTypeFactory)
-        }
-        if( dataKeysExamplesLogic.isEmpty() ) {
-            return null
-        }
-        return Directory.create(
-            name = DirectoryName("TitleData"),
-            files = dataKeysExamplesLogic.map { File.create(
-                name = FileName("${it.getName()}.json"),
-                content = FileContent.fromString(it.createExampleJson())
-            ) }
-        )
+        return getDirectoryForKeysWithName(module.getDataKeys(), DirectoryName("PlayerData"))
     }
 }
 

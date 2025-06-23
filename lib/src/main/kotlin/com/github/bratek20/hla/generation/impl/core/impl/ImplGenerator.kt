@@ -4,7 +4,7 @@ import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.examples.impl.HandlersExamplesGenerator
 import com.github.bratek20.hla.examples.impl.PlayerDataExamplesGenerator
-import com.github.bratek20.hla.examples.impl.TitledataExamplesGenerator
+import com.github.bratek20.hla.examples.impl.TitleDataExamplesGenerator
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -132,7 +132,7 @@ class ExamplesGenerator: SubmoduleGenerator() {
     }
 
     override fun velocityDirPath(): String {
-        return "examples"
+        return "Examples"
     }
 
     override fun shouldGenerateSubmodule(): Boolean {
@@ -141,7 +141,7 @@ class ExamplesGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            TitledataExamplesGenerator(),
+            TitleDataExamplesGenerator(),
             PlayerDataExamplesGenerator(),
             HandlersExamplesGenerator(),
         )
