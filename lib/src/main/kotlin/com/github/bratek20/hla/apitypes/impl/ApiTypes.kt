@@ -114,10 +114,10 @@ class BaseApiType(
             BaseType.INT -> 0
             BaseType.BOOL -> false
             BaseType.VOID ->{}
-            BaseType.ANY -> mapOf("any" to "This is any type can contain anything")
+            BaseType.ANY -> "This is any type - it can contain anything"
             BaseType.DOUBLE -> 0.0
             BaseType.LONG -> 0
-            BaseType.STRUCT ->mapOf("struct" to "This is struct type can contain anything")
+            BaseType.STRUCT -> {}
         }
     }
 

@@ -11,7 +11,5 @@
   "doubleExample": 0.0,
   "longExample": 0,
   "gN": "someValue",
-  "customData": {
-    "struct": "This is struct type can contain anything"
-  }
+  "customData": { }
 }
