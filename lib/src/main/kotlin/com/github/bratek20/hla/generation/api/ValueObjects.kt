@@ -8,24 +8,31 @@ import com.github.bratek20.utils.directory.api.*
 
 data class GeneratedPattern(
     private val name: String,
-    private val file: File,
+    private val file: File?,
+    private val directory: Directory?,
 ) {
     fun getName(): PatternName {
         return PatternName.valueOf(this.name)
     }
 
-    fun getFile(): File {
+    fun getFile(): File? {
         return this.file
+    }
+
+    fun getDirectory(): Directory? {
+        return this.directory
     }
 
     companion object {
         fun create(
             name: PatternName,
-            file: File,
+            file: File?,
+            directory: Directory?,
         ): GeneratedPattern {
             return GeneratedPattern(
                 name = name.name,
                 file = file,
+                directory = directory,
             )
         }
     }

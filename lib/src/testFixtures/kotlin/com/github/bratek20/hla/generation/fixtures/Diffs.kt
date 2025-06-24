@@ -23,7 +23,10 @@ fun diffPatternName(given: PatternName, expected: String, path: String = ""): St
 
 data class ExpectedGeneratedPattern(
     var name: String? = null,
+    var fileEmpty: Boolean? = null,
     var file: (ExpectedFile.() -> Unit)? = null,
+    var directoryEmpty: Boolean? = null,
+    var directory: (ExpectedDirectory.() -> Unit)? = null,
 )
 fun diffGeneratedPattern(given: GeneratedPattern, expectedInit: ExpectedGeneratedPattern.() -> Unit, path: String = ""): String {
     val expected = ExpectedGeneratedPattern().apply(expectedInit)
@@ -33,8 +36,20 @@ fun diffGeneratedPattern(given: GeneratedPattern, expectedInit: ExpectedGenerate
         if (diffPatternName(given.getName(), it) != "") { result.add(diffPatternName(given.getName(), it, "${path}name.")) }
     }
 
+    expected.fileEmpty?.let {
+        if ((given.getFile() == null) != it) { result.add("${path}file empty ${(given.getFile() == null)} != ${it}") }
+    }
+
     expected.file?.let {
-        if (diffFile(given.getFile(), it) != "") { result.add(diffFile(given.getFile(), it, "${path}file.")) }
+        if (diffFile(given.getFile()!!, it) != "") { result.add(diffFile(given.getFile()!!, it, "${path}file.")) }
+    }
+
+    expected.directoryEmpty?.let {
+        if ((given.getDirectory() == null) != it) { result.add("${path}directory empty ${(given.getDirectory() == null)} != ${it}") }
+    }
+
+    expected.directory?.let {
+        if (diffDirectory(given.getDirectory()!!, it) != "") { result.add(diffDirectory(given.getDirectory()!!, it, "${path}directory.")) }
     }
 
     return result.joinToString("\n")

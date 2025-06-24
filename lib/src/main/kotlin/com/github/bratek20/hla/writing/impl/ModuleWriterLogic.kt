@@ -7,10 +7,7 @@ import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
-import com.github.bratek20.utils.directory.api.Directories
-import com.github.bratek20.utils.directory.api.Directory
-import com.github.bratek20.utils.directory.api.DirectoryName
-import com.github.bratek20.utils.directory.api.Path
+import com.github.bratek20.utils.directory.api.*
 
 fun calcModuleDirectoryName(name: ModuleName, profile: HlaProfile): DirectoryName {
     if (profile.getLanguage() == ModuleLanguage.KOTLIN) {
@@ -57,24 +54,30 @@ class ModuleWriterLogic(
         val module = args.getModule()
 
         val paths = args.getProfile().getPaths().getSrc()
-        val toWrite: MutableMap<Path, Directory> = mutableMapOf()
+        val toWriteModules: MutableMap<Path, Directory> = mutableMapOf()
 
         module.getSubmodules().forEach { sub ->
             val path = paths.getPathForSubmodule(sub.getName())
 
-            val currentDir = toWrite.computeIfAbsent(path) {
+            val currentDir = toWriteModules.computeIfAbsent(path) {
                 Directory.create(name = calcModuleDirectoryName(module.getName(), profile))
             }
 
+            val filesToAdd =  sub.getPatterns().mapNotNull { it.getFile() }
+
+            val directoriesFromFiles = if (filesToAdd.isEmpty()) emptyList() else listOf(Directory.create(
+                name = calcSubmoduleDirectoryName(sub.getName(), profile),
+                files = sub.getPatterns().mapNotNull { it.getFile() }
+            ))
+
+
+            val directoriesToAdd = sub.getPatterns().mapNotNull { it.getDirectory() } + directoriesFromFiles
             val updatedDir = currentDir.copy(
-                directories = currentDir.getDirectories() + Directory.create(
-                    name = calcSubmoduleDirectoryName(sub.getName(), profile),
-                    files = sub.getPatterns().map { it.getFile() }
-                )
+                directories = currentDir.getDirectories() + directoriesToAdd
             )
-            toWrite[path] = updatedDir
+            toWriteModules[path] = updatedDir
         }
 
-        toWrite.forEach { (path, dir) -> directories.write(rootPath.add(path), dir) }
+        toWriteModules.forEach { (path, dir) -> directories.write(rootPath.add(path), dir) }
     }
 }

@@ -13,13 +13,15 @@ import com.github.bratek20.hla.generation.api.*
 
 data class GeneratedPatternDef(
     var name: String = PatternName.Primitives.name,
-    var file: (FileDef.() -> Unit) = {},
+    var file: (FileDef.() -> Unit)? = null,
+    var directory: (DirectoryDef.() -> Unit)? = null,
 )
 fun generatedPattern(init: GeneratedPatternDef.() -> Unit = {}): GeneratedPattern {
     val def = GeneratedPatternDef().apply(init)
     return GeneratedPattern.create(
         name = PatternName.valueOf(def.name),
-        file = file(def.file),
+        file = def.file?.let { it -> file(it) },
+        directory = def.directory?.let { it -> directory(it) },
     )
 }
 

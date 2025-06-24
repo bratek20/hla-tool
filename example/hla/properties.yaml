@@ -22,6 +22,9 @@ profiles:
               - "Tests"
               - "Fixtures"
             path: "Tests"
+          - submodules:
+              - "Examples"
+            path: "Examples"
     typeScript:
       mainTsconfigPath: "Configs/tsconfig.main.json"
       testTsconfigPath: "Configs/tsconfig.test.json"

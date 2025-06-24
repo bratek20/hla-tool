@@ -10,6 +10,7 @@ import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
+import kotlin.math.log
 
 class HlaFacadeLogic(
     private val parser: ModuleGroupParser,
@@ -77,7 +78,17 @@ class HlaFacadeLogic(
     private fun logGeneratedModule(module: GeneratedModule, suffix: String) {
         module.getSubmodules().forEach { sub ->
             sub.getPatterns().forEach { patt ->
-                logger.info("${module.getName().value}/${sub.getName()}/${patt.getFile().getName().value} $suffix", this)
+                val file = patt.getFile()
+                val dir = patt.getDirectory()
+                if(file != null) {
+                    logger.info("${module.getName().value}/${sub.getName()}/${patt.getFile()!!.getName().value} $suffix", this)
+                } else if (dir != null){
+                    dir.getFiles().forEach {
+                        logger.info("${module.getName().value}/${sub.getName()}/${it.getName().value} $suffix", this)
+                    }
+                }else {
+                    logger.info("No files generated for ${module.getName().value}/${sub.getName()} $suffix", this)
+                }
             }
         }
     }

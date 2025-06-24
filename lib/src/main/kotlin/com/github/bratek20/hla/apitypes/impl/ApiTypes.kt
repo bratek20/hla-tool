@@ -6,20 +6,15 @@ import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.definitions.api.*
-import com.github.bratek20.hla.facade.api.ModuleName
-import com.github.bratek20.hla.generation.api.PatternName
-import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
-import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.asHla
-import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
 import com.github.bratek20.hla.hlatypesworld.impl.PrimitiveTypesPopulator
 import com.github.bratek20.hla.importscalculation.impl.mapToImport
 import com.github.bratek20.hla.typesworld.api.WorldType
-import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.utils.destringify
 import com.github.bratek20.utils.pascalToCamelCase
 
 abstract class ApiTypeLogic: ApiType {
@@ -113,6 +108,19 @@ class BaseApiType(
         return variable
     }
 
+    override fun getExample(): Any {
+        return when(name) {
+            BaseType.STRING -> "someValue"
+            BaseType.INT -> 0
+            BaseType.BOOL -> false
+            BaseType.VOID ->{}
+            BaseType.ANY -> "This is any type - it can contain anything"
+            BaseType.DOUBLE -> 0.0
+            BaseType.LONG -> 0
+            BaseType.STRUCT -> {}
+        }
+    }
+
     companion object {
         fun isVoid(type: ApiType): Boolean {
             return type is BaseApiType && type.name == BaseType.VOID
@@ -142,6 +150,10 @@ class InterfaceApiType(
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         TODO("Not yet implemented")
     }
+
+    override fun getExample(): Any {
+        TODO("Not yet implemented")
+    }
 }
 
 class ExternalApiType(
@@ -161,6 +173,10 @@ class ExternalApiType(
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         return variable
+    }
+
+    override fun getExample(): Any {
+        return "This is an external type, no example available"
     }
 
     private fun adjustedName(): String {
@@ -192,6 +208,10 @@ class WorldApiType(
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         return variable
+    }
+
+    override fun getExample(): Any {
+        TODO("Not yet implemented")
     }
 
     private fun adjustedName(): String {
@@ -249,6 +269,11 @@ abstract class SimpleStructureApiType(
             return extractExampleValueForBaseType(def.getAttributes())
         }
         return extractExampleValue(def.getAttributes())
+    }
+
+    override fun getExample(): Any {
+        val exampleValue = extractExampleValue()?.let { destringify(it) } ?: return boxedType.getExample()
+        return exampleValue
     }
 }
 
@@ -353,6 +378,18 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
 
     fun getField(fieldName: String): T {
         return fields.first { it.name == fieldName }
+    }
+
+    override fun getExample(): Any {
+        val fieldsMap: MutableMap<String, Any> = mutableMapOf()
+        fields.map { field ->
+            val builderValue = field.exampleValueBuilder()?.build(c)?.let {
+                destringify(it)
+            }
+            val finalValue = builderValue ?: field.type.getExample()
+            fieldsMap[field.privateName()] = finalValue
+        }
+        return fieldsMap
     }
 }
 
@@ -590,6 +627,10 @@ class ListApiType(
             wrappedType.modernSerialize(variable("it"))
         }
     }
+
+    override fun getExample(): Any {
+        return listOf(wrappedType.getExample())
+    }
 }
 
 abstract class WrappedApiType(
@@ -639,6 +680,10 @@ class OptionalApiType(
         }
     }
 
+    override fun getExample(): Any {
+        return wrappedType.getExample()
+    }
+
     override fun serializableWorldType(): WorldType {
         return wrappedType.serializableWorldType();
     }
@@ -674,6 +719,10 @@ class EnumApiType(
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         val variableName = variable.build(c)
         return hardcodedExpression(languageTypes.serializeEnum(variableName))
+    }
+
+    override fun getExample(): Any {
+        return def.getValues().first()
     }
 
     override fun serializableWorldType(): WorldType {
