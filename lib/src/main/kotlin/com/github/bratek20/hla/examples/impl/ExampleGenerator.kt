@@ -11,7 +11,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.utils.directory.api.*
 
-abstract class ExampleJsonLogic() {
+abstract class ExampleJsonLogic {
    companion object {
        private val serializer = SerializationFactory.createSerializer(
            SerializerConfig.create(
@@ -149,10 +149,21 @@ class HandlersExamplesGenerator: PatternGenerator() {
     }
 }
 
-abstract class KeyExamplesGenerator: PatternGenerator() {
+abstract class KeyExamplesGenerator(
+    private val keys: List<KeyDefinition>,
+    private val directoryName: DirectoryName
+): PatternGenerator() {
     override fun supportsCodeBuilder() = true
 
-    fun getDirectoryForKeysWithName(keys: List<KeyDefinition>, directoryName: DirectoryName): Directory? {
+    override fun shouldGenerate(): Boolean {
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && keys.isNotEmpty()
+    }
+
+    override fun getDirectory(): Directory? {
+        return getDirectoryForKeysWithName(keys, directoryName)
+    }
+
+    private fun getDirectoryForKeysWithName(keys: List<KeyDefinition>, directoryName: DirectoryName): Directory? {
         val keysExamplesLogic = keys.map {
             ExampleKeyDefinitionLogic(it, apiTypeFactory)
         }
@@ -167,31 +178,21 @@ abstract class KeyExamplesGenerator: PatternGenerator() {
 
 }
 
-class TitleDataExamplesGenerator: KeyExamplesGenerator() {
+class TitleDataExamplesGenerator(
+    keys: List<KeyDefinition>,
+    directoryName: DirectoryName
+): KeyExamplesGenerator(keys, directoryName) {
     override fun patternName(): PatternName {
         return PatternName.TitleDataExamples
     }
-
-    override fun shouldGenerate(): Boolean {
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getPropertyKeys().isNotEmpty()
-    }
-
-    override fun getDirectory(): Directory? {
-        return getDirectoryForKeysWithName(module.getPropertyKeys(), DirectoryName("TitleData"))
-    }
 }
 
-class PlayerDataExamplesGenerator: KeyExamplesGenerator() {
+class PlayerDataExamplesGenerator(
+    keys: List<KeyDefinition>,
+    directoryName: DirectoryName
+): KeyExamplesGenerator(keys, directoryName) {
     override fun patternName(): PatternName {
         return PatternName.PlayerDataExamples
-    }
-
-    override fun shouldGenerate(): Boolean {
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getDataKeys().isNotEmpty()
-    }
-
-    override fun getDirectory(): Directory? {
-        return getDirectoryForKeysWithName(module.getDataKeys(), DirectoryName("PlayerData"))
     }
 }
 

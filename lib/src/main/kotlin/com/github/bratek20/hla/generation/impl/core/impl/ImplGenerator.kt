@@ -17,6 +17,7 @@ import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFa
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
 import com.github.bratek20.hla.tracking.impl.InitSqlGenerator
 import com.github.bratek20.hla.tracking.impl.TrackPatternGenerator
+import com.github.bratek20.utils.directory.api.DirectoryName
 
 class LogicGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -141,8 +142,8 @@ class ExamplesGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            TitleDataExamplesGenerator(),
-            PlayerDataExamplesGenerator(),
+            TitleDataExamplesGenerator(module.getPropertyKeys(), DirectoryName("TitleData")),
+            PlayerDataExamplesGenerator(module.getDataKeys(), DirectoryName("PlayerData")),
             HandlersExamplesGenerator(),
         )
     }
