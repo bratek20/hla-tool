@@ -93,7 +93,7 @@ class HandlersExamplesGenerator: PatternGenerator() {
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
-        val exposedInterfaces = getExposedInterfaces(c.module.getWebSubmodule())
+        val exposedInterfaces = getExposedInterfaces()
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && !exposedInterfaces.isNullOrEmpty()
     }
 
@@ -116,7 +116,7 @@ class HandlersExamplesGenerator: PatternGenerator() {
     }
 
     private fun createExampleInterfaceMethodLogic(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleInterfaceMethodLogic> {
-        val exposedInterfacesNames = getExposedInterfaces(module.getWebSubmodule()).map { it.getName() }
+        val exposedInterfacesNames = getExposedInterfaces().map { it.getName() }
         val interfacesToMap = module.getInterfaces().filter { exposedInterfacesNames.contains(it.getName()) }
         val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
         interfacesToMap.forEach { interfaceToMap ->
