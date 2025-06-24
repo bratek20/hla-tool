@@ -11,14 +11,16 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.utils.directory.api.*
 
 abstract class ExampleJsonLogic() {
+   companion object {
+       private val serializer = SerializationFactory.createSerializer(
+           SerializerConfig.create(
+               readable = true
+           )
+       )
+   }
     abstract fun createExampleJson(): String
     abstract fun getName(): String
-    fun anyToJson(example: Any): String {
-        val serializer = SerializationFactory.createSerializer(
-            SerializerConfig.create(
-                readable = true
-            )
-        )
+    protected fun anyToJson(example: Any): String {
         return serializer.serialize(example).getValue()
     }
 }
@@ -126,10 +128,8 @@ class HandlersExamplesGenerator: PatternGenerator() {
         return interfacesMethodsLogic
     }
 
-    private fun getExposedInterfaces(web: WebSubmoduleDefinition?): List<ExposedInterface> {
-        if(web == null) {
-            return emptyList()
-        }
+    private fun getExposedInterfaces(): List<ExposedInterface> {
+        val web = c.module.getWebSubmodule() ?: return emptyList()
         val handlers = web.getPlayFabHandlers() ?: return emptyList()
         return handlers.getExposedInterfaces()
     }

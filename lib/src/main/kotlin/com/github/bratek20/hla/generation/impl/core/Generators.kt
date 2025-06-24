@@ -315,9 +315,8 @@ abstract class PatternGenerator
             generatedPatterns.add(GeneratedPattern.create(patternName(), it, null))
         }
 
-        val directory = getDirectory()
-        if(directory != null) {
-            generatedPatterns.add(GeneratedPattern.create(patternName(), null, directory))
+        getDirectory()?.let {
+            generatedPatterns.add(GeneratedPattern.create(patternName(), null, it))
         }
 
         return generatedPatterns
