@@ -58,7 +58,7 @@ class ExampleInterfaceMethodLogic(
 
     override fun createFile(): File {
         return File.create(
-            name = FileName("${def.getName()}.json"),
+            name = FileName("${getName()}.json"),
             content = FileContent.fromString(createExampleJson())
         )
     }
