@@ -6,6 +6,7 @@ import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.BaseApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.utils.directory.api.*
@@ -18,8 +19,10 @@ abstract class ExampleJsonLogic() {
            )
        )
    }
-    abstract fun createExampleJson(): String
-    abstract fun getName(): String
+
+    abstract fun createFile(): File
+    protected abstract fun createExampleJson(): String
+    protected abstract fun getName(): String
     protected fun anyToJson(example: Any): String {
         return serializer.serialize(example).getValue()
     }
@@ -29,6 +32,12 @@ class ExampleKeyDefinitionLogic(
     private val def: KeyDefinition,
     private val apiTypeFactory: ApiTypeFactory,
 ): ExampleJsonLogic() {
+    override fun createFile(): File {
+        return File.create(
+            name = FileName("${def.getName()}.json"),
+            content = FileContent.fromString(createExampleJson())
+        )
+    }
 
     override fun createExampleJson(): String {
         val apiType = apiTypeFactory.create(def.getType())
@@ -44,7 +53,15 @@ class ExampleKeyDefinitionLogic(
 class ExampleInterfaceMethodLogic(
     private val def: MethodDefinition,
     private val apiTypeFactory: ApiTypeFactory,
+    private val moduleName: ModuleName
 ): ExampleJsonLogic() {
+
+    override fun createFile(): File {
+        return File.create(
+            name = FileName("${def.getName()}.json"),
+            content = FileContent.fromString(createExampleJson())
+        )
+    }
     override fun createExampleJson(): String {
         val valuesMap = mutableMapOf<String, Any>()
         valuesMap["input"] = "No input for this method"
@@ -80,7 +97,7 @@ class ExampleInterfaceMethodLogic(
     }
 
     override fun getName(): String {
-        return def.getName()
+        return "${moduleName.value}.${def.getName()}"
     }
 
 }
@@ -107,10 +124,7 @@ class HandlersExamplesGenerator: PatternGenerator() {
         return Directory.create(
             name = DirectoryName("Handlers"),
             files = exampleInterfaceMethodsLogic.map { logic ->
-                File.create(
-                    name = FileName("${c.module.getName()}.${logic.getName()}.json"),
-                    content = FileContent.fromString(logic.createExampleJson())
-                )
+                logic.createFile()
             }
         )
     }
@@ -121,7 +135,7 @@ class HandlersExamplesGenerator: PatternGenerator() {
         val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
         interfacesToMap.forEach { interfaceToMap ->
             interfaceToMap.getMethods().map {
-                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory))
+                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName()))
             }
         }
 
@@ -147,10 +161,7 @@ abstract class KeyExamplesGenerator: PatternGenerator() {
         }
         return Directory.create(
             name = directoryName,
-            files = keysExamplesLogic.map { File.create(
-                name = FileName("${it.getName()}.json"),
-                content = FileContent.fromString(it.createExampleJson())
-            ) }
+            files = keysExamplesLogic.map {it.createFile()}
         )
     }
 
