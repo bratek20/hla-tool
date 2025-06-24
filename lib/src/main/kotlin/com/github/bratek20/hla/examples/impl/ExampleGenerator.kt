@@ -20,7 +20,12 @@ abstract class ExampleJsonLogic {
        )
    }
 
-    abstract fun createFile(): File
+    fun createFile(): File {
+        return File.create(
+            name = FileName("${getName()}.json"),
+            content = FileContent.fromString(createExampleJson())
+        )
+    }
     protected abstract fun createExampleJson(): String
     protected abstract fun getName(): String
     protected fun anyToJson(example: Any): String {
@@ -32,12 +37,6 @@ class ExampleKeyDefinitionLogic(
     private val def: KeyDefinition,
     private val apiTypeFactory: ApiTypeFactory,
 ): ExampleJsonLogic() {
-    override fun createFile(): File {
-        return File.create(
-            name = FileName("${def.getName()}.json"),
-            content = FileContent.fromString(createExampleJson())
-        )
-    }
 
     override fun createExampleJson(): String {
         val apiType = apiTypeFactory.create(def.getType())
@@ -55,13 +54,6 @@ class ExampleInterfaceMethodLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val moduleName: ModuleName
 ): ExampleJsonLogic() {
-
-    override fun createFile(): File {
-        return File.create(
-            name = FileName("${getName()}.json"),
-            content = FileContent.fromString(createExampleJson())
-        )
-    }
     override fun createExampleJson(): String {
         val valuesMap = mutableMapOf<String, Any>()
         valuesMap["input"] = "No input for this method"
@@ -149,18 +141,18 @@ class HandlersExamplesGenerator: PatternGenerator() {
     }
 }
 
-abstract class KeyExamplesGenerator(
-    private val keys: List<KeyDefinition>,
-    private val directoryName: DirectoryName
-): PatternGenerator() {
+abstract class KeyExamplesGenerator: PatternGenerator() {
+
+    protected abstract fun getKeys(): List<KeyDefinition>
+    protected abstract fun getDirectoryName(): DirectoryName
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && keys.isNotEmpty()
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && getKeys().isNotEmpty()
     }
 
     override fun getDirectory(): Directory? {
-        return getDirectoryForKeysWithName(keys, directoryName)
+        return getDirectoryForKeysWithName(getKeys(), getDirectoryName())
     }
 
     private fun getDirectoryForKeysWithName(keys: List<KeyDefinition>, directoryName: DirectoryName): Directory? {
@@ -178,19 +170,29 @@ abstract class KeyExamplesGenerator(
 
 }
 
-class TitleDataExamplesGenerator(
-    keys: List<KeyDefinition>,
-    directoryName: DirectoryName
-): KeyExamplesGenerator(keys, directoryName) {
+class TitleDataExamplesGenerator: KeyExamplesGenerator() {
+    override fun getKeys(): List<KeyDefinition> {
+        return module.getPropertyKeys()
+    }
+
+    override fun getDirectoryName(): DirectoryName {
+        return DirectoryName("TitleData")
+    }
+
     override fun patternName(): PatternName {
         return PatternName.TitleDataExamples
     }
 }
 
-class PlayerDataExamplesGenerator(
-    keys: List<KeyDefinition>,
-    directoryName: DirectoryName
-): KeyExamplesGenerator(keys, directoryName) {
+class PlayerDataExamplesGenerator: KeyExamplesGenerator() {
+    override fun getKeys(): List<KeyDefinition> {
+        return module.getDataKeys()
+    }
+
+    override fun getDirectoryName(): DirectoryName {
+        return DirectoryName("PlayerData")
+    }
+
     override fun patternName(): PatternName {
         return PatternName.PlayerDataExamples
     }

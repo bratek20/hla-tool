@@ -142,8 +142,8 @@ class ExamplesGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            TitleDataExamplesGenerator(module.getPropertyKeys(), DirectoryName("TitleData")),
-            PlayerDataExamplesGenerator(module.getDataKeys(), DirectoryName("PlayerData")),
+            TitleDataExamplesGenerator(),
+            PlayerDataExamplesGenerator(),
             HandlersExamplesGenerator(),
         )
     }
