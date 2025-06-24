@@ -77,7 +77,7 @@ private fun submoduleToDirectory(name: SubmoduleName, subs: List<GeneratedSubmod
 
     return Directory.create(
         name = calcSubmoduleDirectoryName(name, profile),
-        files = sub.getPatterns().map { it.getFile() }
+        files = sub.getPatterns().map { it.getFile()!! }
     )
 }
 

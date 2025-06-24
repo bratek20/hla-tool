@@ -6,23 +6,37 @@ import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.BaseApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.utils.directory.api.File
-import com.github.bratek20.utils.directory.api.FileContent
-import com.github.bratek20.utils.directory.api.FileName
+import com.github.bratek20.utils.directory.api.*
 
-enum class ExampleType {
-    PROPERTY,
-    DATA,
-    INTERFACE
+abstract class ExampleJsonLogic {
+   companion object {
+       private val serializer = SerializationFactory.createSerializer(
+           SerializerConfig.create(
+               readable = true
+           )
+       )
+   }
+
+    fun createFile(): File {
+        return File.create(
+            name = FileName("${getName()}.json"),
+            content = FileContent.fromString(createExampleJson())
+        )
+    }
+    protected abstract fun createExampleJson(): String
+    protected abstract fun getName(): String
+    protected fun anyToJson(example: Any): String {
+        return serializer.serialize(example).getValue()
+    }
 }
 
 class ExampleKeyDefinitionLogic(
     private val def: KeyDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    exampleType: ExampleType
-): ExampleJsonLogic(exampleType) {
+): ExampleJsonLogic() {
 
     override fun createExampleJson(): String {
         val apiType = apiTypeFactory.create(def.getType())
@@ -38,8 +52,8 @@ class ExampleKeyDefinitionLogic(
 class ExampleInterfaceMethodLogic(
     private val def: MethodDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    exampleType: ExampleType
-): ExampleJsonLogic(exampleType) {
+    private val moduleName: ModuleName
+): ExampleJsonLogic() {
     override fun createExampleJson(): String {
         val valuesMap = mutableMapOf<String, Any>()
         valuesMap["input"] = "No input for this method"
@@ -75,77 +89,112 @@ class ExampleInterfaceMethodLogic(
     }
 
     override fun getName(): String {
-        return def.getName()
+        return "${moduleName.value}.${def.getName()}"
     }
 
 }
 
-abstract class ExampleJsonLogic(val exampleType: ExampleType) {
-    abstract fun createExampleJson(): String
-    abstract fun getName(): String
-    fun anyToJson(example: Any): String {
-        val serializer = SerializationFactory.createSerializer(
-            SerializerConfig.create(
-                readable = true
-            )
-        )
-        return serializer.serialize(example).getValue()
-    }
-}
-
-class ExampleGenerator: PatternGenerator() {
+class HandlersExamplesGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
-        return PatternName.Examples
+        return PatternName.HandlersExamples
     }
 
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
-        val exposedInterfaces = getExposedInterfaces(c.module.getWebSubmodule())
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT &&
-                (c.module.getPropertyKeys().isNotEmpty() || c.module.getDataKeys().isNotEmpty() || !exposedInterfaces.isNullOrEmpty())
+        val exposedInterfaces = getExposedInterfaces()
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && !exposedInterfaces.isNullOrEmpty()
     }
 
-    override fun getFiles(): List<File> {
-        val exampleLogics = createExampleLogics(c.module, c.apiTypeFactory)
-        return exampleLogics.map {
-            val filePrefix = when (it.exampleType) {
-                ExampleType.DATA -> "PD."
-                ExampleType.PROPERTY -> "TD."
-                ExampleType.INTERFACE -> "HANDLER.${c.module.getName()}."
+    override fun getDirectory(): Directory? {
+        val exampleInterfaceMethodsLogic = createExampleInterfaceMethodLogic(c.module, c.apiTypeFactory)
+
+        if( exampleInterfaceMethodsLogic.isEmpty() ) {
+            return null
+        }
+
+        return Directory.create(
+            name = DirectoryName("Handlers"),
+            files = exampleInterfaceMethodsLogic.map { logic ->
+                logic.createFile()
             }
-            File.create(
-                name = FileName("$filePrefix${it.getName()}.json"),
-                content = FileContent.fromString(it.createExampleJson())
-            )
+        )
+    }
+
+    private fun createExampleInterfaceMethodLogic(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleInterfaceMethodLogic> {
+        val exposedInterfacesNames = getExposedInterfaces().map { it.getName() }
+        val interfacesToMap = module.getInterfaces().filter { exposedInterfacesNames.contains(it.getName()) }
+        val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
+        interfacesToMap.forEach { interfaceToMap ->
+            interfaceToMap.getMethods().map {
+                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName()))
+            }
         }
+
+        return interfacesMethodsLogic
+    }
+
+    private fun getExposedInterfaces(): List<ExposedInterface> {
+        val web = c.module.getWebSubmodule() ?: return emptyList()
+        val handlers = web.getPlayFabHandlers() ?: return emptyList()
+        return handlers.getExposedInterfaces()
     }
 }
-fun createExampleLogics(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleJsonLogic> {
-    return module.getDataKeys().map {
-        ExampleKeyDefinitionLogic(it, apiTypeFactory, ExampleType.DATA)
-    } + module.getPropertyKeys().map {
-        ExampleKeyDefinitionLogic(it, apiTypeFactory, ExampleType.PROPERTY)
-    } + createExampleInterfaceMethodLogic(module, apiTypeFactory)
-}
 
-fun getExposedInterfaces(web: WebSubmoduleDefinition?): List<ExposedInterface> {
-    if(web == null) {
-        return emptyList()
+abstract class KeyExamplesGenerator: PatternGenerator() {
+
+    protected abstract fun getKeys(): List<KeyDefinition>
+    protected abstract fun getDirectoryName(): DirectoryName
+    override fun supportsCodeBuilder() = true
+
+    override fun shouldGenerate(): Boolean {
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && getKeys().isNotEmpty()
     }
-    val handlers = web.getPlayFabHandlers() ?: return emptyList()
-    return handlers.getExposedInterfaces()
-}
 
-fun createExampleInterfaceMethodLogic(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleInterfaceMethodLogic> {
-    val exposedInterfacesNames = getExposedInterfaces(module.getWebSubmodule()).map { it.getName() }
-    val interfacesToMap = module.getInterfaces().filter { exposedInterfacesNames.contains(it.getName()) }
-    val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
-    interfacesToMap.forEach { interfaceToMap ->
-        interfaceToMap.getMethods().map {
-            interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, ExampleType.INTERFACE))
+    override fun getDirectory(): Directory? {
+        return getDirectoryForKeysWithName(getKeys(), getDirectoryName())
+    }
+
+    private fun getDirectoryForKeysWithName(keys: List<KeyDefinition>, directoryName: DirectoryName): Directory? {
+        val keysExamplesLogic = keys.map {
+            ExampleKeyDefinitionLogic(it, apiTypeFactory)
         }
+        if (keysExamplesLogic.isEmpty()) {
+            return null
+        }
+        return Directory.create(
+            name = directoryName,
+            files = keysExamplesLogic.map {it.createFile()}
+        )
     }
 
-    return interfacesMethodsLogic
 }
+
+class TitleDataExamplesGenerator: KeyExamplesGenerator() {
+    override fun getKeys(): List<KeyDefinition> {
+        return module.getPropertyKeys()
+    }
+
+    override fun getDirectoryName(): DirectoryName {
+        return DirectoryName("TitleData")
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.TitleDataExamples
+    }
+}
+
+class PlayerDataExamplesGenerator: KeyExamplesGenerator() {
+    override fun getKeys(): List<KeyDefinition> {
+        return module.getDataKeys()
+    }
+
+    override fun getDirectoryName(): DirectoryName {
+        return DirectoryName("PlayerData")
+    }
+
+    override fun patternName(): PatternName {
+        return PatternName.PlayerDataExamples
+    }
+}
+

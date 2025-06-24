@@ -9,6 +9,7 @@ Enums
         Context
         Fixtures
         Tests
+        Examples
 
     PatternName
         //api
@@ -68,12 +69,15 @@ Enums
         ImplTest
 
         //Examples
-        Examples
+        HandlersExamples
+        TitleDataExamples
+        PlayerDataExamples
 
 ValueObjects
     GeneratedPattern
         name: PatternName
-        file: File
+        file: File?
+        directory: Directory? //patterns can generate files or directories
     GeneratedSubmodule
         name: SubmoduleName
         patterns: GeneratedPattern[]
