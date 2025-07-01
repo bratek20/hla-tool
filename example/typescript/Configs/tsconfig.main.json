@@ -25,6 +25,7 @@
         "../main/OnlyInterfacesModule/Api/Interfaces.ts",
 
         "../main/OnlyInterfacesModule/Impl/Logic.ts",
+        "../main/OnlyInterfacesModule/Impl/ImplContext.ts",
         //OnlyInterfacesModule end
 
         "../main/OtherModule/Api/ValueObjects.ts",
@@ -36,6 +37,7 @@
 
         "../main/OtherModule/Impl/Track.ts",
         "../main/OtherModule/Impl/Logic.ts",
+        "../main/OtherModule/Impl/ImplContext.ts",
 
         "../main/OtherModule/Web/PlayFabHandlers.ts",
         //OtherModule end
@@ -57,10 +59,13 @@
 
         "../main/SomeModule/Impl/Track.ts",
         "../main/SomeModule/Impl/Logic.ts",
+        "../main/SomeModule/Impl/ImplContext.ts",
 
         "../main/SomeModule/Web/WebCommon.ts",
         "../main/SomeModule/Web/WebClient.ts",
         "../main/SomeModule/Web/PlayFabHandlers.ts",
+        "../main/SomeModule/Web/WebServerContext.ts",
+        "../main/SomeModule/Web/WebClientContext.ts",
         //SomeModule end
 
         "../main/TypesModule/Api/CustomTypes.ts",
