@@ -444,7 +444,6 @@ class HlaFacadeTest {
         val expectedMainFilesToSkipUpdate = setOf(
             "api/CustomTypes",
             "api/CustomTypesMapper",
-            "context/Impl",
         )
 
         val expectedMainDirectoriesToSkipUpdate = setOf<String>(
@@ -555,8 +554,6 @@ class HlaFacadeTest {
                 "SomeModule/Web/WebCommon.kt generated",
                 "SomeModule/Web/WebClient.kt generated",
                 "SomeModule/Web/WebServer.kt generated",
-                "SomeModule/Context/Impl.kt generated",
-                "SomeModule/Context/Web.kt generated",
                 "SomeModule/Fixtures/Builders.kt generated",
                 "SomeModule/Fixtures/Diffs.kt generated",
                 "SomeModule/Fixtures/Asserts.kt generated",
@@ -590,7 +587,6 @@ class HlaFacadeTest {
                 "SomeModule/Web/WebCommon.kt updated",
                 "SomeModule/Web/WebClient.kt updated",
                 "SomeModule/Web/WebServer.kt updated",
-                "SomeModule/Context/Web.kt updated",
                 "SomeModule/Fixtures/Builders.kt updated",
                 "SomeModule/Fixtures/Diffs.kt updated",
                 "SomeModule/Fixtures/Asserts.kt updated",
