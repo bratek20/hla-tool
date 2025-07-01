@@ -92,7 +92,6 @@ class ModuleGeneratorLogic(
                 ModuleLanguage.C_SHARP -> CSharpSupport(domainContext)
             },
             onlyUpdate = args.getOnlyUpdate(),
-            onlyPatterns = profile.getOnlyPatterns(),
             typesWorldApi = typesWorldApi,
         )
 

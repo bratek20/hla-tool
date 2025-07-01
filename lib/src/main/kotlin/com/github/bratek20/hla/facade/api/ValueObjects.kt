@@ -249,12 +249,12 @@ data class HlaProfile(
         return this.typeScript
     }
 
-    fun getOnlyPatterns(): List<String> {
-        return this.onlyPatterns
+    fun getOnlyPatterns(): List<PatternName> {
+        return this.onlyPatterns.map { it -> PatternName.valueOf(it) }
     }
 
-    fun getSkipPatterns(): List<String> {
-        return this.skipPatterns
+    fun getSkipPatterns(): List<PatternName> {
+        return this.skipPatterns.map { it -> PatternName.valueOf(it) }
     }
 
     fun getImports(): List<HlaProfileImport> {
@@ -267,8 +267,8 @@ data class HlaProfile(
             language: ModuleLanguage,
             paths: HlaPaths,
             typeScript: TypeScriptConfig?,
-            onlyPatterns: List<String> = emptyList(),
-            skipPatterns: List<String> = emptyList(),
+            onlyPatterns: List<PatternName> = emptyList(),
+            skipPatterns: List<PatternName> = emptyList(),
             imports: List<HlaProfileImport> = emptyList(),
         ): HlaProfile {
             return HlaProfile(
@@ -276,8 +276,8 @@ data class HlaProfile(
                 language = language.name,
                 paths = paths,
                 typeScript = typeScript,
-                onlyPatterns = onlyPatterns,
-                skipPatterns = skipPatterns,
+                onlyPatterns = onlyPatterns.map { it -> it.name },
+                skipPatterns = skipPatterns.map { it -> it.name },
                 imports = imports,
             )
         }
