@@ -9,6 +9,8 @@ Interfaces
         modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder
         modernSerialize(variable: ExpressionBuilder): ExpressionBuilder
 
+        getExample(): any
+
     ApiTypeFactory
         create(type: TypeDefinition?): ApiType
 

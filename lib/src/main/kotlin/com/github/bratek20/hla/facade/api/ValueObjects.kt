@@ -230,6 +230,7 @@ data class HlaProfile(
     private val paths: HlaPaths,
     private val typeScript: TypeScriptConfig?,
     private val onlyPatterns: List<String> = emptyList(),
+    private val skipPatterns: List<String> = emptyList(),
     private val imports: List<HlaProfileImport> = emptyList(),
 ) {
     fun getName(): ProfileName {
@@ -252,6 +253,10 @@ data class HlaProfile(
         return this.onlyPatterns
     }
 
+    fun getSkipPatterns(): List<String> {
+        return this.skipPatterns
+    }
+
     fun getImports(): List<HlaProfileImport> {
         return this.imports
     }
@@ -263,6 +268,7 @@ data class HlaProfile(
             paths: HlaPaths,
             typeScript: TypeScriptConfig?,
             onlyPatterns: List<String> = emptyList(),
+            skipPatterns: List<String> = emptyList(),
             imports: List<HlaProfileImport> = emptyList(),
         ): HlaProfile {
             return HlaProfile(
@@ -271,6 +277,7 @@ data class HlaProfile(
                 paths = paths,
                 typeScript = typeScript,
                 onlyPatterns = onlyPatterns,
+                skipPatterns = skipPatterns,
                 imports = imports,
             )
         }

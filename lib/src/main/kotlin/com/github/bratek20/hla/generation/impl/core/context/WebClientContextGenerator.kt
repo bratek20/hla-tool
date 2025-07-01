@@ -10,9 +10,9 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
 import com.github.bratek20.utils.directory.api.FileContent
 
-class WebContextGenerator: PatternGenerator() {
+class WebClientContextGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
-        return PatternName.Web
+        return PatternName.WebClientContext
     }
 
     override fun generateFileContent(): FileContent? {
@@ -38,7 +38,7 @@ class WebContextGenerator: PatternGenerator() {
         return CodeBuilder(c.language.base())
             .addOps {
                 add(typeScriptNamespace {
-                    name = "${this@WebContextGenerator.c.module.getName()}.Api"
+                    name = "${this@WebClientContextGenerator.c.module.getName()}.Api"
                     interfs.forEach { interf ->
                         interf.methods.forEach { m ->
                             addFunction {

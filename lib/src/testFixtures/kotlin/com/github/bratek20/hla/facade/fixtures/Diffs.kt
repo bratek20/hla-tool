@@ -191,6 +191,7 @@ data class ExpectedHlaProfile(
     var typeScriptEmpty: Boolean? = null,
     var typeScript: (ExpectedTypeScriptConfig.() -> Unit)? = null,
     var onlyPatterns: List<String>? = null,
+    var skipPatterns: List<String>? = null,
     var imports: List<(ExpectedHlaProfileImport.() -> Unit)>? = null,
 )
 fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Unit, path: String = ""): String {
@@ -220,6 +221,11 @@ fun diffHlaProfile(given: HlaProfile, expectedInit: ExpectedHlaProfile.() -> Uni
     expected.onlyPatterns?.let {
         if (given.getOnlyPatterns().size != it.size) { result.add("${path}onlyPatterns size ${given.getOnlyPatterns().size} != ${it.size}"); return@let }
         given.getOnlyPatterns().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}onlyPatterns[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    expected.skipPatterns?.let {
+        if (given.getSkipPatterns().size != it.size) { result.add("${path}skipPatterns size ${given.getSkipPatterns().size} != ${it.size}"); return@let }
+        given.getSkipPatterns().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}skipPatterns[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     expected.imports?.let {

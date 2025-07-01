@@ -115,6 +115,7 @@ data class HlaProfileDef(
     var paths: (HlaPathsDef.() -> Unit) = {},
     var typeScript: (TypeScriptConfigDef.() -> Unit)? = null,
     var onlyPatterns: List<String> = emptyList(),
+    var skipPatterns: List<String> = emptyList(),
     var imports: List<(HlaProfileImportDef.() -> Unit)> = emptyList(),
 )
 fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
@@ -125,6 +126,7 @@ fun hlaProfile(init: HlaProfileDef.() -> Unit = {}): HlaProfile {
         paths = hlaPaths(def.paths),
         typeScript = def.typeScript?.let { it -> typeScriptConfig(it) },
         onlyPatterns = def.onlyPatterns,
+        skipPatterns = def.skipPatterns,
         imports = def.imports.map { it -> hlaProfileImport(it) },
     )
 }

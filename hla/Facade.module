@@ -37,6 +37,7 @@ Properties
         paths: HlaPaths
         typeScript: TypeScriptConfig?
         onlyPatterns: string[] = []
+        skipPatterns: string[] = []
         imports: HlaProfileImport[] = []
 
     "profiles" -> HlaProfile[]

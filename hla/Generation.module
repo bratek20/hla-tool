@@ -56,7 +56,8 @@ Enums
 
         //context
         Impl
-        Web
+        WebServerContext
+        WebClientContext
         ViewModel
 
         //fixtures

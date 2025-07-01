@@ -242,7 +242,7 @@ abstract class PatternGenerator
                         if (submodule == SubmoduleName.View) {
                             addUsing("$moduleName.ViewModel")
                         }
-                        if (submodule == SubmoduleName.Context && patternName() == PatternName.Web) {
+                        if (submodule == SubmoduleName.Context && patternName() == PatternName.WebClientContext) {
                             addUsing("$moduleName.Web")
                         }
                         if (submodule == SubmoduleName.Context && patternName() == PatternName.ViewModel) {
