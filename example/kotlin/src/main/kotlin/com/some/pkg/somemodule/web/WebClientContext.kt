@@ -20,16 +20,3 @@ class SomeModuleWebClient(
             .setImpl(SomeInterface2::class.java, SomeInterface2WebClient::class.java)
     }
 }
-
-class SomeModuleWebServer: WebServerModule {
-    override fun apply(builder: ContextBuilder) {
-        builder.withModule(SomeModuleImpl())
-    }
-
-    override fun getControllers(): List<Class<*>> {
-        return listOf(
-            SomeInterfaceController::class.java,
-            SomeInterface2Controller::class.java,
-        )
-    }
-}

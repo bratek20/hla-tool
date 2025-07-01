@@ -10,17 +10,6 @@ import com.github.bratek20.infrastructure.httpserver.api.WebServerModule
 import com.some.pkg.somemodule.api.*
 import com.some.pkg.somemodule.web.*
 
-class SomeModuleWebClient(
-    private val config: HttpClientConfig
-): ContextModule {
-    override fun apply(builder: ContextBuilder) {
-        builder
-            .setImplObject(SomeModuleWebClientConfig::class.java, SomeModuleWebClientConfig(config))
-            .setImpl(SomeInterface::class.java, SomeInterfaceWebClient::class.java)
-            .setImpl(SomeInterface2::class.java, SomeInterface2WebClient::class.java)
-    }
-}
-
 class SomeModuleWebServer: WebServerModule {
     override fun apply(builder: ContextBuilder) {
         builder.withModule(SomeModuleImpl())
