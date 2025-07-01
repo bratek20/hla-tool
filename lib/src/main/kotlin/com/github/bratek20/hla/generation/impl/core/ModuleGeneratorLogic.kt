@@ -6,8 +6,8 @@ import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.*
 import com.github.bratek20.hla.generation.impl.core.api.ApiGenerator
 import com.github.bratek20.hla.generation.impl.core.context.ContextGenerator
+import com.github.bratek20.hla.generation.impl.core.examples.ExamplesGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
-import com.github.bratek20.hla.generation.impl.core.impl.ExamplesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
 import com.github.bratek20.hla.generation.impl.core.prefabs.PrefabsGenerator
 import com.github.bratek20.hla.generation.impl.core.tests.TestsGenerator

@@ -2,9 +2,6 @@ package com.github.bratek20.hla.generation.impl.core.impl
 
 import com.github.bratek20.hla.definitions.api.ComplexStructureDefinition
 import com.github.bratek20.hla.definitions.api.KeyDefinition
-import com.github.bratek20.hla.examples.impl.HandlersExamplesGenerator
-import com.github.bratek20.hla.examples.impl.PlayerDataExamplesGenerator
-import com.github.bratek20.hla.examples.impl.TitleDataExamplesGenerator
 import com.github.bratek20.utils.directory.api.FileContent
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -17,7 +14,6 @@ import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFa
 import com.github.bratek20.hla.generation.impl.core.api.PropertyOrDataKeysGenerator
 import com.github.bratek20.hla.tracking.impl.InitSqlGenerator
 import com.github.bratek20.hla.tracking.impl.TrackPatternGenerator
-import com.github.bratek20.utils.directory.api.DirectoryName
 
 class LogicGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -122,29 +118,6 @@ class ImplGenerator: SubmoduleGenerator() {
             TrackPatternGenerator(),
             InitSqlGenerator(),
             LogicGenerator()
-        )
-    }
-}
-
-
-class ExamplesGenerator: SubmoduleGenerator() {
-    override fun submoduleName(): SubmoduleName {
-        return SubmoduleName.Examples
-    }
-
-    override fun velocityDirPath(): String {
-        return "Examples"
-    }
-
-    override fun shouldGenerateSubmodule(): Boolean {
-        return module.getWebSubmodule() != null || module.getDataKeys().isNotEmpty() || module.getPropertyKeys().isNotEmpty()
-    }
-
-    override fun getPatternGenerators(): List<PatternGenerator> {
-        return listOf(
-            TitleDataExamplesGenerator(),
-            PlayerDataExamplesGenerator(),
-            HandlersExamplesGenerator(),
         )
     }
 }
