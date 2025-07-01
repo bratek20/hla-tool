@@ -245,7 +245,7 @@ abstract class PatternGenerator
                         if (submodule == SubmoduleName.Context && patternName() == PatternName.WebClientContext) {
                             addUsing("$moduleName.Web")
                         }
-                        if (submodule == SubmoduleName.Context && patternName() == PatternName.ViewModel) {
+                        if (submodule == SubmoduleName.Context && patternName() == PatternName.ViewModelContext) {
                             addUsing("$moduleName.ViewModel")
                         }
                         modules.getCurrentDependencies().forEach {

@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.generation.impl.core.context
+package com.github.bratek20.hla.generation.impl.core.viewmodel
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.typeName
@@ -6,11 +6,10 @@ import com.github.bratek20.hla.definitions.api.UiContainerDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.generation.impl.core.viewmodel.ViewModelSharedLogic
 
 class ViewModelContextGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
-        return PatternName.ViewModel
+        return PatternName.ViewModelContext
     }
 
     override fun supportsCodeBuilder(): Boolean {
