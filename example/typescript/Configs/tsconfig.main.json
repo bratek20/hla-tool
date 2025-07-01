@@ -9,6 +9,8 @@
         //SimpleModule start
         //SomeModule start
         //TypesModule start
+        "../main/SomeModule/Context/Web.ts",
+
         "../main/NoInterfacesModule/Api/ValueObjects.ts",
         //NoInterfacesModule end
 
@@ -57,7 +59,8 @@
         "../main/SomeModule/Web/PlayFabHandlers.ts",
 
         "../main/SomeModule/Context/Impl.ts",
-        "../main/SomeModule/Context/Web.ts",
+        "../main/SomeModule/Context/WebClientContext.ts",
+        "../main/SomeModule/Context/WebServerContext.ts",
         //SomeModule end
 
         "../main/TypesModule/Api/CustomTypes.ts",
