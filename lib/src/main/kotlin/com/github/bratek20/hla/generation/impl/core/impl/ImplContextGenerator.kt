@@ -21,7 +21,7 @@ class ImplContextGenerator: PatternGenerator() {
         }
 
         val factory = InterfaceViewFactory(apiTypeFactory)
-        return contentBuilder("impl.vm")
+        return contentBuilder("implContext.vm")
             .put("interfaces", factory.create(module.getInterfaces()))
             .build()
     }

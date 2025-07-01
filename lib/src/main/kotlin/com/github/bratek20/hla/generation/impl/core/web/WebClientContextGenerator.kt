@@ -20,7 +20,7 @@ class WebClientContextGenerator: PatternGenerator() {
             return null
         }
         return c.module.getWebSubmodule()?.let { web ->
-            contentBuilder("web.vm")
+            contentBuilder("webClientContext.vm")
                 .put("serverUrl", "\"http://localhost:8080\"")
                 .put("serverName", web.getHttp()!!.getServerName())
                 .put("baseUrl", web.getHttp()!!.getBaseUrl())
