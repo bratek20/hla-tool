@@ -800,6 +800,31 @@ fun diffCustomTypesProperty(given: CustomTypesProperty, expectedInit: ExpectedCu
     return result.joinToString("\n")
 }
 
+data class ExpectedSelfReferencingProperty(
+    var optionalSelfEmpty: Boolean? = null,
+    var optionalSelf: (ExpectedSelfReferencingProperty.() -> Unit)? = null,
+    var listSelf: List<(ExpectedSelfReferencingProperty.() -> Unit)>? = null,
+)
+fun diffSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: ExpectedSelfReferencingProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSelfReferencingProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optionalSelfEmpty?.let {
+        if ((given.getOptionalSelf() == null) != it) { result.add("${path}optionalSelf empty ${(given.getOptionalSelf() == null)} != ${it}") }
+    }
+
+    expected.optionalSelf?.let {
+        if (diffSelfReferencingProperty(given.getOptionalSelf()!!, it) != "") { result.add(diffSelfReferencingProperty(given.getOptionalSelf()!!, it, "${path}optionalSelf.")) }
+    }
+
+    expected.listSelf?.let {
+        if (given.getListSelf().size != it.size) { result.add("${path}listSelf size ${given.getListSelf().size} != ${it.size}"); return@let }
+        given.getListSelf().forEachIndexed { idx, entry -> if (diffSelfReferencingProperty(entry, it[idx]) != "") { result.add(diffSelfReferencingProperty(entry, it[idx], "${path}listSelf[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )

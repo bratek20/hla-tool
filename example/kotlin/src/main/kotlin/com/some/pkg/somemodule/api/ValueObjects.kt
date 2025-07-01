@@ -947,3 +947,28 @@ data class CustomTypesProperty(
         }
     }
 }
+
+data class SelfReferencingProperty(
+    private val optionalSelf: SelfReferencingProperty?,
+    private val listSelf: List<SelfReferencingProperty>,
+) {
+    fun getOptionalSelf(): SelfReferencingProperty? {
+        return this.optionalSelf
+    }
+
+    fun getListSelf(): List<SelfReferencingProperty> {
+        return this.listSelf
+    }
+
+    companion object {
+        fun create(
+            optionalSelf: SelfReferencingProperty?,
+            listSelf: List<SelfReferencingProperty>,
+        ): SelfReferencingProperty {
+            return SelfReferencingProperty(
+                optionalSelf = optionalSelf,
+                listSelf = listSelf,
+            )
+        }
+    }
+}

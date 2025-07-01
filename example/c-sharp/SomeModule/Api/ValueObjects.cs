@@ -840,4 +840,26 @@ namespace SomeModule.Api {
             return new CustomTypesProperty(TODO(date), SerializedDateRange.FromCustomType(dateRange));
         }
     }
+
+    public class SelfReferencingProperty: ValueObject {
+        readonly SelfReferencingProperty? optionalSelf;
+        readonly List<SelfReferencingProperty> listSelf;
+
+        public SelfReferencingProperty(
+            SelfReferencingProperty? optionalSelf,
+            List<SelfReferencingProperty> listSelf
+        ) {
+            this.optionalSelf = optionalSelf;
+            this.listSelf = listSelf;
+        }
+        public Optional<SelfReferencingProperty> GetOptionalSelf() {
+            return Optional<SelfReferencingProperty>.Of(optionalSelf);
+        }
+        public List<SelfReferencingProperty> GetListSelf() {
+            return listSelf;
+        }
+        public static SelfReferencingProperty Create(Optional<SelfReferencingProperty> optionalSelf, List<SelfReferencingProperty> listSelf) {
+            return new SelfReferencingProperty(optionalSelf.OrElse(null), listSelf);
+        }
+    }
 }

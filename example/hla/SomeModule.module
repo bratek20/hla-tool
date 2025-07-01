@@ -161,6 +161,10 @@ Properties
         date: Date
         dateRange: DateRange
 
+    SelfReferencingProperty
+        optionalSelf: SelfReferencingProperty?
+        listSelf: SelfReferencingProperty[]
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeRenamedSourcePropertyEntryList" -> SomeRenamedSourcePropertyEntry[]
@@ -180,6 +184,7 @@ Properties
     "OptionalFieldProperties" -> OptionalFieldProperty[]
 
     "CustomTypesProperty" -> CustomTypesProperty
+    "SelfReferencingProperty" -> SelfReferencingProperty[]
 
 Data
     SomeData
