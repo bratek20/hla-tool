@@ -26,7 +26,9 @@ class WebGenerator: SubmoduleGenerator() {
             WebCommonGenerator(),
             WebClientGenerator(),
             WebServerGenerator(),
-            PlayFabHandlersGenerator()
+            PlayFabHandlersGenerator(),
+            WebServerContextGenerator(),
+            WebClientContextGenerator()
         )
     }
 }

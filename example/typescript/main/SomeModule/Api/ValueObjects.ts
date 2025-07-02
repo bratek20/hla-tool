@@ -178,7 +178,7 @@ class SomeClass3 {
     }
 
     getSomeEnum(): SomeEnum {
-        return SomeEnum.fromName(this.someEnum).get()
+        return SomeEnum.fromName(this.someEnum)
     }
 
     getClass2List(): SomeClass2[] {
@@ -394,7 +394,7 @@ class ClassWithEnumList {
     }
 
     getEnumList(): SomeEnum2[] {
-        return this.enumList.map(it => SomeEnum2.fromName(it).get())
+        return this.enumList.map(it => SomeEnum2.fromName(it))
     }
 }
 
@@ -600,7 +600,7 @@ class SomeProperty2 {
     }
 
     getSomeEnum(): SomeEnum {
-        return SomeEnum.fromName(this.someEnum).get()
+        return SomeEnum.fromName(this.someEnum)
     }
 
     getCustomOpt(): Optional<any> {

@@ -1,10 +1,10 @@
 {
   "input": {
-    "id": "someValue",
+    "id": "someId",
     "amount": 0
   },
   "output": {
-    "id": "someValue",
+    "id": "someId",
     "amount": 0
   },
   "exceptions": [

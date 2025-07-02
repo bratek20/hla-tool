@@ -31,6 +31,7 @@ Enums
         Logic
         Track
         InitSql
+        ImplContext
         //DataClasses - declared in api
         //DataKeys - declared in api
 
@@ -39,6 +40,8 @@ Enums
         WebServer
         WebClient
         PlayFabHandlers
+        WebServerContext
+        WebClientContext
 
         //view model
         GeneratedElements
@@ -47,17 +50,13 @@ Enums
         WindowsLogic
         GeneratedPopups
         PopupsLogic
+        ViewModelContext
 
         //view
         ElementsView
 
         //prefabs
         PrefabBlueprints
-
-        //context
-        Impl
-        Web
-        ViewModel
 
         //fixtures
         Builders

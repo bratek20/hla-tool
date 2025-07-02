@@ -63,7 +63,7 @@ namespace SomeModule.Builder {
 
         return SomeClass3.create(
             SomeModule.Builder.someClass2(final_class2Object),
-            SomeEnum.fromName(final_someEnum).get(),
+            SomeEnum.fromName(final_someEnum),
             final_class2List.map(it => SomeModule.Builder.someClass2(it)),
         )
     }
@@ -188,7 +188,7 @@ namespace SomeModule.Builder {
         const final_enumList = def?.enumList ?? []
 
         return ClassWithEnumList.create(
-            final_enumList.map(it => SomeEnum2.fromName(it).get()),
+            final_enumList.map(it => SomeEnum2.fromName(it)),
         )
     }
 
@@ -306,7 +306,7 @@ namespace SomeModule.Builder {
         return SomeProperty2.create(
             final_value,
             final_custom,
-            SomeEnum.fromName(final_someEnum).get(),
+            SomeEnum.fromName(final_someEnum),
             Optional.of(final_customOpt),
         )
     }
@@ -558,7 +558,7 @@ namespace SomeModule.Builder {
         const final_optCustomType = def?.optCustomType ?? undefined
 
         return SomeData2.create(
-            Optional.of(final_optEnum).map(it => SomeEnum.fromName(it).get()),
+            Optional.of(final_optEnum).map(it => SomeEnum.fromName(it)),
             Optional.of(final_optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it)),
         )
     }

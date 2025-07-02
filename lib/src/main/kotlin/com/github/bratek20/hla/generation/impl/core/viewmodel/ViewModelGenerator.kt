@@ -27,6 +27,7 @@ class ViewModelGenerator(
             WindowsLogicGenerator(),
             generatedPopupsGenerator,
             PopupsLogicGenerator(),
+            ViewModelContextGenerator()
         )
     }
 }

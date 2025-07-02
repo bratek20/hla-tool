@@ -7,12 +7,11 @@ using B20.Ext;
 using B20.Architecture.Contexts.Api;
 using HttpClientModule.Api;
 using SomeModule.Api;
-using SomeModule.Web;
 using OtherModule.Api;
 using SimpleModule.Api;
 using TypesModule.Api;
 
-namespace SomeModule.Context {
+namespace SomeModule.Web {
     public class SomeModuleWebClient: ContextModule {
         readonly HttpClientConfig config;
 

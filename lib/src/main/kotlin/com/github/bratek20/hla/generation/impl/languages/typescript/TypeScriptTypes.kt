@@ -113,7 +113,7 @@ class TypeScriptTypes(private val modules: ModuleGroupQueries): LanguageTypes {
     }
 
     override fun deserializeEnum(enumName: String, variable: String): String {
-        return "$enumName.fromName($variable).get()"
+        return "$enumName.fromName($variable)"
     }
 
     override fun serializeEnum(variableName: String): String {

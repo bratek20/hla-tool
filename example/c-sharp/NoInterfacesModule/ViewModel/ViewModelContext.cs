@@ -8,9 +8,8 @@ using B20.Architecture.Contexts.Api;
 using B20.ViewModel.Windows.Api;
 using B20.ViewModel.Popups.Api;
 using NoInterfacesModule.Api;
-using NoInterfacesModule.ViewModel;
 
-namespace NoInterfacesModule.Context {
+namespace NoInterfacesModule.ViewModel {
     public class NoInterfacesModuleViewModel: ContextModule {
         public void Apply(ContextBuilder builder) {
             builder

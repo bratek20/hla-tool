@@ -1,4 +1,4 @@
-package com.some.pkg.othermodule.context
+package com.some.pkg.othermodule.impl
 
 import com.github.bratek20.architecture.context.api.ContextBuilder
 import com.github.bratek20.architecture.context.api.ContextModule

@@ -444,7 +444,6 @@ class HlaFacadeTest {
         val expectedMainFilesToSkipUpdate = setOf(
             "api/CustomTypes",
             "api/CustomTypesMapper",
-            "context/Impl",
         )
 
         val expectedMainDirectoriesToSkipUpdate = setOf<String>(
@@ -555,8 +554,6 @@ class HlaFacadeTest {
                 "SomeModule/Web/WebCommon.kt generated",
                 "SomeModule/Web/WebClient.kt generated",
                 "SomeModule/Web/WebServer.kt generated",
-                "SomeModule/Context/Impl.kt generated",
-                "SomeModule/Context/Web.kt generated",
                 "SomeModule/Fixtures/Builders.kt generated",
                 "SomeModule/Fixtures/Diffs.kt generated",
                 "SomeModule/Fixtures/Asserts.kt generated",
@@ -590,7 +587,6 @@ class HlaFacadeTest {
                 "SomeModule/Web/WebCommon.kt updated",
                 "SomeModule/Web/WebClient.kt updated",
                 "SomeModule/Web/WebServer.kt updated",
-                "SomeModule/Context/Web.kt updated",
                 "SomeModule/Fixtures/Builders.kt updated",
                 "SomeModule/Fixtures/Diffs.kt updated",
                 "SomeModule/Fixtures/Asserts.kt updated",
@@ -647,6 +643,34 @@ class HlaFacadeTest {
 
         assertWrittenFileWithExample(valueObjectsFile!!, paths.exampleMainPath + "/api/ValueObjects.kt")
         assertWrittenFileWithExample(buildersFile!!, paths.exampleFixturesPath + "/fixtures/Builders.kt")
+    }
+
+    @Test
+    fun `should start module using skipPatterns`() {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        val args = ModuleOperationArgs.create(
+            moduleName = ModuleName("SomeModule"),
+            profileName = ProfileName("kotlinSkipWebServerContextPattern"),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.startModule(args)
+
+        //then
+        directoriesMock.assertWriteCount(3)
+        val paths = ShouldStartModuleArgsProvider().kotlinTestPaths("somemodule")
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            paths.expectedMainPath
+        )
+
+        mainDirectory.getDirectories().first { it.getName().value == "web" }.let { apiDirectory ->
+            assertThat(apiDirectory.getFiles().map { it.getName().value })
+                .doesNotContain("WebServerContext.kt")
+        }
     }
 
     private fun hlaFolderPath(): Path {
