@@ -754,24 +754,6 @@ namespace SomeModule {
         return result.join("\n")
     }
 
-    export interface ExpectedInTheMiddle {
-        selfEmpty?: boolean,
-        self?: ExpectedSelfReferencingProperty,
-    }
-    export function diffInTheMiddle(given: InTheMiddle, expected: ExpectedInTheMiddle, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.selfEmpty !== undefined) {
-            if (given.getSelf().isEmpty() != expected.selfEmpty) { result.push(`${path}self empty ${given.getSelf().isEmpty()} != ${expected.selfEmpty}`) }
-        }
-
-        if (expected.self !== undefined) {
-            if (diffSelfReferencingProperty(given.getSelf().get(), expected.self) != "") { result.push(diffSelfReferencingProperty(given.getSelf().get(), expected.self, `${path}self.`)) }
-        }
-
-        return result.join("\n")
-    }
-
     export interface ExpectedSelfReferencingProperty {
         optionalSelfEmpty?: boolean,
         optionalSelf?: ExpectedSelfReferencingProperty,

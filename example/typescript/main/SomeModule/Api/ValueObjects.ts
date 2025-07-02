@@ -910,22 +910,6 @@ class CustomTypesProperty {
     }
 }
 
-class InTheMiddle {
-    private self? = OptionalClass(SelfReferencingProperty)
-
-    static create(
-        self: Optional<SelfReferencingProperty>,
-    ): InTheMiddle {
-        const instance = new InTheMiddle()
-        instance.self = self.orElse(undefined)
-        return instance
-    }
-
-    getSelf(): Optional<SelfReferencingProperty> {
-        return Optional.of(this.self)
-    }
-}
-
 class SelfReferencingProperty {
     private optionalSelf? = OptionalClass(SelfReferencingProperty)
     private listSelf = [Class(SelfReferencingProperty)]

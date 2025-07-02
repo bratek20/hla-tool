@@ -844,13 +844,16 @@ namespace SomeModule.Api {
     public class SelfReferencingProperty: ValueObject {
         readonly SelfReferencingProperty? optionalSelf;
         readonly List<SelfReferencingProperty> listSelf;
+        readonly List<SelfReferencingProperty>? optionalListSelf;
 
         public SelfReferencingProperty(
             SelfReferencingProperty? optionalSelf,
-            List<SelfReferencingProperty> listSelf
+            List<SelfReferencingProperty> listSelf,
+            List<SelfReferencingProperty>? optionalListSelf
         ) {
             this.optionalSelf = optionalSelf;
             this.listSelf = listSelf;
+            this.optionalListSelf = optionalListSelf;
         }
         public Optional<SelfReferencingProperty> GetOptionalSelf() {
             return Optional<SelfReferencingProperty>.Of(optionalSelf);
@@ -858,8 +861,11 @@ namespace SomeModule.Api {
         public List<SelfReferencingProperty> GetListSelf() {
             return listSelf;
         }
-        public static SelfReferencingProperty Create(Optional<SelfReferencingProperty> optionalSelf, List<SelfReferencingProperty> listSelf) {
-            return new SelfReferencingProperty(optionalSelf.OrElse(null), listSelf);
+        public Optional<List<SelfReferencingProperty>> GetOptionalListSelf() {
+            return Optional<List<SelfReferencingProperty>>.Of(optionalListSelf);
+        }
+        public static SelfReferencingProperty Create(Optional<SelfReferencingProperty> optionalSelf, List<SelfReferencingProperty> listSelf, Optional<List<SelfReferencingProperty>> optionalListSelf) {
+            return new SelfReferencingProperty(optionalSelf.OrElse(null), listSelf, optionalListSelf.OrElse(null));
         }
     }
 }

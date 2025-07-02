@@ -515,17 +515,6 @@ namespace SomeModule.Builder {
         )
     }
 
-    export interface InTheMiddleDef {
-        self?: SomeModule.Builder.SelfReferencingPropertyDef,
-    }
-    export function inTheMiddle(def?: InTheMiddleDef): InTheMiddle {
-        const final_self = def?.self ?? undefined
-
-        return InTheMiddle.create(
-            Optional.of(final_self).map(it => SomeModule.Builder.selfReferencingProperty(it)),
-        )
-    }
-
     export interface SelfReferencingPropertyDef {
         optionalSelf?: SomeModule.Builder.SelfReferencingPropertyDef,
         listSelf?: SomeModule.Builder.SelfReferencingPropertyDef[],
