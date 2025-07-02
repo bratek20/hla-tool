@@ -2,7 +2,7 @@
 
 namespace ImportingModule {
     export function diffImportingEnum(given: ImportingEnum, expected: string, path: string = ""): string {
-        if (given != ImportingEnum.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        if (given != ImportingEnum.fromName(expected)) { return `${path}value ${given.getName()} != ${expected}` }
         return ""
     }
 
