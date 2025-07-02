@@ -44,6 +44,10 @@ class TestSomeInterfaceLogic: SomeInterface {
         TODO("Not yet implemented")
     }
 
+    override fun methodReturningNumericType(): Int {
+        TODO("Not yet implemented")
+    }
+
 }
 
 class TestSomeModuleImpl: ContextModule {
