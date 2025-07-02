@@ -23,6 +23,22 @@ class SomeData {
         return instance
     }
 
+    static createNamed({ TODO }: {
+        id: SomeId;
+        other: OtherData;
+        custom: any;
+        customOpt: Optional<any>;
+        goodDataName: string;
+    }): SomeData {
+        const instance = new SomeData()
+        instance.id = id.getValue()
+        instance.other = other
+        instance.custom = custom
+        instance.customOpt = customOpt.orElse(undefined)
+        instance.gDN = goodDataName
+        return instance
+    }
+
     getId(): SomeId {
         return new SomeId(this.id)
     }
@@ -80,6 +96,16 @@ class SomeData2 {
         optEnum: Optional<SomeEnum>,
         optCustomType: Optional<Date>,
     ): SomeData2 {
+        const instance = new SomeData2()
+        instance.optEnum = optEnum.map(it => it.getName()).orElse(undefined)
+        instance.optCustomType = optCustomType.map(it => TypesModule.CustomTypesMapper.dateGetValue(it)).orElse(undefined)
+        return instance
+    }
+
+    static createNamed({ TODO }: {
+        optEnum: Optional<SomeEnum>;
+        optCustomType: Optional<Date>;
+    }): SomeData2 {
         const instance = new SomeData2()
         instance.optEnum = optEnum.map(it => it.getName()).orElse(undefined)
         instance.optCustomType = optCustomType.map(it => TypesModule.CustomTypesMapper.dateGetValue(it)).orElse(undefined)

@@ -11,6 +11,14 @@ class OtherData {
         return instance
     }
 
+    static createNamed({ TODO }: {
+        id: OtherId;
+    }): OtherData {
+        const instance = new OtherData()
+        instance.id = id.getValue()
+        return instance
+    }
+
     getId(): OtherId {
         return new OtherId(this.id)
     }
