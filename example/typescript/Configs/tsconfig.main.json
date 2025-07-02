@@ -19,6 +19,8 @@
         "../main/SomeModule/Context/WebClientContext.ts",
         "../main/SomeModule/Context/WebServerContext.ts",
 
+        "../main/SomeModule/Web/WebServerContext.ts",
+
         "../main/NoInterfacesModule/Api/ValueObjects.ts",
         //NoInterfacesModule end
 
@@ -64,7 +66,6 @@
         "../main/SomeModule/Web/WebCommon.ts",
         "../main/SomeModule/Web/WebClient.ts",
         "../main/SomeModule/Web/PlayFabHandlers.ts",
-        "../main/SomeModule/Web/WebServerContext.ts",
         "../main/SomeModule/Web/WebClientContext.ts",
         //SomeModule end
 
