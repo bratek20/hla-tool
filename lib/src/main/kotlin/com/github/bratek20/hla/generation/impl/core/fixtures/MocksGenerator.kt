@@ -57,21 +57,12 @@ class MockInterfaceLogic(
 
     private fun responseField(method: MethodDefinition): FieldBuilderOps {
         val returnType = returnApiType(method)
-
-        val emptyValue = if (returnType is ListApiType) {
-            emptyImmutableList(returnType.wrappedType.builder())
-        } else if(returnType is OptionalApiType) {
-            nullValue()
-        }else if(returnType is SerializableApiType || BaseApiType.isAny(returnType)) {
-           if(isKotlin()) emptyLambda() else nullValue()
-        }else {
-            nullValue()
-        }
+        val returnDefType = defTypeFactory.create(returnType)
 
         return {
             type = returnDefType(method).builder()
             name = method.getName() + "Response"
-            value = emptyValue
+            value = returnDefType.emptyValueBuilder()
             mutable = true
         }
     }
@@ -182,7 +173,7 @@ class MockInterfaceLogic(
     }
 
     private fun defaultBuilderCall(type: ApiType, method: MethodDefinition): ExpressionBuilder {
-        return defTypeFactory.create(type as ApiTypeLogic).modernBuild(instanceVariable(method.getName() + "Response"))
+        return defTypeFactory.create(type).modernBuild(instanceVariable(method.getName() + "Response"))
     }
 
     fun createMock(): FunctionBuilderOps = {

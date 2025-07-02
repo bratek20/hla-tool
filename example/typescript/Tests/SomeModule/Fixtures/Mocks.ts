@@ -14,7 +14,7 @@ class SomeInterfaceMock implements SomeInterface {
     private methodReturningOptSimpleVoCalls: number = 0
     private methodReturningOptSimpleVoResponse: string | undefined = undefined
     private methodReturningNumericTypeCalls: number = 0
-    private methodReturningNumericTypeResponse: number = undefined
+    private methodReturningNumericTypeResponse: number = 0
     someEmptyMethod(): void {
         this.someEmptyMethodCalls = this.someEmptyMethodCalls + 1
     }
