@@ -455,6 +455,20 @@ class TypesWorldImplTest {
                         type = {
                             name = "SelfReferenceClass"
                         }
+                    },
+                    {
+                        name = "optionalSelfReference"
+                        type = {
+                            name = "Optional<SelfReferenceClass>"
+                        }
+
+                    },
+                    {
+                        name = "listSelfReference"
+                        type = {
+                            name = "List<SelfReferenceClass>"
+                        }
+
                     }
                 )
             })

@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
+import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
 fun WorldType.getFullName(): String {
@@ -112,7 +113,7 @@ class TypesWorldApiLogic: TypesWorldApi {
 
         if (kind == WorldTypeKind.ClassType) {
             val fields = getClassType(target).getFields()
-            if(fields.any{field -> field.getType().getName().value == target.getName().value}) {
+            if(fields.any{field -> field.getType().getName().asTypeDefinition().getName() == target.getName().value}) {
                 throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
             }
             return fields.flatMap { field ->
