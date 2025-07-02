@@ -201,6 +201,16 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function inTheMiddle(given: InTheMiddle, expected: ExpectedInTheMiddle) {
+        const diff = diffInTheMiddle(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function selfReferencingProperty(given: SelfReferencingProperty, expected: ExpectedSelfReferencingProperty) {
+        const diff = diffSelfReferencingProperty(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
         const diff = diffDateRangeWrapper(given, expected)
         AssertEquals(diff, "", diff)

@@ -13,6 +13,7 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.hlatypesworld.impl.B20FrontendTypesPopulator
 import com.github.bratek20.hla.hlatypesworld.impl.PrimitiveTypesPopulator
 import com.github.bratek20.hla.importscalculation.impl.mapToImport
+import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.utils.destringify
 import com.github.bratek20.utils.pascalToCamelCase
@@ -392,8 +393,20 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
             val builderValue = field.exampleValueBuilder()?.build(c)?.let {
                 destringify(it)
             }
-            val finalValue = builderValue ?: field.type.getExample()
-            fieldsMap[field.privateName()] = finalValue
+            val fieldTypeDef = field.type.asWorldType().getName().asTypeDefinition()
+            val fieldName = fieldTypeDef.getName()
+            if(fieldName == name) {
+                if(fieldTypeDef.getWrappers().contains(TypeWrapper.LIST)) {
+                    fieldsMap[field.privateName()] = emptyList<Any>()
+                }else if (fieldTypeDef.getWrappers().contains(TypeWrapper.OPTIONAL)){
+                    fieldsMap[field.privateName()] = nullValue()
+                }else {
+                    error("Field type is $fieldName and is recursive, but it is not wrapped in Optional or List")
+                }
+            }else {
+                val finalValue = builderValue ?: field.type.getExample()
+                fieldsMap[field.privateName()] = finalValue
+            }
         }
         return fieldsMap
     }

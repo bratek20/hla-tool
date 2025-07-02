@@ -754,6 +754,59 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedInTheMiddle {
+        selfEmpty?: boolean,
+        self?: ExpectedSelfReferencingProperty,
+    }
+    export function diffInTheMiddle(given: InTheMiddle, expected: ExpectedInTheMiddle, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.selfEmpty !== undefined) {
+            if (given.getSelf().isEmpty() != expected.selfEmpty) { result.push(`${path}self empty ${given.getSelf().isEmpty()} != ${expected.selfEmpty}`) }
+        }
+
+        if (expected.self !== undefined) {
+            if (diffSelfReferencingProperty(given.getSelf().get(), expected.self) != "") { result.push(diffSelfReferencingProperty(given.getSelf().get(), expected.self, `${path}self.`)) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSelfReferencingProperty {
+        optionalSelfEmpty?: boolean,
+        optionalSelf?: ExpectedSelfReferencingProperty,
+        listSelf?: ExpectedSelfReferencingProperty[],
+        optionalListSelfEmpty?: boolean,
+        optionalListSelf?: ExpectedSelfReferencingProperty[],
+    }
+    export function diffSelfReferencingProperty(given: SelfReferencingProperty, expected: ExpectedSelfReferencingProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optionalSelfEmpty !== undefined) {
+            if (given.getOptionalSelf().isEmpty() != expected.optionalSelfEmpty) { result.push(`${path}optionalSelf empty ${given.getOptionalSelf().isEmpty()} != ${expected.optionalSelfEmpty}`) }
+        }
+
+        if (expected.optionalSelf !== undefined) {
+            if (diffSelfReferencingProperty(given.getOptionalSelf().get(), expected.optionalSelf) != "") { result.push(diffSelfReferencingProperty(given.getOptionalSelf().get(), expected.optionalSelf, `${path}optionalSelf.`)) }
+        }
+
+        if (expected.listSelf !== undefined) {
+            if (given.getListSelf().length != expected.listSelf.length) { result.push(`${path}listSelf size ${given.getListSelf().length} != ${expected.listSelf.length}`) }
+            given.getListSelf().forEach((entry, idx) => { if (diffSelfReferencingProperty(entry, expected.listSelf[idx]) != "") { result.push(diffSelfReferencingProperty(entry, expected.listSelf[idx], `${path}listSelf[${idx}].`)) } })
+        }
+
+        if (expected.optionalListSelfEmpty !== undefined) {
+            if (given.getOptionalListSelf().isEmpty() != expected.optionalListSelfEmpty) { result.push(`${path}optionalListSelf empty ${given.getOptionalListSelf().isEmpty()} != ${expected.optionalListSelfEmpty}`) }
+        }
+
+        if (expected.optionalListSelf !== undefined) {
+            if (given.getOptionalListSelf().get().length != expected.optionalListSelf.length) { result.push(`${path}optionalListSelf size ${given.getOptionalListSelf().get().length} != ${expected.optionalListSelf.length}`) }
+            given.getOptionalListSelf().get().forEach((entry, idx) => { if (diffSelfReferencingProperty(entry, expected.optionalListSelf[idx]) != "") { result.push(diffSelfReferencingProperty(entry, expected.optionalListSelf[idx], `${path}optionalListSelf[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedDateRangeWrapper {
         range?: TypesModule.ExpectedDateRange,
     }

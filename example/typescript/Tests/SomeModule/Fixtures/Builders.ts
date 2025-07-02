@@ -515,6 +515,34 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface InTheMiddleDef {
+        self?: SomeModule.Builder.SelfReferencingPropertyDef,
+    }
+    export function inTheMiddle(def?: InTheMiddleDef): InTheMiddle {
+        const final_self = def?.self ?? undefined
+
+        return InTheMiddle.create(
+            Optional.of(final_self).map(it => SomeModule.Builder.selfReferencingProperty(it)),
+        )
+    }
+
+    export interface SelfReferencingPropertyDef {
+        optionalSelf?: SomeModule.Builder.SelfReferencingPropertyDef,
+        listSelf?: SomeModule.Builder.SelfReferencingPropertyDef[],
+        optionalListSelf?: SomeModule.Builder.SelfReferencingPropertyDef[],
+    }
+    export function selfReferencingProperty(def?: SelfReferencingPropertyDef): SelfReferencingProperty {
+        const final_optionalSelf = def?.optionalSelf ?? undefined
+        const final_listSelf = def?.listSelf ?? []
+        const final_optionalListSelf = def?.optionalListSelf ?? undefined
+
+        return SelfReferencingProperty.create(
+            Optional.of(final_optionalSelf).map(it => SomeModule.Builder.selfReferencingProperty(it)),
+            final_listSelf.map(it => SomeModule.Builder.selfReferencingProperty(it)),
+            Optional.of(final_optionalListSelf).map(it => it.map(it => SomeModule.Builder.selfReferencingProperty(it))),
+        )
+    }
+
     export interface DateRangeWrapperDef {
         range?: TypesModule.Builder.DateRangeDef,
     }

@@ -909,3 +909,49 @@ class CustomTypesProperty {
         return this.dateRange.toCustomType()
     }
 }
+
+class InTheMiddle {
+    private self? = OptionalClass(SelfReferencingProperty)
+
+    static create(
+        self: Optional<SelfReferencingProperty>,
+    ): InTheMiddle {
+        const instance = new InTheMiddle()
+        instance.self = self.orElse(undefined)
+        return instance
+    }
+
+    getSelf(): Optional<SelfReferencingProperty> {
+        return Optional.of(this.self)
+    }
+}
+
+class SelfReferencingProperty {
+    private optionalSelf? = OptionalClass(SelfReferencingProperty)
+    private listSelf = [Class(SelfReferencingProperty)]
+    private optionalListSelf? = [OptionalClass(SelfReferencingProperty)]
+
+    static create(
+        optionalSelf: Optional<SelfReferencingProperty>,
+        listSelf: SelfReferencingProperty[],
+        optionalListSelf: Optional<SelfReferencingProperty[]>,
+    ): SelfReferencingProperty {
+        const instance = new SelfReferencingProperty()
+        instance.optionalSelf = optionalSelf.orElse(undefined)
+        instance.listSelf = listSelf
+        instance.optionalListSelf = optionalListSelf.orElse(undefined)
+        return instance
+    }
+
+    getOptionalSelf(): Optional<SelfReferencingProperty> {
+        return Optional.of(this.optionalSelf)
+    }
+
+    getListSelf(): SelfReferencingProperty[] {
+        return this.listSelf
+    }
+
+    getOptionalListSelf(): Optional<SelfReferencingProperty[]> {
+        return Optional.of(this.optionalListSelf)
+    }
+}

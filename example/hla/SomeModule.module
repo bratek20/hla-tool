@@ -164,6 +164,7 @@ Properties
     SelfReferencingProperty
         optionalSelf: SelfReferencingProperty?
         listSelf: SelfReferencingProperty[]
+        optionalListSelf: SelfReferencingProperty[]?
 
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
