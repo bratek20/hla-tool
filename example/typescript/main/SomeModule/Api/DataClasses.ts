@@ -23,7 +23,13 @@ class SomeData {
         return instance
     }
 
-    static createNamed({ TODO }: {
+    static createNamed({
+        id,
+        other,
+        custom,
+        customOpt,
+        goodDataName,
+    }: {
         id: SomeId;
         other: OtherData;
         custom: any;
@@ -102,7 +108,10 @@ class SomeData2 {
         return instance
     }
 
-    static createNamed({ TODO }: {
+    static createNamed({
+        optEnum,
+        optCustomType,
+    }: {
         optEnum: Optional<SomeEnum>;
         optCustomType: Optional<Date>;
     }): SomeData2 {

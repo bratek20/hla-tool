@@ -16,7 +16,11 @@ class ${p.name()} {
         return instance
     }
 
-    static createNamed({ TODO }: {
+    static createNamed({
+        #foreach($field in $p.fields)
+        $field.name,
+        #end
+    }: {
         #foreach($field in $p.fields)
         $field.createDeclaration();
         #end
