@@ -1,11 +1,36 @@
 package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
+import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
 fun WorldType.getFullName(): String {
     return "${getPath().value}/${getName()}"
+}
+
+class TraversedPathContext {
+    private var traversedPath: String = ""
+    private var traversedFieldsName: MutableList<String> = mutableListOf()
+
+    fun setPath(path: String) {
+        traversedPath = path
+    }
+
+    fun getTraversedPath(): String {
+        return traversedPath
+    }
+    fun addFieldName(name: String) {
+        traversedFieldsName.add(name)
+    }
+    fun getTraversedFieldsName(): List<String> {
+        return traversedFieldsName.toList()
+    }
+
+    fun reset() {
+        traversedPath = ""
+        traversedFieldsName.clear()
+    }
 }
 
 class TypesWorldApiLogic: TypesWorldApi {
@@ -87,7 +112,7 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
-        return getAllReferencesOfFor(target, searchFor, "").map {
+        return getAllReferencesOfFor(target, searchFor, TraversedPathContext()).map {
             StructPath(dropSlashIfPresent(it))
         }
     }
@@ -104,32 +129,60 @@ class TypesWorldApiLogic: TypesWorldApi {
         }
     }
 
-    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPath: String): List<String> {
+    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPathContext: TraversedPathContext): List<String> {
+
         if (target == searchFor) {
-            return listOf(traversedPath)
+            val path = traversedPathContext.getTraversedPath()
+            return listOf(path)
         }
 
         val kind = getTypeInfo(target).getKind()
 
         if (kind == WorldTypeKind.ClassType) {
             val fields = getClassType(target).getFields()
-            if(fields.any{field -> field.getType().getName().asTypeDefinition().getName() == target.getName().value}) {
-                throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
+            val selfReferencingFields = fields.filter{field -> field.getType().getName().asTypeDefinition().getName() == target.getName().value}
+            if(selfReferencingFields.isNotEmpty()) {
+                selfReferencingFields.forEach {
+                    val fieldWrappers = it.getType().getName().asTypeDefinition().getWrappers()
+                    if(!fieldWrappers.contains(TypeWrapper.LIST) && !fieldWrappers.contains(TypeWrapper.OPTIONAL) ) {
+                        throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
+                    }
+                }
             }
-            return fields.flatMap { field ->
-                getAllReferencesOfFor(field.getType(), searchFor, "$traversedPath${field.getName()}/")
-            }
+            return fields
+                .flatMap { field ->
+                    val fieldTraversedPathContext =TraversedPathContext()
+                    fieldTraversedPathContext.setPath("${traversedPathContext.getTraversedPath()}${field.getName()}/")
+                    getAllReferencesOfFor(field.getType(), searchFor, fieldTraversedPathContext)
+                }
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
             val wrappedType = getConcreteWrapper(target).getWrappedType()
-            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, "")
+
+//            if(target.getName().value.contains(wrappedType.getName().asTypeDefinition().getName())) {
+//                if(isListWrapper(target)) {
+//                    return getAllReferencesOfFor(wrappedType, searchFor, "$traversedPath[*]/").map {
+//                        "${traversedPath}[*]/$it"
+//                    }
+//                }
+//
+//                if(isOptionalWrapper(target)) {
+//                    return getAllReferencesOfFor(wrappedType, searchFor, "$traversedPath[*]/").map {
+//                        "${dropSlashIfPresent(traversedPath)}?/$it"
+//                    }
+//                }
+//                throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
+//            }
+
+            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, TraversedPathContext())
 
             return innerPaths.map { innerPath ->
+                val traversedPath = traversedPathContext.getTraversedPath()
                 when {
-                    isListWrapper(target) -> "$traversedPath[*]/$innerPath"
+                    isListWrapper(target) ->  "${traversedPath}[*]/$innerPath"
                     isOptionalWrapper(target) -> {
-                        dropSlashIfPresent(traversedPath) + "?/$innerPath"
+                         "${dropSlashIfPresent(traversedPath)}?/$innerPath"
                     }
                     else -> throw IllegalStateException("Unknown wrapper type: ${target.getName().value}")
                 }
