@@ -45,6 +45,9 @@ namespace SomeModule.Web {
         public Optional<SomeId> MethodReturningOptSimpleVo() {
             return client.Post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional<object>.Empty()).GetBody<SomeInterfaceMethodReturningOptSimpleVoResponse>().Get().GetValue();
         }
+        public int MethodReturningNumericType() {
+            return client.Post("/some/prefix/someInterface/methodReturningNumericType", Optional<object>.Empty()).GetBody<SomeInterfaceMethodReturningNumericTypeResponse>().Get().GetValue();
+        }
     }
 
     public class SomeInterface2WebClient: SomeInterface2 {

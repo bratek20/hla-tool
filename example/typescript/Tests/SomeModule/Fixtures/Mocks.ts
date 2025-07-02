@@ -13,6 +13,8 @@ class SomeInterfaceMock implements SomeInterface {
     private methodWithAnyResponse: any = undefined
     private methodReturningOptSimpleVoCalls: number = 0
     private methodReturningOptSimpleVoResponse: string | undefined = undefined
+    private methodReturningNumericTypeCalls: number = 0
+    private methodReturningNumericTypeResponse: number = undefined
     someEmptyMethod(): void {
         this.someEmptyMethodCalls = this.someEmptyMethodCalls + 1
     }
@@ -75,6 +77,16 @@ class SomeInterfaceMock implements SomeInterface {
     setMethodReturningOptSimpleVoResponse(response: string | undefined) {
         this.methodReturningOptSimpleVoResponse = response
     }
+    methodReturningNumericType(): number {
+        this.methodReturningNumericTypeCalls = this.methodReturningNumericTypeCalls + 1
+        return this.methodReturningNumericTypeResponse
+    }
+    assertMethodReturningNumericTypeCalls(expectedNumber: number) {
+        AssertEquals(this.methodReturningNumericTypeCalls, expectedNumber, "Expected 'methodReturningNumericType' to be called " + expectedNumber + " times but was called " + this.methodReturningNumericTypeCalls + " times")
+    }
+    setMethodReturningNumericTypeResponse(response: number) {
+        this.methodReturningNumericTypeResponse = response
+    }
     reset() {
         this.someEmptyMethodCalls = 0
         this.someCommandCalls = 0
@@ -83,6 +95,7 @@ class SomeInterfaceMock implements SomeInterface {
         this.methodWithListOfSimpleVOCalls = 0
         this.methodWithAnyCalls = 0
         this.methodReturningOptSimpleVoCalls = 0
+        this.methodReturningNumericTypeCalls = 0
     }
 }
 
@@ -189,6 +202,7 @@ namespace SomeModule.Mocks {
         SomeModule.Api.methodWithListOfSimpleVO = CreateMock(SomeModule.Api.methodWithListOfSimpleVO, (list: SomeId[]) => { return mock.methodWithListOfSimpleVO(list) })
         SomeModule.Api.methodWithAny = CreateMock(SomeModule.Api.methodWithAny, (i: any) => { return mock.methodWithAny(i) })
         SomeModule.Api.methodReturningOptSimpleVo = CreateMock(SomeModule.Api.methodReturningOptSimpleVo, () => { return mock.methodReturningOptSimpleVo() })
+        SomeModule.Api.methodReturningNumericType = CreateMock(SomeModule.Api.methodReturningNumericType, () => { return mock.methodReturningNumericType() })
         return mock
     }
 

@@ -172,6 +172,19 @@ namespace SomeModule.Web {
         }
     }
 
+    public class SomeInterfaceMethodReturningNumericTypeResponse {
+        readonly int value;
+
+        public SomeInterfaceMethodReturningNumericTypeResponse(
+            int value
+        ) {
+            this.value = value;
+        }
+        public int GetValue() {
+            return value;
+        }
+    }
+
     public class SomeInterface2ReferenceOtherClassRequest {
         readonly OtherClass other;
 

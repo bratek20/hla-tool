@@ -37,6 +37,10 @@ class SomeInterfaceLogic: SomeInterface {
     override fun methodReturningOptSimpleVo(): SomeId? {
         TODO("Not yet implemented")
     }
+
+    override fun methodReturningNumericType(): Int {
+        TODO("Not yet implemented")
+    }
 }
 
 class SomeInterface2Logic: SomeInterface2 {

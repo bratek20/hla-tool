@@ -25,6 +25,8 @@ interface SomeInterface {
     methodWithAny(i: any): any
 
     methodReturningOptSimpleVo(): Optional<SomeId>
+
+    methodReturningNumericType(): number
 }
 
 interface SomeInterface2 {
