@@ -399,7 +399,7 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
                 if(fieldTypeDef.getWrappers().contains(TypeWrapper.LIST)) {
                     fieldsMap[field.privateName()] = emptyList<Any>()
                 }else if (fieldTypeDef.getWrappers().contains(TypeWrapper.OPTIONAL)){
-                    fieldsMap[field.privateName()] = nullValue()
+                    // do nothing to show missing field because optional
                 }else {
                     error("Field type is $fieldName and is recursive, but it is not wrapped in Optional or List")
                 }
