@@ -645,6 +645,34 @@ class HlaFacadeTest {
         assertWrittenFileWithExample(buildersFile!!, paths.exampleFixturesPath + "/fixtures/Builders.kt")
     }
 
+    @Test
+    fun `should start module using skipPatterns`() {
+        //given
+        val (directoriesMock, facade) = setup()
+
+        val args = ModuleOperationArgs.create(
+            moduleName = ModuleName("SomeModule"),
+            profileName = ProfileName("kotlinSkipWebServerContextPattern"),
+            hlaFolderPath = hlaFolderPath(),
+        )
+
+        //when
+        facade.startModule(args)
+
+        //then
+        directoriesMock.assertWriteCount(3)
+        val paths = ShouldStartModuleArgsProvider().kotlinTestPaths("somemodule")
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            paths.expectedMainPath
+        )
+
+        mainDirectory.getDirectories().first { it.getName().value == "web" }.let { apiDirectory ->
+            assertThat(apiDirectory.getFiles().map { it.getName().value })
+                .doesNotContain("WebServerContext.kt")
+        }
+    }
+
     private fun hlaFolderPath(): Path {
         return Path("../example/hla")
     }
