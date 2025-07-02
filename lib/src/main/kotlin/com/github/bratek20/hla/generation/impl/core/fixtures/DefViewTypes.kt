@@ -2,11 +2,14 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.*
+import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.impl.*
+import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.api.*
 import com.github.bratek20.hla.generation.impl.core.language.LanguageBuildersPattern
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.csharp.CSharpTypes
+import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.utils.pascalToCamelCase
 
@@ -31,6 +34,14 @@ abstract class DefType<T: ApiTypeLogic>(
     abstract fun defaultValueBuilder(): ExpressionBuilder
 
     abstract fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder
+
+    open fun emptyValueBuilder(): ExpressionBuilder {
+        return defaultValueBuilder()
+    }
+
+    protected fun emptyValueForClassType(): ExpressionBuilder {
+        return if(api.languageTypes is KotlinTypes) emptyLambda() else nullValue()
+    }
 }
 
 class BaseDefType(
@@ -50,6 +61,19 @@ class BaseDefType(
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
         return variable
+    }
+
+    override fun emptyValueBuilder(): ExpressionBuilder {
+        return when(api.name) {
+            BaseType.STRING -> emptyString()
+            BaseType.INT -> const(0)
+            BaseType.BOOL -> falseValue()
+            BaseType.VOID -> error("Void does not have empty value")
+            BaseType.ANY -> emptyValueForClassType()
+            BaseType.DOUBLE -> const(0)
+            BaseType.LONG -> const(0)
+            BaseType.STRUCT -> emptyValueForClassType()
+        }
     }
 }
 
@@ -82,6 +106,10 @@ abstract class SimpleStructureDefType<T: SimpleStructureApiType>(
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
         return api.modernDeserialize(variable)
+    }
+
+    override fun emptyValueBuilder(): ExpressionBuilder {
+        return boxedType.emptyValueBuilder()
     }
 }
 
@@ -172,6 +200,10 @@ open class ComplexStructureDefType(
                 variable
             }
         }
+    }
+
+    override fun emptyValueBuilder(): ExpressionBuilder {
+        return emptyValueForClassType()
     }
 }
 
@@ -290,7 +322,7 @@ class InterfaceDefType(
 class DefTypeFactory(
     private val pattern: LanguageBuildersPattern
 ) {
-    fun create(type: ApiTypeLogic): DefType<*> {
+    fun create(type: ApiType): DefType<*> {
         val result = when (type) {
             is BaseApiType -> BaseDefType(type)
             is SimpleValueObjectApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)

@@ -107,6 +107,13 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodReturningNumericTypeResponse {
+        private value = NUMBER
+        getValue(): number {
+            return this.value
+        }
+    }
+
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = Class(OtherClass)
         getOther(): OtherClass {

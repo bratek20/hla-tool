@@ -223,6 +223,8 @@ Interfaces
 
         methodReturningOptSimpleVo(): SomeId?
 
+        methodReturningNumericType(): int
+
     SomeInterface2
         referenceOtherClass(other: OtherClass): OtherClass
         referenceLegacyType(legacyType: LegacyType): LegacyType

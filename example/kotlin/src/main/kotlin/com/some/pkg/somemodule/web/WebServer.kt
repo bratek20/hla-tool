@@ -61,6 +61,12 @@ class SomeInterfaceController(
         // no request needed
         return serializer.asStruct(SomeInterfaceMethodReturningOptSimpleVoResponse(api.methodReturningOptSimpleVo()?.let { it -> it.value }))
     }
+
+    @PostMapping("/methodReturningNumericType")
+    fun methodReturningNumericType(): Struct {
+        // no request needed
+        return serializer.asStruct(SomeInterfaceMethodReturningNumericTypeResponse(api.methodReturningNumericType()))
+    }
 }
 
 @RestController

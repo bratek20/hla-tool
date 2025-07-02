@@ -43,6 +43,10 @@ class SomeInterfaceWebClient(
     override fun methodReturningOptSimpleVo(): SomeId? {
         return client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", null).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse::class.java).getValue()
     }
+
+    override fun methodReturningNumericType(): Int {
+        return client.post("/some/prefix/someInterface/methodReturningNumericType", null).getBody(SomeInterfaceMethodReturningNumericTypeResponse::class.java).getValue()
+    }
 }
 
 class SomeInterface2WebClient(

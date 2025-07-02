@@ -31,6 +31,8 @@ interface SomeInterface {
     fun methodWithAny(i: Any): Any
 
     fun methodReturningOptSimpleVo(): SomeId?
+
+    fun methodReturningNumericType(): Int
 }
 
 interface SomeInterface2 {
