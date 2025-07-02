@@ -455,20 +455,6 @@ class TypesWorldImplTest {
                         type = {
                             name = "SelfReferenceClass"
                         }
-                    },
-                    {
-                        name = "optionalSelfReference"
-                        type = {
-                            name = "Optional<SelfReferenceClass>"
-                        }
-
-                    },
-                    {
-                        name = "listSelfReference"
-                        type = {
-                            name = "List<SelfReferenceClass>"
-                        }
-
                     }
                 )
             })
@@ -487,6 +473,55 @@ class TypesWorldImplTest {
                     message = "Self reference detected for type 'SelfReferenceClass'"
                 }
             )
+        }
+
+        @Test
+        fun `should not throw exception for class referencing its self if is list or optional`() {
+            api.ensureType(worldType {
+                name = "ValueClass"
+            })
+
+            api.addClassType(worldClassType {
+                type = {
+                    name = "SelfReferenceClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "optionalSelfReference"
+                        type = {
+                            name = "Optional<SelfReferenceClass>"
+                        }
+
+                    },
+                    {
+                        name = "listSelfReference"
+                        type = {
+                            name = "List<SelfReferenceClass>"
+                        }
+
+                    }
+                )
+            })
+
+            val references = api.getAllReferencesOf(
+                worldType {
+                    name = "SelfReferenceClass"
+                },
+                worldType {
+                    name = "ValueClass"
+                }
+            )
+
+            assertThat(references).hasSize(3)
+            assertStructPath(references[0], "value")
+            assertStructPath(references[1], "optionalSelfReference?/value")
+            assertStructPath(references[2], "listSelfReference/[*]/value")
         }
 
         @Test
