@@ -388,7 +388,7 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
     }
 
     override fun getExample(): Any {
-        val fieldsMap: MutableMap<String, Any> = mutableMapOf()
+        val fieldsMap: MutableMap<String, Any?> = mutableMapOf()
         fields.map { field ->
             val builderValue = field.exampleValueBuilder()?.build(c)?.let {
                 destringify(it)
@@ -399,7 +399,7 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
                 if(fieldTypeDef.getWrappers().contains(TypeWrapper.LIST)) {
                     fieldsMap[field.privateName()] = emptyList<Any>()
                 }else if (fieldTypeDef.getWrappers().contains(TypeWrapper.OPTIONAL)){
-                    // do nothing to show missing field because optional
+                    fieldsMap[field.privateName()] = null
                 }else {
                     error("Field type is $fieldName and is recursive, but it is not wrapped in Optional or List")
                 }
