@@ -53,6 +53,20 @@ profiles:
       - "ValueObjects"
       - "Builders"
 
+  - name: "kotlinSkipWebServerContextPattern"
+    language: "KOTLIN"
+    paths:
+      project: "../kotlin"
+      src:
+        default: "src/main/kotlin/com/some/pkg"
+        overrides:
+          - submodule: "Tests"
+            path: "src/test/kotlin/com/some/pkg"
+          - submodule: "Fixtures"
+            path: "src/testFixtures/kotlin/com/some/pkg"
+    skipPatterns:
+      - "WebServerContext"
+
   - name: "typeScriptFileModifiers"
     language: "TYPE_SCRIPT"
     paths:

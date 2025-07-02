@@ -8,8 +8,8 @@ import com.github.bratek20.infrastructure.httpclient.fixtures.httpClientConfig
 import com.github.bratek20.infrastructure.httpserver.api.WebServerModule
 import com.github.bratek20.infrastructure.httpserver.fixtures.TestWebApp
 import com.some.pkg.somemodule.api.SomeInterface
-import com.some.pkg.somemodule.context.SomeModuleWebClient
 import com.some.pkg.somemodule.web.SomeInterfaceController
+import com.some.pkg.somemodule.web.SomeModuleWebClient
 
 class TestSomeModuleWebServer: WebServerModule {
     override fun apply(builder: ContextBuilder) {

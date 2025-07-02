@@ -13,10 +13,9 @@
 
         "../main/OtherModule/Impl/Track.ts",
         "../main/OtherModule/Impl/Logic.ts",
+        "../main/OtherModule/Impl/ImplContext.ts",
 
         "../main/OtherModule/Web/PlayFabHandlers.ts",
-
-        "../main/OtherModule/Context/Impl.ts",
         //OtherModule end
     ]
 }

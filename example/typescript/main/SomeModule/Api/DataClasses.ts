@@ -87,7 +87,7 @@ class SomeData2 {
     }
 
     getOptEnum(): Optional<SomeEnum> {
-        return Optional.of(this.optEnum).map(it => SomeEnum.fromName(it).get())
+        return Optional.of(this.optEnum).map(it => SomeEnum.fromName(it))
     }
 
     getOptCustomType(): Optional<Date> {

@@ -22,17 +22,17 @@ namespace SomeModule {
     }
 
     export function diffSomeEnum(given: SomeEnum, expected: string, path: string = ""): string {
-        if (given != SomeEnum.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        if (given != SomeEnum.fromName(expected)) { return `${path}value ${given.getName()} != ${expected}` }
         return ""
     }
 
     export function diffSomeEnum2(given: SomeEnum2, expected: string, path: string = ""): string {
-        if (given != SomeEnum2.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        if (given != SomeEnum2.fromName(expected)) { return `${path}value ${given.getName()} != ${expected}` }
         return ""
     }
 
     export function diffSomeEnum3(given: SomeEnum3, expected: string, path: string = ""): string {
-        if (given != SomeEnum3.fromName(expected).get()) { return `${path}value ${given.getName()} != ${expected}` }
+        if (given != SomeEnum3.fromName(expected)) { return `${path}value ${given.getName()} != ${expected}` }
         return ""
     }
 

@@ -13,6 +13,7 @@ import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
+import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.generation.impl.core.api.MacrosBuilder
 import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
@@ -32,7 +33,6 @@ class ModuleGenerationContext(
     val velocity: VelocityFacade,
     val language: LanguageSupport,
     val onlyUpdate: Boolean,
-    val onlyPatterns: List<String>,
     val typesWorldApi: TypesWorldApi
 ) {
     val module: ModuleDefinition
@@ -40,6 +40,9 @@ class ModuleGenerationContext(
 
     val apiTypeFactory: ApiTypeFactoryLogic
         get() = ApiTypeFactoryLogic(domain.queries, language.types(), typesWorldApi)
+
+    val profile: HlaProfile
+        get() = domain.profile
 }
 
 interface ContentBuilderExtension{
@@ -242,10 +245,10 @@ abstract class PatternGenerator
                         if (submodule == SubmoduleName.View) {
                             addUsing("$moduleName.ViewModel")
                         }
-                        if (submodule == SubmoduleName.Context && patternName() == PatternName.Web) {
+                        if (submodule == SubmoduleName.Context && patternName() == PatternName.WebClientContext) {
                             addUsing("$moduleName.Web")
                         }
-                        if (submodule == SubmoduleName.Context && patternName() == PatternName.ViewModel) {
+                        if (submodule == SubmoduleName.Context && patternName() == PatternName.ViewModelContext) {
                             addUsing("$moduleName.ViewModel")
                         }
                         modules.getCurrentDependencies().forEach {
@@ -347,7 +350,13 @@ abstract class PatternGenerator
             return true
         }
 
-        if(c.onlyPatterns.isNotEmpty() && !c.onlyPatterns.contains(patternName().name)) {
+        val onlyPatterns = c.profile.getOnlyPatterns()
+        if(onlyPatterns.isNotEmpty() && !onlyPatterns.contains(patternName())) {
+            return true
+        }
+
+        val skipPatterns = c.profile.getSkipPatterns()
+        if (skipPatterns.contains(patternName())) {
             return true
         }
         return false

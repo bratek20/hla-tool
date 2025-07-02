@@ -9,14 +9,25 @@
         //SimpleModule start
         //SomeModule start
         //TypesModule start
+        "../main/SomeModule/Context/Web.ts",
+
+        "../main/OnlyInterfacesModule/Context/Impl.ts",
+
+        "../main/OtherModule/Context/Impl.ts",
+
+        "../main/SomeModule/Context/Impl.ts",
+        "../main/SomeModule/Context/WebClientContext.ts",
+        "../main/SomeModule/Context/WebServerContext.ts",
+
+        "../main/SomeModule/Web/WebServerContext.ts",
+
         "../main/NoInterfacesModule/Api/ValueObjects.ts",
         //NoInterfacesModule end
 
         "../main/OnlyInterfacesModule/Api/Interfaces.ts",
 
         "../main/OnlyInterfacesModule/Impl/Logic.ts",
-
-        "../main/OnlyInterfacesModule/Context/Impl.ts",
+        "../main/OnlyInterfacesModule/Impl/ImplContext.ts",
         //OnlyInterfacesModule end
 
         "../main/OtherModule/Api/ValueObjects.ts",
@@ -28,10 +39,9 @@
 
         "../main/OtherModule/Impl/Track.ts",
         "../main/OtherModule/Impl/Logic.ts",
+        "../main/OtherModule/Impl/ImplContext.ts",
 
         "../main/OtherModule/Web/PlayFabHandlers.ts",
-
-        "../main/OtherModule/Context/Impl.ts",
         //OtherModule end
 
         "../main/SimpleModule/Api/ValueObjects.ts",
@@ -51,13 +61,12 @@
 
         "../main/SomeModule/Impl/Track.ts",
         "../main/SomeModule/Impl/Logic.ts",
+        "../main/SomeModule/Impl/ImplContext.ts",
 
         "../main/SomeModule/Web/WebCommon.ts",
         "../main/SomeModule/Web/WebClient.ts",
         "../main/SomeModule/Web/PlayFabHandlers.ts",
-
-        "../main/SomeModule/Context/Impl.ts",
-        "../main/SomeModule/Context/Web.ts",
+        "../main/SomeModule/Web/WebClientContext.ts",
         //SomeModule end
 
         "../main/TypesModule/Api/CustomTypes.ts",

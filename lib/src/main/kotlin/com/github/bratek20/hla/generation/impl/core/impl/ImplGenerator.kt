@@ -117,7 +117,8 @@ class ImplGenerator: SubmoduleGenerator() {
             ImplDataKeysGenerator(),
             TrackPatternGenerator(),
             InitSqlGenerator(),
-            LogicGenerator()
+            LogicGenerator(),
+            ImplContextGenerator()
         )
     }
 }

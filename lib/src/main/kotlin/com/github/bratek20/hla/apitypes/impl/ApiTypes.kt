@@ -238,7 +238,7 @@ fun extractExampleValue(attributes: List<Attribute>): String? {
     return attributes.firstOrNull { it.getName() == "example" }?.getValue()
 }
 
-fun extractExampleValueForBaseType(attributes: List<Attribute>): String? {
+fun extractExampleValueForNumericType(attributes: List<Attribute>): String? {
     return attributes.firstOrNull { it.getName() == "startsFrom" }?.getValue() ?: extractExampleValue(attributes)
 }
 
@@ -259,21 +259,27 @@ abstract class SimpleStructureApiType(
     }
 
     fun exampleValueBuilder(): ExpressionBuilder? {
-        return extractExampleValue()?.let {
+        return extractExampleValueFromAttributes()?.let {
             const(it)
         }
     }
 
-    private fun extractExampleValue(): String? {
+    private fun extractExampleValueFromAttributes(): String? {
         if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT) {
-            return extractExampleValueForBaseType(def.getAttributes())
+            return extractExampleValueForNumericType(def.getAttributes())
         }
         return extractExampleValue(def.getAttributes())
     }
 
     override fun getExample(): Any {
-        val exampleValue = extractExampleValue()?.let { destringify(it) } ?: return boxedType.getExample()
-        return exampleValue
+        val exampleValueFromAttributes = extractExampleValueFromAttributes()?.let { destringify(it) }
+        if (exampleValueFromAttributes != null) {
+            return exampleValueFromAttributes
+        }
+        if (boxedType.name == BaseType.STRING) {
+            return pascalToCamelCase(def.getName())
+        }
+        return boxedType.getExample()
     }
 }
 
