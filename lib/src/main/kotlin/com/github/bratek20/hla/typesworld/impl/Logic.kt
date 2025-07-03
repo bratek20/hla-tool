@@ -1,7 +1,6 @@
 package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
-import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 import java.util.LinkedList
 
@@ -149,7 +148,7 @@ class TypesWorldApiLogic: TypesWorldApi {
         val kind = getTypeInfo(target).getKind()
 
         if (kind == WorldTypeKind.ClassType) {
-            return mapClassApyTypesFields(traversedPathContext, searchFor, target)
+            return mapClassTypeFieldsOfTarget(traversedPathContext, searchFor, target)
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
@@ -173,7 +172,7 @@ class TypesWorldApiLogic: TypesWorldApi {
         return emptyList()
     }
 
-    private fun mapClassApyTypesFields(
+    private fun mapClassTypeFieldsOfTarget(
         traversedPathContext: TraversedPathContext,
         searchFor: WorldType,
         target: WorldType
