@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
+import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 import java.util.LinkedList
 
@@ -39,6 +40,10 @@ class TraversedPathContext {
 
     fun getTraversedFieldsType(): List<WorldType> {
         return traversedFieldsType.toList()
+    }
+
+    fun hasTraversedFieldType(type: WorldType): Boolean {
+        return traversedFieldsType.any { it.getName().value == type.getName().asTypeDefinition().getName() }
     }
 }
 class TypesWorldApiLogic: TypesWorldApi {
@@ -180,7 +185,8 @@ class TypesWorldApiLogic: TypesWorldApi {
         val fields = getClassType(target).getFields()
 
         val selfReferencingFields = fields.filter{field ->
-            (tryExtractWrappedTypeName(field.getType().getName()) ?: field.getType().getName()) == target.getName()
+            (tryExtractWrappedTypeName(field.getType().getName()) ?: field.getType().getName()) == target.getName() ||
+                traversedPathContext.hasTraversedFieldType(field.getType())
         }
 
         val traversedPathBeforeClean = traversedPathContext.getTraversedPath()
@@ -194,7 +200,7 @@ class TypesWorldApiLogic: TypesWorldApi {
                 result
             } + selfReferencingFields.map { field ->
             val finalTraversedPath = traversedPathBeforeClean.isNotEmpty()
-                .let { if (it) "$traversedPathBeforeClean/${field.getName()}" else field.getName() }
+                .let { if (it) "${dropSlashIfPresent(traversedPathBeforeClean)}/${field.getName()}" else field.getName() }
             when {
                 isListWrapper(field.getType()) -> "${finalTraversedPath}/[*]/value"
                 isOptionalWrapper(field.getType()) -> {
