@@ -161,10 +161,14 @@ Properties
         date: Date
         dateRange: DateRange
 
+    NestedSelfReferencingProperty
+        selfSome: SelfReferencingProperty?
+
     SelfReferencingProperty
         optionalSelf: SelfReferencingProperty?
         listSelf: SelfReferencingProperty[]
         optionalListSelf: SelfReferencingProperty[]?
+        nestedSelfReferencingProperty: NestedSelfReferencingProperty
 
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
