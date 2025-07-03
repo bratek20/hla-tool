@@ -44,6 +44,11 @@ namespace SomeModule.Impl {
             // TODO
             return undefined
         }
+
+        methodReturningNumericType(): number {
+            // TODO
+            return undefined
+        }
     }
 
     export class SomeInterface2Logic implements SomeInterface2 {

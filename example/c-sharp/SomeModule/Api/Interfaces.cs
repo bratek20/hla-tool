@@ -30,6 +30,8 @@ namespace SomeModule.Api {
         object MethodWithAny(object i);
 
         Optional<SomeId> MethodReturningOptSimpleVo();
+
+        int MethodReturningNumericType();
     }
 
     public interface SomeInterface2 {

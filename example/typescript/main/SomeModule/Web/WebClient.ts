@@ -38,6 +38,9 @@ namespace SomeModule.Web {
         methodReturningOptSimpleVo(): Optional<SomeId> {
             return this.client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional.empty()).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse).get().getValue()
         }
+        methodReturningNumericType(): number {
+            return this.client.post("/some/prefix/someInterface/methodReturningNumericType", Optional.empty()).getBody(SomeInterfaceMethodReturningNumericTypeResponse).get().getValue()
+        }
     }
 
     export class SomeInterface2WebClient implements SomeInterface2 {

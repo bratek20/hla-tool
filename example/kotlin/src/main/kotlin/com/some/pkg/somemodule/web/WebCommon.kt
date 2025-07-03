@@ -113,6 +113,13 @@ class SomeInterfaceMethodReturningOptSimpleVoResponse(
         return value?.let { it -> SomeId(it) }
     }
 }
+class SomeInterfaceMethodReturningNumericTypeResponse(
+    private val value: Int
+) {
+    fun getValue(): Int {
+        return value
+    }
+}
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass
 ) {

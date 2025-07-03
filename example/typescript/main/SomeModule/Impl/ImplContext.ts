@@ -28,6 +28,10 @@ namespace SomeModule.Api {
         return new Impl.SomeInterfaceLogic(c).methodReturningOptSimpleVo()
     }
 
+    export function methodReturningNumericType(c: HandlerContext): number {
+        return new Impl.SomeInterfaceLogic(c).methodReturningNumericType()
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
     }

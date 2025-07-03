@@ -70,6 +70,9 @@ fun nullValue() = expression { c -> c.lang.nullValue() }
 fun string(value: String) = expression("\"$value\"")
 fun emptyString() = string("")
 
+fun falseValue() = expression("false")
+fun trueValue() = expression("true")
+
 class PlusBuilder: ExpressionBuilder {
     lateinit var left: ExpressionBuilder
     lateinit var right: ExpressionBuilder

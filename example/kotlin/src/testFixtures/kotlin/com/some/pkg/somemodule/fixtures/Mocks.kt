@@ -24,6 +24,8 @@ class SomeInterfaceMock: SomeInterface {
     private var methodWithAnyResponse: Any = {}
     private var methodReturningOptSimpleVoCalls: Int = 0
     private var methodReturningOptSimpleVoResponse: String? = null
+    private var methodReturningNumericTypeCalls: Int = 0
+    private var methodReturningNumericTypeResponse: Int = 0
     override fun someEmptyMethod(): Unit {
         someEmptyMethodCalls = someEmptyMethodCalls + 1
     }
@@ -86,6 +88,16 @@ class SomeInterfaceMock: SomeInterface {
     fun setMethodReturningOptSimpleVoResponse(response: String?) {
         methodReturningOptSimpleVoResponse = response
     }
+    override fun methodReturningNumericType(): Int {
+        methodReturningNumericTypeCalls = methodReturningNumericTypeCalls + 1
+        return methodReturningNumericTypeResponse
+    }
+    fun assertMethodReturningNumericTypeCalls(expectedNumber: Int) {
+        assertThat(methodReturningNumericTypeCalls).withFailMessage("Expected 'methodReturningNumericType' to be called " + expectedNumber + " times but was called " + methodReturningNumericTypeCalls + " times").isEqualTo(expectedNumber)
+    }
+    fun setMethodReturningNumericTypeResponse(response: Int) {
+        methodReturningNumericTypeResponse = response
+    }
     fun reset() {
         someEmptyMethodCalls = 0
         someCommandCalls = 0
@@ -94,6 +106,7 @@ class SomeInterfaceMock: SomeInterface {
         methodWithListOfSimpleVOCalls = 0
         methodWithAnyCalls = 0
         methodReturningOptSimpleVoCalls = 0
+        methodReturningNumericTypeCalls = 0
     }
 }
 
