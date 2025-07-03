@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
+import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 
@@ -8,6 +9,30 @@ fun WorldType.getFullName(): String {
     return "${getPath().value}/${getName()}"
 }
 
+class TraversedPathContext {
+    private var traversedPath: String = ""
+    private var traversedFieldsType: MutableList<WorldType> = mutableListOf()
+
+    fun setPath(path: String) {
+        traversedPath = path
+    }
+
+    fun getTraversedPath(): String {
+        return traversedPath
+    }
+
+    fun addTraversedFieldType(type: WorldType) {
+        traversedFieldsType.add(type)
+    }
+
+    fun removeTraversedFieldType(type: WorldType) {
+        traversedFieldsType.remove(type)
+    }
+
+    fun getTraversedFieldsType(): List<WorldType> {
+        return traversedFieldsType.toList()
+    }
+}
 class TypesWorldApiLogic: TypesWorldApi {
     companion object {
         private val wrappers = setOf("List", "Optional")
@@ -113,8 +138,15 @@ class TypesWorldApiLogic: TypesWorldApi {
 
         if (kind == WorldTypeKind.ClassType) {
             val fields = getClassType(target).getFields()
-            if(fields.any{field -> field.getType().getName().asTypeDefinition().getName() == target.getName().value}) {
-                throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
+            val selfReferencingFields = fields.filter{field ->
+                (tryExtractWrappedTypeName(field.getType().getName()) ?: field.getType().getName()).value == target.getName().value
+            }
+            if(selfReferencingFields.isNotEmpty()) {
+                selfReferencingFields.forEach {
+                    if(!isWrapper(it.getType())) {
+                        throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
+                    }
+                }
             }
             return fields.flatMap { field ->
                 getAllReferencesOfFor(field.getType(), searchFor, "$traversedPath${field.getName()}/")
