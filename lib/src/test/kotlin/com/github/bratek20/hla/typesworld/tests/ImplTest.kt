@@ -483,6 +483,34 @@ class TypesWorldImplTest {
 
             api.addClassType(worldClassType {
                 type = {
+                    name = "NestedSelfReferenceClass"
+                }
+                fields = listOf (
+                    {
+                        name = "value"
+                        type = {
+                            name = "ValueClass"
+                        }
+                    },
+                    {
+                        name = "optionalSelfReference"
+                        type = {
+                            name = "Optional<NestedSelfReferenceClass>"
+                        }
+
+                    },
+                    {
+                        name = "listSelfReference"
+                        type = {
+                            name = "List<NestedSelfReferenceClass>"
+                        }
+
+                    }
+                )
+            })
+
+            api.addClassType(worldClassType {
+                type = {
                     name = "SelfReferenceClass"
                 }
                 fields = listOf (
@@ -504,7 +532,12 @@ class TypesWorldImplTest {
                         type = {
                             name = "List<SelfReferenceClass>"
                         }
-
+                    },
+                    {
+                        name = "nestedSelfReference"
+                        type = {
+                            name = "NestedSelfReferenceClass"
+                        }
                     }
                 )
             })
@@ -518,10 +551,13 @@ class TypesWorldImplTest {
                 }
             )
 
-            assertThat(references).hasSize(3)
+            assertThat(references).hasSize(6)
             assertStructPath(references[0], "value")
-            assertStructPath(references[1], "optionalSelfReference?/value")
-            assertStructPath(references[2], "listSelfReference/[*]/value")
+            assertStructPath(references[1], "nestedSelfReference/value")
+            assertStructPath(references[2], "nestedSelfReference/optionalSelfReference?/value")
+            assertStructPath(references[3], "nestedSelfReference/listSelfReference/[*]/value")
+            assertStructPath(references[4], "optionalSelfReference?/value")
+            assertStructPath(references[5], "listSelfReference/[*]/value")
         }
 
         @Test
