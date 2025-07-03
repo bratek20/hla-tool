@@ -396,9 +396,9 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
             val fieldTypeDef = field.type.asWorldType().getName().asTypeDefinition()
             val fieldName = fieldTypeDef.getName()
             if(fieldName == name) {
-                if(fieldTypeDef.getWrappers().contains(TypeWrapper.LIST)) {
+                if(field.type is ListApiType) {
                     fieldsMap[field.privateName()] = emptyList<Any>()
-                }else if (fieldTypeDef.getWrappers().contains(TypeWrapper.OPTIONAL)){
+                }else if (field.type is OptionalApiType){
                     fieldsMap[field.privateName()] = null
                 }else {
                     error("Field type is $fieldName and is recursive, but it is not wrapped in Optional or List")
