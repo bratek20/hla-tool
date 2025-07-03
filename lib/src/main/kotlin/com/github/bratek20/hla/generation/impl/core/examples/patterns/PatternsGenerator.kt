@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.examples.impl
+package com.github.bratek20.hla.generation.impl.core.examples.patterns
 
 import com.github.bratek20.architecture.serialization.api.SerializerConfig
 import com.github.bratek20.architecture.serialization.context.SerializationFactory

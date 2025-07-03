@@ -191,6 +191,12 @@ namespace SomeModule.Fixtures {
         public Action<DateRangeDef> DateRange { get; set; } = (_) => {};
     }
 
+    public class SelfReferencingPropertyDef {
+        public Action<SelfReferencingPropertyDef>? OptionalSelf { get; set; } = null;
+        public List<Action<SelfReferencingPropertyDef>> ListSelf { get; set; } = new List<Action<SelfReferencingPropertyDef>>();
+        public List<Action<SelfReferencingPropertyDef>>? OptionalListSelf { get; set; } = null;
+    }
+
     public class DateRangeWrapperDef {
         public Action<DateRangeDef> Range { get; set; } = (_) => {};
     }
@@ -441,6 +447,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return CustomTypesProperty.Create(TODO(def.Date), TypesModuleBuilders.BuildDateRange(def.DateRange));
+        }
+        public static SelfReferencingProperty BuildSelfReferencingProperty(Action<SelfReferencingPropertyDef> init = null) {
+            var def = new SelfReferencingPropertyDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SelfReferencingProperty.Create(Optional<Action<SelfReferencingPropertyDef>>.Of(def.OptionalSelf).Map(it => BuildSelfReferencingProperty(it)), def.ListSelf.Select(it => BuildSelfReferencingProperty(it)).ToList(), Optional<List<Action<SelfReferencingPropertyDef>>>.Of(def.OptionalListSelf).Map(it => it.Select(it => BuildSelfReferencingProperty(it)).ToList()));
         }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();

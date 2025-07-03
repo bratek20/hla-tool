@@ -85,4 +85,9 @@ namespace SomeModule {
         "CustomTypesProperty",
         CustomTypesProperty
     )
+
+    export const SELF_REFERENCING_PROPERTY_PROPERTY_KEY = new ListPropertyKey(
+        "SelfReferencingProperty",
+        SelfReferencingProperty
+    )
 }

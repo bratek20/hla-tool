@@ -909,3 +909,33 @@ class CustomTypesProperty {
         return this.dateRange.toCustomType()
     }
 }
+
+class SelfReferencingProperty {
+    private optionalSelf? = OptionalClass(SelfReferencingProperty)
+    private listSelf = [Class(SelfReferencingProperty)]
+    private optionalListSelf? = [OptionalClass(SelfReferencingProperty)]
+
+    static create(
+        optionalSelf: Optional<SelfReferencingProperty>,
+        listSelf: SelfReferencingProperty[],
+        optionalListSelf: Optional<SelfReferencingProperty[]>,
+    ): SelfReferencingProperty {
+        const instance = new SelfReferencingProperty()
+        instance.optionalSelf = optionalSelf.orElse(undefined)
+        instance.listSelf = listSelf
+        instance.optionalListSelf = optionalListSelf.orElse(undefined)
+        return instance
+    }
+
+    getOptionalSelf(): Optional<SelfReferencingProperty> {
+        return Optional.of(this.optionalSelf)
+    }
+
+    getListSelf(): SelfReferencingProperty[] {
+        return this.listSelf
+    }
+
+    getOptionalListSelf(): Optional<SelfReferencingProperty[]> {
+        return Optional.of(this.optionalListSelf)
+    }
+}
