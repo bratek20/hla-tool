@@ -155,13 +155,7 @@ class TypesWorldApiLogic: TypesWorldApi {
             val selfReferencingFields = fields.filter{field ->
                 (tryExtractWrappedTypeName(field.getType().getName()) ?: field.getType().getName()) == target.getName()
             }
-            if(selfReferencingFields.isNotEmpty()) {
-                selfReferencingFields.forEach {
-                    if(!isWrapper(it.getType())) {
-                        throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
-                    }
-                }
-            }
+
             val traversedPathBeforeClean = traversedPathContext.getTraversedPath()
             return fields
                 .filter { !selfReferencingFields.contains(it) }

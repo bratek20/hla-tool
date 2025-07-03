@@ -470,13 +470,13 @@ class TypesWorldImplTest {
                 ) },
                 {
                     type = SelfReferenceDetectedException::class
-                    message = "Self reference detected for type 'SelfReferenceClass'"
+                    message = "Self referencing class should be Optional or List: SelfReferenceClass"
                 }
             )
         }
 
         @Test
-        fun `should not throw exception for class referencing its self if is list or optional`() {
+        fun `should not throw exception for class referencing its self if is list or optional and return first possible path`() {
             api.ensureType(worldType {
                 name = "ValueClass"
             })
