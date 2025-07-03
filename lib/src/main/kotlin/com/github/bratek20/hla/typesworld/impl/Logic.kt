@@ -23,12 +23,27 @@ class TraversedPathContext {
         return traversedPaths.joinToString(separator = "/")
     }
 
+    fun removeLastPath() {
+        if (traversedPaths.isNotEmpty()) {
+            traversedPaths.removeLast()
+        }
+    }
+    fun removeLastTraversedFieldType() {
+        if (traversedFieldsType.isNotEmpty()) {
+            traversedFieldsType.removeLast()
+        }
+    }
+
     fun clearPathExceptFirst() {
         if (traversedPaths.isNotEmpty()) {
             val first = traversedPaths.first
             traversedPaths.clear()
             traversedPaths.add(first)
         }
+    }
+
+    fun clearPath() {
+        traversedPaths.clear()
     }
 
     fun addTraversedFieldType(type: WorldType) {
@@ -144,7 +159,7 @@ class TypesWorldApiLogic: TypesWorldApi {
     private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPathContext: TraversedPathContext): List<String> {
         if (target == searchFor) {
             val traversedPath = traversedPathContext.getTraversedPath()
-            traversedPathContext.clearPathExceptFirst()
+            //traversedPathContext.clearPath()
             //traversedPathContext.setPath("")
             return listOf(traversedPath)
         }
@@ -166,17 +181,23 @@ class TypesWorldApiLogic: TypesWorldApi {
             return fields.flatMap { field ->
                 traversedPathContext.addPath(field.getName())
                 traversedPathContext.addTraversedFieldType(field.getType())
-                getAllReferencesOfFor(field.getType(), searchFor, traversedPathContext)
+                val result = getAllReferencesOfFor(field.getType(), searchFor, traversedPathContext)
+
+                //Backtrack: remove already added fields after result calculation
+                traversedPathContext.removeLastPath()
+                traversedPathContext.removeLastTraversedFieldType()
+
+                result
             }
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
             val wrappedType = getConcreteWrapper(target).getWrappedType()
+
             val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, TraversedPathContext())
 
             return innerPaths.map { innerPath ->
                 val traversedPath = traversedPathContext.getTraversedPath()
-                traversedPathContext.clearPathExceptFirst()
                 when {
                     isListWrapper(target) -> "$traversedPath/[*]/$innerPath"
                     isOptionalWrapper(target) -> {
