@@ -1,6 +1,7 @@
 package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
+import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
 import java.util.LinkedList
 
@@ -20,7 +21,7 @@ class TraversedPathContext {
     }
 
     fun getTraversedPath(): String {
-        return traversedPaths.joinToString(separator = "/")
+        return traversedPaths.joinToString(separator = "")
     }
 
     fun removeLastPath() {
@@ -159,8 +160,6 @@ class TypesWorldApiLogic: TypesWorldApi {
     private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPathContext: TraversedPathContext): List<String> {
         if (target == searchFor) {
             val traversedPath = traversedPathContext.getTraversedPath()
-            //traversedPathContext.clearPath()
-            //traversedPathContext.setPath("")
             return listOf(traversedPath)
         }
 
@@ -169,7 +168,7 @@ class TypesWorldApiLogic: TypesWorldApi {
         if (kind == WorldTypeKind.ClassType) {
             val fields = getClassType(target).getFields()
             val selfReferencingFields = fields.filter{field ->
-                (tryExtractWrappedTypeName(field.getType().getName()) ?: field.getType().getName()).value == target.getName().value
+                (tryExtractWrappedTypeName(field.getType().getName()) ?: field.getType().getName()) == target.getName()
             }
             if(selfReferencingFields.isNotEmpty()) {
                 selfReferencingFields.forEach {
@@ -179,14 +178,13 @@ class TypesWorldApiLogic: TypesWorldApi {
                 }
             }
             return fields.flatMap { field ->
-                traversedPathContext.addPath(field.getName())
+                traversedPathContext.addPath(field.getName()+"/")
                 traversedPathContext.addTraversedFieldType(field.getType())
                 val result = getAllReferencesOfFor(field.getType(), searchFor, traversedPathContext)
 
                 //Backtrack: remove already added fields after result calculation
                 traversedPathContext.removeLastPath()
                 traversedPathContext.removeLastTraversedFieldType()
-
                 result
             }
         }
@@ -198,8 +196,9 @@ class TypesWorldApiLogic: TypesWorldApi {
 
             return innerPaths.map { innerPath ->
                 val traversedPath = traversedPathContext.getTraversedPath()
+
                 when {
-                    isListWrapper(target) -> "$traversedPath/[*]/$innerPath"
+                    isListWrapper(target) -> "${traversedPath}[*]/$innerPath"
                     isOptionalWrapper(target) -> {
                         dropSlashIfPresent(traversedPath) + "?/$innerPath"
                     }
