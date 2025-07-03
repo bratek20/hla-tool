@@ -1,24 +1,34 @@
 package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
-import com.github.bratek20.hla.definitions.api.TypeWrapper
-import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.typesworld.api.*
+import java.util.LinkedList
 
 fun WorldType.getFullName(): String {
     return "${getPath().value}/${getName()}"
 }
 
 class TraversedPathContext {
-    private var traversedPath: String = ""
+    private var traversedPaths: LinkedList<String> = LinkedList()
     private var traversedFieldsType: MutableList<WorldType> = mutableListOf()
 
-    fun setPath(path: String) {
-        traversedPath = path
+    fun addPath(path: String) {
+        if( path.isEmpty()) {
+            return
+        }
+        traversedPaths.add(path)
     }
 
     fun getTraversedPath(): String {
-        return traversedPath
+        return traversedPaths.joinToString(separator = "/")
+    }
+
+    fun clearPathExceptFirst() {
+        if (traversedPaths.isNotEmpty()) {
+            val first = traversedPaths.first
+            traversedPaths.clear()
+            traversedPaths.add(first)
+        }
     }
 
     fun addTraversedFieldType(type: WorldType) {
@@ -112,7 +122,9 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
-        return getAllReferencesOfFor(target, searchFor, "").map {
+        val traversedPathContext = TraversedPathContext()
+        traversedPathContext.addTraversedFieldType(target)
+        return getAllReferencesOfFor(target, searchFor, traversedPathContext).map {
             StructPath(dropSlashIfPresent(it))
         }
     }
@@ -129,8 +141,11 @@ class TypesWorldApiLogic: TypesWorldApi {
         }
     }
 
-    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPath: String): List<String> {
+    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPathContext: TraversedPathContext): List<String> {
         if (target == searchFor) {
+            val traversedPath = traversedPathContext.getTraversedPath()
+            traversedPathContext.clearPathExceptFirst()
+            //traversedPathContext.setPath("")
             return listOf(traversedPath)
         }
 
@@ -149,17 +164,21 @@ class TypesWorldApiLogic: TypesWorldApi {
                 }
             }
             return fields.flatMap { field ->
-                getAllReferencesOfFor(field.getType(), searchFor, "$traversedPath${field.getName()}/")
+                traversedPathContext.addPath(field.getName())
+                traversedPathContext.addTraversedFieldType(field.getType())
+                getAllReferencesOfFor(field.getType(), searchFor, traversedPathContext)
             }
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
             val wrappedType = getConcreteWrapper(target).getWrappedType()
-            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, "")
+            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, TraversedPathContext())
 
             return innerPaths.map { innerPath ->
+                val traversedPath = traversedPathContext.getTraversedPath()
+                traversedPathContext.clearPathExceptFirst()
                 when {
-                    isListWrapper(target) -> "$traversedPath[*]/$innerPath"
+                    isListWrapper(target) -> "$traversedPath/[*]/$innerPath"
                     isOptionalWrapper(target) -> {
                         dropSlashIfPresent(traversedPath) + "?/$innerPath"
                     }
