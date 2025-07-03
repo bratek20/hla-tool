@@ -141,6 +141,8 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPathContext: TraversedPathContext): List<String> {
+
+
         if (target == searchFor) {
             val traversedPath = traversedPathContext.getTraversedPath()
             return listOf(traversedPath)
@@ -160,13 +162,26 @@ class TypesWorldApiLogic: TypesWorldApi {
                     }
                 }
             }
-            return fields.flatMap { field ->
+            val traversedPathBeforeClean = traversedPathContext.getTraversedPath()
+            return fields
+                .filter { !selfReferencingFields.contains(it) }
+                .flatMap { field ->
                 traversedPathContext.addTraversedPathAndFieldType(field.getName()+"/", field.getType())
                 val result = getAllReferencesOfFor(field.getType(), searchFor, traversedPathContext)
 
                 //Backtrack: remove already added fields after result calculation
                 traversedPathContext.removeLastPathAndFieldType()
                 result
+            } + selfReferencingFields.map { field ->
+                val finalTraversedPath = traversedPathBeforeClean.isNotEmpty()
+                    .let { if (it) "$traversedPathBeforeClean/${field.getName()}" else field.getName() }
+                when {
+                    isListWrapper(field.getType()) -> "${finalTraversedPath}/[*]/value"
+                    isOptionalWrapper(field.getType()) -> {
+                        dropSlashIfPresent(finalTraversedPath) + "?/value"
+                    }
+                    else -> throw SelfReferenceDetectedException("Self referencing class should be Optional or List: ${target.getName().value}")
+                }
             }
         }
 
