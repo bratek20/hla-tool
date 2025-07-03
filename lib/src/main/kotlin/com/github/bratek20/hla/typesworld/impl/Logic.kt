@@ -148,7 +148,7 @@ class TypesWorldApiLogic: TypesWorldApi {
         val kind = getTypeInfo(target).getKind()
 
         if (kind == WorldTypeKind.ClassType) {
-            return mapClassTypeFieldsOfTarget(traversedPathContext, searchFor, target)
+            return getAllReferencesFromTargetFields(traversedPathContext, searchFor, target)
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
@@ -172,7 +172,7 @@ class TypesWorldApiLogic: TypesWorldApi {
         return emptyList()
     }
 
-    private fun mapClassTypeFieldsOfTarget(
+    private fun getAllReferencesFromTargetFields(
         traversedPathContext: TraversedPathContext,
         searchFor: WorldType,
         target: WorldType
