@@ -393,7 +393,7 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
             val builderValue = field.exampleValueBuilder()?.build(c)?.let {
                 destringify(it)
             }
-            val fieldTypeDef = field.type.asWorldType().getName().asTypeDefinition()
+            val fieldTypeDef = field.def.getType()
             val fieldName = fieldTypeDef.getName()
             if(fieldName == name) {
                 if(field.type is ListApiType) {
