@@ -13,46 +13,29 @@ class TraversedPathContext {
     private var traversedPaths: LinkedList<String> = LinkedList()
     private var traversedFieldsType: MutableList<WorldType> = mutableListOf()
 
-    fun addPath(path: String) {
-        if( path.isEmpty()) {
-            return
-        }
+    fun addTraversedPathAndFieldType(path: String, type: WorldType) {
         traversedPaths.add(path)
+        traversedFieldsType.add(type)
     }
 
     fun getTraversedPath(): String {
         return traversedPaths.joinToString(separator = "")
     }
 
-    fun removeLastPath() {
+    fun removeLastPathAndFieldType() {
+        removeLastPath()
+        removeLastTraversedFieldType()
+    }
+
+    private fun removeLastPath() {
         if (traversedPaths.isNotEmpty()) {
             traversedPaths.removeLast()
         }
     }
-    fun removeLastTraversedFieldType() {
+    private fun removeLastTraversedFieldType() {
         if (traversedFieldsType.isNotEmpty()) {
             traversedFieldsType.removeLast()
         }
-    }
-
-    fun clearPathExceptFirst() {
-        if (traversedPaths.isNotEmpty()) {
-            val first = traversedPaths.first
-            traversedPaths.clear()
-            traversedPaths.add(first)
-        }
-    }
-
-    fun clearPath() {
-        traversedPaths.clear()
-    }
-
-    fun addTraversedFieldType(type: WorldType) {
-        traversedFieldsType.add(type)
-    }
-
-    fun removeTraversedFieldType(type: WorldType) {
-        traversedFieldsType.remove(type)
     }
 
     fun getTraversedFieldsType(): List<WorldType> {
@@ -139,7 +122,7 @@ class TypesWorldApiLogic: TypesWorldApi {
 
     override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
         val traversedPathContext = TraversedPathContext()
-        traversedPathContext.addTraversedFieldType(target)
+        traversedPathContext.addTraversedPathAndFieldType("", target)
         return getAllReferencesOfFor(target, searchFor, traversedPathContext).map {
             StructPath(dropSlashIfPresent(it))
         }
@@ -178,13 +161,11 @@ class TypesWorldApiLogic: TypesWorldApi {
                 }
             }
             return fields.flatMap { field ->
-                traversedPathContext.addPath(field.getName()+"/")
-                traversedPathContext.addTraversedFieldType(field.getType())
+                traversedPathContext.addTraversedPathAndFieldType(field.getName()+"/", field.getType())
                 val result = getAllReferencesOfFor(field.getType(), searchFor, traversedPathContext)
 
                 //Backtrack: remove already added fields after result calculation
-                traversedPathContext.removeLastPath()
-                traversedPathContext.removeLastTraversedFieldType()
+                traversedPathContext.removeLastPathAndFieldType()
                 result
             }
         }
