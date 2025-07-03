@@ -493,16 +493,16 @@ class TypesWorldImplTest {
                         }
                     },
                     {
-                        name = "optionalSelfReference"
+                        name = "optionalNestedSelfReference"
                         type = {
-                            name = "Optional<NestedSelfReferenceClass>"
+                            name = "Optional<SelfReferenceClass>"
                         }
 
                     },
                     {
-                        name = "listSelfReference"
+                        name = "listNestedSelfReference"
                         type = {
-                            name = "List<NestedSelfReferenceClass>"
+                            name = "List<SelfReferenceClass>"
                         }
 
                     }
@@ -554,8 +554,8 @@ class TypesWorldImplTest {
             assertThat(references).hasSize(6)
             assertStructPath(references[0], "value")
             assertStructPath(references[1], "nestedSelfReference/value")
-            assertStructPath(references[2], "nestedSelfReference/optionalSelfReference?/value")
-            assertStructPath(references[3], "nestedSelfReference/listSelfReference/[*]/value")
+            assertStructPath(references[2], "nestedSelfReference/optionalNestedSelfReference?/value")
+            assertStructPath(references[3], "nestedSelfReference/listNestedSelfReference/[*]/value")
             assertStructPath(references[4], "optionalSelfReference?/value")
             assertStructPath(references[5], "listSelfReference/[*]/value")
         }
