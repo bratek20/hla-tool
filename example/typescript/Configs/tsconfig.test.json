@@ -25,6 +25,10 @@
         "../Tests/OnlyInterfacesModule/Tests/ImplTest.ts",
         //OnlyInterfacesModule end
 
+        //OnlyTrackingModule start
+        "../Tests/OnlyTrackingModule/Tests/ImplTest.ts",
+        //OnlyTrackingModule end
+
         "../Tests/OtherModule/Fixtures/Builders.ts",
         "../Tests/OtherModule/Fixtures/Diffs.ts",
         "../Tests/OtherModule/Fixtures/Asserts.ts",

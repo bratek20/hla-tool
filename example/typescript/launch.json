@@ -70,5 +70,15 @@
                 "${workspaceFolder}/**/*.js"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - OnlyTrackingModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" OnlyTrackingModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
     ]
 }
