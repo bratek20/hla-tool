@@ -44,6 +44,19 @@ class OtherProperty {
         return instance
     }
 
+    static createNamed({
+        id,
+        name,
+    }: {
+        id: OtherId;
+        name: string;
+    }): OtherProperty {
+        const instance = new OtherProperty()
+        instance.id = id.getValue()
+        instance.name = name
+        return instance
+    }
+
     getId(): OtherId {
         return new OtherId(this.id)
     }
@@ -67,6 +80,19 @@ class OtherClass {
         return instance
     }
 
+    static createNamed({
+        id,
+        amount,
+    }: {
+        id: OtherId;
+        amount: number;
+    }): OtherClass {
+        const instance = new OtherClass()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
     getId(): OtherId {
         return new OtherId(this.id)
     }
@@ -82,6 +108,16 @@ class OtherClassWIthUniqueId {
     static create(
         uniqueId: string,
     ): OtherClassWIthUniqueId {
+        const instance = new OtherClassWIthUniqueId()
+        instance.uniqueId = uniqueId
+        return instance
+    }
+
+    static createNamed({
+        uniqueId,
+    }: {
+        uniqueId: string;
+    }): OtherClassWIthUniqueId {
         const instance = new OtherClassWIthUniqueId()
         instance.uniqueId = uniqueId
         return instance
