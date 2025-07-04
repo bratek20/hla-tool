@@ -105,13 +105,6 @@ class ImplGenerator: SubmoduleGenerator() {
         return "impl"
     }
 
-    override fun shouldGenerateSubmodule(): Boolean {
-        val generateLogic = module.getInterfaces().isNotEmpty()
-        val generateData = module.getImplSubmodule() != null
-        val generateTracking = module.getTrackingSubmodule() != null
-        return generateLogic || generateData || generateTracking
-    }
-
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             ImplDataClassesGenerator(),

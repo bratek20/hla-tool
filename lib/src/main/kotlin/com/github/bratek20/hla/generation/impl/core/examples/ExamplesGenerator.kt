@@ -17,10 +17,6 @@ class ExamplesGenerator: SubmoduleGenerator() {
         return "Examples"
     }
 
-    override fun shouldGenerateSubmodule(): Boolean {
-        return module.getWebSubmodule() != null || module.getDataKeys().isNotEmpty() || module.getPropertyKeys().isNotEmpty()
-    }
-
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
             TitleDataExamplesGenerator(),
