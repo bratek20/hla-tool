@@ -1,0 +1,9 @@
+Tracking
+    Dimensions
+        OnlyTrackingDimension (table: "only_tracking_dimension")
+            some_field: int
+
+    Events
+        OnlyTrackingEvent (table: "only_tracking_event")
+            only_tracking_dimension_id: OnlyTrackingDimension
+            optional_int: int?

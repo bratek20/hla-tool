@@ -30,6 +30,10 @@
         "../main/OnlyInterfacesModule/Impl/ImplContext.ts",
         //OnlyInterfacesModule end
 
+        //OnlyTrackingModule start
+        "../main/OnlyTrackingModule/Impl/Track.ts",
+        //OnlyTrackingModule end
+
         "../main/OtherModule/Api/ValueObjects.ts",
         "../main/OtherModule/Api/DataClasses.ts",
         "../main/OtherModule/Api/PropertyKeys.ts",

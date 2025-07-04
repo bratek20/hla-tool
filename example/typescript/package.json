@@ -5,6 +5,7 @@
     "test NoInterfacesModule": "npm run build_testapp && npm run run_testapp \" NoInterfacesModule\"",
     "test OnlyInterfacesModule": "npm run build_testapp && npm run run_testapp \" OnlyInterfacesModule\"",
     "test SimpleModule": "npm run build_testapp && npm run run_testapp \" SimpleModule\"",
-    "test TypesModule": "npm run build_testapp && npm run run_testapp \" TypesModule\""
+    "test TypesModule": "npm run build_testapp && npm run run_testapp \" TypesModule\"",
+    "test OnlyTrackingModule": "npm run build_testapp && npm run run_testapp \" OnlyTrackingModule\""
   }
 }
