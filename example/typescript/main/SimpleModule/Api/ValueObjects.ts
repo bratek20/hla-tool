@@ -59,6 +59,16 @@ class UniqueIdEntry {
         return instance
     }
 
+    static createNamed({
+        id,
+    }: {
+        id: string;
+    }): UniqueIdEntry {
+        const instance = new UniqueIdEntry()
+        instance.id = id
+        return instance
+    }
+
     getId(): string {
         return this.id
     }
