@@ -52,6 +52,7 @@ class B20FrontendTypesPopulator(
             "Image",
             "Scroll",
             "ProgressBar",
+            "Timer"
         )
     }
 

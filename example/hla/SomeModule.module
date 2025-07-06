@@ -311,6 +311,7 @@ ViewModel
             someScroll: Scroll
             someEnum3Switch: SomeEnum3Switch
             progressBar: ProgressBar
+            timer: Timer
 
         SecondSomeClassVm
             SomeClass
