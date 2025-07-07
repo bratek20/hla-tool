@@ -43,6 +43,10 @@
     {
       "name": "progressBar",
       "viewType": "B20.View.UiElements.View.ProgressBarView"
+    },
+    {
+      "name": "timer",
+      "viewType": "B20.View.UiElements.View.TimerView"
     }
   ],
   "elementViewType": null

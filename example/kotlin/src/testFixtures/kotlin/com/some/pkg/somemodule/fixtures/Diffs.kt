@@ -800,6 +800,42 @@ fun diffCustomTypesProperty(given: CustomTypesProperty, expectedInit: ExpectedCu
     return result.joinToString("\n")
 }
 
+data class ExpectedSelfReferencingProperty(
+    var optionalSelfEmpty: Boolean? = null,
+    var optionalSelf: (ExpectedSelfReferencingProperty.() -> Unit)? = null,
+    var listSelf: List<(ExpectedSelfReferencingProperty.() -> Unit)>? = null,
+    var optionalListSelfEmpty: Boolean? = null,
+    var optionalListSelf: List<(ExpectedSelfReferencingProperty.() -> Unit)>? = null,
+)
+fun diffSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: ExpectedSelfReferencingProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSelfReferencingProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optionalSelfEmpty?.let {
+        if ((given.getOptionalSelf() == null) != it) { result.add("${path}optionalSelf empty ${(given.getOptionalSelf() == null)} != ${it}") }
+    }
+
+    expected.optionalSelf?.let {
+        if (diffSelfReferencingProperty(given.getOptionalSelf()!!, it) != "") { result.add(diffSelfReferencingProperty(given.getOptionalSelf()!!, it, "${path}optionalSelf.")) }
+    }
+
+    expected.listSelf?.let {
+        if (given.getListSelf().size != it.size) { result.add("${path}listSelf size ${given.getListSelf().size} != ${it.size}"); return@let }
+        given.getListSelf().forEachIndexed { idx, entry -> if (diffSelfReferencingProperty(entry, it[idx]) != "") { result.add(diffSelfReferencingProperty(entry, it[idx], "${path}listSelf[${idx}].")) } }
+    }
+
+    expected.optionalListSelfEmpty?.let {
+        if ((given.getOptionalListSelf() == null) != it) { result.add("${path}optionalListSelf empty ${(given.getOptionalListSelf() == null)} != ${it}") }
+    }
+
+    expected.optionalListSelf?.let {
+        if (given.getOptionalListSelf()!!.size != it.size) { result.add("${path}optionalListSelf size ${given.getOptionalListSelf()!!.size} != ${it.size}"); return@let }
+        given.getOptionalListSelf()!!.forEachIndexed { idx, entry -> if (diffSelfReferencingProperty(entry, it[idx]) != "") { result.add(diffSelfReferencingProperty(entry, it[idx], "${path}optionalListSelf[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )

@@ -2,11 +2,45 @@ package com.github.bratek20.hla.typesworld.impl
 
 import com.github.bratek20.architecture.structs.api.StructPath
 import com.github.bratek20.hla.typesworld.api.*
+import java.util.LinkedList
 
 fun WorldType.getFullName(): String {
     return "${getPath().value}/${getName()}"
 }
 
+class TraversedPathContext {
+    private var traversedPaths: LinkedList<String> = LinkedList()
+    private var traversedFieldsType: MutableList<WorldType> = mutableListOf()
+
+    fun addTraversedPathAndFieldType(path: String, type: WorldType) {
+        traversedPaths.add(path)
+        traversedFieldsType.add(type)
+    }
+
+    fun getTraversedPath(): String {
+        return traversedPaths.joinToString(separator = "")
+    }
+
+    fun removeLastPathAndFieldType() {
+        removeLastPath()
+        removeLastTraversedFieldType()
+    }
+
+    private fun removeLastPath() {
+        if (traversedPaths.isNotEmpty()) {
+            traversedPaths.removeLast()
+        }
+    }
+    private fun removeLastTraversedFieldType() {
+        if (traversedFieldsType.isNotEmpty()) {
+            traversedFieldsType.removeLast()
+        }
+    }
+
+    fun getTraversedFieldsType(): List<WorldType> {
+        return traversedFieldsType.toList()
+    }
+}
 class TypesWorldApiLogic: TypesWorldApi {
     companion object {
         private val wrappers = setOf("List", "Optional")
@@ -86,7 +120,9 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     override fun getAllReferencesOf(target: WorldType, searchFor: WorldType): List<StructPath> {
-        return getAllReferencesOfFor(target, searchFor, "").map {
+        val traversedPathContext = TraversedPathContext()
+        traversedPathContext.addTraversedPathAndFieldType("", target)
+        return getAllReferencesOfFor(target, searchFor, traversedPathContext).map {
             StructPath(dropSlashIfPresent(it))
         }
     }
@@ -103,30 +139,28 @@ class TypesWorldApiLogic: TypesWorldApi {
         }
     }
 
-    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPath: String): List<String> {
+    private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPathContext: TraversedPathContext): List<String> {
         if (target == searchFor) {
+            val traversedPath = traversedPathContext.getTraversedPath()
             return listOf(traversedPath)
         }
 
         val kind = getTypeInfo(target).getKind()
 
         if (kind == WorldTypeKind.ClassType) {
-            val fields = getClassType(target).getFields()
-            if(fields.any{field -> field.getType().getName().value == target.getName().value}) {
-                throw SelfReferenceDetectedException("Self reference detected for type '${target.getName()}'")
-            }
-            return fields.flatMap { field ->
-                getAllReferencesOfFor(field.getType(), searchFor, "$traversedPath${field.getName()}/")
-            }
+            return getAllReferencesFromTargetFields(traversedPathContext, searchFor, target)
         }
 
         if (kind == WorldTypeKind.ConcreteWrapper) {
             val wrappedType = getConcreteWrapper(target).getWrappedType()
-            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, "")
+
+            val innerPaths = getAllReferencesOfFor(wrappedType, searchFor, TraversedPathContext())
 
             return innerPaths.map { innerPath ->
+                val traversedPath = traversedPathContext.getTraversedPath()
+
                 when {
-                    isListWrapper(target) -> "$traversedPath[*]/$innerPath"
+                    isListWrapper(target) -> "${traversedPath}[*]/$innerPath"
                     isOptionalWrapper(target) -> {
                         dropSlashIfPresent(traversedPath) + "?/$innerPath"
                     }
@@ -136,6 +170,40 @@ class TypesWorldApiLogic: TypesWorldApi {
         }
 
         return emptyList()
+    }
+
+    private fun getAllReferencesFromTargetFields(
+        traversedPathContext: TraversedPathContext,
+        searchFor: WorldType,
+        target: WorldType
+    ): List<String> {
+        val fields = getClassType(target).getFields()
+
+        val selfReferencingFields = fields.filter{field ->
+            (tryExtractWrappedTypeName(field.getType().getName()) ?: field.getType().getName()) == target.getName()
+        }
+
+        val traversedPathBeforeClean = traversedPathContext.getTraversedPath()
+        return fields
+            .filter { !selfReferencingFields.contains(it) }
+            .flatMap { field ->
+                traversedPathContext.addTraversedPathAndFieldType(field.getName() + "/", field.getType())
+                val result = getAllReferencesOfFor(field.getType(), searchFor, traversedPathContext)
+                //Backtrack: remove already added fields after result calculation
+                traversedPathContext.removeLastPathAndFieldType()
+                result
+            } + selfReferencingFields.map { field ->
+            val finalTraversedPath = traversedPathBeforeClean.isNotEmpty()
+                .let { if (it) "$traversedPathBeforeClean/${field.getName()}" else field.getName() }
+            when {
+                isListWrapper(field.getType()) -> "${finalTraversedPath}/[*]/value"
+                isOptionalWrapper(field.getType()) -> {
+                    dropSlashIfPresent(finalTraversedPath) + "?/value"
+                }
+
+                else -> throw SelfReferenceDetectedException("Self referencing class should be Optional or List: ${target.getName().value}")
+            }
+        }
     }
 
     private fun isListWrapper(type: WorldType): Boolean {

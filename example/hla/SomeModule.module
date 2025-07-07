@@ -161,6 +161,11 @@ Properties
         date: Date
         dateRange: DateRange
 
+    SelfReferencingProperty
+        optionalSelf: SelfReferencingProperty?
+        listSelf: SelfReferencingProperty[]
+        optionalListSelf: SelfReferencingProperty[]?
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeRenamedSourcePropertyEntryList" -> SomeRenamedSourcePropertyEntry[]
@@ -180,6 +185,7 @@ Properties
     "OptionalFieldProperties" -> OptionalFieldProperty[]
 
     "CustomTypesProperty" -> CustomTypesProperty
+    "SelfReferencingProperty" -> SelfReferencingProperty[]
 
 Data
     SomeData
@@ -305,6 +311,7 @@ ViewModel
             someScroll: Scroll
             someEnum3Switch: SomeEnum3Switch
             progressBar: ProgressBar
+            timer: Timer
 
         SecondSomeClassVm
             SomeClass

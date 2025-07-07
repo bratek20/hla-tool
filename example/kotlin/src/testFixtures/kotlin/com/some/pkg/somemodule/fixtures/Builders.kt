@@ -455,6 +455,20 @@ fun customTypesProperty(init: CustomTypesPropertyDef.() -> Unit = {}): CustomTyp
     )
 }
 
+data class SelfReferencingPropertyDef(
+    var optionalSelf: (SelfReferencingPropertyDef.() -> Unit)? = null,
+    var listSelf: List<(SelfReferencingPropertyDef.() -> Unit)> = emptyList(),
+    var optionalListSelf: List<(SelfReferencingPropertyDef.() -> Unit)>? = null,
+)
+fun selfReferencingProperty(init: SelfReferencingPropertyDef.() -> Unit = {}): SelfReferencingProperty {
+    val def = SelfReferencingPropertyDef().apply(init)
+    return SelfReferencingProperty.create(
+        optionalSelf = def.optionalSelf?.let { it -> selfReferencingProperty(it) },
+        listSelf = def.listSelf.map { it -> selfReferencingProperty(it) },
+        optionalListSelf = def.optionalListSelf?.let { it -> it.map { it -> selfReferencingProperty(it) } },
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )

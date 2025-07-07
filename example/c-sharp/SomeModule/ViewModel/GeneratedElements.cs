@@ -22,6 +22,7 @@ namespace SomeModule.ViewModel {
         public Scroll SomeScroll { get; set; }
         public SomeEnum3Switch SomeEnum3Switch { get; set; }
         public ProgressBar ProgressBar { get; set; }
+        public Timer Timer { get; set; }
         protected override List<Type> GetTraitTypes() {
             return new List<Type>() { typeof(Clickable), typeof(Draggable), typeof(WithRect) };
         }
