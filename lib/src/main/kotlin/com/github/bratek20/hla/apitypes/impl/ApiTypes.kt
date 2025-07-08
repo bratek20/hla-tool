@@ -551,6 +551,29 @@ open class SerializableApiType(
                 })
             }
         }
+
+        if (c.lang is TypeScript) {
+            addMethod {
+                static = true
+                returnType = this@SerializableApiType.builder()
+                name = "createNamed"
+                addArg {
+                    //TODO-CREATENAMED so somehow we need a builder that takes all the fields and creates a deconstructed complex argument
+                }
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
+                            className = this@SerializableApiType.name
+                            fields.forEach {
+                                addArg {
+                                    it.type.modernSerialize(variable(it.name))
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        }
     }
 }
 

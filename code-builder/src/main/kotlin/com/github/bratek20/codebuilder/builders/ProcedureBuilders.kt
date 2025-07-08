@@ -29,6 +29,8 @@ class ArgumentBuilder: ExpressionBuilder {
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
+//TODO-CREATENAMED: idea: make ArgumentBuilder open, and create a subclass that takes ArgumentBuilder list as input and can build a deconstructed argument?
+
 class ArgumentListBuilder: ExpressionBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun add(block: ArgumentBuilderOps) {
