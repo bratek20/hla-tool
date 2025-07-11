@@ -4,7 +4,7 @@ import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.utils.camelToPascalCase
 
-class ArgumentBuilder: ExpressionBuilder {
+open class ArgumentBuilder: ExpressionBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilder
 
@@ -29,7 +29,29 @@ class ArgumentBuilder: ExpressionBuilder {
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
-//TODO-CREATENAMED: idea: make ArgumentBuilder open, and create a subclass that takes ArgumentBuilder list as input and can build a deconstructed argument?
+class DeconstructedArgumentBuilder(argBuilders: List<ArgumentBuilderOps>): ArgumentBuilder() {
+    //TODO-CREATENAMED this doesn't yet work: error: lateinit "name" and "type" is not initialised
+    val args = argBuilders.map {builder -> ArgumentBuilder().apply(builder) }
+    override fun build(c: CodeBuilderContext): String {
+        val b = StringBuilder()
+        if (c.lang is TypeScript && args.isNotEmpty()) {
+            b.append("{")
+                args.forEach { arg ->
+                    b.append(arg.name)
+                    b.append(",\n")
+                }
+            b.append("}: {")
+                args.forEach { arg ->
+                    b.append(arg.name)
+                    b.append(": ")
+                    b.append(arg.type.build(c))
+                    b.append(";\n")
+                }
+            b.append("}")
+        }
+        return b.toString()
+    }
+}
 
 class ArgumentListBuilder: ExpressionBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()

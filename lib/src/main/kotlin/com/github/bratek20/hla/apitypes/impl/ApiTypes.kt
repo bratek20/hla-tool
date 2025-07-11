@@ -558,7 +558,14 @@ open class SerializableApiType(
                 returnType = this@SerializableApiType.builder()
                 name = "createNamed"
                 addArg {
-                    //TODO-CREATENAMED so somehow we need a builder that takes all the fields and creates a deconstructed complex argument
+                    DeconstructedArgumentBuilder(
+                        fields.map { field ->
+                            {
+                                type = field.type.builder()
+                                name = field.name
+                            }
+                        }
+                    )
                 }
                 setBody {
                     add(returnStatement {
