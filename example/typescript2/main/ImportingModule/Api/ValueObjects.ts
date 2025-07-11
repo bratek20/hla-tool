@@ -11,6 +11,16 @@ class ImportingProperty {
         return instance
     }
 
+    static createNamed({
+        other,
+    }: {
+        other: OtherProperty;
+    }): ImportingProperty {
+        const instance = new ImportingProperty()
+        instance.other = other
+        return instance
+    }
+
     getOther(): OtherProperty {
         return this.other
     }

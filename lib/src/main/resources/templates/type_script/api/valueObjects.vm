@@ -49,6 +49,22 @@ class ${p.name()} {
     #end
         return instance
     }
+
+    static createNamed({
+        #foreach($field in $p.fields)
+        $field.name,
+        #end
+    }: {
+        #foreach($field in $p.fields)
+        $field.createDeclaration();
+        #end
+    }): ${p.name()} {
+        const instance = new ${p.name()}()
+        #foreach($field in $p.fields)
+        $field.createConstructorPass()
+        #end
+        return instance
+    }
 #foreach($getter in $p.getters())
 
     ${getter.name}(): ${getter.type.name()} {
