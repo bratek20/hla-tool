@@ -29,25 +29,46 @@ open class ArgumentBuilder: ExpressionBuilder {
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
-class DeconstructedArgumentBuilder(argBuilders: List<ArgumentBuilderOps>): ArgumentBuilder() {
-    //TODO-CREATENAMED this doesn't yet work: error: lateinit "name" and "type" is not initialised
-    val args = argBuilders.map {builder -> ArgumentBuilder().apply(builder) }
+class DeconstructedTypeBuilder(private val argBuilders: List<ArgumentBuilderOps>) : TypeBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        val arguments = argBuilders.map {builder -> ArgumentBuilder().apply(builder) }
+        val b = StringBuilder()
+        if (c.lang is TypeScript && arguments.isNotEmpty()) {
+            b.append("{")
+            arguments.forEach { arg ->
+                b.append(arg.name)
+                b.append(": ")
+                b.append(arg.type.build(c))
+                b.append(";\n")
+            }
+            b.append("}")
+        }
+        return b.toString()
+    }
+}
+
+class DeconstructedArgumentBuilder(private val argBuilders: List<ArgumentBuilderOps>): ArgumentBuilder() {
+
+    init {
+        val args = argBuilders.map {builder -> ArgumentBuilder().apply(builder) }
+
+        val b = StringBuilder()
+        b.append("{")
+        args.forEach { arg ->
+            b.append(arg.name)
+            b.append(",\n")
+        }
+        b.append("}")
+        this.name = b.toString()
+        this.type = DeconstructedTypeBuilder(argBuilders)
+    }
+
     override fun build(c: CodeBuilderContext): String {
         val b = StringBuilder()
-        if (c.lang is TypeScript && args.isNotEmpty()) {
-            b.append("{")
-                args.forEach { arg ->
-                    b.append(arg.name)
-                    b.append(",\n")
-                }
-            b.append("}: {")
-                args.forEach { arg ->
-                    b.append(arg.name)
-                    b.append(": ")
-                    b.append(arg.type.build(c))
-                    b.append(";\n")
-                }
-            b.append("}")
+        if (c.lang is TypeScript && argBuilders.isNotEmpty()) {
+            b.append(this.name)
+            b.append(": ")
+            b.append(this.type.build(c))
         }
         return b.toString()
     }
