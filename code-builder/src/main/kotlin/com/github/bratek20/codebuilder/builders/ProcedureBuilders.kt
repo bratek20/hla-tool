@@ -39,7 +39,7 @@ class DeconstructedTypeBuilder(private val argBuilders: List<ArgumentBuilderOps>
                 b.append(arg.name)
                 b.append(": ")
                 b.append(arg.type.build(c))
-                b.append(";\n")
+                b.append("; ")
             }
             b.append("}")
         }
@@ -56,7 +56,7 @@ class DeconstructedArgumentBuilder(private val argBuilders: List<ArgumentBuilder
         b.append("{")
         args.forEach { arg ->
             b.append(arg.name)
-            b.append(",\n")
+            b.append(", ")
         }
         b.append("}")
         this.name = b.toString()
@@ -78,6 +78,10 @@ class ArgumentListBuilder: ExpressionBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun add(block: ArgumentBuilderOps) {
         args.add(ArgumentBuilder().apply(block))
+    }
+
+    fun addBuilder(builder: ArgumentBuilder) {
+        args.add(builder)
     }
 
     override fun build(c: CodeBuilderContext): String {
@@ -105,6 +109,10 @@ abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
     protected val args: ArgumentListBuilder = ArgumentListBuilder()
     fun addArg(ops: ArgumentBuilderOps) {
         args.add(ops)
+    }
+
+    fun addArgBuilder(builder: ArgumentBuilder) {
+        args.addBuilder(builder)
     }
 
     private val generics: MutableList<String> = mutableListOf()

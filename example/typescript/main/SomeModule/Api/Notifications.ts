@@ -22,4 +22,7 @@ class SomeEvent extends EventBusNotification {
     static create(someField: string, otherClass: OtherClass): SomeEvent {
         return new SomeEvent(someField, otherClass)
     }
+    static createNamed({someField, otherClass, }: {someField: string; otherClass: OtherClass; }): SomeEvent {
+        return new SomeEvent(someField, otherClass)
+    }
 }

@@ -557,7 +557,7 @@ open class SerializableApiType(
                 static = true
                 returnType = this@SerializableApiType.builder()
                 name = "createNamed"
-                addArg {
+                addArgBuilder(
                     DeconstructedArgumentBuilder(
                         fields.map { field ->
                             {
@@ -566,7 +566,7 @@ open class SerializableApiType(
                             }
                         }
                     )
-                }
+                )
                 setBody {
                     add(returnStatement {
                         constructorCall {
