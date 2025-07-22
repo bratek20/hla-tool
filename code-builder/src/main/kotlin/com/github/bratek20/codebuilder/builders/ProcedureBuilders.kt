@@ -4,7 +4,7 @@ import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.utils.camelToPascalCase
 
-class ArgumentBuilder: ExpressionBuilder {
+open class ArgumentBuilder: ExpressionBuilder {
     lateinit var name: String
     lateinit var type: TypeBuilder
 
@@ -29,10 +29,59 @@ class ArgumentBuilder: ExpressionBuilder {
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit
 fun argument(block: ArgumentBuilderOps) = ArgumentBuilder().apply(block)
 
+class DeconstructedTypeBuilder(private val argBuilders: List<ArgumentBuilderOps>) : TypeBuilder {
+    override fun build(c: CodeBuilderContext): String {
+        val arguments = argBuilders.map {builder -> ArgumentBuilder().apply(builder) }
+        val b = StringBuilder()
+        if (c.lang is TypeScript && arguments.isNotEmpty()) {
+            b.append("{")
+            arguments.forEach { arg ->
+                b.append(arg.name)
+                b.append(": ")
+                b.append(arg.type.build(c))
+                b.append("; ")
+            }
+            b.append("}")
+        }
+        return b.toString()
+    }
+}
+
+class DeconstructedArgumentBuilder(private val argBuilders: List<ArgumentBuilderOps>): ArgumentBuilder() {
+
+    init {
+        val args = argBuilders.map {builder -> ArgumentBuilder().apply(builder) }
+
+        val b = StringBuilder()
+        b.append("{")
+        args.forEach { arg ->
+            b.append(arg.name)
+            b.append(", ")
+        }
+        b.append("}")
+        this.name = b.toString()
+        this.type = DeconstructedTypeBuilder(argBuilders)
+    }
+
+    override fun build(c: CodeBuilderContext): String {
+        val b = StringBuilder()
+        if (c.lang is TypeScript && argBuilders.isNotEmpty()) {
+            b.append(this.name)
+            b.append(": ")
+            b.append(this.type.build(c))
+        }
+        return b.toString()
+    }
+}
+
 class ArgumentListBuilder: ExpressionBuilder {
     private val args: MutableList<ArgumentBuilder> = mutableListOf()
     fun add(block: ArgumentBuilderOps) {
         args.add(ArgumentBuilder().apply(block))
+    }
+
+    fun addBuilder(builder: ArgumentBuilder) {
+        args.add(builder)
     }
 
     override fun build(c: CodeBuilderContext): String {
@@ -60,6 +109,10 @@ abstract class ProcedureSignatureBuilder: CodeBlockBuilder {
     protected val args: ArgumentListBuilder = ArgumentListBuilder()
     fun addArg(ops: ArgumentBuilderOps) {
         args.add(ops)
+    }
+
+    fun addArgBuilder(builder: ArgumentBuilder) {
+        args.addBuilder(builder)
     }
 
     private val generics: MutableList<String> = mutableListOf()

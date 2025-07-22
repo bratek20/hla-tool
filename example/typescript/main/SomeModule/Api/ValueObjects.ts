@@ -110,6 +110,19 @@ class SomeClass {
         return instance
     }
 
+    static createNamed({
+        id,
+        amount,
+    }: {
+        id: SomeId;
+        amount: number;
+    }): SomeClass {
+        const instance = new SomeClass()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
     getId(): SomeId {
         return new SomeId(this.id)
     }
@@ -131,6 +144,25 @@ class SomeClass2 {
         ids: SomeId[],
         enabled: boolean = true,
     ): SomeClass2 {
+        const instance = new SomeClass2()
+        instance.id = id.getValue()
+        instance.names = names
+        instance.ids = ids.map(it => it.getValue())
+        instance.enabled = enabled
+        return instance
+    }
+
+    static createNamed({
+        id,
+        names,
+        ids,
+        enabled,
+    }: {
+        id: SomeId;
+        names: string[];
+        ids: SomeId[];
+        enabled: boolean = true;
+    }): SomeClass2 {
         const instance = new SomeClass2()
         instance.id = id.getValue()
         instance.names = names
@@ -173,6 +205,22 @@ class SomeClass3 {
         return instance
     }
 
+    static createNamed({
+        class2Object,
+        someEnum,
+        class2List,
+    }: {
+        class2Object: SomeClass2;
+        someEnum: SomeEnum;
+        class2List: SomeClass2[] = [];
+    }): SomeClass3 {
+        const instance = new SomeClass3()
+        instance.class2Object = class2Object
+        instance.someEnum = someEnum.getName()
+        instance.class2List = class2List
+        return instance
+    }
+
     getClass2Object(): SomeClass2 {
         return this.class2Object
     }
@@ -198,6 +246,25 @@ class SomeClass4 {
         otherIdList: OtherId[],
         otherClassList: OtherClass[],
     ): SomeClass4 {
+        const instance = new SomeClass4()
+        instance.otherId = otherId.getValue()
+        instance.otherClass = otherClass
+        instance.otherIdList = otherIdList.map(it => it.getValue())
+        instance.otherClassList = otherClassList
+        return instance
+    }
+
+    static createNamed({
+        otherId,
+        otherClass,
+        otherIdList,
+        otherClassList,
+    }: {
+        otherId: OtherId;
+        otherClass: OtherClass;
+        otherIdList: OtherId[];
+        otherClassList: OtherClass[];
+    }): SomeClass4 {
         const instance = new SomeClass4()
         instance.otherId = otherId.getValue()
         instance.otherClass = otherClass
@@ -237,6 +304,28 @@ class SomeClass5 {
         someProperty: SomeProperty,
         otherProperty: OtherProperty,
     ): SomeClass5 {
+        const instance = new SomeClass5()
+        instance.date = TypesModule.CustomTypesMapper.dateGetValue(date)
+        instance.dateRange = SerializedDateRange.fromCustomType(dateRange)
+        instance.dateRangeWrapper = SerializedDateRangeWrapper.fromCustomType(dateRangeWrapper)
+        instance.someProperty = someProperty
+        instance.otherProperty = otherProperty
+        return instance
+    }
+
+    static createNamed({
+        date,
+        dateRange,
+        dateRangeWrapper,
+        someProperty,
+        otherProperty,
+    }: {
+        date: Date;
+        dateRange: DateRange;
+        dateRangeWrapper: DateRangeWrapper;
+        someProperty: SomeProperty;
+        otherProperty: OtherProperty;
+    }): SomeClass5 {
         const instance = new SomeClass5()
         instance.date = TypesModule.CustomTypesMapper.dateGetValue(date)
         instance.dateRange = SerializedDateRange.fromCustomType(dateRange)
@@ -287,6 +376,25 @@ class SomeClass6 {
         return instance
     }
 
+    static createNamed({
+        someClassOpt,
+        optString,
+        class2List,
+        sameClassList,
+    }: {
+        someClassOpt: Optional<SomeClass>;
+        optString: Optional<string>;
+        class2List: SomeClass2[];
+        sameClassList: SomeClass6[] = [];
+    }): SomeClass6 {
+        const instance = new SomeClass6()
+        instance.someClassOpt = someClassOpt.orElse(undefined)
+        instance.optString = optString.orElse(undefined)
+        instance.class2List = class2List
+        instance.sameClassList = sameClassList
+        return instance
+    }
+
     getSomeClassOpt(): Optional<SomeClass> {
         return Optional.of(this.someClassOpt)
     }
@@ -315,6 +423,16 @@ class ClassHavingOptList {
         return instance
     }
 
+    static createNamed({
+        optList,
+    }: {
+        optList: Optional<SomeClass[]>;
+    }): ClassHavingOptList {
+        const instance = new ClassHavingOptList()
+        instance.optList = optList.orElse(undefined)
+        return instance
+    }
+
     getOptList(): Optional<SomeClass[]> {
         return Optional.of(this.optList)
     }
@@ -326,6 +444,16 @@ class ClassHavingOptSimpleVo {
     static create(
         optSimpleVo: Optional<SomeId>,
     ): ClassHavingOptSimpleVo {
+        const instance = new ClassHavingOptSimpleVo()
+        instance.optSimpleVo = optSimpleVo.map(it => it.getValue()).orElse(undefined)
+        return instance
+    }
+
+    static createNamed({
+        optSimpleVo,
+    }: {
+        optSimpleVo: Optional<SomeId>;
+    }): ClassHavingOptSimpleVo {
         const instance = new ClassHavingOptSimpleVo()
         instance.optSimpleVo = optSimpleVo.map(it => it.getValue()).orElse(undefined)
         return instance
@@ -344,6 +472,19 @@ class RecordClass {
         id: SomeId,
         amount: number,
     ): RecordClass {
+        const instance = new RecordClass()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
+    static createNamed({
+        id,
+        amount,
+    }: {
+        id: SomeId;
+        amount: number;
+    }): RecordClass {
         const instance = new RecordClass()
         instance.id = id.getValue()
         instance.amount = amount
@@ -373,6 +514,19 @@ class ClassWithOptExamples {
         return instance
     }
 
+    static createNamed({
+        optInt,
+        optIntWrapper,
+    }: {
+        optInt: Optional<number>;
+        optIntWrapper: Optional<SomeIntWrapper>;
+    }): ClassWithOptExamples {
+        const instance = new ClassWithOptExamples()
+        instance.optInt = optInt.orElse(undefined)
+        instance.optIntWrapper = optIntWrapper.map(it => it.getValue()).orElse(undefined)
+        return instance
+    }
+
     getOptInt(): Optional<number> {
         return Optional.of(this.optInt)
     }
@@ -388,6 +542,16 @@ class ClassWithEnumList {
     static create(
         enumList: SomeEnum2[],
     ): ClassWithEnumList {
+        const instance = new ClassWithEnumList()
+        instance.enumList = enumList.map(it => it.getName())
+        return instance
+    }
+
+    static createNamed({
+        enumList,
+    }: {
+        enumList: SomeEnum2[];
+    }): ClassWithEnumList {
         const instance = new ClassWithEnumList()
         instance.enumList = enumList.map(it => it.getName())
         return instance
@@ -409,6 +573,16 @@ class ClassWithBoolField {
         return instance
     }
 
+    static createNamed({
+        boolField,
+    }: {
+        boolField: boolean;
+    }): ClassWithBoolField {
+        const instance = new ClassWithBoolField()
+        instance.boolField = boolField
+        return instance
+    }
+
     getBoolField(): boolean {
         return this.boolField
     }
@@ -424,6 +598,22 @@ class RecursiveClass {
         meOpt: Optional<RecursiveClass>,
         meOptList: Optional<RecursiveClass[]>,
     ): RecursiveClass {
+        const instance = new RecursiveClass()
+        instance.meList = meList
+        instance.meOpt = meOpt.orElse(undefined)
+        instance.meOptList = meOptList.orElse(undefined)
+        return instance
+    }
+
+    static createNamed({
+        meList,
+        meOpt,
+        meOptList,
+    }: {
+        meList: RecursiveClass[];
+        meOpt: Optional<RecursiveClass>;
+        meOptList: Optional<RecursiveClass[]>;
+    }): RecursiveClass {
         const instance = new RecursiveClass()
         instance.meList = meList
         instance.meOpt = meOpt.orElse(undefined)
@@ -458,6 +648,19 @@ class SomeQueryInput {
         return instance
     }
 
+    static createNamed({
+        id,
+        amount,
+    }: {
+        id: SomeId;
+        amount: number;
+    }): SomeQueryInput {
+        const instance = new SomeQueryInput()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
     getId(): SomeId {
         return new SomeId(this.id)
     }
@@ -481,6 +684,19 @@ class SomeHandlerInput {
         return instance
     }
 
+    static createNamed({
+        id,
+        amount,
+    }: {
+        id: SomeId;
+        amount: number;
+    }): SomeHandlerInput {
+        const instance = new SomeHandlerInput()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
     getId(): SomeId {
         return new SomeId(this.id)
     }
@@ -498,6 +714,19 @@ class SomeHandlerOutput {
         id: SomeId,
         amount: number,
     ): SomeHandlerOutput {
+        const instance = new SomeHandlerOutput()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
+    static createNamed({
+        id,
+        amount,
+    }: {
+        id: SomeId;
+        amount: number;
+    }): SomeHandlerOutput {
         const instance = new SomeHandlerOutput()
         instance.id = id.getValue()
         instance.amount = amount
@@ -531,6 +760,34 @@ class SomeProperty {
         goodName: string,
         customData: any,
     ): SomeProperty {
+        const instance = new SomeProperty()
+        instance.other = other
+        instance.id2 = id2.map(it => it.getValue()).orElse(undefined)
+        instance.range = range.map(it => SerializedDateRange.fromCustomType(it)).orElse(undefined)
+        instance.doubleExample = doubleExample
+        instance.longExample = longExample
+        instance.gN = goodName
+        instance.customData = customData
+        return instance
+    }
+
+    static createNamed({
+        other,
+        id2,
+        range,
+        doubleExample,
+        longExample,
+        goodName,
+        customData,
+    }: {
+        other: OtherProperty;
+        id2: Optional<SomeId2>;
+        range: Optional<DateRange>;
+        doubleExample: number;
+        longExample: number;
+        goodName: string;
+        customData: any;
+    }): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
         instance.id2 = id2.map(it => it.getValue()).orElse(undefined)
@@ -591,6 +848,25 @@ class SomeProperty2 {
         return instance
     }
 
+    static createNamed({
+        value,
+        custom,
+        someEnum,
+        customOpt,
+    }: {
+        value: string;
+        custom: any;
+        someEnum: SomeEnum;
+        customOpt: Optional<any> = Optional.empty();
+    }): SomeProperty2 {
+        const instance = new SomeProperty2()
+        instance.value = value
+        instance.custom = custom
+        instance.someEnum = someEnum.getName()
+        instance.customOpt = customOpt.orElse(undefined)
+        return instance
+    }
+
     getValue(): string {
         return this.value
     }
@@ -619,6 +895,16 @@ class SomePropertyEntry {
         return instance
     }
 
+    static createNamed({
+        id,
+    }: {
+        id: SomeId;
+    }): SomePropertyEntry {
+        const instance = new SomePropertyEntry()
+        instance.id = id.getValue()
+        return instance
+    }
+
     getId(): SomeId {
         return new SomeId(this.id)
     }
@@ -630,6 +916,16 @@ class SomeRenamedSourcePropertyEntry {
     static create(
         id: SomeOtherId,
     ): SomeRenamedSourcePropertyEntry {
+        const instance = new SomeRenamedSourcePropertyEntry()
+        instance.sId = id.getValue()
+        return instance
+    }
+
+    static createNamed({
+        id,
+    }: {
+        id: SomeOtherId;
+    }): SomeRenamedSourcePropertyEntry {
         const instance = new SomeRenamedSourcePropertyEntry()
         instance.sId = id.getValue()
         return instance
@@ -651,6 +947,16 @@ class SomeReferencingProperty {
         return instance
     }
 
+    static createNamed({
+        referenceId,
+    }: {
+        referenceId: SomeId;
+    }): SomeReferencingProperty {
+        const instance = new SomeReferencingProperty()
+        instance.referenceId = referenceId.getValue()
+        return instance
+    }
+
     getReferenceId(): SomeId {
         return new SomeId(this.referenceId)
     }
@@ -662,6 +968,16 @@ class SomeRenamedReferencingProperty {
     static create(
         referenceId: SomeId,
     ): SomeRenamedReferencingProperty {
+        const instance = new SomeRenamedReferencingProperty()
+        instance.rId = referenceId.getValue()
+        return instance
+    }
+
+    static createNamed({
+        referenceId,
+    }: {
+        referenceId: SomeId;
+    }): SomeRenamedReferencingProperty {
         const instance = new SomeRenamedReferencingProperty()
         instance.rId = referenceId.getValue()
         return instance
@@ -683,6 +999,16 @@ class SomeRenamedReferencingRenamedProperty {
         return instance
     }
 
+    static createNamed({
+        referenceId,
+    }: {
+        referenceId: SomeOtherId;
+    }): SomeRenamedReferencingRenamedProperty {
+        const instance = new SomeRenamedReferencingRenamedProperty()
+        instance.rId = referenceId.getValue()
+        return instance
+    }
+
     getReferenceId(): SomeOtherId {
         return new SomeOtherId(this.rId)
     }
@@ -694,6 +1020,16 @@ class SomeReferencingPropertyFieldList {
     static create(
         referenceIdList: SomeId[],
     ): SomeReferencingPropertyFieldList {
+        const instance = new SomeReferencingPropertyFieldList()
+        instance.referenceIdList = referenceIdList.map(it => it.getValue())
+        return instance
+    }
+
+    static createNamed({
+        referenceIdList,
+    }: {
+        referenceIdList: SomeId[];
+    }): SomeReferencingPropertyFieldList {
         const instance = new SomeReferencingPropertyFieldList()
         instance.referenceIdList = referenceIdList.map(it => it.getValue())
         return instance
@@ -715,6 +1051,16 @@ class SomeStructureWithUniqueIds {
         return instance
     }
 
+    static createNamed({
+        entries,
+    }: {
+        entries: UniqueIdEntry[];
+    }): SomeStructureWithUniqueIds {
+        const instance = new SomeStructureWithUniqueIds()
+        instance.entries = entries
+        return instance
+    }
+
     getEntries(): UniqueIdEntry[] {
         return this.entries
     }
@@ -726,6 +1072,16 @@ class NestedUniqueIds {
     static create(
         entries: UniqueIdEntry[],
     ): NestedUniqueIds {
+        const instance = new NestedUniqueIds()
+        instance.entries = entries
+        return instance
+    }
+
+    static createNamed({
+        entries,
+    }: {
+        entries: UniqueIdEntry[];
+    }): NestedUniqueIds {
         const instance = new NestedUniqueIds()
         instance.entries = entries
         return instance
@@ -747,6 +1103,16 @@ class SomeStructureWithUniqueNestedIds {
         return instance
     }
 
+    static createNamed({
+        nestedUniqueIds,
+    }: {
+        nestedUniqueIds: NestedUniqueIds[];
+    }): SomeStructureWithUniqueNestedIds {
+        const instance = new SomeStructureWithUniqueNestedIds()
+        instance.nestedUniqueIds = nestedUniqueIds
+        return instance
+    }
+
     getNestedUniqueIds(): NestedUniqueIds[] {
         return this.nestedUniqueIds
     }
@@ -758,6 +1124,16 @@ class SomeStructureWithMultipleUniqueNestedIds {
     static create(
         moreNestedFields: SomeStructureWithUniqueNestedIds[],
     ): SomeStructureWithMultipleUniqueNestedIds {
+        const instance = new SomeStructureWithMultipleUniqueNestedIds()
+        instance.moreNestedFields = moreNestedFields
+        return instance
+    }
+
+    static createNamed({
+        moreNestedFields,
+    }: {
+        moreNestedFields: SomeStructureWithUniqueNestedIds[];
+    }): SomeStructureWithMultipleUniqueNestedIds {
         const instance = new SomeStructureWithMultipleUniqueNestedIds()
         instance.moreNestedFields = moreNestedFields
         return instance
@@ -779,6 +1155,16 @@ class SomeClassWIthOtherClassUniqueIds {
         return instance
     }
 
+    static createNamed({
+        otherClass,
+    }: {
+        otherClass: OtherClassWIthUniqueId;
+    }): SomeClassWIthOtherClassUniqueIds {
+        const instance = new SomeClassWIthOtherClassUniqueIds()
+        instance.otherClass = otherClass
+        return instance
+    }
+
     getOtherClass(): OtherClassWIthUniqueId {
         return this.otherClass
     }
@@ -790,6 +1176,16 @@ class SomeStructWithNestedOtherClassUniqueIds {
     static create(
         someNestedWithUniqueIds: SomeClassWIthOtherClassUniqueIds[],
     ): SomeStructWithNestedOtherClassUniqueIds {
+        const instance = new SomeStructWithNestedOtherClassUniqueIds()
+        instance.someNestedWithUniqueIds = someNestedWithUniqueIds
+        return instance
+    }
+
+    static createNamed({
+        someNestedWithUniqueIds,
+    }: {
+        someNestedWithUniqueIds: SomeClassWIthOtherClassUniqueIds[];
+    }): SomeStructWithNestedOtherClassUniqueIds {
         const instance = new SomeStructWithNestedOtherClassUniqueIds()
         instance.someNestedWithUniqueIds = someNestedWithUniqueIds
         return instance
@@ -811,6 +1207,16 @@ class NestedClassLevel2 {
         return instance
     }
 
+    static createNamed({
+        uniqueIds,
+    }: {
+        uniqueIds: OtherClassWIthUniqueId[];
+    }): NestedClassLevel2 {
+        const instance = new NestedClassLevel2()
+        instance.uniqueIds = uniqueIds
+        return instance
+    }
+
     getUniqueIds(): OtherClassWIthUniqueId[] {
         return this.uniqueIds
     }
@@ -822,6 +1228,16 @@ class NestedClassLevel1 {
     static create(
         nestLevel2: NestedClassLevel2[],
     ): NestedClassLevel1 {
+        const instance = new NestedClassLevel1()
+        instance.nestLevel2 = nestLevel2
+        return instance
+    }
+
+    static createNamed({
+        nestLevel2,
+    }: {
+        nestLevel2: NestedClassLevel2[];
+    }): NestedClassLevel1 {
         const instance = new NestedClassLevel1()
         instance.nestLevel2 = nestLevel2
         return instance
@@ -840,6 +1256,19 @@ class ComplexStructureWithNestedUniqueIds {
         id: string,
         nestLevel1: NestedClassLevel1[],
     ): ComplexStructureWithNestedUniqueIds {
+        const instance = new ComplexStructureWithNestedUniqueIds()
+        instance.id = id
+        instance.nestLevel1 = nestLevel1
+        return instance
+    }
+
+    static createNamed({
+        id,
+        nestLevel1,
+    }: {
+        id: string;
+        nestLevel1: NestedClassLevel1[];
+    }): ComplexStructureWithNestedUniqueIds {
         const instance = new ComplexStructureWithNestedUniqueIds()
         instance.id = id
         instance.nestLevel1 = nestLevel1
@@ -866,6 +1295,16 @@ class NestedValue {
         return instance
     }
 
+    static createNamed({
+        value,
+    }: {
+        value: string;
+    }): NestedValue {
+        const instance = new NestedValue()
+        instance.value = value
+        return instance
+    }
+
     getValue(): string {
         return this.value
     }
@@ -877,6 +1316,16 @@ class OptionalFieldProperty {
     static create(
         optionalField: Optional<NestedValue>,
     ): OptionalFieldProperty {
+        const instance = new OptionalFieldProperty()
+        instance.optionalField = optionalField.orElse(undefined)
+        return instance
+    }
+
+    static createNamed({
+        optionalField,
+    }: {
+        optionalField: Optional<NestedValue>;
+    }): OptionalFieldProperty {
         const instance = new OptionalFieldProperty()
         instance.optionalField = optionalField.orElse(undefined)
         return instance
@@ -895,6 +1344,19 @@ class CustomTypesProperty {
         date: Date,
         dateRange: DateRange,
     ): CustomTypesProperty {
+        const instance = new CustomTypesProperty()
+        instance.date = TypesModule.CustomTypesMapper.dateGetValue(date)
+        instance.dateRange = SerializedDateRange.fromCustomType(dateRange)
+        return instance
+    }
+
+    static createNamed({
+        date,
+        dateRange,
+    }: {
+        date: Date;
+        dateRange: DateRange;
+    }): CustomTypesProperty {
         const instance = new CustomTypesProperty()
         instance.date = TypesModule.CustomTypesMapper.dateGetValue(date)
         instance.dateRange = SerializedDateRange.fromCustomType(dateRange)
@@ -920,6 +1382,22 @@ class SelfReferencingProperty {
         listSelf: SelfReferencingProperty[],
         optionalListSelf: Optional<SelfReferencingProperty[]>,
     ): SelfReferencingProperty {
+        const instance = new SelfReferencingProperty()
+        instance.optionalSelf = optionalSelf.orElse(undefined)
+        instance.listSelf = listSelf
+        instance.optionalListSelf = optionalListSelf.orElse(undefined)
+        return instance
+    }
+
+    static createNamed({
+        optionalSelf,
+        listSelf,
+        optionalListSelf,
+    }: {
+        optionalSelf: Optional<SelfReferencingProperty>;
+        listSelf: SelfReferencingProperty[];
+        optionalListSelf: Optional<SelfReferencingProperty[]>;
+    }): SelfReferencingProperty {
         const instance = new SelfReferencingProperty()
         instance.optionalSelf = optionalSelf.orElse(undefined)
         instance.listSelf = listSelf

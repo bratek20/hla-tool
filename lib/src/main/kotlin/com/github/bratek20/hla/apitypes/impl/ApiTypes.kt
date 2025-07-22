@@ -551,6 +551,36 @@ open class SerializableApiType(
                 })
             }
         }
+
+        if (c.lang is TypeScript) {
+            addMethod {
+                static = true
+                returnType = this@SerializableApiType.builder()
+                name = "createNamed"
+                addArgBuilder(
+                    DeconstructedArgumentBuilder(
+                        fields.map { field ->
+                            {
+                                type = field.type.builder()
+                                name = field.name
+                            }
+                        }
+                    )
+                )
+                setBody {
+                    add(returnStatement {
+                        constructorCall {
+                            className = this@SerializableApiType.name
+                            fields.forEach {
+                                addArg {
+                                    it.type.modernSerialize(variable(it.name))
+                                }
+                            }
+                        }
+                    })
+                }
+            }
+        }
     }
 }
 
