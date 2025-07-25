@@ -21,6 +21,8 @@
 
         "../main/SomeModule/Web/WebServerContext.ts",
 
+        //OnlyTrackingModule start
+
         "../main/NoInterfacesModule/Api/ValueObjects.ts",
         //NoInterfacesModule end
 
@@ -30,7 +32,6 @@
         "../main/OnlyInterfacesModule/Impl/ImplContext.ts",
         //OnlyInterfacesModule end
 
-        //OnlyTrackingModule start
         "../main/OnlyTrackingModule/Impl/Track.ts",
         //OnlyTrackingModule end
 
