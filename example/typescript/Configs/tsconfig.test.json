@@ -15,6 +15,8 @@
         //SimpleModule start
         //SomeModule start
         //TypesModule start
+        //OnlyTrackingModule start
+
         "../Tests/NoInterfacesModule/Fixtures/Builders.ts",
         "../Tests/NoInterfacesModule/Fixtures/Diffs.ts",
         "../Tests/NoInterfacesModule/Fixtures/Asserts.ts",
@@ -25,7 +27,6 @@
         "../Tests/OnlyInterfacesModule/Tests/ImplTest.ts",
         //OnlyInterfacesModule end
 
-        //OnlyTrackingModule start
         "../Tests/OnlyTrackingModule/Tests/ImplTest.ts",
         //OnlyTrackingModule end
 

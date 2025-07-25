@@ -89,6 +89,7 @@ Events
     SomeEvent
         someField: string
         otherClass: OtherClass
+        optField: string? = empty
 
 Properties
     SomeProperty

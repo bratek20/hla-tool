@@ -56,7 +56,7 @@ class ${p.name()} {
         #end
     }: {
         #foreach($field in $p.fields)
-        $field.createDeclaration();
+        $field.createDeclarationNoDefault();
         #end
     }): ${p.name()} {
         const instance = new ${p.name()}()

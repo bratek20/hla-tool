@@ -161,7 +161,7 @@ class SomeClass2 {
         id: SomeId;
         names: string[];
         ids: SomeId[];
-        enabled: boolean = true;
+        enabled: boolean;
     }): SomeClass2 {
         const instance = new SomeClass2()
         instance.id = id.getValue()
@@ -212,7 +212,7 @@ class SomeClass3 {
     }: {
         class2Object: SomeClass2;
         someEnum: SomeEnum;
-        class2List: SomeClass2[] = [];
+        class2List: SomeClass2[];
     }): SomeClass3 {
         const instance = new SomeClass3()
         instance.class2Object = class2Object
@@ -385,7 +385,7 @@ class SomeClass6 {
         someClassOpt: Optional<SomeClass>;
         optString: Optional<string>;
         class2List: SomeClass2[];
-        sameClassList: SomeClass6[] = [];
+        sameClassList: SomeClass6[];
     }): SomeClass6 {
         const instance = new SomeClass6()
         instance.someClassOpt = someClassOpt.orElse(undefined)
@@ -857,7 +857,7 @@ class SomeProperty2 {
         value: string;
         custom: any;
         someEnum: SomeEnum;
-        customOpt: Optional<any> = Optional.empty();
+        customOpt: Optional<any>;
     }): SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value

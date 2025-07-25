@@ -12,13 +12,16 @@ namespace SomeModule.Api {
     public class SomeEvent: ValueObject {
         readonly string someField;
         readonly OtherClass otherClass;
+        readonly string? optField;
 
         public SomeEvent(
             string someField,
-            OtherClass otherClass
+            OtherClass otherClass,
+            string? optField
         ) {
             this.someField = someField;
             this.otherClass = otherClass;
+            this.optField = optField;
         }
         public string GetSomeField() {
             return someField;
@@ -26,8 +29,11 @@ namespace SomeModule.Api {
         public OtherClass GetOtherClass() {
             return otherClass;
         }
-        public static SomeEvent Create(string someField, OtherClass otherClass) {
-            return new SomeEvent(someField, otherClass);
+        public Optional<string> GetOptField() {
+            return Optional<string>.Of(optField);
+        }
+        public static SomeEvent Create(string someField, OtherClass otherClass, Optional<string> optField) {
+            return new SomeEvent(someField, otherClass, optField.OrElse(null));
         }
     }
 }

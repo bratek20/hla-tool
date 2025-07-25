@@ -217,6 +217,7 @@ namespace SomeModule.Fixtures {
     public class SomeEventDef {
         public string SomeField { get; set; } = "someValue";
         public Action<OtherClassDef> OtherClass { get; set; } = (_) => {};
+        public string? OptField { get; set; } = null;
     }
 
     public class SomeModuleBuilders {
@@ -476,7 +477,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeEventDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeEvent.Create(def.SomeField, OtherModuleBuilders.BuildOtherClass(def.OtherClass));
+            return SomeEvent.Create(def.SomeField, OtherModuleBuilders.BuildOtherClass(def.OtherClass), Optional<string>.Of(def.OptField));
         }
     }
 }

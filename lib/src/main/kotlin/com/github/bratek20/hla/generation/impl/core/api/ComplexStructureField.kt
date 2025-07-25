@@ -108,10 +108,15 @@ open class ComplexStructureField(
     }
 
     // used by velocity
-    fun createDeclaration(): String {
+    fun createDeclaration(): String = internalCreateDeclaration(true)
+    fun createDeclarationNoDefault(): String = internalCreateDeclaration(false)
+
+    private fun internalCreateDeclaration(allowDefault: Boolean): String {
         val base = "${name}: ${type.name()}"
-        defaultValue()?.let {
-            return "$base = $it"
+        if (allowDefault) {
+            defaultValue()?.let {
+                return "$base = $it"
+            }
         }
         return base
     }

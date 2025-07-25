@@ -9,7 +9,8 @@ import com.some.pkg.typesmodule.api.*
 
 class SomeEvent(
     private val someField: String,
-    private val otherClass: OtherClass
+    private val otherClass: OtherClass,
+    private val optField: String?
 ): Event {
     fun getSomeField(): String {
         return someField
@@ -17,9 +18,12 @@ class SomeEvent(
     fun getOtherClass(): OtherClass {
         return otherClass
     }
+    fun getOptField(): String? {
+        return optField
+    }
     companion object {
-        fun create(someField: String, otherClass: OtherClass): SomeEvent {
-            return SomeEvent(someField, otherClass)
+        fun create(someField: String, otherClass: OtherClass, optField: String?): SomeEvent {
+            return SomeEvent(someField, otherClass, optField)
         }
     }
 }

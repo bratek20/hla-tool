@@ -921,6 +921,8 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
 data class ExpectedSomeEvent(
     var someField: String? = null,
     var otherClass: (ExpectedOtherClass.() -> Unit)? = null,
+    var optFieldEmpty: Boolean? = null,
+    var optField: String? = null,
 )
 fun diffSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeEvent().apply(expectedInit)
@@ -932,6 +934,14 @@ fun diffSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit, 
 
     expected.otherClass?.let {
         if (diffOtherClass(given.getOtherClass(), it) != "") { result.add(diffOtherClass(given.getOtherClass(), it, "${path}otherClass.")) }
+    }
+
+    expected.optFieldEmpty?.let {
+        if ((given.getOptField() == null) != it) { result.add("${path}optField empty ${(given.getOptField() == null)} != ${it}") }
+    }
+
+    expected.optField?.let {
+        if (given.getOptField()!! != it) { result.add("${path}optField ${given.getOptField()!!} != ${it}") }
     }
 
     return result.joinToString("\n")
