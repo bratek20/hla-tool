@@ -512,11 +512,13 @@ fun someData2(init: SomeData2Def.() -> Unit = {}): SomeData2 {
 data class SomeEventDef(
     var someField: String = "someValue",
     var otherClass: (OtherClassDef.() -> Unit) = {},
+    var optField: String? = null,
 )
 fun someEvent(init: SomeEventDef.() -> Unit = {}): SomeEvent {
     val def = SomeEventDef().apply(init)
     return SomeEvent.create(
         someField = def.someField,
         otherClass = otherClass(def.otherClass),
+        optField = def.optField,
     )
 }

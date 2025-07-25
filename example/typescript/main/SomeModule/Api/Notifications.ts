@@ -3,7 +3,8 @@
 class SomeEvent extends EventBusNotification {
     constructor(
         private readonly someField: string,
-        private readonly otherClass: OtherClass
+        private readonly otherClass: OtherClass,
+        private readonly optField: string | undefined
     ) {
         super()
     }
@@ -13,16 +14,19 @@ class SomeEvent extends EventBusNotification {
     getOtherClass(): OtherClass {
         return this.otherClass
     }
+    getOptField(): Optional<string> {
+        return Optional.of(this.optField)
+    }
     getName(): string {
         return "SomeEvent"
     }
     getNotifier(): DependencyName {
         return DependencyName.SomeModule
     }
-    static create(someField: string, otherClass: OtherClass): SomeEvent {
-        return new SomeEvent(someField, otherClass)
+    static create(someField: string, otherClass: OtherClass, optField: Optional<string>): SomeEvent {
+        return new SomeEvent(someField, otherClass, optField.orElse(undefined))
     }
-    static createNamed({someField, otherClass, }: {someField: string; otherClass: OtherClass; }): SomeEvent {
-        return new SomeEvent(someField, otherClass)
+    static createNamed({someField, otherClass, optField, }: {someField: string; otherClass: OtherClass; optField: Optional<string>; }): SomeEvent {
+        return new SomeEvent(someField, otherClass, optField.orElse(undefined))
     }
 }

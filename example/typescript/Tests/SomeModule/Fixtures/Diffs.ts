@@ -871,6 +871,8 @@ namespace SomeModule {
     export interface ExpectedSomeEvent {
         someField?: string,
         otherClass?: OtherModule.ExpectedOtherClass,
+        optFieldEmpty?: boolean,
+        optField?: string,
     }
     export function diffSomeEvent(given: SomeEvent, expected: ExpectedSomeEvent, path: string = ""): string {
         const result: string[] = []
@@ -881,6 +883,14 @@ namespace SomeModule {
 
         if (expected.otherClass !== undefined) {
             if (OtherModule.diffOtherClass(given.getOtherClass(), expected.otherClass) != "") { result.push(OtherModule.diffOtherClass(given.getOtherClass(), expected.otherClass, `${path}otherClass.`)) }
+        }
+
+        if (expected.optFieldEmpty !== undefined) {
+            if (given.getOptField().isEmpty() != expected.optFieldEmpty) { result.push(`${path}optField empty ${given.getOptField().isEmpty()} != ${expected.optFieldEmpty}`) }
+        }
+
+        if (expected.optField !== undefined) {
+            if (given.getOptField().get() != expected.optField) { result.push(`${path}optField ${given.getOptField().get()} != ${expected.optField}`) }
         }
 
         return result.join("\n")
