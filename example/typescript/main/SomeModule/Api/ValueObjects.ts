@@ -1417,3 +1417,39 @@ class SelfReferencingProperty {
         return Optional.of(this.optionalListSelf)
     }
 }
+
+class SomeInterfaceSomeCommandArgs {
+    private id = STRING
+    private amount = NUMBER
+
+    static create(
+        id: SomeId,
+        amount: number,
+    ): SomeInterfaceSomeCommandArgs {
+        const instance = new SomeInterfaceSomeCommandArgs()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
+    static createNamed({
+        id,
+        amount,
+    }: {
+        id: SomeId;
+        amount: number;
+    }): SomeInterfaceSomeCommandArgs {
+        const instance = new SomeInterfaceSomeCommandArgs()
+        instance.id = id.getValue()
+        instance.amount = amount
+        return instance
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+}

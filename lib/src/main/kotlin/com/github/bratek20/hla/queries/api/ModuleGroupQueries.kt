@@ -108,8 +108,12 @@ open class BaseModuleGroupQueries(
         return module.getSimpleValueObjects().find { it.getName() == type.getName() }
     }
 
+    fun getComplexValueObjects(module: ModuleDefinition): List<ComplexStructureDefinition> {
+        return module.getComplexValueObjects() + defsForMockedInterfaceArgs(module)
+    }
+
     private fun findComplexValueObject(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return (module.getComplexValueObjects() + defsForMockedInterfaceArgs(module)).find { it.getName() == type.getName() }
+        return getComplexValueObjects(module).find { it.getName() == type.getName() }
     }
 
     private fun findDataClass(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
@@ -206,11 +210,10 @@ open class BaseModuleGroupQueries(
     }
 
     fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return module.getComplexValueObjects() +
+        return getComplexValueObjects(module) +
             module.getComplexCustomTypes() +
             module.getDataClasses() +
-            module.getEvents() +
-            defsForMockedInterfaceArgs(module)
+            module.getEvents()
     }
 
     private fun defsForMockedInterfaceArgs(module: ModuleDefinition): List<ComplexStructureDefinition> {

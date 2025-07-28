@@ -532,6 +532,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeInterfaceSomeCommandArgsDef {
+        id?: string,
+        amount?: number,
+    }
+    export function someInterfaceSomeCommandArgs(def?: SomeInterfaceSomeCommandArgsDef): SomeInterfaceSomeCommandArgs {
+        const final_id = def?.id ?? "someValue"
+        const final_amount = def?.amount ?? 0
+
+        return SomeInterfaceSomeCommandArgs.create(
+            new SomeId(final_id),
+            final_amount,
+        )
+    }
+
     export interface DateRangeWrapperDef {
         range?: TypesModule.Builder.DateRangeDef,
     }
@@ -594,20 +608,6 @@ namespace SomeModule.Builder {
             final_someField,
             OtherModule.Builder.otherClass(final_otherClass),
             Optional.of(final_optField),
-        )
-    }
-
-    export interface SomeInterfaceSomeCommandArgsDef {
-        id?: string,
-        amount?: number,
-    }
-    export function someInterfaceSomeCommandArgs(def?: SomeInterfaceSomeCommandArgsDef): SomeInterfaceSomeCommandArgs {
-        const final_id = def?.id ?? "someValue"
-        const final_amount = def?.amount ?? 0
-
-        return SomeInterfaceSomeCommandArgs.create(
-            new SomeId(final_id),
-            final_amount,
         )
     }
 }

@@ -221,6 +221,11 @@ fun assertSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: 
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expectedInit: ExpectedSomeInterfaceSomeCommandArgs.() -> Unit) {
+    val diff = diffSomeInterfaceSomeCommandArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -238,10 +243,5 @@ fun assertSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit
 
 fun assertSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit) {
     val diff = diffSomeEvent(given, expectedInit)
-    assertThat(diff).withFailMessage(diff).isEqualTo("")
-}
-
-fun assertSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expectedInit: ExpectedSomeInterfaceSomeCommandArgs.() -> Unit) {
-    val diff = diffSomeInterfaceSomeCommandArgs(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }

@@ -30,7 +30,7 @@ class MockInterfaceLogic(
             addField(callsField(method))
 
             addMethod(mockedMethod(method))
-            addMethod(callsAssertion(method))
+            addMethod(callsNumberAssertion(method))
 
             if (!hasVoidReturnType(method) && !methodReturnExternalApiType(method)) {
                 addField(responseField(method))
@@ -49,7 +49,7 @@ class MockInterfaceLogic(
     private fun callsField(method: MethodDefinition): FieldBuilderOps {
         return {
             type = baseType(BaseType.INT)
-            name = callsVariableName(method)
+            name = callsNumberVariableName(method)
             value = const("0")
             mutable = true
         }
@@ -108,9 +108,9 @@ class MockInterfaceLogic(
 
         setBody {
             add(assignment {
-                left = instanceVariable(callsVariableName(method))
+                left = instanceVariable(callsNumberVariableName(method))
                 right = plus {
-                    left = instanceVariable(callsVariableName(method))
+                    left = instanceVariable(callsNumberVariableName(method))
                     right = const("1")
                 }
             })
@@ -122,11 +122,11 @@ class MockInterfaceLogic(
         }
     }
 
-    private fun callsAssertion(method: MethodDefinition): MethodBuilderOps = {
-        name = "assert${camelToPascalCase(method.getName())}Calls"
+    private fun callsNumberAssertion(method: MethodDefinition): MethodBuilderOps = {
+        name = "assert${camelToPascalCase(method.getName())}CallsNumber"
         val expectedValue = "expectedNumber"
         val expectedValueExpression = variable (expectedValue)
-        val givenExpression = instanceVariable(callsVariableName(method))
+        val givenExpression = instanceVariable(callsNumberVariableName(method))
         addArg {
             name = expectedValue
             type = baseType(BaseType.INT)
@@ -157,15 +157,15 @@ class MockInterfaceLogic(
         setBody {
             def.getMethods().forEach { method ->
                 add(assignment {
-                    left = instanceVariable(callsVariableName(method))
+                    left = instanceVariable(callsNumberVariableName(method))
                     right = const("0")
                 })
             }
         }
     }
 
-    private fun callsVariableName(method: MethodDefinition): String {
-        return method.getName() + "Calls"
+    private fun callsNumberVariableName(method: MethodDefinition): String {
+        return method.getName() + "CallsNumber"
     }
 
     private fun hasVoidReturnType(method: MethodDefinition): Boolean {

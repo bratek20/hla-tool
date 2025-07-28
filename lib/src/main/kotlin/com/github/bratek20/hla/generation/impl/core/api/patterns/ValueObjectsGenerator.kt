@@ -18,7 +18,7 @@ class ValueObjectsGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return module.getSimpleValueObjects().isNotEmpty() || module.getComplexValueObjects().isNotEmpty()
+        return module.getSimpleValueObjects().isNotEmpty() || modules.getComplexValueObjects(module).isNotEmpty()
     }
 
     override fun useImportsCalculator(): Boolean {
@@ -29,7 +29,7 @@ class ValueObjectsGenerator: PatternGenerator() {
         val simpleVOs = module.getSimpleValueObjects().map {
             apiTypeFactory.create<SimpleValueObjectApiType>(it)
         }
-        val complexVOs = module.getComplexValueObjects().map {
+        val complexVOs = modules.getComplexValueObjects(module).map {
             apiTypeFactory.create<ComplexValueObjectApiType>(it)
         }
         simpleVOs.forEach {
@@ -42,7 +42,7 @@ class ValueObjectsGenerator: PatternGenerator() {
 
     override fun generateFileContent(): FileContent? {
         val simpleValueObjects = module.getSimpleValueObjects().map { apiTypeFactory.create<SimpleValueObjectApiType>(it) }
-        val complexValueObjects = module.getComplexValueObjects().map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
+        val complexValueObjects = modules.getComplexValueObjects(module).map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
 
         if (simpleValueObjects.isEmpty() && complexValueObjects.isEmpty()) {
             return null

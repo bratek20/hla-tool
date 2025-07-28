@@ -789,6 +789,24 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeInterfaceSomeCommandArgs {
+        id?: string,
+        amount?: number,
+    }
+    export function diffSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expected: ExpectedSomeInterfaceSomeCommandArgs, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedDateRangeWrapper {
         range?: TypesModule.ExpectedDateRange,
     }
@@ -891,24 +909,6 @@ namespace SomeModule {
 
         if (expected.optField !== undefined) {
             if (given.getOptField().get() != expected.optField) { result.push(`${path}optField ${given.getOptField().get()} != ${expected.optField}`) }
-        }
-
-        return result.join("\n")
-    }
-
-    export interface ExpectedSomeInterfaceSomeCommandArgs {
-        id?: string,
-        amount?: number,
-    }
-    export function diffSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expected: ExpectedSomeInterfaceSomeCommandArgs, path: string = ""): string {
-        const result: string[] = []
-
-        if (expected.id !== undefined) {
-            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
-        }
-
-        if (expected.amount !== undefined) {
-            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
         }
 
         return result.join("\n")

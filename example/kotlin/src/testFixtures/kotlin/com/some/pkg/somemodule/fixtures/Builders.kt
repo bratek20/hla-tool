@@ -469,6 +469,18 @@ fun selfReferencingProperty(init: SelfReferencingPropertyDef.() -> Unit = {}): S
     )
 }
 
+data class SomeInterfaceSomeCommandArgsDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun someInterfaceSomeCommandArgs(init: SomeInterfaceSomeCommandArgsDef.() -> Unit = {}): SomeInterfaceSomeCommandArgs {
+    val def = SomeInterfaceSomeCommandArgsDef().apply(init)
+    return SomeInterfaceSomeCommandArgs.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )
@@ -520,17 +532,5 @@ fun someEvent(init: SomeEventDef.() -> Unit = {}): SomeEvent {
         someField = def.someField,
         otherClass = otherClass(def.otherClass),
         optField = def.optField,
-    )
-}
-
-data class SomeInterfaceSomeCommandArgsDef(
-    var id: String = "someValue",
-    var amount: Int = 0,
-)
-fun someInterfaceSomeCommandArgs(init: SomeInterfaceSomeCommandArgsDef.() -> Unit = {}): SomeInterfaceSomeCommandArgs {
-    val def = SomeInterfaceSomeCommandArgsDef().apply(init)
-    return SomeInterfaceSomeCommandArgs.create(
-        id = SomeId(def.id),
-        amount = def.amount,
     )
 }

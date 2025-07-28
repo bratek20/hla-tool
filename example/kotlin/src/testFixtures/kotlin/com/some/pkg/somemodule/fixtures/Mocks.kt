@@ -12,189 +12,189 @@ import com.some.pkg.typesmodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 
 class SomeInterfaceMock: SomeInterface {
-    private var someEmptyMethodCalls: Int = 0
-    private var someCommandCalls: Int = 0
-    private var someQueryCalls: Int = 0
+    private var someEmptyMethodCallsNumber: Int = 0
+    private var someCommandCallsNumber: Int = 0
+    private var someQueryCallsNumber: Int = 0
     private var someQueryResponse: (SomeClassDef.() -> Unit) = {}
-    private var optMethodCalls: Int = 0
+    private var optMethodCallsNumber: Int = 0
     private var optMethodResponse: (SomeClassDef.() -> Unit)? = null
-    private var methodWithListOfSimpleVOCalls: Int = 0
+    private var methodWithListOfSimpleVOCallsNumber: Int = 0
     private var methodWithListOfSimpleVOResponse: List<String> = emptyList()
-    private var methodWithAnyCalls: Int = 0
+    private var methodWithAnyCallsNumber: Int = 0
     private var methodWithAnyResponse: Any = {}
-    private var methodReturningOptSimpleVoCalls: Int = 0
+    private var methodReturningOptSimpleVoCallsNumber: Int = 0
     private var methodReturningOptSimpleVoResponse: String? = null
-    private var methodReturningNumericTypeCalls: Int = 0
+    private var methodReturningNumericTypeCallsNumber: Int = 0
     private var methodReturningNumericTypeResponse: Int = 0
     override fun someEmptyMethod(): Unit {
-        someEmptyMethodCalls = someEmptyMethodCalls + 1
+        someEmptyMethodCallsNumber = someEmptyMethodCallsNumber + 1
     }
-    fun assertSomeEmptyMethodCalls(expectedNumber: Int) {
-        assertThat(someEmptyMethodCalls).withFailMessage("Expected 'someEmptyMethod' to be called " + expectedNumber + " times but was called " + someEmptyMethodCalls + " times").isEqualTo(expectedNumber)
+    fun assertSomeEmptyMethodCallsNumber(expectedNumber: Int) {
+        assertThat(someEmptyMethodCallsNumber).withFailMessage("Expected 'someEmptyMethod' to be called " + expectedNumber + " times but was called " + someEmptyMethodCallsNumber + " times").isEqualTo(expectedNumber)
     }
     override fun someCommand(id: SomeId, amount: Int): Unit {
-        someCommandCalls = someCommandCalls + 1
+        someCommandCallsNumber = someCommandCallsNumber + 1
     }
-    fun assertSomeCommandCalls(expectedNumber: Int) {
-        assertThat(someCommandCalls).withFailMessage("Expected 'someCommand' to be called " + expectedNumber + " times but was called " + someCommandCalls + " times").isEqualTo(expectedNumber)
+    fun assertSomeCommandCallsNumber(expectedNumber: Int) {
+        assertThat(someCommandCallsNumber).withFailMessage("Expected 'someCommand' to be called " + expectedNumber + " times but was called " + someCommandCallsNumber + " times").isEqualTo(expectedNumber)
     }
     override fun someQuery(query: SomeQueryInput): SomeClass {
-        someQueryCalls = someQueryCalls + 1
+        someQueryCallsNumber = someQueryCallsNumber + 1
         return someClass(someQueryResponse)
     }
-    fun assertSomeQueryCalls(expectedNumber: Int) {
-        assertThat(someQueryCalls).withFailMessage("Expected 'someQuery' to be called " + expectedNumber + " times but was called " + someQueryCalls + " times").isEqualTo(expectedNumber)
+    fun assertSomeQueryCallsNumber(expectedNumber: Int) {
+        assertThat(someQueryCallsNumber).withFailMessage("Expected 'someQuery' to be called " + expectedNumber + " times but was called " + someQueryCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setSomeQueryResponse(response: (SomeClassDef.() -> Unit)) {
         someQueryResponse = response
     }
     override fun optMethod(optId: SomeId?): SomeClass? {
-        optMethodCalls = optMethodCalls + 1
+        optMethodCallsNumber = optMethodCallsNumber + 1
         return optMethodResponse?.let { it -> someClass(it) }
     }
-    fun assertOptMethodCalls(expectedNumber: Int) {
-        assertThat(optMethodCalls).withFailMessage("Expected 'optMethod' to be called " + expectedNumber + " times but was called " + optMethodCalls + " times").isEqualTo(expectedNumber)
+    fun assertOptMethodCallsNumber(expectedNumber: Int) {
+        assertThat(optMethodCallsNumber).withFailMessage("Expected 'optMethod' to be called " + expectedNumber + " times but was called " + optMethodCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setOptMethodResponse(response: (SomeClassDef.() -> Unit)?) {
         optMethodResponse = response
     }
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
-        methodWithListOfSimpleVOCalls = methodWithListOfSimpleVOCalls + 1
+        methodWithListOfSimpleVOCallsNumber = methodWithListOfSimpleVOCallsNumber + 1
         return methodWithListOfSimpleVOResponse.map { it -> SomeId(it) }
     }
-    fun assertMethodWithListOfSimpleVOCalls(expectedNumber: Int) {
-        assertThat(methodWithListOfSimpleVOCalls).withFailMessage("Expected 'methodWithListOfSimpleVO' to be called " + expectedNumber + " times but was called " + methodWithListOfSimpleVOCalls + " times").isEqualTo(expectedNumber)
+    fun assertMethodWithListOfSimpleVOCallsNumber(expectedNumber: Int) {
+        assertThat(methodWithListOfSimpleVOCallsNumber).withFailMessage("Expected 'methodWithListOfSimpleVO' to be called " + expectedNumber + " times but was called " + methodWithListOfSimpleVOCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setMethodWithListOfSimpleVOResponse(response: List<String>) {
         methodWithListOfSimpleVOResponse = response
     }
     override fun methodWithAny(i: Any): Any {
-        methodWithAnyCalls = methodWithAnyCalls + 1
+        methodWithAnyCallsNumber = methodWithAnyCallsNumber + 1
         return methodWithAnyResponse
     }
-    fun assertMethodWithAnyCalls(expectedNumber: Int) {
-        assertThat(methodWithAnyCalls).withFailMessage("Expected 'methodWithAny' to be called " + expectedNumber + " times but was called " + methodWithAnyCalls + " times").isEqualTo(expectedNumber)
+    fun assertMethodWithAnyCallsNumber(expectedNumber: Int) {
+        assertThat(methodWithAnyCallsNumber).withFailMessage("Expected 'methodWithAny' to be called " + expectedNumber + " times but was called " + methodWithAnyCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setMethodWithAnyResponse(response: Any) {
         methodWithAnyResponse = response
     }
     override fun methodReturningOptSimpleVo(): SomeId? {
-        methodReturningOptSimpleVoCalls = methodReturningOptSimpleVoCalls + 1
+        methodReturningOptSimpleVoCallsNumber = methodReturningOptSimpleVoCallsNumber + 1
         return methodReturningOptSimpleVoResponse?.let { it -> SomeId(it) }
     }
-    fun assertMethodReturningOptSimpleVoCalls(expectedNumber: Int) {
-        assertThat(methodReturningOptSimpleVoCalls).withFailMessage("Expected 'methodReturningOptSimpleVo' to be called " + expectedNumber + " times but was called " + methodReturningOptSimpleVoCalls + " times").isEqualTo(expectedNumber)
+    fun assertMethodReturningOptSimpleVoCallsNumber(expectedNumber: Int) {
+        assertThat(methodReturningOptSimpleVoCallsNumber).withFailMessage("Expected 'methodReturningOptSimpleVo' to be called " + expectedNumber + " times but was called " + methodReturningOptSimpleVoCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setMethodReturningOptSimpleVoResponse(response: String?) {
         methodReturningOptSimpleVoResponse = response
     }
     override fun methodReturningNumericType(): Int {
-        methodReturningNumericTypeCalls = methodReturningNumericTypeCalls + 1
+        methodReturningNumericTypeCallsNumber = methodReturningNumericTypeCallsNumber + 1
         return methodReturningNumericTypeResponse
     }
-    fun assertMethodReturningNumericTypeCalls(expectedNumber: Int) {
-        assertThat(methodReturningNumericTypeCalls).withFailMessage("Expected 'methodReturningNumericType' to be called " + expectedNumber + " times but was called " + methodReturningNumericTypeCalls + " times").isEqualTo(expectedNumber)
+    fun assertMethodReturningNumericTypeCallsNumber(expectedNumber: Int) {
+        assertThat(methodReturningNumericTypeCallsNumber).withFailMessage("Expected 'methodReturningNumericType' to be called " + expectedNumber + " times but was called " + methodReturningNumericTypeCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setMethodReturningNumericTypeResponse(response: Int) {
         methodReturningNumericTypeResponse = response
     }
     fun reset() {
-        someEmptyMethodCalls = 0
-        someCommandCalls = 0
-        someQueryCalls = 0
-        optMethodCalls = 0
-        methodWithListOfSimpleVOCalls = 0
-        methodWithAnyCalls = 0
-        methodReturningOptSimpleVoCalls = 0
-        methodReturningNumericTypeCalls = 0
+        someEmptyMethodCallsNumber = 0
+        someCommandCallsNumber = 0
+        someQueryCallsNumber = 0
+        optMethodCallsNumber = 0
+        methodWithListOfSimpleVOCallsNumber = 0
+        methodWithAnyCallsNumber = 0
+        methodReturningOptSimpleVoCallsNumber = 0
+        methodReturningNumericTypeCallsNumber = 0
     }
 }
 
 class SomeInterface2Mock: SomeInterface2 {
-    private var referenceOtherClassCalls: Int = 0
+    private var referenceOtherClassCallsNumber: Int = 0
     private var referenceOtherClassResponse: (OtherClassDef.() -> Unit) = {}
-    private var referenceLegacyTypeCalls: Int = 0
+    private var referenceLegacyTypeCallsNumber: Int = 0
     override fun referenceOtherClass(other: OtherClass): OtherClass {
-        referenceOtherClassCalls = referenceOtherClassCalls + 1
+        referenceOtherClassCallsNumber = referenceOtherClassCallsNumber + 1
         return otherClass(referenceOtherClassResponse)
     }
-    fun assertReferenceOtherClassCalls(expectedNumber: Int) {
-        assertThat(referenceOtherClassCalls).withFailMessage("Expected 'referenceOtherClass' to be called " + expectedNumber + " times but was called " + referenceOtherClassCalls + " times").isEqualTo(expectedNumber)
+    fun assertReferenceOtherClassCallsNumber(expectedNumber: Int) {
+        assertThat(referenceOtherClassCallsNumber).withFailMessage("Expected 'referenceOtherClass' to be called " + expectedNumber + " times but was called " + referenceOtherClassCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setReferenceOtherClassResponse(response: (OtherClassDef.() -> Unit)) {
         referenceOtherClassResponse = response
     }
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
-        referenceLegacyTypeCalls = referenceLegacyTypeCalls + 1
+        referenceLegacyTypeCallsNumber = referenceLegacyTypeCallsNumber + 1
         return TODO()
     }
-    fun assertReferenceLegacyTypeCalls(expectedNumber: Int) {
-        assertThat(referenceLegacyTypeCalls).withFailMessage("Expected 'referenceLegacyType' to be called " + expectedNumber + " times but was called " + referenceLegacyTypeCalls + " times").isEqualTo(expectedNumber)
+    fun assertReferenceLegacyTypeCallsNumber(expectedNumber: Int) {
+        assertThat(referenceLegacyTypeCallsNumber).withFailMessage("Expected 'referenceLegacyType' to be called " + expectedNumber + " times but was called " + referenceLegacyTypeCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun reset() {
-        referenceOtherClassCalls = 0
-        referenceLegacyTypeCalls = 0
+        referenceOtherClassCallsNumber = 0
+        referenceLegacyTypeCallsNumber = 0
     }
 }
 
 class SomeModuleHandlersMock: SomeModuleHandlers {
-    private var someHandlerCalls: Int = 0
+    private var someHandlerCallsNumber: Int = 0
     private var someHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}
-    private var someHandler2Calls: Int = 0
+    private var someHandler2CallsNumber: Int = 0
     private var someHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
     override fun someHandler(i: SomeHandlerInput): SomeHandlerOutput {
-        someHandlerCalls = someHandlerCalls + 1
+        someHandlerCallsNumber = someHandlerCallsNumber + 1
         return someHandlerOutput(someHandlerResponse)
     }
-    fun assertSomeHandlerCalls(expectedNumber: Int) {
-        assertThat(someHandlerCalls).withFailMessage("Expected 'someHandler' to be called " + expectedNumber + " times but was called " + someHandlerCalls + " times").isEqualTo(expectedNumber)
+    fun assertSomeHandlerCallsNumber(expectedNumber: Int) {
+        assertThat(someHandlerCallsNumber).withFailMessage("Expected 'someHandler' to be called " + expectedNumber + " times but was called " + someHandlerCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setSomeHandlerResponse(response: (SomeHandlerOutputDef.() -> Unit)) {
         someHandlerResponse = response
     }
     override fun someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-        someHandler2Calls = someHandler2Calls + 1
+        someHandler2CallsNumber = someHandler2CallsNumber + 1
         return someHandlerOutput(someHandler2Response)
     }
-    fun assertSomeHandler2Calls(expectedNumber: Int) {
-        assertThat(someHandler2Calls).withFailMessage("Expected 'someHandler2' to be called " + expectedNumber + " times but was called " + someHandler2Calls + " times").isEqualTo(expectedNumber)
+    fun assertSomeHandler2CallsNumber(expectedNumber: Int) {
+        assertThat(someHandler2CallsNumber).withFailMessage("Expected 'someHandler2' to be called " + expectedNumber + " times but was called " + someHandler2CallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setSomeHandler2Response(response: (SomeHandlerOutputDef.() -> Unit)) {
         someHandler2Response = response
     }
     fun reset() {
-        someHandlerCalls = 0
-        someHandler2Calls = 0
+        someHandlerCallsNumber = 0
+        someHandler2CallsNumber = 0
     }
 }
 
 class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
-    private var someDebugHandlerCalls: Int = 0
+    private var someDebugHandlerCallsNumber: Int = 0
     private var someDebugHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}
-    private var someDebugHandler2Calls: Int = 0
+    private var someDebugHandler2CallsNumber: Int = 0
     private var someDebugHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
     override fun someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
-        someDebugHandlerCalls = someDebugHandlerCalls + 1
+        someDebugHandlerCallsNumber = someDebugHandlerCallsNumber + 1
         return someHandlerOutput(someDebugHandlerResponse)
     }
-    fun assertSomeDebugHandlerCalls(expectedNumber: Int) {
-        assertThat(someDebugHandlerCalls).withFailMessage("Expected 'someDebugHandler' to be called " + expectedNumber + " times but was called " + someDebugHandlerCalls + " times").isEqualTo(expectedNumber)
+    fun assertSomeDebugHandlerCallsNumber(expectedNumber: Int) {
+        assertThat(someDebugHandlerCallsNumber).withFailMessage("Expected 'someDebugHandler' to be called " + expectedNumber + " times but was called " + someDebugHandlerCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setSomeDebugHandlerResponse(response: (SomeHandlerOutputDef.() -> Unit)) {
         someDebugHandlerResponse = response
     }
     override fun someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-        someDebugHandler2Calls = someDebugHandler2Calls + 1
+        someDebugHandler2CallsNumber = someDebugHandler2CallsNumber + 1
         return someHandlerOutput(someDebugHandler2Response)
     }
-    fun assertSomeDebugHandler2Calls(expectedNumber: Int) {
-        assertThat(someDebugHandler2Calls).withFailMessage("Expected 'someDebugHandler2' to be called " + expectedNumber + " times but was called " + someDebugHandler2Calls + " times").isEqualTo(expectedNumber)
+    fun assertSomeDebugHandler2CallsNumber(expectedNumber: Int) {
+        assertThat(someDebugHandler2CallsNumber).withFailMessage("Expected 'someDebugHandler2' to be called " + expectedNumber + " times but was called " + someDebugHandler2CallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun setSomeDebugHandler2Response(response: (SomeHandlerOutputDef.() -> Unit)) {
         someDebugHandler2Response = response
     }
     fun reset() {
-        someDebugHandlerCalls = 0
-        someDebugHandler2Calls = 0
+        someDebugHandlerCallsNumber = 0
+        someDebugHandler2CallsNumber = 0
     }
 }
