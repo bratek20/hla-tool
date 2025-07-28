@@ -522,3 +522,15 @@ fun someEvent(init: SomeEventDef.() -> Unit = {}): SomeEvent {
         optField = def.optField,
     )
 }
+
+data class SomeInterfaceSomeCommandArgsDef(
+    var id: String = "someValue",
+    var amount: Int = 0,
+)
+fun someInterfaceSomeCommandArgs(init: SomeInterfaceSomeCommandArgsDef.() -> Unit = {}): SomeInterfaceSomeCommandArgs {
+    val def = SomeInterfaceSomeCommandArgsDef().apply(init)
+    return SomeInterfaceSomeCommandArgs.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+    )
+}

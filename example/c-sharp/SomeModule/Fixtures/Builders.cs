@@ -220,6 +220,11 @@ namespace SomeModule.Fixtures {
         public string? OptField { get; set; } = null;
     }
 
+    public class SomeInterfaceSomeCommandArgsDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 0;
+    }
+
     public class SomeModuleBuilders {
         public static SomeId BuildSomeId(string value = "someValue") {
             return new SomeId(value);
@@ -478,6 +483,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeEvent.Create(def.SomeField, OtherModuleBuilders.BuildOtherClass(def.OtherClass), Optional<string>.Of(def.OptField));
+        }
+        public static SomeInterfaceSomeCommandArgs BuildSomeInterfaceSomeCommandArgs(Action<SomeInterfaceSomeCommandArgsDef> init = null) {
+            var def = new SomeInterfaceSomeCommandArgsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeInterfaceSomeCommandArgs.Create(new SomeId(def.Id), def.Amount);
         }
     }
 }

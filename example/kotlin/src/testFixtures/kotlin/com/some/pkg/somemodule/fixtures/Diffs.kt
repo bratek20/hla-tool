@@ -946,3 +946,22 @@ fun diffSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit, 
 
     return result.joinToString("\n")
 }
+
+data class ExpectedSomeInterfaceSomeCommandArgs(
+    var id: String? = null,
+    var amount: Int? = null,
+)
+fun diffSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expectedInit: ExpectedSomeInterfaceSomeCommandArgs.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeInterfaceSomeCommandArgs().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+    }
+
+    expected.amount?.let {
+        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}

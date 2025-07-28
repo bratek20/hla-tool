@@ -4,6 +4,7 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.typesworld.api.*
+import com.github.bratek20.utils.camelToPascalCase
 
 fun ofBaseType(value: String): BaseType {
     return BaseType.valueOf(value.uppercase())
@@ -108,7 +109,7 @@ open class BaseModuleGroupQueries(
     }
 
     private fun findComplexValueObject(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return module.getComplexValueObjects().find { it.getName() == type.getName() }
+        return (module.getComplexValueObjects() + defsForMockedInterfaceArgs(module)).find { it.getName() == type.getName() }
     }
 
     private fun findDataClass(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
@@ -205,7 +206,37 @@ open class BaseModuleGroupQueries(
     }
 
     fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return module.getComplexValueObjects() + module.getComplexCustomTypes() + module.getDataClasses() + module.getEvents()
+        return module.getComplexValueObjects() +
+            module.getComplexCustomTypes() +
+            module.getDataClasses() +
+            module.getEvents() +
+            defsForMockedInterfaceArgs(module)
+    }
+
+    private fun defsForMockedInterfaceArgs(module: ModuleDefinition): List<ComplexStructureDefinition> {
+        return getMockedInterfaces(module).flatMap { interf ->
+            interf.getMethods().mapNotNull { method ->
+                if (method.getArgs().size > 1) {
+                    val argsName = interf.getName() + camelToPascalCase(method.getName()) + "Args"
+                    methodArgsToStructure(argsName, method.getArgs())
+                }
+                else null
+            }
+        }
+    }
+
+    private fun methodArgsToStructure(name: String, args: List<ArgumentDefinition>): ComplexStructureDefinition {
+        return ComplexStructureDefinition.create(
+            name = name,
+            fields = args.map { arg ->
+                FieldDefinition.create(
+                    name = arg.getName(),
+                    type = arg.getType(),
+                    attributes = emptyList(),
+                    defaultValue = null
+                )
+            },
+        )
     }
 
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {
@@ -232,6 +263,11 @@ open class BaseModuleGroupQueries(
                 wrappers = emptyList()
             )
         }
+    }
+
+    fun getMockedInterfaces(module: ModuleDefinition): List<InterfaceDefinition> {
+        return (module.getFixturesSubmodule()?.getMockedInterfaces() ?: emptyList())
+            .map { module.getInterfaces().first { i -> i.getName() == it } }
     }
 }
 

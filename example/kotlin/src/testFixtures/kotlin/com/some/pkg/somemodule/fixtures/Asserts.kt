@@ -240,3 +240,8 @@ fun assertSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit
     val diff = diffSomeEvent(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
+
+fun assertSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expectedInit: ExpectedSomeInterfaceSomeCommandArgs.() -> Unit) {
+    val diff = diffSomeInterfaceSomeCommandArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}

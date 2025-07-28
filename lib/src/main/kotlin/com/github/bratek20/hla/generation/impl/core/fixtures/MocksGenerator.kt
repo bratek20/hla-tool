@@ -269,8 +269,7 @@ class MocksGenerator: PatternGenerator() {
     }
 
     private fun getMockedInterfaces(): List<InterfaceDefinition> {
-        return (module.getFixturesSubmodule()?.getMockedInterfaces() ?: emptyList())
-            .map { module.getInterfaces().first { i -> i.getName() == it } }
+        return modules.getMockedInterfaces(module)
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {

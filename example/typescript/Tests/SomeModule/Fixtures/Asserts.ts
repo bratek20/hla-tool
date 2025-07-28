@@ -225,4 +225,9 @@ namespace SomeModule.Assert {
         const diff = diffSomeEvent(given, expected)
         AssertEquals(diff, "", diff)
     }
+
+    export function someInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expected: ExpectedSomeInterfaceSomeCommandArgs) {
+        const diff = diffSomeInterfaceSomeCommandArgs(given, expected)
+        AssertEquals(diff, "", diff)
+    }
 }
