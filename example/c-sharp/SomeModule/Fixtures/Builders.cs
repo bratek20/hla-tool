@@ -197,6 +197,11 @@ namespace SomeModule.Fixtures {
         public List<Action<SelfReferencingPropertyDef>>? OptionalListSelf { get; set; } = null;
     }
 
+    public class SomeInterfaceSomeCommandArgsDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 0;
+    }
+
     public class DateRangeWrapperDef {
         public Action<DateRangeDef> Range { get; set; } = (_) => {};
     }
@@ -218,11 +223,6 @@ namespace SomeModule.Fixtures {
         public string SomeField { get; set; } = "someValue";
         public Action<OtherClassDef> OtherClass { get; set; } = (_) => {};
         public string? OptField { get; set; } = null;
-    }
-
-    public class SomeInterfaceSomeCommandArgsDef {
-        public string Id { get; set; } = "someValue";
-        public int Amount { get; set; } = 0;
     }
 
     public class SomeModuleBuilders {
@@ -460,6 +460,12 @@ namespace SomeModule.Fixtures {
             init.Invoke(def);
             return SelfReferencingProperty.Create(Optional<Action<SelfReferencingPropertyDef>>.Of(def.OptionalSelf).Map(it => BuildSelfReferencingProperty(it)), def.ListSelf.Select(it => BuildSelfReferencingProperty(it)).ToList(), Optional<List<Action<SelfReferencingPropertyDef>>>.Of(def.OptionalListSelf).Map(it => it.Select(it => BuildSelfReferencingProperty(it)).ToList()));
         }
+        public static SomeInterfaceSomeCommandArgs BuildSomeInterfaceSomeCommandArgs(Action<SomeInterfaceSomeCommandArgsDef> init = null) {
+            var def = new SomeInterfaceSomeCommandArgsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeInterfaceSomeCommandArgs.Create(new SomeId(def.Id), def.Amount);
+        }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();
             init = init ?? ((_) => {});
@@ -483,12 +489,6 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeEvent.Create(def.SomeField, OtherModuleBuilders.BuildOtherClass(def.OtherClass), Optional<string>.Of(def.OptField));
-        }
-        public static SomeInterfaceSomeCommandArgs BuildSomeInterfaceSomeCommandArgs(Action<SomeInterfaceSomeCommandArgsDef> init = null) {
-            var def = new SomeInterfaceSomeCommandArgsDef();
-            init = init ?? ((_) => {});
-            init.Invoke(def);
-            return SomeInterfaceSomeCommandArgs.Create(new SomeId(def.Id), def.Amount);
         }
     }
 }

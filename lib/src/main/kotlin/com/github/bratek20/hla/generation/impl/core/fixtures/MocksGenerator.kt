@@ -15,6 +15,23 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.utils.camelToPascalCase
 
+class MockMethodLogic(
+    private val def: MethodDefinition,
+) {
+    fun getResetAssignments(): List<AssignmentBuilder> {
+        return listOf(
+            assignment {
+                left = instanceVariable(callsNumberVariableName())
+                right = const("0")
+            }
+        )
+    }
+
+    fun callsNumberVariableName(): String {
+        return def.getName() + "CallsNumber"
+    }
+}
+
 class MockInterfaceLogic(
     private val def: InterfaceDefinition,
     private val moduleName: String,
@@ -39,6 +56,12 @@ class MockInterfaceLogic(
         }
 
         addMethod(resetMethod())
+    }
+
+    private fun getMethodsLogic(): List<MockMethodLogic> {
+        return def.getMethods().map { method ->
+            MockMethodLogic(method)
+        }
     }
 
     private fun methodReturnExternalApiType(method: MethodDefinition): Boolean {
@@ -155,17 +178,12 @@ class MockInterfaceLogic(
     private fun resetMethod(): MethodBuilderOps = {
         name = "reset"
         setBody {
-            def.getMethods().forEach { method ->
-                add(assignment {
-                    left = instanceVariable(callsNumberVariableName(method))
-                    right = const("0")
-                })
-            }
+            addMany(getMethodsLogic().flatMap { it.getResetAssignments() })
         }
     }
 
     private fun callsNumberVariableName(method: MethodDefinition): String {
-        return method.getName() + "CallsNumber"
+        return MockMethodLogic(method).callsNumberVariableName()
     }
 
     private fun hasVoidReturnType(method: MethodDefinition): Boolean {
