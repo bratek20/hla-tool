@@ -28,12 +28,14 @@ class SomeInterfaceMock implements SomeInterface {
     }
     someCommand(id: SomeId, amount: number): void {
         this.someCommandCallsNumber = this.someCommandCallsNumber + 1
+        someCommandCalls.push(SomeInterfaceSomeCommandArgs.create(id, amount))
     }
     assertSomeCommandCallsNumber(expectedNumber: number) {
         AssertEquals(this.someCommandCallsNumber, expectedNumber, "Expected 'someCommand' to be called " + expectedNumber + " times but was called " + this.someCommandCallsNumber + " times")
     }
     someQuery(query: SomeQueryInput): SomeClass {
         this.someQueryCallsNumber = this.someQueryCallsNumber + 1
+        someQueryCalls.push(query)
         return SomeModule.Builder.someClass(this.someQueryResponse)
     }
     assertSomeQueryCallsNumber(expectedNumber: number) {
@@ -44,6 +46,7 @@ class SomeInterfaceMock implements SomeInterface {
     }
     optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
         this.optMethodCallsNumber = this.optMethodCallsNumber + 1
+        optMethodCalls.push(optId)
         return Optional.of(this.optMethodResponse).map(it => SomeModule.Builder.someClass(it))
     }
     assertOptMethodCallsNumber(expectedNumber: number) {
@@ -54,6 +57,7 @@ class SomeInterfaceMock implements SomeInterface {
     }
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
         this.methodWithListOfSimpleVOCallsNumber = this.methodWithListOfSimpleVOCallsNumber + 1
+        methodWithListOfSimpleVOCalls.push(list)
         return this.methodWithListOfSimpleVOResponse.map(it => new SomeId(it))
     }
     assertMethodWithListOfSimpleVOCallsNumber(expectedNumber: number) {
@@ -64,6 +68,7 @@ class SomeInterfaceMock implements SomeInterface {
     }
     methodWithAny(i: any): any {
         this.methodWithAnyCallsNumber = this.methodWithAnyCallsNumber + 1
+        methodWithAnyCalls.push(i)
         return this.methodWithAnyResponse
     }
     assertMethodWithAnyCallsNumber(expectedNumber: number) {
@@ -123,6 +128,7 @@ class SomeInterface2Mock implements SomeInterface2 {
     private readonly referenceLegacyTypeCalls: LegacyType[] = []
     referenceOtherClass(other: OtherClass): OtherClass {
         this.referenceOtherClassCallsNumber = this.referenceOtherClassCallsNumber + 1
+        referenceOtherClassCalls.push(other)
         return OtherModule.Builder.otherClass(this.referenceOtherClassResponse)
     }
     assertReferenceOtherClassCallsNumber(expectedNumber: number) {
@@ -133,6 +139,7 @@ class SomeInterface2Mock implements SomeInterface2 {
     }
     referenceLegacyType(legacyType: LegacyType): LegacyType {
         this.referenceLegacyTypeCallsNumber = this.referenceLegacyTypeCallsNumber + 1
+        referenceLegacyTypeCalls.push(legacyType)
         return TODO()
     }
     assertReferenceLegacyTypeCallsNumber(expectedNumber: number) {
@@ -156,6 +163,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     private someHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandlerCallsNumber = this.someHandlerCallsNumber + 1
+        someHandlerCalls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someHandlerResponse)
     }
     assertSomeHandlerCallsNumber(expectedNumber: number) {
@@ -166,6 +174,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     }
     someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandler2CallsNumber = this.someHandler2CallsNumber + 1
+        someHandler2Calls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someHandler2Response)
     }
     assertSomeHandler2CallsNumber(expectedNumber: number) {
@@ -193,6 +202,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     private someDebugHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandlerCallsNumber = this.someDebugHandlerCallsNumber + 1
+        someDebugHandlerCalls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someDebugHandlerResponse)
     }
     assertSomeDebugHandlerCallsNumber(expectedNumber: number) {
@@ -203,6 +213,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     }
     someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandler2CallsNumber = this.someDebugHandler2CallsNumber + 1
+        someDebugHandler2Calls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someDebugHandler2Response)
     }
     assertSomeDebugHandler2CallsNumber(expectedNumber: number) {

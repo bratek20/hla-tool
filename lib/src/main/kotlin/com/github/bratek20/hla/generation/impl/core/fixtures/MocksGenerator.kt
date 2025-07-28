@@ -149,6 +149,32 @@ class MockMethodLogic(
                     right = const("1")
                 }
             })
+
+            if (def.getArgs().size == 1) {
+               add(
+                   listOp(variable(callsVariableName()))
+                       .add {
+                           variable(def.getArgs()[0].getName())
+                       }
+               )
+            }
+            else if (def.getArgs().size > 1) {
+                add(
+                    listOp(variable(callsVariableName()))
+                        .add {
+                            methodCall {
+                                target = variable(methodsArgsTypeName(interfDef, def))
+                                methodName = "create"
+                                def.getArgs().forEach { arg ->
+                                    addArg {
+                                        variable(arg.getName())
+                                    }
+                                }
+                            }
+                        }
+                )
+            }
+
             if (!hasVoidReturnType()) {
                 add(returnStatement {
                     defaultBuilderCall(returnType)

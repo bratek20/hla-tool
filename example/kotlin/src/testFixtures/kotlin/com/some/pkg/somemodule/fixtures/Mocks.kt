@@ -39,12 +39,14 @@ class SomeInterfaceMock: SomeInterface {
     }
     override fun someCommand(id: SomeId, amount: Int): Unit {
         someCommandCallsNumber = someCommandCallsNumber + 1
+        someCommandCalls.add(SomeInterfaceSomeCommandArgs.create(id, amount))
     }
     fun assertSomeCommandCallsNumber(expectedNumber: Int) {
         assertThat(someCommandCallsNumber).withFailMessage("Expected 'someCommand' to be called " + expectedNumber + " times but was called " + someCommandCallsNumber + " times").isEqualTo(expectedNumber)
     }
     override fun someQuery(query: SomeQueryInput): SomeClass {
         someQueryCallsNumber = someQueryCallsNumber + 1
+        someQueryCalls.add(query)
         return someClass(someQueryResponse)
     }
     fun assertSomeQueryCallsNumber(expectedNumber: Int) {
@@ -55,6 +57,7 @@ class SomeInterfaceMock: SomeInterface {
     }
     override fun optMethod(optId: SomeId?): SomeClass? {
         optMethodCallsNumber = optMethodCallsNumber + 1
+        optMethodCalls.add(optId)
         return optMethodResponse?.let { it -> someClass(it) }
     }
     fun assertOptMethodCallsNumber(expectedNumber: Int) {
@@ -65,6 +68,7 @@ class SomeInterfaceMock: SomeInterface {
     }
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
         methodWithListOfSimpleVOCallsNumber = methodWithListOfSimpleVOCallsNumber + 1
+        methodWithListOfSimpleVOCalls.add(list)
         return methodWithListOfSimpleVOResponse.map { it -> SomeId(it) }
     }
     fun assertMethodWithListOfSimpleVOCallsNumber(expectedNumber: Int) {
@@ -75,6 +79,7 @@ class SomeInterfaceMock: SomeInterface {
     }
     override fun methodWithAny(i: Any): Any {
         methodWithAnyCallsNumber = methodWithAnyCallsNumber + 1
+        methodWithAnyCalls.add(i)
         return methodWithAnyResponse
     }
     fun assertMethodWithAnyCallsNumber(expectedNumber: Int) {
@@ -134,6 +139,7 @@ class SomeInterface2Mock: SomeInterface2 {
     private val referenceLegacyTypeCalls: List<com.some.pkg.legacy.LegacyType> = emptyList()
     override fun referenceOtherClass(other: OtherClass): OtherClass {
         referenceOtherClassCallsNumber = referenceOtherClassCallsNumber + 1
+        referenceOtherClassCalls.add(other)
         return otherClass(referenceOtherClassResponse)
     }
     fun assertReferenceOtherClassCallsNumber(expectedNumber: Int) {
@@ -144,6 +150,7 @@ class SomeInterface2Mock: SomeInterface2 {
     }
     override fun referenceLegacyType(legacyType: com.some.pkg.legacy.LegacyType): com.some.pkg.legacy.LegacyType {
         referenceLegacyTypeCallsNumber = referenceLegacyTypeCallsNumber + 1
+        referenceLegacyTypeCalls.add(legacyType)
         return TODO()
     }
     fun assertReferenceLegacyTypeCallsNumber(expectedNumber: Int) {
@@ -167,6 +174,7 @@ class SomeModuleHandlersMock: SomeModuleHandlers {
     private var someHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
     override fun someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         someHandlerCallsNumber = someHandlerCallsNumber + 1
+        someHandlerCalls.add(i)
         return someHandlerOutput(someHandlerResponse)
     }
     fun assertSomeHandlerCallsNumber(expectedNumber: Int) {
@@ -177,6 +185,7 @@ class SomeModuleHandlersMock: SomeModuleHandlers {
     }
     override fun someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
         someHandler2CallsNumber = someHandler2CallsNumber + 1
+        someHandler2Calls.add(i)
         return someHandlerOutput(someHandler2Response)
     }
     fun assertSomeHandler2CallsNumber(expectedNumber: Int) {
@@ -204,6 +213,7 @@ class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     private var someDebugHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
     override fun someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         someDebugHandlerCallsNumber = someDebugHandlerCallsNumber + 1
+        someDebugHandlerCalls.add(i)
         return someHandlerOutput(someDebugHandlerResponse)
     }
     fun assertSomeDebugHandlerCallsNumber(expectedNumber: Int) {
@@ -214,6 +224,7 @@ class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     }
     override fun someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
         someDebugHandler2CallsNumber = someDebugHandler2CallsNumber + 1
+        someDebugHandler2Calls.add(i)
         return someHandlerOutput(someDebugHandler2Response)
     }
     fun assertSomeDebugHandler2CallsNumber(expectedNumber: Int) {
