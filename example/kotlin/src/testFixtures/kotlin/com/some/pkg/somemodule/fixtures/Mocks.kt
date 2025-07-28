@@ -102,11 +102,17 @@ class SomeInterfaceMock: SomeInterface {
         someEmptyMethodCallsNumber = 0
         someCommandCallsNumber = 0
         someQueryCallsNumber = 0
+        someQueryResponse = {}
         optMethodCallsNumber = 0
+        optMethodResponse = null
         methodWithListOfSimpleVOCallsNumber = 0
+        methodWithListOfSimpleVOResponse = emptyList()
         methodWithAnyCallsNumber = 0
+        methodWithAnyResponse = {}
         methodReturningOptSimpleVoCallsNumber = 0
+        methodReturningOptSimpleVoResponse = null
         methodReturningNumericTypeCallsNumber = 0
+        methodReturningNumericTypeResponse = 0
     }
 }
 
@@ -133,6 +139,7 @@ class SomeInterface2Mock: SomeInterface2 {
     }
     fun reset() {
         referenceOtherClassCallsNumber = 0
+        referenceOtherClassResponse = {}
         referenceLegacyTypeCallsNumber = 0
     }
 }
@@ -164,7 +171,9 @@ class SomeModuleHandlersMock: SomeModuleHandlers {
     }
     fun reset() {
         someHandlerCallsNumber = 0
+        someHandlerResponse = {}
         someHandler2CallsNumber = 0
+        someHandler2Response = {}
     }
 }
 
@@ -195,6 +204,8 @@ class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     }
     fun reset() {
         someDebugHandlerCallsNumber = 0
+        someDebugHandlerResponse = {}
         someDebugHandler2CallsNumber = 0
+        someDebugHandler2Response = {}
     }
 }

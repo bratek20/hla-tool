@@ -91,11 +91,17 @@ class SomeInterfaceMock implements SomeInterface {
         this.someEmptyMethodCallsNumber = 0
         this.someCommandCallsNumber = 0
         this.someQueryCallsNumber = 0
+        this.someQueryResponse = undefined
         this.optMethodCallsNumber = 0
+        this.optMethodResponse = undefined
         this.methodWithListOfSimpleVOCallsNumber = 0
+        this.methodWithListOfSimpleVOResponse = []
         this.methodWithAnyCallsNumber = 0
+        this.methodWithAnyResponse = undefined
         this.methodReturningOptSimpleVoCallsNumber = 0
+        this.methodReturningOptSimpleVoResponse = undefined
         this.methodReturningNumericTypeCallsNumber = 0
+        this.methodReturningNumericTypeResponse = 0
     }
 }
 
@@ -122,6 +128,7 @@ class SomeInterface2Mock implements SomeInterface2 {
     }
     reset() {
         this.referenceOtherClassCallsNumber = 0
+        this.referenceOtherClassResponse = undefined
         this.referenceLegacyTypeCallsNumber = 0
     }
 }
@@ -153,7 +160,9 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     }
     reset() {
         this.someHandlerCallsNumber = 0
+        this.someHandlerResponse = undefined
         this.someHandler2CallsNumber = 0
+        this.someHandler2Response = undefined
     }
 }
 
@@ -184,7 +193,9 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     }
     reset() {
         this.someDebugHandlerCallsNumber = 0
+        this.someDebugHandlerResponse = undefined
         this.someDebugHandler2CallsNumber = 0
+        this.someDebugHandler2Response = undefined
     }
 }
 

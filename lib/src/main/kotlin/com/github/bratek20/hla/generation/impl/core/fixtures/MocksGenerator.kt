@@ -21,16 +21,29 @@ class MockMethodLogic(
     private val defTypeFactory: DefTypeFactory,
     private val languageName: ModuleLanguage
 ) {
+    private val returnApiType = apiTypeFactory.create(def.getReturnType())
+    private val returnDefType = defTypeFactory.create(returnApiType as ApiTypeLogic)
+
     fun getResetAssignments(): List<AssignmentBuilder> {
-        return listOf(
+        val assigns = mutableListOf(
             assignment {
                 left = instanceVariable(callsNumberVariableName())
                 right = const("0")
             }
         )
+        if (supportResponse()) {
+            assigns.add(
+                assignment {
+                    left = instanceVariable(responseFieldName())
+                    right = returnDefType.emptyValueBuilder()
+                }
+            )
+        }
+
+        return assigns
     }
 
-    fun callsNumberVariableName(): String {
+    private fun callsNumberVariableName(): String {
         return def.getName() + "CallsNumber"
     }
 
@@ -43,26 +56,31 @@ class MockMethodLogic(
         }
     }
 
+    fun responseField(): FieldBuilderOps {
+        return {
+            type = returnDefType.builder()
+            name = responseFieldName()
+            value = returnDefType.emptyValueBuilder()
+            mutable = true
+        }
+    }
+
     fun setResponse(): MethodBuilderOps = {
         name = "set${camelToPascalCase(def.getName())}Response"
         addArg {
             name = "response"
-            type = returnDefType().builder()
+            type = returnDefType.builder()
         }
         setBody {
             add(assignment {
-                left = instanceVariable(def.getName() + "Response")
+                left = instanceVariable(responseFieldName())
                 right = variable("response")
             })
         }
     }
 
-    private fun returnApiType(): ApiType {
-        return apiTypeFactory.create(def.getReturnType())
-    }
-
-    private fun returnDefType(): DefType<*> {
-        return defTypeFactory.create(returnApiType() as ApiTypeLogic)
+    private fun responseFieldName(): String {
+        return def.getName() + "Response"
     }
 
     fun mockedMethod(): MethodBuilderOps = {
@@ -75,7 +93,7 @@ class MockMethodLogic(
                 type = apiTypeFactory.create(arg.getType()).builder()
             }
         }
-        val returnType = returnApiType()
+        val returnType = returnApiType
         this.returnType = returnType.builder()
 
         setBody {
@@ -124,7 +142,7 @@ class MockMethodLogic(
         }
     }
 
-    fun hasVoidReturnType(): Boolean {
+    private fun hasVoidReturnType(): Boolean {
         return BaseApiType.isVoid(apiTypeFactory.create(def.getReturnType()))
     }
 
@@ -132,25 +150,12 @@ class MockMethodLogic(
         return languageName == ModuleLanguage.KOTLIN
     }
 
-    fun methodReturnExternalApiType(): Boolean {
-        val returnType = returnApiType()
-        return returnType is ExternalApiType
+    private fun hasExternalReturnType(): Boolean {
+        return returnApiType is ExternalApiType
     }
 
     private fun defaultBuilderCall(type: ApiType): ExpressionBuilder {
         return defTypeFactory.create(type).modernBuild(instanceVariable(def.getName() + "Response"))
-    }
-
-    fun responseField(): FieldBuilderOps {
-        val returnType = returnApiType()
-        val returnDefType = defTypeFactory.create(returnType)
-
-        return {
-            type = returnDefType().builder()
-            name = def.getName() + "Response"
-            value = returnDefType.emptyValueBuilder()
-            mutable = true
-        }
     }
 
     fun setupAssignment(moduleName: String): AssignmentBuilder {
@@ -190,6 +195,8 @@ class MockMethodLogic(
             }
         }
     }
+
+    fun supportResponse() = !hasVoidReturnType() && !hasExternalReturnType()
 }
 
 class MockInterfaceLogic(
@@ -209,7 +216,7 @@ class MockInterfaceLogic(
             addMethod(method.mockedMethod())
             addMethod(method.callsNumberAssertion())
 
-            if (!method.hasVoidReturnType() && !method.methodReturnExternalApiType()) {
+            if (method.supportResponse()) {
                 addField(method.responseField())
                 addMethod(method.setResponse())
             }
@@ -217,7 +224,6 @@ class MockInterfaceLogic(
 
         addMethod(resetMethod())
     }
-
     private fun getMethodsLogic(): List<MockMethodLogic> {
         return def.getMethods().map { methodDef ->
             createMethodLogic(methodDef)
