@@ -9,13 +9,17 @@ import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
+import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
+import com.github.bratek20.hla.queries.api.methodsArgsTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
 class MockMethodLogic(
+    private val interfDef: InterfaceDefinition,
     private val def: MethodDefinition,
     private val apiTypeFactory: ApiTypeFactory,
     private val defTypeFactory: DefTypeFactory,
@@ -31,6 +35,14 @@ class MockMethodLogic(
                 right = const("0")
             }
         )
+        argsDefType()?.let {
+            assigns.add(
+                assignment {
+                    left = instanceVariable(callsVariableName())
+                    right = emptyImmutableList(it.builder())
+                }
+            )
+        }
         if (supportResponse()) {
             assigns.add(
                 assignment {
@@ -47,6 +59,10 @@ class MockMethodLogic(
         return def.getName() + "CallsNumber"
     }
 
+    private fun callsVariableName(): String {
+        return def.getName() + "Calls"
+    }
+
     fun callsNumberField(): FieldBuilderOps {
         return {
             type = baseType(BaseType.INT)
@@ -54,6 +70,35 @@ class MockMethodLogic(
             value = const("0")
             mutable = true
         }
+    }
+
+    fun callsField(): FieldBuilderOps? {
+        return argsDefType()?.let {
+            {
+                type = listType(it.builder())
+                name = callsVariableName()
+                value = emptyImmutableList(it.builder())
+            }
+        }
+    }
+
+    private fun argsApiType(): ApiType? {
+        return when (def.getArgs().size) {
+            0 -> null
+            1 -> apiTypeFactory.create(def.getArgs()[0].getType())
+            else -> {
+                return apiTypeFactory.create(
+                    TypeDefinition.create(
+                        name = methodsArgsTypeName(interfDef, def),
+                        wrappers = emptyList()
+                    )
+                )
+            }
+        }
+    }
+
+    private fun argsDefType(): DefType<*>? {
+        return argsApiType()?.let { defTypeFactory.create(it) }
     }
 
     fun responseField(): FieldBuilderOps {
@@ -212,6 +257,9 @@ class MockInterfaceLogic(
 
         getMethodsLogic().forEach { method ->
             addField(method.callsNumberField())
+            method.callsField()?.let {
+                addField(it)
+            }
 
             addMethod(method.mockedMethod())
             addMethod(method.callsNumberAssertion())
@@ -230,8 +278,8 @@ class MockInterfaceLogic(
         }
     }
 
-    private fun createMethodLogic(def: MethodDefinition): MockMethodLogic {
-        return MockMethodLogic(def, apiTypeFactory, defTypeFactory, languageName)
+    private fun createMethodLogic(methodDef: MethodDefinition): MockMethodLogic {
+        return MockMethodLogic(def, methodDef, apiTypeFactory, defTypeFactory, languageName)
     }
 
     private fun resetMethod(): MethodBuilderOps = {

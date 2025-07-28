@@ -46,6 +46,10 @@ fun ModuleGroup.getAllPropertyKeys(): List<KeyDefinition> {
     return this.getModules().flatMap { it.getPropertyKeys() }
 }
 
+fun methodsArgsTypeName(interf: InterfaceDefinition, method: MethodDefinition): String {
+    return "${interf.getName()}${camelToPascalCase(method.getName())}Args"
+}
+
 open class BaseModuleGroupQueries(
     val group: ModuleGroup
 ) {
@@ -220,7 +224,7 @@ open class BaseModuleGroupQueries(
         return getMockedInterfaces(module).flatMap { interf ->
             interf.getMethods().mapNotNull { method ->
                 if (method.getArgs().size > 1) {
-                    val argsName = interf.getName() + camelToPascalCase(method.getName()) + "Args"
+                    val argsName = methodsArgsTypeName(interf, method)
                     methodArgsToStructure(argsName, method.getArgs())
                 }
                 else null
