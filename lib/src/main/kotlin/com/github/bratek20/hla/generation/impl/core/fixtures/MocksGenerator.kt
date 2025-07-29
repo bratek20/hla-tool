@@ -91,7 +91,7 @@ class MockMethodLogic(
     }
 
     private fun callsListOp(): ListOperations {
-        return listOp(variable(callsVariableName()))
+        return listOp(instanceVariable(callsVariableName()))
     }
 
     //calls number

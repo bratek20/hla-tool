@@ -201,7 +201,7 @@ class TypesTest {
                             type = baseType(BaseType.STRING)
                             name = "firstElem"
                         }
-                        right = listOp(variable("list")).get(0)
+                        right = listOp(variable("list")).get(const(0))
                     })
                     add(assignment {
                         left = variableDeclaration {

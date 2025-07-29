@@ -33,10 +33,10 @@ class SomeInterfaceMock implements SomeInterface {
     assertSomeCommandCallsNumber(expectedNumber: number) {
         AssertEquals(this.someCommandCallsNumber, expectedNumber, "Expected 'someCommand' to be called " + expectedNumber + " times but was called " + this.someCommandCallsNumber + " times")
     }
-    assertSomeCommandCalls(expectedArgs: ExpectedSomeInterfaceSomeCommandArgs[]) {
-        assertSomeCommandCallsNumber(expectedArgs.length)
+    assertSomeCommandCalls(expectedArgs: SomeModule.ExpectedSomeInterfaceSomeCommandArgs[]) {
+        this.assertSomeCommandCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            SomeModule.Assert.someInterfaceSomeCommandArgs(someCommandCalls[i], expectedArgs[i])
+            SomeModule.Assert.someInterfaceSomeCommandArgs(this.someCommandCalls[i], expectedArgs[i])
         }
     }
     someQuery(query: SomeQueryInput): SomeClass {

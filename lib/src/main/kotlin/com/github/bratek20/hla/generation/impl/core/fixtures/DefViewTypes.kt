@@ -194,8 +194,8 @@ open class ComplexStructureDefType(
 
     override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
         val variableName = variable.build(api.languageTypes.context())
-        return methodCall {
-            methodName = pattern.complexVoDefConstructor(api.name(), variableName)
+        return functionCall {
+            name = pattern.complexVoDefConstructor(api.name(), variableName)
             addArg {
                 variable
             }
