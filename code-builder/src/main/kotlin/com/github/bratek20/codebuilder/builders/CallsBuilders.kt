@@ -59,7 +59,7 @@ class MethodCallBuilder: CallBuilder() {
     }
 
     override fun beforeName(c: CodeBuilderContext): String {
-        return target?.let { "${it.build(c)}." } ?: ""
+        return target?.let { "${it.build(c)}." } ?: c.lang.softThis()
     }
 }
 typealias MethodCallBuilderOps = MethodCallBuilder.() -> Unit

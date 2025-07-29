@@ -42,6 +42,7 @@ interface CodeBuilderLanguage {
     fun listFindEnd(): String
     fun listMapBegin(): String
     fun listMapEnd(): String
+    fun listSize(): String
 
     fun softOptionalType(elementType: String): String
     fun hardOptionalType(elementType: String): String
@@ -168,6 +169,10 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun listMapEnd(): String {
         return " }"
+    }
+
+    override fun listSize(): String {
+        return "size"
     }
 
     override fun softOptionalType(elementType: String): String {
@@ -350,6 +355,10 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun listMapEnd(): String {
         return ")"
+    }
+
+    override fun listSize(): String {
+        return "length"
     }
 
     override fun softOptionalType(elementType: String): String {
@@ -536,6 +545,10 @@ class CSharp: CodeBuilderLanguage {
 
     override fun listMapEnd(): String {
         return ").ToList()"
+    }
+
+    override fun listSize(): String {
+        return "Count"
     }
 
     override fun optionalGet(variableName: String): String {

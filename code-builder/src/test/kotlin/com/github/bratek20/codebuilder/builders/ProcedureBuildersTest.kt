@@ -183,7 +183,7 @@ class ProcedureBuildersTest {
                     sum(a: number, b: number): number {
                         return a + b
                     }
-                    result = sum(1, 2)
+                    result = this.sum(1, 2)
                     sumOfSum = left.sum(1, 2) + right.sum(3, 4)
                 """
             }

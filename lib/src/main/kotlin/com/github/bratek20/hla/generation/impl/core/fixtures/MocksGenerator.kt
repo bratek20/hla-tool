@@ -6,127 +6,108 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
-import com.github.bratek20.hla.apitypes.impl.*
+import com.github.bratek20.hla.apitypes.impl.ApiTypeLogic
+import com.github.bratek20.hla.apitypes.impl.BaseApiType
+import com.github.bratek20.hla.apitypes.impl.ExternalApiType
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
+import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.generation.impl.languages.typescript.addModulePrefix
+import com.github.bratek20.hla.queries.api.ModuleGroupQueries
+import com.github.bratek20.hla.queries.api.methodsArgsTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
-class MockInterfaceLogic(
-    private val def: InterfaceDefinition,
-    private val moduleName: String,
+class MockMethodLogic(
+    private val interfDef: InterfaceDefinition,
+    private val def: MethodDefinition,
     private val apiTypeFactory: ApiTypeFactory,
     private val defTypeFactory: DefTypeFactory,
-    private val languageName: ModuleLanguage
+    private val expectedTypeFactory: ExpectedTypeFactory,
+    private val languageName: ModuleLanguage,
+    private val modules: ModuleGroupQueries
 ) {
-    fun mockClass(): ClassBuilderOps = {
-        name = def.getName() + "Mock"
-        implements = def.getName()
+    private val returnApiType = apiTypeFactory.create(def.getReturnType())
+    private val returnDefType = defTypeFactory.create(returnApiType as ApiTypeLogic)
 
-        def.getMethods().forEach { method ->
-            addField(callsField(method))
 
-            addMethod(mockedMethod(method))
-            addMethod(callsAssertion(method))
+    fun mockedMethod(): MethodBuilderOps = {
+        name = def.getName()
+        this.overridesClassMethod = languageName == ModuleLanguage.KOTLIN
 
-            if (!hasVoidReturnType(method) && !methodReturnExternalApiType(method)) {
-                addField(responseField(method))
-                addMethod(setResponse(method))
-            }
-        }
-
-        addMethod(resetMethod())
-    }
-
-    private fun methodReturnExternalApiType(method: MethodDefinition): Boolean {
-        val returnType = returnApiType(method)
-        return returnType is ExternalApiType
-    }
-
-    private fun callsField(method: MethodDefinition): FieldBuilderOps {
-        return {
-            type = baseType(BaseType.INT)
-            name = callsVariableName(method)
-            value = const("0")
-            mutable = true
-        }
-    }
-
-    private fun responseField(method: MethodDefinition): FieldBuilderOps {
-        val returnType = returnApiType(method)
-        val returnDefType = defTypeFactory.create(returnType)
-
-        return {
-            type = returnDefType(method).builder()
-            name = method.getName() + "Response"
-            value = returnDefType.emptyValueBuilder()
-            mutable = true
-        }
-    }
-
-    private fun isKotlin(): Boolean {
-        return languageName == ModuleLanguage.KOTLIN
-    }
-
-    private fun setResponse(method: MethodDefinition): MethodBuilderOps = {
-        name = "set${camelToPascalCase(method.getName())}Response"
-        addArg {
-            name = "response"
-            type = returnDefType(method).builder()
-        }
-        setBody {
-            add(assignment {
-                left = instanceVariable(method.getName() + "Response")
-                right = variable("response")
-            })
-        }
-    }
-
-    private fun returnApiType(method: MethodDefinition): ApiType {
-        return apiTypeFactory.create(method.getReturnType())
-    }
-
-    private fun returnDefType(method: MethodDefinition): DefType<*> {
-        return defTypeFactory.create(returnApiType(method) as ApiTypeLogic)
-    }
-
-    private fun mockedMethod(method: MethodDefinition): MethodBuilderOps = {
-        name = method.getName()
-        this.overridesClassMethod = isKotlin()
-
-        method.getArgs().forEach { arg ->
+        def.getArgs().forEach { arg ->
             addArg {
                 name = arg.getName()
                 type = apiTypeFactory.create(arg.getType()).builder()
             }
         }
-        val returnType = returnApiType(method)
+        val returnType = returnApiType
         this.returnType = returnType.builder()
 
         setBody {
             add(assignment {
-                left = instanceVariable(callsVariableName(method))
+                left = instanceVariable(callsNumberVariableName())
                 right = plus {
-                    left = instanceVariable(callsVariableName(method))
+                    left = instanceVariable(callsNumberVariableName())
                     right = const("1")
                 }
             })
-            if (!hasVoidReturnType(method)) {
+
+            if (def.getArgs().size == 1) {
+                add(
+                    callsListOp()
+                        .add {
+                            variable(def.getArgs()[0].getName())
+                        }
+                )
+            }
+            else if (def.getArgs().size > 1) {
+                add(
+                    callsListOp()
+                        .add {
+                            methodCall {
+                                target = variable(methodsArgsTypeName(interfDef, def))
+                                methodName = "create"
+                                def.getArgs().forEach { arg ->
+                                    addArg {
+                                        variable(arg.getName())
+                                    }
+                                }
+                            }
+                        }
+                )
+            }
+
+            if (!hasVoidReturnType()) {
                 add(returnStatement {
-                    defaultBuilderCall(returnType, method)
+                    defaultBuilderCall(returnType)
                 })
             }
         }
     }
 
-    private fun callsAssertion(method: MethodDefinition): MethodBuilderOps = {
-        name = "assert${camelToPascalCase(method.getName())}Calls"
+    private fun callsListOp(): ListOperations {
+        return listOp(instanceVariable(callsVariableName()))
+    }
+
+    //calls number
+    fun callsNumberField(): FieldBuilderOps {
+        return {
+            type = baseType(BaseType.INT)
+            name = callsNumberVariableName()
+            value = const("0")
+            mutable = true
+        }
+    }
+
+    fun callsNumberAssertion(): MethodBuilderOps = {
+        name = assertCallsNumberMethodName()
         val expectedValue = "expectedNumber"
-        val expectedValueExpression = variable (expectedValue)
-        val givenExpression = instanceVariable(callsVariableName(method))
+        val expectedValueExpression = variable(expectedValue)
+        val givenExpression = instanceVariable(callsNumberVariableName())
         addArg {
             name = expectedValue
             type = baseType(BaseType.INT)
@@ -136,7 +117,7 @@ class MockInterfaceLogic(
                 given = givenExpression
                 expected = expectedValueExpression
                 message = plus {
-                    left = string("Expected '${method.getName()}' to be called ")
+                    left = string("Expected '${def.getName()}' to be called ")
                     right = plus {
                         left = variable(expectedValue)
                         right = plus {
@@ -152,28 +133,255 @@ class MockInterfaceLogic(
         }
     }
 
-    private fun resetMethod(): MethodBuilderOps = {
-        name = "reset"
-        setBody {
-            def.getMethods().forEach { method ->
-                add(assignment {
-                    left = instanceVariable(callsVariableName(method))
-                    right = const("0")
-                })
+    private fun assertCallsNumberMethodName() =
+        "assert${camelToPascalCase(def.getName())}CallsNumber"
+
+    //calls
+    fun callsField(): FieldBuilderOps? {
+        return argsApiType()?.let {
+            {
+                type = mutableListType(it.builder())
+                name = callsVariableName()
+                value = emptyMutableList(it.builder())
+                mutable = true
             }
         }
     }
 
-    private fun callsVariableName(method: MethodDefinition): String {
-        return method.getName() + "Calls"
+    fun callsAssertion(): MethodBuilderOps? {
+        return supportedArgsExpectedType()?.let {
+            {
+                val expectedArgsListOp = listOp(variable("expectedArgs"))
+                name = "assert${camelToPascalCase(def.getName())}Calls"
+                addArg {
+                    name = "expectedArgs"
+                    type = listType(typeName(it.alwaysReferencedName()))
+                }
+                setBody {
+                    add(methodCallStatement {
+                        methodName = assertCallsNumberMethodName()
+                        addArg {
+                            expectedArgsListOp.size()
+                        }
+                    })
+                    add(forLoop(
+                        from = const(0),
+                        to = expectedArgsListOp.size(),
+                        body = { iVar ->
+                            functionCallStatement {
+                                name = if (languageName == ModuleLanguage.TYPE_SCRIPT) handleTypeScriptReferencing(it) else it.funName()
+                                addArg {
+                                    callsListOp().get(iVar)
+                                }
+                                addArg {
+                                    expectedArgsListOp.get(iVar)
+                                }
+                            }
+                        }
+                    ))
+                }
+            }
+        }
     }
 
-    private fun hasVoidReturnType(method: MethodDefinition): Boolean {
-        return BaseApiType.isVoid(apiTypeFactory.create(method.getReturnType()))
+    private fun handleTypeScriptReferencing(expectedType: ExpectedType<*>): String {
+        return addModulePrefix(modules, expectedType.api.name(), expectedType.funName(), "Assert")
     }
 
-    private fun defaultBuilderCall(type: ApiType, method: MethodDefinition): ExpressionBuilder {
-        return defTypeFactory.create(type).modernBuild(instanceVariable(method.getName() + "Response"))
+    //response
+    fun responseField(): FieldBuilderOps {
+        return {
+            type = returnDefType.builder()
+            name = responseFieldName()
+            value = returnDefType.emptyValueBuilder()
+            mutable = true
+        }
+    }
+
+    fun setResponse(): MethodBuilderOps = {
+        name = "set${camelToPascalCase(def.getName())}Response"
+        addArg {
+            name = "response"
+            type = returnDefType.builder()
+        }
+        setBody {
+            add(assignment {
+                left = instanceVariable(responseFieldName())
+                right = variable("response")
+            })
+        }
+    }
+
+    //reset
+    fun getResetAssignments(): List<AssignmentBuilder> {
+        val assigns = mutableListOf(
+            assignment {
+                left = instanceVariable(callsNumberVariableName())
+                right = const("0")
+            }
+        )
+        argsApiType()?.let {
+            assigns.add(
+                assignment {
+                    left = instanceVariable(callsVariableName())
+                    right = emptyMutableList(it.builder())
+                }
+            )
+        }
+        if (supportResponse()) {
+            assigns.add(
+                assignment {
+                    left = instanceVariable(responseFieldName())
+                    right = returnDefType.emptyValueBuilder()
+                }
+            )
+        }
+
+        return assigns
+    }
+
+    // language specific
+    fun setupAssignment(moduleName: String): AssignmentBuilder {
+        return assignment {
+            val apiMethodName = "$moduleName.Api.${def.getName()}"
+
+            left = variable(apiMethodName)
+            right = functionCall {
+                name = "CreateMock"
+                addArg {
+                    variable(apiMethodName)
+                }
+                addArg {
+                    lambda {
+                        def.getArgs().forEach {
+                            addArg {
+                                name = it.getName()
+                                type = apiTypeFactory.create(it.getType()).builder()
+                            }
+                        }
+                        val mockMethodCall = methodCall {
+                            target = variable("mock")
+                            methodName = def.getName()
+                            def.getArgs().forEach { arg ->
+                                addArg {
+                                    variable(arg.getName())
+                                }
+                            }
+                        }
+                        body = if (hasVoidReturnType()) {
+                            mockMethodCall
+                        } else {
+                            returnExpression(mockMethodCall)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun supportResponse() = !hasVoidReturnType() && !hasExternalReturnType()
+
+    //private
+    private fun callsNumberVariableName(): String {
+        return def.getName() + "CallsNumber"
+    }
+
+    private fun callsVariableName(): String {
+        return def.getName() + "Calls"
+    }
+
+    private fun argsApiType(): ApiType? {
+        return when (def.getArgs().size) {
+            0 -> null
+            1 -> apiTypeFactory.create(def.getArgs()[0].getType())
+            else -> {
+                return apiTypeFactory.create(
+                    TypeDefinition.create(
+                        name = methodsArgsTypeName(interfDef, def),
+                        wrappers = emptyList()
+                    )
+                )
+            }
+        }
+    }
+
+    private fun argsDefType(): DefType<*>? {
+        return argsApiType()?.let { defTypeFactory.create(it) }
+    }
+
+    private fun supportedArgsExpectedType(): ExpectedType<*>? {
+        val type = argsApiType()?.let { expectedTypeFactory.create(it) }
+        if (type is StructureExpectedType) {
+            return type
+        }
+        return null
+    }
+
+    private fun responseFieldName(): String {
+        return def.getName() + "Response"
+    }
+
+    private fun hasVoidReturnType(): Boolean {
+        return BaseApiType.isVoid(apiTypeFactory.create(def.getReturnType()))
+    }
+
+    private fun hasExternalReturnType(): Boolean {
+        return returnApiType is ExternalApiType
+    }
+
+    private fun defaultBuilderCall(type: ApiType): ExpressionBuilder {
+        return defTypeFactory.create(type).modernBuild(instanceVariable(def.getName() + "Response"))
+    }
+}
+
+class MockInterfaceLogic(
+    private val def: InterfaceDefinition,
+    private val moduleName: String,
+    private val apiTypeFactory: ApiTypeFactory,
+    private val defTypeFactory: DefTypeFactory,
+    private val expectedTypeFactory: ExpectedTypeFactory,
+    private val languageName: ModuleLanguage,
+    private val modules: ModuleGroupQueries
+) {
+    fun mockClass(): ClassBuilderOps = {
+        name = def.getName() + "Mock"
+        implements = def.getName()
+
+        getMethodsLogic().forEach { method ->
+            addField(method.callsNumberField())
+            method.callsField()?.let {
+                addField(it)
+            }
+
+            addMethod(method.mockedMethod())
+            addMethod(method.callsNumberAssertion())
+            method.callsAssertion()?.let {
+                addMethod(it)
+            }
+
+            if (method.supportResponse()) {
+                addField(method.responseField())
+                addMethod(method.setResponse())
+            }
+        }
+
+        addMethod(resetMethod())
+    }
+    private fun getMethodsLogic(): List<MockMethodLogic> {
+        return def.getMethods().map { methodDef ->
+            createMethodLogic(methodDef)
+        }
+    }
+
+    private fun createMethodLogic(methodDef: MethodDefinition): MockMethodLogic {
+        return MockMethodLogic(def, methodDef, apiTypeFactory, defTypeFactory, expectedTypeFactory, languageName, modules)
+    }
+
+    private fun resetMethod(): MethodBuilderOps = {
+        name = "reset"
+        setBody {
+            addMany(getMethodsLogic().flatMap { it.getResetAssignments() })
+        }
     }
 
     fun createMock(): FunctionBuilderOps = {
@@ -201,42 +409,8 @@ class MockInterfaceLogic(
                 }
             })
 
-            def.getMethods().forEach { method ->
-                add(assignment {
-                    val apiMethodName = "$moduleName.Api.${method.getName()}"
-
-                    left = variable(apiMethodName)
-                    right = functionCall {
-                        name = "CreateMock"
-                        addArg {
-                            variable(apiMethodName)
-                        }
-                        addArg {
-                            lambda {
-                                method.getArgs().forEach {
-                                    addArg {
-                                        name = it.getName()
-                                        type = apiTypeFactory.create(it.getType()).builder()
-                                    }
-                                }
-                                val mockMethodCall = methodCall {
-                                    target = variable("mock")
-                                    methodName = method.getName()
-                                    method.getArgs().forEach { arg ->
-                                        addArg {
-                                            variable(arg.getName())
-                                        }
-                                    }
-                                }
-                                body = if (hasVoidReturnType(method)) {
-                                    mockMethodCall
-                                } else {
-                                    returnExpression(mockMethodCall)
-                                }
-                            }
-                        }
-                    }
-                })
+            getMethodsLogic().forEach { method ->
+                add(method.setupAssignment(moduleName))
             }
 
             add(returnStatement {
@@ -269,12 +443,19 @@ class MocksGenerator: PatternGenerator() {
     }
 
     private fun getMockedInterfaces(): List<InterfaceDefinition> {
-        return (module.getFixturesSubmodule()?.getMockedInterfaces() ?: emptyList())
-            .map { module.getInterfaces().first { i -> i.getName() == it } }
+        return modules.getMockedInterfaces(module)
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(it, moduleName, apiTypeFactory, DefTypeFactory(language.buildersFixture()), language.name()) }
+        val mockInterfacesLogic = getMockedInterfaces().map { MockInterfaceLogic(
+            it,
+            moduleName,
+            apiTypeFactory,
+            DefTypeFactory(language.buildersFixture()),
+            ExpectedTypeFactory(c),
+            language.name(),
+            c.domain.queries
+        ) }
 
         mockInterfacesLogic.forEach { logic ->
             addClass(logic.mockClass())

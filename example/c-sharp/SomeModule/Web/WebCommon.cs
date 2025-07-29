@@ -101,6 +101,22 @@ namespace SomeModule.Web {
         }
     }
 
+    public class SomeInterfaceMethodWithSimpleVORequest {
+        readonly string id;
+
+        public SomeInterfaceMethodWithSimpleVORequest(
+            string id
+        ) {
+            this.id = id;
+        }
+        public SomeId GetId() {
+            return new SomeId(id);
+        }
+        public static SomeInterfaceMethodWithSimpleVORequest Create(SomeId id) {
+            return new SomeInterfaceMethodWithSimpleVORequest(id.Value);
+        }
+    }
+
     public class SomeInterfaceMethodWithListOfSimpleVORequest {
         readonly List<string> list;
 
@@ -155,6 +171,35 @@ namespace SomeModule.Web {
             this.value = value;
         }
         public object GetValue() {
+            return value;
+        }
+    }
+
+    public class SomeInterfaceMethodWithBaseTypeRequest {
+        readonly string i;
+
+        public SomeInterfaceMethodWithBaseTypeRequest(
+            string i
+        ) {
+            this.i = i;
+        }
+        public string GetI() {
+            return i;
+        }
+        public static SomeInterfaceMethodWithBaseTypeRequest Create(string i) {
+            return new SomeInterfaceMethodWithBaseTypeRequest(i);
+        }
+    }
+
+    public class SomeInterfaceMethodWithBaseTypeResponse {
+        readonly string value;
+
+        public SomeInterfaceMethodWithBaseTypeResponse(
+            string value
+        ) {
+            this.value = value;
+        }
+        public string GetValue() {
             return value;
         }
     }

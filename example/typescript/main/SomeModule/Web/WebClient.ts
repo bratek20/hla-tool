@@ -29,11 +29,17 @@ namespace SomeModule.Web {
         optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
             return this.client.post("/some/prefix/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().getValue()
         }
+        methodWithSimpleVO(id: SomeId): void {
+            this.client.post("/some/prefix/someInterface/methodWithSimpleVO", Optional.of(SomeInterfaceMethodWithSimpleVORequest.create(id)))
+        }
         methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
             return this.client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional.of(SomeInterfaceMethodWithListOfSimpleVORequest.create(list))).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse).get().getValue()
         }
         methodWithAny(i: any): any {
             return this.client.post("/some/prefix/someInterface/methodWithAny", Optional.of(SomeInterfaceMethodWithAnyRequest.create(i))).getBody(SomeInterfaceMethodWithAnyResponse).get().getValue()
+        }
+        methodWithBaseType(i: string): string {
+            return this.client.post("/some/prefix/someInterface/methodWithBaseType", Optional.of(SomeInterfaceMethodWithBaseTypeRequest.create(i))).getBody(SomeInterfaceMethodWithBaseTypeResponse).get().getValue()
         }
         methodReturningOptSimpleVo(): Optional<SomeId> {
             return this.client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional.empty()).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse).get().getValue()

@@ -26,9 +26,13 @@ interface SomeInterface {
 
     fun optMethod(optId: SomeId?): SomeClass?
 
+    fun methodWithSimpleVO(id: SomeId): Unit
+
     fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId>
 
     fun methodWithAny(i: Any): Any
+
+    fun methodWithBaseType(i: String): String
 
     fun methodReturningOptSimpleVo(): SomeId?
 

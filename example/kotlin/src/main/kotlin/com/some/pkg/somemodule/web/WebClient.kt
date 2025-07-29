@@ -32,12 +32,20 @@ class SomeInterfaceWebClient(
         return client.post("/some/prefix/someInterface/optMethod", SomeInterfaceOptMethodRequest.create(optId)).getBody(SomeInterfaceOptMethodResponse::class.java).getValue()
     }
 
+    override fun methodWithSimpleVO(id: SomeId): Unit {
+        client.post("/some/prefix/someInterface/methodWithSimpleVO", SomeInterfaceMethodWithSimpleVORequest.create(id))
+    }
+
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
         return client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", SomeInterfaceMethodWithListOfSimpleVORequest.create(list)).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse::class.java).getValue()
     }
 
     override fun methodWithAny(i: Any): Any {
         return client.post("/some/prefix/someInterface/methodWithAny", SomeInterfaceMethodWithAnyRequest.create(i)).getBody(SomeInterfaceMethodWithAnyResponse::class.java).getValue()
+    }
+
+    override fun methodWithBaseType(i: String): String {
+        return client.post("/some/prefix/someInterface/methodWithBaseType", SomeInterfaceMethodWithBaseTypeRequest.create(i)).getBody(SomeInterfaceMethodWithBaseTypeResponse::class.java).getValue()
     }
 
     override fun methodReturningOptSimpleVo(): SomeId? {

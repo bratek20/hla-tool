@@ -30,12 +30,22 @@ namespace SomeModule.Impl {
             return undefined
         }
 
+        methodWithSimpleVO(id: SomeId): void {
+            // TODO
+            return undefined
+        }
+
         methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
             // TODO
             return undefined
         }
 
         methodWithAny(i: any): any {
+            // TODO
+            return undefined
+        }
+
+        methodWithBaseType(i: string): string {
             // TODO
             return undefined
         }

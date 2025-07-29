@@ -20,9 +20,13 @@ interface SomeInterface {
 
     optMethod(optId: Optional<SomeId>): Optional<SomeClass>
 
+    methodWithSimpleVO(id: SomeId): void
+
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[]
 
     methodWithAny(i: any): any
+
+    methodWithBaseType(i: string): string
 
     methodReturningOptSimpleVo(): Optional<SomeId>
 

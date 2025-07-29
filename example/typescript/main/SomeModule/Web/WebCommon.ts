@@ -62,6 +62,18 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodWithSimpleVORequest {
+        private id = STRING
+        getId(): SomeId {
+            return new SomeId(this.id)
+        }
+        static create(id: SomeId): SomeInterfaceMethodWithSimpleVORequest {
+            const instance = new SomeInterfaceMethodWithSimpleVORequest()
+            instance.id = id.getValue()
+            return instance
+        }
+    }
+
     export class SomeInterfaceMethodWithListOfSimpleVORequest {
         private list = [STRING]
         getList(): SomeId[] {
@@ -96,6 +108,25 @@ namespace SomeModule.Web {
     export class SomeInterfaceMethodWithAnyResponse {
         private value = ANY
         getValue(): any {
+            return this.value
+        }
+    }
+
+    export class SomeInterfaceMethodWithBaseTypeRequest {
+        private i = STRING
+        getI(): string {
+            return this.i
+        }
+        static create(i: string): SomeInterfaceMethodWithBaseTypeRequest {
+            const instance = new SomeInterfaceMethodWithBaseTypeRequest()
+            instance.i = i
+            return instance
+        }
+    }
+
+    export class SomeInterfaceMethodWithBaseTypeResponse {
+        private value = STRING
+        getValue(): string {
             return this.value
         }
     }

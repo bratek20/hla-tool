@@ -27,12 +27,20 @@ namespace SomeModule.Api {
         return new Web.SomeInterfaceWebClient(Web.config, c).optMethod(optId)
     }
 
+    export function methodWithSimpleVO(id: SomeId, c: HandlerContext): void {
+        new Web.SomeInterfaceWebClient(Web.config, c).methodWithSimpleVO(id)
+    }
+
     export function methodWithListOfSimpleVO(list: SomeId[], c: HandlerContext): SomeId[] {
         return new Web.SomeInterfaceWebClient(Web.config, c).methodWithListOfSimpleVO(list)
     }
 
     export function methodWithAny(i: any, c: HandlerContext): any {
         return new Web.SomeInterfaceWebClient(Web.config, c).methodWithAny(i)
+    }
+
+    export function methodWithBaseType(i: string, c: HandlerContext): string {
+        return new Web.SomeInterfaceWebClient(Web.config, c).methodWithBaseType(i)
     }
 
     export function methodReturningOptSimpleVo(c: HandlerContext): Optional<SomeId> {

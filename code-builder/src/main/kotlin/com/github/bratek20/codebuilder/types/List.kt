@@ -40,8 +40,8 @@ fun newListOf(elementType: TypeBuilder, vararg elements: ExpressionBuilder) = ex
 class ListOperations(
     private val variable: ExpressionBuilder
 ) {
-    fun get(index: Int): ExpressionBuilder = expression { c ->
-        "${variable.build(c)}[$index]"
+    fun get(index: ExpressionBuilder): ExpressionBuilder = expression { c ->
+        "${variable.build(c)}[${index.build(c)}]"
     }
 
     fun add(element: ExpressionBuilderProvider): StatementBuilder = object : StatementBuilder {
@@ -67,6 +67,10 @@ class ListOperations(
             append(predicate().build(c))
             append(c.lang.listMapEnd())
         }.toString()
+    }
+
+    fun size(): ExpressionBuilder = expression { c ->
+        "${variable.build(c)}.${c.lang.listSize()}"
     }
 }
 

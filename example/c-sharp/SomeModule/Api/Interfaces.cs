@@ -25,9 +25,13 @@ namespace SomeModule.Api {
 
         Optional<SomeClass> OptMethod(Optional<SomeId> optId);
 
+        void MethodWithSimpleVO(SomeId id);
+
         List<SomeId> MethodWithListOfSimpleVO(List<SomeId> list);
 
         object MethodWithAny(object i);
+
+        string MethodWithBaseType(string i);
 
         Optional<SomeId> MethodReturningOptSimpleVo();
 

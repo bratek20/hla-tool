@@ -6,14 +6,14 @@ import com.some.pkg.othermodule.api.*
 import org.assertj.core.api.Assertions.assertThat
 
 class OtherInterfaceMock: OtherInterface {
-    private var otherMethodCalls: Int = 0
+    private var otherMethodCallsNumber: Int = 0
     override fun otherMethod(): Unit {
-        otherMethodCalls = otherMethodCalls + 1
+        otherMethodCallsNumber = otherMethodCallsNumber + 1
     }
-    fun assertOtherMethodCalls(expectedNumber: Int) {
-        assertThat(otherMethodCalls).withFailMessage("Expected 'otherMethod' to be called " + expectedNumber + " times but was called " + otherMethodCalls + " times").isEqualTo(expectedNumber)
+    fun assertOtherMethodCallsNumber(expectedNumber: Int) {
+        assertThat(otherMethodCallsNumber).withFailMessage("Expected 'otherMethod' to be called " + expectedNumber + " times but was called " + otherMethodCallsNumber + " times").isEqualTo(expectedNumber)
     }
     fun reset() {
-        otherMethodCalls = 0
+        otherMethodCallsNumber = 0
     }
 }

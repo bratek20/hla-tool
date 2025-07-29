@@ -868,4 +868,26 @@ namespace SomeModule.Api {
             return new SelfReferencingProperty(optionalSelf.OrElse(null), listSelf, optionalListSelf.OrElse(null));
         }
     }
+
+    public class SomeInterfaceSomeCommandArgs: ValueObject {
+        readonly string id;
+        readonly int amount;
+
+        public SomeInterfaceSomeCommandArgs(
+            string id,
+            int amount
+        ) {
+            this.id = id;
+            this.amount = amount;
+        }
+        public SomeId GetId() {
+            return new SomeId(id);
+        }
+        public int GetAmount() {
+            return amount;
+        }
+        public static SomeInterfaceSomeCommandArgs Create(SomeId id, int amount) {
+            return new SomeInterfaceSomeCommandArgs(id.Value, amount);
+        }
+    }
 }
