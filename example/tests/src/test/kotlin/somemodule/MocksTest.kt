@@ -34,12 +34,12 @@ class MocksTest {
 
     @Test
     fun methodCalledForArgs() {
-//        someInterface2Mock.assertReferenceOtherClassCallsNumber()
-//
-//        someInterface2.referenceOtherClass(otherClass { id = 1 })
-//        someInterface2Mock.assertReferenceOtherClassCalledForArgs({}, 1)
-//        someInterface2Mock.assertReferenceOtherClassCalledForArgs({ id = 1 }, 1)
-//        someInterface2Mock.assertReferenceOtherClassCalledForArgs({ id = 2 }, 0)
+        someInterface2Mock.assertReferenceOtherClassCalls(emptyList())
+
+        someInterface2.referenceOtherClass(otherClass { id = 1 })
+        someInterface2Mock.assertReferenceOtherClassCalls(listOf {
+            id = 1
+        })
     }
 
     @Test

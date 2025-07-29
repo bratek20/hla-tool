@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.generation.impl.core.ModuleGenerationContext
@@ -306,7 +307,7 @@ class EnumExpectedType(
 class ExpectedTypeFactory(
     private val c: ModuleGenerationContext
 ) {
-    fun create(type: ApiTypeLogic): ExpectedType<*> {
+    fun create(type: ApiType): ExpectedType<*> {
         val result =  when (type) {
             is BaseApiType -> BaseExpectedType(type)
             is SimpleValueObjectApiType -> SimpleValueObjectExpectedType(type, create(type.boxedType) as BaseExpectedType)
@@ -320,7 +321,7 @@ class ExpectedTypeFactory(
             else -> throw IllegalArgumentException("Unknown type: $type")
         }
 
-        result.languageTypes = type.languageTypes
+        result.languageTypes = c.language.types()
         result.fixture = c.language.assertsFixture()
 
         return result
