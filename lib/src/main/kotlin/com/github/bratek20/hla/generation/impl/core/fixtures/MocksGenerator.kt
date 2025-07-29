@@ -6,7 +6,9 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
-import com.github.bratek20.hla.apitypes.impl.*
+import com.github.bratek20.hla.apitypes.impl.ApiTypeLogic
+import com.github.bratek20.hla.apitypes.impl.BaseApiType
+import com.github.bratek20.hla.apitypes.impl.ExternalApiType
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
@@ -14,7 +16,6 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
-import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.queries.api.methodsArgsTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
@@ -35,11 +36,11 @@ class MockMethodLogic(
                 right = const("0")
             }
         )
-        argsDefType()?.let {
+        argsApiType()?.let {
             assigns.add(
                 assignment {
                     left = instanceVariable(callsVariableName())
-                    right = emptyImmutableList(it.builder())
+                    right = emptyMutableList(it.builder())
                 }
             )
         }
@@ -73,11 +74,12 @@ class MockMethodLogic(
     }
 
     fun callsField(): FieldBuilderOps? {
-        return argsDefType()?.let {
+        return argsApiType()?.let {
             {
-                type = listType(it.builder())
+                type = mutableListType(it.builder())
                 name = callsVariableName()
-                value = emptyImmutableList(it.builder())
+                value = emptyMutableList(it.builder())
+                mutable = true
             }
         }
     }

@@ -3,15 +3,15 @@
 class SomeInterfaceMock implements SomeInterface {
     private someEmptyMethodCallsNumber: number = 0
     private someCommandCallsNumber: number = 0
-    private readonly someCommandCalls: SomeModule.Builder.SomeInterfaceSomeCommandArgsDef[] = []
+    private readonly someCommandCalls: SomeInterfaceSomeCommandArgs[] = []
     private someQueryCallsNumber: number = 0
-    private readonly someQueryCalls: SomeModule.Builder.SomeQueryInputDef[] = []
+    private readonly someQueryCalls: SomeQueryInput[] = []
     private someQueryResponse: SomeModule.Builder.SomeClassDef = undefined
     private optMethodCallsNumber: number = 0
-    private readonly optMethodCalls: string | undefined[] = []
+    private readonly optMethodCalls: Optional<SomeId>[] = []
     private optMethodResponse: SomeModule.Builder.SomeClassDef | undefined = undefined
     private methodWithListOfSimpleVOCallsNumber: number = 0
-    private readonly methodWithListOfSimpleVOCalls: string[][] = []
+    private readonly methodWithListOfSimpleVOCalls: SomeId[][] = []
     private methodWithListOfSimpleVOResponse: string[] = []
     private methodWithAnyCallsNumber: number = 0
     private readonly methodWithAnyCalls: any[] = []
@@ -122,7 +122,7 @@ class SomeInterfaceMock implements SomeInterface {
 
 class SomeInterface2Mock implements SomeInterface2 {
     private referenceOtherClassCallsNumber: number = 0
-    private readonly referenceOtherClassCalls: OtherModule.Builder.OtherClassDef[] = []
+    private readonly referenceOtherClassCalls: OtherClass[] = []
     private referenceOtherClassResponse: OtherModule.Builder.OtherClassDef = undefined
     private referenceLegacyTypeCallsNumber: number = 0
     private readonly referenceLegacyTypeCalls: LegacyType[] = []
@@ -156,10 +156,10 @@ class SomeInterface2Mock implements SomeInterface2 {
 
 class SomeModuleHandlersMock implements SomeModuleHandlers {
     private someHandlerCallsNumber: number = 0
-    private readonly someHandlerCalls: SomeModule.Builder.SomeHandlerInputDef[] = []
+    private readonly someHandlerCalls: SomeHandlerInput[] = []
     private someHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
     private someHandler2CallsNumber: number = 0
-    private readonly someHandler2Calls: SomeModule.Builder.SomeHandlerInputDef[] = []
+    private readonly someHandler2Calls: SomeHandlerInput[] = []
     private someHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandlerCallsNumber = this.someHandlerCallsNumber + 1
@@ -195,10 +195,10 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
 
 class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     private someDebugHandlerCallsNumber: number = 0
-    private readonly someDebugHandlerCalls: SomeModule.Builder.SomeHandlerInputDef[] = []
+    private readonly someDebugHandlerCalls: SomeHandlerInput[] = []
     private someDebugHandlerResponse: SomeModule.Builder.SomeHandlerOutputDef = undefined
     private someDebugHandler2CallsNumber: number = 0
-    private readonly someDebugHandler2Calls: SomeModule.Builder.SomeHandlerInputDef[] = []
+    private readonly someDebugHandler2Calls: SomeHandlerInput[] = []
     private someDebugHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandlerCallsNumber = this.someDebugHandlerCallsNumber + 1

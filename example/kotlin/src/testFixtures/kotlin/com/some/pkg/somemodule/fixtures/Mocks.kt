@@ -14,18 +14,18 @@ import com.some.pkg.typesmodule.api.*
 class SomeInterfaceMock: SomeInterface {
     private var someEmptyMethodCallsNumber: Int = 0
     private var someCommandCallsNumber: Int = 0
-    private val someCommandCalls: List<(SomeInterfaceSomeCommandArgsDef.() -> Unit)> = emptyList()
+    private var someCommandCalls: MutableList<SomeInterfaceSomeCommandArgs> = mutableListOf()
     private var someQueryCallsNumber: Int = 0
-    private val someQueryCalls: List<(SomeQueryInputDef.() -> Unit)> = emptyList()
+    private var someQueryCalls: MutableList<SomeQueryInput> = mutableListOf()
     private var someQueryResponse: (SomeClassDef.() -> Unit) = {}
     private var optMethodCallsNumber: Int = 0
-    private val optMethodCalls: List<String?> = emptyList()
+    private var optMethodCalls: MutableList<SomeId?> = mutableListOf()
     private var optMethodResponse: (SomeClassDef.() -> Unit)? = null
     private var methodWithListOfSimpleVOCallsNumber: Int = 0
-    private val methodWithListOfSimpleVOCalls: List<List<String>> = emptyList()
+    private var methodWithListOfSimpleVOCalls: MutableList<List<SomeId>> = mutableListOf()
     private var methodWithListOfSimpleVOResponse: List<String> = emptyList()
     private var methodWithAnyCallsNumber: Int = 0
-    private val methodWithAnyCalls: List<Any> = emptyList()
+    private var methodWithAnyCalls: MutableList<Any> = mutableListOf()
     private var methodWithAnyResponse: Any = {}
     private var methodReturningOptSimpleVoCallsNumber: Int = 0
     private var methodReturningOptSimpleVoResponse: String? = null
@@ -111,18 +111,18 @@ class SomeInterfaceMock: SomeInterface {
     fun reset() {
         someEmptyMethodCallsNumber = 0
         someCommandCallsNumber = 0
-        someCommandCalls = emptyList()
+        someCommandCalls = mutableListOf()
         someQueryCallsNumber = 0
-        someQueryCalls = emptyList()
+        someQueryCalls = mutableListOf()
         someQueryResponse = {}
         optMethodCallsNumber = 0
-        optMethodCalls = emptyList()
+        optMethodCalls = mutableListOf()
         optMethodResponse = null
         methodWithListOfSimpleVOCallsNumber = 0
-        methodWithListOfSimpleVOCalls = emptyList()
+        methodWithListOfSimpleVOCalls = mutableListOf()
         methodWithListOfSimpleVOResponse = emptyList()
         methodWithAnyCallsNumber = 0
-        methodWithAnyCalls = emptyList()
+        methodWithAnyCalls = mutableListOf()
         methodWithAnyResponse = {}
         methodReturningOptSimpleVoCallsNumber = 0
         methodReturningOptSimpleVoResponse = null
@@ -133,10 +133,10 @@ class SomeInterfaceMock: SomeInterface {
 
 class SomeInterface2Mock: SomeInterface2 {
     private var referenceOtherClassCallsNumber: Int = 0
-    private val referenceOtherClassCalls: List<(OtherClassDef.() -> Unit)> = emptyList()
+    private var referenceOtherClassCalls: MutableList<OtherClass> = mutableListOf()
     private var referenceOtherClassResponse: (OtherClassDef.() -> Unit) = {}
     private var referenceLegacyTypeCallsNumber: Int = 0
-    private val referenceLegacyTypeCalls: List<com.some.pkg.legacy.LegacyType> = emptyList()
+    private var referenceLegacyTypeCalls: MutableList<com.some.pkg.legacy.LegacyType> = mutableListOf()
     override fun referenceOtherClass(other: OtherClass): OtherClass {
         referenceOtherClassCallsNumber = referenceOtherClassCallsNumber + 1
         referenceOtherClassCalls.add(other)
@@ -158,19 +158,19 @@ class SomeInterface2Mock: SomeInterface2 {
     }
     fun reset() {
         referenceOtherClassCallsNumber = 0
-        referenceOtherClassCalls = emptyList()
+        referenceOtherClassCalls = mutableListOf()
         referenceOtherClassResponse = {}
         referenceLegacyTypeCallsNumber = 0
-        referenceLegacyTypeCalls = emptyList()
+        referenceLegacyTypeCalls = mutableListOf()
     }
 }
 
 class SomeModuleHandlersMock: SomeModuleHandlers {
     private var someHandlerCallsNumber: Int = 0
-    private val someHandlerCalls: List<(SomeHandlerInputDef.() -> Unit)> = emptyList()
+    private var someHandlerCalls: MutableList<SomeHandlerInput> = mutableListOf()
     private var someHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}
     private var someHandler2CallsNumber: Int = 0
-    private val someHandler2Calls: List<(SomeHandlerInputDef.() -> Unit)> = emptyList()
+    private var someHandler2Calls: MutableList<SomeHandlerInput> = mutableListOf()
     private var someHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
     override fun someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         someHandlerCallsNumber = someHandlerCallsNumber + 1
@@ -196,20 +196,20 @@ class SomeModuleHandlersMock: SomeModuleHandlers {
     }
     fun reset() {
         someHandlerCallsNumber = 0
-        someHandlerCalls = emptyList()
+        someHandlerCalls = mutableListOf()
         someHandlerResponse = {}
         someHandler2CallsNumber = 0
-        someHandler2Calls = emptyList()
+        someHandler2Calls = mutableListOf()
         someHandler2Response = {}
     }
 }
 
 class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     private var someDebugHandlerCallsNumber: Int = 0
-    private val someDebugHandlerCalls: List<(SomeHandlerInputDef.() -> Unit)> = emptyList()
+    private var someDebugHandlerCalls: MutableList<SomeHandlerInput> = mutableListOf()
     private var someDebugHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}
     private var someDebugHandler2CallsNumber: Int = 0
-    private val someDebugHandler2Calls: List<(SomeHandlerInputDef.() -> Unit)> = emptyList()
+    private var someDebugHandler2Calls: MutableList<SomeHandlerInput> = mutableListOf()
     private var someDebugHandler2Response: (SomeHandlerOutputDef.() -> Unit) = {}
     override fun someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         someDebugHandlerCallsNumber = someDebugHandlerCallsNumber + 1
@@ -235,10 +235,10 @@ class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     }
     fun reset() {
         someDebugHandlerCallsNumber = 0
-        someDebugHandlerCalls = emptyList()
+        someDebugHandlerCalls = mutableListOf()
         someDebugHandlerResponse = {}
         someDebugHandler2CallsNumber = 0
-        someDebugHandler2Calls = emptyList()
+        someDebugHandler2Calls = mutableListOf()
         someDebugHandler2Response = {}
     }
 }
