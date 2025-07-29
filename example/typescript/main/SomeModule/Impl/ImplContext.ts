@@ -28,6 +28,10 @@ namespace SomeModule.Api {
         return new Impl.SomeInterfaceLogic(c).methodWithAny(i)
     }
 
+    export function methodWithBaseType(i: string, c: HandlerContext): string {
+        return new Impl.SomeInterfaceLogic(c).methodWithBaseType(i)
+    }
+
     export function methodReturningOptSimpleVo(c: HandlerContext): Optional<SomeId> {
         return new Impl.SomeInterfaceLogic(c).methodReturningOptSimpleVo()
     }

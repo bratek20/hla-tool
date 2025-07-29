@@ -185,6 +185,9 @@ class MockMethodLogic(
     }
 
     private fun handleTypeScriptReferencing(expectedType: ExpectedType<*>): String {
+        if (expectedType is BaseExpectedType) {
+            return expectedType.funName()
+        }
         return addModulePrefix(modules, expectedType.api.name(), expectedType.funName(), "Assert")
     }
 

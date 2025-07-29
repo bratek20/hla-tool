@@ -31,6 +31,8 @@ namespace SomeModule.Api {
 
         object MethodWithAny(object i);
 
+        string MethodWithBaseType(string i);
+
         Optional<SomeId> MethodReturningOptSimpleVo();
 
         int MethodReturningNumericType();

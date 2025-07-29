@@ -18,6 +18,9 @@ class SomeInterfaceMock implements SomeInterface {
     private methodWithAnyCallsNumber: number = 0
     private methodWithAnyCalls: any[] = []
     private methodWithAnyResponse: any = undefined
+    private methodWithBaseTypeCallsNumber: number = 0
+    private methodWithBaseTypeCalls: string[] = []
+    private methodWithBaseTypeResponse: string = ""
     private methodReturningOptSimpleVoCallsNumber: number = 0
     private methodReturningOptSimpleVoResponse: string | undefined = undefined
     private methodReturningNumericTypeCallsNumber: number = 0
@@ -104,6 +107,23 @@ class SomeInterfaceMock implements SomeInterface {
     setMethodWithAnyResponse(response: any) {
         this.methodWithAnyResponse = response
     }
+    methodWithBaseType(i: string): string {
+        this.methodWithBaseTypeCallsNumber = this.methodWithBaseTypeCallsNumber + 1
+        this.methodWithBaseTypeCalls.push(i)
+        return this.methodWithBaseTypeResponse
+    }
+    assertMethodWithBaseTypeCallsNumber(expectedNumber: number) {
+        AssertEquals(this.methodWithBaseTypeCallsNumber, expectedNumber, "Expected 'methodWithBaseType' to be called " + expectedNumber + " times but was called " + this.methodWithBaseTypeCallsNumber + " times")
+    }
+    assertMethodWithBaseTypeCalls(expectedArgs: string[]) {
+        this.assertMethodWithBaseTypeCallsNumber(expectedArgs.length)
+        for (let i = 0; i < expectedArgs.length; i++) {
+            string(this.methodWithBaseTypeCalls[i], expectedArgs[i])
+        }
+    }
+    setMethodWithBaseTypeResponse(response: string) {
+        this.methodWithBaseTypeResponse = response
+    }
     methodReturningOptSimpleVo(): Optional<SomeId> {
         this.methodReturningOptSimpleVoCallsNumber = this.methodReturningOptSimpleVoCallsNumber + 1
         return Optional.of(this.methodReturningOptSimpleVoResponse).map(it => new SomeId(it))
@@ -142,6 +162,9 @@ class SomeInterfaceMock implements SomeInterface {
         this.methodWithAnyCallsNumber = 0
         this.methodWithAnyCalls = []
         this.methodWithAnyResponse = undefined
+        this.methodWithBaseTypeCallsNumber = 0
+        this.methodWithBaseTypeCalls = []
+        this.methodWithBaseTypeResponse = ""
         this.methodReturningOptSimpleVoCallsNumber = 0
         this.methodReturningOptSimpleVoResponse = undefined
         this.methodReturningNumericTypeCallsNumber = 0
@@ -305,6 +328,7 @@ namespace SomeModule.Mocks {
         SomeModule.Api.methodWithSimpleVO = CreateMock(SomeModule.Api.methodWithSimpleVO, (id: SomeId) => { mock.methodWithSimpleVO(id) })
         SomeModule.Api.methodWithListOfSimpleVO = CreateMock(SomeModule.Api.methodWithListOfSimpleVO, (list: SomeId[]) => { return mock.methodWithListOfSimpleVO(list) })
         SomeModule.Api.methodWithAny = CreateMock(SomeModule.Api.methodWithAny, (i: any) => { return mock.methodWithAny(i) })
+        SomeModule.Api.methodWithBaseType = CreateMock(SomeModule.Api.methodWithBaseType, (i: string) => { return mock.methodWithBaseType(i) })
         SomeModule.Api.methodReturningOptSimpleVo = CreateMock(SomeModule.Api.methodReturningOptSimpleVo, () => { return mock.methodReturningOptSimpleVo() })
         SomeModule.Api.methodReturningNumericType = CreateMock(SomeModule.Api.methodReturningNumericType, () => { return mock.methodReturningNumericType() })
         return mock

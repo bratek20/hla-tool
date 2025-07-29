@@ -230,6 +230,8 @@ Interfaces
 
         methodWithAny(i: any): any
 
+        methodWithBaseType(i: string): string
+
         methodReturningOptSimpleVo(): SomeId?
 
         methodReturningNumericType(): int

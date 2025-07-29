@@ -29,6 +29,9 @@ class SomeInterfaceMock: SomeInterface {
     private var methodWithAnyCallsNumber: Int = 0
     private var methodWithAnyCalls: MutableList<Any> = mutableListOf()
     private var methodWithAnyResponse: Any = {}
+    private var methodWithBaseTypeCallsNumber: Int = 0
+    private var methodWithBaseTypeCalls: MutableList<String> = mutableListOf()
+    private var methodWithBaseTypeResponse: String = ""
     private var methodReturningOptSimpleVoCallsNumber: Int = 0
     private var methodReturningOptSimpleVoResponse: String? = null
     private var methodReturningNumericTypeCallsNumber: Int = 0
@@ -115,6 +118,23 @@ class SomeInterfaceMock: SomeInterface {
     fun setMethodWithAnyResponse(response: Any) {
         methodWithAnyResponse = response
     }
+    override fun methodWithBaseType(i: String): String {
+        methodWithBaseTypeCallsNumber = methodWithBaseTypeCallsNumber + 1
+        methodWithBaseTypeCalls.add(i)
+        return methodWithBaseTypeResponse
+    }
+    fun assertMethodWithBaseTypeCallsNumber(expectedNumber: Int) {
+        assertThat(methodWithBaseTypeCallsNumber).withFailMessage("Expected 'methodWithBaseType' to be called " + expectedNumber + " times but was called " + methodWithBaseTypeCallsNumber + " times").isEqualTo(expectedNumber)
+    }
+    fun assertMethodWithBaseTypeCalls(expectedArgs: List<String>) {
+        assertMethodWithBaseTypeCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertString(methodWithBaseTypeCalls[i], expectedArgs[i])
+        }
+    }
+    fun setMethodWithBaseTypeResponse(response: String) {
+        methodWithBaseTypeResponse = response
+    }
     override fun methodReturningOptSimpleVo(): SomeId? {
         methodReturningOptSimpleVoCallsNumber = methodReturningOptSimpleVoCallsNumber + 1
         return methodReturningOptSimpleVoResponse?.let { it -> SomeId(it) }
@@ -153,6 +173,9 @@ class SomeInterfaceMock: SomeInterface {
         methodWithAnyCallsNumber = 0
         methodWithAnyCalls = mutableListOf()
         methodWithAnyResponse = {}
+        methodWithBaseTypeCallsNumber = 0
+        methodWithBaseTypeCalls = mutableListOf()
+        methodWithBaseTypeResponse = ""
         methodReturningOptSimpleVoCallsNumber = 0
         methodReturningOptSimpleVoResponse = null
         methodReturningNumericTypeCallsNumber = 0

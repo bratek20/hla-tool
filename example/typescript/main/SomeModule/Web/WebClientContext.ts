@@ -39,6 +39,10 @@ namespace SomeModule.Api {
         return new Web.SomeInterfaceWebClient(Web.config, c).methodWithAny(i)
     }
 
+    export function methodWithBaseType(i: string, c: HandlerContext): string {
+        return new Web.SomeInterfaceWebClient(Web.config, c).methodWithBaseType(i)
+    }
+
     export function methodReturningOptSimpleVo(c: HandlerContext): Optional<SomeId> {
         return new Web.SomeInterfaceWebClient(Web.config, c).methodReturningOptSimpleVo()
     }

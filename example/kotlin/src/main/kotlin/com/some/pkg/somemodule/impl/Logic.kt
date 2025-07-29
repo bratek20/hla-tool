@@ -38,6 +38,10 @@ class SomeInterfaceLogic: SomeInterface {
         TODO("Not yet implemented")
     }
 
+    override fun methodWithBaseType(i: String): String {
+        TODO("Not yet implemented")
+    }
+
     override fun methodReturningOptSimpleVo(): SomeId? {
         TODO("Not yet implemented")
     }

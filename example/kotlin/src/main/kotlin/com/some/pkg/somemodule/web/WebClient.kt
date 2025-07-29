@@ -44,6 +44,10 @@ class SomeInterfaceWebClient(
         return client.post("/some/prefix/someInterface/methodWithAny", SomeInterfaceMethodWithAnyRequest.create(i)).getBody(SomeInterfaceMethodWithAnyResponse::class.java).getValue()
     }
 
+    override fun methodWithBaseType(i: String): String {
+        return client.post("/some/prefix/someInterface/methodWithBaseType", SomeInterfaceMethodWithBaseTypeRequest.create(i)).getBody(SomeInterfaceMethodWithBaseTypeResponse::class.java).getValue()
+    }
+
     override fun methodReturningOptSimpleVo(): SomeId? {
         return client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", null).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse::class.java).getValue()
     }

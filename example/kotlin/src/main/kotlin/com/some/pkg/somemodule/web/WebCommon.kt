@@ -118,6 +118,25 @@ class SomeInterfaceMethodWithAnyResponse(
         return value
     }
 }
+class SomeInterfaceMethodWithBaseTypeRequest(
+    private val i: String
+) {
+    fun getI(): String {
+        return i
+    }
+    companion object {
+        fun create(i: String): SomeInterfaceMethodWithBaseTypeRequest {
+            return SomeInterfaceMethodWithBaseTypeRequest(i)
+        }
+    }
+}
+class SomeInterfaceMethodWithBaseTypeResponse(
+    private val value: String
+) {
+    fun getValue(): String {
+        return value
+    }
+}
 class SomeInterfaceMethodReturningOptSimpleVoResponse(
     private val value: String?
 ) {

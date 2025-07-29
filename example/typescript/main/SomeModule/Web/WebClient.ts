@@ -38,6 +38,9 @@ namespace SomeModule.Web {
         methodWithAny(i: any): any {
             return this.client.post("/some/prefix/someInterface/methodWithAny", Optional.of(SomeInterfaceMethodWithAnyRequest.create(i))).getBody(SomeInterfaceMethodWithAnyResponse).get().getValue()
         }
+        methodWithBaseType(i: string): string {
+            return this.client.post("/some/prefix/someInterface/methodWithBaseType", Optional.of(SomeInterfaceMethodWithBaseTypeRequest.create(i))).getBody(SomeInterfaceMethodWithBaseTypeResponse).get().getValue()
+        }
         methodReturningOptSimpleVo(): Optional<SomeId> {
             return this.client.post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional.empty()).getBody(SomeInterfaceMethodReturningOptSimpleVoResponse).get().getValue()
         }

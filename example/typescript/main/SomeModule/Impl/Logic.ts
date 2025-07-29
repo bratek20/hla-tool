@@ -45,6 +45,11 @@ namespace SomeModule.Impl {
             return undefined
         }
 
+        methodWithBaseType(i: string): string {
+            // TODO
+            return undefined
+        }
+
         methodReturningOptSimpleVo(): Optional<SomeId> {
             // TODO
             return undefined

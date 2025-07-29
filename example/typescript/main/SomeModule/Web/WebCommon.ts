@@ -112,6 +112,25 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodWithBaseTypeRequest {
+        private i = STRING
+        getI(): string {
+            return this.i
+        }
+        static create(i: string): SomeInterfaceMethodWithBaseTypeRequest {
+            const instance = new SomeInterfaceMethodWithBaseTypeRequest()
+            instance.i = i
+            return instance
+        }
+    }
+
+    export class SomeInterfaceMethodWithBaseTypeResponse {
+        private value = STRING
+        getValue(): string {
+            return this.value
+        }
+    }
+
     export class SomeInterfaceMethodReturningOptSimpleVoResponse {
         private value = OPTIONAL_STRING
         getValue(): Optional<SomeId> {

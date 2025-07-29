@@ -32,11 +32,19 @@ class TestSomeInterfaceLogic: SomeInterface {
         TODO("Not yet implemented")
     }
 
+    override fun methodWithSimpleVO(id: SomeId) {
+        TODO("Not yet implemented")
+    }
+
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
         return list
     }
 
     override fun methodWithAny(i: Any): Any {
+        TODO("Not yet implemented")
+    }
+
+    override fun methodWithBaseType(i: String): String {
         TODO("Not yet implemented")
     }
 

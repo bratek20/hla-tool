@@ -175,6 +175,35 @@ namespace SomeModule.Web {
         }
     }
 
+    public class SomeInterfaceMethodWithBaseTypeRequest {
+        readonly string i;
+
+        public SomeInterfaceMethodWithBaseTypeRequest(
+            string i
+        ) {
+            this.i = i;
+        }
+        public string GetI() {
+            return i;
+        }
+        public static SomeInterfaceMethodWithBaseTypeRequest Create(string i) {
+            return new SomeInterfaceMethodWithBaseTypeRequest(i);
+        }
+    }
+
+    public class SomeInterfaceMethodWithBaseTypeResponse {
+        readonly string value;
+
+        public SomeInterfaceMethodWithBaseTypeResponse(
+            string value
+        ) {
+            this.value = value;
+        }
+        public string GetValue() {
+            return value;
+        }
+    }
+
     public class SomeInterfaceMethodReturningOptSimpleVoResponse {
         readonly string? value;
 

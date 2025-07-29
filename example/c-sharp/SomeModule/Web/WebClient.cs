@@ -45,6 +45,9 @@ namespace SomeModule.Web {
         public object MethodWithAny(object i) {
             return client.Post("/some/prefix/someInterface/methodWithAny", Optional<SomeInterfaceMethodWithAnyRequest>.Of(SomeInterfaceMethodWithAnyRequest.Create(i))).GetBody<SomeInterfaceMethodWithAnyResponse>().Get().GetValue();
         }
+        public string MethodWithBaseType(string i) {
+            return client.Post("/some/prefix/someInterface/methodWithBaseType", Optional<SomeInterfaceMethodWithBaseTypeRequest>.Of(SomeInterfaceMethodWithBaseTypeRequest.Create(i))).GetBody<SomeInterfaceMethodWithBaseTypeResponse>().Get().GetValue();
+        }
         public Optional<SomeId> MethodReturningOptSimpleVo() {
             return client.Post("/some/prefix/someInterface/methodReturningOptSimpleVo", Optional<object>.Empty()).GetBody<SomeInterfaceMethodReturningOptSimpleVoResponse>().Get().GetValue();
         }
