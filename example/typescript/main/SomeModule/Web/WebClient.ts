@@ -29,6 +29,9 @@ namespace SomeModule.Web {
         optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
             return this.client.post("/some/prefix/someInterface/optMethod", Optional.of(SomeInterfaceOptMethodRequest.create(optId))).getBody(SomeInterfaceOptMethodResponse).get().getValue()
         }
+        methodWithSimpleVO(id: SomeId): void {
+            this.client.post("/some/prefix/someInterface/methodWithSimpleVO", Optional.of(SomeInterfaceMethodWithSimpleVORequest.create(id)))
+        }
         methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
             return this.client.post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional.of(SomeInterfaceMethodWithListOfSimpleVORequest.create(list))).getBody(SomeInterfaceMethodWithListOfSimpleVOResponse).get().getValue()
         }

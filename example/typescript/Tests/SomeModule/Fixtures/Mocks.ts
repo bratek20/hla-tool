@@ -10,6 +10,8 @@ class SomeInterfaceMock implements SomeInterface {
     private optMethodCallsNumber: number = 0
     private optMethodCalls: Optional<SomeId>[] = []
     private optMethodResponse: SomeModule.Builder.SomeClassDef | undefined = undefined
+    private methodWithSimpleVOCallsNumber: number = 0
+    private methodWithSimpleVOCalls: SomeId[] = []
     private methodWithListOfSimpleVOCallsNumber: number = 0
     private methodWithListOfSimpleVOCalls: SomeId[][] = []
     private methodWithListOfSimpleVOResponse: string[] = []
@@ -67,6 +69,19 @@ class SomeInterfaceMock implements SomeInterface {
     setOptMethodResponse(response: SomeModule.Builder.SomeClassDef | undefined) {
         this.optMethodResponse = response
     }
+    methodWithSimpleVO(id: SomeId): void {
+        this.methodWithSimpleVOCallsNumber = this.methodWithSimpleVOCallsNumber + 1
+        this.methodWithSimpleVOCalls.push(id)
+    }
+    assertMethodWithSimpleVOCallsNumber(expectedNumber: number) {
+        AssertEquals(this.methodWithSimpleVOCallsNumber, expectedNumber, "Expected 'methodWithSimpleVO' to be called " + expectedNumber + " times but was called " + this.methodWithSimpleVOCallsNumber + " times")
+    }
+    assertMethodWithSimpleVOCalls(expectedArgs: string[]) {
+        this.assertMethodWithSimpleVOCallsNumber(expectedArgs.length)
+        for (let i = 0; i < expectedArgs.length; i++) {
+            SomeModule.Assert.someId(this.methodWithSimpleVOCalls[i], expectedArgs[i])
+        }
+    }
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
         this.methodWithListOfSimpleVOCallsNumber = this.methodWithListOfSimpleVOCallsNumber + 1
         this.methodWithListOfSimpleVOCalls.push(list)
@@ -119,6 +134,8 @@ class SomeInterfaceMock implements SomeInterface {
         this.optMethodCallsNumber = 0
         this.optMethodCalls = []
         this.optMethodResponse = undefined
+        this.methodWithSimpleVOCallsNumber = 0
+        this.methodWithSimpleVOCalls = []
         this.methodWithListOfSimpleVOCallsNumber = 0
         this.methodWithListOfSimpleVOCalls = []
         this.methodWithListOfSimpleVOResponse = []
@@ -285,6 +302,7 @@ namespace SomeModule.Mocks {
         SomeModule.Api.someCommand = CreateMock(SomeModule.Api.someCommand, (id: SomeId, amount: number) => { mock.someCommand(id, amount) })
         SomeModule.Api.someQuery = CreateMock(SomeModule.Api.someQuery, (query: SomeQueryInput) => { return mock.someQuery(query) })
         SomeModule.Api.optMethod = CreateMock(SomeModule.Api.optMethod, (optId: Optional<SomeId>) => { return mock.optMethod(optId) })
+        SomeModule.Api.methodWithSimpleVO = CreateMock(SomeModule.Api.methodWithSimpleVO, (id: SomeId) => { mock.methodWithSimpleVO(id) })
         SomeModule.Api.methodWithListOfSimpleVO = CreateMock(SomeModule.Api.methodWithListOfSimpleVO, (list: SomeId[]) => { return mock.methodWithListOfSimpleVO(list) })
         SomeModule.Api.methodWithAny = CreateMock(SomeModule.Api.methodWithAny, (i: any) => { return mock.methodWithAny(i) })
         SomeModule.Api.methodReturningOptSimpleVo = CreateMock(SomeModule.Api.methodReturningOptSimpleVo, () => { return mock.methodReturningOptSimpleVo() })

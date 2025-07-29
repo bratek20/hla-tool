@@ -36,6 +36,9 @@ namespace SomeModule.Web {
         public Optional<SomeClass> OptMethod(Optional<SomeId> optId) {
             return client.Post("/some/prefix/someInterface/optMethod", Optional<SomeInterfaceOptMethodRequest>.Of(SomeInterfaceOptMethodRequest.Create(optId))).GetBody<SomeInterfaceOptMethodResponse>().Get().GetValue();
         }
+        public void MethodWithSimpleVO(SomeId id) {
+            client.Post("/some/prefix/someInterface/methodWithSimpleVO", Optional<SomeInterfaceMethodWithSimpleVORequest>.Of(SomeInterfaceMethodWithSimpleVORequest.Create(id)));
+        }
         public List<SomeId> MethodWithListOfSimpleVO(List<SomeId> list) {
             return client.Post("/some/prefix/someInterface/methodWithListOfSimpleVO", Optional<SomeInterfaceMethodWithListOfSimpleVORequest>.Of(SomeInterfaceMethodWithListOfSimpleVORequest.Create(list))).GetBody<SomeInterfaceMethodWithListOfSimpleVOResponse>().Get().GetValue();
         }

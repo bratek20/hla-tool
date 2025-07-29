@@ -16,6 +16,11 @@ class TypeScriptAssertsPattern(private val modules: ModuleGroupQueries) : Langua
         return handleReferencing(modules, name, base, null)
     }
 
+    override fun expectedReferencedClassType(name: String): String {
+        val base = "Expected${name}"
+        return addModulePrefix(modules, name, base, null)
+    }
+
     override fun diffFunName(apiStructureName: String): String {
         val base = "diff${apiStructureName}"
         return handleReferencing(modules, apiStructureName, base, null)

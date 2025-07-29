@@ -68,6 +68,18 @@ class SomeInterfaceOptMethodResponse(
         return value
     }
 }
+class SomeInterfaceMethodWithSimpleVORequest(
+    private val id: String
+) {
+    fun getId(): SomeId {
+        return SomeId(id)
+    }
+    companion object {
+        fun create(id: SomeId): SomeInterfaceMethodWithSimpleVORequest {
+            return SomeInterfaceMethodWithSimpleVORequest(id.value)
+        }
+    }
+}
 class SomeInterfaceMethodWithListOfSimpleVORequest(
     private val list: List<String>
 ) {

@@ -21,6 +21,8 @@ class SomeInterfaceMock: SomeInterface {
     private var optMethodCallsNumber: Int = 0
     private var optMethodCalls: MutableList<SomeId?> = mutableListOf()
     private var optMethodResponse: (SomeClassDef.() -> Unit)? = null
+    private var methodWithSimpleVOCallsNumber: Int = 0
+    private var methodWithSimpleVOCalls: MutableList<SomeId> = mutableListOf()
     private var methodWithListOfSimpleVOCallsNumber: Int = 0
     private var methodWithListOfSimpleVOCalls: MutableList<List<SomeId>> = mutableListOf()
     private var methodWithListOfSimpleVOResponse: List<String> = emptyList()
@@ -78,6 +80,19 @@ class SomeInterfaceMock: SomeInterface {
     fun setOptMethodResponse(response: (SomeClassDef.() -> Unit)?) {
         optMethodResponse = response
     }
+    override fun methodWithSimpleVO(id: SomeId): Unit {
+        methodWithSimpleVOCallsNumber = methodWithSimpleVOCallsNumber + 1
+        methodWithSimpleVOCalls.add(id)
+    }
+    fun assertMethodWithSimpleVOCallsNumber(expectedNumber: Int) {
+        assertThat(methodWithSimpleVOCallsNumber).withFailMessage("Expected 'methodWithSimpleVO' to be called " + expectedNumber + " times but was called " + methodWithSimpleVOCallsNumber + " times").isEqualTo(expectedNumber)
+    }
+    fun assertMethodWithSimpleVOCalls(expectedArgs: List<String>) {
+        assertMethodWithSimpleVOCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertSomeId(methodWithSimpleVOCalls[i], expectedArgs[i])
+        }
+    }
     override fun methodWithListOfSimpleVO(list: List<SomeId>): List<SomeId> {
         methodWithListOfSimpleVOCallsNumber = methodWithListOfSimpleVOCallsNumber + 1
         methodWithListOfSimpleVOCalls.add(list)
@@ -130,6 +145,8 @@ class SomeInterfaceMock: SomeInterface {
         optMethodCallsNumber = 0
         optMethodCalls = mutableListOf()
         optMethodResponse = null
+        methodWithSimpleVOCallsNumber = 0
+        methodWithSimpleVOCalls = mutableListOf()
         methodWithListOfSimpleVOCallsNumber = 0
         methodWithListOfSimpleVOCalls = mutableListOf()
         methodWithListOfSimpleVOResponse = emptyList()

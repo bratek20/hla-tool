@@ -4,6 +4,7 @@ interface LanguageAssertsPattern {
     fun assertFunName(name: String): String
 
     fun expectedClassType(name: String): String
+    fun expectedReferencedClassType(name: String): String = expectedClassType(name)
     fun diffFunName(apiStructureName: String): String
     fun indentionForAssertListElements(): Int
 }

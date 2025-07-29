@@ -17,7 +17,6 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.hla.generation.impl.languages.typescript.addModulePrefix
-import com.github.bratek20.hla.generation.impl.languages.typescript.handleReferencing
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.methodsArgsTypeName
 import com.github.bratek20.utils.camelToPascalCase
@@ -156,7 +155,7 @@ class MockMethodLogic(
                 name = "assert${camelToPascalCase(def.getName())}Calls"
                 addArg {
                     name = "expectedArgs"
-                    type = listType(typeName(referencedName(it)))
+                    type = listType(typeName(it.alwaysReferencedName()))
                 }
                 setBody {
                     add(methodCallStatement {
@@ -182,23 +181,6 @@ class MockMethodLogic(
                     ))
                 }
             }
-        }
-    }
-
-    private fun referencedName(expectedType: ExpectedType<*>): String {
-        return if (languageName == ModuleLanguage.TYPE_SCRIPT) {
-            val referenced = addModulePrefix(modules, expectedType.api.name(), expectedType.name(), null)
-            val afterFirstDot = referenced.substringAfter('.')
-
-            //hack: expectedType.name() already adds module prefix in case type is from another module - I remove it
-            if (afterFirstDot.contains('.')) {
-                afterFirstDot
-            }
-            else {
-                referenced
-            }
-        } else {
-            expectedType.name()
         }
     }
 

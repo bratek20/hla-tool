@@ -101,6 +101,22 @@ namespace SomeModule.Web {
         }
     }
 
+    public class SomeInterfaceMethodWithSimpleVORequest {
+        readonly string id;
+
+        public SomeInterfaceMethodWithSimpleVORequest(
+            string id
+        ) {
+            this.id = id;
+        }
+        public SomeId GetId() {
+            return new SomeId(id);
+        }
+        public static SomeInterfaceMethodWithSimpleVORequest Create(SomeId id) {
+            return new SomeInterfaceMethodWithSimpleVORequest(id.Value);
+        }
+    }
+
     public class SomeInterfaceMethodWithListOfSimpleVORequest {
         readonly List<string> list;
 

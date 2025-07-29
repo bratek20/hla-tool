@@ -20,6 +20,10 @@ abstract class ExpectedType<T: ApiTypeLogic>(
         return api.name()
     }
 
+    open fun alwaysReferencedName(): String {
+        return name()
+    }
+
     open fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         return languageTypes.wrapWithString("$path \${$givenVariable} != \${$expectedVariable}")
     }
@@ -191,6 +195,10 @@ open class ComplexStructureExpectedType(
 ) : StructureExpectedType<ComplexStructureApiType<*>>(api) {
     override fun name(): String {
         return fixture.expectedClassType(api.name())
+    }
+
+    override fun alwaysReferencedName(): String {
+        return fixture.expectedReferencedClassType(api.name())
     }
 
     // used by velocity

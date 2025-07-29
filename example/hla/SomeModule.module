@@ -224,6 +224,8 @@ Interfaces
 
         optMethod(optId: SomeId?): SomeClass?
 
+        methodWithSimpleVO(id: SomeId)
+
         methodWithListOfSimpleVO(list: SomeId[]): SomeId[]
 
         methodWithAny(i: any): any

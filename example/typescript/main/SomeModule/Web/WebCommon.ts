@@ -62,6 +62,18 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodWithSimpleVORequest {
+        private id = STRING
+        getId(): SomeId {
+            return new SomeId(this.id)
+        }
+        static create(id: SomeId): SomeInterfaceMethodWithSimpleVORequest {
+            const instance = new SomeInterfaceMethodWithSimpleVORequest()
+            instance.id = id.getValue()
+            return instance
+        }
+    }
+
     export class SomeInterfaceMethodWithListOfSimpleVORequest {
         private list = [STRING]
         getList(): SomeId[] {
