@@ -55,7 +55,7 @@ class MockMethodLogic(
 
             if (def.getArgs().size == 1) {
                 add(
-                    listOp(variable(callsVariableName()))
+                    callsListOp()
                         .add {
                             variable(def.getArgs()[0].getName())
                         }
@@ -63,7 +63,7 @@ class MockMethodLogic(
             }
             else if (def.getArgs().size > 1) {
                 add(
-                    listOp(variable(callsVariableName()))
+                    callsListOp()
                         .add {
                             methodCall {
                                 target = variable(methodsArgsTypeName(interfDef, def))
@@ -86,6 +86,10 @@ class MockMethodLogic(
         }
     }
 
+    private fun callsListOp(): ListOperations {
+        return listOp(variable(callsVariableName()))
+    }
+
     //calls number
     fun callsNumberField(): FieldBuilderOps {
         return {
@@ -97,9 +101,9 @@ class MockMethodLogic(
     }
 
     fun callsNumberAssertion(): MethodBuilderOps = {
-        name = "assert${camelToPascalCase(def.getName())}CallsNumber"
+        name = assertCallsNumberMethodName()
         val expectedValue = "expectedNumber"
-        val expectedValueExpression = variable (expectedValue)
+        val expectedValueExpression = variable(expectedValue)
         val givenExpression = instanceVariable(callsNumberVariableName())
         addArg {
             name = expectedValue
@@ -126,6 +130,9 @@ class MockMethodLogic(
         }
     }
 
+    private fun assertCallsNumberMethodName() =
+        "assert${camelToPascalCase(def.getName())}CallsNumber"
+
     //calls
     fun callsField(): FieldBuilderOps? {
         return argsApiType()?.let {
@@ -147,6 +154,12 @@ class MockMethodLogic(
                     type = listType(typeName(it.name()))
                 }
                 setBody {
+                    add(methodCallStatement {
+                        methodName = assertCallsNumberMethodName()
+                        addArg {
+                            listOp(variable("expectedArgs")).size()
+                        }
+                    })
                 }
             }
         }

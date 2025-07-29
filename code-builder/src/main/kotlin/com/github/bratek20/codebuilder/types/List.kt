@@ -68,6 +68,10 @@ class ListOperations(
             append(c.lang.listMapEnd())
         }.toString()
     }
+
+    fun size(): ExpressionBuilder = expression { c ->
+        "${variable.build(c)}.${c.lang.listSize()}"
+    }
 }
 
 fun listOp(variable: ExpressionBuilder): ListOperations {

@@ -38,7 +38,7 @@ class MocksTest {
 
         someInterface2.referenceOtherClass(otherClass { id = 1 })
         someInterface2Mock.assertReferenceOtherClassCalls(listOf {
-            id = 1
+            id = 2
         })
     }
 

@@ -34,6 +34,7 @@ class SomeInterfaceMock implements SomeInterface {
         AssertEquals(this.someCommandCallsNumber, expectedNumber, "Expected 'someCommand' to be called " + expectedNumber + " times but was called " + this.someCommandCallsNumber + " times")
     }
     assertSomeCommandCalls(expectedArgs: ExpectedSomeInterfaceSomeCommandArgs[]) {
+        assertSomeCommandCallsNumber(expectedArgs.length)
     }
     someQuery(query: SomeQueryInput): SomeClass {
         this.someQueryCallsNumber = this.someQueryCallsNumber + 1
@@ -44,6 +45,7 @@ class SomeInterfaceMock implements SomeInterface {
         AssertEquals(this.someQueryCallsNumber, expectedNumber, "Expected 'someQuery' to be called " + expectedNumber + " times but was called " + this.someQueryCallsNumber + " times")
     }
     assertSomeQueryCalls(expectedArgs: ExpectedSomeQueryInput[]) {
+        assertSomeQueryCallsNumber(expectedArgs.length)
     }
     setSomeQueryResponse(response: SomeModule.Builder.SomeClassDef) {
         this.someQueryResponse = response
@@ -57,6 +59,7 @@ class SomeInterfaceMock implements SomeInterface {
         AssertEquals(this.optMethodCallsNumber, expectedNumber, "Expected 'optMethod' to be called " + expectedNumber + " times but was called " + this.optMethodCallsNumber + " times")
     }
     assertOptMethodCalls(expectedArgs: string[]) {
+        assertOptMethodCallsNumber(expectedArgs.length)
     }
     setOptMethodResponse(response: SomeModule.Builder.SomeClassDef | undefined) {
         this.optMethodResponse = response
@@ -70,6 +73,7 @@ class SomeInterfaceMock implements SomeInterface {
         AssertEquals(this.methodWithListOfSimpleVOCallsNumber, expectedNumber, "Expected 'methodWithListOfSimpleVO' to be called " + expectedNumber + " times but was called " + this.methodWithListOfSimpleVOCallsNumber + " times")
     }
     assertMethodWithListOfSimpleVOCalls(expectedArgs: string[][]) {
+        assertMethodWithListOfSimpleVOCallsNumber(expectedArgs.length)
     }
     setMethodWithListOfSimpleVOResponse(response: string[]) {
         this.methodWithListOfSimpleVOResponse = response
@@ -83,6 +87,7 @@ class SomeInterfaceMock implements SomeInterface {
         AssertEquals(this.methodWithAnyCallsNumber, expectedNumber, "Expected 'methodWithAny' to be called " + expectedNumber + " times but was called " + this.methodWithAnyCallsNumber + " times")
     }
     assertMethodWithAnyCalls(expectedArgs: any[]) {
+        assertMethodWithAnyCallsNumber(expectedArgs.length)
     }
     setMethodWithAnyResponse(response: any) {
         this.methodWithAnyResponse = response
@@ -145,6 +150,7 @@ class SomeInterface2Mock implements SomeInterface2 {
         AssertEquals(this.referenceOtherClassCallsNumber, expectedNumber, "Expected 'referenceOtherClass' to be called " + expectedNumber + " times but was called " + this.referenceOtherClassCallsNumber + " times")
     }
     assertReferenceOtherClassCalls(expectedArgs: OtherModule.ExpectedOtherClass[]) {
+        assertReferenceOtherClassCallsNumber(expectedArgs.length)
     }
     setReferenceOtherClassResponse(response: OtherModule.Builder.OtherClassDef) {
         this.referenceOtherClassResponse = response
@@ -158,6 +164,7 @@ class SomeInterface2Mock implements SomeInterface2 {
         AssertEquals(this.referenceLegacyTypeCallsNumber, expectedNumber, "Expected 'referenceLegacyType' to be called " + expectedNumber + " times but was called " + this.referenceLegacyTypeCallsNumber + " times")
     }
     assertReferenceLegacyTypeCalls(expectedArgs: LegacyType[]) {
+        assertReferenceLegacyTypeCallsNumber(expectedArgs.length)
     }
     reset() {
         this.referenceOtherClassCallsNumber = 0
@@ -184,6 +191,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
         AssertEquals(this.someHandlerCallsNumber, expectedNumber, "Expected 'someHandler' to be called " + expectedNumber + " times but was called " + this.someHandlerCallsNumber + " times")
     }
     assertSomeHandlerCalls(expectedArgs: ExpectedSomeHandlerInput[]) {
+        assertSomeHandlerCallsNumber(expectedArgs.length)
     }
     setSomeHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someHandlerResponse = response
@@ -197,6 +205,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
         AssertEquals(this.someHandler2CallsNumber, expectedNumber, "Expected 'someHandler2' to be called " + expectedNumber + " times but was called " + this.someHandler2CallsNumber + " times")
     }
     assertSomeHandler2Calls(expectedArgs: ExpectedSomeHandlerInput[]) {
+        assertSomeHandler2CallsNumber(expectedArgs.length)
     }
     setSomeHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someHandler2Response = response
@@ -227,6 +236,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
         AssertEquals(this.someDebugHandlerCallsNumber, expectedNumber, "Expected 'someDebugHandler' to be called " + expectedNumber + " times but was called " + this.someDebugHandlerCallsNumber + " times")
     }
     assertSomeDebugHandlerCalls(expectedArgs: ExpectedSomeHandlerInput[]) {
+        assertSomeDebugHandlerCallsNumber(expectedArgs.length)
     }
     setSomeDebugHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someDebugHandlerResponse = response
@@ -240,6 +250,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
         AssertEquals(this.someDebugHandler2CallsNumber, expectedNumber, "Expected 'someDebugHandler2' to be called " + expectedNumber + " times but was called " + this.someDebugHandler2CallsNumber + " times")
     }
     assertSomeDebugHandler2Calls(expectedArgs: ExpectedSomeHandlerInput[]) {
+        assertSomeDebugHandler2CallsNumber(expectedArgs.length)
     }
     setSomeDebugHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {
         this.someDebugHandler2Response = response
