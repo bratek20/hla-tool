@@ -115,12 +115,6 @@ class SomeInterfaceMock implements SomeInterface {
     assertMethodWithBaseTypeCallsNumber(expectedNumber: number) {
         AssertEquals(this.methodWithBaseTypeCallsNumber, expectedNumber, "Expected 'methodWithBaseType' to be called " + expectedNumber + " times but was called " + this.methodWithBaseTypeCallsNumber + " times")
     }
-    assertMethodWithBaseTypeCalls(expectedArgs: string[]) {
-        this.assertMethodWithBaseTypeCallsNumber(expectedArgs.length)
-        for (let i = 0; i < expectedArgs.length; i++) {
-            string(this.methodWithBaseTypeCalls[i], expectedArgs[i])
-        }
-    }
     setMethodWithBaseTypeResponse(response: string) {
         this.methodWithBaseTypeResponse = response
     }

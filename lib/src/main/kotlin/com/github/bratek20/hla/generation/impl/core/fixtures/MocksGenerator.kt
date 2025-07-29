@@ -185,9 +185,6 @@ class MockMethodLogic(
     }
 
     private fun handleTypeScriptReferencing(expectedType: ExpectedType<*>): String {
-        if (expectedType is BaseExpectedType) {
-            return expectedType.funName()
-        }
         return addModulePrefix(modules, expectedType.api.name(), expectedType.funName(), "Assert")
     }
 
@@ -314,13 +311,10 @@ class MockMethodLogic(
 
     private fun supportedArgsExpectedType(): ExpectedType<*>? {
         val type = argsApiType()?.let { expectedTypeFactory.create(it) }
-        if (type is ExternalExpectedType || type is OptionalExpectedType || type is ListExpectedType) {
-            return null
+        if (type is StructureExpectedType) {
+            return type
         }
-        if (type is BaseExpectedType && type.api.name == com.github.bratek20.hla.definitions.api.BaseType.ANY) {
-            return null
-        }
-        return type
+        return null
     }
 
     private fun responseFieldName(): String {
