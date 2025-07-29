@@ -36,7 +36,7 @@ class SomeInterfaceMock implements SomeInterface {
     assertSomeCommandCalls(expectedArgs: ExpectedSomeInterfaceSomeCommandArgs[]) {
         assertSomeCommandCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            someInterfaceSomeCommandArgs(someCommandCalls[i], expectedArgs[i])
+            SomeModule.Assert.someInterfaceSomeCommandArgs(someCommandCalls[i], expectedArgs[i])
         }
     }
     someQuery(query: SomeQueryInput): SomeClass {
@@ -50,7 +50,7 @@ class SomeInterfaceMock implements SomeInterface {
     assertSomeQueryCalls(expectedArgs: ExpectedSomeQueryInput[]) {
         assertSomeQueryCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            someQueryInput(someQueryCalls[i], expectedArgs[i])
+            SomeModule.Assert.someQueryInput(someQueryCalls[i], expectedArgs[i])
         }
     }
     setSomeQueryResponse(response: SomeModule.Builder.SomeClassDef) {
@@ -149,7 +149,7 @@ class SomeInterface2Mock implements SomeInterface2 {
     assertReferenceOtherClassCalls(expectedArgs: OtherModule.ExpectedOtherClass[]) {
         assertReferenceOtherClassCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            otherClass(referenceOtherClassCalls[i], expectedArgs[i])
+            OtherModule.Assert.otherClass(referenceOtherClassCalls[i], expectedArgs[i])
         }
     }
     setReferenceOtherClassResponse(response: OtherModule.Builder.OtherClassDef) {
@@ -190,7 +190,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     assertSomeHandlerCalls(expectedArgs: ExpectedSomeHandlerInput[]) {
         assertSomeHandlerCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            someHandlerInput(someHandlerCalls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(someHandlerCalls[i], expectedArgs[i])
         }
     }
     setSomeHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
@@ -207,7 +207,7 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     assertSomeHandler2Calls(expectedArgs: ExpectedSomeHandlerInput[]) {
         assertSomeHandler2CallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            someHandlerInput(someHandler2Calls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(someHandler2Calls[i], expectedArgs[i])
         }
     }
     setSomeHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {
@@ -241,7 +241,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     assertSomeDebugHandlerCalls(expectedArgs: ExpectedSomeHandlerInput[]) {
         assertSomeDebugHandlerCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            someHandlerInput(someDebugHandlerCalls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(someDebugHandlerCalls[i], expectedArgs[i])
         }
     }
     setSomeDebugHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
@@ -258,7 +258,7 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     assertSomeDebugHandler2Calls(expectedArgs: ExpectedSomeHandlerInput[]) {
         assertSomeDebugHandler2CallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            someHandlerInput(someDebugHandler2Calls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(someDebugHandler2Calls[i], expectedArgs[i])
         }
     }
     setSomeDebugHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {

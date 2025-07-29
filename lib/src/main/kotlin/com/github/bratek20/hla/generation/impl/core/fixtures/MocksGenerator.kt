@@ -16,6 +16,9 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
+import com.github.bratek20.hla.generation.impl.languages.typescript.addModulePrefix
+import com.github.bratek20.hla.generation.impl.languages.typescript.handleReferencing
+import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.methodsArgsTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
@@ -25,7 +28,8 @@ class MockMethodLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val defTypeFactory: DefTypeFactory,
     private val expectedTypeFactory: ExpectedTypeFactory,
-    private val languageName: ModuleLanguage
+    private val languageName: ModuleLanguage,
+    private val modules: ModuleGroupQueries
 ) {
     private val returnApiType = apiTypeFactory.create(def.getReturnType())
     private val returnDefType = defTypeFactory.create(returnApiType as ApiTypeLogic)
@@ -33,7 +37,7 @@ class MockMethodLogic(
 
     fun mockedMethod(): MethodBuilderOps = {
         name = def.getName()
-        this.overridesClassMethod = isKotlin()
+        this.overridesClassMethod = languageName == ModuleLanguage.KOTLIN
 
         def.getArgs().forEach { arg ->
             addArg {
@@ -166,7 +170,7 @@ class MockMethodLogic(
                         to = expectedArgsListOp.size(),
                         body = { iVar ->
                             functionCallStatement {
-                                name = it.funName()
+                                name = if (languageName == ModuleLanguage.TYPE_SCRIPT) handleTypeScriptReferencing(it) else it.funName()
                                 addArg {
                                     callsListOp().get(iVar)
                                 }
@@ -179,6 +183,10 @@ class MockMethodLogic(
                 }
             }
         }
+    }
+
+    private fun handleTypeScriptReferencing(expectedType: ExpectedType<*>): String {
+        return addModulePrefix(modules, expectedType.api.name(), expectedType.funName(), "Assert")
     }
 
     //response
@@ -321,10 +329,6 @@ class MockMethodLogic(
         return BaseApiType.isVoid(apiTypeFactory.create(def.getReturnType()))
     }
 
-    private fun isKotlin(): Boolean {
-        return languageName == ModuleLanguage.KOTLIN
-    }
-
     private fun hasExternalReturnType(): Boolean {
         return returnApiType is ExternalApiType
     }
@@ -340,7 +344,8 @@ class MockInterfaceLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val defTypeFactory: DefTypeFactory,
     private val expectedTypeFactory: ExpectedTypeFactory,
-    private val languageName: ModuleLanguage
+    private val languageName: ModuleLanguage,
+    private val modules: ModuleGroupQueries
 ) {
     fun mockClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
@@ -373,7 +378,7 @@ class MockInterfaceLogic(
     }
 
     private fun createMethodLogic(methodDef: MethodDefinition): MockMethodLogic {
-        return MockMethodLogic(def, methodDef, apiTypeFactory, defTypeFactory, expectedTypeFactory, languageName)
+        return MockMethodLogic(def, methodDef, apiTypeFactory, defTypeFactory, expectedTypeFactory, languageName, modules)
     }
 
     private fun resetMethod(): MethodBuilderOps = {
@@ -452,7 +457,8 @@ class MocksGenerator: PatternGenerator() {
             apiTypeFactory,
             DefTypeFactory(language.buildersFixture()),
             ExpectedTypeFactory(c),
-            language.name()
+            language.name(),
+            c.domain.queries
         ) }
 
         mockInterfacesLogic.forEach { logic ->
