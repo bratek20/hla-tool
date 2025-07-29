@@ -215,6 +215,20 @@ class MockMethodLogic(
         }
     }
 
+    fun callsAssertion(): MethodBuilderOps? {
+        return argsApiType()?.let {
+            {
+                name = "assert${camelToPascalCase(def.getName())}Calls"
+                addArg {
+                    name = "expectedArgs"
+                    type = listType(it.serializableBuilder())
+                }
+                setBody {
+                }
+            }
+        }
+    }
+
     private fun hasVoidReturnType(): Boolean {
         return BaseApiType.isVoid(apiTypeFactory.create(def.getReturnType()))
     }
@@ -291,6 +305,9 @@ class MockInterfaceLogic(
 
             addMethod(method.mockedMethod())
             addMethod(method.callsNumberAssertion())
+            method.callsAssertion()?.let {
+                addMethod(it)
+            }
 
             if (method.supportResponse()) {
                 addField(method.responseField())
