@@ -156,7 +156,7 @@ class MockMethodLogic(
                 name = "assert${camelToPascalCase(def.getName())}Calls"
                 addArg {
                     name = "expectedArgs"
-                    type = listType(typeName(it.name()))
+                    type = listType(typeName(referencedName(it)))
                 }
                 setBody {
                     add(methodCallStatement {
@@ -182,6 +182,23 @@ class MockMethodLogic(
                     ))
                 }
             }
+        }
+    }
+
+    private fun referencedName(expectedType: ExpectedType<*>): String {
+        return if (languageName == ModuleLanguage.TYPE_SCRIPT) {
+            val referenced = addModulePrefix(modules, expectedType.api.name(), expectedType.name(), null)
+            val afterFirstDot = referenced.substringAfter('.')
+
+            //hack: expectedType.name() already adds module prefix in case type is from another module - I remove it
+            if (afterFirstDot.contains('.')) {
+                afterFirstDot
+            }
+            else {
+                referenced
+            }
+        } else {
+            expectedType.name()
         }
     }
 

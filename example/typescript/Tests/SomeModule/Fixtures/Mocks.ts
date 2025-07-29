@@ -28,7 +28,7 @@ class SomeInterfaceMock implements SomeInterface {
     }
     someCommand(id: SomeId, amount: number): void {
         this.someCommandCallsNumber = this.someCommandCallsNumber + 1
-        someCommandCalls.push(SomeInterfaceSomeCommandArgs.create(id, amount))
+        this.someCommandCalls.push(SomeInterfaceSomeCommandArgs.create(id, amount))
     }
     assertSomeCommandCallsNumber(expectedNumber: number) {
         AssertEquals(this.someCommandCallsNumber, expectedNumber, "Expected 'someCommand' to be called " + expectedNumber + " times but was called " + this.someCommandCallsNumber + " times")
@@ -41,16 +41,16 @@ class SomeInterfaceMock implements SomeInterface {
     }
     someQuery(query: SomeQueryInput): SomeClass {
         this.someQueryCallsNumber = this.someQueryCallsNumber + 1
-        someQueryCalls.push(query)
+        this.someQueryCalls.push(query)
         return SomeModule.Builder.someClass(this.someQueryResponse)
     }
     assertSomeQueryCallsNumber(expectedNumber: number) {
         AssertEquals(this.someQueryCallsNumber, expectedNumber, "Expected 'someQuery' to be called " + expectedNumber + " times but was called " + this.someQueryCallsNumber + " times")
     }
-    assertSomeQueryCalls(expectedArgs: ExpectedSomeQueryInput[]) {
-        assertSomeQueryCallsNumber(expectedArgs.length)
+    assertSomeQueryCalls(expectedArgs: SomeModule.ExpectedSomeQueryInput[]) {
+        this.assertSomeQueryCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            SomeModule.Assert.someQueryInput(someQueryCalls[i], expectedArgs[i])
+            SomeModule.Assert.someQueryInput(this.someQueryCalls[i], expectedArgs[i])
         }
     }
     setSomeQueryResponse(response: SomeModule.Builder.SomeClassDef) {
@@ -58,7 +58,7 @@ class SomeInterfaceMock implements SomeInterface {
     }
     optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
         this.optMethodCallsNumber = this.optMethodCallsNumber + 1
-        optMethodCalls.push(optId)
+        this.optMethodCalls.push(optId)
         return Optional.of(this.optMethodResponse).map(it => SomeModule.Builder.someClass(it))
     }
     assertOptMethodCallsNumber(expectedNumber: number) {
@@ -69,7 +69,7 @@ class SomeInterfaceMock implements SomeInterface {
     }
     methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
         this.methodWithListOfSimpleVOCallsNumber = this.methodWithListOfSimpleVOCallsNumber + 1
-        methodWithListOfSimpleVOCalls.push(list)
+        this.methodWithListOfSimpleVOCalls.push(list)
         return this.methodWithListOfSimpleVOResponse.map(it => new SomeId(it))
     }
     assertMethodWithListOfSimpleVOCallsNumber(expectedNumber: number) {
@@ -80,7 +80,7 @@ class SomeInterfaceMock implements SomeInterface {
     }
     methodWithAny(i: any): any {
         this.methodWithAnyCallsNumber = this.methodWithAnyCallsNumber + 1
-        methodWithAnyCalls.push(i)
+        this.methodWithAnyCalls.push(i)
         return this.methodWithAnyResponse
     }
     assertMethodWithAnyCallsNumber(expectedNumber: number) {
@@ -140,16 +140,16 @@ class SomeInterface2Mock implements SomeInterface2 {
     private referenceLegacyTypeCalls: LegacyType[] = []
     referenceOtherClass(other: OtherClass): OtherClass {
         this.referenceOtherClassCallsNumber = this.referenceOtherClassCallsNumber + 1
-        referenceOtherClassCalls.push(other)
+        this.referenceOtherClassCalls.push(other)
         return OtherModule.Builder.otherClass(this.referenceOtherClassResponse)
     }
     assertReferenceOtherClassCallsNumber(expectedNumber: number) {
         AssertEquals(this.referenceOtherClassCallsNumber, expectedNumber, "Expected 'referenceOtherClass' to be called " + expectedNumber + " times but was called " + this.referenceOtherClassCallsNumber + " times")
     }
     assertReferenceOtherClassCalls(expectedArgs: OtherModule.ExpectedOtherClass[]) {
-        assertReferenceOtherClassCallsNumber(expectedArgs.length)
+        this.assertReferenceOtherClassCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            OtherModule.Assert.otherClass(referenceOtherClassCalls[i], expectedArgs[i])
+            OtherModule.Assert.otherClass(this.referenceOtherClassCalls[i], expectedArgs[i])
         }
     }
     setReferenceOtherClassResponse(response: OtherModule.Builder.OtherClassDef) {
@@ -157,7 +157,7 @@ class SomeInterface2Mock implements SomeInterface2 {
     }
     referenceLegacyType(legacyType: LegacyType): LegacyType {
         this.referenceLegacyTypeCallsNumber = this.referenceLegacyTypeCallsNumber + 1
-        referenceLegacyTypeCalls.push(legacyType)
+        this.referenceLegacyTypeCalls.push(legacyType)
         return TODO()
     }
     assertReferenceLegacyTypeCallsNumber(expectedNumber: number) {
@@ -181,16 +181,16 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     private someHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandlerCallsNumber = this.someHandlerCallsNumber + 1
-        someHandlerCalls.push(i)
+        this.someHandlerCalls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someHandlerResponse)
     }
     assertSomeHandlerCallsNumber(expectedNumber: number) {
         AssertEquals(this.someHandlerCallsNumber, expectedNumber, "Expected 'someHandler' to be called " + expectedNumber + " times but was called " + this.someHandlerCallsNumber + " times")
     }
-    assertSomeHandlerCalls(expectedArgs: ExpectedSomeHandlerInput[]) {
-        assertSomeHandlerCallsNumber(expectedArgs.length)
+    assertSomeHandlerCalls(expectedArgs: SomeModule.ExpectedSomeHandlerInput[]) {
+        this.assertSomeHandlerCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            SomeModule.Assert.someHandlerInput(someHandlerCalls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(this.someHandlerCalls[i], expectedArgs[i])
         }
     }
     setSomeHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
@@ -198,16 +198,16 @@ class SomeModuleHandlersMock implements SomeModuleHandlers {
     }
     someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
         this.someHandler2CallsNumber = this.someHandler2CallsNumber + 1
-        someHandler2Calls.push(i)
+        this.someHandler2Calls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someHandler2Response)
     }
     assertSomeHandler2CallsNumber(expectedNumber: number) {
         AssertEquals(this.someHandler2CallsNumber, expectedNumber, "Expected 'someHandler2' to be called " + expectedNumber + " times but was called " + this.someHandler2CallsNumber + " times")
     }
-    assertSomeHandler2Calls(expectedArgs: ExpectedSomeHandlerInput[]) {
-        assertSomeHandler2CallsNumber(expectedArgs.length)
+    assertSomeHandler2Calls(expectedArgs: SomeModule.ExpectedSomeHandlerInput[]) {
+        this.assertSomeHandler2CallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            SomeModule.Assert.someHandlerInput(someHandler2Calls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(this.someHandler2Calls[i], expectedArgs[i])
         }
     }
     setSomeHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {
@@ -232,16 +232,16 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     private someDebugHandler2Response: SomeModule.Builder.SomeHandlerOutputDef = undefined
     someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandlerCallsNumber = this.someDebugHandlerCallsNumber + 1
-        someDebugHandlerCalls.push(i)
+        this.someDebugHandlerCalls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someDebugHandlerResponse)
     }
     assertSomeDebugHandlerCallsNumber(expectedNumber: number) {
         AssertEquals(this.someDebugHandlerCallsNumber, expectedNumber, "Expected 'someDebugHandler' to be called " + expectedNumber + " times but was called " + this.someDebugHandlerCallsNumber + " times")
     }
-    assertSomeDebugHandlerCalls(expectedArgs: ExpectedSomeHandlerInput[]) {
-        assertSomeDebugHandlerCallsNumber(expectedArgs.length)
+    assertSomeDebugHandlerCalls(expectedArgs: SomeModule.ExpectedSomeHandlerInput[]) {
+        this.assertSomeDebugHandlerCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            SomeModule.Assert.someHandlerInput(someDebugHandlerCalls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(this.someDebugHandlerCalls[i], expectedArgs[i])
         }
     }
     setSomeDebugHandlerResponse(response: SomeModule.Builder.SomeHandlerOutputDef) {
@@ -249,16 +249,16 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     }
     someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
         this.someDebugHandler2CallsNumber = this.someDebugHandler2CallsNumber + 1
-        someDebugHandler2Calls.push(i)
+        this.someDebugHandler2Calls.push(i)
         return SomeModule.Builder.someHandlerOutput(this.someDebugHandler2Response)
     }
     assertSomeDebugHandler2CallsNumber(expectedNumber: number) {
         AssertEquals(this.someDebugHandler2CallsNumber, expectedNumber, "Expected 'someDebugHandler2' to be called " + expectedNumber + " times but was called " + this.someDebugHandler2CallsNumber + " times")
     }
-    assertSomeDebugHandler2Calls(expectedArgs: ExpectedSomeHandlerInput[]) {
-        assertSomeDebugHandler2CallsNumber(expectedArgs.length)
+    assertSomeDebugHandler2Calls(expectedArgs: SomeModule.ExpectedSomeHandlerInput[]) {
+        this.assertSomeDebugHandler2CallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            SomeModule.Assert.someHandlerInput(someDebugHandler2Calls[i], expectedArgs[i])
+            SomeModule.Assert.someHandlerInput(this.someDebugHandler2Calls[i], expectedArgs[i])
         }
     }
     setSomeDebugHandler2Response(response: SomeModule.Builder.SomeHandlerOutputDef) {
