@@ -146,7 +146,7 @@ class MockMethodLogic(
     }
 
     fun callsAssertion(): MethodBuilderOps? {
-        return argsExpectedType()?.let {
+        return supportedArgsExpectedType()?.let {
             {
                 val expectedArgsListOp = listOp(variable("expectedArgs"))
                 name = "assert${camelToPascalCase(def.getName())}Calls"
@@ -302,10 +302,16 @@ class MockMethodLogic(
         return argsApiType()?.let { defTypeFactory.create(it) }
     }
 
-    private fun argsExpectedType(): ExpectedType<*>? {
-        return argsApiType()?.let { expectedTypeFactory.create(it) }
+    private fun supportedArgsExpectedType(): ExpectedType<*>? {
+        val type = argsApiType()?.let { expectedTypeFactory.create(it) }
+        if (type is ExternalExpectedType || type is OptionalExpectedType || type is ListExpectedType) {
+            return null
+        }
+        if (type is BaseExpectedType && type.api.name == com.github.bratek20.hla.definitions.api.BaseType.ANY) {
+            return null
+        }
+        return type
     }
-
 
     private fun responseFieldName(): String {
         return def.getName() + "Response"
