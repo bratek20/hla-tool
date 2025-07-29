@@ -148,6 +148,7 @@ class MockMethodLogic(
     fun callsAssertion(): MethodBuilderOps? {
         return argsExpectedType()?.let {
             {
+                val expectedArgsListOp = listOp(variable("expectedArgs"))
                 name = "assert${camelToPascalCase(def.getName())}Calls"
                 addArg {
                     name = "expectedArgs"
@@ -157,9 +158,24 @@ class MockMethodLogic(
                     add(methodCallStatement {
                         methodName = assertCallsNumberMethodName()
                         addArg {
-                            listOp(variable("expectedArgs")).size()
+                            expectedArgsListOp.size()
                         }
                     })
+                    add(forLoop(
+                        from = const(0),
+                        to = expectedArgsListOp.size(),
+                        body = { iVar ->
+                            functionCallStatement {
+                                name = it.funName()
+                                addArg {
+                                    callsListOp().get(iVar)
+                                }
+                                addArg {
+                                    expectedArgsListOp.get(iVar)
+                                }
+                            }
+                        }
+                    ))
                 }
             }
         }

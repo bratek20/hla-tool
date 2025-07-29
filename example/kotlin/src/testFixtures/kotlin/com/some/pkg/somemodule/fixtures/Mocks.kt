@@ -46,6 +46,9 @@ class SomeInterfaceMock: SomeInterface {
     }
     fun assertSomeCommandCalls(expectedArgs: List<(ExpectedSomeInterfaceSomeCommandArgs.() -> Unit)>) {
         assertSomeCommandCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertSomeInterfaceSomeCommandArgs(someCommandCalls[i], expectedArgs[i])
+        }
     }
     override fun someQuery(query: SomeQueryInput): SomeClass {
         someQueryCallsNumber = someQueryCallsNumber + 1
@@ -57,6 +60,9 @@ class SomeInterfaceMock: SomeInterface {
     }
     fun assertSomeQueryCalls(expectedArgs: List<(ExpectedSomeQueryInput.() -> Unit)>) {
         assertSomeQueryCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertSomeQueryInput(someQueryCalls[i], expectedArgs[i])
+        }
     }
     fun setSomeQueryResponse(response: (SomeClassDef.() -> Unit)) {
         someQueryResponse = response
@@ -69,9 +75,6 @@ class SomeInterfaceMock: SomeInterface {
     fun assertOptMethodCallsNumber(expectedNumber: Int) {
         assertThat(optMethodCallsNumber).withFailMessage("Expected 'optMethod' to be called " + expectedNumber + " times but was called " + optMethodCallsNumber + " times").isEqualTo(expectedNumber)
     }
-    fun assertOptMethodCalls(expectedArgs: List<String>) {
-        assertOptMethodCallsNumber(expectedArgs.size)
-    }
     fun setOptMethodResponse(response: (SomeClassDef.() -> Unit)?) {
         optMethodResponse = response
     }
@@ -83,9 +86,6 @@ class SomeInterfaceMock: SomeInterface {
     fun assertMethodWithListOfSimpleVOCallsNumber(expectedNumber: Int) {
         assertThat(methodWithListOfSimpleVOCallsNumber).withFailMessage("Expected 'methodWithListOfSimpleVO' to be called " + expectedNumber + " times but was called " + methodWithListOfSimpleVOCallsNumber + " times").isEqualTo(expectedNumber)
     }
-    fun assertMethodWithListOfSimpleVOCalls(expectedArgs: List<List<String>>) {
-        assertMethodWithListOfSimpleVOCallsNumber(expectedArgs.size)
-    }
     fun setMethodWithListOfSimpleVOResponse(response: List<String>) {
         methodWithListOfSimpleVOResponse = response
     }
@@ -96,9 +96,6 @@ class SomeInterfaceMock: SomeInterface {
     }
     fun assertMethodWithAnyCallsNumber(expectedNumber: Int) {
         assertThat(methodWithAnyCallsNumber).withFailMessage("Expected 'methodWithAny' to be called " + expectedNumber + " times but was called " + methodWithAnyCallsNumber + " times").isEqualTo(expectedNumber)
-    }
-    fun assertMethodWithAnyCalls(expectedArgs: List<Any>) {
-        assertMethodWithAnyCallsNumber(expectedArgs.size)
     }
     fun setMethodWithAnyResponse(response: Any) {
         methodWithAnyResponse = response
@@ -162,6 +159,9 @@ class SomeInterface2Mock: SomeInterface2 {
     }
     fun assertReferenceOtherClassCalls(expectedArgs: List<(ExpectedOtherClass.() -> Unit)>) {
         assertReferenceOtherClassCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertOtherClass(referenceOtherClassCalls[i], expectedArgs[i])
+        }
     }
     fun setReferenceOtherClassResponse(response: (OtherClassDef.() -> Unit)) {
         referenceOtherClassResponse = response
@@ -173,9 +173,6 @@ class SomeInterface2Mock: SomeInterface2 {
     }
     fun assertReferenceLegacyTypeCallsNumber(expectedNumber: Int) {
         assertThat(referenceLegacyTypeCallsNumber).withFailMessage("Expected 'referenceLegacyType' to be called " + expectedNumber + " times but was called " + referenceLegacyTypeCallsNumber + " times").isEqualTo(expectedNumber)
-    }
-    fun assertReferenceLegacyTypeCalls(expectedArgs: List<com.some.pkg.legacy.LegacyType>) {
-        assertReferenceLegacyTypeCallsNumber(expectedArgs.size)
     }
     fun reset() {
         referenceOtherClassCallsNumber = 0
@@ -203,6 +200,9 @@ class SomeModuleHandlersMock: SomeModuleHandlers {
     }
     fun assertSomeHandlerCalls(expectedArgs: List<(ExpectedSomeHandlerInput.() -> Unit)>) {
         assertSomeHandlerCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertSomeHandlerInput(someHandlerCalls[i], expectedArgs[i])
+        }
     }
     fun setSomeHandlerResponse(response: (SomeHandlerOutputDef.() -> Unit)) {
         someHandlerResponse = response
@@ -217,6 +217,9 @@ class SomeModuleHandlersMock: SomeModuleHandlers {
     }
     fun assertSomeHandler2Calls(expectedArgs: List<(ExpectedSomeHandlerInput.() -> Unit)>) {
         assertSomeHandler2CallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertSomeHandlerInput(someHandler2Calls[i], expectedArgs[i])
+        }
     }
     fun setSomeHandler2Response(response: (SomeHandlerOutputDef.() -> Unit)) {
         someHandler2Response = response
@@ -248,6 +251,9 @@ class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     }
     fun assertSomeDebugHandlerCalls(expectedArgs: List<(ExpectedSomeHandlerInput.() -> Unit)>) {
         assertSomeDebugHandlerCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertSomeHandlerInput(someDebugHandlerCalls[i], expectedArgs[i])
+        }
     }
     fun setSomeDebugHandlerResponse(response: (SomeHandlerOutputDef.() -> Unit)) {
         someDebugHandlerResponse = response
@@ -262,6 +268,9 @@ class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     }
     fun assertSomeDebugHandler2Calls(expectedArgs: List<(ExpectedSomeHandlerInput.() -> Unit)>) {
         assertSomeDebugHandler2CallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertSomeHandlerInput(someDebugHandler2Calls[i], expectedArgs[i])
+        }
     }
     fun setSomeDebugHandler2Response(response: (SomeHandlerOutputDef.() -> Unit)) {
         someDebugHandler2Response = response
