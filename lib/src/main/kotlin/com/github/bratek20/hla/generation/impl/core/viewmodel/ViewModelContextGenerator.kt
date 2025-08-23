@@ -78,4 +78,6 @@ class ViewModelContextGenerator: PatternGenerator() {
         "B20.ViewModel.Popups.Api",
     )
 
+    override fun useImportsCalculator(): Boolean = true
+
 }

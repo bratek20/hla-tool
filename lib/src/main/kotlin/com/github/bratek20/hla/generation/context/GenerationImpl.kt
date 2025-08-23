@@ -48,7 +48,7 @@ private class ViewModelGenerators: ContextModule {
             .addImpl(PatternGenerator::class.java, ElementsLogicGenerator::class.java)
             .addImpl(PatternGenerator::class.java, GeneratedPopupsGenerator::class.java)
             .addImpl(PatternGenerator::class.java, GeneratedWindowsGenerator::class.java)
-
+            .addImpl(PatternGenerator::class.java, ViewModelContextGenerator::class.java)
     }
 }
 

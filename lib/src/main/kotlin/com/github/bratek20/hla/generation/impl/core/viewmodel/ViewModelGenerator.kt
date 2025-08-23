@@ -10,6 +10,7 @@ class ViewModelGenerator(
     private val elementsLogicGenerator: ElementsLogicGenerator,
     private val generatedPopupsGenerator: GeneratedPopupsGenerator,
     private val generatedWindowsGenerator: GeneratedWindowsGenerator,
+    private val viewModelContextGenerator: ViewModelContextGenerator
 ): SubmoduleGenerator() {
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.ViewModel
@@ -27,7 +28,7 @@ class ViewModelGenerator(
             WindowsLogicGenerator(),
             generatedPopupsGenerator,
             PopupsLogicGenerator(),
-            ViewModelContextGenerator()
+            viewModelContextGenerator
         )
     }
 }
