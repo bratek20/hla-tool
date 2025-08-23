@@ -121,7 +121,9 @@ class ElementsViewGenerator: BaseViewModelPatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return logic.elementsDef().isNotEmpty()
+        return logic.elementsDef().isNotEmpty() ||
+                logic.popupsDef().isNotEmpty() ||
+                logic.windowsDef().isNotEmpty()
     }
 
     override fun getOperationsPerFile(): List<PerFileOperations> {
