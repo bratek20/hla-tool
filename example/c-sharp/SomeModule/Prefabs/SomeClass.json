@@ -47,6 +47,10 @@
     {
       "name": "timer",
       "viewType": "B20.View.UiElements.View.TimerView"
+    },
+    {
+      "name": "simpleGroup",
+      "viewType": "B20.View.UiElements.View.SimpleGroupView"
     }
   ],
   "elementViewType": null

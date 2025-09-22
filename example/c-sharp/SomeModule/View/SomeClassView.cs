@@ -36,6 +36,8 @@ namespace SomeModule.View {
         ProgressBarView progressBar;
         [SerializeField]
         TimerView timer;
+        [SerializeField]
+        SimpleGroupView simpleGroup;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
@@ -49,6 +51,7 @@ namespace SomeModule.View {
             someEnum3Switch.Bind(ViewModel.SomeEnum3Switch);
             progressBar.Bind(ViewModel.ProgressBar);
             timer.Bind(ViewModel.Timer);
+            simpleGroup.Bind(ViewModel.SimpleGroup);
         }
     }
 }
