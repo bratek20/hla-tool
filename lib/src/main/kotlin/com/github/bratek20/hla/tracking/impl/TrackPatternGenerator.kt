@@ -310,7 +310,7 @@ class TrackingTableLogic(
             BaseType.BOOL -> "BOOLEAN"
             BaseType.VOID -> TODO()
             BaseType.ANY -> TODO()
-            BaseType.DOUBLE -> TODO()
+            BaseType.DOUBLE -> "DOUBLE PRECISION"
             BaseType.LONG -> "BIGINT"
             BaseType.STRUCT -> TODO()
         }

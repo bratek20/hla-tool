@@ -389,6 +389,12 @@ Tracking
                 id -> name // name mapping
                 amount // keeping same name
             date_range: DateRange // field + custom type
+        SomeDimensionWithPrimitives (table: "some_dimension_with_primitives")
+            some_string: string
+            some_int: int
+            some_long: long
+            some_double: double
+            some_bool: bool
         SomeDimensionWithEnum (table: "some_dimension_with_enum")
             SomeClass3
                 someEnum -> enum_string // name mapping
