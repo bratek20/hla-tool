@@ -19,6 +19,31 @@ namespace SomeModule.Impl {
         }
     }
 
+    export class SomeDimensionWithPrimitives extends TrackingDimension {
+        constructor(
+            some_string: string,
+            some_int: number,
+            some_long: number,
+            some_double: number,
+            some_bool: boolean
+        ) {
+            super()
+            this.some_string = some_string
+            this.some_int = some_int
+            this.some_long = some_long
+            this.some_double = some_double
+            this.some_bool = some_bool
+        }
+        private readonly some_string: string
+        private readonly some_int: number
+        private readonly some_long: number
+        private readonly some_double: number
+        private readonly some_bool: boolean
+        getTableName(): TrackingTableName {
+            return new TrackingTableName("some_dimension_with_primitives")
+        }
+    }
+
     export class SomeDimensionWithEnum extends TrackingDimension {
         constructor(
             someClass3: SomeClass3

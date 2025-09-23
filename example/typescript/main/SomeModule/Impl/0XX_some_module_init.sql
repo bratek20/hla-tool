@@ -7,6 +7,15 @@ CREATE TABLE some_dimension (
     date_range jsonb NOT NULL
 );
 
+CREATE TABLE some_dimension_with_primitives (
+    some_dimension_with_primitives_id BIGINT DEFAULT NEXTVAL('common.the_sequence'::regclass) CONSTRAINT some_dimension_with_primitives_id PRIMARY KEY,
+    some_string VARCHAR(256) NOT NULL,
+    some_int INTEGER NOT NULL,
+    some_long BIGINT NOT NULL,
+    some_double DOUBLE PRECISION NOT NULL,
+    some_bool BOOLEAN NOT NULL
+);
+
 CREATE TABLE some_dimension_with_enum (
     some_dimension_with_enum_id BIGINT DEFAULT NEXTVAL('common.the_sequence'::regclass) CONSTRAINT some_dimension_with_enum_id PRIMARY KEY,
     enum_string VARCHAR(64) NOT NULL
