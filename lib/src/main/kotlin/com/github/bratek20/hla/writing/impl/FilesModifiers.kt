@@ -243,7 +243,7 @@ class FilesModifiers(
                 .filter { it.endsWith(".ts") }
                 .forEach { fileName ->
                     newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
-                    val result = currentLines.removeIf { line -> line.contains("$prefix${item.submoduleName}/$fileName")}
+                    val result = currentLines.removeIf { line -> line.contains("\"$prefix${item.submoduleName}/$fileName")}
                     if (result) {
                         indexToAdd--
                     }
