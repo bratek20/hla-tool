@@ -420,6 +420,7 @@ namespace SomeModule {
         longExample?: number,
         goodName?: string,
         customData?: any,
+        as?: string,
     }
     export function diffSomeProperty(given: SomeProperty, expected: ExpectedSomeProperty, path: string = ""): string {
         const result: string[] = []
@@ -460,6 +461,10 @@ namespace SomeModule {
             if (JSON.stringify(given.getCustomData()) != JSON.stringify(expected.customData)) { result.push(`${path}customData ${JSON.stringify(given.getCustomData())} != ${JSON.stringify(expected.customData)}`) }
         }
 
+        if (expected.as !== undefined) {
+            if (given.getAs() != expected.as) { result.push(`${path}as ${given.getAs()} != ${expected.as}`) }
+        }
+
         return result.join("\n")
     }
 
@@ -469,6 +474,7 @@ namespace SomeModule {
         someEnum?: string,
         customOptEmpty?: boolean,
         customOpt?: any,
+        kotlinKeyword?: string,
     }
     export function diffSomeProperty2(given: SomeProperty2, expected: ExpectedSomeProperty2, path: string = ""): string {
         const result: string[] = []
@@ -491,6 +497,10 @@ namespace SomeModule {
 
         if (expected.customOpt !== undefined) {
             if (JSON.stringify(given.getCustomOpt().get()) != JSON.stringify(expected.customOpt)) { result.push(`${path}customOpt ${JSON.stringify(given.getCustomOpt().get())} != ${JSON.stringify(expected.customOpt)}`) }
+        }
+
+        if (expected.kotlinKeyword !== undefined) {
+            if (given.getKotlinKeyword() != expected.kotlinKeyword) { result.push(`${path}kotlinKeyword ${given.getKotlinKeyword()} != ${expected.kotlinKeyword}`) }
         }
 
         return result.join("\n")

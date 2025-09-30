@@ -11,5 +11,6 @@
   "doubleExample": 0.0,
   "longExample": 0,
   "gN": "someValue",
-  "customData": { }
+  "customData": { },
+  "as": "someValue"
 }

@@ -750,6 +750,7 @@ class SomeProperty {
     private longExample = NUMBER
     private gN = STRING
     private customData = ANY
+    private as = STRING
 
     static create(
         other: OtherProperty,
@@ -759,6 +760,7 @@ class SomeProperty {
         longExample: number,
         goodName: string,
         customData: any,
+        as: string,
     ): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
@@ -768,6 +770,7 @@ class SomeProperty {
         instance.longExample = longExample
         instance.gN = goodName
         instance.customData = customData
+        instance.as = as
         return instance
     }
 
@@ -779,6 +782,7 @@ class SomeProperty {
         longExample,
         goodName,
         customData,
+        as,
     }: {
         other: OtherProperty;
         id2: Optional<SomeId2>;
@@ -787,6 +791,7 @@ class SomeProperty {
         longExample: number;
         goodName: string;
         customData: any;
+        as: string;
     }): SomeProperty {
         const instance = new SomeProperty()
         instance.other = other
@@ -796,6 +801,7 @@ class SomeProperty {
         instance.longExample = longExample
         instance.gN = goodName
         instance.customData = customData
+        instance.as = as
         return instance
     }
 
@@ -826,6 +832,10 @@ class SomeProperty {
     getCustomData(): any {
         return this.customData
     }
+
+    getAs(): string {
+        return this.as
+    }
 }
 
 class SomeProperty2 {
@@ -833,18 +843,21 @@ class SomeProperty2 {
     private custom = ANY
     private someEnum = STRING
     private customOpt? = OPTIONAL_ANY
+    private as = STRING
 
     static create(
         value: string,
         custom: any,
         someEnum: SomeEnum,
         customOpt: Optional<any> = Optional.empty(),
+        kotlinKeyword: string,
     ): SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value
         instance.custom = custom
         instance.someEnum = someEnum.getName()
         instance.customOpt = customOpt.orElse(undefined)
+        instance.as = kotlinKeyword
         return instance
     }
 
@@ -853,17 +866,20 @@ class SomeProperty2 {
         custom,
         someEnum,
         customOpt,
+        kotlinKeyword,
     }: {
         value: string;
         custom: any;
         someEnum: SomeEnum;
         customOpt: Optional<any>;
+        kotlinKeyword: string;
     }): SomeProperty2 {
         const instance = new SomeProperty2()
         instance.value = value
         instance.custom = custom
         instance.someEnum = someEnum.getName()
         instance.customOpt = customOpt.orElse(undefined)
+        instance.as = kotlinKeyword
         return instance
     }
 
@@ -881,6 +897,10 @@ class SomeProperty2 {
 
     getCustomOpt(): Optional<any> {
         return Optional.of(this.customOpt)
+    }
+
+    getKotlinKeyword(): string {
+        return this.as
     }
 }
 

@@ -100,12 +100,14 @@ Properties
         longExample: long
         goodName: string (from: gN)
         customData: struct
+        as: string
 
     SomeProperty2
         value: string (public)
         custom: any
         someEnum: SomeEnum
         customOpt: any? = empty
+        kotlinKeyword: string (from: as)
 
     SomePropertyEntry
         id: SomeId (idSource)
