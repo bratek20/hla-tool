@@ -2,6 +2,11 @@
     "include": [
         "test/SomeModule/SomeClassTest.ts",
 
+        //same module name but with different prefix (hence different module), should not be moved
+        "prefix-1-test/OtherModule/Tests/ImplTest.ts",
+        "prefix-2-test/OtherModule/Tests/ImplTest.ts",
+        "prefix-3-test/OtherModule/Tests/ImplTest.ts",
+
         //OtherModule start
         "fixtures/OtherModule/Fixtures/Builders.ts",
         "fixtures/OtherModule/Fixtures/Diffs.ts",
