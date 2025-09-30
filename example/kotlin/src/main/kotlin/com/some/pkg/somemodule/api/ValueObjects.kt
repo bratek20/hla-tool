@@ -519,6 +519,7 @@ data class SomeProperty(
     private val longExample: Long,
     private val gN: String,
     private val customData: com.github.bratek20.architecture.structs.api.Struct,
+    private val `as`: String,
 ) {
     fun getOther(): OtherProperty {
         return this.other
@@ -548,6 +549,10 @@ data class SomeProperty(
         return this.customData
     }
 
+    fun getAs(): String {
+        return this.`as`
+    }
+
     companion object {
         fun create(
             other: OtherProperty,
@@ -557,6 +562,7 @@ data class SomeProperty(
             longExample: Long,
             goodName: String,
             customData: com.github.bratek20.architecture.structs.api.Struct,
+            `as`: String,
         ): SomeProperty {
             return SomeProperty(
                 other = other,
@@ -566,6 +572,7 @@ data class SomeProperty(
                 longExample = longExample,
                 gN = goodName,
                 customData = customData,
+                `as` = `as`,
             )
         }
     }
@@ -576,6 +583,7 @@ data class SomeProperty2(
     private val custom: Any,
     private val someEnum: String,
     private val customOpt: Any? = null,
+    private val `as`: String,
 ) {
     fun getValue(): String {
         return this.value
@@ -593,18 +601,24 @@ data class SomeProperty2(
         return this.customOpt
     }
 
+    fun getKotlinKeyword(): String {
+        return this.`as`
+    }
+
     companion object {
         fun create(
             value: String,
             custom: Any,
             someEnum: SomeEnum,
             customOpt: Any? = null,
+            kotlinKeyword: String,
         ): SomeProperty2 {
             return SomeProperty2(
                 value = value,
                 custom = custom,
                 someEnum = someEnum.name,
                 customOpt = customOpt,
+                `as` = kotlinKeyword,
             )
         }
     }
