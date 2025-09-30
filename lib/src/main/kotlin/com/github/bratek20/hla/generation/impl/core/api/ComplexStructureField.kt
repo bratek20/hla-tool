@@ -19,6 +19,7 @@ open class ComplexStructureField(
 ) {
     private lateinit var complexStructure: ComplexStructureApiType<*>
 
+    val kotlinPrivateWords = listOf("as")
     fun init(complexStructure: ComplexStructureApiType<*>) {
         this.complexStructure = complexStructure
     }
@@ -112,7 +113,8 @@ open class ComplexStructureField(
     fun createDeclarationNoDefault(): String = internalCreateDeclaration(false)
 
     private fun internalCreateDeclaration(allowDefault: Boolean): String {
-        val base = "${name}: ${type.name()}"
+        val finalName = if(type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(name)) privateName() else name
+        val base = "${finalName}: ${type.name()}"
         if (allowDefault) {
             defaultValue()?.let {
                 return "$base = $it"
@@ -127,14 +129,22 @@ open class ComplexStructureField(
         if (type.languageTypes is TypeScriptTypes) {
             return "instance.${privateName()} = ${type.serialize(name)}"
         }
-        return "${privateName()} = ${type.serialize(name)}"
+        val assignment = type.serialize(name)
+        if(type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(assignment)) {
+            return "${privateName()} = `$assignment`"
+        }
+        return "${privateName()} = $assignment"
     }
 
     fun privateName(): String {
+        var finalName = name
         def.getAttributes().firstOrNull { it.getName() == "from" }?.let {
-            return it.getValue()
+            finalName = it.getValue()
         }
-        return name
+        if(type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(finalName)) {
+            finalName = "`${finalName}`"
+        }
+        return finalName
     }
 
     private fun mapDefaultValue(value: String): ExpressionBuilder {
