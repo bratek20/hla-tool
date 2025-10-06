@@ -53,7 +53,8 @@ class B20FrontendTypesPopulator(
             "Scroll",
             "ProgressBar",
             "Timer",
-            "SimpleGroup"
+            "SimpleGroup",
+            "EmptyVm"
         )
     }
 

@@ -318,6 +318,7 @@ ViewModel
             progressBar: ProgressBar
             timer: Timer
             simpleGroup: SimpleGroup
+            emptyVm: EmptyVm
 
         SecondSomeClassVm
             SomeClass
