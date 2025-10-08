@@ -40,7 +40,8 @@ class ModuleGroupParserLogic(
         "Web",
         "ViewModel",
         "Tracking",
-        "Fixtures"
+        "Fixtures",
+        "Menu",
     )
 
     private val directories = DirectoriesLogic()
@@ -118,8 +119,21 @@ class ModuleGroupParserLogic(
             exceptions = parseExceptions("Exceptions", elements),
             events = parseStructures("Events", elements).complex + parseStructures("Notifications", elements).complex,
             trackingSubmodule = parseTrackingSubmodule(elements),
-            fixturesSubmodule = parseFixturesSubmodule(elements)
+            fixturesSubmodule = parseFixturesSubmodule(elements),
+            menuSubmodule = parseMenuSubmodule(elements)
         )
+    }
+
+    private fun parseMenuSubmodule(elements: List<ParsedElement>): MenuDefinition? {
+        return findSection(elements, "Menu")?.let { menu ->
+            val exposedInterfaces = findSection(menu.elements, "ExposedInterfaces")?.elements
+                    ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList()
+
+            return MenuDefinition(
+                    exposedInterfaces = exposedInterfaces,
+                    attributes = menu.attributes
+            )
+        }
     }
 
     private fun parseOptVariable(elements: List<ParsedElement>, name: String): String? {
@@ -511,6 +525,4 @@ class ModuleGroupParserLogic(
             )
         }
     }
-
-
 }
