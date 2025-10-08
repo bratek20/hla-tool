@@ -124,18 +124,6 @@ class ModuleGroupParserLogic(
         )
     }
 
-    private fun parseMenuSubmodule(elements: List<ParsedElement>): MenuDefinition? {
-        return findSection(elements, "Menu")?.let { menu ->
-            val exposedInterfaces = findSection(menu.elements, "ExposedInterfaces")?.elements
-                    ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList()
-
-            return MenuDefinition(
-                    exposedInterfaces = exposedInterfaces,
-                    attributes = menu.attributes
-            )
-        }
-    }
-
     private fun parseOptVariable(elements: List<ParsedElement>, name: String): String? {
         return elements.filterIsInstance<EqualsAssignment>().firstOrNull {
             it.name == name
@@ -522,6 +510,19 @@ class ModuleGroupParserLogic(
             return ImplSubmoduleDefinition(
                 dataClasses = dataClasses + data.classes.map { it.definition },
                 dataKeys = keys + data.keys
+            )
+        }
+    }
+
+    private fun parseMenuSubmodule(elements: List<ParsedElement>): MenuDefinition? {
+        return findSection(elements, "Menu")?.let { menu ->
+
+            val exposedInterfaces = findSection(menu.elements, "ExposedInterfaces")?.elements
+                    ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList()
+
+            return MenuDefinition(
+                    exposedInterfaces = exposedInterfaces,
+                    attributes = menu.attributes
             )
         }
     }
