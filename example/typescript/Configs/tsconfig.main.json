@@ -47,6 +47,7 @@
         "../main/OtherModule/Impl/ImplContext.ts",
 
         "../main/OtherModule/Web/PlayFabHandlers.ts",
+        "../main/OtherModule/Web/Primitives.ts",
         //OtherModule end
 
         "../main/SimpleModule/Api/ValueObjects.ts",
@@ -72,6 +73,7 @@
         "../main/SomeModule/Web/WebClient.ts",
         "../main/SomeModule/Web/PlayFabHandlers.ts",
         "../main/SomeModule/Web/WebClientContext.ts",
+        "../main/SomeModule/Web/Primitives.ts",
         //SomeModule end
 
         "../main/TypesModule/Api/CustomTypes.ts",
