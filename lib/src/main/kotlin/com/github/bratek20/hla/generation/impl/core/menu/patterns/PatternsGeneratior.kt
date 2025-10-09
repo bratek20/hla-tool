@@ -8,6 +8,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.examples.patterns.ExampleKeyDefinitionLogic
+import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.directory.api.Directory
 import com.github.bratek20.utils.directory.api.DirectoryName
 import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf
@@ -50,12 +51,60 @@ class MenuPatternGenerator: PatternGenerator() {
                             }
                         }
                     })
+
+                    var currentTarget = variable("builder")
+                    methodNames.forEach {method ->
+                        currentTarget = methodCall {
+                            this.target = currentTarget
+                            this.methodName = "addNamespaced"
+
+                            addArg {
+                                string(camelToHumanReadableCase(method))
+                            }
+                            addArg {
+                                string("${module.getName()}.Menu")
+                            }
+                            addArg {
+                                variable(method)
+                            }
+                        }
+                    }
+                    add(
+                        methodCallStatement {
+                            target = currentTarget
+                            methodName = "build"
+                        }
+                    )
                 }
             }
 
             methodNames.forEach {methodName ->
                 addFunction {
                     name = methodName
+                    setBody {
+                        add(
+                            methodCallStatement {
+                                this.target = variable("Woh")
+                                this.methodName = "menuDecorator"
+                                addArg {
+                                    lambda {
+                                        addArg {
+                                            name = "c"
+                                            type = baseType(BaseType.ANY)
+                                        }
+                                        body =
+                                            methodCall {
+                                                this.target = variable("${module.getName()}.Api.${methodName}")
+                                                this.methodName = methodName
+                                                    addArg {
+                                                        variable("c")
+                                                    }
+                                            }
+                                    }
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -71,5 +120,9 @@ class MenuPatternGenerator: PatternGenerator() {
         return Directory.create(
             name = DirectoryName("Menu")
         )
+    }
+
+    private fun camelToHumanReadableCase(name: String = "example"): String {
+        return name.replace(Regex("([a-z])([A-Z])"), "$1 $2").replaceFirstChar { it.uppercase() }
     }
 }
