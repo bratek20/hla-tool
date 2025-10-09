@@ -56,3 +56,7 @@ ViewModel
                 //to test referencing to api only from view model submodule
                 //note api is not referencing simple module
                 simpleId: SimpleId
+
+Menu
+    ExposedInterfaces
+        OtherInterface
