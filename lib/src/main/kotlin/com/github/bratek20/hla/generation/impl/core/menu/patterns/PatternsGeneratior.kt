@@ -33,7 +33,7 @@ class MenuPatternGenerator: PatternGenerator() {
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && getKeys().isNotEmpty()
+        return c.module.getMenuSubmodule() != null
     }
 
     override fun getDirectory(): Directory? {
