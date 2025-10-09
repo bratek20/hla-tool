@@ -2,6 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.menu.patterns
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
+import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.definitions.api.KeyDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
@@ -113,7 +114,7 @@ class MenuPatternGenerator: PatternGenerator() {
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
-        return c.module.getMenuSubmodule() != null
+        return c.module.getMenuSubmodule() != null && c.language.name() == ModuleLanguage.TYPE_SCRIPT
     }
 
     override fun getDirectory(): Directory? {
