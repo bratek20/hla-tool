@@ -32,12 +32,6 @@ class MenuPattern: PatternGenerator() {
         return c.module.getMenuSubmodule() != null && c.language.name() == ModuleLanguage.TYPE_SCRIPT
     }
 
-    override fun getDirectory(): Directory? {
-        return Directory.create(
-                name = DirectoryName("Menu")
-        )
-    }
-
     private fun getBuilderName(): String {
         val attribute = module.getMenuSubmodule()?.getAttributes()?.find { it.getName() == "name" }
 
