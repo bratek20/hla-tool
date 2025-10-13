@@ -20,12 +20,21 @@ class MenuPattern: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        val interfacesMethods = module.getInterfaces()
-                .flatMap { it.getMethods() }
-                .distinct()
+        val interfacesMethods = getExposedMethods()
 
         addInitFunction(this, interfacesMethods)
         addInterfacesFunctions(this, interfacesMethods)
+    }
+
+    private fun getExposedMethods(): List<MethodDefinition> {
+        return module.getMenuSubmodule()?.getExposedInterfaces()
+                ?.flatMap { exposedInterface ->
+                    module.getInterfaces()
+                            .firstOrNull { it.getName() == exposedInterface }
+                            ?.getMethods()
+                            ?: emptyList()
+                }
+                ?: emptyList()
     }
 
     private fun addInitFunction(
