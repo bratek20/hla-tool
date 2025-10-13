@@ -7,50 +7,50 @@ namespace SomeModule.Menu {
     }
 
     export function someEmptyMethod() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.someEmptyMethod.someEmptyMethod(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.someEmptyMethod(c) })
     }
 
     export function someCommand() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.someCommand.someCommand(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.someCommand(c) })
     }
 
     export function someQuery() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.someQuery.someQuery(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.someQuery(c) })
     }
 
     export function optMethod() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.optMethod.optMethod(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.optMethod(c) })
     }
 
     export function methodWithSimpleVO() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithSimpleVO.methodWithSimpleVO(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithSimpleVO(c) })
     }
 
     export function methodWithListOfSimpleVO() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithListOfSimpleVO.methodWithListOfSimpleVO(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithListOfSimpleVO(c) })
     }
 
     export function methodWithAny() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithAny.methodWithAny(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithAny(c) })
     }
 
     export function methodWithBaseType() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithBaseType.methodWithBaseType(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithBaseType(c) })
     }
 
     export function methodReturningOptSimpleVo() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.methodReturningOptSimpleVo.methodReturningOptSimpleVo(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.methodReturningOptSimpleVo(c) })
     }
 
     export function methodReturningNumericType() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.methodReturningNumericType.methodReturningNumericType(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.methodReturningNumericType(c) })
     }
 
     export function referenceOtherClass() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.referenceOtherClass.referenceOtherClass(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.referenceOtherClass(c) })
     }
 
     export function referenceLegacyType() {
-        Woh.menuDecorator((c: any) => { SomeModule.Api.referenceLegacyType.referenceLegacyType(c) })
+        Woh.menuDecorator((c: any) => { SomeModule.Api.referenceLegacyType(c) })
     }
 }
