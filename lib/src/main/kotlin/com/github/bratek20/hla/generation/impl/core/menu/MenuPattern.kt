@@ -26,6 +26,27 @@ class MenuPattern: PatternGenerator() {
         addInterfacesFunctions(this, interfacesMethods)
     }
 
+    override fun supportsCodeBuilder() = true
+
+    override fun shouldGenerate(): Boolean {
+        return c.module.getMenuSubmodule() != null && c.language.name() == ModuleLanguage.TYPE_SCRIPT
+    }
+
+    override fun getDirectory(): Directory? {
+        return Directory.create(
+                name = DirectoryName("Menu")
+        )
+    }
+
+    private fun getBuilderName(): String {
+        val attribute = module.getMenuSubmodule()?.getAttributes()?.find { it.getName() == "name" }
+
+        if(attribute != null) {
+            return attribute.getValue().trim('"')
+        }
+        return module.getName().value
+    }
+
     private fun getExposedMethods(): List<MethodDefinition> {
         return module.getMenuSubmodule()?.getExposedInterfaces()
                 ?.flatMap { exposedInterface ->
@@ -59,7 +80,7 @@ class MenuPattern: PatternGenerator() {
                 left = variableDeclaration { name = BUILDER_VAR_NAME }
                 right = constructorCall {
                     className = "MenuBuilder"
-                    addArg { string(module.getName().value) }
+                    addArg { string(getBuilderName()) }
                     addArg { variable(LIBRARY_PREFIX_VAR_NAME) }
                 }
             }
@@ -114,17 +135,6 @@ class MenuPattern: PatternGenerator() {
                 }
             }
         }
-    }
-    override fun supportsCodeBuilder() = true
-
-    override fun shouldGenerate(): Boolean {
-        return c.module.getMenuSubmodule() != null && c.language.name() == ModuleLanguage.TYPE_SCRIPT
-    }
-
-    override fun getDirectory(): Directory? {
-        return Directory.create(
-            name = DirectoryName("Menu")
-        )
     }
 
     private fun camelToHumanReadableCase(name: String = "example"): String {
