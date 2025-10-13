@@ -19,8 +19,6 @@
         "../main/SomeModule/Context/WebClientContext.ts",
         "../main/SomeModule/Context/WebServerContext.ts",
 
-        "../main/SomeModule/Web/WebServerContext.ts",
-
         //OnlyTrackingModule start
 
         "../main/NoInterfacesModule/Api/ValueObjects.ts",

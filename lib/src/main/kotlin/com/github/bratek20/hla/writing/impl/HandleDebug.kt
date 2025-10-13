@@ -22,27 +22,15 @@ fun handleDebug(module: GeneratedModule) {
     val dirs = DirectoriesLogic()
     dirs.delete(debugPath)
 
-    val finalDirs = mutableListOf<Directory>()
-
-    module.getSubmodules().forEach { subModule ->
-        val patterns = subModule.getPatterns()
-        patterns.forEach {
-            if(it.getFile() != null) {
-                finalDirs.add(
-                    Directory.create(
-                        name = DirectoryName(it.getName().name),
-                        files = listOf(it.getFile()!!)
-                    )
-                )
-            } else if (it.getDirectory() != null) {
-                finalDirs.add(it.getDirectory()!!)
-            }
-        }
-
-    }
     val moduleDir = Directory.create(
-        name = DirectoryName(module.getName().value),
-        directories = finalDirs
+            name = DirectoryName(module.getName().value),
+            directories = module.getSubmodules().map {
+                Directory.create(
+                        name = DirectoryName(it.getName().name),
+                        files = it.getPatterns().map { p -> p.getFile() }.filterNotNull(),
+                        directories = it.getPatterns().map { p -> p.getDirectory() }.filterNotNull()
+                )
+            }
     )
     dirs.write(debugPath, moduleDir)
 }

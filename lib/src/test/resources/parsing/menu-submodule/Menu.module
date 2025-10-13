@@ -1,0 +1,7 @@
+Interfaces
+    SomeInterface
+        someMethod(someArg: int)
+
+Menu (name: "Some name")
+    ExposedInterfaces
+        SomeInterface

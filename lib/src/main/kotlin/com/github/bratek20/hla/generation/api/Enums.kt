@@ -17,6 +17,7 @@ enum class SubmoduleName {
     Fixtures,
     Tests,
     Examples,
+    Menu,
 }
 
 enum class PatternName {
@@ -60,4 +61,5 @@ enum class PatternName {
     HandlersExamples,
     TitleDataExamples,
     PlayerDataExamples,
+    Menu,
 }

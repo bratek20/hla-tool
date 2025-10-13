@@ -409,3 +409,9 @@ Tracking
             optional_int: int?
 
         SomeTrackingMultiplayerEvent (table: "some_tracking_mevent")
+
+Menu (name: "Custom name")
+    ExposedInterfaces
+        SomeEmptyInterface
+        SomeInterface
+        SomeInterface2

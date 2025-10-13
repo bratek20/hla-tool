@@ -966,4 +966,23 @@ class ModuleGroupParserTest {
             }
         })
     }
+
+    @Test
+    fun `should parse menu`() {
+        val modules = parseSingleGroup("menu-submodule")
+
+        assertModules(modules, listOf {
+            menuSubmodule = {
+                exposedInterfaces = listOf(
+                    "SomeInterface"
+                )
+                attributes = listOf {
+                    name = "name"
+                    value = "\"Some name\""
+                }
+
+            }
+        })
+    }
+
 }
