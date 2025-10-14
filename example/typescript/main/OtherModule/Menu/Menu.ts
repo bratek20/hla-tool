@@ -7,6 +7,6 @@ namespace OtherModule.Menu {
     }
 
     export function otherMethod() {
-        Woh.menuDecorator((c: any) => { OtherModule.Api.otherMethod.otherMethod(c) })
+        Woh.menuDecorator((c: any) => { OtherModule.Api.otherMethod(c) })
     }
 }

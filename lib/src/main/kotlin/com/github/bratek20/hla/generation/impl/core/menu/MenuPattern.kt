@@ -123,7 +123,7 @@ class MenuPattern: PatternGenerator() {
             lambda {
                 addArg { name = "c"; type = baseType(BaseType.ANY) }
                 body = methodCall {
-                    this.target = variable("${module.getName()}.Api.${method.getName()}")
+                    this.target = variable("${module.getName()}.Api")
                     this.methodName = method.getName()
                     addArg { variable("c") }
                 }
