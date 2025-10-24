@@ -90,4 +90,9 @@ namespace SomeModule {
         "SelfReferencingProperty",
         SelfReferencingProperty
     )
+
+    export const CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "CustomTypesPropertyOptionalList",
+        CustomTypesPropertyOptionalList
+    )
 }

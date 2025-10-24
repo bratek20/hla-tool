@@ -167,6 +167,10 @@ Properties
         listSelf: SelfReferencingProperty[]
         optionalListSelf: SelfReferencingProperty[]?
 
+    CustomTypesPropertyOptionalList
+        id: string
+        customPropertiesList: CustomTypesProperty[]?
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeRenamedSourcePropertyEntryList" -> SomeRenamedSourcePropertyEntry[]
@@ -187,6 +191,7 @@ Properties
 
     "CustomTypesProperty" -> CustomTypesProperty
     "SelfReferencingProperty" -> SelfReferencingProperty[]
+    "CustomTypesPropertyOptionalList" -> CustomTypesPropertyOptionalList[]
 
 Data
     SomeData
