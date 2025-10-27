@@ -363,7 +363,7 @@ class TypesWorldImplTest {
 
 
         @Test
-        fun `should work for normal, optional and list fields`() {
+        fun `should work for normal, optional, list and optional list fields`() {
             api.ensureType(worldType {
                 name = "ValueClass"
             })
@@ -402,6 +402,12 @@ class TypesWorldImplTest {
                         type = {
                             name = "List<OtherClass>"
                         }
+                    },
+                    {
+                        name = "optionalListField"
+                        type = {
+                            name = "Optional<List<OtherClass>>"
+                        }
                     }
                 )
             })
@@ -427,10 +433,11 @@ class TypesWorldImplTest {
                 }
             )
 
-            assertThat(references).hasSize(3)
+            assertThat(references).hasSize(4)
             assertStructPath(references[0], "nestedField/normalField/value")
             assertStructPath(references[1], "nestedField/optionalField?/value")
             assertStructPath(references[2], "nestedField/listField/[*]/value")
+            assertStructPath(references[3], "nestedField/optionalListField?/[*]/value")
         }
 
         @Test

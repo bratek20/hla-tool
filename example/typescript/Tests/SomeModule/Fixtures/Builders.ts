@@ -532,6 +532,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface CustomTypesPropertyOptionalListDef {
+        id?: string,
+        customPropertiesList?: SomeModule.Builder.CustomTypesPropertyDef[],
+    }
+    export function customTypesPropertyOptionalList(def?: CustomTypesPropertyOptionalListDef): CustomTypesPropertyOptionalList {
+        const final_id = def?.id ?? "someValue"
+        const final_customPropertiesList = def?.customPropertiesList ?? undefined
+
+        return CustomTypesPropertyOptionalList.create(
+            final_id,
+            Optional.of(final_customPropertiesList).map(it => it.map(it => SomeModule.Builder.customTypesProperty(it))),
+        )
+    }
+
     export interface SomeInterfaceSomeCommandArgsDef {
         id?: string,
         amount?: number,

@@ -221,6 +221,11 @@ fun assertSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: 
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, expectedInit: ExpectedCustomTypesPropertyOptionalList.() -> Unit) {
+    val diff = diffCustomTypesPropertyOptionalList(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expectedInit: ExpectedSomeInterfaceSomeCommandArgs.() -> Unit) {
     val diff = diffSomeInterfaceSomeCommandArgs(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

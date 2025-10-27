@@ -197,6 +197,11 @@ namespace SomeModule.Fixtures {
         public List<Action<SelfReferencingPropertyDef>>? OptionalListSelf { get; set; } = null;
     }
 
+    public class CustomTypesPropertyOptionalListDef {
+        public string Id { get; set; } = "someValue";
+        public List<Action<CustomTypesPropertyDef>>? CustomPropertiesList { get; set; } = null;
+    }
+
     public class SomeInterfaceSomeCommandArgsDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 0;
@@ -459,6 +464,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SelfReferencingProperty.Create(Optional<Action<SelfReferencingPropertyDef>>.Of(def.OptionalSelf).Map(it => BuildSelfReferencingProperty(it)), def.ListSelf.Select(it => BuildSelfReferencingProperty(it)).ToList(), Optional<List<Action<SelfReferencingPropertyDef>>>.Of(def.OptionalListSelf).Map(it => it.Select(it => BuildSelfReferencingProperty(it)).ToList()));
+        }
+        public static CustomTypesPropertyOptionalList BuildCustomTypesPropertyOptionalList(Action<CustomTypesPropertyOptionalListDef> init = null) {
+            var def = new CustomTypesPropertyOptionalListDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return CustomTypesPropertyOptionalList.Create(def.Id, Optional<List<Action<CustomTypesPropertyDef>>>.Of(def.CustomPropertiesList).Map(it => it.Select(it => BuildCustomTypesProperty(it)).ToList()));
         }
         public static SomeInterfaceSomeCommandArgs BuildSomeInterfaceSomeCommandArgs(Action<SomeInterfaceSomeCommandArgsDef> init = null) {
             var def = new SomeInterfaceSomeCommandArgsDef();

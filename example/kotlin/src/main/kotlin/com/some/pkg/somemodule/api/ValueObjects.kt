@@ -980,6 +980,31 @@ data class SelfReferencingProperty(
     }
 }
 
+data class CustomTypesPropertyOptionalList(
+    private val id: String,
+    private val customPropertiesList: List<CustomTypesProperty>?,
+) {
+    fun getId(): String {
+        return this.id
+    }
+
+    fun getCustomPropertiesList(): List<CustomTypesProperty>? {
+        return this.customPropertiesList
+    }
+
+    companion object {
+        fun create(
+            id: String,
+            customPropertiesList: List<CustomTypesProperty>?,
+        ): CustomTypesPropertyOptionalList {
+            return CustomTypesPropertyOptionalList(
+                id = id,
+                customPropertiesList = customPropertiesList,
+            )
+        }
+    }
+}
+
 data class SomeInterfaceSomeCommandArgs(
     private val id: String,
     private val amount: Int,

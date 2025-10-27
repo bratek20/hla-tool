@@ -836,6 +836,31 @@ fun diffSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: Ex
     return result.joinToString("\n")
 }
 
+data class ExpectedCustomTypesPropertyOptionalList(
+    var id: String? = null,
+    var customPropertiesListEmpty: Boolean? = null,
+    var customPropertiesList: List<(ExpectedCustomTypesProperty.() -> Unit)>? = null,
+)
+fun diffCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, expectedInit: ExpectedCustomTypesPropertyOptionalList.() -> Unit, path: String = ""): String {
+    val expected = ExpectedCustomTypesPropertyOptionalList().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (given.getId() != it) { result.add("${path}id ${given.getId()} != ${it}") }
+    }
+
+    expected.customPropertiesListEmpty?.let {
+        if ((given.getCustomPropertiesList() == null) != it) { result.add("${path}customPropertiesList empty ${(given.getCustomPropertiesList() == null)} != ${it}") }
+    }
+
+    expected.customPropertiesList?.let {
+        if (given.getCustomPropertiesList()!!.size != it.size) { result.add("${path}customPropertiesList size ${given.getCustomPropertiesList()!!.size} != ${it.size}"); return@let }
+        given.getCustomPropertiesList()!!.forEachIndexed { idx, entry -> if (diffCustomTypesProperty(entry, it[idx]) != "") { result.add(diffCustomTypesProperty(entry, it[idx], "${path}customPropertiesList[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeInterfaceSomeCommandArgs(
     var id: String? = null,
     var amount: Int? = null,
