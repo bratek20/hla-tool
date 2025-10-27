@@ -140,6 +140,7 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     private fun getAllReferencesOfFor(target: WorldType, searchFor: WorldType, traversedPathContext: TraversedPathContext): List<String> {
+        System.out.println("Visiting type: ${target.getFullName()}, traversed path: ${traversedPathContext.getTraversedPath()}")
         if (target == searchFor) {
             val traversedPath = traversedPathContext.getTraversedPath()
             return listOf(traversedPath)
