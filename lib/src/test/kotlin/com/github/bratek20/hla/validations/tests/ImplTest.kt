@@ -915,6 +915,18 @@ class ValidationsImplTest {
             propertiesMock.set(CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST, listOf(
                 struct {
                     "id" to "testId1"
+                },
+                struct {
+                    "id" to "testId2"
+                    "customPropertiesList" to structList(
+                        {
+                            "date" to "01/01/2021 00:00"
+                            "dateRange" to struct {
+                                "from" to "01/01/2021 00:00"
+                                "to" to "01/01/2021 00:00"
+                            }
+                        }
+                    )
                 }
             ))
 
