@@ -5,13 +5,14 @@ import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
 
 fun TypeDefinition.asWorldTypeName(): WorldTypeName {
+    var name = this.getName()
     if (this.getWrappers().contains(TypeWrapper.LIST)) {
-        return WorldTypeName("List<${this.getName()}>")
+        name = "List<$name>"
     }
     if (this.getWrappers().contains(TypeWrapper.OPTIONAL)) {
-        return WorldTypeName("Optional<${this.getName()}>")
+        name = "Optional<$name>"
     }
-    return WorldTypeName(this.getName())
+    return WorldTypeName(name)
 }
 
 fun WorldTypeName.asTypeDefinition(): TypeDefinition {
