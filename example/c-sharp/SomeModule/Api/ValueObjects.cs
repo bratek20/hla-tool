@@ -869,6 +869,28 @@ namespace SomeModule.Api {
         }
     }
 
+    public class CustomTypesPropertyOptionalList: ValueObject {
+        readonly string id;
+        readonly List<CustomTypesProperty>? customPropertiesList;
+
+        public CustomTypesPropertyOptionalList(
+            string id,
+            List<CustomTypesProperty>? customPropertiesList
+        ) {
+            this.id = id;
+            this.customPropertiesList = customPropertiesList;
+        }
+        public string GetId() {
+            return id;
+        }
+        public Optional<List<CustomTypesProperty>> GetCustomPropertiesList() {
+            return Optional<List<CustomTypesProperty>>.Of(customPropertiesList);
+        }
+        public static CustomTypesPropertyOptionalList Create(string id, Optional<List<CustomTypesProperty>> customPropertiesList) {
+            return new CustomTypesPropertyOptionalList(id, customPropertiesList.OrElse(null));
+        }
+    }
+
     public class SomeInterfaceSomeCommandArgs: ValueObject {
         readonly string id;
         readonly int amount;
