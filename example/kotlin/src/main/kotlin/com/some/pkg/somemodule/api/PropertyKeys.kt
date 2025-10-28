@@ -95,3 +95,8 @@ val SELF_REFERENCING_PROPERTY_PROPERTY_KEY = com.github.bratek20.architecture.pr
     "SelfReferencingProperty",
     SelfReferencingProperty::class
 )
+
+val CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "CustomTypesPropertyOptionalList",
+    CustomTypesPropertyOptionalList::class
+)

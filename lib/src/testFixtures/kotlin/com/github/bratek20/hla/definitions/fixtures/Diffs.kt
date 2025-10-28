@@ -441,6 +441,27 @@ fun diffKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.() 
     return result.joinToString("\n")
 }
 
+data class ExpectedMenuDefinition(
+    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
+    var exposedInterfaces: List<String>? = null,
+)
+fun diffMenuDefinition(given: MenuDefinition, expectedInit: ExpectedMenuDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedMenuDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.attributes?.let {
+        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
+        given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
+    }
+
+    expected.exposedInterfaces?.let {
+        if (given.getExposedInterfaces().size != it.size) { result.add("${path}exposedInterfaces size ${given.getExposedInterfaces().size} != ${it.size}"); return@let }
+        given.getExposedInterfaces().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}exposedInterfaces[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedModuleDefinition(
     var name: String? = null,
     var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
@@ -467,6 +488,8 @@ data class ExpectedModuleDefinition(
     var fixturesSubmodule: (ExpectedFixturesSubmoduleDefinition.() -> Unit)? = null,
     var kotlinConfigEmpty: Boolean? = null,
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
+    var menuSubmoduleEmpty: Boolean? = null,
+    var menuSubmodule: (ExpectedMenuDefinition.() -> Unit)? = null,
 )
 fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedModuleDefinition().apply(expectedInit)
@@ -582,6 +605,14 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
     expected.kotlinConfig?.let {
         if (diffKotlinConfig(given.getKotlinConfig()!!, it) != "") { result.add(diffKotlinConfig(given.getKotlinConfig()!!, it, "${path}kotlinConfig.")) }
+    }
+
+    expected.menuSubmoduleEmpty?.let {
+        if ((given.getMenuSubmodule() == null) != it) { result.add("${path}menuSubmodule empty ${(given.getMenuSubmodule() == null)} != ${it}") }
+    }
+
+    expected.menuSubmodule?.let {
+        if (diffMenuDefinition(given.getMenuSubmodule()!!, it) != "") { result.add(diffMenuDefinition(given.getMenuSubmodule()!!, it, "${path}menuSubmodule.")) }
     }
 
     return result.joinToString("\n")

@@ -169,6 +169,10 @@ Properties
         listSelf: SelfReferencingProperty[]
         optionalListSelf: SelfReferencingProperty[]?
 
+    CustomTypesPropertyOptionalList
+        id: string
+        customPropertiesList: CustomTypesProperty[]?
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeRenamedSourcePropertyEntryList" -> SomeRenamedSourcePropertyEntry[]
@@ -189,6 +193,7 @@ Properties
 
     "CustomTypesProperty" -> CustomTypesProperty
     "SelfReferencingProperty" -> SelfReferencingProperty[]
+    "CustomTypesPropertyOptionalList" -> CustomTypesPropertyOptionalList[]
 
 Data
     SomeData
@@ -320,6 +325,7 @@ ViewModel
             progressBar: ProgressBar
             timer: Timer
             simpleGroup: SimpleGroup
+            emptyVm: EmptyVm
 
         SecondSomeClassVm
             SomeClass
@@ -410,3 +416,9 @@ Tracking
             optional_int: int?
 
         SomeTrackingMultiplayerEvent (table: "some_tracking_mevent")
+
+Menu (name: "Custom name")
+    ExposedInterfaces
+        SomeEmptyInterface
+        SomeInterface
+        SomeInterface2

@@ -24,6 +24,7 @@ namespace SomeModule.ViewModel {
         public ProgressBar ProgressBar { get; set; }
         public Timer Timer { get; set; }
         public SimpleGroup SimpleGroup { get; set; }
+        public EmptyVm EmptyVm { get; set; }
         protected override List<Type> GetTraitTypes() {
             return new List<Type>() { typeof(Clickable), typeof(Draggable), typeof(WithRect) };
         }

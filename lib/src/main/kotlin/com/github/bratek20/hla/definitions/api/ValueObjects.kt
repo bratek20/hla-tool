@@ -475,6 +475,31 @@ data class KotlinConfig(
     }
 }
 
+data class MenuDefinition(
+    private val attributes: List<Attribute>,
+    private val exposedInterfaces: List<String>,
+) {
+    fun getAttributes(): List<Attribute> {
+        return this.attributes
+    }
+
+    fun getExposedInterfaces(): List<String> {
+        return this.exposedInterfaces
+    }
+
+    companion object {
+        fun create(
+            attributes: List<Attribute>,
+            exposedInterfaces: List<String>,
+        ): MenuDefinition {
+            return MenuDefinition(
+                attributes = attributes,
+                exposedInterfaces = exposedInterfaces,
+            )
+        }
+    }
+}
+
 data class ModuleDefinition(
     private val name: String,
     private val simpleCustomTypes: List<SimpleStructureDefinition>,
@@ -495,6 +520,7 @@ data class ModuleDefinition(
     private val trackingSubmodule: TrackingSubmoduleDefinition?,
     private val fixturesSubmodule: FixturesSubmoduleDefinition?,
     private val kotlinConfig: KotlinConfig?,
+    private val menuSubmodule: MenuDefinition?,
 ) {
     fun getName(): ModuleName {
         return ModuleName(this.name)
@@ -572,6 +598,10 @@ data class ModuleDefinition(
         return this.kotlinConfig
     }
 
+    fun getMenuSubmodule(): MenuDefinition? {
+        return this.menuSubmodule
+    }
+
     companion object {
         fun create(
             name: ModuleName,
@@ -593,6 +623,7 @@ data class ModuleDefinition(
             trackingSubmodule: TrackingSubmoduleDefinition?,
             fixturesSubmodule: FixturesSubmoduleDefinition?,
             kotlinConfig: KotlinConfig?,
+            menuSubmodule: MenuDefinition?,
         ): ModuleDefinition {
             return ModuleDefinition(
                 name = name.value,
@@ -614,6 +645,7 @@ data class ModuleDefinition(
                 trackingSubmodule = trackingSubmodule,
                 fixturesSubmodule = fixturesSubmodule,
                 kotlinConfig = kotlinConfig,
+                menuSubmodule = menuSubmodule,
             )
         }
     }

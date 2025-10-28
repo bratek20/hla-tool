@@ -51,6 +51,10 @@
     {
       "name": "simpleGroup",
       "viewType": "B20.View.UiElements.View.SimpleGroupView"
+    },
+    {
+      "name": "emptyVm",
+      "viewType": "B20.View.UiElements.View.EmptyVmView"
     }
   ],
   "elementViewType": null

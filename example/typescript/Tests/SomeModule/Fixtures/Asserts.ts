@@ -206,6 +206,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function customTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, expected: ExpectedCustomTypesPropertyOptionalList) {
+        const diff = diffCustomTypesPropertyOptionalList(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expected: ExpectedSomeInterfaceSomeCommandArgs) {
         const diff = diffSomeInterfaceSomeCommandArgs(given, expected)
         AssertEquals(diff, "", diff)

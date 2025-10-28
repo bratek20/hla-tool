@@ -8,6 +8,7 @@ import com.github.bratek20.hla.generation.impl.core.api.ApiGenerator
 import com.github.bratek20.hla.generation.impl.core.examples.ExamplesGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.FixturesGenerator
 import com.github.bratek20.hla.generation.impl.core.impl.ImplGenerator
+import com.github.bratek20.hla.generation.impl.core.menu.MenuGenerator
 import com.github.bratek20.hla.generation.impl.core.prefabs.PrefabsGenerator
 import com.github.bratek20.hla.generation.impl.core.tests.TestsGenerator
 import com.github.bratek20.hla.generation.impl.core.view.ViewGenerator
@@ -62,7 +63,8 @@ class ModuleGeneratorLogic(
                 prefabsGenerator,
                 FixturesGenerator(),
                 TestsGenerator(),
-                ExamplesGenerator()
+                ExamplesGenerator(),
+                MenuGenerator()
             ).mapNotNull {
                 it.legacyInit(context, "", typesWorldApi)
                 it.generateMacros()

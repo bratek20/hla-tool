@@ -221,6 +221,18 @@ fun kotlinConfig(init: KotlinConfigDef.() -> Unit = {}): KotlinConfig {
     )
 }
 
+data class MenuDefinitionDef(
+    var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
+    var exposedInterfaces: List<String> = emptyList(),
+)
+fun menuDefinition(init: MenuDefinitionDef.() -> Unit = {}): MenuDefinition {
+    val def = MenuDefinitionDef().apply(init)
+    return MenuDefinition.create(
+        attributes = def.attributes.map { it -> attribute(it) },
+        exposedInterfaces = def.exposedInterfaces,
+    )
+}
+
 data class ModuleDefinitionDef(
     var name: String = "someValue",
     var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
@@ -241,6 +253,7 @@ data class ModuleDefinitionDef(
     var trackingSubmodule: (TrackingSubmoduleDefinitionDef.() -> Unit)? = null,
     var fixturesSubmodule: (FixturesSubmoduleDefinitionDef.() -> Unit)? = null,
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
+    var menuSubmodule: (MenuDefinitionDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
@@ -264,6 +277,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         trackingSubmodule = def.trackingSubmodule?.let { it -> trackingSubmoduleDefinition(it) },
         fixturesSubmodule = def.fixturesSubmodule?.let { it -> fixturesSubmoduleDefinition(it) },
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
+        menuSubmodule = def.menuSubmodule?.let { it -> menuDefinition(it) },
     )
 }
 

@@ -223,6 +223,11 @@ val COMPLEX_SRUCTURE_WITH_NESTED_UNIQUE_IDS = com.github.bratek20.architecture.p
     Struct::class
 )
 
+val CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "CustomTypesPropertyOptionalList",
+    Struct::class
+)
+
 
 class ValidationsImplTest {
     private lateinit var validator: HlaValidator
@@ -891,6 +896,39 @@ class ValidationsImplTest {
                     "to" to "2021-01-01"
                 }
             })
+
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                ok = true
+            }
+        }
+
+        @Test
+        fun `should pass custom types validation if custom type is in field of optional structure list`() {
+            setup {
+                typeValidatorsToInject = listOf(
+                    DateOkValidator::class.java
+                )
+            }
+
+            propertiesMock.set(CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST, listOf(
+                struct {
+                    "id" to "testId1"
+                },
+                struct {
+                    "id" to "testId2"
+                    "customPropertiesList" to structList(
+                        {
+                            "date" to "01/01/2021 00:00"
+                            "dateRange" to struct {
+                                "from" to "01/01/2021 00:00"
+                                "to" to "01/01/2021 00:00"
+                            }
+                        }
+                    )
+                }
+            ))
 
             val result = validateCall()
 

@@ -110,6 +110,23 @@ class HlaTypesWorldImplTest {
     }
 
     @Test
+    fun `should populate optional list type`() {
+        assertHasClassType("CustomTypesPropertyOptionalList", "SomeModule/Api/ValueObjects") {
+            fields = listOf (
+                {
+                    name = "id"
+                },
+                {
+                    name = "customPropertiesList"
+                    type = {
+                        name = "Optional<List<CustomTypesProperty>>"
+                    }
+                }
+            )
+        }
+    }
+
+    @Test
     fun `should populate view model types`() {
         assertHasConcreteParametrizedClass("UiElement<OtherClass>", "OtherModule/ViewModel/GeneratedElements") {
             typeArguments = listOf {

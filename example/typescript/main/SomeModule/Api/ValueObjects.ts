@@ -1438,6 +1438,42 @@ class SelfReferencingProperty {
     }
 }
 
+class CustomTypesPropertyOptionalList {
+    private id = STRING
+    private customPropertiesList? = [OptionalClass(CustomTypesProperty)]
+
+    static create(
+        id: string,
+        customPropertiesList: Optional<CustomTypesProperty[]>,
+    ): CustomTypesPropertyOptionalList {
+        const instance = new CustomTypesPropertyOptionalList()
+        instance.id = id
+        instance.customPropertiesList = customPropertiesList.orElse(undefined)
+        return instance
+    }
+
+    static createNamed({
+        id,
+        customPropertiesList,
+    }: {
+        id: string;
+        customPropertiesList: Optional<CustomTypesProperty[]>;
+    }): CustomTypesPropertyOptionalList {
+        const instance = new CustomTypesPropertyOptionalList()
+        instance.id = id
+        instance.customPropertiesList = customPropertiesList.orElse(undefined)
+        return instance
+    }
+
+    getId(): string {
+        return this.id
+    }
+
+    getCustomPropertiesList(): Optional<CustomTypesProperty[]> {
+        return Optional.of(this.customPropertiesList)
+    }
+}
+
 class SomeInterfaceSomeCommandArgs {
     private id = STRING
     private amount = NUMBER

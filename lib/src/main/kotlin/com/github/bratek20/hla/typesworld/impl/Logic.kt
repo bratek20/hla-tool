@@ -160,6 +160,9 @@ class TypesWorldApiLogic: TypesWorldApi {
                 val traversedPath = traversedPathContext.getTraversedPath()
 
                 when {
+                    isOptionalListWrapper(target) -> {
+                        dropSlashIfPresent(traversedPath) + "?/[*]/$innerPath"
+                    }
                     isListWrapper(target) -> "${traversedPath}[*]/$innerPath"
                     isOptionalWrapper(target) -> {
                         dropSlashIfPresent(traversedPath) + "?/$innerPath"
@@ -212,6 +215,10 @@ class TypesWorldApiLogic: TypesWorldApi {
 
     private fun isOptionalWrapper(type: WorldType): Boolean {
         return type.getName().value.startsWith("Optional<")
+    }
+
+    private fun isOptionalListWrapper(type: WorldType): Boolean {
+        return type.getName().value.startsWith("Optional<List<")
     }
 
 
@@ -317,7 +324,12 @@ class TypesWorldApiLogic: TypesWorldApi {
     }
 
     private fun tryExtractWrappedTypeName(name: WorldTypeName): WorldTypeName? {
-        return wrappers.firstNotNullOfOrNull { tryExtractWrappedTypeNameForWrapper(name, it) }
+        val extractedOptional = tryExtractWrappedTypeNameForWrapper(name, "Optional")
+        return if(extractedOptional == null) {
+            tryExtractWrappedTypeNameForWrapper(name, "List")
+        }else {
+            tryExtractWrappedTypeNameForWrapper(extractedOptional, "List") ?: extractedOptional
+        }
     }
 
     private fun tryExtractWrappedTypeNameForWrapper(name: WorldTypeName, wrapper: String): WorldTypeName? {

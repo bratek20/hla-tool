@@ -473,6 +473,18 @@ fun selfReferencingProperty(init: SelfReferencingPropertyDef.() -> Unit = {}): S
     )
 }
 
+data class CustomTypesPropertyOptionalListDef(
+    var id: String = "someValue",
+    var customPropertiesList: List<(CustomTypesPropertyDef.() -> Unit)>? = null,
+)
+fun customTypesPropertyOptionalList(init: CustomTypesPropertyOptionalListDef.() -> Unit = {}): CustomTypesPropertyOptionalList {
+    val def = CustomTypesPropertyOptionalListDef().apply(init)
+    return CustomTypesPropertyOptionalList.create(
+        id = def.id,
+        customPropertiesList = def.customPropertiesList?.let { it -> it.map { it -> customTypesProperty(it) } },
+    )
+}
+
 data class SomeInterfaceSomeCommandArgsDef(
     var id: String = "someValue",
     var amount: Int = 0,

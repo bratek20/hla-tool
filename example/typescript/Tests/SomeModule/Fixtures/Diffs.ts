@@ -799,6 +799,30 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedCustomTypesPropertyOptionalList {
+        id?: string,
+        customPropertiesListEmpty?: boolean,
+        customPropertiesList?: ExpectedCustomTypesProperty[],
+    }
+    export function diffCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, expected: ExpectedCustomTypesPropertyOptionalList, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (given.getId() != expected.id) { result.push(`${path}id ${given.getId()} != ${expected.id}`) }
+        }
+
+        if (expected.customPropertiesListEmpty !== undefined) {
+            if (given.getCustomPropertiesList().isEmpty() != expected.customPropertiesListEmpty) { result.push(`${path}customPropertiesList empty ${given.getCustomPropertiesList().isEmpty()} != ${expected.customPropertiesListEmpty}`) }
+        }
+
+        if (expected.customPropertiesList !== undefined) {
+            if (given.getCustomPropertiesList().get().length != expected.customPropertiesList.length) { result.push(`${path}customPropertiesList size ${given.getCustomPropertiesList().get().length} != ${expected.customPropertiesList.length}`) }
+            given.getCustomPropertiesList().get().forEach((entry, idx) => { if (diffCustomTypesProperty(entry, expected.customPropertiesList[idx]) != "") { result.push(diffCustomTypesProperty(entry, expected.customPropertiesList[idx], `${path}customPropertiesList[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeInterfaceSomeCommandArgs {
         id?: string,
         amount?: number,
