@@ -81,12 +81,17 @@ data class ImplSubmoduleDefinition(
 }
 
 data class HttpDefinition(
+    private val attributes: List<Attribute>,
     private val exposedInterfaces: List<String>,
     private val serverName: String?,
     private val baseUrl: String?,
     private val auth: String?,
     private val urlPathPrefix: String?,
 ) {
+    fun getAttributes(): List<Attribute> {
+        return this.attributes
+    }
+
     fun getExposedInterfaces(): List<String> {
         return this.exposedInterfaces
     }
@@ -109,6 +114,7 @@ data class HttpDefinition(
 
     companion object {
         fun create(
+            attributes: List<Attribute>,
             exposedInterfaces: List<String>,
             serverName: String?,
             baseUrl: String?,
@@ -116,6 +122,7 @@ data class HttpDefinition(
             urlPathPrefix: String?,
         ): HttpDefinition {
             return HttpDefinition(
+                attributes = attributes,
                 exposedInterfaces = exposedInterfaces,
                 serverName = serverName,
                 baseUrl = baseUrl,

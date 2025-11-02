@@ -80,6 +80,7 @@ fun diffImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: Ex
 }
 
 data class ExpectedHttpDefinition(
+    var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
     var exposedInterfaces: List<String>? = null,
     var serverNameEmpty: Boolean? = null,
     var serverName: String? = null,
@@ -93,6 +94,11 @@ data class ExpectedHttpDefinition(
 fun diffHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedHttpDefinition().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
+
+    expected.attributes?.let {
+        if (given.getAttributes().size != it.size) { result.add("${path}attributes size ${given.getAttributes().size} != ${it.size}"); return@let }
+        given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
+    }
 
     expected.exposedInterfaces?.let {
         if (given.getExposedInterfaces().size != it.size) { result.add("${path}exposedInterfaces size ${given.getExposedInterfaces().size} != ${it.size}"); return@let }

@@ -27,6 +27,7 @@ ValueObjects
         dataKeys: KeyDefinition[]
 
     HttpDefinition
+        attributes: Attribute[]
         exposedInterfaces: string[]
         serverName: string?
         baseUrl: string?

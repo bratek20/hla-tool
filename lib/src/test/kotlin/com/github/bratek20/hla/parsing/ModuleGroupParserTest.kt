@@ -740,6 +740,9 @@ class ModuleGroupParserTest {
                 name = "SomeModule"
                 webSubmodule = {
                     http = {
+                        attributes = listOf {
+                            name = "user"
+                        }
                         exposedInterfaces = listOf(
                             "SomeInterface",
                             "SomeInterface2"

@@ -1,0 +1,12 @@
+ValueObjects
+    SomeUserValueObject // to have fixtures so tests do not fail
+        someField: int
+
+Interfaces
+    SomeUserInterface
+        someMethod()
+
+Web
+    Http (user)
+        ExposedInterfaces
+            SomeUserInterface

@@ -3,6 +3,8 @@ package com.github.bratek20.hla.generation.impl.core.web
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.newListOf
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.attributes.hasAttribute
+import com.github.bratek20.hla.definitions.api.HttpDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -29,6 +31,14 @@ class WebServerContextGenerator: PatternGenerator() {
     }
     override fun shouldGenerate() = c.language.name() == ModuleLanguage.KOTLIN && c.module.getWebSubmodule()?.getHttp() != null
 
+    private fun getHttp(): HttpDefinition {
+        return c.module.getWebSubmodule()!!.getHttp()!!
+    }
+
+    private fun isUserModule(): Boolean {
+        return hasAttribute(getHttp().getAttributes(), "user")
+    }
+
     override fun getOperations(): TopLevelCodeBuilderOps = {
         addClass {
             name = "${moduleName}WebServer"
@@ -44,15 +54,17 @@ class WebServerContextGenerator: PatternGenerator() {
                     type = typeName("ContextBuilder")
                 }
                 setBody {
-                    add(methodCallStatement {
-                        target = variable("builder")
-                        name = "withModule"
-                        addArg {
-                            constructorCall {
-                                className = "${moduleName}Impl"
+                    if (!isUserModule()) {
+                        add(methodCallStatement {
+                            target = variable("builder")
+                            name = "withModule"
+                            addArg {
+                                constructorCall {
+                                    className = "${moduleName}Impl"
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
             }
 
@@ -64,13 +76,29 @@ class WebServerContextGenerator: PatternGenerator() {
                     add(returnStatement {
                         newListOf(
                             typeName("Class<*>"),
-                            *c.module.getWebSubmodule()!!.getHttp()!!.getExposedInterfaces().map { interfaceName ->
-                                expression {
+                            *getHttp().getExposedInterfaces().map { interfaceName ->
+                                hardcodedExpression(
                                     "${interfaceName}Controller::class.java"
-                                }
+                                )
                             }.toTypedArray()
                         )
                     })
+                }
+            }
+
+            if (isUserModule()) {
+                addMethod {
+                    name = "getConfigs"
+                    overridesClassMethod = true
+                    returnType = typeName("List<Class<*>>")
+                    setBody {
+                        add(returnStatement {
+                            newListOf(
+                                typeName("Class<*>"),
+                                hardcodedExpression("${moduleName}ImplConfig::class.java")
+                            )
+                        })
+                    }
                 }
             }
         }
