@@ -133,6 +133,7 @@ class ElementGroupViewModelLogic(
         val elementModelTypeName = getModelTypeForEnsuredUiElementWrapper(typesWorldApi, listTypeName).getName().value
 
         name = listTypeName
+        partial = true
         extends {
             name = "UiElementGroup"
             addGeneric {
