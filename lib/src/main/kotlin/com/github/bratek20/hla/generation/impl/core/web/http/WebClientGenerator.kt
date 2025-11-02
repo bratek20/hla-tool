@@ -204,11 +204,11 @@ class WebClientGenerator: PatternGenerator() {
         val getBodyPart = methodCall {
             target = optionalOp {
                 methodCall {
-                    methodName = "getBody"
+                    name = "getBody"
                     addGeneric(responseName(interfaceName, method))
                 }
             }.get()
-            methodName = "getValue"
+            name = "getValue"
         }
 
         val postUrl = getPostUrl(interfaceName, method)
@@ -217,7 +217,7 @@ class WebClientGenerator: PatternGenerator() {
             hardOptional(typeName(reqName)) {
                 methodCall {
                     target = variable(reqName)
-                    methodName = "create"
+                    name = "create"
                     apply(method.argsPassCB())
                 }
             }
@@ -226,7 +226,7 @@ class WebClientGenerator: PatternGenerator() {
 
         val finalExpression = methodCall {
             target = instanceVariable("client")
-            methodName = "post"
+            name = "post"
             addArg {
                 variable(postUrl)
             }

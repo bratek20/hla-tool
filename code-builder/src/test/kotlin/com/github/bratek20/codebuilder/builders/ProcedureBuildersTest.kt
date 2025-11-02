@@ -4,7 +4,6 @@ import com.github.bratek20.codebuilder.core.*
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.pairOp
 import com.github.bratek20.codebuilder.types.pairType
-import com.github.bratek20.codebuilder.types.typeName
 import org.junit.jupiter.api.Test
 
 class ProcedureBuildersTest {
@@ -129,7 +128,7 @@ class ProcedureBuildersTest {
                 add(assignment {
                     left = variable("result")
                     right = methodCall {
-                        methodName = "sum"
+                        name = "sum"
 
                         addArg {
                             const(1)
@@ -144,7 +143,7 @@ class ProcedureBuildersTest {
                     right = plus {
                         left = methodCall {
                             target = variable("left")
-                            methodName = "sum"
+                            name = "sum"
 
                             addArg {
                                 const(1)
@@ -155,7 +154,7 @@ class ProcedureBuildersTest {
                         }
                         right = methodCall {
                             target = variable("right")
-                            methodName = "sum"
+                            name = "sum"
 
                             addArg {
                                 const(3)

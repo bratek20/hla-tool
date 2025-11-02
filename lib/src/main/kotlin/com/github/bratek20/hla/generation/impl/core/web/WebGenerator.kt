@@ -8,7 +8,9 @@ import com.github.bratek20.hla.generation.impl.core.web.http.WebCommonGenerator
 import com.github.bratek20.hla.generation.impl.core.web.http.WebServerGenerator
 
 
-class WebGenerator: SubmoduleGenerator() {
+class WebGenerator(
+    private val webServerContextGenerator: WebServerContextGenerator
+): SubmoduleGenerator() {
     override fun submoduleName(): SubmoduleName {
         return SubmoduleName.Web
     }
@@ -27,7 +29,7 @@ class WebGenerator: SubmoduleGenerator() {
             WebClientGenerator(),
             WebServerGenerator(),
             PlayFabHandlersGenerator(),
-            WebServerContextGenerator(),
+            webServerContextGenerator,
             WebClientContextGenerator()
         )
     }

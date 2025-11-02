@@ -297,6 +297,13 @@ class TypesTest {
                     const list: string[] = [ "str1", "str2" ]
                     """
                 }
+                langExpected {
+                    lang = Kotlin()
+                    expected =
+                        """
+                    val list: List<String> = listOf("str1", "str2")
+                    """
+                }
             }
         }
     }
@@ -494,7 +501,7 @@ class TypesTest {
                         }
                         body = methodCall {
                             target = variable("mock")
-                            methodName = "someMethod"
+                            name = "someMethod"
                             addArg {
                                 variable("arg")
                             }

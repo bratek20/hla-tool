@@ -37,6 +37,7 @@ data class DomainContext(
 class ModuleGeneratorLogic(
     private val velocity: VelocityFacade,
     private val apiGenerator: ApiGenerator,
+    private val webGenerator: WebGenerator,
     private val viewModelGenerator: ViewModelGenerator,
     private val viewGenerator: ViewGenerator,
     private val prefabsGenerator: PrefabsGenerator,
@@ -48,6 +49,7 @@ class ModuleGeneratorLogic(
     class SubmodulesGenerator(
         private val context: ModuleGenerationContext,
         private val apiGenerator: ApiGenerator,
+        private val webGenerator: WebGenerator,
         private val viewModelGenerator: ViewModelGenerator,
         private val viewGenerator: ViewGenerator,
         private val prefabsGenerator: PrefabsGenerator,
@@ -57,7 +59,7 @@ class ModuleGeneratorLogic(
             return listOf(
                 apiGenerator,
                 ImplGenerator(),
-                WebGenerator(),
+                webGenerator,
                 viewModelGenerator,
                 viewGenerator,
                 prefabsGenerator,
@@ -109,6 +111,7 @@ class ModuleGeneratorLogic(
             submodules = SubmodulesGenerator(
                 context,
                 apiGenerator,
+                webGenerator,
                 viewModelGenerator,
                 viewGenerator,
                 prefabsGenerator,

@@ -7,6 +7,7 @@ import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.CodeBuilderContext
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
+import com.github.bratek20.codebuilder.core.TypeScript
 
 fun listType(elementType: TypeBuilder) = typeName { c ->
     c.lang.listType(elementType.build(c))
@@ -26,14 +27,16 @@ fun emptyMutableList(elementType: TypeBuilder) = expression { c ->
 }
 
 fun newListOf(elementType: TypeBuilder, vararg elements: ExpressionBuilder) = expression { c ->
+    val args = elements.joinToString(", ") { it.build(c) }
     if (c.lang is CSharp) {
         val creation = emptyMutableList(elementType).build(c)
-        val args = elements.joinToString(", ") { it.build(c) }
         "$creation { $args }"
     }
-    else {
-        val args = elements.joinToString(", ") { it.build(c) }
+    else if (c.lang is TypeScript) {
         "[ $args ]"
+    }
+    else {
+        "listOf($args)"
     }
 }
 
