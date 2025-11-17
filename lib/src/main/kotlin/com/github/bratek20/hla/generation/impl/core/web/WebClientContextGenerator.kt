@@ -97,7 +97,7 @@ class WebClientContextGenerator: PatternGenerator() {
                         instanceVariable("builder")
                     }.then {
                         methodCall {
-                            methodName = "setImplObject"
+                            name = "setImplObject"
                             addGeneric("${module.getName()}WebClientConfig")
                             addArg {
                                 constructorCall {
@@ -113,7 +113,7 @@ class WebClientContextGenerator: PatternGenerator() {
                     module.getWebSubmodule()!!.getHttp()!!.getExposedInterfaces().forEach { interf ->
                         builderOperations.then {
                             methodCall {
-                                methodName = "setImpl"
+                                name = "setImpl"
                                 addGeneric(interf)
                                 addGeneric("${interf}WebClient")
                             }

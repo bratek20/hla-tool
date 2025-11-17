@@ -46,6 +46,7 @@ fun implSubmoduleDefinition(init: ImplSubmoduleDefinitionDef.() -> Unit = {}): I
 }
 
 data class HttpDefinitionDef(
+    var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
     var exposedInterfaces: List<String> = emptyList(),
     var serverName: String? = null,
     var baseUrl: String? = null,
@@ -55,6 +56,7 @@ data class HttpDefinitionDef(
 fun httpDefinition(init: HttpDefinitionDef.() -> Unit = {}): HttpDefinition {
     val def = HttpDefinitionDef().apply(init)
     return HttpDefinition.create(
+        attributes = def.attributes.map { it -> attribute(it) },
         exposedInterfaces = def.exposedInterfaces,
         serverName = def.serverName,
         baseUrl = def.baseUrl,

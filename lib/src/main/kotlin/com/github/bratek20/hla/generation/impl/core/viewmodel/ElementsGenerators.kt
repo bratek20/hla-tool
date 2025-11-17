@@ -133,6 +133,7 @@ class ElementGroupViewModelLogic(
         val elementModelTypeName = getModelTypeForEnsuredUiElementWrapper(typesWorldApi, listTypeName).getName().value
 
         name = listTypeName
+        partial = true
         extends {
             name = "UiElementGroup"
             addGeneric {
@@ -262,14 +263,14 @@ class ViewModelComplexElementLogic(
             getMappedFields().forEach { field ->
                 add(methodCallStatement {
                     target = getterField(field.name)
-                    methodName = "update"
+                    name = "update"
                     addArg {
                         //TODO-REF
                         if (field.type is SimpleValueObjectApiType) {
                             getterFieldAccess {
                                 objectRef = methodCall {
                                     target = getterField("model")
-                                    methodName = field.getterName()
+                                    name = field.getterName()
                                 }
                                 fieldName = "value"
                             }
@@ -278,7 +279,7 @@ class ViewModelComplexElementLogic(
                             optionalOp {
                                 methodCall {
                                     target = getterField("model")
-                                    methodName = field.getterName()
+                                    name = field.getterName()
                                 }
                             }.map {
                                 getterFieldAccess {
@@ -290,7 +291,7 @@ class ViewModelComplexElementLogic(
                         else {
                             methodCall {
                                 target = getterField("model")
-                                methodName = field.getterName()
+                                name = field.getterName()
                             }
                         }
                     }

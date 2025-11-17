@@ -70,7 +70,7 @@ class MockMethodLogic(
                         .add {
                             methodCall {
                                 target = variable(methodsArgsTypeName(interfDef, def))
-                                methodName = "create"
+                                name = "create"
                                 def.getArgs().forEach { arg ->
                                     addArg {
                                         variable(arg.getName())
@@ -159,7 +159,7 @@ class MockMethodLogic(
                 }
                 setBody {
                     add(methodCallStatement {
-                        methodName = assertCallsNumberMethodName()
+                        name = assertCallsNumberMethodName()
                         addArg {
                             expectedArgsListOp.size()
                         }
@@ -261,7 +261,7 @@ class MockMethodLogic(
                         }
                         val mockMethodCall = methodCall {
                             target = variable("mock")
-                            methodName = def.getName()
+                            name = def.getName()
                             def.getArgs().forEach { arg ->
                                 addArg {
                                     variable(arg.getName())

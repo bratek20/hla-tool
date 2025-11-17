@@ -101,7 +101,7 @@ abstract class ModulePartGenerator {
     }
 }
 
-private fun submodulePackage(group: ModuleGroup, submodule: SubmoduleName, c: ModuleGenerationContext): String {
+fun submodulePackage(group: ModuleGroup, submodule: SubmoduleName, c: ModuleGenerationContext): String {
     return submodulePackageForModule(group, c.module.getName(), submodule, c)
 }
 
@@ -178,19 +178,36 @@ abstract class PatternGenerator
                 cb.kotlinFile {
                     packageName = submodulePackage(c.domain.queries.group, submodule, c)
 
-                    extraKotlinImports().forEach {
-                        addImport(it)
-                    }
-
-                    modules.getCurrentDependencies().forEach { dep ->
-                        val submodules = mutableListOf(
-                            submodule
+                    if (useImportsCalculator()) {
+                        val importsToAdd = extraKotlinImports().toMutableSet()
+                        val patternPath = HlaTypePath.create(
+                            c.module.getName(),
+                            submodule,
+                            patternName()
                         )
-                        if (submodule == SubmoduleName.Fixtures) {
-                            submodules.add(SubmoduleName.Api)
+                        importsCalculator.calculate(patternPath).forEach {
+                            importsToAdd.add(it)
                         }
-                        submodules.forEach {
-                            addImport(submodulePackageForModule(dep.getGroup(), dep.getModule().getName(), it, c) + ".*")
+
+                        importsToAdd.forEach {
+                            addImport(it)
+                        }
+                    }
+                    else {
+                        extraKotlinImports().forEach {
+                            addImport(it)
+                        }
+
+                        modules.getCurrentDependencies().forEach { dep ->
+                            val submodules = mutableListOf(
+                                submodule
+                            )
+                            if (submodule == SubmoduleName.Fixtures) {
+                                submodules.add(SubmoduleName.Api)
+                            }
+                            submodules.forEach {
+                                addImport(submodulePackageForModule(dep.getGroup(), dep.getModule().getName(), it, c) + ".*")
+                            }
                         }
                     }
 

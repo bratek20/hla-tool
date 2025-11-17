@@ -134,6 +134,7 @@ class ModuleGroupParserLogic(
         return findSection(elements, "Web")?.let { web ->
             val http = findSection(web.elements, "Http")?.let { http ->
                 HttpDefinition(
+                    attributes = http.attributes,
                     exposedInterfaces = findSection(http.elements, "ExposedInterfaces")?.elements
                         ?.filterIsInstance<Section>()?.map { it.name } ?: emptyList(),
                     serverName = parseOptVariable(http.elements, "serverName"),

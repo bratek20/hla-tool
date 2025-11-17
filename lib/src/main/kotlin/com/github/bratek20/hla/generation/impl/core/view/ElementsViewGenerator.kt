@@ -80,13 +80,13 @@ open class ViewLogic(
                 setBody {
                     add(methodCallStatement {
                         target = parent()
-                        methodName = "onBind"
+                        name = "onBind"
                     })
 
                     fields.forEach {
                         add(methodCallStatement {
                             target = variable(it.getName())
-                            methodName = "bind"
+                            name = "bind"
                             addArg {
                                 getterFieldAccess {
                                     objectRef = getterField("viewModel")

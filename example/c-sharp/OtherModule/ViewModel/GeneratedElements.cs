@@ -18,7 +18,7 @@ namespace OtherModule.ViewModel {
         }
     }
 
-    public class OtherClassVmGroup: UiElementGroup<OtherClassVm, OtherClass> {
+    public partial class OtherClassVmGroup: UiElementGroup<OtherClassVm, OtherClass> {
         public OtherClassVmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<OtherClassVm>()) {

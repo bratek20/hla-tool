@@ -123,21 +123,21 @@ namespace SomeModule.ViewModel {
     public class SomeEnum2Switch: EnumSwitch<SomeEnum2> {
     }
 
-    public class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
+    public partial class SomeClass2VmGroup: UiElementGroup<SomeClass2Vm, SomeClass2> {
         public SomeClass2VmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<SomeClass2Vm>()) {
         }
     }
 
-    public class SomeEnum2SwitchGroup: UiElementGroup<SomeEnum2Switch, SomeEnum2> {
+    public partial class SomeEnum2SwitchGroup: UiElementGroup<SomeEnum2Switch, SomeEnum2> {
         public SomeEnum2SwitchGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<SomeEnum2Switch>()) {
         }
     }
 
-    public class SomeClassVmGroup: UiElementGroup<SomeClassVm, SomeClass> {
+    public partial class SomeClassVmGroup: UiElementGroup<SomeClassVm, SomeClass> {
         public SomeClassVmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<SomeClassVm>()) {

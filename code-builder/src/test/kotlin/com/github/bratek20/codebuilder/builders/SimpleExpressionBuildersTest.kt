@@ -63,7 +63,7 @@ class SimpleExpressionBuildersTest {
                     instanceVariable("client")
                 }.then {
                     methodCall {
-                        methodName = "get"
+                        name = "get"
                     }
                 }
 
@@ -71,15 +71,15 @@ class SimpleExpressionBuildersTest {
                     instanceVariable("client")
                 }.then {
                     methodCall {
-                        methodName = "post"
+                        name = "post"
                     }
                 }.then {
                     methodCall {
-                        methodName = "getBody"
+                        name = "getBody"
                     }
                 }.then {
                     methodCall {
-                        methodName = "Get"
+                        name = "Get"
                     }
                 }.then {
                     expression("Value")

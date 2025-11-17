@@ -46,15 +46,15 @@ abstract class CallBuilder: ExpressionBuilder {
 }
 
 class MethodCallBuilder: CallBuilder() {
-    lateinit var methodName: String
+    lateinit var name: String
 
     var target: ExpressionBuilder? = null
 
     override fun getCallName(c: CodeBuilderContext): String {
         return if (c.lang.areMethodsPascalCase()) {
-            camelToPascalCase(methodName)
+            camelToPascalCase(name)
         } else {
-            methodName
+            name
         }
     }
 

@@ -6,7 +6,7 @@ Interfaces
         someMethod()
 
 Web
-    Http
+    Http (user)
         ExposedInterfaces
             SomeInterface
             SomeInterface2

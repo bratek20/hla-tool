@@ -304,7 +304,7 @@ class SimpleValueObjectApiType(
         if (language is TypeScript) {
             return methodCall {
                 target = variable
-                methodName = "getValue"
+                name = "getValue"
             }
         }
 
@@ -329,7 +329,7 @@ class SimpleValueObjectApiType(
                     add(returnStatement {
                         methodCall {
                             target = getterField("value")
-                            methodName = "toString"
+                            name = "toString"
                         }
                     })
                 }
@@ -443,14 +443,14 @@ class ComplexCustomApiType(
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
         return methodCall {
             target = variable
-            methodName = "toCustomType"
+            name = "toCustomType"
         }
     }
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
         return methodCall {
             target = variable(serializableName())
-            methodName = "fromCustomType"
+            name = "fromCustomType"
             addArg {
                 variable
             }

@@ -7,8 +7,6 @@ import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.utils.directory.api.Directory
-import com.github.bratek20.utils.directory.api.DirectoryName
 
 class MenuPattern: PatternGenerator() {
 
@@ -85,13 +83,13 @@ class MenuPattern: PatternGenerator() {
         target = methods.fold(variable(BUILDER_VAR_NAME)) { current, method ->
             methodCall {
                 target = current
-                methodName = "addNamespaced"
+                name = "addNamespaced"
                 addArg { string(camelToHumanReadableCase(method.getName())) }
                 addArg { string("${module.getName()}.Menu") }
                 addArg { variable(method.getName()) }
             }
         }
-        methodName = "build"
+        name = "build"
     }
 
     private fun addInterfacesFunctions(
@@ -118,13 +116,13 @@ class MenuPattern: PatternGenerator() {
             method: MethodDefinition
     ): StatementBuilder = methodCallStatement {
         this.target = variable("Woh")
-        this.methodName = "menuDecorator"
+        this.name = "menuDecorator"
         addArg {
             lambda {
                 addArg { name = "c"; type = baseType(BaseType.ANY) }
                 body = methodCall {
                     this.target = variable("${module.getName()}.Api")
-                    this.methodName = method.getName()
+                    this.name = method.getName()
                     addArg { variable("c") }
                 }
             }

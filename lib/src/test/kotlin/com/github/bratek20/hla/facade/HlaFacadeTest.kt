@@ -97,6 +97,11 @@ class HlaFacadeTest {
                     kotlinTestPaths("simplemodule")
                 ),
                 Arguments.of(
+                    "SomeUserModule",
+                    KOTLIN_PROFILE,
+                    kotlinTestPaths("someusermodule")
+                ),
+                Arguments.of(
                     "ImportingModule",
                     KOTLIN_2_PROFILE,
                     kotlin2TestPaths("importingmodule")
@@ -691,7 +696,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(11)
+        directoriesMock.assertWriteCount(13)
     }
 
     @Test

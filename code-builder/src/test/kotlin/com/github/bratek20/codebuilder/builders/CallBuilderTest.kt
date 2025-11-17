@@ -3,7 +3,6 @@ package com.github.bratek20.codebuilder.builders
 import com.github.bratek20.codebuilder.core.CSharp
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.core.testLinePartOps
-import com.github.bratek20.codebuilder.core.testOp
 import org.junit.jupiter.api.Test
 
 class CallBuilderTest {
@@ -38,7 +37,7 @@ class CallBuilderTest {
         testLinePartOps {
             ops {
                 add(methodCall {
-                    methodName = "someFunction"
+                    name = "someFunction"
                     addGeneric("SomeType")
                 })
             }
