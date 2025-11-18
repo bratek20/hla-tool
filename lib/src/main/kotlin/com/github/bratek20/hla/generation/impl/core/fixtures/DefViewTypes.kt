@@ -129,9 +129,7 @@ open class DefField(
     val api: ComplexStructureField,
     private val factory: DefTypeFactory
 ) {
-    val kotlinPrivateWords = listOf("as")
-
-    val name = if(api.type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(api.name)) "`${api.name}`"  else api.name
+    val name = if(api.type.languageTypes is KotlinTypes && api.kotlinPrivateWords.contains(api.name)) "`${api.name}`"  else api.name
 
     val type by lazy {
         factory.create(api.type)

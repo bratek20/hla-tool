@@ -20,14 +20,18 @@ open class ComplexStructureField(
     private lateinit var complexStructure: ComplexStructureApiType<*>
 
     val kotlinPrivateWords = listOf("as")
+
     fun init(complexStructure: ComplexStructureApiType<*>) {
         this.complexStructure = complexStructure
     }
 
-    val name = def.getName()
-
     val type: ApiTypeLogic by lazy {
         factory.create(def.getType())
+    }
+
+    val name : String by lazy {
+        val raw = def.getName()
+        if (type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(raw)) "`$raw`" else raw
     }
 
     fun access(variableName: String): String {
@@ -185,13 +189,13 @@ open class ComplexStructureField(
         if(type.languageTypes is KotlinTypes) {
             val records = complexStructure.typeModule?.getKotlinConfig()?.getRecords() ?: emptyList()
             if (records.contains(complexStructure.name())) {
-                return name
+                return def.getName()
             }
         }
-        return "get${camelToPascalCase(name)}"
+        return "get${camelToPascalCase(def.getName())}"
     }
 
     fun setterName(): String {
-        return "set${camelToPascalCase(name)}"
+        return "set${camelToPascalCase(def.getName())}"
     }
 }
