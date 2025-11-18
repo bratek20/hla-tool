@@ -34,6 +34,8 @@ open class ComplexStructureField(
         if (type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(raw)) "`$raw`" else raw
     }
 
+    val defName = def.getName()
+
     fun access(variableName: String): String {
         if (complexStructure is ComplexCustomApiType) {
             return accessComplexCustomType(variableName)
@@ -189,13 +191,13 @@ open class ComplexStructureField(
         if(type.languageTypes is KotlinTypes) {
             val records = complexStructure.typeModule?.getKotlinConfig()?.getRecords() ?: emptyList()
             if (records.contains(complexStructure.name())) {
-                return def.getName()
+                return defName
             }
         }
-        return "get${camelToPascalCase(def.getName())}"
+        return "get${camelToPascalCase(defName)}"
     }
 
     fun setterName(): String {
-        return "set${camelToPascalCase(def.getName())}"
+        return "set${camelToPascalCase(defName)}"
     }
 }

@@ -118,7 +118,7 @@ open class DefaultExpectedTypeField(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String): String {
-        val diffCall = type.diff(api.access(givenVariable), expectedVariable, "\${path}${name()}")
+        val diffCall = type.diff(api.access(givenVariable), expectedVariable, "\${path}${api.defName}")
         val ifCondition = type.notEquals(api.access(givenVariable), expectedVariable)
         if (ifCondition == null) {
             return diffCall
