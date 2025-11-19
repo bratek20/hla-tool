@@ -241,6 +241,7 @@ data class SomePropertyDef(
     var longExample: Long = 0L,
     var goodName: String = "someValue",
     var customData: com.github.bratek20.architecture.structs.api.Struct = com.github.bratek20.architecture.structs.api.Struct(),
+    var `as`: String = "someValue",
 )
 fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
     val def = SomePropertyDef().apply(init)
@@ -252,6 +253,7 @@ fun someProperty(init: SomePropertyDef.() -> Unit = {}): SomeProperty {
         longExample = def.longExample,
         goodName = def.goodName,
         customData = def.customData,
+        `as` = def.`as`,
     )
 }
 
@@ -260,6 +262,7 @@ data class SomeProperty2Def(
     var custom: Any = Any(),
     var someEnum: String = SomeEnum.VALUE_A.name,
     var customOpt: Any? = null,
+    var kotlinKeyword: String = "someValue",
 )
 fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
     val def = SomeProperty2Def().apply(init)
@@ -268,6 +271,7 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
         custom = def.custom,
         someEnum = SomeEnum.valueOf(def.someEnum),
         customOpt = def.customOpt,
+        kotlinKeyword = def.kotlinKeyword,
     )
 }
 

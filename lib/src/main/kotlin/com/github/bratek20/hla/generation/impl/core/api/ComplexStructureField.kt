@@ -19,15 +19,22 @@ open class ComplexStructureField(
 ) {
     private lateinit var complexStructure: ComplexStructureApiType<*>
 
+    private val kotlinRestrictedWords = listOf("as")
+
     fun init(complexStructure: ComplexStructureApiType<*>) {
         this.complexStructure = complexStructure
     }
 
-    val name = def.getName()
-
     val type: ApiTypeLogic by lazy {
         factory.create(def.getType())
     }
+
+    val name : String by lazy {
+        val raw = def.getName()
+        buildNameFromRaw(raw)
+    }
+
+    val defName = def.getName()
 
     fun access(variableName: String): String {
         if (complexStructure is ComplexCustomApiType) {
@@ -127,14 +134,23 @@ open class ComplexStructureField(
         if (type.languageTypes is TypeScriptTypes) {
             return "instance.${privateName()} = ${type.serialize(name)}"
         }
-        return "${privateName()} = ${type.serialize(name)}"
+        val assignment = type.serialize(name)
+        return "${privateName()} = ${buildNameFromRaw(assignment)}"
+    }
+
+    fun buildNameFromRaw(value: String): String {
+        if (type.languageTypes is KotlinTypes && kotlinRestrictedWords.contains(value)){
+            return "`$value`"
+        }
+        return value
     }
 
     fun privateName(): String {
+        var finalName = name
         def.getAttributes().firstOrNull { it.getName() == "from" }?.let {
-            return it.getValue()
+            finalName = it.getValue()
         }
-        return name
+        return buildNameFromRaw(finalName)
     }
 
     private fun mapDefaultValue(value: String): ExpressionBuilder {
@@ -175,13 +191,13 @@ open class ComplexStructureField(
         if(type.languageTypes is KotlinTypes) {
             val records = complexStructure.typeModule?.getKotlinConfig()?.getRecords() ?: emptyList()
             if (records.contains(complexStructure.name())) {
-                return name
+                return defName
             }
         }
-        return "get${camelToPascalCase(name)}"
+        return "get${camelToPascalCase(defName)}"
     }
 
     fun setterName(): String {
-        return "set${camelToPascalCase(name)}"
+        return "set${camelToPascalCase(defName)}"
     }
 }

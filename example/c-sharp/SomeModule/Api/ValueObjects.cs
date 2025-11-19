@@ -463,6 +463,7 @@ namespace SomeModule.Api {
         readonly long longExample;
         readonly string goodName;
         readonly B20.Architecture.Structs.Api.Struct customData;
+        readonly string as;
 
         public SomeProperty(
             OtherProperty other,
@@ -471,7 +472,8 @@ namespace SomeModule.Api {
             double doubleExample,
             long longExample,
             string goodName,
-            B20.Architecture.Structs.Api.Struct customData
+            B20.Architecture.Structs.Api.Struct customData,
+            string as
         ) {
             this.other = other;
             this.id2 = id2;
@@ -480,6 +482,7 @@ namespace SomeModule.Api {
             this.longExample = longExample;
             this.goodName = goodName;
             this.customData = customData;
+            this.as = as;
         }
         public OtherProperty GetOther() {
             return other;
@@ -502,8 +505,11 @@ namespace SomeModule.Api {
         public B20.Architecture.Structs.Api.Struct GetCustomData() {
             return customData;
         }
-        public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, B20.Architecture.Structs.Api.Struct customData) {
-            return new SomeProperty(other, id2.Map(it => it.Value).OrElse(null), range.Map(it => SerializedDateRange.FromCustomType(it)).OrElse(null), doubleExample, longExample, goodName, customData);
+        public string GetAs() {
+            return as;
+        }
+        public static SomeProperty Create(OtherProperty other, Optional<SomeId2> id2, Optional<DateRange> range, double doubleExample, long longExample, string goodName, B20.Architecture.Structs.Api.Struct customData, string as) {
+            return new SomeProperty(other, id2.Map(it => it.Value).OrElse(null), range.Map(it => SerializedDateRange.FromCustomType(it)).OrElse(null), doubleExample, longExample, goodName, customData, as);
         }
     }
 
@@ -512,17 +518,20 @@ namespace SomeModule.Api {
         readonly object custom;
         readonly string someEnum;
         readonly object? customOpt;
+        readonly string kotlinKeyword;
 
         public SomeProperty2(
             string value,
             object custom,
             string someEnum,
-            object? customOpt
+            object? customOpt,
+            string kotlinKeyword
         ) {
             this.value = value;
             this.custom = custom;
             this.someEnum = someEnum;
             this.customOpt = customOpt;
+            this.kotlinKeyword = kotlinKeyword;
         }
         public string GetValue() {
             return value;
@@ -536,8 +545,11 @@ namespace SomeModule.Api {
         public Optional<object> GetCustomOpt() {
             return Optional<object>.Of(customOpt);
         }
-        public static SomeProperty2 Create(string value, object custom, SomeEnum someEnum, Optional<object> customOpt) {
-            return new SomeProperty2(value, custom, someEnum.ToString(), customOpt.OrElse(null));
+        public string GetKotlinKeyword() {
+            return kotlinKeyword;
+        }
+        public static SomeProperty2 Create(string value, object custom, SomeEnum someEnum, Optional<object> customOpt, string kotlinKeyword) {
+            return new SomeProperty2(value, custom, someEnum.ToString(), customOpt.OrElse(null), kotlinKeyword);
         }
     }
 

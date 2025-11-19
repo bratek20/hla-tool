@@ -108,6 +108,7 @@ namespace SomeModule.Fixtures {
         public long LongExample { get; set; } = 0;
         public string GoodName { get; set; } = "someValue";
         public B20.Architecture.Structs.Api.Struct CustomData { get; set; } = null;
+        public string As { get; set; } = "someValue";
     }
 
     public class SomeProperty2Def {
@@ -115,6 +116,7 @@ namespace SomeModule.Fixtures {
         public object Custom { get; set; } = null;
         public string SomeEnum { get; set; } = SomeModule.Api.SomeEnum.VALUE_A.ToString();
         public object? CustomOpt { get; set; } = null;
+        public string KotlinKeyword { get; set; } = "someValue";
     }
 
     public class SomePropertyEntryDef {
@@ -343,13 +345,13 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeProperty.Create(OtherModuleBuilders.BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => TypesModuleBuilders.BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData);
+            return SomeProperty.Create(OtherModuleBuilders.BuildOtherProperty(def.Other), Optional<int>.Of(def.Id2).Map(it => new SomeId2(it)), Optional<Action<DateRangeDef>>.Of(def.Range).Map(it => TypesModuleBuilders.BuildDateRange(it)), def.DoubleExample, def.LongExample, def.GoodName, def.CustomData, def.As);
         }
         public static SomeProperty2 BuildSomeProperty2(Action<SomeProperty2Def> init = null) {
             var def = new SomeProperty2Def();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeProperty2.Create(def.Value, def.Custom, (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), Optional<object>.Of(def.CustomOpt));
+            return SomeProperty2.Create(def.Value, def.Custom, (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnum), Optional<object>.Of(def.CustomOpt), def.KotlinKeyword);
         }
         public static SomePropertyEntry BuildSomePropertyEntry(Action<SomePropertyEntryDef> init = null) {
             var def = new SomePropertyEntryDef();

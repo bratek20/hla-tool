@@ -129,7 +129,7 @@ open class DefField(
     val api: ComplexStructureField,
     private val factory: DefTypeFactory
 ) {
-    val name = api.name
+    val name = api.buildNameFromRaw(api.name)
 
     val type by lazy {
         factory.create(api.type)

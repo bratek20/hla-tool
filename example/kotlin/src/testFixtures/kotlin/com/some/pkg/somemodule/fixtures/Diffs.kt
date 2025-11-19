@@ -446,6 +446,7 @@ data class ExpectedSomeProperty(
     var longExample: Long? = null,
     var goodName: String? = null,
     var customData: com.github.bratek20.architecture.structs.api.Struct? = null,
+    var `as`: String? = null,
 )
 fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeProperty().apply(expectedInit)
@@ -487,6 +488,10 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
         if (given.getCustomData() != it) { result.add("${path}customData ${given.getCustomData()} != ${it}") }
     }
 
+    expected.`as`?.let {
+        if (given.getAs() != it) { result.add("${path}as ${given.getAs()} != ${it}") }
+    }
+
     return result.joinToString("\n")
 }
 
@@ -496,6 +501,7 @@ data class ExpectedSomeProperty2(
     var someEnum: String? = null,
     var customOptEmpty: Boolean? = null,
     var customOpt: Any? = null,
+    var kotlinKeyword: String? = null,
 )
 fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeProperty2().apply(expectedInit)
@@ -519,6 +525,10 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
     expected.customOpt?.let {
         if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
+    }
+
+    expected.kotlinKeyword?.let {
+        if (given.getKotlinKeyword() != it) { result.add("${path}kotlinKeyword ${given.getKotlinKeyword()} != ${it}") }
     }
 
     return result.joinToString("\n")

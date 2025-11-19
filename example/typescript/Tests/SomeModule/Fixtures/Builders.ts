@@ -270,6 +270,7 @@ namespace SomeModule.Builder {
         longExample?: number,
         goodName?: string,
         customData?: any,
+        as?: string,
     }
     export function someProperty(def?: SomePropertyDef): SomeProperty {
         const final_other = def?.other ?? {}
@@ -279,6 +280,7 @@ namespace SomeModule.Builder {
         const final_longExample = def?.longExample ?? 0
         const final_goodName = def?.goodName ?? "someValue"
         const final_customData = def?.customData ?? {}
+        const final_as = def?.as ?? "someValue"
 
         return SomeProperty.create(
             OtherModule.Builder.otherProperty(final_other),
@@ -288,6 +290,7 @@ namespace SomeModule.Builder {
             final_longExample,
             final_goodName,
             final_customData,
+            final_as,
         )
     }
 
@@ -296,18 +299,21 @@ namespace SomeModule.Builder {
         custom?: any,
         someEnum?: string,
         customOpt?: any,
+        kotlinKeyword?: string,
     }
     export function someProperty2(def?: SomeProperty2Def): SomeProperty2 {
         const final_value = def?.value ?? "someValue"
         const final_custom = def?.custom ?? {}
         const final_someEnum = def?.someEnum ?? SomeEnum.VALUE_A.getName()
         const final_customOpt = def?.customOpt ?? undefined
+        const final_kotlinKeyword = def?.kotlinKeyword ?? "someValue"
 
         return SomeProperty2.create(
             final_value,
             final_custom,
             SomeEnum.fromName(final_someEnum),
             Optional.of(final_customOpt),
+            final_kotlinKeyword,
         )
     }
 
