@@ -31,7 +31,7 @@ open class ComplexStructureField(
 
     val name : String by lazy {
         val raw = def.getName()
-        if (type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(raw)) "`$raw`" else raw
+        if (isKotlinPrivateWord(raw)) "`$raw`" else raw
     }
 
     val defName = def.getName()
@@ -119,8 +119,7 @@ open class ComplexStructureField(
     fun createDeclarationNoDefault(): String = internalCreateDeclaration(false)
 
     private fun internalCreateDeclaration(allowDefault: Boolean): String {
-        val finalName = if(type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(name)) privateName() else name
-        val base = "${finalName}: ${type.name()}"
+        val base = "${name}: ${type.name()}"
         if (allowDefault) {
             defaultValue()?.let {
                 return "$base = $it"
@@ -136,10 +135,14 @@ open class ComplexStructureField(
             return "instance.${privateName()} = ${type.serialize(name)}"
         }
         val assignment = type.serialize(name)
-        if(type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(assignment)) {
+        if(isKotlinPrivateWord(assignment)) {
             return "${privateName()} = `$assignment`"
         }
         return "${privateName()} = $assignment"
+    }
+
+    fun isKotlinPrivateWord(value: String): Boolean {
+        return type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(value)
     }
 
     fun privateName(): String {
@@ -147,7 +150,7 @@ open class ComplexStructureField(
         def.getAttributes().firstOrNull { it.getName() == "from" }?.let {
             finalName = it.getValue()
         }
-        if(type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(finalName)) {
+        if(isKotlinPrivateWord(finalName)) {
             finalName = "`${finalName}`"
         }
         return finalName
