@@ -129,7 +129,7 @@ open class DefField(
     val api: ComplexStructureField,
     private val factory: DefTypeFactory
 ) {
-    val name = if(api.isKotlinPrivateWord(api.name)) "`${api.name}`"  else api.name
+    val name = api.buildNameFromRaw(api.name)
 
     val type by lazy {
         factory.create(api.type)

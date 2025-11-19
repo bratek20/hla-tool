@@ -19,7 +19,7 @@ open class ComplexStructureField(
 ) {
     private lateinit var complexStructure: ComplexStructureApiType<*>
 
-    val kotlinPrivateWords = listOf("as")
+    private val kotlinRestrictedWords = listOf("as")
 
     fun init(complexStructure: ComplexStructureApiType<*>) {
         this.complexStructure = complexStructure
@@ -31,7 +31,7 @@ open class ComplexStructureField(
 
     val name : String by lazy {
         val raw = def.getName()
-        if (isKotlinPrivateWord(raw)) "`$raw`" else raw
+        buildNameFromRaw(raw)
     }
 
     val defName = def.getName()
@@ -135,14 +135,14 @@ open class ComplexStructureField(
             return "instance.${privateName()} = ${type.serialize(name)}"
         }
         val assignment = type.serialize(name)
-        if(isKotlinPrivateWord(assignment)) {
-            return "${privateName()} = `$assignment`"
-        }
-        return "${privateName()} = $assignment"
+        return "${privateName()} = ${buildNameFromRaw(assignment)}"
     }
 
-    fun isKotlinPrivateWord(value: String): Boolean {
-        return type.languageTypes is KotlinTypes && kotlinPrivateWords.contains(value)
+    fun buildNameFromRaw(value: String): String {
+        if (type.languageTypes is KotlinTypes && kotlinRestrictedWords.contains(value)){
+            return "`$value`"
+        }
+        return value
     }
 
     fun privateName(): String {
@@ -150,10 +150,7 @@ open class ComplexStructureField(
         def.getAttributes().firstOrNull { it.getName() == "from" }?.let {
             finalName = it.getValue()
         }
-        if(isKotlinPrivateWord(finalName)) {
-            finalName = "`${finalName}`"
-        }
-        return finalName
+        return buildNameFromRaw(finalName)
     }
 
     private fun mapDefaultValue(value: String): ExpressionBuilder {
