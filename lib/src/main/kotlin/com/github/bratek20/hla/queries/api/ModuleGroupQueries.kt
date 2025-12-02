@@ -221,10 +221,11 @@ open class BaseModuleGroupQueries(
                 module.getEvents()
         val profile = getGroup(module.getName()).getProfile()
 
-        if(profile.getSkipPatterns().contains(PatternName.Events) || (profile.getOnlyPatterns().isNotEmpty() && !profile.getOnlyPatterns().contains(
-                PatternName.Events))) {
-            val eventStructuresNames =  module.getEvents().map { it.getName() }
-            defs = defs.filter { !eventStructuresNames.contains(it.getName()) }
+        if(profile.getSkipPatterns().contains(PatternName.Events) ||
+            (profile.getOnlyPatterns().isNotEmpty() && !profile.getOnlyPatterns().contains(PatternName.Events))
+        ) {
+            val eventStructuresNamesToNotGenerate =  module.getEvents().map { it.getName() }
+            defs = defs.filter { !eventStructuresNamesToNotGenerate.contains(it.getName()) }
         }
         return defs
     }

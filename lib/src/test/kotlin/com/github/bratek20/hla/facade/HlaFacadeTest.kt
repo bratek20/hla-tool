@@ -313,14 +313,7 @@ class HlaFacadeTest {
     @Test
     fun `should start KotlinSkipPatterns module`() {
         //given
-        val paths = TestPaths(
-            exampleMainPath = "../example/kotlinSkipPatterns/src/main/kotlinSkipPatterns/com/some/pkg/somemodule",
-            exampleFixturesPath = "../example/kotlinSkipPatterns/src/testFixtures/kotlinSkipPatterns/com/some/pkg/somemodule",
-            exampleTestsPath = "../example/kotlinSkipPatterns/src/test/kotlinSkipPatterns/com/some/pkg/somemodule",
-            expectedMainPath = "../example/hla/../kotlinSkipPatterns/src/main/kotlinSkipPatterns/com/some/pkg",
-            expectedFixturesPath = "../example/hla/../kotlinSkipPatterns/src/testFixtures/kotlinSkipPatterns/com/some/pkg",
-            expectedTestsPath = "../example/hla/../kotlinSkipPatterns/src/test/kotlinSkipPatterns/com/some/pkg",
-        )
+        val paths = ShouldStartModuleArgsProvider().kotlinSkipPatternsTestPaths("somemodule")
         val (directoriesMock, facade) = setup()
 
         //when
@@ -707,7 +700,7 @@ class HlaFacadeTest {
 
         val args = ModuleOperationArgs.create(
             moduleName = ModuleName("SomeModule"),
-            profileName = ProfileName("kotlinSkipWebServerContextPattern"),
+            profileName = ProfileName("kotlinSkipPatterns"),
             hlaFolderPath = hlaFolderPath(),
         )
 
@@ -716,7 +709,7 @@ class HlaFacadeTest {
 
         //then
         directoriesMock.assertWriteCount(3)
-        val paths = ShouldStartModuleArgsProvider().kotlinTestPaths("somemodule")
+        val paths = ShouldStartModuleArgsProvider().kotlinSkipPatternsTestPaths("somemodule")
         val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
             1,
             paths.expectedMainPath

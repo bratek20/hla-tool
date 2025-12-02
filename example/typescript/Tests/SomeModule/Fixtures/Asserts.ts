@@ -235,9 +235,4 @@ namespace SomeModule.Assert {
         const diff = diffSomeEvent(given, expected)
         AssertEquals(diff, "", diff)
     }
-
-    export function toNotGenerateInKotlin(given: ToNotGenerateInKotlin, expected: ExpectedToNotGenerateInKotlin) {
-        const diff = diffToNotGenerateInKotlin(given, expected)
-        AssertEquals(diff, "", diff)
-    }
 }

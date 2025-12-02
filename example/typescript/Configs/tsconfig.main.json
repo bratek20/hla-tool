@@ -21,6 +21,8 @@
 
         //OnlyTrackingModule start
 
+        //SomeUserModule start
+
         "../main/NoInterfacesModule/Api/ValueObjects.ts",
         //NoInterfacesModule end
 
@@ -72,7 +74,6 @@
         "../main/SomeModule/Web/WebClientContext.ts",
         //SomeModule end
 
-        //SomeUserModule start
         "../main/SomeUserModule/Api/ValueObjects.ts",
         "../main/SomeUserModule/Api/Interfaces.ts",
 
