@@ -10,6 +10,8 @@ profiles:
               path: "src/test/kotlin/com/some/pkg"
             - submodule: "Fixtures"
               path: "src/testFixtures/kotlin/com/some/pkg"
+    skipPatterns:
+      - "Events"
 
   - name: "typeScript"
     language: "TYPE_SCRIPT"
