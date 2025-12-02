@@ -210,6 +210,9 @@ Data
 
     "SomeKey" -> SomeData
 
+Notifications
+    ToNotGenerateInKotlin
+
 Interfaces
     SomeEmptyInterface
 

@@ -80,5 +80,15 @@
                 "${workspaceFolder}/**/*.js"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - SomeUserModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" SomeUserModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
     ]
 }

@@ -30,3 +30,22 @@ class SomeEvent extends EventBusNotification {
         return new SomeEvent(someField, otherClass, optField.orElse(undefined))
     }
 }
+
+class ToNotGenerateInKotlin extends EventBusNotification {
+    constructor(
+    ) {
+        super()
+    }
+    getName(): string {
+        return "ToNotGenerateInKotlin"
+    }
+    getNotifier(): DependencyName {
+        return DependencyName.SomeModule
+    }
+    static create(): ToNotGenerateInKotlin {
+        return new ToNotGenerateInKotlin()
+    }
+    static createNamed(): ToNotGenerateInKotlin {
+        return new ToNotGenerateInKotlin()
+    }
+}

@@ -630,4 +630,12 @@ namespace SomeModule.Builder {
             Optional.of(final_optField),
         )
     }
+
+    export interface ToNotGenerateInKotlinDef {
+    }
+    export function toNotGenerateInKotlin(def?: ToNotGenerateInKotlinDef): ToNotGenerateInKotlin {
+
+        return ToNotGenerateInKotlin.create(
+        )
+    }
 }

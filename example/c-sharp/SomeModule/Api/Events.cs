@@ -36,4 +36,10 @@ namespace SomeModule.Api {
             return new SomeEvent(someField, otherClass, optField.OrElse(null));
         }
     }
+
+    public class ToNotGenerateInKotlin: ValueObject {
+        public static ToNotGenerateInKotlin Create() {
+            return new ToNotGenerateInKotlin();
+        }
+    }
 }

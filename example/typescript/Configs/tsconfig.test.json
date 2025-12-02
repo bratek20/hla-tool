@@ -53,6 +53,14 @@
         "../Tests/SomeModule/Tests/ImplTest.ts",
         //SomeModule end
 
+        //SomeUserModule start
+        "../Tests/SomeUserModule/Fixtures/Builders.ts",
+        "../Tests/SomeUserModule/Fixtures/Diffs.ts",
+        "../Tests/SomeUserModule/Fixtures/Asserts.ts",
+
+        "../Tests/SomeUserModule/Tests/ImplTest.ts",
+        //SomeUserModule end
+
         "../Tests/TypesModule/Fixtures/Builders.ts",
         "../Tests/TypesModule/Fixtures/Diffs.ts",
         "../Tests/TypesModule/Fixtures/Asserts.ts",

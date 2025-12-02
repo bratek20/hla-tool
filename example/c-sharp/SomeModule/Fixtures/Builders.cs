@@ -232,6 +232,9 @@ namespace SomeModule.Fixtures {
         public string? OptField { get; set; } = null;
     }
 
+    public class ToNotGenerateInKotlinDef {
+    }
+
     public class SomeModuleBuilders {
         public static SomeId BuildSomeId(string value = "someValue") {
             return new SomeId(value);
@@ -502,6 +505,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeEvent.Create(def.SomeField, OtherModuleBuilders.BuildOtherClass(def.OtherClass), Optional<string>.Of(def.OptField));
+        }
+        public static ToNotGenerateInKotlin BuildToNotGenerateInKotlin(Action<ToNotGenerateInKotlinDef> init = null) {
+            var def = new ToNotGenerateInKotlinDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ToNotGenerateInKotlin.Create();
         }
     }
 }

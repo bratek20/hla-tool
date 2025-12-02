@@ -72,6 +72,18 @@
         "../main/SomeModule/Web/WebClientContext.ts",
         //SomeModule end
 
+        //SomeUserModule start
+        "../main/SomeUserModule/Api/ValueObjects.ts",
+        "../main/SomeUserModule/Api/Interfaces.ts",
+
+        "../main/SomeUserModule/Impl/Logic.ts",
+        "../main/SomeUserModule/Impl/ImplContext.ts",
+
+        "../main/SomeUserModule/Web/WebCommon.ts",
+        "../main/SomeUserModule/Web/WebClient.ts",
+        "../main/SomeUserModule/Web/WebClientContext.ts",
+        //SomeUserModule end
+
         "../main/TypesModule/Api/CustomTypes.ts",
         "../main/TypesModule/Api/CustomTypesMapper.ts",
         "../main/TypesModule/Api/SerializedCustomTypes.ts",

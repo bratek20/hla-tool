@@ -947,4 +947,13 @@ namespace SomeModule {
 
         return result.join("\n")
     }
+
+    export interface ExpectedToNotGenerateInKotlin {
+    }
+    export function diffToNotGenerateInKotlin(given: ToNotGenerateInKotlin, expected: ExpectedToNotGenerateInKotlin, path: string = ""): string {
+        const result: string[] = []
+
+
+        return result.join("\n")
+    }
 }
