@@ -15,7 +15,11 @@ class AssertsGenerator: PatternGenerator() {
     )
     fun doSth(): Asserts? {
         val simpleAssertTypes = modules.allSimpleStructureDefinitions(module)
-        val complexAssertTypes = modules.allComplexStructureDefinitions(module)
+        var complexAssertTypes = modules.allComplexStructureDefinitions(module)
+        if(modules.getGroup(module.getName()).getProfile().getSkipPatterns().contains(PatternName.Events)) {
+            val eventStructuresNames =  module.getEvents().map { it.getName() }
+            complexAssertTypes = complexAssertTypes.filter { !eventStructuresNames.contains(it.getName()) }
+        }
         if (simpleAssertTypes.isEmpty() && complexAssertTypes.isEmpty()) {
             return null
         }

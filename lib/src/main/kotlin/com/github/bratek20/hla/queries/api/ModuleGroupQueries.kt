@@ -145,7 +145,7 @@ open class BaseModuleGroupQueries(
     }
 
 
-    protected fun getGroup(module: ModuleName): ModuleGroup {
+    fun getGroup(module: ModuleName): ModuleGroup {
         return resolveAllGroups(group).first { it.getModules().any { it.getName() == module } }
     }
 

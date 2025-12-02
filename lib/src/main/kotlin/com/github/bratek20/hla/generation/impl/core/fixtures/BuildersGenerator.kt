@@ -5,6 +5,7 @@ import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.utils.directory.api.FileContent
 
 class SimpleBuilder(
@@ -133,8 +134,13 @@ class BuildersGenerator: PatternGenerator() {
     private fun getComplexBuilders(): List<ComplexBuilder> {
         val defTypes = modules.allStructureDefinitions(module)
         val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
+        var complexDefTypes = defTypes.complex
+        if(modules.getGroup(module.getName()).getProfile().getSkipPatterns().contains(PatternName.Events)) {
+            val eventStructuresNames =  module.getEvents().map { it.getName() }
+            complexDefTypes = complexDefTypes.filter { !eventStructuresNames.contains(it.getName()) }
+        }
 
-        return (defTypes.complex).map {
+        return (complexDefTypes).map {
             ComplexBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as ComplexStructureDefType)
         }
     }
