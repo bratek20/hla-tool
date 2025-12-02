@@ -672,9 +672,10 @@ class HlaFacadeTest {
         assertDirectory(mainDirectory) {
             directories = listOf {
                 name = "api"
-                files = listOf {
-                    name = "ValueObjects.kt"
-                }
+                files = listOf (
+                    { name = "ValueObjects.kt" },
+                    { name = "Events.kt"}
+                )
             }
         }
 

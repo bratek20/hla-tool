@@ -52,6 +52,7 @@ profiles:
     onlyPatterns:
       - "ValueObjects"
       - "Builders"
+      - "Events"
 
   - name: "kotlinSkipPatterns"
     language: "KOTLIN"
