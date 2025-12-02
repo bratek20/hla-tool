@@ -134,13 +134,8 @@ class BuildersGenerator: PatternGenerator() {
     private fun getComplexBuilders(): List<ComplexBuilder> {
         val defTypes = modules.allStructureDefinitions(module)
         val defTypeFactory = DefTypeFactory(c.language.buildersFixture())
-        var complexDefTypes = defTypes.complex
-        if(modules.getGroup(module.getName()).getProfile().getSkipPatterns().contains(PatternName.Events)) {
-            val eventStructuresNames =  module.getEvents().map { it.getName() }
-            complexDefTypes = complexDefTypes.filter { !eventStructuresNames.contains(it.getName()) }
-        }
 
-        return (complexDefTypes).map {
+        return (defTypes.complex).map {
             ComplexBuilder(defTypeFactory.create(apiTypeFactory.create(it)) as ComplexStructureDefType)
         }
     }

@@ -2,6 +2,7 @@ package com.github.bratek20.hla.queries.api
 
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleName
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.utils.camelToPascalCase
@@ -214,10 +215,18 @@ open class BaseModuleGroupQueries(
     }
 
     fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return getComplexValueObjects(module) +
-            module.getComplexCustomTypes() +
-            module.getDataClasses() +
-            module.getEvents()
+        var defs = getComplexValueObjects(module) +
+                module.getComplexCustomTypes() +
+                module.getDataClasses() +
+                module.getEvents()
+        val profile = getGroup(module.getName()).getProfile()
+
+        if(profile.getSkipPatterns().contains(PatternName.Events) || (profile.getOnlyPatterns().isNotEmpty() && !profile.getOnlyPatterns().contains(
+                PatternName.Events))) {
+            val eventStructuresNames =  module.getEvents().map { it.getName() }
+            defs = defs.filter { !eventStructuresNames.contains(it.getName()) }
+        }
+        return defs
     }
 
     private fun defsForMockedInterfaceArgs(module: ModuleDefinition): List<ComplexStructureDefinition> {
