@@ -35,6 +35,7 @@ class HlaFacadeTest {
         const val HLA_FOLDER_PATH = "../example/hla"
         const val KOTLIN_PROFILE = "kotlin"
         const val KOTLIN_2_PROFILE = "kotlin2"
+        const val KOTLIN_SKIP_PATTERNS_PROFILE = "kotlinSkipPatterns"
     }
 
     data class TestPaths(
@@ -73,6 +74,17 @@ class HlaFacadeTest {
             )
         }
 
+        fun kotlinSkipPatternsTestPaths(packageName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/kotlinSkipPatterns/src/main/kotlinSkipPatterns/com/some/pkg/$packageName",
+                exampleFixturesPath = "../example/kotlinSkipPatterns/src/testFixtures/kotlinSkipPatterns/com/some/pkg/$packageName",
+                exampleTestsPath = "../example/kotlinSkipPatterns/src/test/kotlinSkipPatterns/com/some/pkg/$packageName",
+                expectedMainPath = "../example/hla/../kotlinSkipPatterns/src/main/kotlinSkipPatterns/com/some/pkg",
+                expectedFixturesPath = "../example/hla/../kotlinSkipPatterns/src/testFixtures/kotlinSkipPatterns/com/some/pkg",
+                expectedTestsPath = "../example/hla/../kotlinSkipPatterns/src/test/kotlinSkipPatterns/com/some/pkg",
+            )
+        }
+
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
@@ -105,7 +117,7 @@ class HlaFacadeTest {
                     "ImportingModule",
                     KOTLIN_2_PROFILE,
                     kotlin2TestPaths("importingmodule")
-                ),
+                )
             )
         }
     }
@@ -296,6 +308,44 @@ class HlaFacadeTest {
         assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
         assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
         assertWrittenDirectoryWithExample(testsDirectory, paths.exampleTestsPath)
+    }
+
+    @Test
+    fun `should start KotlinSkipPatterns module`() {
+        //given
+        val paths = TestPaths(
+            exampleMainPath = "../example/kotlinSkipPatterns/src/main/kotlinSkipPatterns/com/some/pkg/somemodule",
+            exampleFixturesPath = "../example/kotlinSkipPatterns/src/testFixtures/kotlinSkipPatterns/com/some/pkg/somemodule",
+            exampleTestsPath = "../example/kotlinSkipPatterns/src/test/kotlinSkipPatterns/com/some/pkg/somemodule",
+            expectedMainPath = "../example/hla/../kotlinSkipPatterns/src/main/kotlinSkipPatterns/com/some/pkg",
+            expectedFixturesPath = "../example/hla/../kotlinSkipPatterns/src/testFixtures/kotlinSkipPatterns/com/some/pkg",
+            expectedTestsPath = "../example/hla/../kotlinSkipPatterns/src/test/kotlinSkipPatterns/com/some/pkg",
+        )
+        val (directoriesMock, facade) = setup()
+
+        //when
+        facade.startModule(
+            ModuleOperationArgs.create(
+                moduleName = ModuleName("SomeModule"),
+                profileName = ProfileName(KOTLIN_SKIP_PATTERNS_PROFILE),
+                hlaFolderPath = Path(paths.hlaFolderPath),
+            )
+        )
+
+        //then
+        directoriesMock.assertWriteCount(3)
+        val mainDirectory = directoriesMock.assertWriteAndGetDirectory(
+            1,
+            paths.expectedMainPath
+        )
+        val fixturesDirectory = directoriesMock.assertWriteAndGetDirectory(
+            2,
+            paths.expectedFixturesPath
+        )
+
+
+        assertWrittenDirectoryWithExample(mainDirectory, paths.exampleMainPath)
+        assertWrittenDirectoryWithExample(fixturesDirectory, paths.exampleFixturesPath)
     }
 
     @ParameterizedTest(name = "{0} ({1})")
