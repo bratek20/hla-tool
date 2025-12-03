@@ -217,15 +217,13 @@ open class BaseModuleGroupQueries(
     fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
         var defs = getComplexValueObjects(module) +
                 module.getComplexCustomTypes() +
-                module.getDataClasses() +
-                module.getEvents()
+                module.getDataClasses()
         val profile = getGroup(module.getName()).getProfile()
 
-        if(profile.getSkipPatterns().contains(PatternName.Events) ||
-            (profile.getOnlyPatterns().isNotEmpty() && !profile.getOnlyPatterns().contains(PatternName.Events))
+        if(!profile.getSkipPatterns().contains(PatternName.Events) &&
+            (profile.getOnlyPatterns().isEmpty() || profile.getOnlyPatterns().contains(PatternName.Events))
         ) {
-            val eventStructuresNamesToNotGenerate =  module.getEvents().map { it.getName() }
-            defs = defs.filter { !eventStructuresNamesToNotGenerate.contains(it.getName()) }
+            defs = defs + module.getEvents()
         }
         return defs
     }
