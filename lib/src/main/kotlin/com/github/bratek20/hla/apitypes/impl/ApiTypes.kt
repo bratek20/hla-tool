@@ -265,7 +265,7 @@ abstract class SimpleStructureApiType(
     }
 
     private fun extractExampleValueFromAttributes(): String? {
-        if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT) {
+        if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT || boxedType.name == BaseType.DOUBLE) {
             return extractExampleValueForNumericType(def.getAttributes())
         }
         return extractExampleValue(def.getAttributes())

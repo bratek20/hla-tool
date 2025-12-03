@@ -279,7 +279,7 @@ data class SomePropertyEntryDef(
     var id: String = "someValue",
     var exampleInt: Int = 1,
     var exampleLong: Long = 2,
-    var exampleDouble: Double = 0.0,
+    var exampleDouble: Double = 3.0,
     var exampleString: String = "ABC",
 )
 fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyEntry {

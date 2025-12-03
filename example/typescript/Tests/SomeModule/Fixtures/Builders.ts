@@ -328,7 +328,7 @@ namespace SomeModule.Builder {
         const final_id = def?.id ?? "someValue"
         const final_exampleInt = def?.exampleInt ?? 1
         const final_exampleLong = def?.exampleLong ?? 2
-        const final_exampleDouble = def?.exampleDouble ?? 0
+        const final_exampleDouble = def?.exampleDouble ?? 3
         const final_exampleString = def?.exampleString ?? "ABC"
 
         return SomePropertyEntry.create(

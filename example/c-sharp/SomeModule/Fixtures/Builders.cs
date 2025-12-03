@@ -123,7 +123,7 @@ namespace SomeModule.Fixtures {
         public string Id { get; set; } = "someValue";
         public int ExampleInt { get; set; } = 1;
         public long ExampleLong { get; set; } = 2;
-        public double ExampleDouble { get; set; } = 0;
+        public double ExampleDouble { get; set; } = 3;
         public string ExampleString { get; set; } = "ABC";
     }
 

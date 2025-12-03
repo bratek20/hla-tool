@@ -61,7 +61,7 @@ open class ComplexStructureField(
     private fun extractExampleValue(): String? {
         if(type is BaseApiType) {
             val basApiType = type as BaseApiType
-            if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT) {
+            if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT || basApiType.name == BaseType.DOUBLE) {
                 return extractExampleValueForNumericType(def.getAttributes())
             }
         }
