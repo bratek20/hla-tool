@@ -558,6 +558,7 @@ namespace SomeModule.Api {
         readonly int exampleInt;
         readonly long exampleLong;
         readonly double exampleDouble;
+        readonly bool exampleBool;
         readonly string exampleString;
 
         public SomePropertyEntry(
@@ -565,12 +566,14 @@ namespace SomeModule.Api {
             int exampleInt,
             long exampleLong,
             double exampleDouble,
+            bool exampleBool,
             string exampleString
         ) {
             this.id = id;
             this.exampleInt = exampleInt;
             this.exampleLong = exampleLong;
             this.exampleDouble = exampleDouble;
+            this.exampleBool = exampleBool;
             this.exampleString = exampleString;
         }
         public SomeId GetId() {
@@ -585,11 +588,14 @@ namespace SomeModule.Api {
         public double GetExampleDouble() {
             return exampleDouble;
         }
+        public bool GetExampleBool() {
+            return exampleBool;
+        }
         public string GetExampleString() {
             return exampleString;
         }
-        public static SomePropertyEntry Create(SomeId id, int exampleInt, long exampleLong, double exampleDouble, string exampleString) {
-            return new SomePropertyEntry(id.Value, exampleInt, exampleLong, exampleDouble, exampleString);
+        public static SomePropertyEntry Create(SomeId id, int exampleInt, long exampleLong, double exampleDouble, bool exampleBool, string exampleString) {
+            return new SomePropertyEntry(id.Value, exampleInt, exampleLong, exampleDouble, exampleBool, exampleString);
         }
     }
 

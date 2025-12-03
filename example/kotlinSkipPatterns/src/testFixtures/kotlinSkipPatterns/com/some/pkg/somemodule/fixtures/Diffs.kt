@@ -539,6 +539,7 @@ data class ExpectedSomePropertyEntry(
     var exampleInt: Int? = null,
     var exampleLong: Long? = null,
     var exampleDouble: Double? = null,
+    var exampleBool: Boolean? = null,
     var exampleString: String? = null,
 )
 fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePropertyEntry.() -> Unit, path: String = ""): String {
@@ -559,6 +560,10 @@ fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePr
 
     expected.exampleDouble?.let {
         if (given.getExampleDouble() != it) { result.add("${path}exampleDouble ${given.getExampleDouble()} != ${it}") }
+    }
+
+    expected.exampleBool?.let {
+        if (given.getExampleBool() != it) { result.add("${path}exampleBool ${given.getExampleBool()} != ${it}") }
     }
 
     expected.exampleString?.let {

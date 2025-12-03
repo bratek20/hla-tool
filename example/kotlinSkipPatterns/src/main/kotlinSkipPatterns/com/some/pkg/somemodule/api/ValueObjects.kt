@@ -629,6 +629,7 @@ data class SomePropertyEntry(
     private val exampleInt: Int,
     private val exampleLong: Long,
     private val exampleDouble: Double,
+    private val exampleBool: Boolean,
     private val exampleString: String,
 ) {
     fun getId(): SomeId {
@@ -647,6 +648,10 @@ data class SomePropertyEntry(
         return this.exampleDouble
     }
 
+    fun getExampleBool(): Boolean {
+        return this.exampleBool
+    }
+
     fun getExampleString(): String {
         return this.exampleString
     }
@@ -657,6 +662,7 @@ data class SomePropertyEntry(
             exampleInt: Int,
             exampleLong: Long,
             exampleDouble: Double,
+            exampleBool: Boolean,
             exampleString: String,
         ): SomePropertyEntry {
             return SomePropertyEntry(
@@ -664,6 +670,7 @@ data class SomePropertyEntry(
                 exampleInt = exampleInt,
                 exampleLong = exampleLong,
                 exampleDouble = exampleDouble,
+                exampleBool = exampleBool,
                 exampleString = exampleString,
             )
         }

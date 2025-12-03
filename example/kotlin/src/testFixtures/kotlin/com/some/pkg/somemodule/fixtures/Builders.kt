@@ -280,6 +280,7 @@ data class SomePropertyEntryDef(
     var exampleInt: Int = 1,
     var exampleLong: Long = 2,
     var exampleDouble: Double = 3.0,
+    var exampleBool: Boolean = true,
     var exampleString: String = "ABC",
 )
 fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyEntry {
@@ -289,6 +290,7 @@ fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyE
         exampleInt = def.exampleInt,
         exampleLong = def.exampleLong,
         exampleDouble = def.exampleDouble,
+        exampleBool = def.exampleBool,
         exampleString = def.exampleString,
     )
 }
