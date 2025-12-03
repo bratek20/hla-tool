@@ -627,6 +627,9 @@ data class SomeProperty2(
 data class SomePropertyEntry(
     private val id: String,
     private val exampleInt: Int,
+    private val exampleLong: Long,
+    private val exampleDouble: Double,
+    private val exampleString: String,
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
@@ -636,14 +639,32 @@ data class SomePropertyEntry(
         return this.exampleInt
     }
 
+    fun getExampleLong(): Long {
+        return this.exampleLong
+    }
+
+    fun getExampleDouble(): Double {
+        return this.exampleDouble
+    }
+
+    fun getExampleString(): String {
+        return this.exampleString
+    }
+
     companion object {
         fun create(
             id: SomeId,
             exampleInt: Int,
+            exampleLong: Long,
+            exampleDouble: Double,
+            exampleString: String,
         ): SomePropertyEntry {
             return SomePropertyEntry(
                 id = id.value,
                 exampleInt = exampleInt,
+                exampleLong = exampleLong,
+                exampleDouble = exampleDouble,
+                exampleString = exampleString,
             )
         }
     }

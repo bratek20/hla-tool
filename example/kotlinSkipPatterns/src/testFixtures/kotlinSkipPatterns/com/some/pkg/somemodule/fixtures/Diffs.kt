@@ -537,6 +537,9 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 data class ExpectedSomePropertyEntry(
     var id: String? = null,
     var exampleInt: Int? = null,
+    var exampleLong: Long? = null,
+    var exampleDouble: Double? = null,
+    var exampleString: String? = null,
 )
 fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePropertyEntry.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomePropertyEntry().apply(expectedInit)
@@ -548,6 +551,18 @@ fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePr
 
     expected.exampleInt?.let {
         if (given.getExampleInt() != it) { result.add("${path}exampleInt ${given.getExampleInt()} != ${it}") }
+    }
+
+    expected.exampleLong?.let {
+        if (given.getExampleLong() != it) { result.add("${path}exampleLong ${given.getExampleLong()} != ${it}") }
+    }
+
+    expected.exampleDouble?.let {
+        if (given.getExampleDouble() != it) { result.add("${path}exampleDouble ${given.getExampleDouble()} != ${it}") }
+    }
+
+    expected.exampleString?.let {
+        if (given.getExampleString() != it) { result.add("${path}exampleString ${given.getExampleString()} != ${it}") }
     }
 
     return result.joinToString("\n")

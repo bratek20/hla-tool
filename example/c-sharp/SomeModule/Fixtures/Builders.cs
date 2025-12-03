@@ -122,6 +122,9 @@ namespace SomeModule.Fixtures {
     public class SomePropertyEntryDef {
         public string Id { get; set; } = "someValue";
         public int ExampleInt { get; set; } = 1;
+        public long ExampleLong { get; set; } = 2;
+        public double ExampleDouble { get; set; } = 0;
+        public string ExampleString { get; set; } = "ABC";
     }
 
     public class SomeRenamedSourcePropertyEntryDef {
@@ -358,7 +361,7 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyEntryDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomePropertyEntry.Create(new SomeId(def.Id), def.ExampleInt);
+            return SomePropertyEntry.Create(new SomeId(def.Id), def.ExampleInt, def.ExampleLong, def.ExampleDouble, def.ExampleString);
         }
         public static SomeRenamedSourcePropertyEntry BuildSomeRenamedSourcePropertyEntry(Action<SomeRenamedSourcePropertyEntryDef> init = null) {
             var def = new SomeRenamedSourcePropertyEntryDef();

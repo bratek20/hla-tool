@@ -278,12 +278,18 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
 data class SomePropertyEntryDef(
     var id: String = "someValue",
     var exampleInt: Int = 1,
+    var exampleLong: Long = 2,
+    var exampleDouble: Double = 0.0,
+    var exampleString: String = "ABC",
 )
 fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyEntry {
     val def = SomePropertyEntryDef().apply(init)
     return SomePropertyEntry.create(
         id = SomeId(def.id),
         exampleInt = def.exampleInt,
+        exampleLong = def.exampleLong,
+        exampleDouble = def.exampleDouble,
+        exampleString = def.exampleString,
     )
 }
 
