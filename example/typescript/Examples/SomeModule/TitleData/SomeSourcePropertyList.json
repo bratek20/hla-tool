@@ -4,6 +4,7 @@
     "exampleInt": 1,
     "exampleLong": 2,
     "exampleDouble": 3.0,
+    "exampleBool": true,
     "exampleString": "ABC"
   }
 ]

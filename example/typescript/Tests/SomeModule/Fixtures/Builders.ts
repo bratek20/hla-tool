@@ -322,13 +322,15 @@ namespace SomeModule.Builder {
         exampleInt?: number,
         exampleLong?: number,
         exampleDouble?: number,
+        exampleBool?: boolean,
         exampleString?: string,
     }
     export function somePropertyEntry(def?: SomePropertyEntryDef): SomePropertyEntry {
         const final_id = def?.id ?? "someValue"
         const final_exampleInt = def?.exampleInt ?? 1
         const final_exampleLong = def?.exampleLong ?? 2
-        const final_exampleDouble = def?.exampleDouble ?? 3
+        const final_exampleDouble = def?.exampleDouble ?? 3.0
+        const final_exampleBool = def?.exampleBool ?? true
         const final_exampleString = def?.exampleString ?? "ABC"
 
         return SomePropertyEntry.create(
@@ -336,6 +338,7 @@ namespace SomeModule.Builder {
             final_exampleInt,
             final_exampleLong,
             final_exampleDouble,
+            final_exampleBool,
             final_exampleString,
         )
     }

@@ -511,6 +511,7 @@ namespace SomeModule {
         exampleInt?: number,
         exampleLong?: number,
         exampleDouble?: number,
+        exampleBool?: boolean,
         exampleString?: string,
     }
     export function diffSomePropertyEntry(given: SomePropertyEntry, expected: ExpectedSomePropertyEntry, path: string = ""): string {
@@ -530,6 +531,10 @@ namespace SomeModule {
 
         if (expected.exampleDouble !== undefined) {
             if (given.getExampleDouble() != expected.exampleDouble) { result.push(`${path}exampleDouble ${given.getExampleDouble()} != ${expected.exampleDouble}`) }
+        }
+
+        if (expected.exampleBool !== undefined) {
+            if (given.getExampleBool() != expected.exampleBool) { result.push(`${path}exampleBool ${given.getExampleBool()} != ${expected.exampleBool}`) }
         }
 
         if (expected.exampleString !== undefined) {

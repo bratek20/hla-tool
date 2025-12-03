@@ -129,6 +129,24 @@ class BaseApiType(
         fun isAny(type: ApiType): Boolean {
             return type is BaseApiType && type.name == BaseType.ANY
         }
+
+        fun parseToProperExampleFormat(basApiType: BaseApiType, value: String): Any {
+            return when (basApiType.name) {
+                BaseType.LONG -> {
+                    value.toLong()
+                }
+                BaseType.INT -> {
+                    value.toInt()
+                }
+                BaseType.DOUBLE -> {
+                    value.toDouble()
+                }
+                BaseType.BOOL -> {
+                    value.toBoolean()
+                }
+                else -> destringify(value)
+            }
+        }
     }
 }
 
@@ -389,9 +407,6 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
     override fun getExample(): Any {
         val fieldsMap: MutableMap<String, Any?> = mutableMapOf()
         fields.map { field ->
-            val builderValue = field.exampleValueBuilder()?.build(c)?.let {
-                destringify(it)
-            }
             val fieldTypeDef = field.def.getType()
             val fieldTypeName = fieldTypeDef.getName()
             if(fieldTypeName == name) {
@@ -403,6 +418,7 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
                     error("Field type is $fieldTypeName and is recursive, but it is not wrapped in Optional or List")
                 }
             }else {
+                val builderValue = field.buildExampleValue()
                 val finalValue = builderValue ?: field.type.getExample()
                 fieldsMap[field.privateName()] = finalValue
             }

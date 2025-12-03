@@ -909,6 +909,7 @@ class SomePropertyEntry {
     private exampleInt = NUMBER
     private exampleLong = NUMBER
     private exampleDouble = NUMBER
+    private exampleBool = BOOLEAN
     private exampleString = STRING
 
     static create(
@@ -916,6 +917,7 @@ class SomePropertyEntry {
         exampleInt: number,
         exampleLong: number,
         exampleDouble: number,
+        exampleBool: boolean,
         exampleString: string,
     ): SomePropertyEntry {
         const instance = new SomePropertyEntry()
@@ -923,6 +925,7 @@ class SomePropertyEntry {
         instance.exampleInt = exampleInt
         instance.exampleLong = exampleLong
         instance.exampleDouble = exampleDouble
+        instance.exampleBool = exampleBool
         instance.exampleString = exampleString
         return instance
     }
@@ -932,12 +935,14 @@ class SomePropertyEntry {
         exampleInt,
         exampleLong,
         exampleDouble,
+        exampleBool,
         exampleString,
     }: {
         id: SomeId;
         exampleInt: number;
         exampleLong: number;
         exampleDouble: number;
+        exampleBool: boolean;
         exampleString: string;
     }): SomePropertyEntry {
         const instance = new SomePropertyEntry()
@@ -945,6 +950,7 @@ class SomePropertyEntry {
         instance.exampleInt = exampleInt
         instance.exampleLong = exampleLong
         instance.exampleDouble = exampleDouble
+        instance.exampleBool = exampleBool
         instance.exampleString = exampleString
         return instance
     }
@@ -963,6 +969,10 @@ class SomePropertyEntry {
 
     getExampleDouble(): number {
         return this.exampleDouble
+    }
+
+    getExampleBool(): boolean {
+        return this.exampleBool
     }
 
     getExampleString(): string {

@@ -3,6 +3,8 @@ package com.github.bratek20.hla.generation.impl.core.api
 import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.nullValue
+import com.github.bratek20.codebuilder.core.CodeBuilderContext
+import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
@@ -12,6 +14,7 @@ import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.utils.camelToPascalCase
+import com.github.bratek20.utils.destringify
 
 open class ComplexStructureField(
     val def: FieldDefinition,
@@ -56,6 +59,18 @@ open class ComplexStructureField(
         return extractExampleValue()?.let {
             expression(it)
         }
+    }
+
+    fun buildExampleValue(): Any? {
+        val value = this.extractExampleValue()
+        if(value != null) {
+            if(type is BaseApiType) {
+                val basApiType = type as BaseApiType
+                return BaseApiType.parseToProperExampleFormat(basApiType, value)
+            }
+            return destringify(value)
+        }
+        return value
     }
 
     private fun extractExampleValue(): String? {

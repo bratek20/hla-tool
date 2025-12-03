@@ -113,7 +113,8 @@ Properties
         id: SomeId (idSource)
         exampleInt: int (startsFrom: 1)
         exampleLong: long (startsFrom: 2)
-        exampleDouble: double (startsFrom: 3)
+        exampleDouble: double (startsFrom: 3.0)
+        exampleBool: bool (example: true)
         exampleString: string (example: "ABC")
 
     SomeRenamedSourcePropertyEntry
