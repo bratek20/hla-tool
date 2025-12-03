@@ -319,12 +319,15 @@ namespace SomeModule.Builder {
 
     export interface SomePropertyEntryDef {
         id?: string,
+        exampleInt?: number,
     }
     export function somePropertyEntry(def?: SomePropertyEntryDef): SomePropertyEntry {
         const final_id = def?.id ?? "someValue"
+        const final_exampleInt = def?.exampleInt ?? 1
 
         return SomePropertyEntry.create(
             new SomeId(final_id),
+            final_exampleInt,
         )
     }
 

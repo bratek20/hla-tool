@@ -111,6 +111,7 @@ Properties
 
     SomePropertyEntry
         id: SomeId (idSource)
+        exampleInt: int (startsFrom: 1)
 
     SomeRenamedSourcePropertyEntry
         id: SomeOtherId (from: sId, idSource)

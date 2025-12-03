@@ -626,17 +626,24 @@ data class SomeProperty2(
 
 data class SomePropertyEntry(
     private val id: String,
+    private val exampleInt: Int,
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
     }
 
+    fun getExampleInt(): Int {
+        return this.exampleInt
+    }
+
     companion object {
         fun create(
             id: SomeId,
+            exampleInt: Int,
         ): SomePropertyEntry {
             return SomePropertyEntry(
                 id = id.value,
+                exampleInt = exampleInt,
             )
         }
     }

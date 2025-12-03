@@ -16,7 +16,6 @@
         //SomeModule start
         //TypesModule start
         //OnlyTrackingModule start
-
         //SomeUserModule start
 
         "../Tests/NoInterfacesModule/Fixtures/Builders.ts",

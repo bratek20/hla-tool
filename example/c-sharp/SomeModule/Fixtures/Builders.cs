@@ -121,6 +121,7 @@ namespace SomeModule.Fixtures {
 
     public class SomePropertyEntryDef {
         public string Id { get; set; } = "someValue";
+        public int ExampleInt { get; set; } = 1;
     }
 
     public class SomeRenamedSourcePropertyEntryDef {
@@ -357,7 +358,7 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyEntryDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomePropertyEntry.Create(new SomeId(def.Id));
+            return SomePropertyEntry.Create(new SomeId(def.Id), def.ExampleInt);
         }
         public static SomeRenamedSourcePropertyEntry BuildSomeRenamedSourcePropertyEntry(Action<SomeRenamedSourcePropertyEntryDef> init = null) {
             var def = new SomeRenamedSourcePropertyEntryDef();

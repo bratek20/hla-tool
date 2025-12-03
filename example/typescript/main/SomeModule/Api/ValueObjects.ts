@@ -906,27 +906,37 @@ class SomeProperty2 {
 
 class SomePropertyEntry {
     private id = STRING
+    private exampleInt = NUMBER
 
     static create(
         id: SomeId,
+        exampleInt: number,
     ): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
+        instance.exampleInt = exampleInt
         return instance
     }
 
     static createNamed({
         id,
+        exampleInt,
     }: {
         id: SomeId;
+        exampleInt: number;
     }): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
+        instance.exampleInt = exampleInt
         return instance
     }
 
     getId(): SomeId {
         return new SomeId(this.id)
+    }
+
+    getExampleInt(): number {
+        return this.exampleInt
     }
 }
 

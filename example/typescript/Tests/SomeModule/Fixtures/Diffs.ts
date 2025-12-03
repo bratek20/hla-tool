@@ -508,12 +508,17 @@ namespace SomeModule {
 
     export interface ExpectedSomePropertyEntry {
         id?: string,
+        exampleInt?: number,
     }
     export function diffSomePropertyEntry(given: SomePropertyEntry, expected: ExpectedSomePropertyEntry, path: string = ""): string {
         const result: string[] = []
 
         if (expected.id !== undefined) {
             if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.exampleInt !== undefined) {
+            if (given.getExampleInt() != expected.exampleInt) { result.push(`${path}exampleInt ${given.getExampleInt()} != ${expected.exampleInt}`) }
         }
 
         return result.join("\n")

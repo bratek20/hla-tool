@@ -1,5 +1,6 @@
 [
   {
-    "id": "someId"
+    "id": "someId",
+    "exampleInt": 1
   }
 ]

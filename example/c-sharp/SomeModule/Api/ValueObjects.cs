@@ -555,17 +555,23 @@ namespace SomeModule.Api {
 
     public class SomePropertyEntry: ValueObject {
         readonly string id;
+        readonly int exampleInt;
 
         public SomePropertyEntry(
-            string id
+            string id,
+            int exampleInt
         ) {
             this.id = id;
+            this.exampleInt = exampleInt;
         }
         public SomeId GetId() {
             return new SomeId(id);
         }
-        public static SomePropertyEntry Create(SomeId id) {
-            return new SomePropertyEntry(id.Value);
+        public int GetExampleInt() {
+            return exampleInt;
+        }
+        public static SomePropertyEntry Create(SomeId id, int exampleInt) {
+            return new SomePropertyEntry(id.Value, exampleInt);
         }
     }
 
