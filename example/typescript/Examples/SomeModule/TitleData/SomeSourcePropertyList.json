@@ -1,6 +1,9 @@
 [
   {
     "id": "someId",
-    "exampleInt": 1
+    "exampleInt": 1,
+    "exampleLong": 2,
+    "exampleDouble": 3.0,
+    "exampleString": "ABC"
   }
 ]

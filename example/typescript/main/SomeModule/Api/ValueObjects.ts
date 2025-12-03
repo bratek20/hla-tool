@@ -907,27 +907,45 @@ class SomeProperty2 {
 class SomePropertyEntry {
     private id = STRING
     private exampleInt = NUMBER
+    private exampleLong = NUMBER
+    private exampleDouble = NUMBER
+    private exampleString = STRING
 
     static create(
         id: SomeId,
         exampleInt: number,
+        exampleLong: number,
+        exampleDouble: number,
+        exampleString: string,
     ): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
         instance.exampleInt = exampleInt
+        instance.exampleLong = exampleLong
+        instance.exampleDouble = exampleDouble
+        instance.exampleString = exampleString
         return instance
     }
 
     static createNamed({
         id,
         exampleInt,
+        exampleLong,
+        exampleDouble,
+        exampleString,
     }: {
         id: SomeId;
         exampleInt: number;
+        exampleLong: number;
+        exampleDouble: number;
+        exampleString: string;
     }): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
         instance.exampleInt = exampleInt
+        instance.exampleLong = exampleLong
+        instance.exampleDouble = exampleDouble
+        instance.exampleString = exampleString
         return instance
     }
 
@@ -937,6 +955,18 @@ class SomePropertyEntry {
 
     getExampleInt(): number {
         return this.exampleInt
+    }
+
+    getExampleLong(): number {
+        return this.exampleLong
+    }
+
+    getExampleDouble(): number {
+        return this.exampleDouble
+    }
+
+    getExampleString(): string {
+        return this.exampleString
     }
 }
 

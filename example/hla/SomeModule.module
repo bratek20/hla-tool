@@ -112,6 +112,9 @@ Properties
     SomePropertyEntry
         id: SomeId (idSource)
         exampleInt: int (startsFrom: 1)
+        exampleLong: long (startsFrom: 2)
+        exampleDouble: double (startsFrom: 3)
+        exampleString: string (example: "ABC")
 
     SomeRenamedSourcePropertyEntry
         id: SomeOtherId (from: sId, idSource)
