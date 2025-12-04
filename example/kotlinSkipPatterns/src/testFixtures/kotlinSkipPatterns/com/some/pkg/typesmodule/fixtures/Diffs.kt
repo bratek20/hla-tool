@@ -9,6 +9,11 @@ fun diffDate(given: Date, expected: String, path: String = ""): String {
     return ""
 }
 
+fun diffTier(given: Tier, expected: Int, path: String = ""): String {
+    if (tierGetValue(given) != expected) { return "${path}value ${tierGetValue(given)} != ${expected}" }
+    return ""
+}
+
 data class ExpectedDateRange(
     var from: String? = null,
     var to: String? = null,

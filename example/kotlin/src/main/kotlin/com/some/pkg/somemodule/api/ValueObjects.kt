@@ -631,6 +631,8 @@ data class SomePropertyEntry(
     private val exampleDouble: Double,
     private val exampleBool: Boolean,
     private val exampleString: String,
+    private val exampleNumericCustomType: Int,
+    private val exampleNumericCustomType2: Int,
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
@@ -656,6 +658,14 @@ data class SomePropertyEntry(
         return this.exampleString
     }
 
+    fun getExampleNumericCustomType(): Tier {
+        return tierCreate(this.exampleNumericCustomType)
+    }
+
+    fun getExampleNumericCustomType2(): Tier {
+        return tierCreate(this.exampleNumericCustomType2)
+    }
+
     companion object {
         fun create(
             id: SomeId,
@@ -664,6 +674,8 @@ data class SomePropertyEntry(
             exampleDouble: Double,
             exampleBool: Boolean,
             exampleString: String,
+            exampleNumericCustomType: Tier,
+            exampleNumericCustomType2: Tier,
         ): SomePropertyEntry {
             return SomePropertyEntry(
                 id = id.value,
@@ -672,6 +684,8 @@ data class SomePropertyEntry(
                 exampleDouble = exampleDouble,
                 exampleBool = exampleBool,
                 exampleString = exampleString,
+                exampleNumericCustomType = tierGetValue(exampleNumericCustomType),
+                exampleNumericCustomType2 = tierGetValue(exampleNumericCustomType2),
             )
         }
     }

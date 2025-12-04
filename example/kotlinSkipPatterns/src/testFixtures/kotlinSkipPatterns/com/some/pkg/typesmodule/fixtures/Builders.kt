@@ -8,6 +8,10 @@ fun date(value: String = "01/01/1970 00:00"): Date {
     return dateCreate(value)
 }
 
+fun tier(value: Int = 1): Tier {
+    return tierCreate(value)
+}
+
 data class DateRangeDef(
     var from: String = "01/01/1970 00:00",
     var to: String = "01/01/2030 00:00",

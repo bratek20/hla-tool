@@ -541,6 +541,8 @@ data class ExpectedSomePropertyEntry(
     var exampleDouble: Double? = null,
     var exampleBool: Boolean? = null,
     var exampleString: String? = null,
+    var exampleNumericCustomType: Int? = null,
+    var exampleNumericCustomType2: Int? = null,
 )
 fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePropertyEntry.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomePropertyEntry().apply(expectedInit)
@@ -568,6 +570,14 @@ fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePr
 
     expected.exampleString?.let {
         if (given.getExampleString() != it) { result.add("${path}exampleString ${given.getExampleString()} != ${it}") }
+    }
+
+    expected.exampleNumericCustomType?.let {
+        if (diffTier(given.getExampleNumericCustomType(), it) != "") { result.add(diffTier(given.getExampleNumericCustomType(), it, "${path}exampleNumericCustomType.")) }
+    }
+
+    expected.exampleNumericCustomType2?.let {
+        if (diffTier(given.getExampleNumericCustomType2(), it) != "") { result.add(diffTier(given.getExampleNumericCustomType2(), it, "${path}exampleNumericCustomType2.")) }
     }
 
     return result.joinToString("\n")

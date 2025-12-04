@@ -8,6 +8,14 @@ fun dateGetValue(it: Date): String {
     TODO()
 }
 
+fun tierCreate(value: Int): Tier {
+    TODO()
+}
+
+fun tierGetValue(it: Tier): Int {
+    TODO()
+}
+
 fun dateRangeCreate(from: Date, to: Date): DateRange {
     TODO()
 }

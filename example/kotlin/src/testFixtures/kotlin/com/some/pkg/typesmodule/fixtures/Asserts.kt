@@ -11,6 +11,12 @@ fun assertDate(given: Date, expected: String) {
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+
+fun assertTier(given: Tier, expected: Int) {
+    val diff = diffTier(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRange(given: DateRange, expectedInit: ExpectedDateRange.() -> Unit) {
     val diff = diffDateRange(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
