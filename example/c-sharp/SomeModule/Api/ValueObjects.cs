@@ -560,6 +560,8 @@ namespace SomeModule.Api {
         readonly double exampleDouble;
         readonly bool exampleBool;
         readonly string exampleString;
+        readonly int exampleNumericCustomType;
+        readonly int exampleNumericCustomType2;
 
         public SomePropertyEntry(
             string id,
@@ -567,7 +569,9 @@ namespace SomeModule.Api {
             long exampleLong,
             double exampleDouble,
             bool exampleBool,
-            string exampleString
+            string exampleString,
+            int exampleNumericCustomType,
+            int exampleNumericCustomType2
         ) {
             this.id = id;
             this.exampleInt = exampleInt;
@@ -575,6 +579,8 @@ namespace SomeModule.Api {
             this.exampleDouble = exampleDouble;
             this.exampleBool = exampleBool;
             this.exampleString = exampleString;
+            this.exampleNumericCustomType = exampleNumericCustomType;
+            this.exampleNumericCustomType2 = exampleNumericCustomType2;
         }
         public SomeId GetId() {
             return new SomeId(id);
@@ -594,8 +600,14 @@ namespace SomeModule.Api {
         public string GetExampleString() {
             return exampleString;
         }
-        public static SomePropertyEntry Create(SomeId id, int exampleInt, long exampleLong, double exampleDouble, bool exampleBool, string exampleString) {
-            return new SomePropertyEntry(id.Value, exampleInt, exampleLong, exampleDouble, exampleBool, exampleString);
+        public Tier GetExampleNumericCustomType() {
+            return TODO(exampleNumericCustomType);
+        }
+        public Tier GetExampleNumericCustomType2() {
+            return TODO(exampleNumericCustomType2);
+        }
+        public static SomePropertyEntry Create(SomeId id, int exampleInt, long exampleLong, double exampleDouble, bool exampleBool, string exampleString, Tier exampleNumericCustomType, Tier exampleNumericCustomType2) {
+            return new SomePropertyEntry(id.Value, exampleInt, exampleLong, exampleDouble, exampleBool, exampleString, TODO(exampleNumericCustomType), TODO(exampleNumericCustomType2));
         }
     }
 

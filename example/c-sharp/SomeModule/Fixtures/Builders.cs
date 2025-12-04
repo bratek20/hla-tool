@@ -126,6 +126,8 @@ namespace SomeModule.Fixtures {
         public double ExampleDouble { get; set; } = 3.0;
         public bool ExampleBool { get; set; } = true;
         public string ExampleString { get; set; } = "ABC";
+        public int ExampleNumericCustomType { get; set; } = 1;
+        public int ExampleNumericCustomType2 { get; set; } = 2;
     }
 
     public class SomeRenamedSourcePropertyEntryDef {
@@ -362,7 +364,7 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyEntryDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomePropertyEntry.Create(new SomeId(def.Id), def.ExampleInt, def.ExampleLong, def.ExampleDouble, def.ExampleBool, def.ExampleString);
+            return SomePropertyEntry.Create(new SomeId(def.Id), def.ExampleInt, def.ExampleLong, def.ExampleDouble, def.ExampleBool, def.ExampleString, TODO(def.ExampleNumericCustomType), TODO(def.ExampleNumericCustomType2));
         }
         public static SomeRenamedSourcePropertyEntry BuildSomeRenamedSourcePropertyEntry(Action<SomeRenamedSourcePropertyEntryDef> init = null) {
             var def = new SomeRenamedSourcePropertyEntryDef();
