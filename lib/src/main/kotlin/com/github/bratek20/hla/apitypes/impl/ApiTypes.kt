@@ -296,7 +296,7 @@ abstract class SimpleStructureApiType(
     override fun getExample(): Any {
         val exampleValueFromAttributes = extractExampleValueFromAttributes()?.let { destringify(it) }
         if (exampleValueFromAttributes != null) {
-            return exampleValueFromAttributes
+            return BaseApiType.parseToProperExampleFormat(boxedType, exampleValueFromAttributes)
         }
         if (boxedType.name == BaseType.STRING) {
             return pascalToCamelCase(def.getName())

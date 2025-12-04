@@ -12,7 +12,6 @@ import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
 import com.github.bratek20.utils.camelToPascalCase
-import com.github.bratek20.utils.destringify
 
 open class ComplexStructureField(
     val def: FieldDefinition,
@@ -62,21 +61,29 @@ open class ComplexStructureField(
     fun getExampleValue(): Any? {
         val value = this.extractExampleValue()
         if(value != null) {
-            if(type is BaseApiType) {
-                val basApiType = type as BaseApiType
-                return BaseApiType.parseToProperExampleFormat(basApiType, value)
-            }
-            return destringify(value)
+            val typeToParse = getBaseApiType(type) ?: throw ShouldNeverHappenException("Type")
+            return BaseApiType.parseToProperExampleFormat(typeToParse, value)
         }
         return value
     }
 
-    private fun extractExampleValue(): String? {
+    private fun getBaseApiType(type: ApiTypeLogic): BaseApiType?{
         if(type is BaseApiType) {
-            val basApiType = type as BaseApiType
-            if(BaseApiType.isNumericType(basApiType)) {
-                return extractExampleValueForNumericType(def.getAttributes())
-            }
+            return type as BaseApiType
+        }
+        if(type is SimpleCustomApiType) {
+            return (type as SimpleCustomApiType).boxedType
+        }
+        if(type is SimpleValueObjectApiType) {
+            return (type as SimpleValueObjectApiType).boxedType
+        }
+        return null
+    }
+
+    private fun extractExampleValue(): String? {
+        val typeToExtract = getBaseApiType(type)
+        if(typeToExtract != null && BaseApiType.isNumericType(typeToExtract)) {
+            return extractExampleValueForNumericType(def.getAttributes())
         }
         return extractExampleValue(def.getAttributes())
     }
