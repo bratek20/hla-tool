@@ -116,6 +116,8 @@ Properties
         exampleDouble: double (startsFrom: 3.0)
         exampleBool: bool (example: true)
         exampleString: string (example: "ABC")
+        exampleNumericCustomType: Tier
+        exampleNumericCustomType2: Tier (startsFrom: 2)
 
     SomeRenamedSourcePropertyEntry
         id: SomeOtherId (from: sId, idSource)

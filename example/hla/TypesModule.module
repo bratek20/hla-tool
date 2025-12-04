@@ -1,5 +1,6 @@
 CustomTypes
     Date: string (example: "01/01/1970 00:00")
+    Tier: int (startsFrom: 1)
 
     DateRange
         from: Date

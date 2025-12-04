@@ -324,6 +324,8 @@ namespace SomeModule.Builder {
         exampleDouble?: number,
         exampleBool?: boolean,
         exampleString?: string,
+        exampleNumericCustomType?: number,
+        exampleNumericCustomType2?: number,
     }
     export function somePropertyEntry(def?: SomePropertyEntryDef): SomePropertyEntry {
         const final_id = def?.id ?? "someValue"
@@ -332,6 +334,8 @@ namespace SomeModule.Builder {
         const final_exampleDouble = def?.exampleDouble ?? 3.0
         const final_exampleBool = def?.exampleBool ?? true
         const final_exampleString = def?.exampleString ?? "ABC"
+        const final_exampleNumericCustomType = def?.exampleNumericCustomType ?? 1
+        const final_exampleNumericCustomType2 = def?.exampleNumericCustomType2 ?? 2
 
         return SomePropertyEntry.create(
             new SomeId(final_id),
@@ -340,6 +344,8 @@ namespace SomeModule.Builder {
             final_exampleDouble,
             final_exampleBool,
             final_exampleString,
+            TypesModule.CustomTypesMapper.tierCreate(final_exampleNumericCustomType),
+            TypesModule.CustomTypesMapper.tierCreate(final_exampleNumericCustomType2),
         )
     }
 

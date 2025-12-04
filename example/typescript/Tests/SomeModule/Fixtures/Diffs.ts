@@ -513,6 +513,8 @@ namespace SomeModule {
         exampleDouble?: number,
         exampleBool?: boolean,
         exampleString?: string,
+        exampleNumericCustomType?: number,
+        exampleNumericCustomType2?: number,
     }
     export function diffSomePropertyEntry(given: SomePropertyEntry, expected: ExpectedSomePropertyEntry, path: string = ""): string {
         const result: string[] = []
@@ -539,6 +541,14 @@ namespace SomeModule {
 
         if (expected.exampleString !== undefined) {
             if (given.getExampleString() != expected.exampleString) { result.push(`${path}exampleString ${given.getExampleString()} != ${expected.exampleString}`) }
+        }
+
+        if (expected.exampleNumericCustomType !== undefined) {
+            if (TypesModule.diffTier(given.getExampleNumericCustomType(), expected.exampleNumericCustomType) != "") { result.push(TypesModule.diffTier(given.getExampleNumericCustomType(), expected.exampleNumericCustomType, `${path}exampleNumericCustomType.`)) }
+        }
+
+        if (expected.exampleNumericCustomType2 !== undefined) {
+            if (TypesModule.diffTier(given.getExampleNumericCustomType2(), expected.exampleNumericCustomType2) != "") { result.push(TypesModule.diffTier(given.getExampleNumericCustomType2(), expected.exampleNumericCustomType2, `${path}exampleNumericCustomType2.`)) }
         }
 
         return result.join("\n")

@@ -5,6 +5,10 @@ namespace TypesModule.Builder {
         return TypesModule.CustomTypesMapper.dateCreate(value)
     }
 
+    export function tier(value: number = 1): Tier {
+        return TypesModule.CustomTypesMapper.tierCreate(value)
+    }
+
     export interface DateRangeDef {
         from?: string,
         to?: string,

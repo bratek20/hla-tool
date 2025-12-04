@@ -6,6 +6,11 @@ namespace TypesModule {
         return ""
     }
 
+    export function diffTier(given: Tier, expected: number, path: string = ""): string {
+        if (TypesModule.CustomTypesMapper.tierGetValue(given) != expected) { return `${path}value ${TypesModule.CustomTypesMapper.tierGetValue(given)} != ${expected}` }
+        return ""
+    }
+
     export interface ExpectedDateRange {
         from?: string,
         to?: string,

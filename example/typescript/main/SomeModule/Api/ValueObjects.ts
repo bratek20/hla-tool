@@ -911,6 +911,8 @@ class SomePropertyEntry {
     private exampleDouble = NUMBER
     private exampleBool = BOOLEAN
     private exampleString = STRING
+    private exampleNumericCustomType = NUMBER
+    private exampleNumericCustomType2 = NUMBER
 
     static create(
         id: SomeId,
@@ -919,6 +921,8 @@ class SomePropertyEntry {
         exampleDouble: number,
         exampleBool: boolean,
         exampleString: string,
+        exampleNumericCustomType: Tier,
+        exampleNumericCustomType2: Tier,
     ): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
@@ -927,6 +931,8 @@ class SomePropertyEntry {
         instance.exampleDouble = exampleDouble
         instance.exampleBool = exampleBool
         instance.exampleString = exampleString
+        instance.exampleNumericCustomType = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType)
+        instance.exampleNumericCustomType2 = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType2)
         return instance
     }
 
@@ -937,6 +943,8 @@ class SomePropertyEntry {
         exampleDouble,
         exampleBool,
         exampleString,
+        exampleNumericCustomType,
+        exampleNumericCustomType2,
     }: {
         id: SomeId;
         exampleInt: number;
@@ -944,6 +952,8 @@ class SomePropertyEntry {
         exampleDouble: number;
         exampleBool: boolean;
         exampleString: string;
+        exampleNumericCustomType: Tier;
+        exampleNumericCustomType2: Tier;
     }): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
@@ -952,6 +962,8 @@ class SomePropertyEntry {
         instance.exampleDouble = exampleDouble
         instance.exampleBool = exampleBool
         instance.exampleString = exampleString
+        instance.exampleNumericCustomType = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType)
+        instance.exampleNumericCustomType2 = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType2)
         return instance
     }
 
@@ -977,6 +989,14 @@ class SomePropertyEntry {
 
     getExampleString(): string {
         return this.exampleString
+    }
+
+    getExampleNumericCustomType(): Tier {
+        return TypesModule.CustomTypesMapper.tierCreate(this.exampleNumericCustomType)
+    }
+
+    getExampleNumericCustomType2(): Tier {
+        return TypesModule.CustomTypesMapper.tierCreate(this.exampleNumericCustomType2)
     }
 }
 
