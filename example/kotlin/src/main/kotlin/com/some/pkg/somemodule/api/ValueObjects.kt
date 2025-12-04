@@ -633,6 +633,8 @@ data class SomePropertyEntry(
     private val exampleString: String,
     private val exampleNumericCustomType: Int,
     private val exampleNumericCustomType2: Int,
+    private val exampleVONumeric: Int,
+    private val exampleVONumeric2: Int,
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
@@ -666,6 +668,14 @@ data class SomePropertyEntry(
         return tierCreate(this.exampleNumericCustomType2)
     }
 
+    fun getExampleVONumeric(): SomeIntWrapper {
+        return SomeIntWrapper(this.exampleVONumeric)
+    }
+
+    fun getExampleVONumeric2(): SomeIntWrapper {
+        return SomeIntWrapper(this.exampleVONumeric2)
+    }
+
     companion object {
         fun create(
             id: SomeId,
@@ -676,6 +686,8 @@ data class SomePropertyEntry(
             exampleString: String,
             exampleNumericCustomType: Tier,
             exampleNumericCustomType2: Tier,
+            exampleVONumeric: SomeIntWrapper,
+            exampleVONumeric2: SomeIntWrapper,
         ): SomePropertyEntry {
             return SomePropertyEntry(
                 id = id.value,
@@ -686,6 +698,8 @@ data class SomePropertyEntry(
                 exampleString = exampleString,
                 exampleNumericCustomType = tierGetValue(exampleNumericCustomType),
                 exampleNumericCustomType2 = tierGetValue(exampleNumericCustomType2),
+                exampleVONumeric = exampleVONumeric.value,
+                exampleVONumeric2 = exampleVONumeric2.value,
             )
         }
     }

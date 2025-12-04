@@ -515,6 +515,8 @@ namespace SomeModule {
         exampleString?: string,
         exampleNumericCustomType?: number,
         exampleNumericCustomType2?: number,
+        exampleVONumeric?: number,
+        exampleVONumeric2?: number,
     }
     export function diffSomePropertyEntry(given: SomePropertyEntry, expected: ExpectedSomePropertyEntry, path: string = ""): string {
         const result: string[] = []
@@ -549,6 +551,14 @@ namespace SomeModule {
 
         if (expected.exampleNumericCustomType2 !== undefined) {
             if (TypesModule.diffTier(given.getExampleNumericCustomType2(), expected.exampleNumericCustomType2) != "") { result.push(TypesModule.diffTier(given.getExampleNumericCustomType2(), expected.exampleNumericCustomType2, `${path}exampleNumericCustomType2.`)) }
+        }
+
+        if (expected.exampleVONumeric !== undefined) {
+            if (diffSomeIntWrapper(given.getExampleVONumeric(), expected.exampleVONumeric) != "") { result.push(diffSomeIntWrapper(given.getExampleVONumeric(), expected.exampleVONumeric, `${path}exampleVONumeric.`)) }
+        }
+
+        if (expected.exampleVONumeric2 !== undefined) {
+            if (diffSomeIntWrapper(given.getExampleVONumeric2(), expected.exampleVONumeric2) != "") { result.push(diffSomeIntWrapper(given.getExampleVONumeric2(), expected.exampleVONumeric2, `${path}exampleVONumeric2.`)) }
         }
 
         return result.join("\n")

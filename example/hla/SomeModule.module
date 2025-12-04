@@ -118,6 +118,8 @@ Properties
         exampleString: string (example: "ABC")
         exampleNumericCustomType: Tier
         exampleNumericCustomType2: Tier (startsFrom: 2)
+        exampleVONumeric: SomeIntWrapper
+        exampleVONumeric2: SomeIntWrapper (startsFrom: 3)
 
     SomeRenamedSourcePropertyEntry
         id: SomeOtherId (from: sId, idSource)

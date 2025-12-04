@@ -543,6 +543,8 @@ data class ExpectedSomePropertyEntry(
     var exampleString: String? = null,
     var exampleNumericCustomType: Int? = null,
     var exampleNumericCustomType2: Int? = null,
+    var exampleVONumeric: Int? = null,
+    var exampleVONumeric2: Int? = null,
 )
 fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePropertyEntry.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomePropertyEntry().apply(expectedInit)
@@ -578,6 +580,14 @@ fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePr
 
     expected.exampleNumericCustomType2?.let {
         if (diffTier(given.getExampleNumericCustomType2(), it) != "") { result.add(diffTier(given.getExampleNumericCustomType2(), it, "${path}exampleNumericCustomType2.")) }
+    }
+
+    expected.exampleVONumeric?.let {
+        if (diffSomeIntWrapper(given.getExampleVONumeric(), it) != "") { result.add(diffSomeIntWrapper(given.getExampleVONumeric(), it, "${path}exampleVONumeric.")) }
+    }
+
+    expected.exampleVONumeric2?.let {
+        if (diffSomeIntWrapper(given.getExampleVONumeric2(), it) != "") { result.add(diffSomeIntWrapper(given.getExampleVONumeric2(), it, "${path}exampleVONumeric2.")) }
     }
 
     return result.joinToString("\n")

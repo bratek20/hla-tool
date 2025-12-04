@@ -284,6 +284,8 @@ data class SomePropertyEntryDef(
     var exampleString: String = "ABC",
     var exampleNumericCustomType: Int = 1,
     var exampleNumericCustomType2: Int = 2,
+    var exampleVONumeric: Int = 5,
+    var exampleVONumeric2: Int = 3,
 )
 fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyEntry {
     val def = SomePropertyEntryDef().apply(init)
@@ -296,6 +298,8 @@ fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyE
         exampleString = def.exampleString,
         exampleNumericCustomType = tierCreate(def.exampleNumericCustomType),
         exampleNumericCustomType2 = tierCreate(def.exampleNumericCustomType2),
+        exampleVONumeric = SomeIntWrapper(def.exampleVONumeric),
+        exampleVONumeric2 = SomeIntWrapper(def.exampleVONumeric2),
     )
 }
 

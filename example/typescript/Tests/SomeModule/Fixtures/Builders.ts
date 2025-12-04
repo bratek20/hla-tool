@@ -326,6 +326,8 @@ namespace SomeModule.Builder {
         exampleString?: string,
         exampleNumericCustomType?: number,
         exampleNumericCustomType2?: number,
+        exampleVONumeric?: number,
+        exampleVONumeric2?: number,
     }
     export function somePropertyEntry(def?: SomePropertyEntryDef): SomePropertyEntry {
         const final_id = def?.id ?? "someValue"
@@ -336,6 +338,8 @@ namespace SomeModule.Builder {
         const final_exampleString = def?.exampleString ?? "ABC"
         const final_exampleNumericCustomType = def?.exampleNumericCustomType ?? 1
         const final_exampleNumericCustomType2 = def?.exampleNumericCustomType2 ?? 2
+        const final_exampleVONumeric = def?.exampleVONumeric ?? 5
+        const final_exampleVONumeric2 = def?.exampleVONumeric2 ?? 3
 
         return SomePropertyEntry.create(
             new SomeId(final_id),
@@ -346,6 +350,8 @@ namespace SomeModule.Builder {
             final_exampleString,
             TypesModule.CustomTypesMapper.tierCreate(final_exampleNumericCustomType),
             TypesModule.CustomTypesMapper.tierCreate(final_exampleNumericCustomType2),
+            new SomeIntWrapper(final_exampleVONumeric),
+            new SomeIntWrapper(final_exampleVONumeric2),
         )
     }
 

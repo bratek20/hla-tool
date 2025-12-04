@@ -913,6 +913,8 @@ class SomePropertyEntry {
     private exampleString = STRING
     private exampleNumericCustomType = NUMBER
     private exampleNumericCustomType2 = NUMBER
+    private exampleVONumeric = NUMBER
+    private exampleVONumeric2 = NUMBER
 
     static create(
         id: SomeId,
@@ -923,6 +925,8 @@ class SomePropertyEntry {
         exampleString: string,
         exampleNumericCustomType: Tier,
         exampleNumericCustomType2: Tier,
+        exampleVONumeric: SomeIntWrapper,
+        exampleVONumeric2: SomeIntWrapper,
     ): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
@@ -933,6 +937,8 @@ class SomePropertyEntry {
         instance.exampleString = exampleString
         instance.exampleNumericCustomType = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType)
         instance.exampleNumericCustomType2 = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType2)
+        instance.exampleVONumeric = exampleVONumeric.getValue()
+        instance.exampleVONumeric2 = exampleVONumeric2.getValue()
         return instance
     }
 
@@ -945,6 +951,8 @@ class SomePropertyEntry {
         exampleString,
         exampleNumericCustomType,
         exampleNumericCustomType2,
+        exampleVONumeric,
+        exampleVONumeric2,
     }: {
         id: SomeId;
         exampleInt: number;
@@ -954,6 +962,8 @@ class SomePropertyEntry {
         exampleString: string;
         exampleNumericCustomType: Tier;
         exampleNumericCustomType2: Tier;
+        exampleVONumeric: SomeIntWrapper;
+        exampleVONumeric2: SomeIntWrapper;
     }): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
@@ -964,6 +974,8 @@ class SomePropertyEntry {
         instance.exampleString = exampleString
         instance.exampleNumericCustomType = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType)
         instance.exampleNumericCustomType2 = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType2)
+        instance.exampleVONumeric = exampleVONumeric.getValue()
+        instance.exampleVONumeric2 = exampleVONumeric2.getValue()
         return instance
     }
 
@@ -997,6 +1009,14 @@ class SomePropertyEntry {
 
     getExampleNumericCustomType2(): Tier {
         return TypesModule.CustomTypesMapper.tierCreate(this.exampleNumericCustomType2)
+    }
+
+    getExampleVONumeric(): SomeIntWrapper {
+        return new SomeIntWrapper(this.exampleVONumeric)
+    }
+
+    getExampleVONumeric2(): SomeIntWrapper {
+        return new SomeIntWrapper(this.exampleVONumeric2)
     }
 }
 
