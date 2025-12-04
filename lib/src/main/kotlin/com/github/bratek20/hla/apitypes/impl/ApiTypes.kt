@@ -130,6 +130,10 @@ class BaseApiType(
             return type is BaseApiType && type.name == BaseType.ANY
         }
 
+        fun isNumericType(type: ApiType): Boolean {
+            return type is BaseApiType && (type.name == BaseType.LONG || type.name == BaseType.INT || type.name == BaseType.DOUBLE)
+        }
+
         fun parseToProperExampleFormat(basApiType: BaseApiType, value: String): Any {
             return when (basApiType.name) {
                 BaseType.LONG -> {
@@ -283,7 +287,7 @@ abstract class SimpleStructureApiType(
     }
 
     private fun extractExampleValueFromAttributes(): String? {
-        if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT || boxedType.name == BaseType.DOUBLE) {
+        if (BaseApiType.isNumericType(boxedType)) {
             return extractExampleValueForNumericType(def.getAttributes())
         }
         return extractExampleValue(def.getAttributes())
@@ -418,8 +422,8 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
                     error("Field type is $fieldTypeName and is recursive, but it is not wrapped in Optional or List")
                 }
             }else {
-                val builderValue = field.buildExampleValue()
-                val finalValue = builderValue ?: field.type.getExample()
+                val fieldExampleValue = field.getExampleValue()
+                val finalValue = fieldExampleValue ?: field.type.getExample()
                 fieldsMap[field.privateName()] = finalValue
             }
         }

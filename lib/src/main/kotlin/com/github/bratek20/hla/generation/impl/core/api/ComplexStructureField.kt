@@ -1,14 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.architecture.exceptions.ShouldNeverHappenException
 import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.nullValue
-import com.github.bratek20.codebuilder.core.CodeBuilderContext
-import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
-import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
@@ -61,7 +59,7 @@ open class ComplexStructureField(
         }
     }
 
-    fun buildExampleValue(): Any? {
+    fun getExampleValue(): Any? {
         val value = this.extractExampleValue()
         if(value != null) {
             if(type is BaseApiType) {
@@ -76,7 +74,7 @@ open class ComplexStructureField(
     private fun extractExampleValue(): String? {
         if(type is BaseApiType) {
             val basApiType = type as BaseApiType
-            if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT || basApiType.name == BaseType.DOUBLE) {
+            if(BaseApiType.isNumericType(basApiType)) {
                 return extractExampleValueForNumericType(def.getAttributes())
             }
         }
