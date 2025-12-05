@@ -292,6 +292,7 @@ abstract class SimpleStructureApiType(
         }
         return extractExampleValue(def.getAttributes())
     }
+    
 
     override fun getExample(): Any {
         val exampleValueFromAttributes = extractExampleValueFromAttributes()?.let { destringify(it) }
