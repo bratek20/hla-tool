@@ -17,6 +17,10 @@ class OtherId {
         return this.getValue().toString()
     }
 
+    valueOf(): number {
+        return this.getValue()
+    }
+
     plus(other: OtherId): OtherId {
         return new OtherId(this.getValue() + other.getValue());
     }

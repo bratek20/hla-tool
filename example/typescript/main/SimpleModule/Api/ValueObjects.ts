@@ -35,6 +35,10 @@ class SomeLongWrapper {
         return this.getValue().toString()
     }
 
+    valueOf(): number {
+        return this.getValue()
+    }
+
     plus(other: SomeLongWrapper): SomeLongWrapper {
         return new SomeLongWrapper(this.getValue() + other.getValue());
     }

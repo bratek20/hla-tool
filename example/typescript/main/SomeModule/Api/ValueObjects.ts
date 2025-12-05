@@ -53,6 +53,10 @@ class SomeIntWrapper {
         return this.getValue().toString()
     }
 
+    valueOf(): number {
+        return this.getValue()
+    }
+
     plus(other: SomeIntWrapper): SomeIntWrapper {
         return new SomeIntWrapper(this.getValue() + other.getValue());
     }
@@ -81,6 +85,10 @@ class SomeId2 {
 
     toString(): string {
         return this.getValue().toString()
+    }
+
+    valueOf(): number {
+        return this.getValue()
     }
 
     plus(other: SomeId2): SomeId2 {
