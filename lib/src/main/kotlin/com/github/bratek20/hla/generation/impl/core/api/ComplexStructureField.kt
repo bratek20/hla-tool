@@ -79,10 +79,10 @@ open class ComplexStructureField(
 
     private fun extractExampleValue(): String? {
         val typeToExtract = getBaseApiType()
-        if(typeToExtract != null && BaseApiType.isNumericType(typeToExtract)) {
-            return extractExampleValueForNumericType(def.getAttributes())
+        if(typeToExtract == null) {
+            return extractExampleValue(def.getAttributes())
         }
-        return extractExampleValue(def.getAttributes())
+        return extractExampleValueFromAttributes(typeToExtract, def.getAttributes())
     }
 
     @Deprecated("Use defaultValueBuilder() instead")

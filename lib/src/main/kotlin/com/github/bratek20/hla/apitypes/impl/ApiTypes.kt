@@ -281,21 +281,14 @@ abstract class SimpleStructureApiType(
     }
 
     fun exampleValueBuilder(): ExpressionBuilder? {
-        return extractExampleValueFromAttributes()?.let {
+        return extractExampleValueFromAttributes(boxedType, def.getAttributes())?.let {
             const(it)
         }
-    }
-
-    private fun extractExampleValueFromAttributes(): String? {
-        if (BaseApiType.isNumericType(boxedType)) {
-            return extractExampleValueForNumericType(def.getAttributes())
-        }
-        return extractExampleValue(def.getAttributes())
     }
     
 
     override fun getExample(): Any {
-        val exampleValueFromAttributes = extractExampleValueFromAttributes()?.let { destringify(it) }
+        val exampleValueFromAttributes = extractExampleValueFromAttributes(boxedType, def.getAttributes())?.let { destringify(it) }
         if (exampleValueFromAttributes != null) {
             return BaseApiType.parseToProperExampleFormat(boxedType, exampleValueFromAttributes)
         }
@@ -803,3 +796,10 @@ data class ApiCustomTypes(
     val simpleList: List<SimpleCustomApiType>,
     val complexList: List<ComplexCustomApiType>
 )
+
+fun extractExampleValueFromAttributes(type: BaseApiType, attributes: List<Attribute>): String? {
+    if (BaseApiType.isNumericType(type)) {
+        return extractExampleValueForNumericType(attributes)
+    }
+    return extractExampleValue(attributes)
+}
