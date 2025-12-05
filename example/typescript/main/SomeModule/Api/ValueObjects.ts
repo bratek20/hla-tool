@@ -53,6 +53,10 @@ class SomeIntWrapper {
         return this.getValue().toString()
     }
 
+    valueOf(): number {
+        return this.getValue()
+    }
+
     plus(other: SomeIntWrapper): SomeIntWrapper {
         return new SomeIntWrapper(this.getValue() + other.getValue());
     }
@@ -81,6 +85,10 @@ class SomeId2 {
 
     toString(): string {
         return this.getValue().toString()
+    }
+
+    valueOf(): number {
+        return this.getValue()
     }
 
     plus(other: SomeId2): SomeId2 {
@@ -906,27 +914,117 @@ class SomeProperty2 {
 
 class SomePropertyEntry {
     private id = STRING
+    private exampleInt = NUMBER
+    private exampleLong = NUMBER
+    private exampleDouble = NUMBER
+    private exampleBool = BOOLEAN
+    private exampleString = STRING
+    private exampleNumericCustomType = NUMBER
+    private exampleNumericCustomType2 = NUMBER
+    private exampleVONumeric = NUMBER
+    private exampleVONumeric2 = NUMBER
 
     static create(
         id: SomeId,
+        exampleInt: number,
+        exampleLong: number,
+        exampleDouble: number,
+        exampleBool: boolean,
+        exampleString: string,
+        exampleNumericCustomType: Tier,
+        exampleNumericCustomType2: Tier,
+        exampleVONumeric: SomeIntWrapper,
+        exampleVONumeric2: SomeIntWrapper,
     ): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
+        instance.exampleInt = exampleInt
+        instance.exampleLong = exampleLong
+        instance.exampleDouble = exampleDouble
+        instance.exampleBool = exampleBool
+        instance.exampleString = exampleString
+        instance.exampleNumericCustomType = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType)
+        instance.exampleNumericCustomType2 = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType2)
+        instance.exampleVONumeric = exampleVONumeric.getValue()
+        instance.exampleVONumeric2 = exampleVONumeric2.getValue()
         return instance
     }
 
     static createNamed({
         id,
+        exampleInt,
+        exampleLong,
+        exampleDouble,
+        exampleBool,
+        exampleString,
+        exampleNumericCustomType,
+        exampleNumericCustomType2,
+        exampleVONumeric,
+        exampleVONumeric2,
     }: {
         id: SomeId;
+        exampleInt: number;
+        exampleLong: number;
+        exampleDouble: number;
+        exampleBool: boolean;
+        exampleString: string;
+        exampleNumericCustomType: Tier;
+        exampleNumericCustomType2: Tier;
+        exampleVONumeric: SomeIntWrapper;
+        exampleVONumeric2: SomeIntWrapper;
     }): SomePropertyEntry {
         const instance = new SomePropertyEntry()
         instance.id = id.getValue()
+        instance.exampleInt = exampleInt
+        instance.exampleLong = exampleLong
+        instance.exampleDouble = exampleDouble
+        instance.exampleBool = exampleBool
+        instance.exampleString = exampleString
+        instance.exampleNumericCustomType = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType)
+        instance.exampleNumericCustomType2 = TypesModule.CustomTypesMapper.tierGetValue(exampleNumericCustomType2)
+        instance.exampleVONumeric = exampleVONumeric.getValue()
+        instance.exampleVONumeric2 = exampleVONumeric2.getValue()
         return instance
     }
 
     getId(): SomeId {
         return new SomeId(this.id)
+    }
+
+    getExampleInt(): number {
+        return this.exampleInt
+    }
+
+    getExampleLong(): number {
+        return this.exampleLong
+    }
+
+    getExampleDouble(): number {
+        return this.exampleDouble
+    }
+
+    getExampleBool(): boolean {
+        return this.exampleBool
+    }
+
+    getExampleString(): string {
+        return this.exampleString
+    }
+
+    getExampleNumericCustomType(): Tier {
+        return TypesModule.CustomTypesMapper.tierCreate(this.exampleNumericCustomType)
+    }
+
+    getExampleNumericCustomType2(): Tier {
+        return TypesModule.CustomTypesMapper.tierCreate(this.exampleNumericCustomType2)
+    }
+
+    getExampleVONumeric(): SomeIntWrapper {
+        return new SomeIntWrapper(this.exampleVONumeric)
+    }
+
+    getExampleVONumeric2(): SomeIntWrapper {
+        return new SomeIntWrapper(this.exampleVONumeric2)
     }
 }
 

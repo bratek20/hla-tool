@@ -626,17 +626,80 @@ data class SomeProperty2(
 
 data class SomePropertyEntry(
     private val id: String,
+    private val exampleInt: Int,
+    private val exampleLong: Long,
+    private val exampleDouble: Double,
+    private val exampleBool: Boolean,
+    private val exampleString: String,
+    private val exampleNumericCustomType: Int,
+    private val exampleNumericCustomType2: Int,
+    private val exampleVONumeric: Int,
+    private val exampleVONumeric2: Int,
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
     }
 
+    fun getExampleInt(): Int {
+        return this.exampleInt
+    }
+
+    fun getExampleLong(): Long {
+        return this.exampleLong
+    }
+
+    fun getExampleDouble(): Double {
+        return this.exampleDouble
+    }
+
+    fun getExampleBool(): Boolean {
+        return this.exampleBool
+    }
+
+    fun getExampleString(): String {
+        return this.exampleString
+    }
+
+    fun getExampleNumericCustomType(): Tier {
+        return tierCreate(this.exampleNumericCustomType)
+    }
+
+    fun getExampleNumericCustomType2(): Tier {
+        return tierCreate(this.exampleNumericCustomType2)
+    }
+
+    fun getExampleVONumeric(): SomeIntWrapper {
+        return SomeIntWrapper(this.exampleVONumeric)
+    }
+
+    fun getExampleVONumeric2(): SomeIntWrapper {
+        return SomeIntWrapper(this.exampleVONumeric2)
+    }
+
     companion object {
         fun create(
             id: SomeId,
+            exampleInt: Int,
+            exampleLong: Long,
+            exampleDouble: Double,
+            exampleBool: Boolean,
+            exampleString: String,
+            exampleNumericCustomType: Tier,
+            exampleNumericCustomType2: Tier,
+            exampleVONumeric: SomeIntWrapper,
+            exampleVONumeric2: SomeIntWrapper,
         ): SomePropertyEntry {
             return SomePropertyEntry(
                 id = id.value,
+                exampleInt = exampleInt,
+                exampleLong = exampleLong,
+                exampleDouble = exampleDouble,
+                exampleBool = exampleBool,
+                exampleString = exampleString,
+                exampleNumericCustomType = tierGetValue(exampleNumericCustomType),
+                exampleNumericCustomType2 = tierGetValue(exampleNumericCustomType2),
+                exampleVONumeric = exampleVONumeric.value,
+                exampleVONumeric2 = exampleVONumeric2.value,
             )
         }
     }

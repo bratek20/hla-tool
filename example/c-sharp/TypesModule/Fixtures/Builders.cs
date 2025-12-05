@@ -16,6 +16,9 @@ namespace TypesModule.Fixtures {
         public static Date BuildDate(string value = "01/01/1970 00:00") {
             return TODO(value);
         }
+        public static Tier BuildTier(int value = 1) {
+            return TODO(value);
+        }
         public static DateRange BuildDateRange(Action<DateRangeDef> init = null) {
             var def = new DateRangeDef();
             init = init ?? ((_) => {});

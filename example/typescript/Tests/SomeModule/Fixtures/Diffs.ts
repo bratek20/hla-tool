@@ -508,12 +508,57 @@ namespace SomeModule {
 
     export interface ExpectedSomePropertyEntry {
         id?: string,
+        exampleInt?: number,
+        exampleLong?: number,
+        exampleDouble?: number,
+        exampleBool?: boolean,
+        exampleString?: string,
+        exampleNumericCustomType?: number,
+        exampleNumericCustomType2?: number,
+        exampleVONumeric?: number,
+        exampleVONumeric2?: number,
     }
     export function diffSomePropertyEntry(given: SomePropertyEntry, expected: ExpectedSomePropertyEntry, path: string = ""): string {
         const result: string[] = []
 
         if (expected.id !== undefined) {
             if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.exampleInt !== undefined) {
+            if (given.getExampleInt() != expected.exampleInt) { result.push(`${path}exampleInt ${given.getExampleInt()} != ${expected.exampleInt}`) }
+        }
+
+        if (expected.exampleLong !== undefined) {
+            if (given.getExampleLong() != expected.exampleLong) { result.push(`${path}exampleLong ${given.getExampleLong()} != ${expected.exampleLong}`) }
+        }
+
+        if (expected.exampleDouble !== undefined) {
+            if (given.getExampleDouble() != expected.exampleDouble) { result.push(`${path}exampleDouble ${given.getExampleDouble()} != ${expected.exampleDouble}`) }
+        }
+
+        if (expected.exampleBool !== undefined) {
+            if (given.getExampleBool() != expected.exampleBool) { result.push(`${path}exampleBool ${given.getExampleBool()} != ${expected.exampleBool}`) }
+        }
+
+        if (expected.exampleString !== undefined) {
+            if (given.getExampleString() != expected.exampleString) { result.push(`${path}exampleString ${given.getExampleString()} != ${expected.exampleString}`) }
+        }
+
+        if (expected.exampleNumericCustomType !== undefined) {
+            if (TypesModule.diffTier(given.getExampleNumericCustomType(), expected.exampleNumericCustomType) != "") { result.push(TypesModule.diffTier(given.getExampleNumericCustomType(), expected.exampleNumericCustomType, `${path}exampleNumericCustomType.`)) }
+        }
+
+        if (expected.exampleNumericCustomType2 !== undefined) {
+            if (TypesModule.diffTier(given.getExampleNumericCustomType2(), expected.exampleNumericCustomType2) != "") { result.push(TypesModule.diffTier(given.getExampleNumericCustomType2(), expected.exampleNumericCustomType2, `${path}exampleNumericCustomType2.`)) }
+        }
+
+        if (expected.exampleVONumeric !== undefined) {
+            if (diffSomeIntWrapper(given.getExampleVONumeric(), expected.exampleVONumeric) != "") { result.push(diffSomeIntWrapper(given.getExampleVONumeric(), expected.exampleVONumeric, `${path}exampleVONumeric.`)) }
+        }
+
+        if (expected.exampleVONumeric2 !== undefined) {
+            if (diffSomeIntWrapper(given.getExampleVONumeric2(), expected.exampleVONumeric2) != "") { result.push(diffSomeIntWrapper(given.getExampleVONumeric2(), expected.exampleVONumeric2, `${path}exampleVONumeric2.`)) }
         }
 
         return result.join("\n")

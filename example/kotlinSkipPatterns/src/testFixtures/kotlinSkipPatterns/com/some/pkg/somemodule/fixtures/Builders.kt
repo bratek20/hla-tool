@@ -277,11 +277,29 @@ fun someProperty2(init: SomeProperty2Def.() -> Unit = {}): SomeProperty2 {
 
 data class SomePropertyEntryDef(
     var id: String = "someValue",
+    var exampleInt: Int = 1,
+    var exampleLong: Long = 2,
+    var exampleDouble: Double = 3.0,
+    var exampleBool: Boolean = true,
+    var exampleString: String = "ABC",
+    var exampleNumericCustomType: Int = 1,
+    var exampleNumericCustomType2: Int = 2,
+    var exampleVONumeric: Int = 5,
+    var exampleVONumeric2: Int = 3,
 )
 fun somePropertyEntry(init: SomePropertyEntryDef.() -> Unit = {}): SomePropertyEntry {
     val def = SomePropertyEntryDef().apply(init)
     return SomePropertyEntry.create(
         id = SomeId(def.id),
+        exampleInt = def.exampleInt,
+        exampleLong = def.exampleLong,
+        exampleDouble = def.exampleDouble,
+        exampleBool = def.exampleBool,
+        exampleString = def.exampleString,
+        exampleNumericCustomType = tierCreate(def.exampleNumericCustomType),
+        exampleNumericCustomType2 = tierCreate(def.exampleNumericCustomType2),
+        exampleVONumeric = SomeIntWrapper(def.exampleVONumeric),
+        exampleVONumeric2 = SomeIntWrapper(def.exampleVONumeric2),
     )
 }
 

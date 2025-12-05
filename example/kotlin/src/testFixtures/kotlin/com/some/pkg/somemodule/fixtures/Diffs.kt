@@ -536,6 +536,15 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
 
 data class ExpectedSomePropertyEntry(
     var id: String? = null,
+    var exampleInt: Int? = null,
+    var exampleLong: Long? = null,
+    var exampleDouble: Double? = null,
+    var exampleBool: Boolean? = null,
+    var exampleString: String? = null,
+    var exampleNumericCustomType: Int? = null,
+    var exampleNumericCustomType2: Int? = null,
+    var exampleVONumeric: Int? = null,
+    var exampleVONumeric2: Int? = null,
 )
 fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePropertyEntry.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomePropertyEntry().apply(expectedInit)
@@ -543,6 +552,42 @@ fun diffSomePropertyEntry(given: SomePropertyEntry, expectedInit: ExpectedSomePr
 
     expected.id?.let {
         if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+    }
+
+    expected.exampleInt?.let {
+        if (given.getExampleInt() != it) { result.add("${path}exampleInt ${given.getExampleInt()} != ${it}") }
+    }
+
+    expected.exampleLong?.let {
+        if (given.getExampleLong() != it) { result.add("${path}exampleLong ${given.getExampleLong()} != ${it}") }
+    }
+
+    expected.exampleDouble?.let {
+        if (given.getExampleDouble() != it) { result.add("${path}exampleDouble ${given.getExampleDouble()} != ${it}") }
+    }
+
+    expected.exampleBool?.let {
+        if (given.getExampleBool() != it) { result.add("${path}exampleBool ${given.getExampleBool()} != ${it}") }
+    }
+
+    expected.exampleString?.let {
+        if (given.getExampleString() != it) { result.add("${path}exampleString ${given.getExampleString()} != ${it}") }
+    }
+
+    expected.exampleNumericCustomType?.let {
+        if (diffTier(given.getExampleNumericCustomType(), it) != "") { result.add(diffTier(given.getExampleNumericCustomType(), it, "${path}exampleNumericCustomType.")) }
+    }
+
+    expected.exampleNumericCustomType2?.let {
+        if (diffTier(given.getExampleNumericCustomType2(), it) != "") { result.add(diffTier(given.getExampleNumericCustomType2(), it, "${path}exampleNumericCustomType2.")) }
+    }
+
+    expected.exampleVONumeric?.let {
+        if (diffSomeIntWrapper(given.getExampleVONumeric(), it) != "") { result.add(diffSomeIntWrapper(given.getExampleVONumeric(), it, "${path}exampleVONumeric.")) }
+    }
+
+    expected.exampleVONumeric2?.let {
+        if (diffSomeIntWrapper(given.getExampleVONumeric2(), it) != "") { result.add(diffSomeIntWrapper(given.getExampleVONumeric2(), it, "${path}exampleVONumeric2.")) }
     }
 
     return result.joinToString("\n")

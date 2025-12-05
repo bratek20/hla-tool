@@ -1,12 +1,12 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
+import com.github.bratek20.architecture.exceptions.ShouldNeverHappenException
 import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.nullValue
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
-import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
@@ -58,14 +58,32 @@ open class ComplexStructureField(
         }
     }
 
-    private fun extractExampleValue(): String? {
-        if(type is BaseApiType) {
-            val basApiType = type as BaseApiType
-            if(basApiType.name == BaseType.LONG || basApiType.name == BaseType.INT) {
-                return extractExampleValueForNumericType(def.getAttributes())
-            }
+    fun getExampleValue(): Any? {
+        val value = this.extractExampleValue()
+        if(value != null) {
+            val typeToParse = extractBaseApiType(type) ?: throw ShouldNeverHappenException("Type")
+            return BaseApiType.parseToProperExampleFormat(typeToParse, value)
         }
-        return extractExampleValue(def.getAttributes())
+        return value
+    }
+
+    private fun extractBaseApiType(type: ApiTypeLogic): BaseApiType?{
+        if(type is BaseApiType) {
+            return type as BaseApiType
+        }
+        if(type is SimpleStructureApiType) {
+            return (type as SimpleStructureApiType).boxedType
+        }
+        if(type is OptionalApiType) {
+            return extractBaseApiType((type as OptionalApiType).wrappedType)
+        }
+        return null
+    }
+
+    private fun extractExampleValue(): String? {
+        return extractBaseApiType(type)?.let {
+            extractExampleValueFromAttributes(it, def.getAttributes())
+        }
     }
 
     @Deprecated("Use defaultValueBuilder() instead")

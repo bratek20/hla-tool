@@ -17,6 +17,10 @@ class ${nt.name()} {
     }
     #if(${nt.boxedType.name()} == "number")
 
+    valueOf(): ${nt.boxedType.name()} {
+        return this.getValue()
+    }
+
     plus(other: ${nt.name()}): ${nt.name()} {
         return new ${nt.name()}(this.getValue() + other.getValue());
     }

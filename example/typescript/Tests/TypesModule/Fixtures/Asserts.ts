@@ -6,6 +6,11 @@ namespace TypesModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function tier(given: Tier, expected: number) {
+        const diff = diffTier(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function dateRange(given: DateRange, expected: ExpectedDateRange) {
         const diff = diffDateRange(given, expected)
         AssertEquals(diff, "", diff)
