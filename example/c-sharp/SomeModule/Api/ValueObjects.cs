@@ -555,17 +555,71 @@ namespace SomeModule.Api {
 
     public class SomePropertyEntry: ValueObject {
         readonly string id;
+        readonly int exampleInt;
+        readonly long exampleLong;
+        readonly double exampleDouble;
+        readonly bool exampleBool;
+        readonly string exampleString;
+        readonly int exampleNumericCustomType;
+        readonly int exampleNumericCustomType2;
+        readonly int exampleVONumeric;
+        readonly int exampleVONumeric2;
 
         public SomePropertyEntry(
-            string id
+            string id,
+            int exampleInt,
+            long exampleLong,
+            double exampleDouble,
+            bool exampleBool,
+            string exampleString,
+            int exampleNumericCustomType,
+            int exampleNumericCustomType2,
+            int exampleVONumeric,
+            int exampleVONumeric2
         ) {
             this.id = id;
+            this.exampleInt = exampleInt;
+            this.exampleLong = exampleLong;
+            this.exampleDouble = exampleDouble;
+            this.exampleBool = exampleBool;
+            this.exampleString = exampleString;
+            this.exampleNumericCustomType = exampleNumericCustomType;
+            this.exampleNumericCustomType2 = exampleNumericCustomType2;
+            this.exampleVONumeric = exampleVONumeric;
+            this.exampleVONumeric2 = exampleVONumeric2;
         }
         public SomeId GetId() {
             return new SomeId(id);
         }
-        public static SomePropertyEntry Create(SomeId id) {
-            return new SomePropertyEntry(id.Value);
+        public int GetExampleInt() {
+            return exampleInt;
+        }
+        public long GetExampleLong() {
+            return exampleLong;
+        }
+        public double GetExampleDouble() {
+            return exampleDouble;
+        }
+        public bool GetExampleBool() {
+            return exampleBool;
+        }
+        public string GetExampleString() {
+            return exampleString;
+        }
+        public Tier GetExampleNumericCustomType() {
+            return TODO(exampleNumericCustomType);
+        }
+        public Tier GetExampleNumericCustomType2() {
+            return TODO(exampleNumericCustomType2);
+        }
+        public SomeIntWrapper GetExampleVONumeric() {
+            return new SomeIntWrapper(exampleVONumeric);
+        }
+        public SomeIntWrapper GetExampleVONumeric2() {
+            return new SomeIntWrapper(exampleVONumeric2);
+        }
+        public static SomePropertyEntry Create(SomeId id, int exampleInt, long exampleLong, double exampleDouble, bool exampleBool, string exampleString, Tier exampleNumericCustomType, Tier exampleNumericCustomType2, SomeIntWrapper exampleVONumeric, SomeIntWrapper exampleVONumeric2) {
+            return new SomePropertyEntry(id.Value, exampleInt, exampleLong, exampleDouble, exampleBool, exampleString, TODO(exampleNumericCustomType), TODO(exampleNumericCustomType2), exampleVONumeric.Value, exampleVONumeric2.Value);
         }
     }
 

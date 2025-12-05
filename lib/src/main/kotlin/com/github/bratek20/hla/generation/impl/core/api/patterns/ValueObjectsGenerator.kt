@@ -13,16 +13,16 @@ class ValueObjectsGenerator: PatternGenerator() {
         return PatternName.ValueObjects
     }
 
-    override fun supportsCodeBuilder(): Boolean {
-        return c.language.name() == ModuleLanguage.C_SHARP
-    }
-
     override fun shouldGenerate(): Boolean {
         return module.getSimpleValueObjects().isNotEmpty() || modules.getComplexValueObjects(module).isNotEmpty()
     }
 
     override fun useImportsCalculator(): Boolean {
         return true
+    }
+
+    override fun supportsCodeBuilder(): Boolean {
+        return c.language.name() == ModuleLanguage.C_SHARP
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {

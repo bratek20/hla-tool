@@ -121,6 +121,15 @@ namespace SomeModule.Fixtures {
 
     public class SomePropertyEntryDef {
         public string Id { get; set; } = "someValue";
+        public int ExampleInt { get; set; } = 1;
+        public long ExampleLong { get; set; } = 2;
+        public double ExampleDouble { get; set; } = 3.0;
+        public bool ExampleBool { get; set; } = true;
+        public string ExampleString { get; set; } = "ABC";
+        public int ExampleNumericCustomType { get; set; } = 1;
+        public int ExampleNumericCustomType2 { get; set; } = 2;
+        public int ExampleVONumeric { get; set; } = 5;
+        public int ExampleVONumeric2 { get; set; } = 3;
     }
 
     public class SomeRenamedSourcePropertyEntryDef {
@@ -357,7 +366,7 @@ namespace SomeModule.Fixtures {
             var def = new SomePropertyEntryDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomePropertyEntry.Create(new SomeId(def.Id));
+            return SomePropertyEntry.Create(new SomeId(def.Id), def.ExampleInt, def.ExampleLong, def.ExampleDouble, def.ExampleBool, def.ExampleString, TODO(def.ExampleNumericCustomType), TODO(def.ExampleNumericCustomType2), new SomeIntWrapper(def.ExampleVONumeric), new SomeIntWrapper(def.ExampleVONumeric2));
         }
         public static SomeRenamedSourcePropertyEntry BuildSomeRenamedSourcePropertyEntry(Action<SomeRenamedSourcePropertyEntryDef> init = null) {
             var def = new SomeRenamedSourcePropertyEntryDef();

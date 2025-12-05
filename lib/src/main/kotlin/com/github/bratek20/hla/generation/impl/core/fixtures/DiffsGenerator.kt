@@ -13,6 +13,7 @@ class DiffsGenerator: PatternGenerator() {
         val simpleAssertTypes = modules.allSimpleStructureDefinitions(module)
         val enumTypes = modules.allEnumTypeDefinitions(module)
         val complexAssertTypes = modules.allComplexStructureDefinitions(module)
+
         if (simpleAssertTypes.isEmpty() && complexAssertTypes.isEmpty() && enumTypes.isEmpty()) {
             return null
         }

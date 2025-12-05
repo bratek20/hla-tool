@@ -319,12 +319,39 @@ namespace SomeModule.Builder {
 
     export interface SomePropertyEntryDef {
         id?: string,
+        exampleInt?: number,
+        exampleLong?: number,
+        exampleDouble?: number,
+        exampleBool?: boolean,
+        exampleString?: string,
+        exampleNumericCustomType?: number,
+        exampleNumericCustomType2?: number,
+        exampleVONumeric?: number,
+        exampleVONumeric2?: number,
     }
     export function somePropertyEntry(def?: SomePropertyEntryDef): SomePropertyEntry {
         const final_id = def?.id ?? "someValue"
+        const final_exampleInt = def?.exampleInt ?? 1
+        const final_exampleLong = def?.exampleLong ?? 2
+        const final_exampleDouble = def?.exampleDouble ?? 3.0
+        const final_exampleBool = def?.exampleBool ?? true
+        const final_exampleString = def?.exampleString ?? "ABC"
+        const final_exampleNumericCustomType = def?.exampleNumericCustomType ?? 1
+        const final_exampleNumericCustomType2 = def?.exampleNumericCustomType2 ?? 2
+        const final_exampleVONumeric = def?.exampleVONumeric ?? 5
+        const final_exampleVONumeric2 = def?.exampleVONumeric2 ?? 3
 
         return SomePropertyEntry.create(
             new SomeId(final_id),
+            final_exampleInt,
+            final_exampleLong,
+            final_exampleDouble,
+            final_exampleBool,
+            final_exampleString,
+            TypesModule.CustomTypesMapper.tierCreate(final_exampleNumericCustomType),
+            TypesModule.CustomTypesMapper.tierCreate(final_exampleNumericCustomType2),
+            new SomeIntWrapper(final_exampleVONumeric),
+            new SomeIntWrapper(final_exampleVONumeric2),
         )
     }
 

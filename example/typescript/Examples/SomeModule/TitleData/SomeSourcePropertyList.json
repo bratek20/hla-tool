@@ -1,5 +1,14 @@
 [
   {
-    "id": "someId"
+    "id": "someId",
+    "exampleInt": 1,
+    "exampleLong": 2,
+    "exampleDouble": 3.0,
+    "exampleBool": true,
+    "exampleString": "ABC",
+    "exampleNumericCustomType": 1,
+    "exampleNumericCustomType2": 2,
+    "exampleVONumeric": 5,
+    "exampleVONumeric2": 3
   }
 ]

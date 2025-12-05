@@ -6,6 +6,12 @@ class Date {
     }
 }
 
+class Tier {
+    init {
+        TODO()
+    }
+}
+
 class DateRange {
     init {
         TODO()

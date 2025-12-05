@@ -8,6 +8,15 @@ namespace TypesModule.CustomTypesMapper {
         //TODO
         return undefined
     }
+    export function tierCreate(value: number): Tier {
+        //TODO
+        return undefined
+    }
+
+    export function tierGetValue(it: Tier): number {
+        //TODO
+        return undefined
+    }
 
     export function dateRangeCreate(from: Date, to: Date): DateRange {
         //TODO

@@ -111,6 +111,15 @@ Properties
 
     SomePropertyEntry
         id: SomeId (idSource)
+        exampleInt: int (startsFrom: 1)
+        exampleLong: long (startsFrom: 2)
+        exampleDouble: double (startsFrom: 3.0)
+        exampleBool: bool (example: true)
+        exampleString: string (example: "ABC")
+        exampleNumericCustomType: Tier
+        exampleNumericCustomType2: Tier (startsFrom: 2)
+        exampleVONumeric: SomeIntWrapper
+        exampleVONumeric2: SomeIntWrapper (startsFrom: 3)
 
     SomeRenamedSourcePropertyEntry
         id: SomeOtherId (from: sId, idSource)

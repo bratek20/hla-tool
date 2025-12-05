@@ -52,20 +52,22 @@ profiles:
     onlyPatterns:
       - "ValueObjects"
       - "Builders"
+      - "Events"
 
-  - name: "kotlinSkipWebServerContextPattern"
+  - name: "kotlinSkipPatterns"
     language: "KOTLIN"
     paths:
-      project: "../kotlin"
+      project: "../kotlinSkipPatterns"
       src:
-        default: "src/main/kotlin/com/some/pkg"
+        default: "src/main/kotlinSkipPatterns/com/some/pkg"
         overrides:
           - submodule: "Tests"
-            path: "src/test/kotlin/com/some/pkg"
+            path: "src/test/kotlinSkipPatterns/com/some/pkg"
           - submodule: "Fixtures"
-            path: "src/testFixtures/kotlin/com/some/pkg"
+            path: "src/testFixtures/kotlinSkipPatterns/com/some/pkg"
     skipPatterns:
       - "WebServerContext"
+      - "Events"
 
   - name: "typeScriptFileModifiers"
     language: "TYPE_SCRIPT"

@@ -5,6 +5,7 @@ import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.utils.directory.api.FileContent
 
 class SimpleBuilder(

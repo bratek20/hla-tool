@@ -129,6 +129,28 @@ class BaseApiType(
         fun isAny(type: ApiType): Boolean {
             return type is BaseApiType && type.name == BaseType.ANY
         }
+
+        fun isNumericType(type: ApiType): Boolean {
+            return type is BaseApiType && (type.name == BaseType.LONG || type.name == BaseType.INT || type.name == BaseType.DOUBLE)
+        }
+
+        fun parseToProperExampleFormat(basApiType: BaseApiType, value: String): Any {
+            return when (basApiType.name) {
+                BaseType.LONG -> {
+                    value.toLong()
+                }
+                BaseType.INT -> {
+                    value.toInt()
+                }
+                BaseType.DOUBLE -> {
+                    value.toDouble()
+                }
+                BaseType.BOOL -> {
+                    value.toBoolean()
+                }
+                else -> destringify(value)
+            }
+        }
     }
 }
 
@@ -259,22 +281,16 @@ abstract class SimpleStructureApiType(
     }
 
     fun exampleValueBuilder(): ExpressionBuilder? {
-        return extractExampleValueFromAttributes()?.let {
+        return extractExampleValueFromAttributes(boxedType, def.getAttributes())?.let {
             const(it)
         }
     }
-
-    private fun extractExampleValueFromAttributes(): String? {
-        if (boxedType.name == BaseType.LONG || boxedType.name == BaseType.INT) {
-            return extractExampleValueForNumericType(def.getAttributes())
-        }
-        return extractExampleValue(def.getAttributes())
-    }
+    
 
     override fun getExample(): Any {
-        val exampleValueFromAttributes = extractExampleValueFromAttributes()?.let { destringify(it) }
+        val exampleValueFromAttributes = extractExampleValueFromAttributes(boxedType, def.getAttributes())?.let { destringify(it) }
         if (exampleValueFromAttributes != null) {
-            return exampleValueFromAttributes
+            return BaseApiType.parseToProperExampleFormat(boxedType, exampleValueFromAttributes)
         }
         if (boxedType.name == BaseType.STRING) {
             return pascalToCamelCase(def.getName())
@@ -389,9 +405,6 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
     override fun getExample(): Any {
         val fieldsMap: MutableMap<String, Any?> = mutableMapOf()
         fields.map { field ->
-            val builderValue = field.exampleValueBuilder()?.build(c)?.let {
-                destringify(it)
-            }
             val fieldTypeDef = field.def.getType()
             val fieldTypeName = fieldTypeDef.getName()
             if(fieldTypeName == name) {
@@ -403,7 +416,8 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
                     error("Field type is $fieldTypeName and is recursive, but it is not wrapped in Optional or List")
                 }
             }else {
-                val finalValue = builderValue ?: field.type.getExample()
+                val fieldExampleValue = field.getExampleValue()
+                val finalValue = fieldExampleValue ?: field.type.getExample()
                 fieldsMap[field.privateName()] = finalValue
             }
         }
@@ -782,3 +796,10 @@ data class ApiCustomTypes(
     val simpleList: List<SimpleCustomApiType>,
     val complexList: List<ComplexCustomApiType>
 )
+
+fun extractExampleValueFromAttributes(type: BaseApiType, attributes: List<Attribute>): String? {
+    if (BaseApiType.isNumericType(type)) {
+        return extractExampleValueForNumericType(attributes)
+    }
+    return extractExampleValue(attributes)
+}
