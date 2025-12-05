@@ -61,28 +61,29 @@ open class ComplexStructureField(
     fun getExampleValue(): Any? {
         val value = this.extractExampleValue()
         if(value != null) {
-            val typeToParse = getBaseApiType() ?: throw ShouldNeverHappenException("Type")
+            val typeToParse = extractBaseApiType(type) ?: throw ShouldNeverHappenException("Type")
             return BaseApiType.parseToProperExampleFormat(typeToParse, value)
         }
         return value
     }
 
-    private fun getBaseApiType(): BaseApiType?{
+    private fun extractBaseApiType(type: ApiTypeLogic): BaseApiType?{
         if(type is BaseApiType) {
             return type as BaseApiType
         }
         if(type is SimpleStructureApiType) {
             return (type as SimpleStructureApiType).boxedType
         }
+        if(type is OptionalApiType) {
+            return extractBaseApiType((type as OptionalApiType).wrappedType)
+        }
         return null
     }
 
     private fun extractExampleValue(): String? {
-        val typeToExtract = getBaseApiType()
-        if(typeToExtract == null) {
-            return extractExampleValue(def.getAttributes())
+        return extractBaseApiType(type)?.let {
+            extractExampleValueFromAttributes(it, def.getAttributes())
         }
-        return extractExampleValueFromAttributes(typeToExtract, def.getAttributes())
     }
 
     @Deprecated("Use defaultValueBuilder() instead")
