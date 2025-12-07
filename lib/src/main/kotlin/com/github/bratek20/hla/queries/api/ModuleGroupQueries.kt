@@ -60,7 +60,7 @@ open class BaseModuleGroupQueries(
         val resolvedModules = group.getDependencies().flatMap {
             getModulesRecursive(it)
         }
-        return groupModules + resolvedModules
+        return resolvedModules + groupModules
     }
     val modules: List<ModuleDefinition>
         get() = getModulesRecursive(group)

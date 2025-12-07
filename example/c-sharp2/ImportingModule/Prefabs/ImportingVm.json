@@ -1,0 +1,13 @@
+{
+  "blueprintType": "ComplexElement",
+  "name": "ImportingVm",
+  "viewType": "ImportingModule.View.ImportingVmView",
+  "creationOrder": 2,
+  "children": [
+    {
+      "name": "other",
+      "viewType": "OtherModule.View.OtherClassView"
+    }
+  ],
+  "elementViewType": null
+}
