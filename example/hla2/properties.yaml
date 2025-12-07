@@ -13,6 +13,7 @@ profiles:
     imports:
       - hlaFolderPath: "../hla"
         profileName: "kotlin"
+
   - name: "typeScript2"
     language: "TYPE_SCRIPT"
     paths:
@@ -27,3 +28,13 @@ profiles:
     imports:
       - hlaFolderPath: "../hla"
         profileName: "typeScript"
+
+  - name: "cSharp2"
+    language: "C_SHARP"
+    imports:
+      - hlaFolderPath: "../hla"
+        profileName: "cSharp"
+    paths:
+      project: "../c-sharp2"
+      src:
+        default: ""

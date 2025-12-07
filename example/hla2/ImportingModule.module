@@ -8,3 +8,8 @@ Exceptions
 ValueObjects
     ImportingProperty
         other: OtherProperty
+
+ViewModel
+    Elements
+        ImportingVm
+            other: OtherClassVm
