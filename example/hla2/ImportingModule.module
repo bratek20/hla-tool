@@ -13,3 +13,5 @@ ViewModel
     Elements
         ImportingVm
             other: OtherClassVm
+            others: OtherClassVm[]
+            otherOpt: OtherClassVm?
