@@ -395,12 +395,22 @@ data class UiContainerDefinition(
 
 data class ViewModelSubmoduleDefinition(
     private val enumSwitches: List<String>,
+    private val elementGroups: List<String>,
+    private val optionalElements: List<String>,
     private val elements: List<UiElementDefinition>,
     private val windows: List<UiContainerDefinition>,
     private val popups: List<UiContainerDefinition>,
 ) {
     fun getEnumSwitches(): List<String> {
         return this.enumSwitches
+    }
+
+    fun getElementGroups(): List<String> {
+        return this.elementGroups
+    }
+
+    fun getOptionalElements(): List<String> {
+        return this.optionalElements
     }
 
     fun getElements(): List<UiElementDefinition> {
@@ -418,12 +428,16 @@ data class ViewModelSubmoduleDefinition(
     companion object {
         fun create(
             enumSwitches: List<String>,
+            elementGroups: List<String>,
+            optionalElements: List<String>,
             elements: List<UiElementDefinition>,
             windows: List<UiContainerDefinition>,
             popups: List<UiContainerDefinition>,
         ): ViewModelSubmoduleDefinition {
             return ViewModelSubmoduleDefinition(
                 enumSwitches = enumSwitches,
+                elementGroups = elementGroups,
+                optionalElements = optionalElements,
                 elements = elements,
                 windows = windows,
                 popups = popups,

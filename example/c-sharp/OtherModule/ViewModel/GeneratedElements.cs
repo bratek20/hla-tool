@@ -18,10 +18,29 @@ namespace OtherModule.ViewModel {
         }
     }
 
+    public partial class OtherClassVm2: UiElement<OtherClass> {
+        protected override void OnUpdate() {
+        }
+    }
+
     public partial class OtherClassVmGroup: UiElementGroup<OtherClassVm, OtherClass> {
         public OtherClassVmGroup(
             B20.Architecture.Contexts.Api.Context c
         ): base(() => c.Get<OtherClassVm>()) {
+        }
+    }
+
+    public partial class OtherClassVm2Group: UiElementGroup<OtherClassVm2, OtherClass> {
+        public OtherClassVm2Group(
+            B20.Architecture.Contexts.Api.Context c
+        ): base(() => c.Get<OtherClassVm2>()) {
+        }
+    }
+
+    public class OptionalOtherClassVm: OptionalUiElement<OtherClassVm, OtherClass> {
+        public OptionalOtherClassVm(
+            OtherClassVm element
+        ): base(element) {
         }
     }
 }

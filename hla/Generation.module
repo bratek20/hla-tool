@@ -10,6 +10,7 @@ Enums
         Fixtures
         Tests
         Examples
+        Menu
 
     PatternName
         //api
@@ -71,6 +72,9 @@ Enums
         HandlersExamples
         TitleDataExamples
         PlayerDataExamples
+
+        //Menu
+        Menu
 
 ValueObjects
     GeneratedPattern

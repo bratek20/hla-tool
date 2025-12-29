@@ -10,6 +10,6 @@ using OtherModule.Api;
 using B20.View.UiElements.View;
 
 namespace OtherModule.View {
-    public class OtherClassGroupView: UiElementGroupView<OtherClassView, OtherClassVm, OtherClass> {
+    public class OtherClassVm2View: ElementView<OtherClassVm2> {
     }
 }

@@ -12,6 +12,8 @@ using OtherModule.ViewModel;
 namespace ImportingModule.ViewModel {
     public partial class ImportingVm: UiElement<EmptyModel> {
         public OtherClassVm Other { get; set; }
+        public OtherClassVmGroup Others { get; set; }
+        public OptionalOtherClassVm OtherOpt { get; set; }
         protected override void OnUpdate() {
         }
     }

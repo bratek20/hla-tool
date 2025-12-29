@@ -12,9 +12,15 @@ namespace ImportingModule.View {
     public class ImportingVmView: ElementView<ImportingVm> {
         [SerializeField]
         OtherClassView other;
+        [SerializeField]
+        OtherClassGroupView others;
+        [SerializeField]
+        OptionalOtherClassView otherOpt;
         protected override void OnBind() {
             base.OnBind();
             other.Bind(ViewModel.Other);
+            others.Bind(ViewModel.Others);
+            otherOpt.Bind(ViewModel.OtherOpt);
         }
     }
 }

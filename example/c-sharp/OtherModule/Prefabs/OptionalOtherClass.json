@@ -1,0 +1,8 @@
+{
+  "blueprintType": "OptionalElement",
+  "name": "OptionalOtherClass",
+  "viewType": "OtherModule.View.OptionalOtherClassView",
+  "creationOrder": 2,
+  "children": [ ],
+  "elementViewType": "OtherModule.View.OtherClassView"
+}

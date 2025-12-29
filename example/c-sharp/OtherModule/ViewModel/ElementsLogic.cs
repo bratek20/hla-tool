@@ -8,4 +8,7 @@ using B20.ViewModel.Traits.Api;
 namespace OtherModule.ViewModel {
     public partial class OtherClassVm {
     }
+
+    public partial class OtherClassVm2 {
+    }
 }

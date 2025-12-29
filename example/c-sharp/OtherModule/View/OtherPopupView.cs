@@ -6,8 +6,8 @@ using System.Linq;
 using B20.Ext;
 using UnityEngine;
 using OtherModule.ViewModel;
-using B20.View.UiElements.View;
 using OtherModule.Api;
+using B20.View.UiElements.View;
 
 namespace OtherModule.View {
     public class OtherPopupView: UiContainerView<OtherPopup> {
