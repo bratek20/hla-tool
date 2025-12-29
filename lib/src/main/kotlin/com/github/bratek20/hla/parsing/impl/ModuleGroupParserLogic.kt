@@ -178,6 +178,8 @@ class ModuleGroupParserLogic(
 
             return ViewModelSubmoduleDefinition(
                 enumSwitches = parseSectionAsStringList(viewModel.elements, "EnumSwitches"),
+                elementGroups = parseSectionAsStringList(viewModel.elements, "ElementGroups"),
+                optionalElements = parseSectionAsStringList(viewModel.elements, "OptionalElements"),
                 elements = vmElements,
                 windows = parseUiContainers(viewModel.elements, "Windows"),
                 popups = parseUiContainers(viewModel.elements, "Popups")

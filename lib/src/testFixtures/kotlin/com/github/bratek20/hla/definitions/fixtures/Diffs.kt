@@ -376,6 +376,8 @@ fun diffUiContainerDefinition(given: UiContainerDefinition, expectedInit: Expect
 
 data class ExpectedViewModelSubmoduleDefinition(
     var enumSwitches: List<String>? = null,
+    var elementGroups: List<String>? = null,
+    var optionalElements: List<String>? = null,
     var elements: List<(ExpectedUiElementDefinition.() -> Unit)>? = null,
     var windows: List<(ExpectedUiContainerDefinition.() -> Unit)>? = null,
     var popups: List<(ExpectedUiContainerDefinition.() -> Unit)>? = null,
@@ -387,6 +389,16 @@ fun diffViewModelSubmoduleDefinition(given: ViewModelSubmoduleDefinition, expect
     expected.enumSwitches?.let {
         if (given.getEnumSwitches().size != it.size) { result.add("${path}enumSwitches size ${given.getEnumSwitches().size} != ${it.size}"); return@let }
         given.getEnumSwitches().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}enumSwitches[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    expected.elementGroups?.let {
+        if (given.getElementGroups().size != it.size) { result.add("${path}elementGroups size ${given.getElementGroups().size} != ${it.size}"); return@let }
+        given.getElementGroups().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}elementGroups[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    expected.optionalElements?.let {
+        if (given.getOptionalElements().size != it.size) { result.add("${path}optionalElements size ${given.getOptionalElements().size} != ${it.size}"); return@let }
+        given.getOptionalElements().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}optionalElements[${idx}] ${entry} != ${it[idx]}") } }
     }
 
     expected.elements?.let {

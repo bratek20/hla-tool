@@ -49,6 +49,16 @@ ViewModel
                 id
                 amount
 
+        OtherClassVm2
+            OtherClass
+
+    OptionalElements
+        OptionalOtherClassVm
+
+    ElementGroups
+        OtherClassVmGroup
+        OtherClassVm2Group
+
     Popups
         OtherPopup
             State

@@ -12,8 +12,11 @@ namespace OtherModule.ViewModel {
     public class OtherModuleViewModel: ContextModule {
         public void Apply(ContextBuilder builder) {
             builder
-                .SetClass<OtherClassVm>(InjectionMode.Prototype)
                 .SetClass<OtherClassVmGroup>(InjectionMode.Prototype)
+                .SetClass<OtherClassVm2Group>(InjectionMode.Prototype)
+                .SetClass<OptionalOtherClassVm>(InjectionMode.Prototype)
+                .SetClass<OtherClassVm>(InjectionMode.Prototype)
+                .SetClass<OtherClassVm2>(InjectionMode.Prototype)
                 .AddImpl<Popup, OtherPopup>();
         }
     }

@@ -79,6 +79,8 @@ ValueObjects
 
     ViewModelSubmoduleDefinition
         enumSwitches: string[]
+        elementGroups: string[]
+        optionalElements: string[]
         elements: UiElementDefinition[]
         windows: UiContainerDefinition[]
         popups: UiContainerDefinition[]
