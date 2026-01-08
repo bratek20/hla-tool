@@ -4,16 +4,19 @@ namespace SomeModule.Impl {
     export class SomeDimension extends TrackingDimension {
         constructor(
             someClass: SomeClass,
-            date_range: DateRange
+            date_range: DateRange,
+            dimensions_list: TrackingDimensionList
         ) {
             super()
             this.name = someClass.getId().getValue()
             this.amount = someClass.getAmount()
             this.date_range = SerializedDateRange.fromCustomType(date_range)
+            this.dimensions_list = dimensions_list
         }
         private readonly name: string
         private readonly amount: number
         private readonly date_range: SerializedDateRange
+        private readonly dimensions_list: TrackingDimensionList
         getTableName(): TrackingTableName {
             return new TrackingTableName("some_dimension")
         }
@@ -62,18 +65,21 @@ namespace SomeModule.Impl {
             classWithOptExamples: ClassWithOptExamples,
             some_dimension_id: SomeDimension,
             optional_generic_tracking_dimension_id: Optional<TrackingDimension>,
-            optional_int: Optional<number>
+            optional_int: Optional<number>,
+            dimensions_list: TrackingDimensionList
         ) {
             super()
             this.optional_int_exposed = classWithOptExamples.getOptInt().orElse(undefined)
             this.some_dimension_id = some_dimension_id
             this.optional_generic_tracking_dimension_id = optional_generic_tracking_dimension_id.orElse(undefined)
             this.optional_int = optional_int.orElse(undefined)
+            this.dimensions_list = dimensions_list
         }
         private readonly optional_int_exposed: number | undefined
         private readonly some_dimension_id: SomeDimension
         private readonly optional_generic_tracking_dimension_id: TrackingDimension
         private readonly optional_int: number
+        private readonly dimensions_list: TrackingDimensionList
         getTableName(): TrackingTableName {
             return new TrackingTableName("some_tracking_event")
         }

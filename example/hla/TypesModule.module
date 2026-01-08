@@ -5,3 +5,6 @@ CustomTypes
     DateRange
         from: Date
         to: Date (example: "01/01/2030 00:00")
+
+ExternalTypes
+    TrackingDimensionList

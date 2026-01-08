@@ -406,6 +406,7 @@ Tracking
                 id -> name // name mapping
                 amount // keeping same name
             date_range: DateRange // field + custom type
+            dimensions_list: TrackingDimensionList
         SomeDimensionWithPrimitives (table: "some_dimension_with_primitives")
             some_string: string
             some_int: int
@@ -423,6 +424,7 @@ Tracking
             some_dimension_id: SomeDimension // referencing other
             optional_generic_tracking_dimension_id: TrackingDimension?
             optional_int: int?
+            dimensions_list: TrackingDimensionList
 
         SomeTrackingMultiplayerEvent (table: "some_tracking_mevent")
 
