@@ -28,7 +28,7 @@ CREATE TABLE some_tracking_event (
     some_dimension_id BIGINT NOT NULL,
     optional_generic_tracking_dimension_id BIGINT,
     optional_int INTEGER,
-    dimensions_list jsonb NOT NULL
+    dimensions_list VARCHAR(256) NOT NULL
 ) INHERITS (event);
 ALTER TYPE event_type ADD VALUE 'some_tracking_event';
 
