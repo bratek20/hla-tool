@@ -399,7 +399,8 @@ abstract class ComplexStructureApiType<T: ComplexStructureField>(
     }
 
     fun getField(fieldName: String): T {
-        return fields.first { it.name == fieldName }
+        return fields.firstOrNull { it.name == fieldName }
+            ?: error("Field '$fieldName' not found in class '$name'")
     }
 
     override fun getExample(): Any {
