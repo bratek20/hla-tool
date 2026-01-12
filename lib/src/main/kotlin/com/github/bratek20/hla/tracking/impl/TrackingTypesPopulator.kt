@@ -26,6 +26,15 @@ class TrackingTypesPopulator(
                 PatternName.Interfaces
             ).asWorld()
         )
+
+        val TRACKING_DIMENSION_LIST_WORLD_TYPE: WorldType = WorldType.create(
+            name = WorldTypeName("TrackingDimensionList"),
+            path = HlaTypePath.create(
+                ModuleName("Tracking"),
+                SubmoduleName.Impl,
+                PatternName.Interfaces
+            ).asWorld()
+        )
     }
     override fun getOrder(): Int {
         return ORDER

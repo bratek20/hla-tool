@@ -285,6 +285,10 @@ class TrackingTableLogic(
         val hlaTypePath = type.getPath().asHla()
         val hlaSerializableTypePath = serializableType.getPath().asHla()
 
+        if(type.getName() == TrackingTypesPopulator.TRACKING_DIMENSION_LIST_WORLD_TYPE.getName()) {
+            return "VARCHAR(256)"
+        }
+
         if (hlaTypePath.getPatternName() == PatternName.Enums) {
             return "VARCHAR(64)"
         }
