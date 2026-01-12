@@ -285,7 +285,7 @@ class TrackingTableLogic(
         val hlaTypePath = type.getPath().asHla()
         val hlaSerializableTypePath = serializableType.getPath().asHla()
 
-        if(type.getName() == TrackingTypesPopulator.TRACKING_DIMENSION_LIST_WORLD_TYPE.getName()) {
+        if(type == TrackingTypesPopulator.TRACKING_DIMENSION_LIST_WORLD_TYPE) {
             return "VARCHAR(256)"
         }
 

@@ -44,6 +44,9 @@ class TrackingTypesPopulator(
         world.ensureType(
             TRACKING_DIMENSION_WORLD_TYPE
         )
+        world.ensureType(
+            TRACKING_DIMENSION_LIST_WORLD_TYPE
+        )
         modules.forEach { module ->
             module.getTrackingSubmodule()?.let { subModule ->
                 subModule.getDimensions().forEach { populateTable(module, it) }
