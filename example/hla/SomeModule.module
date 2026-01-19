@@ -335,6 +335,7 @@ ViewModel
             timer: Timer
             simpleGroup: SimpleGroup
             emptyVm: EmptyVm
+            optInputField: InputField?
 
         SecondSomeClassVm
             SomeClass

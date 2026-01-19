@@ -55,6 +55,10 @@
     {
       "name": "emptyVm",
       "viewType": "B20.View.UiElements.View.EmptyVmView"
+    },
+    {
+      "name": "optInputField",
+      "viewType": "B20.View.UiElements.View.OptionalInputFieldView"
     }
   ],
   "elementViewType": null

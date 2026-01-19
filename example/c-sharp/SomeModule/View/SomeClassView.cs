@@ -40,6 +40,8 @@ namespace SomeModule.View {
         SimpleGroupView simpleGroup;
         [SerializeField]
         EmptyVmView emptyVm;
+        [SerializeField]
+        OptionalInputFieldView optInputField;
         protected override void OnBind() {
             base.OnBind();
             id.Bind(ViewModel.Id);
@@ -55,6 +57,7 @@ namespace SomeModule.View {
             timer.Bind(ViewModel.Timer);
             simpleGroup.Bind(ViewModel.SimpleGroup);
             emptyVm.Bind(ViewModel.EmptyVm);
+            optInputField.Bind(ViewModel.OptInputField);
         }
     }
 }
