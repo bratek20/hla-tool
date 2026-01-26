@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.bratek20.kotlin.library.conventions)
+    alias(libs.plugins.b20.library)
 }
 
 dependencies {
