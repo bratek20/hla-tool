@@ -2,8 +2,8 @@
 
 package com.github.bratek20.hla.facade.api
 
-import com.github.bratek20.hla.generation.api.*
 import com.github.bratek20.utils.directory.api.*
+import com.github.bratek20.hla.generation.api.*
 
 val PROFILES_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ListPropertyKey(
     "profiles",

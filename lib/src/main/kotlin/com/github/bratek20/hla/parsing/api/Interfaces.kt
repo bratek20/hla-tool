@@ -2,9 +2,9 @@
 
 package com.github.bratek20.hla.parsing.api
 
+import com.github.bratek20.utils.directory.api.*
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.utils.directory.api.*
 
 interface ModuleGroupParser {
     @Throws(

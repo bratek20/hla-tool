@@ -4,10 +4,10 @@ package com.github.bratek20.hla.validations.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
-import com.github.bratek20.hla.facade.api.*
-import com.github.bratek20.hla.facade.fixtures.*
 import com.github.bratek20.utils.directory.api.*
 import com.github.bratek20.utils.directory.fixtures.*
+import com.github.bratek20.hla.facade.api.*
+import com.github.bratek20.hla.facade.fixtures.*
 
 import com.github.bratek20.hla.validations.api.*
 

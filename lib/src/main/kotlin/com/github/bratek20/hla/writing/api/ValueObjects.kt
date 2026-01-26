@@ -2,9 +2,9 @@
 
 package com.github.bratek20.hla.writing.api
 
+import com.github.bratek20.utils.directory.api.*
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.*
-import com.github.bratek20.utils.directory.api.*
 
 data class WriteArgs(
     private val hlaFolderPath: String,

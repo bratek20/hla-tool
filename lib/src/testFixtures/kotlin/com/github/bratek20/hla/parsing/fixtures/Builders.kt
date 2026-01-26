@@ -2,12 +2,12 @@
 
 package com.github.bratek20.hla.parsing.fixtures
 
+import com.github.bratek20.utils.directory.api.*
+import com.github.bratek20.utils.directory.fixtures.*
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.definitions.fixtures.*
 import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.facade.fixtures.*
-import com.github.bratek20.utils.directory.api.*
-import com.github.bratek20.utils.directory.fixtures.*
 
 import com.github.bratek20.hla.parsing.api.*
 
