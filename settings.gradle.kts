@@ -2,56 +2,29 @@ rootProject.name = "hla"
 
 includeBuild("example")
 
-val b20Version = "1.0.101"
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
 
-        mavenLocal()
-
-        val githubActor: String? = if (extra.has("githubActor")) extra["githubActor"] as String else System.getenv("GITHUB_ACTOR")
-        val githubToken: String? = if (extra.has("githubToken")) extra["githubToken"] as String else System.getenv("GITHUB_TOKEN")
-
-        if (githubActor != null && githubToken != null) {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/bratek20/starter")
-                credentials {
-                    username = githubActor
-                    password = githubToken
-                }
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/bratek20/starter")
+            credentials {
+                username = providers.gradleProperty("githubActor").getOrElse(System.getenv("GITHUB_ACTOR"))
+                password = providers.gradleProperty("githubToken").getOrElse(System.getenv("GITHUB_TOKEN"))
             }
         }
     }
 }
 
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            from("com.github.bratek20:version-catalog:$b20Version")
-        }
-    }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-
-        val githubActor: String? = if (extra.has("githubActor")) extra["githubActor"] as String else System.getenv("GITHUB_ACTOR")
-        val githubToken: String? = if (extra.has("githubToken")) extra["githubToken"] as String else System.getenv("GITHUB_TOKEN")
-
-        if (githubActor != null && githubToken != null) {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/bratek20/starter")
-                credentials {
-                    username = githubActor
-                    password = githubToken
-                }
-            }
-        }
-    }
+plugins {
+    id("com.github.bratek20.plugins.b20-settings") version "1.1.0"
 }
-include("app")
-include("lib")
+
+b20Settings {
+    catalogVersion = "1.1.6"
+}
+
 include("code-builder")
+include("lib")
+include("app")
