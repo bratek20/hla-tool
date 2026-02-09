@@ -5,7 +5,7 @@ package com.some.pkg.othermodule.fixtures
 import com.some.pkg.othermodule.api.*
 import org.assertj.core.api.Assertions.assertThat
 
-class OtherInterfaceMock: OtherInterface {
+open class OtherInterfaceMock: OtherInterface {
     private var otherMethodCallsNumber: Int = 0
     override fun otherMethod(): Unit {
         otherMethodCallsNumber = otherMethodCallsNumber + 1
