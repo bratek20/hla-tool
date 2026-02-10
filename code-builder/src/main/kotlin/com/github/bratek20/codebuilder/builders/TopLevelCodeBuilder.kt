@@ -63,10 +63,6 @@ open class TopLevelCodeBuilder: CodeBlockBuilder {
     fun add(other: TopLevelCodeBuilder) {
         addOp(other)
     }
-
-    fun addBuilder(builder: CodeBuilderBuilder) {
-        addOp(builder)
-    }
 }
 typealias TopLevelCodeBuilderOps = TopLevelCodeBuilder.() -> Unit
 fun CodeBuilder.file(block: TopLevelCodeBuilderOps) = add(TopLevelCodeBuilder().apply(block))

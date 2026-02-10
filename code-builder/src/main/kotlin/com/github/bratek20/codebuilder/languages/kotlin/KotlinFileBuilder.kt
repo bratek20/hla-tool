@@ -4,11 +4,6 @@ import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CodeBuilder
 import com.github.bratek20.codebuilder.core.CodeBuilderOps
 
-class OpenClassBuilder: ClassBuilder() {
-    override fun beforeClassKeyword(): String = "open "
-}
-fun openClass(block: ClassBuilderOps) = OpenClassBuilder().apply(block)
-
 class KotlinFileBuilder: TopLevelCodeBuilder() {
     lateinit var packageName: String
 

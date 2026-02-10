@@ -161,6 +161,8 @@ open class ClassBuilder: CodeBlockBuilder {
 
     lateinit var name: String
 
+    var open = false
+
     var partial = false
 
     var implements: String? = null
@@ -282,8 +284,8 @@ open class ClassBuilder: CodeBlockBuilder {
     }
 
     private fun classDeclarationWithFieldConstructor(c: CodeBuilderContext): CodeBuilderOps = {
-        val finalClassKeyword = if(dataClass && c.lang is Kotlin) {
-            "data class "
+        val finalClassKeyword = if(c.lang is Kotlin) {
+            if (dataClass) "data class " else if(open) "open class " else "class "
         }
         else {
             "class "

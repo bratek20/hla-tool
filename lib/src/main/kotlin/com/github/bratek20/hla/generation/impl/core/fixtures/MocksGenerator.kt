@@ -2,7 +2,6 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.BaseType
-import com.github.bratek20.codebuilder.languages.kotlin.openClass
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
@@ -347,6 +346,7 @@ class MockInterfaceLogic(
     fun mockClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
         implements = def.getName()
+        open = true
 
         getMethodsLogic().forEach { method ->
             addField(method.callsNumberField())
@@ -459,11 +459,7 @@ class MocksGenerator: PatternGenerator() {
         ) }
 
         mockInterfacesLogic.forEach { logic ->
-            if (language.name() == ModuleLanguage.KOTLIN) {
-                addBuilder(openClass(logic.mockClass()))
-            } else {
-                addClass(logic.mockClass())
-            }
+            addClass(logic.mockClass())
         }
 
         if(language.name() == ModuleLanguage.TYPE_SCRIPT) {
