@@ -11,7 +11,7 @@ import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.fixtures.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.api.*
 
-class SomeInterfaceMock: SomeInterface {
+open class SomeInterfaceMock: SomeInterface {
     private var someEmptyMethodCallsNumber: Int = 0
     private var someCommandCallsNumber: Int = 0
     private var someCommandCalls: MutableList<SomeInterfaceSomeCommandArgs> = mutableListOf()
@@ -177,7 +177,7 @@ class SomeInterfaceMock: SomeInterface {
     }
 }
 
-class SomeInterface2Mock: SomeInterface2 {
+open class SomeInterface2Mock: SomeInterface2 {
     private var referenceOtherClassCallsNumber: Int = 0
     private var referenceOtherClassCalls: MutableList<OtherClass> = mutableListOf()
     private var referenceOtherClassResponse: (OtherClassDef.() -> Unit) = {}
@@ -217,7 +217,7 @@ class SomeInterface2Mock: SomeInterface2 {
     }
 }
 
-class SomeModuleHandlersMock: SomeModuleHandlers {
+open class SomeModuleHandlersMock: SomeModuleHandlers {
     private var someHandlerCallsNumber: Int = 0
     private var someHandlerCalls: MutableList<SomeHandlerInput> = mutableListOf()
     private var someHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}
@@ -268,7 +268,7 @@ class SomeModuleHandlersMock: SomeModuleHandlers {
     }
 }
 
-class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
+open class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
     private var someDebugHandlerCallsNumber: Int = 0
     private var someDebugHandlerCalls: MutableList<SomeHandlerInput> = mutableListOf()
     private var someDebugHandlerResponse: (SomeHandlerOutputDef.() -> Unit) = {}

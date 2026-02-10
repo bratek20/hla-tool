@@ -346,6 +346,7 @@ class MockInterfaceLogic(
     fun mockClass(): ClassBuilderOps = {
         name = def.getName() + "Mock"
         implements = def.getName()
+        open = true
 
         getMethodsLogic().forEach { method ->
             addField(method.callsNumberField())
