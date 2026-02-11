@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(./gradlew:*)",
+      "Bash(ls:*)",
+      "Bash(java -jar ../app/build/libs/hla-app-all.jar:*)",
+      "Bash(java -jar:*)",
+      "Bash(for module in OtherModule SimpleModule SomeUserModule NoInterfacesModule)",
+      "Bash(do echo \"=== Updating $module ===\")",
+      "Bash(done)",
+      "Bash(for module in SomeModule OtherModule SimpleModule SomeUserModule NoInterfacesModule)",
+      "Bash(do echo \"=== $module ===\")",
+      "Bash(for module in SomeUserModule)",
+      "Bash(do echo \"=== Updating $module TypeScript ===\")"
+    ]
+  }
+}

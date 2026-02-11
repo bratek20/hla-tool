@@ -7,7 +7,7 @@ import com.some.pkg.othermodule.api.*
 import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
 
-class SomeEvent(
+data class SomeEvent(
     private val someField: String,
     private val otherClass: OtherClass,
     private val optField: String?

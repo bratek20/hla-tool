@@ -86,6 +86,32 @@ fun plus(ops: PlusBuilderOps): PlusBuilder {
     return PlusBuilder().apply(ops)
 }
 
+class MinusBuilder: ExpressionBuilder {
+    lateinit var left: ExpressionBuilder
+    lateinit var right: ExpressionBuilder
+
+    override fun build(c: CodeBuilderContext): String {
+        return "${left.build(c)} - ${right.build(c)}"
+    }
+}
+typealias MinusBuilderOps = MinusBuilder.() -> Unit
+fun minus(ops: MinusBuilderOps): MinusBuilder {
+    return MinusBuilder().apply(ops)
+}
+
+class TimesBuilder: ExpressionBuilder {
+    lateinit var left: ExpressionBuilder
+    lateinit var right: ExpressionBuilder
+
+    override fun build(c: CodeBuilderContext): String {
+        return "${left.build(c)} * ${right.build(c)}"
+    }
+}
+typealias TimesBuilderOps = TimesBuilder.() -> Unit
+fun times(ops: TimesBuilderOps): TimesBuilder {
+    return TimesBuilder().apply(ops)
+}
+
 typealias StringProvider = () -> String
 fun comment(comment: StringProvider) = object : StatementBuilder {
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {

@@ -3,8 +3,8 @@
 package com.some.pkg.somemodule.api
 
 import com.some.pkg.othermodule.api.*
-import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
+import com.some.pkg.simplemodule.api.*
 
 data class SomeId(
     val value: String
@@ -28,15 +28,12 @@ data class SomeIntWrapper(
     override fun toString(): String {
         return value.toString()
     }
-
     operator fun plus(other: SomeIntWrapper): SomeIntWrapper {
         return SomeIntWrapper(this.value + other.value)
     }
-
     operator fun minus(other: SomeIntWrapper): SomeIntWrapper {
         return SomeIntWrapper(this.value - other.value)
     }
-
     operator fun times(amount: Int): SomeIntWrapper {
         return SomeIntWrapper(this.value * amount)
     }
@@ -48,15 +45,12 @@ data class SomeId2(
     override fun toString(): String {
         return value.toString()
     }
-
     operator fun plus(other: SomeId2): SomeId2 {
         return SomeId2(this.value + other.value)
     }
-
     operator fun minus(other: SomeId2): SomeId2 {
         return SomeId2(this.value - other.value)
     }
-
     operator fun times(amount: Int): SomeId2 {
         return SomeId2(this.value * amount)
     }
@@ -64,25 +58,17 @@ data class SomeId2(
 
 data class SomeClass(
     private val id: String,
-    private val amount: Int,
+    private val amount: Int
 ) {
     fun getId(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun getAmount(): Int {
-        return this.amount
+        return amount
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            amount: Int,
-        ): SomeClass {
-            return SomeClass(
-                id = id.value,
-                amount = amount,
-            )
+        fun create(id: SomeId, amount: Int): SomeClass {
+            return SomeClass(id.value, amount)
         }
     }
 }
@@ -91,37 +77,23 @@ data class SomeClass2(
     private val id: String,
     private val names: List<String>,
     private val ids: List<String>,
-    private val enabled: Boolean = true,
+    private val enabled: Boolean
 ) {
     fun getId(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun getNames(): List<String> {
-        return this.names
+        return names
     }
-
     fun getIds(): List<SomeId> {
-        return this.ids.map { it -> SomeId(it) }
+        return ids.map { it -> SomeId(it) }
     }
-
     fun getEnabled(): Boolean {
-        return this.enabled
+        return enabled
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            names: List<String>,
-            ids: List<SomeId>,
-            enabled: Boolean = true,
-        ): SomeClass2 {
-            return SomeClass2(
-                id = id.value,
-                names = names,
-                ids = ids.map { it -> it.value },
-                enabled = enabled,
-            )
+        fun create(id: SomeId, names: List<String>, ids: List<SomeId>, enabled: Boolean): SomeClass2 {
+            return SomeClass2(id.value, names, ids.map { it -> it.value }, enabled)
         }
     }
 }
@@ -129,31 +101,20 @@ data class SomeClass2(
 data class SomeClass3(
     private val class2Object: SomeClass2,
     private val someEnum: String,
-    private val class2List: List<SomeClass2> = emptyList(),
+    private val class2List: List<SomeClass2>
 ) {
     fun getClass2Object(): SomeClass2 {
-        return this.class2Object
+        return class2Object
     }
-
     fun getSomeEnum(): SomeEnum {
-        return SomeEnum.valueOf(this.someEnum)
+        return SomeEnum.valueOf(someEnum)
     }
-
     fun getClass2List(): List<SomeClass2> {
-        return this.class2List
+        return class2List
     }
-
     companion object {
-        fun create(
-            class2Object: SomeClass2,
-            someEnum: SomeEnum,
-            class2List: List<SomeClass2> = emptyList(),
-        ): SomeClass3 {
-            return SomeClass3(
-                class2Object = class2Object,
-                someEnum = someEnum.name,
-                class2List = class2List,
-            )
+        fun create(class2Object: SomeClass2, someEnum: SomeEnum, class2List: List<SomeClass2>): SomeClass3 {
+            return SomeClass3(class2Object, someEnum.name, class2List)
         }
     }
 }
@@ -162,37 +123,23 @@ data class SomeClass4(
     private val otherId: Int,
     private val otherClass: OtherClass,
     private val otherIdList: List<Int>,
-    private val otherClassList: List<OtherClass>,
+    private val otherClassList: List<OtherClass>
 ) {
     fun getOtherId(): OtherId {
-        return OtherId(this.otherId)
+        return OtherId(otherId)
     }
-
     fun getOtherClass(): OtherClass {
-        return this.otherClass
+        return otherClass
     }
-
     fun getOtherIdList(): List<OtherId> {
-        return this.otherIdList.map { it -> OtherId(it) }
+        return otherIdList.map { it -> OtherId(it) }
     }
-
     fun getOtherClassList(): List<OtherClass> {
-        return this.otherClassList
+        return otherClassList
     }
-
     companion object {
-        fun create(
-            otherId: OtherId,
-            otherClass: OtherClass,
-            otherIdList: List<OtherId>,
-            otherClassList: List<OtherClass>,
-        ): SomeClass4 {
-            return SomeClass4(
-                otherId = otherId.value,
-                otherClass = otherClass,
-                otherIdList = otherIdList.map { it -> it.value },
-                otherClassList = otherClassList,
-            )
+        fun create(otherId: OtherId, otherClass: OtherClass, otherIdList: List<OtherId>, otherClassList: List<OtherClass>): SomeClass4 {
+            return SomeClass4(otherId.value, otherClass, otherIdList.map { it -> it.value }, otherClassList)
         }
     }
 }
@@ -202,43 +149,26 @@ data class SomeClass5(
     private val dateRange: SerializedDateRange,
     private val dateRangeWrapper: SerializedDateRangeWrapper,
     private val someProperty: SomeProperty,
-    private val otherProperty: OtherProperty,
+    private val otherProperty: OtherProperty
 ) {
     fun getDate(): Date {
-        return dateCreate(this.date)
+        return dateCreate(date)
     }
-
     fun getDateRange(): DateRange {
-        return this.dateRange.toCustomType()
+        return dateRange.toCustomType()
     }
-
     fun getDateRangeWrapper(): DateRangeWrapper {
-        return this.dateRangeWrapper.toCustomType()
+        return dateRangeWrapper.toCustomType()
     }
-
     fun getSomeProperty(): SomeProperty {
-        return this.someProperty
+        return someProperty
     }
-
     fun getOtherProperty(): OtherProperty {
-        return this.otherProperty
+        return otherProperty
     }
-
     companion object {
-        fun create(
-            date: Date,
-            dateRange: DateRange,
-            dateRangeWrapper: DateRangeWrapper,
-            someProperty: SomeProperty,
-            otherProperty: OtherProperty,
-        ): SomeClass5 {
-            return SomeClass5(
-                date = dateGetValue(date),
-                dateRange = SerializedDateRange.fromCustomType(dateRange),
-                dateRangeWrapper = SerializedDateRangeWrapper.fromCustomType(dateRangeWrapper),
-                someProperty = someProperty,
-                otherProperty = otherProperty,
-            )
+        fun create(date: Date, dateRange: DateRange, dateRangeWrapper: DateRangeWrapper, someProperty: SomeProperty, otherProperty: OtherProperty): SomeClass5 {
+            return SomeClass5(dateGetValue(date), SerializedDateRange.fromCustomType(dateRange), SerializedDateRangeWrapper.fromCustomType(dateRangeWrapper), someProperty, otherProperty)
         }
     }
 }
@@ -247,159 +177,109 @@ data class SomeClass6(
     private val someClassOpt: SomeClass?,
     private val optString: String?,
     private val class2List: List<SomeClass2>,
-    private val sameClassList: List<SomeClass6> = emptyList(),
+    private val sameClassList: List<SomeClass6>
 ) {
     fun getSomeClassOpt(): SomeClass? {
-        return this.someClassOpt
+        return someClassOpt
     }
-
     fun getOptString(): String? {
-        return this.optString
+        return optString
     }
-
     fun getClass2List(): List<SomeClass2> {
-        return this.class2List
+        return class2List
     }
-
     fun getSameClassList(): List<SomeClass6> {
-        return this.sameClassList
+        return sameClassList
     }
-
     companion object {
-        fun create(
-            someClassOpt: SomeClass?,
-            optString: String?,
-            class2List: List<SomeClass2>,
-            sameClassList: List<SomeClass6> = emptyList(),
-        ): SomeClass6 {
-            return SomeClass6(
-                someClassOpt = someClassOpt,
-                optString = optString,
-                class2List = class2List,
-                sameClassList = sameClassList,
-            )
+        fun create(someClassOpt: SomeClass?, optString: String?, class2List: List<SomeClass2>, sameClassList: List<SomeClass6>): SomeClass6 {
+            return SomeClass6(someClassOpt, optString, class2List, sameClassList)
         }
     }
 }
 
 data class ClassHavingOptList(
-    private val optList: List<SomeClass>?,
+    private val optList: List<SomeClass>?
 ) {
     fun getOptList(): List<SomeClass>? {
-        return this.optList
+        return optList
     }
-
     companion object {
-        fun create(
-            optList: List<SomeClass>?,
-        ): ClassHavingOptList {
-            return ClassHavingOptList(
-                optList = optList,
-            )
+        fun create(optList: List<SomeClass>?): ClassHavingOptList {
+            return ClassHavingOptList(optList)
         }
     }
 }
 
 data class ClassHavingOptSimpleVo(
-    private val optSimpleVo: String?,
+    private val optSimpleVo: String?
 ) {
     fun getOptSimpleVo(): SomeId? {
-        return this.optSimpleVo?.let { it -> SomeId(it) }
+        return optSimpleVo?.let { it -> SomeId(it) }
     }
-
     companion object {
-        fun create(
-            optSimpleVo: SomeId?,
-        ): ClassHavingOptSimpleVo {
-            return ClassHavingOptSimpleVo(
-                optSimpleVo = optSimpleVo?.let { it -> it.value },
-            )
+        fun create(optSimpleVo: SomeId?): ClassHavingOptSimpleVo {
+            return ClassHavingOptSimpleVo(optSimpleVo?.let { it -> it.value })
         }
     }
 }
 
 data class RecordClass(
     private val id: String,
-    private val amount: Int,
+    private val amount: Int
 ) {
     fun id(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun amount(): Int {
-        return this.amount
+        return amount
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            amount: Int,
-        ): RecordClass {
-            return RecordClass(
-                id = id.value,
-                amount = amount,
-            )
+        fun create(id: SomeId, amount: Int): RecordClass {
+            return RecordClass(id.value, amount)
         }
     }
 }
 
 data class ClassWithOptExamples(
     private val optInt: Int?,
-    private val optIntWrapper: Int?,
+    private val optIntWrapper: Int?
 ) {
     fun getOptInt(): Int? {
-        return this.optInt
+        return optInt
     }
-
     fun getOptIntWrapper(): SomeIntWrapper? {
-        return this.optIntWrapper?.let { it -> SomeIntWrapper(it) }
+        return optIntWrapper?.let { it -> SomeIntWrapper(it) }
     }
-
     companion object {
-        fun create(
-            optInt: Int?,
-            optIntWrapper: SomeIntWrapper?,
-        ): ClassWithOptExamples {
-            return ClassWithOptExamples(
-                optInt = optInt,
-                optIntWrapper = optIntWrapper?.let { it -> it.value },
-            )
+        fun create(optInt: Int?, optIntWrapper: SomeIntWrapper?): ClassWithOptExamples {
+            return ClassWithOptExamples(optInt, optIntWrapper?.let { it -> it.value })
         }
     }
 }
 
 data class ClassWithEnumList(
-    private val enumList: List<String>,
+    private val enumList: List<String>
 ) {
     fun getEnumList(): List<SomeEnum2> {
-        return this.enumList.map { it -> SomeEnum2.valueOf(it) }
+        return enumList.map { it -> SomeEnum2.valueOf(it) }
     }
-
     companion object {
-        fun create(
-            enumList: List<SomeEnum2>,
-        ): ClassWithEnumList {
-            return ClassWithEnumList(
-                enumList = enumList.map { it -> it.name },
-            )
+        fun create(enumList: List<SomeEnum2>): ClassWithEnumList {
+            return ClassWithEnumList(enumList.map { it -> it.name })
         }
     }
 }
 
 data class ClassWithBoolField(
-    private val boolField: Boolean,
+    private val boolField: Boolean
 ) {
     fun getBoolField(): Boolean {
-        return this.boolField
+        return boolField
     }
-
     companion object {
-        fun create(
-            boolField: Boolean,
-        ): ClassWithBoolField {
-            return ClassWithBoolField(
-                boolField = boolField,
-            )
+        fun create(boolField: Boolean): ClassWithBoolField {
+            return ClassWithBoolField(boolField)
         }
     }
 }
@@ -407,106 +287,71 @@ data class ClassWithBoolField(
 data class RecursiveClass(
     private val meList: List<RecursiveClass>,
     private val meOpt: RecursiveClass?,
-    private val meOptList: List<RecursiveClass>?,
+    private val meOptList: List<RecursiveClass>?
 ) {
     fun getMeList(): List<RecursiveClass> {
-        return this.meList
+        return meList
     }
-
     fun getMeOpt(): RecursiveClass? {
-        return this.meOpt
+        return meOpt
     }
-
     fun getMeOptList(): List<RecursiveClass>? {
-        return this.meOptList
+        return meOptList
     }
-
     companion object {
-        fun create(
-            meList: List<RecursiveClass>,
-            meOpt: RecursiveClass?,
-            meOptList: List<RecursiveClass>?,
-        ): RecursiveClass {
-            return RecursiveClass(
-                meList = meList,
-                meOpt = meOpt,
-                meOptList = meOptList,
-            )
+        fun create(meList: List<RecursiveClass>, meOpt: RecursiveClass?, meOptList: List<RecursiveClass>?): RecursiveClass {
+            return RecursiveClass(meList, meOpt, meOptList)
         }
     }
 }
 
 data class SomeQueryInput(
     private val id: String,
-    private val amount: Int,
+    private val amount: Int
 ) {
     fun getId(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun getAmount(): Int {
-        return this.amount
+        return amount
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            amount: Int,
-        ): SomeQueryInput {
-            return SomeQueryInput(
-                id = id.value,
-                amount = amount,
-            )
+        fun create(id: SomeId, amount: Int): SomeQueryInput {
+            return SomeQueryInput(id.value, amount)
         }
     }
 }
 
 data class SomeHandlerInput(
     private val id: String,
-    private val amount: Int,
+    private val amount: Int
 ) {
     fun getId(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun getAmount(): Int {
-        return this.amount
+        return amount
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            amount: Int,
-        ): SomeHandlerInput {
-            return SomeHandlerInput(
-                id = id.value,
-                amount = amount,
-            )
+        fun create(id: SomeId, amount: Int): SomeHandlerInput {
+            return SomeHandlerInput(id.value, amount)
         }
     }
 }
 
 data class SomeHandlerOutput(
     private val id: String,
-    private val amount: Int,
+    private val amount: Int
 ) {
     fun getId(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun getAmount(): Int {
-        return this.amount
+        return amount
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            amount: Int,
-        ): SomeHandlerOutput {
-            return SomeHandlerOutput(
-                id = id.value,
-                amount = amount,
-            )
+        fun create(id: SomeId, amount: Int): SomeHandlerOutput {
+            return SomeHandlerOutput(id.value, amount)
         }
     }
 }
@@ -517,109 +362,66 @@ data class SomeProperty(
     private val range: SerializedDateRange?,
     private val doubleExample: Double,
     private val longExample: Long,
-    private val gN: String,
+    private val goodName: String,
     private val customData: com.github.bratek20.architecture.structs.api.Struct,
-    private val `as`: String,
+    private val `as`: String
 ) {
     fun getOther(): OtherProperty {
-        return this.other
+        return other
     }
-
     fun getId2(): SomeId2? {
-        return this.id2?.let { it -> SomeId2(it) }
+        return id2?.let { it -> SomeId2(it) }
     }
-
     fun getRange(): DateRange? {
-        return this.range?.let { it -> it.toCustomType() }
+        return range?.let { it -> it.toCustomType() }
     }
-
     fun getDoubleExample(): Double {
-        return this.doubleExample
+        return doubleExample
     }
-
     fun getLongExample(): Long {
-        return this.longExample
+        return longExample
     }
-
     fun getGoodName(): String {
-        return this.gN
+        return goodName
     }
-
     fun getCustomData(): com.github.bratek20.architecture.structs.api.Struct {
-        return this.customData
+        return customData
     }
-
     fun getAs(): String {
-        return this.`as`
+        return `as`
     }
-
     companion object {
-        fun create(
-            other: OtherProperty,
-            id2: SomeId2?,
-            range: DateRange?,
-            doubleExample: Double,
-            longExample: Long,
-            goodName: String,
-            customData: com.github.bratek20.architecture.structs.api.Struct,
-            `as`: String,
-        ): SomeProperty {
-            return SomeProperty(
-                other = other,
-                id2 = id2?.let { it -> it.value },
-                range = range?.let { it -> SerializedDateRange.fromCustomType(it) },
-                doubleExample = doubleExample,
-                longExample = longExample,
-                gN = goodName,
-                customData = customData,
-                `as` = `as`,
-            )
+        fun create(other: OtherProperty, id2: SomeId2?, range: DateRange?, doubleExample: Double, longExample: Long, goodName: String, customData: com.github.bratek20.architecture.structs.api.Struct, `as`: String): SomeProperty {
+            return SomeProperty(other, id2?.let { it -> it.value }, range?.let { it -> SerializedDateRange.fromCustomType(it) }, doubleExample, longExample, goodName, customData, `as`)
         }
     }
 }
 
 data class SomeProperty2(
-    @JvmField val value: String,
+    private val value: String,
     private val custom: Any,
     private val someEnum: String,
-    private val customOpt: Any? = null,
-    private val `as`: String,
+    private val customOpt: Any?,
+    private val kotlinKeyword: String
 ) {
     fun getValue(): String {
-        return this.value
+        return value
     }
-
     fun getCustom(): Any {
-        return this.custom
+        return custom
     }
-
     fun getSomeEnum(): SomeEnum {
-        return SomeEnum.valueOf(this.someEnum)
+        return SomeEnum.valueOf(someEnum)
     }
-
     fun getCustomOpt(): Any? {
-        return this.customOpt
+        return customOpt
     }
-
     fun getKotlinKeyword(): String {
-        return this.`as`
+        return kotlinKeyword
     }
-
     companion object {
-        fun create(
-            value: String,
-            custom: Any,
-            someEnum: SomeEnum,
-            customOpt: Any? = null,
-            kotlinKeyword: String,
-        ): SomeProperty2 {
-            return SomeProperty2(
-                value = value,
-                custom = custom,
-                someEnum = someEnum.name,
-                customOpt = customOpt,
-                `as` = kotlinKeyword,
-            )
+        fun create(value: String, custom: Any, someEnum: SomeEnum, customOpt: Any?, kotlinKeyword: String): SomeProperty2 {
+            return SomeProperty2(value, custom, someEnum.name, customOpt, kotlinKeyword)
         }
     }
 }
@@ -634,393 +436,270 @@ data class SomePropertyEntry(
     private val exampleNumericCustomType: Int,
     private val exampleNumericCustomType2: Int,
     private val exampleVONumeric: Int,
-    private val exampleVONumeric2: Int,
+    private val exampleVONumeric2: Int
 ) {
     fun getId(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun getExampleInt(): Int {
-        return this.exampleInt
+        return exampleInt
     }
-
     fun getExampleLong(): Long {
-        return this.exampleLong
+        return exampleLong
     }
-
     fun getExampleDouble(): Double {
-        return this.exampleDouble
+        return exampleDouble
     }
-
     fun getExampleBool(): Boolean {
-        return this.exampleBool
+        return exampleBool
     }
-
     fun getExampleString(): String {
-        return this.exampleString
+        return exampleString
     }
-
     fun getExampleNumericCustomType(): Tier {
-        return tierCreate(this.exampleNumericCustomType)
+        return tierCreate(exampleNumericCustomType)
     }
-
     fun getExampleNumericCustomType2(): Tier {
-        return tierCreate(this.exampleNumericCustomType2)
+        return tierCreate(exampleNumericCustomType2)
     }
-
     fun getExampleVONumeric(): SomeIntWrapper {
-        return SomeIntWrapper(this.exampleVONumeric)
+        return SomeIntWrapper(exampleVONumeric)
     }
-
     fun getExampleVONumeric2(): SomeIntWrapper {
-        return SomeIntWrapper(this.exampleVONumeric2)
+        return SomeIntWrapper(exampleVONumeric2)
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            exampleInt: Int,
-            exampleLong: Long,
-            exampleDouble: Double,
-            exampleBool: Boolean,
-            exampleString: String,
-            exampleNumericCustomType: Tier,
-            exampleNumericCustomType2: Tier,
-            exampleVONumeric: SomeIntWrapper,
-            exampleVONumeric2: SomeIntWrapper,
-        ): SomePropertyEntry {
-            return SomePropertyEntry(
-                id = id.value,
-                exampleInt = exampleInt,
-                exampleLong = exampleLong,
-                exampleDouble = exampleDouble,
-                exampleBool = exampleBool,
-                exampleString = exampleString,
-                exampleNumericCustomType = tierGetValue(exampleNumericCustomType),
-                exampleNumericCustomType2 = tierGetValue(exampleNumericCustomType2),
-                exampleVONumeric = exampleVONumeric.value,
-                exampleVONumeric2 = exampleVONumeric2.value,
-            )
+        fun create(id: SomeId, exampleInt: Int, exampleLong: Long, exampleDouble: Double, exampleBool: Boolean, exampleString: String, exampleNumericCustomType: Tier, exampleNumericCustomType2: Tier, exampleVONumeric: SomeIntWrapper, exampleVONumeric2: SomeIntWrapper): SomePropertyEntry {
+            return SomePropertyEntry(id.value, exampleInt, exampleLong, exampleDouble, exampleBool, exampleString, tierGetValue(exampleNumericCustomType), tierGetValue(exampleNumericCustomType2), exampleVONumeric.value, exampleVONumeric2.value)
         }
     }
 }
 
 data class SomeRenamedSourcePropertyEntry(
-    private val sId: String,
+    private val id: String
 ) {
     fun getId(): SomeOtherId {
-        return SomeOtherId(this.sId)
+        return SomeOtherId(id)
     }
-
     companion object {
-        fun create(
-            id: SomeOtherId,
-        ): SomeRenamedSourcePropertyEntry {
-            return SomeRenamedSourcePropertyEntry(
-                sId = id.value,
-            )
+        fun create(id: SomeOtherId): SomeRenamedSourcePropertyEntry {
+            return SomeRenamedSourcePropertyEntry(id.value)
         }
     }
 }
 
 data class SomeReferencingProperty(
-    private val referenceId: String,
+    private val referenceId: String
 ) {
     fun getReferenceId(): SomeId {
-        return SomeId(this.referenceId)
+        return SomeId(referenceId)
     }
-
     companion object {
-        fun create(
-            referenceId: SomeId,
-        ): SomeReferencingProperty {
-            return SomeReferencingProperty(
-                referenceId = referenceId.value,
-            )
+        fun create(referenceId: SomeId): SomeReferencingProperty {
+            return SomeReferencingProperty(referenceId.value)
         }
     }
 }
 
 data class SomeRenamedReferencingProperty(
-    private val rId: String,
+    private val referenceId: String
 ) {
     fun getReferenceId(): SomeId {
-        return SomeId(this.rId)
+        return SomeId(referenceId)
     }
-
     companion object {
-        fun create(
-            referenceId: SomeId,
-        ): SomeRenamedReferencingProperty {
-            return SomeRenamedReferencingProperty(
-                rId = referenceId.value,
-            )
+        fun create(referenceId: SomeId): SomeRenamedReferencingProperty {
+            return SomeRenamedReferencingProperty(referenceId.value)
         }
     }
 }
 
 data class SomeRenamedReferencingRenamedProperty(
-    private val rId: String,
+    private val referenceId: String
 ) {
     fun getReferenceId(): SomeOtherId {
-        return SomeOtherId(this.rId)
+        return SomeOtherId(referenceId)
     }
-
     companion object {
-        fun create(
-            referenceId: SomeOtherId,
-        ): SomeRenamedReferencingRenamedProperty {
-            return SomeRenamedReferencingRenamedProperty(
-                rId = referenceId.value,
-            )
+        fun create(referenceId: SomeOtherId): SomeRenamedReferencingRenamedProperty {
+            return SomeRenamedReferencingRenamedProperty(referenceId.value)
         }
     }
 }
 
 data class SomeReferencingPropertyFieldList(
-    private val referenceIdList: List<String>,
+    private val referenceIdList: List<String>
 ) {
     fun getReferenceIdList(): List<SomeId> {
-        return this.referenceIdList.map { it -> SomeId(it) }
+        return referenceIdList.map { it -> SomeId(it) }
     }
-
     companion object {
-        fun create(
-            referenceIdList: List<SomeId>,
-        ): SomeReferencingPropertyFieldList {
-            return SomeReferencingPropertyFieldList(
-                referenceIdList = referenceIdList.map { it -> it.value },
-            )
+        fun create(referenceIdList: List<SomeId>): SomeReferencingPropertyFieldList {
+            return SomeReferencingPropertyFieldList(referenceIdList.map { it -> it.value })
         }
     }
 }
 
 data class SomeStructureWithUniqueIds(
-    private val entries: List<UniqueIdEntry>,
+    private val entries: List<UniqueIdEntry>
 ) {
     fun getEntries(): List<UniqueIdEntry> {
-        return this.entries
+        return entries
     }
-
     companion object {
-        fun create(
-            entries: List<UniqueIdEntry>,
-        ): SomeStructureWithUniqueIds {
-            return SomeStructureWithUniqueIds(
-                entries = entries,
-            )
+        fun create(entries: List<UniqueIdEntry>): SomeStructureWithUniqueIds {
+            return SomeStructureWithUniqueIds(entries)
         }
     }
 }
 
 data class NestedUniqueIds(
-    private val entries: List<UniqueIdEntry>,
+    private val entries: List<UniqueIdEntry>
 ) {
     fun getEntries(): List<UniqueIdEntry> {
-        return this.entries
+        return entries
     }
-
     companion object {
-        fun create(
-            entries: List<UniqueIdEntry>,
-        ): NestedUniqueIds {
-            return NestedUniqueIds(
-                entries = entries,
-            )
+        fun create(entries: List<UniqueIdEntry>): NestedUniqueIds {
+            return NestedUniqueIds(entries)
         }
     }
 }
 
 data class SomeStructureWithUniqueNestedIds(
-    private val nestedUniqueIds: List<NestedUniqueIds>,
+    private val nestedUniqueIds: List<NestedUniqueIds>
 ) {
     fun getNestedUniqueIds(): List<NestedUniqueIds> {
-        return this.nestedUniqueIds
+        return nestedUniqueIds
     }
-
     companion object {
-        fun create(
-            nestedUniqueIds: List<NestedUniqueIds>,
-        ): SomeStructureWithUniqueNestedIds {
-            return SomeStructureWithUniqueNestedIds(
-                nestedUniqueIds = nestedUniqueIds,
-            )
+        fun create(nestedUniqueIds: List<NestedUniqueIds>): SomeStructureWithUniqueNestedIds {
+            return SomeStructureWithUniqueNestedIds(nestedUniqueIds)
         }
     }
 }
 
 data class SomeStructureWithMultipleUniqueNestedIds(
-    private val moreNestedFields: List<SomeStructureWithUniqueNestedIds>,
+    private val moreNestedFields: List<SomeStructureWithUniqueNestedIds>
 ) {
     fun getMoreNestedFields(): List<SomeStructureWithUniqueNestedIds> {
-        return this.moreNestedFields
+        return moreNestedFields
     }
-
     companion object {
-        fun create(
-            moreNestedFields: List<SomeStructureWithUniqueNestedIds>,
-        ): SomeStructureWithMultipleUniqueNestedIds {
-            return SomeStructureWithMultipleUniqueNestedIds(
-                moreNestedFields = moreNestedFields,
-            )
+        fun create(moreNestedFields: List<SomeStructureWithUniqueNestedIds>): SomeStructureWithMultipleUniqueNestedIds {
+            return SomeStructureWithMultipleUniqueNestedIds(moreNestedFields)
         }
     }
 }
 
 data class SomeClassWIthOtherClassUniqueIds(
-    private val otherClass: OtherClassWIthUniqueId,
+    private val otherClass: OtherClassWIthUniqueId
 ) {
     fun getOtherClass(): OtherClassWIthUniqueId {
-        return this.otherClass
+        return otherClass
     }
-
     companion object {
-        fun create(
-            otherClass: OtherClassWIthUniqueId,
-        ): SomeClassWIthOtherClassUniqueIds {
-            return SomeClassWIthOtherClassUniqueIds(
-                otherClass = otherClass,
-            )
+        fun create(otherClass: OtherClassWIthUniqueId): SomeClassWIthOtherClassUniqueIds {
+            return SomeClassWIthOtherClassUniqueIds(otherClass)
         }
     }
 }
 
 data class SomeStructWithNestedOtherClassUniqueIds(
-    private val someNestedWithUniqueIds: List<SomeClassWIthOtherClassUniqueIds>,
+    private val someNestedWithUniqueIds: List<SomeClassWIthOtherClassUniqueIds>
 ) {
     fun getSomeNestedWithUniqueIds(): List<SomeClassWIthOtherClassUniqueIds> {
-        return this.someNestedWithUniqueIds
+        return someNestedWithUniqueIds
     }
-
     companion object {
-        fun create(
-            someNestedWithUniqueIds: List<SomeClassWIthOtherClassUniqueIds>,
-        ): SomeStructWithNestedOtherClassUniqueIds {
-            return SomeStructWithNestedOtherClassUniqueIds(
-                someNestedWithUniqueIds = someNestedWithUniqueIds,
-            )
+        fun create(someNestedWithUniqueIds: List<SomeClassWIthOtherClassUniqueIds>): SomeStructWithNestedOtherClassUniqueIds {
+            return SomeStructWithNestedOtherClassUniqueIds(someNestedWithUniqueIds)
         }
     }
 }
 
 data class NestedClassLevel2(
-    private val uniqueIds: List<OtherClassWIthUniqueId>,
+    private val uniqueIds: List<OtherClassWIthUniqueId>
 ) {
     fun getUniqueIds(): List<OtherClassWIthUniqueId> {
-        return this.uniqueIds
+        return uniqueIds
     }
-
     companion object {
-        fun create(
-            uniqueIds: List<OtherClassWIthUniqueId>,
-        ): NestedClassLevel2 {
-            return NestedClassLevel2(
-                uniqueIds = uniqueIds,
-            )
+        fun create(uniqueIds: List<OtherClassWIthUniqueId>): NestedClassLevel2 {
+            return NestedClassLevel2(uniqueIds)
         }
     }
 }
 
 data class NestedClassLevel1(
-    private val nestLevel2: List<NestedClassLevel2>,
+    private val nestLevel2: List<NestedClassLevel2>
 ) {
     fun getNestLevel2(): List<NestedClassLevel2> {
-        return this.nestLevel2
+        return nestLevel2
     }
-
     companion object {
-        fun create(
-            nestLevel2: List<NestedClassLevel2>,
-        ): NestedClassLevel1 {
-            return NestedClassLevel1(
-                nestLevel2 = nestLevel2,
-            )
+        fun create(nestLevel2: List<NestedClassLevel2>): NestedClassLevel1 {
+            return NestedClassLevel1(nestLevel2)
         }
     }
 }
 
 data class ComplexStructureWithNestedUniqueIds(
     private val id: String,
-    private val nestLevel1: List<NestedClassLevel1>,
+    private val nestLevel1: List<NestedClassLevel1>
 ) {
     fun getId(): String {
-        return this.id
+        return id
     }
-
     fun getNestLevel1(): List<NestedClassLevel1> {
-        return this.nestLevel1
+        return nestLevel1
     }
-
     companion object {
-        fun create(
-            id: String,
-            nestLevel1: List<NestedClassLevel1>,
-        ): ComplexStructureWithNestedUniqueIds {
-            return ComplexStructureWithNestedUniqueIds(
-                id = id,
-                nestLevel1 = nestLevel1,
-            )
+        fun create(id: String, nestLevel1: List<NestedClassLevel1>): ComplexStructureWithNestedUniqueIds {
+            return ComplexStructureWithNestedUniqueIds(id, nestLevel1)
         }
     }
 }
 
 data class NestedValue(
-    private val value: String,
+    private val value: String
 ) {
     fun getValue(): String {
-        return this.value
+        return value
     }
-
     companion object {
-        fun create(
-            value: String,
-        ): NestedValue {
-            return NestedValue(
-                value = value,
-            )
+        fun create(value: String): NestedValue {
+            return NestedValue(value)
         }
     }
 }
 
 data class OptionalFieldProperty(
-    private val optionalField: NestedValue?,
+    private val optionalField: NestedValue?
 ) {
     fun getOptionalField(): NestedValue? {
-        return this.optionalField
+        return optionalField
     }
-
     companion object {
-        fun create(
-            optionalField: NestedValue?,
-        ): OptionalFieldProperty {
-            return OptionalFieldProperty(
-                optionalField = optionalField,
-            )
+        fun create(optionalField: NestedValue?): OptionalFieldProperty {
+            return OptionalFieldProperty(optionalField)
         }
     }
 }
 
 data class CustomTypesProperty(
     private val date: String,
-    private val dateRange: SerializedDateRange,
+    private val dateRange: SerializedDateRange
 ) {
     fun getDate(): Date {
-        return dateCreate(this.date)
+        return dateCreate(date)
     }
-
     fun getDateRange(): DateRange {
-        return this.dateRange.toCustomType()
+        return dateRange.toCustomType()
     }
-
     companion object {
-        fun create(
-            date: Date,
-            dateRange: DateRange,
-        ): CustomTypesProperty {
-            return CustomTypesProperty(
-                date = dateGetValue(date),
-                dateRange = SerializedDateRange.fromCustomType(dateRange),
-            )
+        fun create(date: Date, dateRange: DateRange): CustomTypesProperty {
+            return CustomTypesProperty(dateGetValue(date), SerializedDateRange.fromCustomType(dateRange))
         }
     }
 }
@@ -1028,81 +707,54 @@ data class CustomTypesProperty(
 data class SelfReferencingProperty(
     private val optionalSelf: SelfReferencingProperty?,
     private val listSelf: List<SelfReferencingProperty>,
-    private val optionalListSelf: List<SelfReferencingProperty>?,
+    private val optionalListSelf: List<SelfReferencingProperty>?
 ) {
     fun getOptionalSelf(): SelfReferencingProperty? {
-        return this.optionalSelf
+        return optionalSelf
     }
-
     fun getListSelf(): List<SelfReferencingProperty> {
-        return this.listSelf
+        return listSelf
     }
-
     fun getOptionalListSelf(): List<SelfReferencingProperty>? {
-        return this.optionalListSelf
+        return optionalListSelf
     }
-
     companion object {
-        fun create(
-            optionalSelf: SelfReferencingProperty?,
-            listSelf: List<SelfReferencingProperty>,
-            optionalListSelf: List<SelfReferencingProperty>?,
-        ): SelfReferencingProperty {
-            return SelfReferencingProperty(
-                optionalSelf = optionalSelf,
-                listSelf = listSelf,
-                optionalListSelf = optionalListSelf,
-            )
+        fun create(optionalSelf: SelfReferencingProperty?, listSelf: List<SelfReferencingProperty>, optionalListSelf: List<SelfReferencingProperty>?): SelfReferencingProperty {
+            return SelfReferencingProperty(optionalSelf, listSelf, optionalListSelf)
         }
     }
 }
 
 data class CustomTypesPropertyOptionalList(
     private val id: String,
-    private val customPropertiesList: List<CustomTypesProperty>?,
+    private val customPropertiesList: List<CustomTypesProperty>?
 ) {
     fun getId(): String {
-        return this.id
+        return id
     }
-
     fun getCustomPropertiesList(): List<CustomTypesProperty>? {
-        return this.customPropertiesList
+        return customPropertiesList
     }
-
     companion object {
-        fun create(
-            id: String,
-            customPropertiesList: List<CustomTypesProperty>?,
-        ): CustomTypesPropertyOptionalList {
-            return CustomTypesPropertyOptionalList(
-                id = id,
-                customPropertiesList = customPropertiesList,
-            )
+        fun create(id: String, customPropertiesList: List<CustomTypesProperty>?): CustomTypesPropertyOptionalList {
+            return CustomTypesPropertyOptionalList(id, customPropertiesList)
         }
     }
 }
 
 data class SomeInterfaceSomeCommandArgs(
     private val id: String,
-    private val amount: Int,
+    private val amount: Int
 ) {
     fun getId(): SomeId {
-        return SomeId(this.id)
+        return SomeId(id)
     }
-
     fun getAmount(): Int {
-        return this.amount
+        return amount
     }
-
     companion object {
-        fun create(
-            id: SomeId,
-            amount: Int,
-        ): SomeInterfaceSomeCommandArgs {
-            return SomeInterfaceSomeCommandArgs(
-                id = id.value,
-                amount = amount,
-            )
+        fun create(id: SomeId, amount: Int): SomeInterfaceSomeCommandArgs {
+            return SomeInterfaceSomeCommandArgs(id.value, amount)
         }
     }
 }

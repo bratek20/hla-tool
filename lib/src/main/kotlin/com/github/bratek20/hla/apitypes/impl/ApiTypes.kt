@@ -2,6 +2,7 @@ package com.github.bratek20.hla.apitypes.impl
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.CSharp
+import com.github.bratek20.codebuilder.core.Kotlin
 import com.github.bratek20.codebuilder.core.TypeScript
 import com.github.bratek20.codebuilder.types.*
 import com.github.bratek20.hla.apitypes.api.ApiType
@@ -332,31 +333,324 @@ class SimpleValueObjectApiType(
 
     fun getClassOps(): ClassBuilderOps =  {
         name = this@SimpleValueObjectApiType.name
-        if (c.lang is CSharp) {
-            extends {
-                name = "ValueObject"
+
+        when {
+            c.lang is Kotlin -> {
+                dataClass = true
+
+                addField {
+                    type = serializableBuilder()
+                    name = "value"
+                    fromConstructor = true
+                    getter = true
+                }
+
+                addMethod {
+                    overridesClassMethod = true
+                    returnType = baseType(com.github.bratek20.codebuilder.core.BaseType.STRING)
+                    name = "toString"
+                    setBody {
+                        add(returnStatement {
+                            methodCall {
+                                target = instanceVariable("value")
+                                name = "toString"
+                            }
+                        })
+                    }
+                }
+
+                // Add arithmetic operators for Int and Long types
+                if (boxedType.name == BaseType.INT || boxedType.name == BaseType.LONG) {
+                    addKotlinArithmeticOperators()
+                }
             }
 
-            addMethod {
-                overridesClassMethod = true
-                returnType = baseType(com.github.bratek20.codebuilder.core.BaseType.STRING)
-                name = "toString"
-                setBody {
-                    add(returnStatement {
-                        methodCall {
-                            target = getterField("value")
-                            name = "toString"
-                        }
-                    })
+            c.lang is CSharp -> {
+                extends {
+                    name = "ValueObject"
+                }
+
+                addMethod {
+                    overridesClassMethod = true
+                    returnType = baseType(com.github.bratek20.codebuilder.core.BaseType.STRING)
+                    name = "toString"
+                    setBody {
+                        add(returnStatement {
+                            methodCall {
+                                target = getterField("value")
+                                name = "toString"
+                            }
+                        })
+                    }
+                }
+
+                addField {
+                    type = serializableBuilder()
+                    name = "value"
+                    fromConstructor = true
+                    getter = true
+                }
+            }
+
+            c.lang is TypeScript -> {
+                // Constructor field with TypeScript naming convention: value${ClassName}
+                addField {
+                    type = serializableBuilder()
+                    name = "value${this@SimpleValueObjectApiType.name}"
+                    fromConstructor = true
+                    getter = false
+                }
+
+                // getValue() method
+                addMethod {
+                    name = "getValue"
+                    returnType = serializableBuilder()
+                    setBody {
+                        add(returnStatement {
+                            instanceVariable("value${this@SimpleValueObjectApiType.name}")
+                        })
+                    }
+                }
+
+                // equals() method
+                addMethod {
+                    name = "equals"
+                    returnType = baseType(com.github.bratek20.codebuilder.core.BaseType.BOOL)
+                    addArg {
+                        name = "other"
+                        type = this@SimpleValueObjectApiType.builder()
+                    }
+                    setBody {
+                        add(returnStatement {
+                            hardcodedExpression("this.getValue() === other.getValue()")
+                        })
+                    }
+                }
+
+                // toString() method
+                addMethod {
+                    name = "toString"
+                    returnType = baseType(com.github.bratek20.codebuilder.core.BaseType.STRING)
+                    setBody {
+                        add(returnStatement {
+                            methodCall {
+                                target = methodCall {
+                                    target = instanceVariable("this")
+                                    name = "getValue"
+                                }
+                                name = "toString"
+                            }
+                        })
+                    }
+                }
+
+                // Add numeric-specific methods for number type
+                if (boxedType.name == BaseType.INT || boxedType.name == BaseType.LONG) {
+                    addTypeScriptNumericMethods()
+                }
+            }
+
+            else -> {
+                addField {
+                    type = serializableBuilder()
+                    name = "value"
+                    fromConstructor = true
+                    getter = true
                 }
             }
         }
+    }
 
-        addField {
-            type = serializableBuilder()
-            name = "value"
-            fromConstructor = true
-            getter = true
+    private fun ClassBuilder.addKotlinArithmeticOperators() {
+        val voName = this@SimpleValueObjectApiType.name
+
+        // operator fun plus
+        addMethod {
+            operator = true
+            name = "plus"
+            returnType = this@SimpleValueObjectApiType.builder()
+            addArg {
+                name = "other"
+                type = this@SimpleValueObjectApiType.builder()
+            }
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = voName
+                        addArg {
+                            plus {
+                                left = getterFieldAccess {
+                                    objectRef = instanceVariable("this")
+                                    fieldName = "value"
+                                }
+                                right = getterFieldAccess {
+                                    objectRef = variable("other")
+                                    fieldName = "value"
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+
+        // operator fun minus
+        addMethod {
+            operator = true
+            name = "minus"
+            returnType = this@SimpleValueObjectApiType.builder()
+            addArg {
+                name = "other"
+                type = this@SimpleValueObjectApiType.builder()
+            }
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = voName
+                        addArg {
+                            minus {
+                                left = getterFieldAccess {
+                                    objectRef = instanceVariable("this")
+                                    fieldName = "value"
+                                }
+                                right = getterFieldAccess {
+                                    objectRef = variable("other")
+                                    fieldName = "value"
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+
+        // operator fun times
+        addMethod {
+            operator = true
+            name = "times"
+            returnType = this@SimpleValueObjectApiType.builder()
+            addArg {
+                name = "amount"
+                type = baseType(com.github.bratek20.codebuilder.core.BaseType.INT)
+            }
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = voName
+                        addArg {
+                            times {
+                                left = getterFieldAccess {
+                                    objectRef = instanceVariable("this")
+                                    fieldName = "value"
+                                }
+                                right = variable("amount")
+                            }
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    private fun ClassBuilder.addTypeScriptNumericMethods() {
+        val voName = this@SimpleValueObjectApiType.name
+
+        // valueOf() method
+        addMethod {
+            name = "valueOf"
+            returnType = serializableBuilder()
+            setBody {
+                add(returnStatement {
+                    methodCall {
+                        target = instanceVariable("this")
+                        name = "getValue"
+                    }
+                })
+            }
+        }
+
+        // plus() method
+        addMethod {
+            name = "plus"
+            returnType = this@SimpleValueObjectApiType.builder()
+            addArg {
+                name = "other"
+                type = this@SimpleValueObjectApiType.builder()
+            }
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = voName
+                        addArg {
+                            plus {
+                                left = methodCall {
+                                    target = instanceVariable("this")
+                                    name = "getValue"
+                                }
+                                right = methodCall {
+                                    target = variable("other")
+                                    name = "getValue"
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+
+        // minus() method
+        addMethod {
+            name = "minus"
+            returnType = this@SimpleValueObjectApiType.builder()
+            addArg {
+                name = "other"
+                type = this@SimpleValueObjectApiType.builder()
+            }
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = voName
+                        addArg {
+                            minus {
+                                left = methodCall {
+                                    target = instanceVariable("this")
+                                    name = "getValue"
+                                }
+                                right = methodCall {
+                                    target = variable("other")
+                                    name = "getValue"
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+        }
+
+        // times() method
+        addMethod {
+            name = "times"
+            returnType = this@SimpleValueObjectApiType.builder()
+            addArg {
+                name = "amount"
+                type = baseType(com.github.bratek20.codebuilder.core.BaseType.INT)
+            }
+            setBody {
+                add(returnStatement {
+                    constructorCall {
+                        className = voName
+                        addArg {
+                            times {
+                                left = methodCall {
+                                    target = instanceVariable("this")
+                                    name = "getValue"
+                                }
+                                right = variable("amount")
+                            }
+                        }
+                    }
+                })
+            }
         }
     }
 }
@@ -518,6 +812,11 @@ open class SerializableApiType(
 
     open fun getClassOps(): ClassBuilderOps = {
         this.name = name()
+
+        if (c.lang is Kotlin) {
+            dataClass = true
+        }
+
         if (c.lang is CSharp) {
             extends {
                 name = "ValueObject"

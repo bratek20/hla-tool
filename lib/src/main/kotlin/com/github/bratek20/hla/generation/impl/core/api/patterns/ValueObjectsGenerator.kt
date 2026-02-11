@@ -22,7 +22,7 @@ class ValueObjectsGenerator: PatternGenerator() {
     }
 
     override fun supportsCodeBuilder(): Boolean {
-        return c.language.name() == ModuleLanguage.C_SHARP
+        return true  // Now supports all languages: C#, Kotlin, TypeScript
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {

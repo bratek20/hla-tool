@@ -229,12 +229,14 @@ class MethodBuilder: ProcedureBuilder() {
     var overridesClassMethod: Boolean = false
     var static: Boolean = false
     var modifier: AccessModifier? = null
+    var operator: Boolean = false
 
     override fun beforeName(c: CodeBuilderContext): String {
+        val operatorPart = if (operator && c.lang is Kotlin) "operator " else ""
         val overridePart = if (overridesClassMethod) "override " else ""
         val staticPart = if (static && c.lang.supportsStaticKeyword()) "static " else ""
         val modifierPart = modifier?.let { "${it.name.lowercase()} " } ?: c.lang.defaultTopLevelAccessor()
-        return "${modifierPart}${staticPart}${overridePart}${c.lang.methodDeclarationKeyword()}"
+        return "${modifierPart}${staticPart}${operatorPart}${overridePart}${c.lang.methodDeclarationKeyword()}"
     }
 }
 typealias MethodBuilderOps = MethodBuilder.() -> Unit
