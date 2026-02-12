@@ -3,7 +3,11 @@
 class SimpleId {
     constructor(
         readonly valueSimpleId: string
-    ) {}
+    ) {
+        if (Undefined(valueSimpleId)) {
+            throw Error("Undefined value for SimpleId")
+        }
+    }
 
     getValue(): string {
         return this.valueSimpleId
@@ -21,7 +25,11 @@ class SimpleId {
 class SomeLongWrapper {
     constructor(
         readonly valueSomeLongWrapper: number
-    ) {}
+    ) {
+        if (Undefined(valueSomeLongWrapper)) {
+            throw Error("Undefined value for SomeLongWrapper")
+        }
+    }
 
     getValue(): number {
         return this.valueSomeLongWrapper
