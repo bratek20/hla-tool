@@ -4,9 +4,11 @@ import com.github.bratek20.architecture.exceptions.ShouldNeverHappenException
 import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.nullValue
+import com.github.bratek20.codebuilder.builders.variable
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
+import com.github.bratek20.hla.definitions.api.BaseType
 import com.github.bratek20.hla.definitions.api.FieldDefinition
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
@@ -139,7 +141,12 @@ open class ComplexStructureField(
     private fun internalCreateDeclaration(allowDefault: Boolean): String {
         val base = "${name}: ${type.name()}"
         if (allowDefault) {
-            defaultValue()?.let {
+            defaultValueBuilder()?.build(factory.languageTypes.context())?.let {
+                if (type is SimpleValueObjectApiType) {
+                    if(type.languageTypes is TypeScriptTypes || type.languageTypes is KotlinTypes) {
+                        return "$base = ${(type as SimpleValueObjectApiType).constructorCall()}(${it})"
+                    }
+                }
                 return "$base = $it"
             }
         }

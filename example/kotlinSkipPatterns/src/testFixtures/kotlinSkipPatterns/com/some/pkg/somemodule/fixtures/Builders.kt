@@ -531,6 +531,7 @@ data class SomeDataDef(
     var custom: Any = Any(),
     var customOpt: Any? = null,
     var goodDataName: String = "someValue",
+    var defaultValue: String = "customDefaultValue",
 )
 fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
     val def = SomeDataDef().apply(init)
@@ -540,6 +541,7 @@ fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
         custom = def.custom,
         customOpt = def.customOpt,
         goodDataName = def.goodDataName,
+        defaultValue = SomeOtherId(def.defaultValue),
     )
 }
 

@@ -212,6 +212,7 @@ Data
         customOpt: any?
         //Here startsFrom is not generated because not long or int
         goodDataName: string (from: gDN, startsFrom: "some")
+        defaultValue: SomeOtherId = "customDefaultValue"
 
     SomeData2
         optEnum: SomeEnum?
