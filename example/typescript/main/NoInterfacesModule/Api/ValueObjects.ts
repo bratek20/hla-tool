@@ -3,7 +3,11 @@
 class NoInterfaceId {
     constructor(
         readonly valueNoInterfaceId: string
-    ) {}
+    ) {
+        if (Undefined(valueNoInterfaceId)) {
+            throw Error("Undefined value for NoInterfaceId")
+        }
+    }
 
     getValue(): string {
         return this.valueNoInterfaceId

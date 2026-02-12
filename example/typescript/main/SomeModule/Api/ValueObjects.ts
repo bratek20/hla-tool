@@ -3,7 +3,11 @@
 class SomeId {
     constructor(
         readonly valueSomeId: string
-    ) {}
+    ) {
+        if (Undefined(valueSomeId)) {
+            throw Error("Undefined value for SomeId")
+        }
+    }
 
     getValue(): string {
         return this.valueSomeId
@@ -21,7 +25,11 @@ class SomeId {
 class SomeOtherId {
     constructor(
         readonly valueSomeOtherId: string
-    ) {}
+    ) {
+        if (Undefined(valueSomeOtherId)) {
+            throw Error("Undefined value for SomeOtherId")
+        }
+    }
 
     getValue(): string {
         return this.valueSomeOtherId
@@ -39,7 +47,11 @@ class SomeOtherId {
 class SomeIntWrapper {
     constructor(
         readonly valueSomeIntWrapper: number
-    ) {}
+    ) {
+        if (Undefined(valueSomeIntWrapper)) {
+            throw Error("Undefined value for SomeIntWrapper")
+        }
+    }
 
     getValue(): number {
         return this.valueSomeIntWrapper
@@ -73,7 +85,11 @@ class SomeIntWrapper {
 class SomeId2 {
     constructor(
         readonly valueSomeId2: number
-    ) {}
+    ) {
+        if (Undefined(valueSomeId2)) {
+            throw Error("Undefined value for SomeId2")
+        }
+    }
 
     getValue(): number {
         return this.valueSomeId2

@@ -2,7 +2,11 @@
 class ${nt.name()} {
     constructor(
         readonly value${nt.name()}: ${nt.boxedType.name()}
-    ) {}
+    ) {
+        if (Undefined(value${nt.name()})) {
+            throw Error("Undefined value for ${nt.name()}")
+        }
+    }
 
     getValue(): ${nt.boxedType.name()} {
         return this.value${nt.name()}

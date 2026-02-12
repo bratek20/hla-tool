@@ -3,7 +3,11 @@
 class OtherId {
     constructor(
         readonly valueOtherId: number
-    ) {}
+    ) {
+        if (Undefined(valueOtherId)) {
+            throw Error("Undefined value for OtherId")
+        }
+    }
 
     getValue(): number {
         return this.valueOtherId
