@@ -6,6 +6,8 @@ class SomeData {
     private custom = ANY
     private customOpt? = OPTIONAL_ANY
     private gDN = STRING
+    private someDefault? = OPTIONAL_STRING
+    private someDefaultOpt? = OPTIONAL_STRING
 
     static create(
         id: SomeId,
@@ -13,6 +15,8 @@ class SomeData {
         custom: any,
         customOpt: Optional<any>,
         goodDataName: string,
+        someDefault: SomeOtherId = new SomeOtherId("defaultValue"),
+        someDefaultOpt: Optional<SomeOtherId> = Optional.of(new SomeOtherId("defaultValue")),
     ): SomeData {
         const instance = new SomeData()
         instance.id = id.getValue()
@@ -20,6 +24,8 @@ class SomeData {
         instance.custom = custom
         instance.customOpt = customOpt.orElse(undefined)
         instance.gDN = goodDataName
+        instance.someDefault = someDefault.getValue()
+        instance.someDefaultOpt = someDefaultOpt.map(it => it.getValue()).orElse(undefined)
         return instance
     }
 
@@ -29,12 +35,16 @@ class SomeData {
         custom,
         customOpt,
         goodDataName,
+        someDefault,
+        someDefaultOpt,
     }: {
         id: SomeId;
         other: OtherData;
         custom: any;
         customOpt: Optional<any>;
         goodDataName: string;
+        someDefault: SomeOtherId;
+        someDefaultOpt: Optional<SomeOtherId>;
     }): SomeData {
         const instance = new SomeData()
         instance.id = id.getValue()
@@ -42,6 +52,8 @@ class SomeData {
         instance.custom = custom
         instance.customOpt = customOpt.orElse(undefined)
         instance.gDN = goodDataName
+        instance.someDefault = someDefault.getValue()
+        instance.someDefaultOpt = someDefaultOpt.map(it => it.getValue()).orElse(undefined)
         return instance
     }
 
@@ -65,6 +77,14 @@ class SomeData {
         return this.gDN
     }
 
+    getSomeDefault(): SomeOtherId {
+        return new SomeOtherId(this.someDefault ?? "defaultValue")
+    }
+
+    getSomeDefaultOpt(): Optional<SomeOtherId> {
+        return Optional.of(this.someDefaultOpt ?? "defaultValue").map(it => new SomeOtherId(it))
+    }
+
     setId(id: SomeId): void {
         this.id = id.getValue()
     }
@@ -85,12 +105,22 @@ class SomeData {
         this.gDN = goodDataName
     }
 
+    setSomeDefault(someDefault: SomeOtherId): void {
+        this.someDefault = someDefault.getValue()
+    }
+
+    setSomeDefaultOpt(someDefaultOpt: Optional<SomeOtherId>): void {
+        this.someDefaultOpt = someDefaultOpt.map(it => it.getValue()).orElse(undefined)
+    }
+
     update(other: SomeData) {
         this.id = other.id
         this.other = other.other
         this.custom = other.custom
         this.customOpt = other.customOpt
         this.gDN = other.gDN
+        this.someDefault = other.someDefault
+        this.someDefaultOpt = other.someDefaultOpt
     }
 }
 

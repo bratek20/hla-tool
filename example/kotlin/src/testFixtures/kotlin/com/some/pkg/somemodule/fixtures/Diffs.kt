@@ -956,6 +956,9 @@ data class ExpectedSomeData(
     var customOptEmpty: Boolean? = null,
     var customOpt: Any? = null,
     var goodDataName: String? = null,
+    var someDefault: String? = null,
+    var someDefaultOptEmpty: Boolean? = null,
+    var someDefaultOpt: String? = null,
 )
 fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeData().apply(expectedInit)
@@ -983,6 +986,18 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
 
     expected.goodDataName?.let {
         if (given.getGoodDataName() != it) { result.add("${path}goodDataName ${given.getGoodDataName()} != ${it}") }
+    }
+
+    expected.someDefault?.let {
+        if (diffSomeOtherId(given.getSomeDefault(), it) != "") { result.add(diffSomeOtherId(given.getSomeDefault(), it, "${path}someDefault.")) }
+    }
+
+    expected.someDefaultOptEmpty?.let {
+        if ((given.getSomeDefaultOpt() == null) != it) { result.add("${path}someDefaultOpt empty ${(given.getSomeDefaultOpt() == null)} != ${it}") }
+    }
+
+    expected.someDefaultOpt?.let {
+        if (diffSomeOtherId(given.getSomeDefaultOpt()!!, it) != "") { result.add(diffSomeOtherId(given.getSomeDefaultOpt()!!, it, "${path}someDefaultOpt.")) }
     }
 
     return result.joinToString("\n")

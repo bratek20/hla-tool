@@ -76,7 +76,11 @@ class ${p.name()} {
 #foreach($getter in $p.getters())
 
     ${getter.name}(): ${getter.type.name()} {
+        #if($getter.fieldDef)
+        return ${getter.fieldDef.getterDeserializeExpression("this.${getter.field}")}
+        #else
         return ${getter.type.deserialize("this.${getter.field}")}
+        #end
     }
 #end
 }#if($foreach.hasNext)
