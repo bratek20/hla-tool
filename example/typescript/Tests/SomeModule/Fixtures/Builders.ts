@@ -610,7 +610,6 @@ namespace SomeModule.Builder {
         custom?: any,
         customOpt?: any,
         goodDataName?: string,
-        defaultValue?: string,
     }
     export function someData(def?: SomeDataDef): SomeData {
         const final_id = def?.id ?? "someValue"
@@ -618,7 +617,6 @@ namespace SomeModule.Builder {
         const final_custom = def?.custom ?? {}
         const final_customOpt = def?.customOpt ?? undefined
         const final_goodDataName = def?.goodDataName ?? "someValue"
-        const final_defaultValue = def?.defaultValue ?? "customDefaultValue"
 
         return SomeData.create(
             new SomeId(final_id),
@@ -626,7 +624,6 @@ namespace SomeModule.Builder {
             final_custom,
             Optional.of(final_customOpt),
             final_goodDataName,
-            new SomeOtherId(final_defaultValue),
         )
     }
 

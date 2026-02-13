@@ -5,6 +5,5 @@
   },
   "custom": "This is any type - it can contain anything",
   "customOpt": "This is any type - it can contain anything",
-  "gDN": "someValue",
-  "defaultValue": "someOtherId"
+  "gDN": "someValue"
 }

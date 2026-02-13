@@ -6,7 +6,6 @@ class SomeData {
     private custom = ANY
     private customOpt? = OPTIONAL_ANY
     private gDN = STRING
-    private defaultValue = STRING
 
     static create(
         id: SomeId,
@@ -14,7 +13,6 @@ class SomeData {
         custom: any,
         customOpt: Optional<any>,
         goodDataName: string,
-        defaultValue: SomeOtherId = new SomeOtherId("customDefaultValue"),
     ): SomeData {
         const instance = new SomeData()
         instance.id = id.getValue()
@@ -22,7 +20,6 @@ class SomeData {
         instance.custom = custom
         instance.customOpt = customOpt.orElse(undefined)
         instance.gDN = goodDataName
-        instance.defaultValue = defaultValue.getValue()
         return instance
     }
 
@@ -32,14 +29,12 @@ class SomeData {
         custom,
         customOpt,
         goodDataName,
-        defaultValue,
     }: {
         id: SomeId;
         other: OtherData;
         custom: any;
         customOpt: Optional<any>;
         goodDataName: string;
-        defaultValue: SomeOtherId;
     }): SomeData {
         const instance = new SomeData()
         instance.id = id.getValue()
@@ -47,7 +42,6 @@ class SomeData {
         instance.custom = custom
         instance.customOpt = customOpt.orElse(undefined)
         instance.gDN = goodDataName
-        instance.defaultValue = defaultValue.getValue()
         return instance
     }
 
@@ -71,10 +65,6 @@ class SomeData {
         return this.gDN
     }
 
-    getDefaultValue(): SomeOtherId {
-        return new SomeOtherId(this.defaultValue)
-    }
-
     setId(id: SomeId): void {
         this.id = id.getValue()
     }
@@ -95,17 +85,12 @@ class SomeData {
         this.gDN = goodDataName
     }
 
-    setDefaultValue(defaultValue: SomeOtherId): void {
-        this.defaultValue = defaultValue.getValue()
-    }
-
     update(other: SomeData) {
         this.id = other.id
         this.other = other.other
         this.custom = other.custom
         this.customOpt = other.customOpt
         this.gDN = other.gDN
-        this.defaultValue = other.defaultValue
     }
 }
 

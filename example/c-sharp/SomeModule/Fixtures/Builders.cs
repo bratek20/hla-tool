@@ -228,7 +228,6 @@ namespace SomeModule.Fixtures {
         public object Custom { get; set; } = null;
         public object? CustomOpt { get; set; } = null;
         public string GoodDataName { get; set; } = "someValue";
-        public string DefaultValue { get; set; } = "customDefaultValue";
     }
 
     public class SomeData2Def {
@@ -499,7 +498,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeDataDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeData.Create(new SomeId(def.Id), OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName, new SomeOtherId(def.DefaultValue));
+            return SomeData.Create(new SomeId(def.Id), OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName);
         }
         public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = null) {
             var def = new SomeData2Def();

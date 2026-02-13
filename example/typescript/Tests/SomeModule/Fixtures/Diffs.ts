@@ -906,7 +906,6 @@ namespace SomeModule {
         customOptEmpty?: boolean,
         customOpt?: any,
         goodDataName?: string,
-        defaultValue?: string,
     }
     export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: string = ""): string {
         const result: string[] = []
@@ -933,10 +932,6 @@ namespace SomeModule {
 
         if (expected.goodDataName !== undefined) {
             if (given.getGoodDataName() != expected.goodDataName) { result.push(`${path}goodDataName ${given.getGoodDataName()} != ${expected.goodDataName}`) }
-        }
-
-        if (expected.defaultValue !== undefined) {
-            if (diffSomeOtherId(given.getDefaultValue(), expected.defaultValue) != "") { result.push(diffSomeOtherId(given.getDefaultValue(), expected.defaultValue, `${path}defaultValue.`)) }
         }
 
         return result.join("\n")

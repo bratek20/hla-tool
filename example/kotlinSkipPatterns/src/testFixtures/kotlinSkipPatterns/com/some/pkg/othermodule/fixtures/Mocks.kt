@@ -5,7 +5,7 @@ package src.main.kotlinSkipPatterns.com.some.pkg.othermodule.fixtures
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import org.assertj.core.api.Assertions.assertThat
 
-open class OtherInterfaceMock: OtherInterface {
+class OtherInterfaceMock: OtherInterface {
     private var otherMethodCallsNumber: Int = 0
     override fun otherMethod(): Unit {
         otherMethodCallsNumber = otherMethodCallsNumber + 1
