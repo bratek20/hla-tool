@@ -12,6 +12,8 @@ data class SomeData(
     private var custom: Any,
     private var customOpt: Any?,
     private var gDN: String,
+    private var someDefault: String = "defaultValue",
+    private var someDefaultOpt: String? = "defaultValue",
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
@@ -31,6 +33,14 @@ data class SomeData(
 
     fun getGoodDataName(): String {
         return this.gDN
+    }
+
+    fun getSomeDefault(): SomeOtherId {
+        return SomeOtherId(this.someDefault)
+    }
+
+    fun getSomeDefaultOpt(): SomeOtherId? {
+        return this.someDefaultOpt?.let { it -> SomeOtherId(it) }
     }
 
     fun setId(id: SomeId) {
@@ -53,6 +63,14 @@ data class SomeData(
         this.gDN = goodDataName
     }
 
+    fun setSomeDefault(someDefault: SomeOtherId) {
+        this.someDefault = someDefault.value
+    }
+
+    fun setSomeDefaultOpt(someDefaultOpt: SomeOtherId?) {
+        this.someDefaultOpt = someDefaultOpt?.let { it -> it.value }
+    }
+
     companion object {
         fun create(
             id: SomeId,
@@ -60,6 +78,8 @@ data class SomeData(
             custom: Any,
             customOpt: Any?,
             goodDataName: String,
+            someDefault: SomeOtherId = SomeOtherId("defaultValue"),
+            someDefaultOpt: SomeOtherId? = SomeOtherId("defaultValue"),
         ): SomeData {
             return SomeData(
                 id = id.value,
@@ -67,6 +87,8 @@ data class SomeData(
                 custom = custom,
                 customOpt = customOpt,
                 gDN = goodDataName,
+                someDefault = someDefault.value,
+                someDefaultOpt = someDefaultOpt?.let { it -> it.value },
             )
         }
     }
@@ -77,6 +99,8 @@ data class SomeData(
         this.custom = other.custom
         this.customOpt = other.customOpt
         this.gDN = other.gDN
+        this.someDefault = other.someDefault
+        this.someDefaultOpt = other.someDefaultOpt
     }
 }
 

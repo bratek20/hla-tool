@@ -160,7 +160,7 @@ class SomeClass2 {
     private id = STRING
     private names = [STRING]
     private ids = [STRING]
-    private enabled = BOOLEAN
+    private enabled? = OPTIONAL_BOOLEAN
 
     static create(
         id: SomeId,
@@ -208,14 +208,14 @@ class SomeClass2 {
     }
 
     getEnabled(): boolean {
-        return this.enabled
+        return this.enabled ?? true
     }
 }
 
 class SomeClass3 {
     private class2Object = Class(SomeClass2)
     private someEnum = STRING
-    private class2List = [Class(SomeClass2)]
+    private class2List? = [OptionalClass(SomeClass2)]
 
     static create(
         class2Object: SomeClass2,
@@ -254,7 +254,7 @@ class SomeClass3 {
     }
 
     getClass2List(): SomeClass2[] {
-        return this.class2List
+        return this.class2List ?? []
     }
 }
 
@@ -384,7 +384,7 @@ class SomeClass6 {
     private someClassOpt? = OptionalClass(SomeClass)
     private optString? = OPTIONAL_STRING
     private class2List = [Class(SomeClass2)]
-    private sameClassList = [Class(SomeClass6)]
+    private sameClassList? = [OptionalClass(SomeClass6)]
 
     static create(
         someClassOpt: Optional<SomeClass>,
@@ -432,7 +432,7 @@ class SomeClass6 {
     }
 
     getSameClassList(): SomeClass6[] {
-        return this.sameClassList
+        return this.sameClassList ?? []
     }
 }
 
@@ -920,7 +920,7 @@ class SomeProperty2 {
     }
 
     getCustomOpt(): Optional<any> {
-        return Optional.of(this.customOpt)
+        return Optional.of(this.customOpt ?? empty).map(it => it)
     }
 
     getKotlinKeyword(): string {

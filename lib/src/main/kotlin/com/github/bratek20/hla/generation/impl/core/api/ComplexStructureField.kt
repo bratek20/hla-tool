@@ -8,9 +8,11 @@ import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.FieldDefinition
+import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
+import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
 open class ComplexStructureField(
@@ -27,6 +29,45 @@ open class ComplexStructureField(
 
     val type: ApiTypeLogic by lazy {
         factory.create(def.getType())
+    }
+
+    // Returns serializable type - wraps non-optional types with default value in optional for proper storage
+    private fun getSerializableType(): ApiTypeLogic {
+        // Only make optional if: has default value AND is NOT already optional
+        if (def.getDefaultValue() != null && type !is OptionalApiType) {
+            val optionalType = OptionalApiType(type)
+            optionalType.languageTypes = type.languageTypes
+            optionalType.typeModule = type.typeModule
+            optionalType.worldType = type.worldType
+            return optionalType
+        }
+        return type
+    }
+
+    // Helper to check if field needs default value handling in getter
+    fun needsDefaultValueInGetter(): Boolean {
+        return def.getDefaultValue() != null && type !is OptionalApiType
+    }
+
+    // Returns the deserialization expression for getter with default value support
+    fun getterDeserializeExpression(variableName: String): String {
+        if (def.getDefaultValue() != null) {
+            val defaultVal = def.getDefaultValue()!!
+
+            if (type is OptionalApiType) {
+                // Optional with default: Optional.of(field ?? "default").map(it => new Type(it))
+                val wrappedType = (type as OptionalApiType).wrappedType
+                val innerDeserialize = wrappedType.deserialize("it")
+                return "Optional.of($variableName ?? $defaultVal).map(it => $innerDeserialize)"
+            } else if (type is BaseApiType) {
+                // BaseApiType with default: field ?? default (no deserialization needed)
+                return "$variableName ?? $defaultVal"
+            } else {
+                // SimpleVO/Complex type with default: new Type(field ?? "default")
+                return type.deserialize("$variableName ?? $defaultVal")
+            }
+        }
+        return type.deserialize(variableName)
     }
 
     val name : String by lazy {
@@ -120,10 +161,11 @@ open class ComplexStructureField(
 
     // used by velocity
     fun classDeclaration(): String {
+        //siplify it to if default and not optional declare optional
         if (type.languageTypes is TypeScriptTypes) {
-            val oc = ObjectCreationMapper()
-            return "${accessor()}${privateName()}${oc.adjustAssignment(type.serializableName())} = ${oc.map(type.serializableName())}"
+            return "${accessor()}${privateName()}${ObjectCreationMapper().adjustAssignment(getSerializableType().serializableName())} = ${ObjectCreationMapper().map(getSerializableType().serializableName())}"
         }
+
         val valOrVar = if (complexStructure is DataClassApiType) "var" else "val"
         val base = "${accessor()}${valOrVar} ${privateName()}: ${type.serializableName()}"
         defaultValue()?.let {
@@ -138,11 +180,28 @@ open class ComplexStructureField(
 
     private fun internalCreateDeclaration(allowDefault: Boolean): String {
         val base = "${name}: ${type.name()}"
+
         if (allowDefault) {
-            defaultValue()?.let {
-                return "$base = $it"
+            defaultValueBuilder()?.build(factory.languageTypes.context())?.let { defaultVal ->
+                if(type is SimpleValueObjectApiType) {
+                    return "$base = ${(type as SimpleValueObjectApiType).constructorCall()}($defaultVal)"
+                }
+                if(type is OptionalApiType) {
+                    val wrappedType = (type as OptionalApiType).wrappedType
+                    if(wrappedType is SimpleValueObjectApiType) {
+                        val voCall = "${(wrappedType as SimpleValueObjectApiType).constructorCall()}($defaultVal)"
+                        if (type.languageTypes is TypeScriptTypes) {
+                            return "$base = Optional.of($voCall)"
+                        } else {
+                            // Kotlin: just the value, no Optional wrapping
+                            return "$base = $voCall"
+                        }
+                    }
+                }
+                return "$base = $defaultVal"
             }
         }
+
         return base
     }
 
@@ -192,7 +251,7 @@ open class ComplexStructureField(
     }
 
     fun getter(): ComplexStructureGetter {
-        return ComplexStructureGetter(getterName(), type, privateName())
+        return ComplexStructureGetter(getterName(), type, privateName(), this)
     }
 
     //TODO-REF introduce setterBody and setterDeclaration? to simplify velocity

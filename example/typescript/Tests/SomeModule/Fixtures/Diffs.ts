@@ -906,6 +906,9 @@ namespace SomeModule {
         customOptEmpty?: boolean,
         customOpt?: any,
         goodDataName?: string,
+        someDefault?: string,
+        someDefaultOptEmpty?: boolean,
+        someDefaultOpt?: string,
     }
     export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: string = ""): string {
         const result: string[] = []
@@ -932,6 +935,18 @@ namespace SomeModule {
 
         if (expected.goodDataName !== undefined) {
             if (given.getGoodDataName() != expected.goodDataName) { result.push(`${path}goodDataName ${given.getGoodDataName()} != ${expected.goodDataName}`) }
+        }
+
+        if (expected.someDefault !== undefined) {
+            if (diffSomeOtherId(given.getSomeDefault(), expected.someDefault) != "") { result.push(diffSomeOtherId(given.getSomeDefault(), expected.someDefault, `${path}someDefault.`)) }
+        }
+
+        if (expected.someDefaultOptEmpty !== undefined) {
+            if (given.getSomeDefaultOpt().isEmpty() != expected.someDefaultOptEmpty) { result.push(`${path}someDefaultOpt empty ${given.getSomeDefaultOpt().isEmpty()} != ${expected.someDefaultOptEmpty}`) }
+        }
+
+        if (expected.someDefaultOpt !== undefined) {
+            if (diffSomeOtherId(given.getSomeDefaultOpt().get(), expected.someDefaultOpt) != "") { result.push(diffSomeOtherId(given.getSomeDefaultOpt().get(), expected.someDefaultOpt, `${path}someDefaultOpt.`)) }
         }
 
         return result.join("\n")
