@@ -4,15 +4,14 @@ import com.github.bratek20.architecture.exceptions.ShouldNeverHappenException
 import com.github.bratek20.codebuilder.builders.ExpressionBuilder
 import com.github.bratek20.codebuilder.builders.expression
 import com.github.bratek20.codebuilder.builders.nullValue
+import com.github.bratek20.codebuilder.builders.variable
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.FieldDefinition
-import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.ObjectCreationMapper
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
-import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
 open class ComplexStructureField(
@@ -42,32 +41,6 @@ open class ComplexStructureField(
             return optionalType
         }
         return type
-    }
-
-    // Helper to check if field needs default value handling in getter
-    fun needsDefaultValueInGetter(): Boolean {
-        return def.getDefaultValue() != null && type !is OptionalApiType
-    }
-
-    // Returns the deserialization expression for getter with default value support
-    fun getterDeserializeExpression(variableName: String): String {
-        if (def.getDefaultValue() != null) {
-            val defaultVal = def.getDefaultValue()!!
-
-            if (type is OptionalApiType) {
-                // Optional with default: Optional.of(field ?? "default").map(it => new Type(it))
-                val wrappedType = (type as OptionalApiType).wrappedType
-                val innerDeserialize = wrappedType.deserialize("it")
-                return "Optional.of($variableName ?? $defaultVal).map(it => $innerDeserialize)"
-            } else if (type is BaseApiType) {
-                // BaseApiType with default: field ?? default (no deserialization needed)
-                return "$variableName ?? $defaultVal"
-            } else {
-                // SimpleVO/Complex type with default: new Type(field ?? "default")
-                return type.deserialize("$variableName ?? $defaultVal")
-            }
-        }
-        return type.deserialize(variableName)
     }
 
     val name : String by lazy {
@@ -251,7 +224,7 @@ open class ComplexStructureField(
     }
 
     fun getter(): ComplexStructureGetter {
-        return ComplexStructureGetter(getterName(), type, privateName(), this)
+        return ComplexStructureGetter(getterName(), type, getterBody())
     }
 
     //TODO-REF introduce setterBody and setterDeclaration? to simplify velocity
@@ -272,6 +245,24 @@ open class ComplexStructureField(
             }
         }
         return "get${camelToPascalCase(defName)}"
+    }
+
+    private fun getterBody(): String {
+        val fieldName = "this.${privateName()}"
+        if (def.getDefaultValue() == null) {
+            return type.modernDeserialize(variable("this.${privateName()}")).build(type.languageTypes.context())
+        }
+
+        val defaultVal = def.getDefaultValue()!!
+        when (type) {
+            is OptionalApiType -> {
+                val wrappedType = (type as OptionalApiType).wrappedType
+                val innerDeserialize = wrappedType.modernDeserialize(variable("it")).build(type.languageTypes.context())
+                return "Optional.of($fieldName ?? $defaultVal).map(it => $innerDeserialize)"
+            }
+            is BaseApiType -> return "$fieldName ?? $defaultVal"
+            else -> return type.modernDeserialize(variable("$fieldName ?? $defaultVal")).build(type.languageTypes.context())
+        }
     }
 
     fun setterName(): String {

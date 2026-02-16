@@ -21,9 +21,9 @@ class OtherData {
         return instance
     }
 
-    getId(): OtherId {
-        return new OtherId(this.id)
-    }
+        getId(): OtherId {
+            return new OtherId(this.id)
+        }
 
     setId(id: OtherId): void {
         this.id = id.getValue()

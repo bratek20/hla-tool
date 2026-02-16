@@ -476,8 +476,7 @@ class ComplexCustomApiType(
 data class ComplexStructureGetter(
     val name: String,
     val type: ApiTypeLogic,
-    val field: String,
-    val fieldDef: ComplexStructureField? = null
+    val body: String
 )
 
 data class ComplexStructureSetter(
