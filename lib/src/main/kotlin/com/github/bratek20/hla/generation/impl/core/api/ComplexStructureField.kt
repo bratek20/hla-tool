@@ -120,10 +120,13 @@ open class ComplexStructureField(
     }
 
     fun classDeclaration(): String {
-        val declarationType = if(def.getDefaultValue() != null) getOptionalOf(type) else type
         if (type.languageTypes is TypeScriptTypes) {
-            return "${accessor()}${privateName()}${ObjectCreationMapper().adjustAssignment(declarationType.serializableBuilder().build(type.languageTypes.context()))}" +
-                    " = ${ObjectCreationMapper().map(declarationType.serializableBuilder().build(type.languageTypes.context()))}"
+            val declarationType = if(def.getDefaultValue() != null) getOptionalOf(type) else type
+            val languageContext = type.languageTypes.context()
+            val base = "${accessor()}${privateName()}${ObjectCreationMapper().adjustAssignment(declarationType.serializableBuilder().build(languageContext))}"
+            val initializer = ObjectCreationMapper().map(declarationType.serializableBuilder().build(languageContext))
+
+            return "$base = $initializer"
         }
 
         val valOrVar = if (complexStructure is DataClassApiType) "var" else "val"
@@ -149,11 +152,11 @@ open class ComplexStructureField(
     private fun internalCreateDeclaration(allowDefault: Boolean): String {
         val base = "${name}: ${type.name()}"
         if (allowDefault) {
-            defaultValueBuilder()?.build(factory.languageTypes.context())?.let { defaultVal ->
+            defaultValueBuilder()?.build(factory.languageTypes.context())?.let {
                 if(type is SimpleValueObjectApiType) {
-                    return "$base = ${(type as SimpleValueObjectApiType).constructorCall()}($defaultVal)"
+                    return "$base = ${(type as SimpleValueObjectApiType).constructorCall()}($it)"
                 }
-                return "$base = $defaultVal"
+                return "$base = $it"
             }
         }
 
