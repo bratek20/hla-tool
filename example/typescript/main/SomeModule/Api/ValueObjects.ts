@@ -920,7 +920,7 @@ class SomeProperty2 {
     }
 
     getCustomOpt(): Optional<any> {
-        return Optional.of(this.customOpt ?? empty).map(it => it)
+        return Optional.of(this.customOpt)
     }
 
     getKotlinKeyword(): string {

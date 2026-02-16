@@ -15,19 +15,22 @@ namespace SomeModule.Api {
         readonly object custom;
         readonly object? customOpt;
         readonly string goodDataName;
+        readonly string someDefault;
 
         public SomeData(
             string id,
             OtherData other,
             object custom,
             object? customOpt,
-            string goodDataName
+            string goodDataName,
+            string someDefault
         ) {
             this.id = id;
             this.other = other;
             this.custom = custom;
             this.customOpt = customOpt;
             this.goodDataName = goodDataName;
+            this.someDefault = someDefault;
         }
         public SomeId GetId() {
             return new SomeId(id);
@@ -44,8 +47,11 @@ namespace SomeModule.Api {
         public string GetGoodDataName() {
             return goodDataName;
         }
-        public static SomeData Create(SomeId id, OtherData other, object custom, Optional<object> customOpt, string goodDataName) {
-            return new SomeData(id.Value, other, custom, customOpt.OrElse(null), goodDataName);
+        public SomeOtherId GetSomeDefault() {
+            return new SomeOtherId(someDefault);
+        }
+        public static SomeData Create(SomeId id, OtherData other, object custom, Optional<object> customOpt, string goodDataName, SomeOtherId someDefault) {
+            return new SomeData(id.Value, other, custom, customOpt.OrElse(null), goodDataName, someDefault.Value);
         }
     }
 

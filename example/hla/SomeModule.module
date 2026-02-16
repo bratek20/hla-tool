@@ -213,7 +213,6 @@ Data
         //Here startsFrom is not generated because not long or int
         goodDataName: string (from: gDN, startsFrom: "some")
         someDefault: SomeOtherId = "defaultValue"
-        someDefaultOpt: SomeOtherId? = "defaultValue"
 
     SomeData2
         optEnum: SomeEnum?

@@ -30,19 +30,6 @@ open class ComplexStructureField(
         factory.create(def.getType())
     }
 
-    // Returns serializable type - wraps non-optional types with default value in optional for proper storage
-    private fun getSerializableType(): ApiTypeLogic {
-        // Only make optional if: has default value AND is NOT already optional
-        if (def.getDefaultValue() != null && type !is OptionalApiType) {
-            val optionalType = OptionalApiType(type)
-            optionalType.languageTypes = type.languageTypes
-            optionalType.typeModule = type.typeModule
-            optionalType.worldType = type.worldType
-            return optionalType
-        }
-        return type
-    }
-
     val name : String by lazy {
         val raw = def.getName()
         buildNameFromRaw(raw)
@@ -132,11 +119,11 @@ open class ComplexStructureField(
         return if(isPublic) finalPrefix else "private "
     }
 
-    // used by velocity
     fun classDeclaration(): String {
-        //siplify it to if default and not optional declare optional
+        val declarationType = if(def.getDefaultValue() != null) getOptionalOf(type) else type
         if (type.languageTypes is TypeScriptTypes) {
-            return "${accessor()}${privateName()}${ObjectCreationMapper().adjustAssignment(getSerializableType().serializableName())} = ${ObjectCreationMapper().map(getSerializableType().serializableName())}"
+            return "${accessor()}${privateName()}${ObjectCreationMapper().adjustAssignment(declarationType.serializableBuilder().build(type.languageTypes.context()))}" +
+                    " = ${ObjectCreationMapper().map(declarationType.serializableBuilder().build(type.languageTypes.context()))}"
         }
 
         val valOrVar = if (complexStructure is DataClassApiType) "var" else "val"
@@ -147,29 +134,24 @@ open class ComplexStructureField(
         return base
     }
 
+    private fun getOptionalOf(type: ApiTypeLogic): ApiTypeLogic {
+        val optionalType = OptionalApiType(type)
+        optionalType.languageTypes = type.languageTypes
+        optionalType.typeModule = type.typeModule
+        optionalType.worldType = type.worldType
+        return optionalType
+    }
+
     // used by velocity
     fun createDeclaration(): String = internalCreateDeclaration(true)
     fun createDeclarationNoDefault(): String = internalCreateDeclaration(false)
 
     private fun internalCreateDeclaration(allowDefault: Boolean): String {
         val base = "${name}: ${type.name()}"
-
         if (allowDefault) {
             defaultValueBuilder()?.build(factory.languageTypes.context())?.let { defaultVal ->
                 if(type is SimpleValueObjectApiType) {
                     return "$base = ${(type as SimpleValueObjectApiType).constructorCall()}($defaultVal)"
-                }
-                if(type is OptionalApiType) {
-                    val wrappedType = (type as OptionalApiType).wrappedType
-                    if(wrappedType is SimpleValueObjectApiType) {
-                        val voCall = "${(wrappedType as SimpleValueObjectApiType).constructorCall()}($defaultVal)"
-                        if (type.languageTypes is TypeScriptTypes) {
-                            return "$base = Optional.of($voCall)"
-                        } else {
-                            // Kotlin: just the value, no Optional wrapping
-                            return "$base = $voCall"
-                        }
-                    }
                 }
                 return "$base = $defaultVal"
             }
@@ -248,21 +230,14 @@ open class ComplexStructureField(
     }
 
     private fun getterBody(): String {
-        val fieldName = "this.${privateName()}"
-        if (def.getDefaultValue() == null) {
-            return type.modernDeserialize(variable("this.${privateName()}")).build(type.languageTypes.context())
+        if(def.getDefaultValue() != null && type.languageTypes is TypeScriptTypes) {
+            val defaultVal = def.getDefaultValue()!!
+            return type.modernDeserialize(
+                variable("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $defaultVal"}")
+            ).build(type.languageTypes.context())
         }
 
-        val defaultVal = def.getDefaultValue()!!
-        when (type) {
-            is OptionalApiType -> {
-                val wrappedType = (type as OptionalApiType).wrappedType
-                val innerDeserialize = wrappedType.modernDeserialize(variable("it")).build(type.languageTypes.context())
-                return "Optional.of($fieldName ?? $defaultVal).map(it => $innerDeserialize)"
-            }
-            is BaseApiType -> return "$fieldName ?? $defaultVal"
-            else -> return type.modernDeserialize(variable("$fieldName ?? $defaultVal")).build(type.languageTypes.context())
-        }
+        return type.deserialize("this.${privateName()}")
     }
 
     fun setterName(): String {

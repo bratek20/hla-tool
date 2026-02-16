@@ -611,7 +611,6 @@ namespace SomeModule.Builder {
         customOpt?: any,
         goodDataName?: string,
         someDefault?: string,
-        someDefaultOpt?: string,
     }
     export function someData(def?: SomeDataDef): SomeData {
         const final_id = def?.id ?? "someValue"
@@ -620,7 +619,6 @@ namespace SomeModule.Builder {
         const final_customOpt = def?.customOpt ?? undefined
         const final_goodDataName = def?.goodDataName ?? "someValue"
         const final_someDefault = def?.someDefault ?? "defaultValue"
-        const final_someDefaultOpt = def?.someDefaultOpt ?? "defaultValue"
 
         return SomeData.create(
             new SomeId(final_id),
@@ -629,7 +627,6 @@ namespace SomeModule.Builder {
             Optional.of(final_customOpt),
             final_goodDataName,
             new SomeOtherId(final_someDefault),
-            Optional.of(final_someDefaultOpt).map(it => new SomeOtherId(it)),
         )
     }
 
