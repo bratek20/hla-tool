@@ -8,7 +8,7 @@ data class ${vo.name()}(
 ) {
     #foreach($getter in $vo.getters())
     fun ${getter.name}(): ${getter.type.name()} {
-        return ${getter.type.deserialize("this.${getter.field}")}
+        return ${getter.body}
     }
 
     #end

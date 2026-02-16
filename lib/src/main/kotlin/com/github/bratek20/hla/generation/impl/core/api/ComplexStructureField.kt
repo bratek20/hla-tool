@@ -1,9 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.architecture.exceptions.ShouldNeverHappenException
-import com.github.bratek20.codebuilder.builders.ExpressionBuilder
-import com.github.bratek20.codebuilder.builders.expression
-import com.github.bratek20.codebuilder.builders.nullValue
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
@@ -118,18 +116,30 @@ open class ComplexStructureField(
         return if(isPublic) finalPrefix else "private "
     }
 
-    // used by velocity
     fun classDeclaration(): String {
         if (type.languageTypes is TypeScriptTypes) {
-            val oc = ObjectCreationMapper()
-            return "${accessor()}${privateName()}${oc.adjustAssignment(type.serializableName())} = ${oc.map(type.serializableName())}"
+            val declarationType = if(def.getDefaultValue() != null) getOptionalOf(type) else type
+            val languageContext = type.languageTypes.context()
+            val base = "${accessor()}${privateName()}${ObjectCreationMapper().adjustAssignment(declarationType.serializableBuilder().build(languageContext))}"
+            val initializer = ObjectCreationMapper().map(declarationType.serializableBuilder().build(languageContext))
+
+            return "$base = $initializer"
         }
+
         val valOrVar = if (complexStructure is DataClassApiType) "var" else "val"
         val base = "${accessor()}${valOrVar} ${privateName()}: ${type.serializableName()}"
         defaultValue()?.let {
             return "$base = $it"
         }
         return base
+    }
+
+    private fun getOptionalOf(type: ApiTypeLogic): ApiTypeLogic {
+        val optionalType = OptionalApiType(type)
+        optionalType.languageTypes = type.languageTypes
+        optionalType.typeModule = type.typeModule
+        optionalType.worldType = type.worldType
+        return optionalType
     }
 
     // used by velocity
@@ -139,10 +149,14 @@ open class ComplexStructureField(
     private fun internalCreateDeclaration(allowDefault: Boolean): String {
         val base = "${name}: ${type.name()}"
         if (allowDefault) {
-            defaultValue()?.let {
+            defaultValueBuilder()?.build(factory.languageTypes.context())?.let {
+                if(type is SimpleValueObjectApiType) {
+                    return "$base = ${(type as SimpleValueObjectApiType).constructorCall()}($it)"
+                }
                 return "$base = $it"
             }
         }
+
         return base
     }
 
@@ -192,7 +206,7 @@ open class ComplexStructureField(
     }
 
     fun getter(): ComplexStructureGetter {
-        return ComplexStructureGetter(getterName(), type, privateName())
+        return ComplexStructureGetter(getterName(), type, getterBody())
     }
 
     //TODO-REF introduce setterBody and setterDeclaration? to simplify velocity
@@ -213,6 +227,17 @@ open class ComplexStructureField(
             }
         }
         return "get${camelToPascalCase(defName)}"
+    }
+
+    private fun getterBody(): String {
+        if(def.getDefaultValue() != null && type.languageTypes is TypeScriptTypes) {
+            val defaultVal = def.getDefaultValue()!!
+            return type.modernDeserialize(
+                hardcodedExpression("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $defaultVal"}")
+            ).build(type.languageTypes.context())
+        }
+
+        return type.deserialize("this.${privateName()}")
     }
 
     fun setterName(): String {

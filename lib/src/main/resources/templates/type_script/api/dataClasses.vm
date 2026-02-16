@@ -34,7 +34,7 @@ class ${p.name()} {
     #foreach($getter in $p.getters())
 
     ${getter.name}(): ${getter.type.name()} {
-        return ${getter.type.deserialize("this.${getter.field}")}
+        return ${getter.body}
     }
     #end
     #foreach($setter in $p.setters())
