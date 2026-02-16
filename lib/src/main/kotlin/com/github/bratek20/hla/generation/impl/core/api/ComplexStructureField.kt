@@ -236,7 +236,7 @@ open class ComplexStructureField(
         if(def.getDefaultValue() != null && type.languageTypes is TypeScriptTypes) {
             val defaultVal = def.getDefaultValue()!!
             return type.modernDeserialize(
-                variable("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $defaultVal"}")
+                expression("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $defaultVal"}")
             ).build(type.languageTypes.context())
         }
 
