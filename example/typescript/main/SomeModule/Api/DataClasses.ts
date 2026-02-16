@@ -51,29 +51,29 @@ class SomeData {
         return instance
     }
 
-        getId(): SomeId {
-            return new SomeId(this.id)
-        }
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
 
-        getOther(): OtherData {
-            return this.other
-        }
+    getOther(): OtherData {
+        return this.other
+    }
 
-        getCustom(): any {
-            return this.custom
-        }
+    getCustom(): any {
+        return this.custom
+    }
 
-        getCustomOpt(): Optional<any> {
-            return Optional.of(this.customOpt)
-        }
+    getCustomOpt(): Optional<any> {
+        return Optional.of(this.customOpt)
+    }
 
-        getGoodDataName(): string {
-            return this.gDN
-        }
+    getGoodDataName(): string {
+        return this.gDN
+    }
 
-        getSomeDefault(): SomeOtherId {
-            return new SomeOtherId(this.someDefault ?? "defaultValue")
-        }
+    getSomeDefault(): SomeOtherId {
+        return new SomeOtherId(this.someDefault ?? "defaultValue")
+    }
 
     setId(id: SomeId): void {
         this.id = id.getValue()
@@ -136,13 +136,13 @@ class SomeData2 {
         return instance
     }
 
-        getOptEnum(): Optional<SomeEnum> {
-            return Optional.of(this.optEnum).map(it => SomeEnum.fromName(it))
-        }
+    getOptEnum(): Optional<SomeEnum> {
+        return Optional.of(this.optEnum).map(it => SomeEnum.fromName(it))
+    }
 
-        getOptCustomType(): Optional<Date> {
-            return Optional.of(this.optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it))
-        }
+    getOptCustomType(): Optional<Date> {
+        return Optional.of(this.optCustomType).map(it => TypesModule.CustomTypesMapper.dateCreate(it))
+    }
 
     setOptEnum(optEnum: Optional<SomeEnum>): void {
         this.optEnum = optEnum.map(it => it.getName()).orElse(undefined)

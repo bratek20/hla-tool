@@ -33,9 +33,9 @@ class ${p.name()} {
     }
     #foreach($getter in $p.getters())
 
-        ${getter.name}(): ${getter.type.name()} {
-            return ${getter.body}
-        }
+    ${getter.name}(): ${getter.type.name()} {
+        return ${getter.body}
+    }
     #end
     #foreach($setter in $p.setters())
 
