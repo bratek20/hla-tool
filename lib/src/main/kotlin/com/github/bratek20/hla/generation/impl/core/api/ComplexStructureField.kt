@@ -1,10 +1,7 @@
 package com.github.bratek20.hla.generation.impl.core.api
 
 import com.github.bratek20.architecture.exceptions.ShouldNeverHappenException
-import com.github.bratek20.codebuilder.builders.ExpressionBuilder
-import com.github.bratek20.codebuilder.builders.expression
-import com.github.bratek20.codebuilder.builders.nullValue
-import com.github.bratek20.codebuilder.builders.variable
+import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.emptyHardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
@@ -236,7 +233,7 @@ open class ComplexStructureField(
         if(def.getDefaultValue() != null && type.languageTypes is TypeScriptTypes) {
             val defaultVal = def.getDefaultValue()!!
             return type.modernDeserialize(
-                expression("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $defaultVal"}")
+                hardcodedExpression("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $defaultVal"}")
             ).build(type.languageTypes.context())
         }
 
