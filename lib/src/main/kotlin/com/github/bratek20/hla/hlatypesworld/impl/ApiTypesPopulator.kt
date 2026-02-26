@@ -182,7 +182,7 @@ class ApiTypesPopulator(
     private fun createPatternPopulators(module: ModuleDefinition): List<ApiPatternPopulator> {
         val populators = listOf(
             SimpleValueObjectsPopulator(module.getSimpleValueObjects()),
-            ComplexValueObjectsPopulator(module.getComplexValueObjects()),
+            ComplexValueObjectsPopulator(module.getAllComplexValueObjects()),
 
             SimpleCustomTypesPopulator(module.getSimpleCustomTypes()),
             ComplexCustomTypesPopulator(module.getComplexCustomTypes()),
