@@ -13,7 +13,10 @@
       "Bash(for module in SomeModule OtherModule SimpleModule SomeUserModule NoInterfacesModule)",
       "Bash(do echo \"=== $module ===\")",
       "Bash(for module in SomeUserModule)",
-      "Bash(do echo \"=== Updating $module TypeScript ===\")"
+      "Bash(do echo \"=== Updating $module TypeScript ===\")",
+      "Bash(timeout 5 kotlinc:*)",
+      "Bash(chmod:*)",
+      "Bash(timeout:*)"
     ]
   }
 }
