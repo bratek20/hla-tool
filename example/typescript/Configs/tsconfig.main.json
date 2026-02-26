@@ -22,6 +22,10 @@
         //OnlyTrackingModule start
         //SomeUserModule start
 
+        //ModuleOnlyForMocksArgs start
+        "../main/ModuleOnlyForMocksArgs/Api/ValueObjects.ts",
+        //ModuleOnlyForMocksArgs end
+
         "../main/NoInterfacesModule/Api/ValueObjects.ts",
         //NoInterfacesModule end
 

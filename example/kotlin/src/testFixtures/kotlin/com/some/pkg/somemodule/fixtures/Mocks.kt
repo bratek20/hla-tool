@@ -4,6 +4,8 @@ package com.some.pkg.somemodule.fixtures
 
 import com.some.pkg.somemodule.api.*
 import org.assertj.core.api.Assertions.assertThat
+import com.some.pkg.moduleonlyformocksargs.fixtures.*
+import com.some.pkg.moduleonlyformocksargs.api.*
 import com.some.pkg.othermodule.fixtures.*
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.simplemodule.fixtures.*
@@ -316,5 +318,27 @@ open class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
         someDebugHandler2CallsNumber = 0
         someDebugHandler2Calls = mutableListOf()
         someDebugHandler2Response = {}
+    }
+}
+
+open class SomeInterfaceToTestMockArgsImportMock: SomeInterfaceToTestMockArgsImport {
+    private var someMethodCallsNumber: Int = 0
+    private var someMethodCalls: MutableList<MockArg> = mutableListOf()
+    override fun someMethod(arg: MockArg): Unit {
+        someMethodCallsNumber = someMethodCallsNumber + 1
+        someMethodCalls.add(arg)
+    }
+    fun assertSomeMethodCallsNumber(expectedNumber: Int) {
+        assertThat(someMethodCallsNumber).withFailMessage("Expected 'someMethod' to be called " + expectedNumber + " times but was called " + someMethodCallsNumber + " times").isEqualTo(expectedNumber)
+    }
+    fun assertSomeMethodCalls(expectedArgs: List<String>) {
+        assertSomeMethodCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertMockArg(someMethodCalls[i], expectedArgs[i])
+        }
+    }
+    fun reset() {
+        someMethodCallsNumber = 0
+        someMethodCalls = mutableListOf()
     }
 }

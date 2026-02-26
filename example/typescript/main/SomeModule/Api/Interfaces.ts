@@ -45,6 +45,10 @@ interface SomeInterface3 {
     referenceOtherInterface(other: OtherInterface): OtherInterface
 }
 
+interface SomeInterfaceToTestMockArgsImport {
+    someMethod(arg: MockArg): void
+}
+
 interface SomeModuleHandlers {
     /**
      * @throws { SomeException }

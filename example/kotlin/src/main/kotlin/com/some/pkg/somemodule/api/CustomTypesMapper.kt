@@ -1,5 +1,6 @@
 package com.some.pkg.somemodule.api
 
+import com.some.pkg.moduleonlyformocksargs.api.*
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*

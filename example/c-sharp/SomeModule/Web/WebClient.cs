@@ -6,6 +6,7 @@ using System.Linq;
 using B20.Ext;
 using HttpClientModule.Api;
 using SomeModule.Api;
+using ModuleOnlyForMocksArgs.Api;
 using OtherModule.Api;
 using SimpleModule.Api;
 using TypesModule.Api;

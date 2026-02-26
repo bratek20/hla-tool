@@ -5,6 +5,7 @@ using B20.Ext;
 using B20.ViewModel.Windows.Api;
 using B20.ViewModel.Popups.Api;
 using SomeModule.Api;
+using ModuleOnlyForMocksArgs.Api;
 using OtherModule.Api;
 using OtherModule.ViewModel;
 using SimpleModule.Api;

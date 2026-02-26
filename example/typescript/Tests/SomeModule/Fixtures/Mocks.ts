@@ -308,6 +308,28 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     }
 }
 
+class SomeInterfaceToTestMockArgsImportMock implements SomeInterfaceToTestMockArgsImport {
+    private someMethodCallsNumber: number = 0
+    private someMethodCalls: MockArg[] = []
+    someMethod(arg: MockArg): void {
+        this.someMethodCallsNumber = this.someMethodCallsNumber + 1
+        this.someMethodCalls.push(arg)
+    }
+    assertSomeMethodCallsNumber(expectedNumber: number) {
+        AssertEquals(this.someMethodCallsNumber, expectedNumber, "Expected 'someMethod' to be called " + expectedNumber + " times but was called " + this.someMethodCallsNumber + " times")
+    }
+    assertSomeMethodCalls(expectedArgs: string[]) {
+        this.assertSomeMethodCallsNumber(expectedArgs.length)
+        for (let i = 0; i < expectedArgs.length; i++) {
+            ModuleOnlyForMocksArgs.Assert.mockArg(this.someMethodCalls[i], expectedArgs[i])
+        }
+    }
+    reset() {
+        this.someMethodCallsNumber = 0
+        this.someMethodCalls = []
+    }
+}
+
 namespace SomeModule.Mocks {
     export function createSomeInterfaceMock(): SomeInterfaceMock {
         return new SomeInterfaceMock()
@@ -358,6 +380,16 @@ namespace SomeModule.Mocks {
         const mock = SomeModule.Mocks.createSomeModuleDebugHandlersMock()
         SomeModule.Api.someDebugHandler = CreateMock(SomeModule.Api.someDebugHandler, (i: SomeHandlerInput) => { return mock.someDebugHandler(i) })
         SomeModule.Api.someDebugHandler2 = CreateMock(SomeModule.Api.someDebugHandler2, (i: SomeHandlerInput) => { return mock.someDebugHandler2(i) })
+        return mock
+    }
+
+    export function createSomeInterfaceToTestMockArgsImportMock(): SomeInterfaceToTestMockArgsImportMock {
+        return new SomeInterfaceToTestMockArgsImportMock()
+    }
+
+    export function setupSomeInterfaceToTestMockArgsImport(): SomeInterfaceToTestMockArgsImportMock {
+        const mock = SomeModule.Mocks.createSomeInterfaceToTestMockArgsImportMock()
+        SomeModule.Api.someMethod = CreateMock(SomeModule.Api.someMethod, (arg: MockArg) => { mock.someMethod(arg) })
         return mock
     }
 }

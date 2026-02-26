@@ -261,6 +261,9 @@ Interfaces
         referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
         referenceOtherInterface(other: OtherInterface): OtherInterface
 
+    SomeInterfaceToTestMockArgsImport
+        someMethod(arg: MockArg)
+
     SomeModuleHandlers
         SomeHandlerInput
             id: SomeId
@@ -315,6 +318,7 @@ Fixtures
         SomeInterface2
         SomeModuleHandlers
         SomeModuleDebugHandlers
+        SomeInterfaceToTestMockArgsImport
 
 ViewModel
     EnumSwitches

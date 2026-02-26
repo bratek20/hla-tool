@@ -2,6 +2,7 @@ package com.some.pkg.somemodule.impl
 
 import com.some.pkg.somemodule.api.*
 
+import com.some.pkg.moduleonlyformocksargs.api.*
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.simplemodule.api.*
 import com.some.pkg.typesmodule.api.*
@@ -67,6 +68,12 @@ class SomeInterface3Logic: SomeInterface3 {
     }
 
     override fun referenceOtherInterface(other: OtherInterface): OtherInterface {
+        TODO("Not yet implemented")
+    }
+}
+
+class SomeInterfaceToTestMockArgsImportLogic: SomeInterfaceToTestMockArgsImport {
+    override fun someMethod(arg: MockArg): Unit {
         TODO("Not yet implemented")
     }
 }

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
 using SomeModule.Api;
+using ModuleOnlyForMocksArgs.Api;
+using ModuleOnlyForMocksArgs.Fixtures;
 using OtherModule.Api;
 using OtherModule.Fixtures;
 using SimpleModule.Api;

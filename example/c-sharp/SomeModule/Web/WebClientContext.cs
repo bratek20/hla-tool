@@ -7,6 +7,7 @@ using B20.Ext;
 using B20.Architecture.Contexts.Api;
 using HttpClientModule.Api;
 using SomeModule.Api;
+using ModuleOnlyForMocksArgs.Api;
 using OtherModule.Api;
 using SimpleModule.Api;
 using TypesModule.Api;
