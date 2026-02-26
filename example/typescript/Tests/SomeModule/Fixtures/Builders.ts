@@ -593,6 +593,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface SomeInterfaceToTestMockArgsImportSomeMethodArgsDef {
+        arg1?: string,
+        arg2?: string,
+    }
+    export function someInterfaceToTestMockArgsImportSomeMethodArgs(def?: SomeInterfaceToTestMockArgsImportSomeMethodArgsDef): SomeInterfaceToTestMockArgsImportSomeMethodArgs {
+        const final_arg1 = def?.arg1 ?? "someValue"
+        const final_arg2 = def?.arg2 ?? "someValue"
+
+        return SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(
+            new MockArg(final_arg1),
+            new MockArg(final_arg2),
+        )
+    }
+
     export interface DateRangeWrapperDef {
         range?: TypesModule.Builder.DateRangeDef,
     }

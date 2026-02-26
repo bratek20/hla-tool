@@ -323,18 +323,18 @@ open class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
 
 open class SomeInterfaceToTestMockArgsImportMock: SomeInterfaceToTestMockArgsImport {
     private var someMethodCallsNumber: Int = 0
-    private var someMethodCalls: MutableList<MockArg> = mutableListOf()
-    override fun someMethod(arg: MockArg): Unit {
+    private var someMethodCalls: MutableList<SomeInterfaceToTestMockArgsImportSomeMethodArgs> = mutableListOf()
+    override fun someMethod(arg1: MockArg, arg2: MockArg): Unit {
         someMethodCallsNumber = someMethodCallsNumber + 1
-        someMethodCalls.add(arg)
+        someMethodCalls.add(SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(arg1, arg2))
     }
     fun assertSomeMethodCallsNumber(expectedNumber: Int) {
         assertThat(someMethodCallsNumber).withFailMessage("Expected 'someMethod' to be called " + expectedNumber + " times but was called " + someMethodCallsNumber + " times").isEqualTo(expectedNumber)
     }
-    fun assertSomeMethodCalls(expectedArgs: List<String>) {
+    fun assertSomeMethodCalls(expectedArgs: List<(ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs.() -> Unit)>) {
         assertSomeMethodCallsNumber(expectedArgs.size)
         for (i in 0 until expectedArgs.size) {
-            assertMockArg(someMethodCalls[i], expectedArgs[i])
+            assertSomeInterfaceToTestMockArgsImportSomeMethodArgs(someMethodCalls[i], expectedArgs[i])
         }
     }
     fun reset() {

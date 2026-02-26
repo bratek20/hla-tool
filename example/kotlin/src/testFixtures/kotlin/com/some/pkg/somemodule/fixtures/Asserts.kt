@@ -233,6 +233,11 @@ fun assertSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expe
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertSomeInterfaceToTestMockArgsImportSomeMethodArgs(given: SomeInterfaceToTestMockArgsImportSomeMethodArgs, expectedInit: ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs.() -> Unit) {
+    val diff = diffSomeInterfaceToTestMockArgsImportSomeMethodArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertDateRangeWrapper(given: DateRangeWrapper, expectedInit: ExpectedDateRangeWrapper.() -> Unit) {
     val diff = diffDateRangeWrapper(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

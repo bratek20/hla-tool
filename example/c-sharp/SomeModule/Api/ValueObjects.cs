@@ -7,6 +7,7 @@ using B20.Ext;
 using OtherModule.Api;
 using TypesModule.Api;
 using SimpleModule.Api;
+using ModuleOnlyForMocksArgs.Api;
 
 namespace SomeModule.Api {
     public class SomeId: ValueObject {
@@ -976,6 +977,28 @@ namespace SomeModule.Api {
         }
         public static SomeInterfaceSomeCommandArgs Create(SomeId id, int amount) {
             return new SomeInterfaceSomeCommandArgs(id.Value, amount);
+        }
+    }
+
+    public class SomeInterfaceToTestMockArgsImportSomeMethodArgs: ValueObject {
+        readonly string arg1;
+        readonly string arg2;
+
+        public SomeInterfaceToTestMockArgsImportSomeMethodArgs(
+            string arg1,
+            string arg2
+        ) {
+            this.arg1 = arg1;
+            this.arg2 = arg2;
+        }
+        public MockArg GetArg1() {
+            return new MockArg(arg1);
+        }
+        public MockArg GetArg2() {
+            return new MockArg(arg2);
+        }
+        public static SomeInterfaceToTestMockArgsImportSomeMethodArgs Create(MockArg arg1, MockArg arg2) {
+            return new SomeInterfaceToTestMockArgsImportSomeMethodArgs(arg1.Value, arg2.Value);
         }
     }
 }

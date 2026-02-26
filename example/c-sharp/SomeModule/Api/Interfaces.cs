@@ -52,7 +52,7 @@ namespace SomeModule.Api {
     }
 
     public interface SomeInterfaceToTestMockArgsImport {
-        void SomeMethod(MockArg arg);
+        void SomeMethod(MockArg arg1, MockArg arg2);
     }
 
     public interface SomeModuleHandlers {

@@ -98,7 +98,7 @@ namespace SomeModule.Impl {
             private readonly c: HandlerContext,
         ) {}
 
-        someMethod(arg: MockArg): void {
+        someMethod(arg1: MockArg, arg2: MockArg): void {
             // TODO
             return undefined
         }

@@ -517,6 +517,18 @@ fun someInterfaceSomeCommandArgs(init: SomeInterfaceSomeCommandArgsDef.() -> Uni
     )
 }
 
+data class SomeInterfaceToTestMockArgsImportSomeMethodArgsDef(
+    var arg1: String = "someValue",
+    var arg2: String = "someValue",
+)
+fun someInterfaceToTestMockArgsImportSomeMethodArgs(init: SomeInterfaceToTestMockArgsImportSomeMethodArgsDef.() -> Unit = {}): SomeInterfaceToTestMockArgsImportSomeMethodArgs {
+    val def = SomeInterfaceToTestMockArgsImportSomeMethodArgsDef().apply(init)
+    return SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(
+        arg1 = MockArg(def.arg1),
+        arg2 = MockArg(def.arg2),
+    )
+}
+
 data class DateRangeWrapperDef(
     var range: (DateRangeDef.() -> Unit) = {},
 )

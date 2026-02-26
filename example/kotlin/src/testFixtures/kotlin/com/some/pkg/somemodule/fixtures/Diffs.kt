@@ -937,6 +937,25 @@ fun diffSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expect
     return result.joinToString("\n")
 }
 
+data class ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs(
+    var arg1: String? = null,
+    var arg2: String? = null,
+)
+fun diffSomeInterfaceToTestMockArgsImportSomeMethodArgs(given: SomeInterfaceToTestMockArgsImportSomeMethodArgs, expectedInit: ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.arg1?.let {
+        if (diffMockArg(given.getArg1(), it) != "") { result.add(diffMockArg(given.getArg1(), it, "${path}arg1.")) }
+    }
+
+    expected.arg2?.let {
+        if (diffMockArg(given.getArg2(), it) != "") { result.add(diffMockArg(given.getArg2(), it, "${path}arg2.")) }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedDateRangeWrapper(
     var range: (ExpectedDateRange.() -> Unit)? = null,
 )

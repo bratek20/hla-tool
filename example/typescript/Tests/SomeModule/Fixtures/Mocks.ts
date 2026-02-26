@@ -310,18 +310,18 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
 
 class SomeInterfaceToTestMockArgsImportMock implements SomeInterfaceToTestMockArgsImport {
     private someMethodCallsNumber: number = 0
-    private someMethodCalls: MockArg[] = []
-    someMethod(arg: MockArg): void {
+    private someMethodCalls: SomeInterfaceToTestMockArgsImportSomeMethodArgs[] = []
+    someMethod(arg1: MockArg, arg2: MockArg): void {
         this.someMethodCallsNumber = this.someMethodCallsNumber + 1
-        this.someMethodCalls.push(arg)
+        this.someMethodCalls.push(SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(arg1, arg2))
     }
     assertSomeMethodCallsNumber(expectedNumber: number) {
         AssertEquals(this.someMethodCallsNumber, expectedNumber, "Expected 'someMethod' to be called " + expectedNumber + " times but was called " + this.someMethodCallsNumber + " times")
     }
-    assertSomeMethodCalls(expectedArgs: string[]) {
+    assertSomeMethodCalls(expectedArgs: SomeModule.ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs[]) {
         this.assertSomeMethodCallsNumber(expectedArgs.length)
         for (let i = 0; i < expectedArgs.length; i++) {
-            ModuleOnlyForMocksArgs.Assert.mockArg(this.someMethodCalls[i], expectedArgs[i])
+            SomeModule.Assert.someInterfaceToTestMockArgsImportSomeMethodArgs(this.someMethodCalls[i], expectedArgs[i])
         }
     }
     reset() {
@@ -389,7 +389,7 @@ namespace SomeModule.Mocks {
 
     export function setupSomeInterfaceToTestMockArgsImport(): SomeInterfaceToTestMockArgsImportMock {
         const mock = SomeModule.Mocks.createSomeInterfaceToTestMockArgsImportMock()
-        SomeModule.Api.someMethod = CreateMock(SomeModule.Api.someMethod, (arg: MockArg) => { mock.someMethod(arg) })
+        SomeModule.Api.someMethod = CreateMock(SomeModule.Api.someMethod, (arg1: MockArg, arg2: MockArg) => { mock.someMethod(arg1, arg2) })
         return mock
     }
 }

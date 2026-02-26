@@ -262,7 +262,7 @@ Interfaces
         referenceOtherInterface(other: OtherInterface): OtherInterface
 
     SomeInterfaceToTestMockArgsImport
-        someMethod(arg: MockArg)
+        someMethod(arg1: MockArg, arg2: MockArg)
 
     SomeModuleHandlers
         SomeHandlerInput

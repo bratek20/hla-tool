@@ -216,6 +216,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someInterfaceToTestMockArgsImportSomeMethodArgs(given: SomeInterfaceToTestMockArgsImportSomeMethodArgs, expected: ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs) {
+        const diff = diffSomeInterfaceToTestMockArgsImportSomeMethodArgs(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function dateRangeWrapper(given: DateRangeWrapper, expected: ExpectedDateRangeWrapper) {
         const diff = diffDateRangeWrapper(given, expected)
         AssertEquals(diff, "", diff)

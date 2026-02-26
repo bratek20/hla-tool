@@ -73,7 +73,7 @@ class SomeInterface3Logic: SomeInterface3 {
 }
 
 class SomeInterfaceToTestMockArgsImportLogic: SomeInterfaceToTestMockArgsImport {
-    override fun someMethod(arg: MockArg): Unit {
+    override fun someMethod(arg1: MockArg, arg2: MockArg): Unit {
         TODO("Not yet implemented")
     }
 }

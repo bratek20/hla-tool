@@ -220,6 +220,11 @@ namespace SomeModule.Fixtures {
         public int Amount { get; set; } = 0;
     }
 
+    public class SomeInterfaceToTestMockArgsImportSomeMethodArgsDef {
+        public string Arg1 { get; set; } = "someValue";
+        public string Arg2 { get; set; } = "someValue";
+    }
+
     public class DateRangeWrapperDef {
         public Action<DateRangeDef> Range { get; set; } = (_) => {};
     }
@@ -490,6 +495,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return SomeInterfaceSomeCommandArgs.Create(new SomeId(def.Id), def.Amount);
+        }
+        public static SomeInterfaceToTestMockArgsImportSomeMethodArgs BuildSomeInterfaceToTestMockArgsImportSomeMethodArgs(Action<SomeInterfaceToTestMockArgsImportSomeMethodArgsDef> init = null) {
+            var def = new SomeInterfaceToTestMockArgsImportSomeMethodArgsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeInterfaceToTestMockArgsImportSomeMethodArgs.Create(new MockArg(def.Arg1), new MockArg(def.Arg2));
         }
         public static DateRangeWrapper BuildDateRangeWrapper(Action<DateRangeWrapperDef> init = null) {
             var def = new DateRangeWrapperDef();

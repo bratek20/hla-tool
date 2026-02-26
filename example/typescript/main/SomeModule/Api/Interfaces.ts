@@ -46,7 +46,7 @@ interface SomeInterface3 {
 }
 
 interface SomeInterfaceToTestMockArgsImport {
-    someMethod(arg: MockArg): void
+    someMethod(arg1: MockArg, arg2: MockArg): void
 }
 
 interface SomeModuleHandlers {

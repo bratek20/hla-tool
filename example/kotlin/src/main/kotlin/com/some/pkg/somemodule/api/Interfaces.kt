@@ -53,7 +53,7 @@ interface SomeInterface3 {
 }
 
 interface SomeInterfaceToTestMockArgsImport {
-    fun someMethod(arg: MockArg): Unit
+    fun someMethod(arg1: MockArg, arg2: MockArg): Unit
 }
 
 interface SomeModuleHandlers {

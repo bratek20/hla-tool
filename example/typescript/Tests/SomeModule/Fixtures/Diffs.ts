@@ -886,6 +886,24 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs {
+        arg1?: string,
+        arg2?: string,
+    }
+    export function diffSomeInterfaceToTestMockArgsImportSomeMethodArgs(given: SomeInterfaceToTestMockArgsImportSomeMethodArgs, expected: ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.arg1 !== undefined) {
+            if (ModuleOnlyForMocksArgs.diffMockArg(given.getArg1(), expected.arg1) != "") { result.push(ModuleOnlyForMocksArgs.diffMockArg(given.getArg1(), expected.arg1, `${path}arg1.`)) }
+        }
+
+        if (expected.arg2 !== undefined) {
+            if (ModuleOnlyForMocksArgs.diffMockArg(given.getArg2(), expected.arg2) != "") { result.push(ModuleOnlyForMocksArgs.diffMockArg(given.getArg2(), expected.arg2, `${path}arg2.`)) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedDateRangeWrapper {
         range?: TypesModule.ExpectedDateRange,
     }
