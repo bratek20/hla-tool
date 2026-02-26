@@ -1623,3 +1623,39 @@ class SomeInterfaceSomeCommandArgs {
         return this.amount
     }
 }
+
+class SomeInterfaceToTestMockArgsImportSomeMethodArgs {
+    private arg1 = STRING
+    private arg2 = STRING
+
+    static create(
+        arg1: MockArg,
+        arg2: MockArg,
+    ): SomeInterfaceToTestMockArgsImportSomeMethodArgs {
+        const instance = new SomeInterfaceToTestMockArgsImportSomeMethodArgs()
+        instance.arg1 = arg1.getValue()
+        instance.arg2 = arg2.getValue()
+        return instance
+    }
+
+    static createNamed({
+        arg1,
+        arg2,
+    }: {
+        arg1: MockArg;
+        arg2: MockArg;
+    }): SomeInterfaceToTestMockArgsImportSomeMethodArgs {
+        const instance = new SomeInterfaceToTestMockArgsImportSomeMethodArgs()
+        instance.arg1 = arg1.getValue()
+        instance.arg2 = arg2.getValue()
+        return instance
+    }
+
+    getArg1(): MockArg {
+        return new MockArg(this.arg1)
+    }
+
+    getArg2(): MockArg {
+        return new MockArg(this.arg2)
+    }
+}

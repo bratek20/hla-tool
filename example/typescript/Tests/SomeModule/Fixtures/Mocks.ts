@@ -308,6 +308,28 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
     }
 }
 
+class SomeInterfaceToTestMockArgsImportMock implements SomeInterfaceToTestMockArgsImport {
+    private someMethodCallsNumber: number = 0
+    private someMethodCalls: SomeInterfaceToTestMockArgsImportSomeMethodArgs[] = []
+    someMethod(arg1: MockArg, arg2: MockArg): void {
+        this.someMethodCallsNumber = this.someMethodCallsNumber + 1
+        this.someMethodCalls.push(SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(arg1, arg2))
+    }
+    assertSomeMethodCallsNumber(expectedNumber: number) {
+        AssertEquals(this.someMethodCallsNumber, expectedNumber, "Expected 'someMethod' to be called " + expectedNumber + " times but was called " + this.someMethodCallsNumber + " times")
+    }
+    assertSomeMethodCalls(expectedArgs: SomeModule.ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs[]) {
+        this.assertSomeMethodCallsNumber(expectedArgs.length)
+        for (let i = 0; i < expectedArgs.length; i++) {
+            SomeModule.Assert.someInterfaceToTestMockArgsImportSomeMethodArgs(this.someMethodCalls[i], expectedArgs[i])
+        }
+    }
+    reset() {
+        this.someMethodCallsNumber = 0
+        this.someMethodCalls = []
+    }
+}
+
 namespace SomeModule.Mocks {
     export function createSomeInterfaceMock(): SomeInterfaceMock {
         return new SomeInterfaceMock()
@@ -358,6 +380,16 @@ namespace SomeModule.Mocks {
         const mock = SomeModule.Mocks.createSomeModuleDebugHandlersMock()
         SomeModule.Api.someDebugHandler = CreateMock(SomeModule.Api.someDebugHandler, (i: SomeHandlerInput) => { return mock.someDebugHandler(i) })
         SomeModule.Api.someDebugHandler2 = CreateMock(SomeModule.Api.someDebugHandler2, (i: SomeHandlerInput) => { return mock.someDebugHandler2(i) })
+        return mock
+    }
+
+    export function createSomeInterfaceToTestMockArgsImportMock(): SomeInterfaceToTestMockArgsImportMock {
+        return new SomeInterfaceToTestMockArgsImportMock()
+    }
+
+    export function setupSomeInterfaceToTestMockArgsImport(): SomeInterfaceToTestMockArgsImportMock {
+        const mock = SomeModule.Mocks.createSomeInterfaceToTestMockArgsImportMock()
+        SomeModule.Api.someMethod = CreateMock(SomeModule.Api.someMethod, (arg1: MockArg, arg2: MockArg) => { mock.someMethod(arg1, arg2) })
         return mock
     }
 }

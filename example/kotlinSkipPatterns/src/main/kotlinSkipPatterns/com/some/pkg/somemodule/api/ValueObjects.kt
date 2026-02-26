@@ -2,6 +2,7 @@
 
 package src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api
 
+import src.main.kotlinSkipPatterns.com.some.pkg.moduleonlyformocksargs.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.api.*
@@ -1102,6 +1103,31 @@ data class SomeInterfaceSomeCommandArgs(
             return SomeInterfaceSomeCommandArgs(
                 id = id.value,
                 amount = amount,
+            )
+        }
+    }
+}
+
+data class SomeInterfaceToTestMockArgsImportSomeMethodArgs(
+    private val arg1: String,
+    private val arg2: String,
+) {
+    fun getArg1(): MockArg {
+        return MockArg(this.arg1)
+    }
+
+    fun getArg2(): MockArg {
+        return MockArg(this.arg2)
+    }
+
+    companion object {
+        fun create(
+            arg1: MockArg,
+            arg2: MockArg,
+        ): SomeInterfaceToTestMockArgsImportSomeMethodArgs {
+            return SomeInterfaceToTestMockArgsImportSomeMethodArgs(
+                arg1 = arg1.value,
+                arg2 = arg2.value,
             )
         }
     }

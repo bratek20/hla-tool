@@ -2,6 +2,8 @@
 
 package com.some.pkg.somemodule.fixtures
 
+import com.some.pkg.moduleonlyformocksargs.api.*
+import com.some.pkg.moduleonlyformocksargs.fixtures.*
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
 import com.some.pkg.simplemodule.api.*
@@ -512,6 +514,18 @@ fun someInterfaceSomeCommandArgs(init: SomeInterfaceSomeCommandArgsDef.() -> Uni
     return SomeInterfaceSomeCommandArgs.create(
         id = SomeId(def.id),
         amount = def.amount,
+    )
+}
+
+data class SomeInterfaceToTestMockArgsImportSomeMethodArgsDef(
+    var arg1: String = "someValue",
+    var arg2: String = "someValue",
+)
+fun someInterfaceToTestMockArgsImportSomeMethodArgs(init: SomeInterfaceToTestMockArgsImportSomeMethodArgsDef.() -> Unit = {}): SomeInterfaceToTestMockArgsImportSomeMethodArgs {
+    val def = SomeInterfaceToTestMockArgsImportSomeMethodArgsDef().apply(init)
+    return SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(
+        arg1 = MockArg(def.arg1),
+        arg2 = MockArg(def.arg2),
     )
 }
 

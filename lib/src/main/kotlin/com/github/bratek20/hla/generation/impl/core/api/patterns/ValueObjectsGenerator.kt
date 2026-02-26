@@ -6,6 +6,7 @@ import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.apitypes.impl.ComplexValueObjectApiType
 import com.github.bratek20.hla.apitypes.impl.SimpleValueObjectApiType
+import com.github.bratek20.hla.queries.api.getAllComplexValueObjects
 import com.github.bratek20.utils.directory.api.FileContent
 
 class ValueObjectsGenerator: PatternGenerator() {
@@ -14,7 +15,7 @@ class ValueObjectsGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
-        return module.getSimpleValueObjects().isNotEmpty() || modules.getComplexValueObjects(module).isNotEmpty()
+        return module.getSimpleValueObjects().isNotEmpty() || module.getAllComplexValueObjects().isNotEmpty()
     }
 
     override fun useImportsCalculator(): Boolean {
@@ -29,7 +30,7 @@ class ValueObjectsGenerator: PatternGenerator() {
         val simpleVOs = module.getSimpleValueObjects().map {
             apiTypeFactory.create<SimpleValueObjectApiType>(it)
         }
-        val complexVOs = modules.getComplexValueObjects(module).map {
+        val complexVOs = module.getAllComplexValueObjects().map {
             apiTypeFactory.create<ComplexValueObjectApiType>(it)
         }
         simpleVOs.forEach {
@@ -42,7 +43,7 @@ class ValueObjectsGenerator: PatternGenerator() {
 
     override fun generateFileContent(): FileContent? {
         val simpleValueObjects = module.getSimpleValueObjects().map { apiTypeFactory.create<SimpleValueObjectApiType>(it) }
-        val complexValueObjects = modules.getComplexValueObjects(module).map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
+        val complexValueObjects = module.getAllComplexValueObjects().map { apiTypeFactory.create<ComplexValueObjectApiType>(it) }
 
         if (simpleValueObjects.isEmpty() && complexValueObjects.isEmpty()) {
             return null

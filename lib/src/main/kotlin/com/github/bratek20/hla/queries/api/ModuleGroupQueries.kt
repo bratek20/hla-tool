@@ -113,12 +113,8 @@ open class BaseModuleGroupQueries(
         return module.getSimpleValueObjects().find { it.getName() == type.getName() }
     }
 
-    fun getComplexValueObjects(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return module.getComplexValueObjects() + defsForMockedInterfaceArgs(module)
-    }
-
     private fun findComplexValueObject(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
-        return getComplexValueObjects(module).find { it.getName() == type.getName() }
+        return module.getAllComplexValueObjects().find { it.getName() == type.getName() }
     }
 
     private fun findDataClass(type: TypeDefinition, module: ModuleDefinition): ComplexStructureDefinition? {
@@ -158,7 +154,7 @@ open class BaseModuleGroupQueries(
         return groups
     }
 
-    fun findTypeModuleName(typeName: String): ModuleName? {
+    private fun findTypeModuleName(typeName: String): ModuleName? {
         allTypeNames().forEach { (moduleName, typeNames) ->
             if (typeNames.contains(typeName)) {
                 return moduleName
@@ -215,7 +211,7 @@ open class BaseModuleGroupQueries(
     }
 
     fun allComplexStructureDefinitions(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        var defs = getComplexValueObjects(module) +
+        var defs = module.getAllComplexValueObjects() +
                 module.getComplexCustomTypes() +
                 module.getDataClasses()
         val profile = getGroup(module.getName()).getProfile()
@@ -226,32 +222,6 @@ open class BaseModuleGroupQueries(
             defs = defs + module.getEvents()
         }
         return defs
-    }
-
-    private fun defsForMockedInterfaceArgs(module: ModuleDefinition): List<ComplexStructureDefinition> {
-        return getMockedInterfaces(module).flatMap { interf ->
-            interf.getMethods().mapNotNull { method ->
-                if (method.getArgs().size > 1) {
-                    val argsName = methodsArgsTypeName(interf, method)
-                    methodArgsToStructure(argsName, method.getArgs())
-                }
-                else null
-            }
-        }
-    }
-
-    private fun methodArgsToStructure(name: String, args: List<ArgumentDefinition>): ComplexStructureDefinition {
-        return ComplexStructureDefinition.create(
-            name = name,
-            fields = args.map { arg ->
-                FieldDefinition.create(
-                    name = arg.getName(),
-                    type = arg.getType(),
-                    attributes = emptyList(),
-                    defaultValue = null
-                )
-            },
-        )
     }
 
     private fun allTypeNames(): List<Pair<ModuleName, List<String>>> {
@@ -279,11 +249,41 @@ open class BaseModuleGroupQueries(
             )
         }
     }
+}
 
-    fun getMockedInterfaces(module: ModuleDefinition): List<InterfaceDefinition> {
-        return (module.getFixturesSubmodule()?.getMockedInterfaces() ?: emptyList())
-            .map { module.getInterfaces().first { i -> i.getName() == it } }
+fun ModuleDefinition.defsForMockedInterfaceArgs(): List<ComplexStructureDefinition> {
+    return this.getMockedInterfaces().flatMap { interf ->
+        interf.getMethods().mapNotNull { method ->
+            if (method.getArgs().size > 1) {
+                val argsName = methodsArgsTypeName(interf, method)
+                methodArgsToStructure(argsName, method.getArgs())
+            }
+            else null
+        }
     }
+}
+
+fun ModuleDefinition.getAllComplexValueObjects(): List<ComplexStructureDefinition> {
+    return this.getComplexValueObjects() + this.defsForMockedInterfaceArgs()
+}
+
+private fun methodArgsToStructure(name: String, args: List<ArgumentDefinition>): ComplexStructureDefinition {
+    return ComplexStructureDefinition.create(
+        name = name,
+        fields = args.map { arg ->
+            FieldDefinition.create(
+                name = arg.getName(),
+                type = arg.getType(),
+                attributes = emptyList(),
+                defaultValue = null
+            )
+        },
+    )
+}
+
+fun ModuleDefinition.getMockedInterfaces(): List<InterfaceDefinition> {
+    return (this.getFixturesSubmodule()?.getMockedInterfaces() ?: emptyList())
+        .map { this.getInterfaces().first { i -> i.getName() == it } }
 }
 
 class ModuleGroupQueries(

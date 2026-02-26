@@ -17,6 +17,14 @@
         //TypesModule start
         //OnlyTrackingModule start
         //SomeUserModule start
+        //ModuleOnlyForMocksArgs start
+
+        "../Tests/ModuleOnlyForMocksArgs/Fixtures/Builders.ts",
+        "../Tests/ModuleOnlyForMocksArgs/Fixtures/Diffs.ts",
+        "../Tests/ModuleOnlyForMocksArgs/Fixtures/Asserts.ts",
+
+        "../Tests/ModuleOnlyForMocksArgs/Tests/ImplTest.ts",
+        //ModuleOnlyForMocksArgs end
 
         "../Tests/NoInterfacesModule/Fixtures/Builders.ts",
         "../Tests/NoInterfacesModule/Fixtures/Diffs.ts",

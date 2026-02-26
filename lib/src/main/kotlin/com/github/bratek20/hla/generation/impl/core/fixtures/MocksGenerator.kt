@@ -18,6 +18,7 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.hla.generation.impl.languages.typescript.addModulePrefix
 import com.github.bratek20.hla.queries.api.ModuleGroupQueries
+import com.github.bratek20.hla.queries.api.getMockedInterfaces
 import com.github.bratek20.hla.queries.api.methodsArgsTypeName
 import com.github.bratek20.utils.camelToPascalCase
 
@@ -444,7 +445,7 @@ class MocksGenerator: PatternGenerator() {
     }
 
     private fun getMockedInterfaces(): List<InterfaceDefinition> {
-        return modules.getMockedInterfaces(module)
+        return module.getMockedInterfaces()
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {

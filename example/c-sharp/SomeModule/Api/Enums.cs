@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
+using ModuleOnlyForMocksArgs.Api;
 using OtherModule.Api;
 using SimpleModule.Api;
 using TypesModule.Api;

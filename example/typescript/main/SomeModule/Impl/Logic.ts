@@ -93,6 +93,17 @@ namespace SomeModule.Impl {
         }
     }
 
+    export class SomeInterfaceToTestMockArgsImportLogic implements SomeInterfaceToTestMockArgsImport {
+        constructor(
+            private readonly c: HandlerContext,
+        ) {}
+
+        someMethod(arg1: MockArg, arg2: MockArg): void {
+            // TODO
+            return undefined
+        }
+    }
+
     export class SomeModuleHandlersLogic implements SomeModuleHandlers {
         constructor(
             private readonly c: HandlerContext,

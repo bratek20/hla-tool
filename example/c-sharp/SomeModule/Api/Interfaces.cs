@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
+using ModuleOnlyForMocksArgs.Api;
 using OtherModule.Api;
 using SimpleModule.Api;
 using TypesModule.Api;
@@ -48,6 +49,10 @@ namespace SomeModule.Api {
         SomeEmptyInterface ReferenceInterface(SomeEmptyInterface empty);
 
         OtherInterface ReferenceOtherInterface(OtherInterface other);
+    }
+
+    public interface SomeInterfaceToTestMockArgsImport {
+        void SomeMethod(MockArg arg1, MockArg arg2);
     }
 
     public interface SomeModuleHandlers {

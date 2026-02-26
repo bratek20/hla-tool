@@ -90,5 +90,15 @@
                 "${workspaceFolder}/**/*.js"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - ModuleOnlyForMocksArgs Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" ModuleOnlyForMocksArgs"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
     ]
 }

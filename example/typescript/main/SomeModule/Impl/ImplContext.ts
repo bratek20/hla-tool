@@ -56,6 +56,10 @@ namespace SomeModule.Api {
         return new Impl.SomeInterface3Logic(c).referenceOtherInterface(other)
     }
 
+    export function someMethod(arg1: MockArg, arg2: MockArg, c: HandlerContext): void {
+        new Impl.SomeInterfaceToTestMockArgsImportLogic(c).someMethod(arg1, arg2)
+    }
+
     export function someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
         return new Impl.SomeModuleHandlersLogic(c).someHandler(i)
     }

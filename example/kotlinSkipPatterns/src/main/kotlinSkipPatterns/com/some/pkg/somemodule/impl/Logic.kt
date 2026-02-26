@@ -2,6 +2,7 @@ package src.main.kotlinSkipPatterns.com.some.pkg.somemodule.impl
 
 import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api.*
 
+import src.main.kotlinSkipPatterns.com.some.pkg.moduleonlyformocksargs.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.api.*
@@ -67,6 +68,12 @@ class SomeInterface3Logic: SomeInterface3 {
     }
 
     override fun referenceOtherInterface(other: OtherInterface): OtherInterface {
+        TODO("Not yet implemented")
+    }
+}
+
+class SomeInterfaceToTestMockArgsImportLogic: SomeInterfaceToTestMockArgsImport {
+    override fun someMethod(arg1: MockArg, arg2: MockArg): Unit {
         TODO("Not yet implemented")
     }
 }

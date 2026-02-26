@@ -4,6 +4,8 @@ package src.main.kotlinSkipPatterns.com.some.pkg.somemodule.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import src.main.kotlinSkipPatterns.com.some.pkg.moduleonlyformocksargs.api.*
+import src.main.kotlinSkipPatterns.com.some.pkg.moduleonlyformocksargs.fixtures.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.fixtures.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
@@ -228,6 +230,11 @@ fun assertCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList
 
 fun assertSomeInterfaceSomeCommandArgs(given: SomeInterfaceSomeCommandArgs, expectedInit: ExpectedSomeInterfaceSomeCommandArgs.() -> Unit) {
     val diff = diffSomeInterfaceSomeCommandArgs(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeInterfaceToTestMockArgsImportSomeMethodArgs(given: SomeInterfaceToTestMockArgsImportSomeMethodArgs, expectedInit: ExpectedSomeInterfaceToTestMockArgsImportSomeMethodArgs.() -> Unit) {
+    val diff = diffSomeInterfaceToTestMockArgsImportSomeMethodArgs(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
