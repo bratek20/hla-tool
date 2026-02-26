@@ -2,6 +2,7 @@
 
 package src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api
 
+import src.main.kotlinSkipPatterns.com.some.pkg.moduleonlyformocksargs.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.api.*
@@ -49,6 +50,10 @@ interface SomeInterface3 {
     fun referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface
 
     fun referenceOtherInterface(other: OtherInterface): OtherInterface
+}
+
+interface SomeInterfaceToTestMockArgsImport {
+    fun someMethod(arg1: MockArg, arg2: MockArg): Unit
 }
 
 interface SomeModuleHandlers {
