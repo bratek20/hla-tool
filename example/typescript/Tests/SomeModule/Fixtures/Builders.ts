@@ -220,6 +220,50 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassWithSimpleMapDef {
+        primitiveMap?: Map<string, number>,
+    }
+    export function classWithSimpleMap(def?: ClassWithSimpleMapDef): ClassWithSimpleMap {
+        const final_primitiveMap = def?.primitiveMap ?? new Map()
+
+        return ClassWithSimpleMap.create(
+            final_primitiveMap,
+        )
+    }
+
+    export interface ClassWithVoMapDef {
+        idMap?: Map<string, string>,
+    }
+    export function classWithVoMap(def?: ClassWithVoMapDef): ClassWithVoMap {
+        const final_idMap = def?.idMap ?? new Map()
+
+        return ClassWithVoMap.create(
+            new Map(),
+        )
+    }
+
+    export interface ClassWithOptionalMapDef {
+        optMap?: Map<string, number>,
+    }
+    export function classWithOptionalMap(def?: ClassWithOptionalMapDef): ClassWithOptionalMap {
+        const final_optMap = def?.optMap ?? undefined
+
+        return ClassWithOptionalMap.create(
+            Optional.of(final_optMap),
+        )
+    }
+
+    export interface ClassWithComplexMapDef {
+        complexMap?: Map<string, SomeModule.Builder.SomeClassDef>,
+    }
+    export function classWithComplexMap(def?: ClassWithComplexMapDef): ClassWithComplexMap {
+        const final_complexMap = def?.complexMap ?? new Map()
+
+        return ClassWithComplexMap.create(
+            new Map(),
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,

@@ -658,6 +658,110 @@ class RecursiveClass {
     }
 }
 
+class ClassWithSimpleMap {
+    private primitiveMap = Class(Map<string, number>)
+
+    static create(
+        primitiveMap: Map<string, number>,
+    ): ClassWithSimpleMap {
+        const instance = new ClassWithSimpleMap()
+        instance.primitiveMap = primitiveMap
+        return instance
+    }
+
+    static createNamed({
+        primitiveMap,
+    }: {
+        primitiveMap: Map<string, number>;
+    }): ClassWithSimpleMap {
+        const instance = new ClassWithSimpleMap()
+        instance.primitiveMap = primitiveMap
+        return instance
+    }
+
+    getPrimitiveMap(): Map<string, number> {
+        return this.primitiveMap
+    }
+}
+
+class ClassWithVoMap {
+    private idMap = Class(Map<string, string>)
+
+    static create(
+        idMap: Map<string, SomeId>,
+    ): ClassWithVoMap {
+        const instance = new ClassWithVoMap()
+        instance.idMap = new Map()
+        return instance
+    }
+
+    static createNamed({
+        idMap,
+    }: {
+        idMap: Map<string, SomeId>;
+    }): ClassWithVoMap {
+        const instance = new ClassWithVoMap()
+        instance.idMap = new Map()
+        return instance
+    }
+
+    getIdMap(): Map<string, SomeId> {
+        return new Map()
+    }
+}
+
+class ClassWithOptionalMap {
+    private optMap? = OptionalClass(Map<string, number>)
+
+    static create(
+        optMap: Optional<Map<string, number>>,
+    ): ClassWithOptionalMap {
+        const instance = new ClassWithOptionalMap()
+        instance.optMap = optMap.orElse(undefined)
+        return instance
+    }
+
+    static createNamed({
+        optMap,
+    }: {
+        optMap: Optional<Map<string, number>>;
+    }): ClassWithOptionalMap {
+        const instance = new ClassWithOptionalMap()
+        instance.optMap = optMap.orElse(undefined)
+        return instance
+    }
+
+    getOptMap(): Optional<Map<string, number>> {
+        return Optional.of(this.optMap)
+    }
+}
+
+class ClassWithComplexMap {
+    private complexMap = Class(Map<string, SomeClass>)
+
+    static create(
+        complexMap: Map<SomeId, SomeClass>,
+    ): ClassWithComplexMap {
+        const instance = new ClassWithComplexMap()
+        instance.complexMap = complexMap
+        return instance
+    }
+
+    static createNamed({
+        complexMap,
+    }: {
+        complexMap: Map<SomeId, SomeClass>;
+    }): ClassWithComplexMap {
+        const instance = new ClassWithComplexMap()
+        instance.complexMap = complexMap
+        return instance
+    }
+
+    getComplexMap(): Map<SomeId, SomeClass> {
+        return this.complexMap
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

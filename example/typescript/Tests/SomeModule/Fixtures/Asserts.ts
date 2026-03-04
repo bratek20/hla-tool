@@ -86,6 +86,26 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function classWithSimpleMap(given: ClassWithSimpleMap, expected: ExpectedClassWithSimpleMap) {
+        const diff = diffClassWithSimpleMap(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function classWithVoMap(given: ClassWithVoMap, expected: ExpectedClassWithVoMap) {
+        const diff = diffClassWithVoMap(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function classWithOptionalMap(given: ClassWithOptionalMap, expected: ExpectedClassWithOptionalMap) {
+        const diff = diffClassWithOptionalMap(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function classWithComplexMap(given: ClassWithComplexMap, expected: ExpectedClassWithComplexMap) {
+        const diff = diffClassWithComplexMap(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
         const diff = diffSomeQueryInput(given, expected)
         AssertEquals(diff, "", diff)

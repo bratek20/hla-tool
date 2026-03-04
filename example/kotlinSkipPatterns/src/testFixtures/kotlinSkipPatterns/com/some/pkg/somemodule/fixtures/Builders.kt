@@ -199,6 +199,46 @@ fun recursiveClass(init: RecursiveClassDef.() -> Unit = {}): RecursiveClass {
     )
 }
 
+data class ClassWithSimpleMapDef(
+    var primitiveMap: Map<String, Int> = emptyMap(),
+)
+fun classWithSimpleMap(init: ClassWithSimpleMapDef.() -> Unit = {}): ClassWithSimpleMap {
+    val def = ClassWithSimpleMapDef().apply(init)
+    return ClassWithSimpleMap.create(
+        primitiveMap = def.primitiveMap,
+    )
+}
+
+data class ClassWithVoMapDef(
+    var idMap: Map<String, String> = emptyMap(),
+)
+fun classWithVoMap(init: ClassWithVoMapDef.() -> Unit = {}): ClassWithVoMap {
+    val def = ClassWithVoMapDef().apply(init)
+    return ClassWithVoMap.create(
+        idMap = def.idMap.mapValues { (key, value) -> SomeId(value) },
+    )
+}
+
+data class ClassWithOptionalMapDef(
+    var optMap: Map<String, Int>? = null,
+)
+fun classWithOptionalMap(init: ClassWithOptionalMapDef.() -> Unit = {}): ClassWithOptionalMap {
+    val def = ClassWithOptionalMapDef().apply(init)
+    return ClassWithOptionalMap.create(
+        optMap = def.optMap,
+    )
+}
+
+data class ClassWithComplexMapDef(
+    var complexMap: Map<String, (SomeClassDef.() -> Unit)> = emptyMap(),
+)
+fun classWithComplexMap(init: ClassWithComplexMapDef.() -> Unit = {}): ClassWithComplexMap {
+    val def = ClassWithComplexMapDef().apply(init)
+    return ClassWithComplexMap.create(
+        complexMap = def.complexMap.mapValues { (key, value) -> someClass(value) },
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,

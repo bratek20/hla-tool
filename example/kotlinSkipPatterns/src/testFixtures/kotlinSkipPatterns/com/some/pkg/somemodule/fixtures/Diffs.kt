@@ -381,6 +381,67 @@ fun diffRecursiveClass(given: RecursiveClass, expectedInit: ExpectedRecursiveCla
     return result.joinToString("\n")
 }
 
+data class ExpectedClassWithSimpleMap(
+    var primitiveMap: Map<String, Int>? = null,
+)
+fun diffClassWithSimpleMap(given: ClassWithSimpleMap, expectedInit: ExpectedClassWithSimpleMap.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithSimpleMap().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.primitiveMap?.let {
+        ${path}primitiveMap ${given.getPrimitiveMap()} != ${it}
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedClassWithVoMap(
+    var idMap: Map<String, SomeId>? = null,
+)
+fun diffClassWithVoMap(given: ClassWithVoMap, expectedInit: ExpectedClassWithVoMap.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithVoMap().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.idMap?.let {
+        ${path}idMap ${given.getIdMap()} != ${it}
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedClassWithOptionalMap(
+    var optMapEmpty: Boolean? = null,
+    var optMap: Map<String, Int>? = null,
+)
+fun diffClassWithOptionalMap(given: ClassWithOptionalMap, expectedInit: ExpectedClassWithOptionalMap.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithOptionalMap().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optMapEmpty?.let {
+        if ((given.getOptMap() == null) != it) { result.add("${path}optMap empty ${(given.getOptMap() == null)} != ${it}") }
+    }
+
+    expected.optMap?.let {
+        ${path}optMap ${given.getOptMap()!!} != ${it}
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedClassWithComplexMap(
+    var complexMap: Map<SomeId, SomeClass>? = null,
+)
+fun diffClassWithComplexMap(given: ClassWithComplexMap, expectedInit: ExpectedClassWithComplexMap.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithComplexMap().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.complexMap?.let {
+        ${path}complexMap ${given.getComplexMap()} != ${it}
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,

@@ -87,6 +87,22 @@ namespace SomeModule.Fixtures {
         public List<Action<RecursiveClassDef>>? MeOptList { get; set; } = null;
     }
 
+    public class ClassWithSimpleMapDef {
+        public Dictionary<string, int> PrimitiveMap { get; set; } = new Dictionary<string, int>();
+    }
+
+    public class ClassWithVoMapDef {
+        public Dictionary<string, string> IdMap { get; set; } = new Dictionary<string, string>();
+    }
+
+    public class ClassWithOptionalMapDef {
+        public Dictionary<string, int>? OptMap { get; set; } = null;
+    }
+
+    public class ClassWithComplexMapDef {
+        public Dictionary<string, Action<SomeClassDef>> ComplexMap { get; set; } = new Dictionary<string, Action<SomeClassDef>>();
+    }
+
     public class SomeQueryInputDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 0;
@@ -339,6 +355,30 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return RecursiveClass.Create(def.MeList.Select(it => BuildRecursiveClass(it)).ToList(), Optional<Action<RecursiveClassDef>>.Of(def.MeOpt).Map(it => BuildRecursiveClass(it)), Optional<List<Action<RecursiveClassDef>>>.Of(def.MeOptList).Map(it => it.Select(it => BuildRecursiveClass(it)).ToList()));
+        }
+        public static ClassWithSimpleMap BuildClassWithSimpleMap(Action<ClassWithSimpleMapDef> init = null) {
+            var def = new ClassWithSimpleMapDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassWithSimpleMap.Create(def.PrimitiveMap);
+        }
+        public static ClassWithVoMap BuildClassWithVoMap(Action<ClassWithVoMapDef> init = null) {
+            var def = new ClassWithVoMapDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassWithVoMap.Create(new Dictionary<>());
+        }
+        public static ClassWithOptionalMap BuildClassWithOptionalMap(Action<ClassWithOptionalMapDef> init = null) {
+            var def = new ClassWithOptionalMapDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassWithOptionalMap.Create(Optional<Dictionary<string, int>>.Of(def.OptMap));
+        }
+        public static ClassWithComplexMap BuildClassWithComplexMap(Action<ClassWithComplexMapDef> init = null) {
+            var def = new ClassWithComplexMapDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassWithComplexMap.Create(new Dictionary<>());
         }
         public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = null) {
             var def = new SomeQueryInputDef();

@@ -356,6 +356,63 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassWithSimpleMap {
+        primitiveMap?: Map<string, number>,
+    }
+    export function diffClassWithSimpleMap(given: ClassWithSimpleMap, expected: ExpectedClassWithSimpleMap, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.primitiveMap !== undefined) {
+            ${path}primitiveMap ${given.getPrimitiveMap()} != ${expected.primitiveMap}
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedClassWithVoMap {
+        idMap?: Map<string, SomeId>,
+    }
+    export function diffClassWithVoMap(given: ClassWithVoMap, expected: ExpectedClassWithVoMap, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.idMap !== undefined) {
+            ${path}idMap ${given.getIdMap()} != ${expected.idMap}
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedClassWithOptionalMap {
+        optMapEmpty?: boolean,
+        optMap?: Map<string, number>,
+    }
+    export function diffClassWithOptionalMap(given: ClassWithOptionalMap, expected: ExpectedClassWithOptionalMap, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optMapEmpty !== undefined) {
+            if (given.getOptMap().isEmpty() != expected.optMapEmpty) { result.push(`${path}optMap empty ${given.getOptMap().isEmpty()} != ${expected.optMapEmpty}`) }
+        }
+
+        if (expected.optMap !== undefined) {
+            ${path}optMap ${given.getOptMap().get()} != ${expected.optMap}
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedClassWithComplexMap {
+        complexMap?: Map<SomeId, SomeClass>,
+    }
+    export function diffClassWithComplexMap(given: ClassWithComplexMap, expected: ExpectedClassWithComplexMap, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.complexMap !== undefined) {
+            ${path}complexMap ${given.getComplexMap()} != ${expected.complexMap}
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeQueryInput {
         id?: string,
         amount?: number,
