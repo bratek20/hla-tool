@@ -437,6 +437,78 @@ data class RecursiveClass(
     }
 }
 
+data class ClassWithSimpleMap(
+    private val primitiveMap: Map<String, Int>,
+) {
+    fun getPrimitiveMap(): Map<String, Int> {
+        return this.primitiveMap
+    }
+
+    companion object {
+        fun create(
+            primitiveMap: Map<String, Int>,
+        ): ClassWithSimpleMap {
+            return ClassWithSimpleMap(
+                primitiveMap = primitiveMap,
+            )
+        }
+    }
+}
+
+data class ClassWithVoMap(
+    private val idMap: Map<String, String>,
+) {
+    fun getIdMap(): Map<String, SomeId> {
+        return this.idMap.mapValues { (key, value) -> SomeId(value) }
+    }
+
+    companion object {
+        fun create(
+            idMap: Map<String, SomeId>,
+        ): ClassWithVoMap {
+            return ClassWithVoMap(
+                idMap = idMap.mapValues { (key, value) -> value.value },
+            )
+        }
+    }
+}
+
+data class ClassWithOptionalMap(
+    private val optMap: Map<String, Int>?,
+) {
+    fun getOptMap(): Map<String, Int>? {
+        return this.optMap
+    }
+
+    companion object {
+        fun create(
+            optMap: Map<String, Int>?,
+        ): ClassWithOptionalMap {
+            return ClassWithOptionalMap(
+                optMap = optMap,
+            )
+        }
+    }
+}
+
+data class ClassWithComplexMap(
+    private val complexMap: Map<String, SomeClass>,
+) {
+    fun getComplexMap(): Map<SomeId, SomeClass> {
+        return this.complexMap
+    }
+
+    companion object {
+        fun create(
+            complexMap: Map<SomeId, SomeClass>,
+        ): ClassWithComplexMap {
+            return ClassWithComplexMap(
+                complexMap = complexMap,
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,

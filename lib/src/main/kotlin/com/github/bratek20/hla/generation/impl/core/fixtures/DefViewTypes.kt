@@ -319,6 +319,32 @@ class InterfaceDefType(
     api: InterfaceApiType
 ) : ToDoDefType<InterfaceApiType>(api)
 
+class MapDefType(
+    api: MapApiType,
+    val keyType: DefType<*>,
+    val valueType: DefType<*>
+) : DefType<MapApiType>(api) {
+    override fun name(): String {
+        val ctx = languageTypes.context()
+        return mapType(keyType.builder(), valueType.builder()).build(ctx)
+    }
+
+    override fun defaultValueBuilder(): ExpressionBuilder {
+        return emptyMap(keyType.builder(), valueType.builder())
+    }
+
+    override fun modernBuild(variable: ExpressionBuilder): ExpressionBuilder {
+        if (valueType is BaseDefType) {
+            return variable
+        }
+        return mapOp(variable).mapValues { keyVar, valueVar -> valueType.modernBuild(valueVar) }
+    }
+
+    override fun builder(): TypeBuilder {
+        return mapType(keyType.builder(), valueType.builder())
+    }
+}
+
 class DefTypeFactory(
     private val pattern: LanguageBuildersPattern
 ) {
@@ -328,6 +354,7 @@ class DefTypeFactory(
             is SimpleValueObjectApiType -> SimpleVODefType(type, create(type.boxedType) as BaseDefType)
             is OptionalApiType -> OptionalDefType(type, create(type.wrappedType))
             is ListApiType -> ListDefType(type, create(type.wrappedType))
+            is MapApiType -> MapDefType(type, create(type.keyType), create(type.valueType))
             is EnumApiType -> EnumDefType(type)
             is SimpleCustomApiType -> SimpleCustomDefType(type, create(type.boxedType) as BaseDefType)
             is ComplexCustomApiType -> ComplexCustomDefType(type, createFields(type.fields))

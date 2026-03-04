@@ -53,5 +53,17 @@ class PrimitiveTypesPopulator(
                 )
             )
         }
+
+        // Create map types for all primitive type combinations
+        BaseType.entries.forEach { keyType ->
+            BaseType.entries.forEach { valueType ->
+                api.ensureType(
+                    WorldType.create(
+                        name = WorldTypeName("MAP<${keyType.name.lowercase()},${valueType.name.lowercase()}>"),
+                        path = path
+                    )
+                )
+            }
+        }
     }
 }

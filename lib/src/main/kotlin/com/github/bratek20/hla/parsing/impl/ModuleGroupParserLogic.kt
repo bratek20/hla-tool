@@ -364,6 +364,28 @@ class ModuleGroupParserLogic(
     }
 
     private fun parseType(typeValue: String): TypeDefinition {
+        // Check for map type: <Key, Value> or <Key, Value>?
+        val mapPattern = Regex("""<([^,]+),\s*([^>]+)>(\??)""")
+        val mapMatch = mapPattern.find(typeValue)
+
+        if (mapMatch != null) {
+            val keyType = mapMatch.groupValues[1].trim()
+            val valueType = mapMatch.groupValues[2].trim()
+            val isOptional = mapMatch.groupValues[3] == "?"
+
+            // Create a map type with special naming convention
+            val mapTypeName = "MAP<$keyType,$valueType>"
+            val wrappers = mutableListOf(TypeWrapper.MAP)
+            if (isOptional) {
+                wrappers.add(0, TypeWrapper.OPTIONAL)
+            }
+
+            return TypeDefinition.create(
+                name = mapTypeName,
+                wrappers = wrappers
+            )
+        }
+
         if (typeValue.contains("[]?")) {
             return TypeDefinition.create(
                 name = typeValue.replace("[]?", ""),

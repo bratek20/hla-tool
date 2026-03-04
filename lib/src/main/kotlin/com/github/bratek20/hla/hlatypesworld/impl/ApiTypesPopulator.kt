@@ -206,6 +206,47 @@ class ApiTypesPopulator(
         val populators = modules.flatMap { createPatternPopulators(it) }
 
         populators.forEach { it.ensurePatternTypes() }
+        ensureMapTypes(modules)
         populators.forEach { it.addPatternTypes() }
+    }
+
+    private fun ensureMapTypes(modules: List<ModuleDefinition>) {
+        // Collect all type definitions used in fields
+        val allFieldTypes = modules.flatMap { module ->
+            module.getComplexValueObjects().flatMap { vo ->
+                vo.getFields().map { it.getType() }
+            } +
+            module.getDataClasses().flatMap { dc ->
+                dc.getFields().map { it.getType() }
+            }
+        }
+
+        // Find all MAP types and ensure they exist
+        allFieldTypes.forEach { typeDef ->
+            if (typeDef.getWrappers().contains(com.github.bratek20.hla.definitions.api.TypeWrapper.MAP)) {
+                // Extract key and value types from MAP<key,value>
+                val typeName = typeDef.getName()
+                val mapPattern = Regex("""MAP<([^,]+),([^>]+)>""")
+                val match = mapPattern.find(typeName)
+
+                if (match != null) {
+                    val keyTypeName = match.groupValues[1].trim()
+                    val valueTypeName = match.groupValues[2].trim()
+
+                    // Ensure the map type exists in the world
+                    val mapWorldTypeName = WorldTypeName("MAP<$keyTypeName,$valueTypeName>")
+                    if (!world.hasTypeByName(mapWorldTypeName)) {
+                        // Get the path from one of the wrapped types
+                        val keyWorldType = world.getTypeByName(WorldTypeName(keyTypeName))
+                        world.ensureType(
+                            WorldType.create(
+                                name = mapWorldTypeName,
+                                path = keyWorldType.getPath()
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 }
