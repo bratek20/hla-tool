@@ -7,8 +7,8 @@ import com.github.bratek20.hla.typesworld.api.WorldTypeName
 fun TypeDefinition.asWorldTypeName(): WorldTypeName {
     var name = this.getName()
     if (this.getWrappers().contains(TypeWrapper.MAP)) {
-        // Map type name already contains MAP<key,value>, so just use it directly
-        // name is already in format "MAP<key,value>"
+        // Map type name already contains Map<key,value>, so just use it directly
+        // name is already in format "Map<key,value>"
     }
     if (this.getWrappers().contains(TypeWrapper.LIST)) {
         name = "List<$name>"
@@ -30,7 +30,7 @@ fun WorldTypeName.asTypeDefinition(): TypeDefinition {
     return TypeDefinition.create(
         name = unwrappedName,
         wrappers = when {
-            name.startsWith("MAP<") && name.endsWith(">") -> listOf(TypeWrapper.MAP)
+            MapTypeParser.isMapType(name) -> listOf(TypeWrapper.MAP)
             name.startsWith("List<") && name.endsWith(">") -> listOf(TypeWrapper.LIST)
             name.startsWith("Optional<") && name.endsWith(">") -> listOf(TypeWrapper.OPTIONAL)
             else -> emptyList()

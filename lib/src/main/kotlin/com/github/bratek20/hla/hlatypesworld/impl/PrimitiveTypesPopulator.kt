@@ -59,7 +59,10 @@ class PrimitiveTypesPopulator(
             BaseType.entries.forEach { valueType ->
                 api.ensureType(
                     WorldType.create(
-                        name = WorldTypeName("MAP<${keyType.name.lowercase()},${valueType.name.lowercase()}>"),
+                        name = WorldTypeName(com.github.bratek20.hla.queries.api.MapTypeParser.createMapTypeName(
+                            keyType.name.lowercase(),
+                            valueType.name.lowercase()
+                        )),
                         path = path
                     )
                 )

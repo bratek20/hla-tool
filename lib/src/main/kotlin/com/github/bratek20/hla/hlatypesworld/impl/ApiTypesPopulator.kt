@@ -221,20 +221,18 @@ class ApiTypesPopulator(
             }
         }
 
-        // Find all MAP types and ensure they exist
+        // Find all Map types and ensure they exist
         allFieldTypes.forEach { typeDef ->
             if (typeDef.getWrappers().contains(com.github.bratek20.hla.definitions.api.TypeWrapper.MAP)) {
-                // Extract key and value types from MAP<key,value>
+                // Extract key and value types from Map<key,value>
                 val typeName = typeDef.getName()
-                val mapPattern = Regex("""MAP<([^,]+),([^>]+)>""")
-                val match = mapPattern.find(typeName)
+                val keyValueTypes = com.github.bratek20.hla.queries.api.MapTypeParser.extractKeyValueTypes(typeName)
 
-                if (match != null) {
-                    val keyTypeName = match.groupValues[1].trim()
-                    val valueTypeName = match.groupValues[2].trim()
+                if (keyValueTypes != null) {
+                    val (keyTypeName, valueTypeName) = keyValueTypes
 
                     // Ensure the map type exists in the world
-                    val mapWorldTypeName = WorldTypeName("MAP<$keyTypeName,$valueTypeName>")
+                    val mapWorldTypeName = WorldTypeName(com.github.bratek20.hla.queries.api.MapTypeParser.createMapTypeName(keyTypeName, valueTypeName))
                     if (!world.hasTypeByName(mapWorldTypeName)) {
                         // Get the path from one of the wrapped types
                         val keyWorldType = world.getTypeByName(WorldTypeName(keyTypeName))

@@ -41,14 +41,12 @@ class ApiTypeFactoryLogic(
             isOptional -> OptionalApiType(create(withoutTypeWrapper(type, TypeWrapper.OPTIONAL)))
             isList -> ListApiType(create(withoutTypeWrapper(type, TypeWrapper.LIST)))
             isMap -> {
-                // Extract key and value types from name: "MAP<KeyType,ValueType>"
+                // Extract key and value types from name: "Map<KeyType,ValueType>"
                 val typeName = type.getName()
-                val mapPattern = Regex("""MAP<([^,]+),([^>]+)>""")
-                val match = mapPattern.find(typeName)
+                val keyValueTypes = com.github.bratek20.hla.queries.api.MapTypeParser.extractKeyValueTypes(typeName)
 
-                if (match != null) {
-                    val keyTypeName = match.groupValues[1].trim()
-                    val valueTypeName = match.groupValues[2].trim()
+                if (keyValueTypes != null) {
+                    val (keyTypeName, valueTypeName) = keyValueTypes
 
                     val keyTypeDef = TypeDefinition.create(name = keyTypeName, wrappers = emptyList())
                     val valueTypeDef = TypeDefinition.create(name = valueTypeName, wrappers = emptyList())
