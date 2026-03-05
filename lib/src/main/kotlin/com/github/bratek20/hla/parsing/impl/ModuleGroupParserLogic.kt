@@ -3,6 +3,7 @@ package com.github.bratek20.hla.parsing.impl
 import com.github.bratek20.architecture.properties.impl.PropertiesLogic
 import com.github.bratek20.architecture.properties.sources.yaml.YamlPropertiesSource
 import com.github.bratek20.hla.definitions.api.*
+import com.github.bratek20.hla.queries.api.MapTypeParser
 import com.github.bratek20.utils.directory.api.File
 import com.github.bratek20.utils.directory.api.FileName
 import com.github.bratek20.utils.directory.api.Path
@@ -364,6 +365,23 @@ class ModuleGroupParserLogic(
     }
 
     private fun parseType(typeValue: String): TypeDefinition {
+        // Check for map type: <Key, Value> or <Key, Value>?
+        val mapInfo = MapTypeParser.parseMapType(typeValue)
+
+        if (mapInfo != null) {
+            // Create a map type with special naming convention
+            val mapTypeName = MapTypeParser.createMapTypeName(mapInfo.keyType, mapInfo.valueType)
+            val wrappers = mutableListOf(TypeWrapper.MAP)
+            if (mapInfo.isOptional) {
+                wrappers.add(0, TypeWrapper.OPTIONAL)
+            }
+
+            return TypeDefinition.create(
+                name = mapTypeName,
+                wrappers = wrappers
+            )
+        }
+
         if (typeValue.contains("[]?")) {
             return TypeDefinition.create(
                 name = typeValue.replace("[]?", ""),

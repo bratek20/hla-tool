@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.generation.impl.core.fixtures
 
+import com.github.bratek20.codebuilder.types.mapType
 import com.github.bratek20.hla.apitypes.api.ApiType
 import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.BaseType
@@ -312,6 +313,27 @@ class EnumExpectedType(
     }
 }
 
+class MapExpectedType(
+    api: MapApiType,
+    private val keyType: ExpectedType<*>,
+    private val valueType: ExpectedType<*>,
+) : ExpectedType<MapApiType>(api) {
+    override fun name(): String {
+        val ctx = languageTypes.context()
+        return mapType(keyType.api.builder(), valueType.api.builder()).build(ctx)
+    }
+
+    override fun notEquals(givenVariable: String, expectedVariable: String): String? {
+        return null
+    }
+
+    override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
+        val element = languageTypes.wrapWithString("$path \${$givenVariable} != \${$expectedVariable}")
+        val body = languageTypes.addListElement("result", element)
+        return "if ($givenVariable != $expectedVariable) { $body }"
+    }
+}
+
 class ExpectedTypeFactory(
     private val c: ModuleGenerationContext
 ) {
@@ -321,6 +343,7 @@ class ExpectedTypeFactory(
             is SimpleValueObjectApiType -> SimpleValueObjectExpectedType(type, create(type.boxedType) as BaseExpectedType)
             is OptionalApiType -> OptionalExpectedType(type, create(type.wrappedType))
             is ListApiType -> ListExpectedType(type, create(type.wrappedType))
+            is MapApiType -> MapExpectedType(type, create(type.keyType), create(type.valueType))
             is EnumApiType -> EnumExpectedType(type)
             is SerializableApiType -> PropertyExpectedType(type, createFields(type.fields))
             is SimpleCustomApiType -> SimpleCustomExpectedType(type, create(type.boxedType) as BaseExpectedType)

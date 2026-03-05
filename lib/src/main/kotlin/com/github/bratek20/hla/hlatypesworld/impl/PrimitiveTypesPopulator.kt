@@ -9,6 +9,7 @@ import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypesWorldPopulator
 import com.github.bratek20.hla.hlatypesworld.api.asWorld
 import com.github.bratek20.hla.parsing.api.GroupName
+import com.github.bratek20.hla.queries.api.MapTypeParser
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
@@ -52,6 +53,21 @@ class PrimitiveTypesPopulator(
                     path = path
                 )
             )
+        }
+
+        // Create map types for all primitive type combinations
+        BaseType.entries.forEach { keyType ->
+            BaseType.entries.forEach { valueType ->
+                api.ensureType(
+                    WorldType.create(
+                        name = WorldTypeName(MapTypeParser.createMapTypeName(
+                            keyType.name.lowercase(),
+                            valueType.name.lowercase()
+                        )),
+                        path = path
+                    )
+                )
+            }
         }
     }
 }

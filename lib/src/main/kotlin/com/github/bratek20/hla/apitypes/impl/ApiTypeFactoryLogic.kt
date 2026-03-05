@@ -5,6 +5,7 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
+import com.github.bratek20.hla.queries.api.MapTypeParser
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
@@ -26,6 +27,7 @@ class ApiTypeFactoryLogic(
         val complexVO = modules.findComplexValueObject(type)
         val isOptional = type.getWrappers().contains(TypeWrapper.OPTIONAL)
         val isList = type.getWrappers().contains(TypeWrapper.LIST)
+        val isMap = type.getWrappers().contains(TypeWrapper.MAP)
         val isBaseType = isBaseType(type.getName())
         val enum = modules.findEnum(type)
         val simpleCustomType = modules.findSimpleCustomType(type)
@@ -39,6 +41,22 @@ class ApiTypeFactoryLogic(
         val apiType = when {
             isOptional -> OptionalApiType(create(withoutTypeWrapper(type, TypeWrapper.OPTIONAL)))
             isList -> ListApiType(create(withoutTypeWrapper(type, TypeWrapper.LIST)))
+            isMap -> {
+                // Extract key and value types from name: "Map<KeyType,ValueType>"
+                val typeName = type.getName()
+                val keyValueTypes = MapTypeParser.extractKeyValueTypes(typeName)
+
+                if (keyValueTypes != null) {
+                    val (keyTypeName, valueTypeName) = keyValueTypes
+
+                    val keyTypeDef = TypeDefinition.create(name = keyTypeName, wrappers = emptyList())
+                    val valueTypeDef = TypeDefinition.create(name = valueTypeName, wrappers = emptyList())
+
+                    MapApiType(create(keyTypeDef), create(valueTypeDef))
+                } else {
+                    throw IllegalArgumentException("Invalid map type format: $typeName")
+                }
+            }
             simpleVO != null -> SimpleValueObjectApiType(
                 simpleVO,
                 createBaseApiType(ofBaseType(simpleVO.getTypeName()), typesWorldApi)

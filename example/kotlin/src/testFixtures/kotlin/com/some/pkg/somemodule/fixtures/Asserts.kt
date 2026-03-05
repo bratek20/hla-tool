@@ -103,6 +103,26 @@ fun assertRecursiveClass(given: RecursiveClass, expectedInit: ExpectedRecursiveC
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertClassWithSimpleMap(given: ClassWithSimpleMap, expectedInit: ExpectedClassWithSimpleMap.() -> Unit) {
+    val diff = diffClassWithSimpleMap(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertClassWithVoMap(given: ClassWithVoMap, expectedInit: ExpectedClassWithVoMap.() -> Unit) {
+    val diff = diffClassWithVoMap(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertClassWithOptionalMap(given: ClassWithOptionalMap, expectedInit: ExpectedClassWithOptionalMap.() -> Unit) {
+    val diff = diffClassWithOptionalMap(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertClassWithComplexMap(given: ClassWithComplexMap, expectedInit: ExpectedClassWithComplexMap.() -> Unit) {
+    val diff = diffClassWithComplexMap(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
     val diff = diffSomeQueryInput(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

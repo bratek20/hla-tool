@@ -752,6 +752,44 @@ class OptionalApiType(
     }
 }
 
+class MapApiType(
+    val keyType: ApiTypeLogic,
+    val valueType: ApiTypeLogic,
+) : ApiTypeLogic() {
+
+    override fun builder(): TypeBuilder {
+        return mapType(keyType.builder(), valueType.builder())
+    }
+
+    override fun serializableBuilder(): TypeBuilder {
+        return mapType(keyType.serializableBuilder(), valueType.serializableBuilder())
+    }
+
+    override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
+        // Keys are always primitives, only values may need conversion
+        if (valueType.name() == valueType.serializableName()) {
+            return variable
+        }
+        return mapOp(variable).mapValues { keyVar, valueVar ->
+            valueType.modernDeserialize(valueVar)
+        }
+    }
+
+    override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
+        // Keys are always primitives, only values may need conversion
+        if (valueType.name() == valueType.serializableName()) {
+            return variable
+        }
+        return mapOp(variable).mapValues { keyVar, valueVar ->
+            valueType.modernSerialize(valueVar)
+        }
+    }
+
+    override fun getExample(): Any {
+        return mapOf(keyType.getExample() to valueType.getExample())
+    }
+}
+
 class EnumApiType(
     private val def: EnumDefinition,
 ) : ApiTypeLogic() {

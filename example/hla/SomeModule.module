@@ -82,6 +82,18 @@ ValueObjects
         meOpt: RecursiveClass?
         meOptList: RecursiveClass[]?
 
+    ClassWithSimpleMap
+        primitiveMap: <string, int>
+
+    ClassWithVoMap
+        idMap: <string, SomeId>
+
+    ClassWithOptionalMap
+        optMap: <string, int>?
+
+    ClassWithComplexMap
+        complexMap: <string, SomeClass>
+
 Exceptions
     SomeExtraException
 

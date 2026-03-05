@@ -390,6 +390,70 @@ namespace SomeModule.Api {
         }
     }
 
+    public class ClassWithSimpleMap: ValueObject {
+        readonly Dictionary<string, int> primitiveMap;
+
+        public ClassWithSimpleMap(
+            Dictionary<string, int> primitiveMap
+        ) {
+            this.primitiveMap = primitiveMap;
+        }
+        public Dictionary<string, int> GetPrimitiveMap() {
+            return primitiveMap;
+        }
+        public static ClassWithSimpleMap Create(Dictionary<string, int> primitiveMap) {
+            return new ClassWithSimpleMap(primitiveMap);
+        }
+    }
+
+    public class ClassWithVoMap: ValueObject {
+        readonly Dictionary<string, string> idMap;
+
+        public ClassWithVoMap(
+            Dictionary<string, string> idMap
+        ) {
+            this.idMap = idMap;
+        }
+        public Dictionary<string, SomeId> GetIdMap() {
+            return new Dictionary<>();
+        }
+        public static ClassWithVoMap Create(Dictionary<string, SomeId> idMap) {
+            return new ClassWithVoMap(new Dictionary<>());
+        }
+    }
+
+    public class ClassWithOptionalMap: ValueObject {
+        readonly Dictionary<string, int>? optMap;
+
+        public ClassWithOptionalMap(
+            Dictionary<string, int>? optMap
+        ) {
+            this.optMap = optMap;
+        }
+        public Optional<Dictionary<string, int>> GetOptMap() {
+            return Optional<Dictionary<string, int>>.Of(optMap);
+        }
+        public static ClassWithOptionalMap Create(Optional<Dictionary<string, int>> optMap) {
+            return new ClassWithOptionalMap(optMap.OrElse(null));
+        }
+    }
+
+    public class ClassWithComplexMap: ValueObject {
+        readonly Dictionary<string, SomeClass> complexMap;
+
+        public ClassWithComplexMap(
+            Dictionary<string, SomeClass> complexMap
+        ) {
+            this.complexMap = complexMap;
+        }
+        public Dictionary<string, SomeClass> GetComplexMap() {
+            return complexMap;
+        }
+        public static ClassWithComplexMap Create(Dictionary<string, SomeClass> complexMap) {
+            return new ClassWithComplexMap(complexMap);
+        }
+    }
+
     public class SomeQueryInput: ValueObject {
         readonly string id;
         readonly int amount;

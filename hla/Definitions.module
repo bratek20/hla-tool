@@ -12,6 +12,7 @@ Enums
     TypeWrapper
         LIST
         OPTIONAL
+        MAP
 
 ValueObjects
     KeyDefinition

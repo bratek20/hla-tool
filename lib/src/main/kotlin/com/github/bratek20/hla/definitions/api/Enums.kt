@@ -19,4 +19,5 @@ enum class BaseType {
 enum class TypeWrapper {
     LIST,
     OPTIONAL,
+    MAP,
 }

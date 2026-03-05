@@ -53,7 +53,16 @@ interface CodeBuilderLanguage {
     fun optionalMapBegin(): String
     fun optionalMapEnd(): String
 
+    fun mapType(keyType: String, valueType: String): String
+    fun newEmptyMap(keyType: String, valueType: String): String
+    fun mapOf(pairsStr: String): String
+    fun mapGet(mapVar: String, key: String): String
+    fun mapPut(mapVar: String, key: String, value: String): String
+    fun mapMapValues(mapVar: String, keyParam: String, valueParam: String, transform: String): String
+    fun mapSize(mapVar: String): String
+
     fun lambdaArrow(): String
+    fun lambdaParam(paramName: String): String = paramName
 
     fun immutableFieldDeclaration(): String
     fun mutableFieldDeclaration(): String
@@ -205,6 +214,34 @@ class Kotlin: CodeBuilderLanguage {
 
     override fun optionalMapEnd(): String {
         return " }"
+    }
+
+    override fun mapType(keyType: String, valueType: String): String {
+        return "Map<$keyType, $valueType>"
+    }
+
+    override fun newEmptyMap(keyType: String, valueType: String): String {
+        return "emptyMap()"
+    }
+
+    override fun mapOf(pairsStr: String): String {
+        return "mapOf($pairsStr)"
+    }
+
+    override fun mapGet(mapVar: String, key: String): String {
+        return "$mapVar[$key]"
+    }
+
+    override fun mapPut(mapVar: String, key: String, value: String): String {
+        return "$mapVar[$key] = $value"
+    }
+
+    override fun mapMapValues(mapVar: String, keyParam: String, valueParam: String, transform: String): String {
+        return "$mapVar.mapValues { ($keyParam, $valueParam) -> $transform }"
+    }
+
+    override fun mapSize(mapVar: String): String {
+        return "$mapVar.size"
     }
 
     override fun lambdaArrow(): String {
@@ -391,6 +428,36 @@ class TypeScript: CodeBuilderLanguage {
 
     override fun optionalMapEnd(): String {
         return ")"
+    }
+
+    override fun mapType(keyType: String, valueType: String): String {
+        return "Map<$keyType, $valueType>"
+    }
+
+    override fun newEmptyMap(keyType: String, valueType: String): String {
+        return "new Map()"
+    }
+
+    override fun mapOf(pairsStr: String): String {
+        // TODO: Implement proper TypeScript map creation
+        return "new Map()"
+    }
+
+    override fun mapGet(mapVar: String, key: String): String {
+        return "$mapVar.get($key)"
+    }
+
+    override fun mapPut(mapVar: String, key: String, value: String): String {
+        return "$mapVar.set($key, $value)"
+    }
+
+    override fun mapMapValues(mapVar: String, keyParam: String, valueParam: String, transform: String): String {
+        // TODO: Implement proper TypeScript map values mapping
+        return "new Map()"
+    }
+
+    override fun mapSize(mapVar: String): String {
+        return "$mapVar.size"
     }
 
     override fun lambdaArrow(): String {
@@ -581,6 +648,36 @@ class CSharp: CodeBuilderLanguage {
 
     override fun emptyHardOptional(elementType: String): String {
         return "Optional<$elementType>.Empty()"
+    }
+
+    override fun mapType(keyType: String, valueType: String): String {
+        return "Dictionary<$keyType, $valueType>"
+    }
+
+    override fun newEmptyMap(keyType: String, valueType: String): String {
+        return "new Dictionary<$keyType, $valueType>()"
+    }
+
+    override fun mapOf(pairsStr: String): String {
+        // TODO: Implement proper C# dictionary creation
+        return "new Dictionary<>()"
+    }
+
+    override fun mapGet(mapVar: String, key: String): String {
+        return "$mapVar[$key]"
+    }
+
+    override fun mapPut(mapVar: String, key: String, value: String): String {
+        return "$mapVar[$key] = $value"
+    }
+
+    override fun mapMapValues(mapVar: String, keyParam: String, valueParam: String, transform: String): String {
+        // TODO: Implement proper C# dictionary values mapping
+        return "new Dictionary<>()"
+    }
+
+    override fun mapSize(mapVar: String): String {
+        return "$mapVar.Count"
     }
 
     override fun lambdaArrow(): String {

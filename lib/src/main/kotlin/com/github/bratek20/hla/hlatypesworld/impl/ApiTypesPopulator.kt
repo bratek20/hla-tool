@@ -206,6 +206,45 @@ class ApiTypesPopulator(
         val populators = modules.flatMap { createPatternPopulators(it) }
 
         populators.forEach { it.ensurePatternTypes() }
+        ensureMapTypes(modules)
         populators.forEach { it.addPatternTypes() }
+    }
+
+    private fun ensureMapTypes(modules: List<ModuleDefinition>) {
+        // Collect all type definitions used in fields
+        val allFieldTypes = modules.flatMap { module ->
+            module.getComplexValueObjects().flatMap { vo ->
+                vo.getFields().map { it.getType() }
+            } +
+            module.getDataClasses().flatMap { dc ->
+                dc.getFields().map { it.getType() }
+            }
+        }
+
+        // Find all Map types and ensure they exist
+        allFieldTypes.forEach { typeDef ->
+            if (typeDef.getWrappers().contains(com.github.bratek20.hla.definitions.api.TypeWrapper.MAP)) {
+                // Extract key and value types from Map<key,value>
+                val typeName = typeDef.getName()
+                val keyValueTypes = MapTypeParser.extractKeyValueTypes(typeName)
+
+                if (keyValueTypes != null) {
+                    val (keyTypeName, valueTypeName) = keyValueTypes
+
+                    // Ensure the map type exists in the world
+                    val mapWorldTypeName = WorldTypeName(MapTypeParser.createMapTypeName(keyTypeName, valueTypeName))
+                    if (!world.hasTypeByName(mapWorldTypeName)) {
+                        // Get the path from one of the wrapped types
+                        val keyWorldType = world.getTypeByName(WorldTypeName(keyTypeName))
+                        world.ensureType(
+                            WorldType.create(
+                                name = mapWorldTypeName,
+                                path = keyWorldType.getPath()
+                            )
+                        )
+                    }
+                }
+            }
+        }
     }
 }
