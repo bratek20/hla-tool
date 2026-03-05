@@ -5,6 +5,7 @@ import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.generation.impl.core.api.ComplexStructureField
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
+import com.github.bratek20.hla.queries.api.MapTypeParser
 import com.github.bratek20.hla.queries.api.asWorldTypeName
 import com.github.bratek20.hla.queries.api.isBaseType
 import com.github.bratek20.hla.queries.api.ofBaseType
@@ -43,7 +44,7 @@ class ApiTypeFactoryLogic(
             isMap -> {
                 // Extract key and value types from name: "Map<KeyType,ValueType>"
                 val typeName = type.getName()
-                val keyValueTypes = com.github.bratek20.hla.queries.api.MapTypeParser.extractKeyValueTypes(typeName)
+                val keyValueTypes = MapTypeParser.extractKeyValueTypes(typeName)
 
                 if (keyValueTypes != null) {
                     val (keyTypeName, valueTypeName) = keyValueTypes

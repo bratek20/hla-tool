@@ -81,6 +81,37 @@ fun minus(ops: MinusBuilderOps): MinusBuilder {
 }
 ```
 
+## Coding Style Guidelines
+
+### Comments
+
+- **Minimize comments in code** - Code should be self-explanatory through clear naming and structure
+- **Only add comments when logic is not self-evident** - Complex algorithms, business rules, or non-obvious workarounds may need explanation
+- **DO NOT add comments that just restate the code** - Bad: `// Create a map` above `val map = mutableMapOf()`
+- **DO NOT add docstring comments or type annotations to code you didn't change** - Only document new functionality you add
+- **Comments should explain "why", not "what"** - The code already shows what it does
+
+### Imports
+
+- **Always add explicit imports** - Never use fully qualified names in code (e.g., `com.github.bratek20.hla.queries.api.MapTypeParser.extractKeyValueTypes()`)
+- **Use short, simple names with proper imports** - Write `MapTypeParser.extractKeyValueTypes()` with `import com.github.bratek20.hla.queries.api.MapTypeParser`
+- **Group imports logically** - External dependencies first, then project imports
+- **Use wildcard imports only when importing many items from same package** - Prefer explicit imports for clarity
+
+**Good Example**:
+```kotlin
+import com.github.bratek20.hla.queries.api.MapTypeParser
+
+val mapInfo = MapTypeParser.parseMapType(typeString)
+```
+
+**Bad Example**:
+```kotlin
+// No import, using fully qualified name
+val mapInfo = com.github.bratek20.hla.queries.api.MapTypeParser.parseMapType(typeString)
+```
+
+
 ## Value Objects Generation (Recent Refactoring)
 
 ### Migration from Velocity to Code Builder
