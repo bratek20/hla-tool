@@ -766,8 +766,7 @@ class MapApiType(
     }
 
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
-        // For value object values, need to map them
-        // For primitive types, direct assignment
+        // Keys are always primitives, only values may need conversion
         if (valueType.name() == valueType.serializableName()) {
             return variable
         }
@@ -777,7 +776,7 @@ class MapApiType(
     }
 
     override fun modernSerialize(variable: ExpressionBuilder): ExpressionBuilder {
-        // For value object values, need to serialize them
+        // Keys are always primitives, only values may need conversion
         if (valueType.name() == valueType.serializableName()) {
             return variable
         }

@@ -494,13 +494,13 @@ data class ClassWithOptionalMap(
 data class ClassWithComplexMap(
     private val complexMap: Map<String, SomeClass>,
 ) {
-    fun getComplexMap(): Map<SomeId, SomeClass> {
+    fun getComplexMap(): Map<String, SomeClass> {
         return this.complexMap
     }
 
     companion object {
         fun create(
-            complexMap: Map<SomeId, SomeClass>,
+            complexMap: Map<String, SomeClass>,
         ): ClassWithComplexMap {
             return ClassWithComplexMap(
                 complexMap = complexMap,

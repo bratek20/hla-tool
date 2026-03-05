@@ -363,7 +363,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.primitiveMap !== undefined) {
-            ${path}primitiveMap ${given.getPrimitiveMap()} != ${expected.primitiveMap}
+            if (given.getPrimitiveMap() != expected.primitiveMap) { result.push(`${path}primitiveMap ${given.getPrimitiveMap()} != ${expected.primitiveMap}`) }
         }
 
         return result.join("\n")
@@ -376,7 +376,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.idMap !== undefined) {
-            ${path}idMap ${given.getIdMap()} != ${expected.idMap}
+            if (given.getIdMap() != expected.idMap) { result.push(`${path}idMap ${given.getIdMap()} != ${expected.idMap}`) }
         }
 
         return result.join("\n")
@@ -394,20 +394,20 @@ namespace SomeModule {
         }
 
         if (expected.optMap !== undefined) {
-            ${path}optMap ${given.getOptMap().get()} != ${expected.optMap}
+            if (given.getOptMap().get() != expected.optMap) { result.push(`${path}optMap ${given.getOptMap().get()} != ${expected.optMap}`) }
         }
 
         return result.join("\n")
     }
 
     export interface ExpectedClassWithComplexMap {
-        complexMap?: Map<SomeId, SomeClass>,
+        complexMap?: Map<string, SomeClass>,
     }
     export function diffClassWithComplexMap(given: ClassWithComplexMap, expected: ExpectedClassWithComplexMap, path: string = ""): string {
         const result: string[] = []
 
         if (expected.complexMap !== undefined) {
-            ${path}complexMap ${given.getComplexMap()} != ${expected.complexMap}
+            if (given.getComplexMap() != expected.complexMap) { result.push(`${path}complexMap ${given.getComplexMap()} != ${expected.complexMap}`) }
         }
 
         return result.join("\n")

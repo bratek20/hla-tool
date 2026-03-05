@@ -446,10 +446,10 @@ namespace SomeModule.Api {
         ) {
             this.complexMap = complexMap;
         }
-        public Dictionary<SomeId, SomeClass> GetComplexMap() {
+        public Dictionary<string, SomeClass> GetComplexMap() {
             return complexMap;
         }
-        public static ClassWithComplexMap Create(Dictionary<SomeId, SomeClass> complexMap) {
+        public static ClassWithComplexMap Create(Dictionary<string, SomeClass> complexMap) {
             return new ClassWithComplexMap(complexMap);
         }
     }

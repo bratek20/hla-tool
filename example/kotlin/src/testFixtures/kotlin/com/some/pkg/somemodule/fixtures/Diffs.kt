@@ -389,7 +389,7 @@ fun diffClassWithSimpleMap(given: ClassWithSimpleMap, expectedInit: ExpectedClas
     val result: MutableList<String> = mutableListOf()
 
     expected.primitiveMap?.let {
-        ${path}primitiveMap ${given.getPrimitiveMap()} != ${it}
+        if (given.getPrimitiveMap() != it) { result.add("${path}primitiveMap ${given.getPrimitiveMap()} != ${it}") }
     }
 
     return result.joinToString("\n")
@@ -403,7 +403,7 @@ fun diffClassWithVoMap(given: ClassWithVoMap, expectedInit: ExpectedClassWithVoM
     val result: MutableList<String> = mutableListOf()
 
     expected.idMap?.let {
-        ${path}idMap ${given.getIdMap()} != ${it}
+        if (given.getIdMap() != it) { result.add("${path}idMap ${given.getIdMap()} != ${it}") }
     }
 
     return result.joinToString("\n")
@@ -422,21 +422,21 @@ fun diffClassWithOptionalMap(given: ClassWithOptionalMap, expectedInit: Expected
     }
 
     expected.optMap?.let {
-        ${path}optMap ${given.getOptMap()!!} != ${it}
+        if (given.getOptMap()!! != it) { result.add("${path}optMap ${given.getOptMap()!!} != ${it}") }
     }
 
     return result.joinToString("\n")
 }
 
 data class ExpectedClassWithComplexMap(
-    var complexMap: Map<SomeId, SomeClass>? = null,
+    var complexMap: Map<String, SomeClass>? = null,
 )
 fun diffClassWithComplexMap(given: ClassWithComplexMap, expectedInit: ExpectedClassWithComplexMap.() -> Unit, path: String = ""): String {
     val expected = ExpectedClassWithComplexMap().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
     expected.complexMap?.let {
-        ${path}complexMap ${given.getComplexMap()} != ${it}
+        if (given.getComplexMap() != it) { result.add("${path}complexMap ${given.getComplexMap()} != ${it}") }
     }
 
     return result.joinToString("\n")

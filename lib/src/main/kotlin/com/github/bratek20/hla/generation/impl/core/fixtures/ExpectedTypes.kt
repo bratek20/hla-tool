@@ -328,8 +328,9 @@ class MapExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        // Simple implementation for now - just compare as strings
-        return "$path \${$givenVariable} != \${$expectedVariable}"
+        val element = languageTypes.wrapWithString("$path \${$givenVariable} != \${$expectedVariable}")
+        val body = languageTypes.addListElement("result", element)
+        return "if ($givenVariable != $expectedVariable) { $body }"
     }
 }
 
