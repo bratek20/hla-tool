@@ -51,6 +51,10 @@ namespace SomeModule.Api {
         return new Web.SomeInterfaceWebClient(Web.config, c).methodReturningNumericType()
     }
 
+    export function methodWithOptionalMap(optMap: Optional<Map<string, string>>, c: HandlerContext): Optional<Map<string, string>> {
+        return new Web.SomeInterfaceWebClient(Web.config, c).methodWithOptionalMap(optMap)
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Web.SomeInterface2WebClient(Web.config, c).referenceOtherClass(other)
     }

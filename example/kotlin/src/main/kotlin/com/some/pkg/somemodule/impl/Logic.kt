@@ -50,6 +50,10 @@ class SomeInterfaceLogic: SomeInterface {
     override fun methodReturningNumericType(): Int {
         TODO("Not yet implemented")
     }
+
+    override fun methodWithOptionalMap(optMap: Map<String, String>?): Map<String, String>? {
+        TODO("Not yet implemented")
+    }
 }
 
 class SomeInterface2Logic: SomeInterface2 {

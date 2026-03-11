@@ -38,6 +38,8 @@ interface SomeInterface {
     fun methodReturningOptSimpleVo(): SomeId?
 
     fun methodReturningNumericType(): Int
+
+    fun methodWithOptionalMap(optMap: Map<String, String>?): Map<String, String>?
 }
 
 interface SomeInterface2 {

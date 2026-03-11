@@ -230,6 +230,28 @@ Operations:
 - `updateAll` - Regenerate all modules in profile
 - `startAll` - Generate all modules in profile
 
+**⚠️ CRITICAL: When modifying SomeModule.module**
+
+When you modify `example/hla/SomeModule.module`, you **MUST** regenerate it for **ALL** languages and profiles that use it to avoid test failures:
+
+```bash
+cd example
+
+# Regenerate for all languages
+java -jar ../app/build/libs/app.jar update hla kotlin SomeModule
+java -jar ../app/build/libs/app.jar update hla typeScript SomeModule
+java -jar ../app/build/libs/app.jar update hla cSharp SomeModule
+java -jar ../app/build/libs/app.jar update hla kotlinSkipPatterns SomeModule
+```
+
+**Why this is required:**
+- The `HlaFacadeTest` integration tests compare generated output with example files
+- Example files exist for multiple language profiles: `kotlin`, `typeScript`, `cSharp`, `kotlinSkipPatterns`
+- If you only regenerate one language, other tests will fail because they detect differences
+- Look in `.run/` folder for common configurations - you can use "StartAll" configurations for each profile
+
+**Quick tip**: Use `startAll` or `updateAll` operations to regenerate all modules at once for a specific profile.
+
 ### Running Tests
 
 ```bash
@@ -428,6 +450,23 @@ if (boxedType.name == BaseType.INT || boxedType.name == BaseType.LONG)
 if (boxedType.name.toString() == "Int")
 ```
 
+### Map Types in Method Arguments
+
+Optional map types like `<string, string>?` are fully supported in method arguments:
+
+```
+Interfaces
+    SomeInterface
+        methodWithOptionalMap(optMap: <string, string>?): <string, string>?
+```
+
+This generates correct code in all languages:
+- **Kotlin**: `fun methodWithOptionalMap(optMap: Map<String, String>?): Map<String, String>?`
+- **TypeScript**: `methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>>`
+- **C#**: `Dictionary<string, string>? MethodWithOptionalMap(Dictionary<string, string>? optMap)`
+
+The parser uses `splitNotInsideAngleBrackets()` to correctly handle commas inside angle brackets.
+
 ### Adding Language-Specific Features
 
 Use `when` blocks in `getClassOps()`:
@@ -482,8 +521,14 @@ when {
 6. ✅ **Use when blocks for language-specific logic** - Clean and maintainable
 7. ✅ **Check BaseType with enum comparison** - Not string comparison
 
-## Recent Changes (2026-02-11)
+## Recent Changes
 
+### 2026-03-11
+- ✅ Fixed parser to support optional map types in method arguments (e.g., `methodWithOptionalMap(optMap: <string, string>?)`)
+- ✅ Added `splitNotInsideAngleBrackets()` helper function to `ParsingEngine.kt` to correctly handle commas inside map type definitions
+- ✅ Parser now properly handles `<key, value>?` syntax in method arguments without incorrectly splitting on the comma inside angle brackets
+
+### 2026-02-11
 - ✅ Migrated Kotlin value objects from Velocity to code builder
 - ✅ Migrated TypeScript value objects from Velocity to code builder
 - ✅ Added `operator` flag to MethodBuilder for Kotlin operators

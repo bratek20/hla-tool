@@ -55,6 +55,9 @@ namespace SomeModule.Web {
         public int MethodReturningNumericType() {
             return client.Post("/some/prefix/someInterface/methodReturningNumericType", Optional<object>.Empty()).GetBody<SomeInterfaceMethodReturningNumericTypeResponse>().Get().GetValue();
         }
+        public Optional<Dictionary<string, string>> MethodWithOptionalMap(Optional<Dictionary<string, string>> optMap) {
+            return client.Post("/some/prefix/someInterface/methodWithOptionalMap", Optional<SomeInterfaceMethodWithOptionalMapRequest>.Of(SomeInterfaceMethodWithOptionalMapRequest.Create(optMap))).GetBody<SomeInterfaceMethodWithOptionalMapResponse>().Get().GetValue();
+        }
     }
 
     public class SomeInterface2WebClient: SomeInterface2 {

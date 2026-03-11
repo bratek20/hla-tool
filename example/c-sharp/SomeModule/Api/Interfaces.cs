@@ -37,6 +37,8 @@ namespace SomeModule.Api {
         Optional<SomeId> MethodReturningOptSimpleVo();
 
         int MethodReturningNumericType();
+
+        Optional<Dictionary<string, string>> MethodWithOptionalMap(Optional<Dictionary<string, string>> optMap);
     }
 
     public interface SomeInterface2 {
