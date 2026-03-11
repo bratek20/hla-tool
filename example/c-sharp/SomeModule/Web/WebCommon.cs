@@ -231,6 +231,35 @@ namespace SomeModule.Web {
         }
     }
 
+    public class SomeInterfaceMethodWithOptionalMapRequest {
+        readonly Dictionary<string, string>? optMap;
+
+        public SomeInterfaceMethodWithOptionalMapRequest(
+            Dictionary<string, string>? optMap
+        ) {
+            this.optMap = optMap;
+        }
+        public Optional<Dictionary<string, string>> GetOptMap() {
+            return Optional<Dictionary<string, string>>.Of(optMap);
+        }
+        public static SomeInterfaceMethodWithOptionalMapRequest Create(Optional<Dictionary<string, string>> optMap) {
+            return new SomeInterfaceMethodWithOptionalMapRequest(optMap.OrElse(null));
+        }
+    }
+
+    public class SomeInterfaceMethodWithOptionalMapResponse {
+        readonly Dictionary<string, string>? value;
+
+        public SomeInterfaceMethodWithOptionalMapResponse(
+            Dictionary<string, string>? value
+        ) {
+            this.value = value;
+        }
+        public Optional<Dictionary<string, string>> GetValue() {
+            return Optional<Dictionary<string, string>>.Of(value);
+        }
+    }
+
     public class SomeInterface2ReferenceOtherClassRequest {
         readonly OtherClass other;
 

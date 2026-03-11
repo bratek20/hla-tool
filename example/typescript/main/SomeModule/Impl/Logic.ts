@@ -59,6 +59,11 @@ namespace SomeModule.Impl {
             // TODO
             return undefined
         }
+
+        methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>> {
+            // TODO
+            return undefined
+        }
     }
 
     export class SomeInterface2Logic implements SomeInterface2 {

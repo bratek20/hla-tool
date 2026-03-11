@@ -3,7 +3,7 @@
 namespace SomeModule.Menu {
     export function initSomeModuleMenu(libraryPrefix: string | undefined) {
         const builder = new MenuBuilder("Custom name", libraryPrefix)
-        builder.addNamespaced("Some Empty Method", "SomeModule.Menu", someEmptyMethod).addNamespaced("Some Command", "SomeModule.Menu", someCommand).addNamespaced("Some Query", "SomeModule.Menu", someQuery).addNamespaced("Opt Method", "SomeModule.Menu", optMethod).addNamespaced("Method With Simple VO", "SomeModule.Menu", methodWithSimpleVO).addNamespaced("Method With List Of Simple VO", "SomeModule.Menu", methodWithListOfSimpleVO).addNamespaced("Method With Any", "SomeModule.Menu", methodWithAny).addNamespaced("Method With Base Type", "SomeModule.Menu", methodWithBaseType).addNamespaced("Method Returning Opt Simple Vo", "SomeModule.Menu", methodReturningOptSimpleVo).addNamespaced("Method Returning Numeric Type", "SomeModule.Menu", methodReturningNumericType).addNamespaced("Reference Other Class", "SomeModule.Menu", referenceOtherClass).addNamespaced("Reference Legacy Type", "SomeModule.Menu", referenceLegacyType).build()
+        builder.addNamespaced("Some Empty Method", "SomeModule.Menu", someEmptyMethod).addNamespaced("Some Command", "SomeModule.Menu", someCommand).addNamespaced("Some Query", "SomeModule.Menu", someQuery).addNamespaced("Opt Method", "SomeModule.Menu", optMethod).addNamespaced("Method With Simple VO", "SomeModule.Menu", methodWithSimpleVO).addNamespaced("Method With List Of Simple VO", "SomeModule.Menu", methodWithListOfSimpleVO).addNamespaced("Method With Any", "SomeModule.Menu", methodWithAny).addNamespaced("Method With Base Type", "SomeModule.Menu", methodWithBaseType).addNamespaced("Method Returning Opt Simple Vo", "SomeModule.Menu", methodReturningOptSimpleVo).addNamespaced("Method Returning Numeric Type", "SomeModule.Menu", methodReturningNumericType).addNamespaced("Method With Optional Map", "SomeModule.Menu", methodWithOptionalMap).addNamespaced("Reference Other Class", "SomeModule.Menu", referenceOtherClass).addNamespaced("Reference Legacy Type", "SomeModule.Menu", referenceLegacyType).build()
     }
 
     export function someEmptyMethod() {
@@ -44,6 +44,10 @@ namespace SomeModule.Menu {
 
     export function methodReturningNumericType() {
         Woh.menuDecorator((c: any) => { SomeModule.Api.methodReturningNumericType(c) })
+    }
+
+    export function methodWithOptionalMap() {
+        Woh.menuDecorator((c: any) => { SomeModule.Api.methodWithOptionalMap(c) })
     }
 
     export function referenceOtherClass() {

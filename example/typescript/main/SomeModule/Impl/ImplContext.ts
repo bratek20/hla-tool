@@ -40,6 +40,10 @@ namespace SomeModule.Api {
         return new Impl.SomeInterfaceLogic(c).methodReturningNumericType()
     }
 
+    export function methodWithOptionalMap(optMap: Optional<Map<string, string>>, c: HandlerContext): Optional<Map<string, string>> {
+        return new Impl.SomeInterfaceLogic(c).methodWithOptionalMap(optMap)
+    }
+
     export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
         return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
     }

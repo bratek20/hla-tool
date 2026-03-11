@@ -47,6 +47,9 @@ namespace SomeModule.Web {
         methodReturningNumericType(): number {
             return this.client.post("/some/prefix/someInterface/methodReturningNumericType", Optional.empty()).getBody(SomeInterfaceMethodReturningNumericTypeResponse).get().getValue()
         }
+        methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>> {
+            return this.client.post("/some/prefix/someInterface/methodWithOptionalMap", Optional.of(SomeInterfaceMethodWithOptionalMapRequest.create(optMap))).getBody(SomeInterfaceMethodWithOptionalMapResponse).get().getValue()
+        }
     }
 
     export class SomeInterface2WebClient implements SomeInterface2 {

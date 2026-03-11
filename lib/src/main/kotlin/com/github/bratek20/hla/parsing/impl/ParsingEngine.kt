@@ -119,7 +119,7 @@ class ParsingEngine {
 
         if (noIndentLine.contains(Regex("[a-zA-Z0-9]\\("))) {
             val methodName = noIndentLine.substringBefore("(")
-            val args = noIndentLine.substringAfter("(").substringBefore(")").split(",")
+            val args = splitNotInsideAngleBrackets(noIndentLine.substringAfter("(").substringBefore(")"), ",")
                 .filter { it.isNotBlank() }
                 .map {
                     val split = it.split(":")
@@ -193,6 +193,39 @@ class ParsingEngine {
         }
 
         return filtered.contains(toCheck)
+    }
+
+    private fun splitNotInsideAngleBrackets(str: String, delimiter: String): List<String> {
+        val result = mutableListOf<String>()
+        val current = StringBuilder()
+        var insideAngleBrackets = 0
+
+        var i = 0
+        while (i < str.length) {
+            when {
+                str[i] == '<' -> {
+                    insideAngleBrackets++
+                    current.append(str[i])
+                }
+                str[i] == '>' -> {
+                    insideAngleBrackets--
+                    current.append(str[i])
+                }
+                insideAngleBrackets == 0 && str.substring(i).startsWith(delimiter) -> {
+                    result.add(current.toString())
+                    current.clear()
+                    i += delimiter.length - 1
+                }
+                else -> current.append(str[i])
+            }
+            i++
+        }
+
+        if (current.isNotEmpty()) {
+            result.add(current.toString())
+        }
+
+        return result
     }
 
 

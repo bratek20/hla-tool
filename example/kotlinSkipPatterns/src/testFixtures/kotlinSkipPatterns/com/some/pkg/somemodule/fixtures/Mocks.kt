@@ -38,6 +38,9 @@ open class SomeInterfaceMock: SomeInterface {
     private var methodReturningOptSimpleVoResponse: String? = null
     private var methodReturningNumericTypeCallsNumber: Int = 0
     private var methodReturningNumericTypeResponse: Int = 0
+    private var methodWithOptionalMapCallsNumber: Int = 0
+    private var methodWithOptionalMapCalls: MutableList<Map<String, String>?> = mutableListOf()
+    private var methodWithOptionalMapResponse: Map<String, String>? = null
     override fun someEmptyMethod(): Unit {
         someEmptyMethodCallsNumber = someEmptyMethodCallsNumber + 1
     }
@@ -151,6 +154,17 @@ open class SomeInterfaceMock: SomeInterface {
     fun setMethodReturningNumericTypeResponse(response: Int) {
         methodReturningNumericTypeResponse = response
     }
+    override fun methodWithOptionalMap(optMap: Map<String, String>?): Map<String, String>? {
+        methodWithOptionalMapCallsNumber = methodWithOptionalMapCallsNumber + 1
+        methodWithOptionalMapCalls.add(optMap)
+        return methodWithOptionalMapResponse
+    }
+    fun assertMethodWithOptionalMapCallsNumber(expectedNumber: Int) {
+        assertThat(methodWithOptionalMapCallsNumber).withFailMessage("Expected 'methodWithOptionalMap' to be called " + expectedNumber + " times but was called " + methodWithOptionalMapCallsNumber + " times").isEqualTo(expectedNumber)
+    }
+    fun setMethodWithOptionalMapResponse(response: Map<String, String>?) {
+        methodWithOptionalMapResponse = response
+    }
     fun reset() {
         someEmptyMethodCallsNumber = 0
         someCommandCallsNumber = 0
@@ -176,6 +190,9 @@ open class SomeInterfaceMock: SomeInterface {
         methodReturningOptSimpleVoResponse = null
         methodReturningNumericTypeCallsNumber = 0
         methodReturningNumericTypeResponse = 0
+        methodWithOptionalMapCallsNumber = 0
+        methodWithOptionalMapCalls = mutableListOf()
+        methodWithOptionalMapResponse = null
     }
 }
 

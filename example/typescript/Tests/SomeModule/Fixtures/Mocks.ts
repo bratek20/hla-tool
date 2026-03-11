@@ -25,6 +25,9 @@ class SomeInterfaceMock implements SomeInterface {
     private methodReturningOptSimpleVoResponse: string | undefined = undefined
     private methodReturningNumericTypeCallsNumber: number = 0
     private methodReturningNumericTypeResponse: number = 0
+    private methodWithOptionalMapCallsNumber: number = 0
+    private methodWithOptionalMapCalls: Optional<Map<string, string>>[] = []
+    private methodWithOptionalMapResponse: Map<string, string> | undefined = undefined
     someEmptyMethod(): void {
         this.someEmptyMethodCallsNumber = this.someEmptyMethodCallsNumber + 1
     }
@@ -138,6 +141,17 @@ class SomeInterfaceMock implements SomeInterface {
     setMethodReturningNumericTypeResponse(response: number) {
         this.methodReturningNumericTypeResponse = response
     }
+    methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>> {
+        this.methodWithOptionalMapCallsNumber = this.methodWithOptionalMapCallsNumber + 1
+        this.methodWithOptionalMapCalls.push(optMap)
+        return Optional.of(this.methodWithOptionalMapResponse)
+    }
+    assertMethodWithOptionalMapCallsNumber(expectedNumber: number) {
+        AssertEquals(this.methodWithOptionalMapCallsNumber, expectedNumber, "Expected 'methodWithOptionalMap' to be called " + expectedNumber + " times but was called " + this.methodWithOptionalMapCallsNumber + " times")
+    }
+    setMethodWithOptionalMapResponse(response: Map<string, string> | undefined) {
+        this.methodWithOptionalMapResponse = response
+    }
     reset() {
         this.someEmptyMethodCallsNumber = 0
         this.someCommandCallsNumber = 0
@@ -163,6 +177,9 @@ class SomeInterfaceMock implements SomeInterface {
         this.methodReturningOptSimpleVoResponse = undefined
         this.methodReturningNumericTypeCallsNumber = 0
         this.methodReturningNumericTypeResponse = 0
+        this.methodWithOptionalMapCallsNumber = 0
+        this.methodWithOptionalMapCalls = []
+        this.methodWithOptionalMapResponse = undefined
     }
 }
 
@@ -347,6 +364,7 @@ namespace SomeModule.Mocks {
         SomeModule.Api.methodWithBaseType = CreateMock(SomeModule.Api.methodWithBaseType, (i: string) => { return mock.methodWithBaseType(i) })
         SomeModule.Api.methodReturningOptSimpleVo = CreateMock(SomeModule.Api.methodReturningOptSimpleVo, () => { return mock.methodReturningOptSimpleVo() })
         SomeModule.Api.methodReturningNumericType = CreateMock(SomeModule.Api.methodReturningNumericType, () => { return mock.methodReturningNumericType() })
+        SomeModule.Api.methodWithOptionalMap = CreateMock(SomeModule.Api.methodWithOptionalMap, (optMap: Optional<Map<string, string>>) => { return mock.methodWithOptionalMap(optMap) })
         return mock
     }
 

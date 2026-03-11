@@ -145,6 +145,25 @@ namespace SomeModule.Web {
         }
     }
 
+    export class SomeInterfaceMethodWithOptionalMapRequest {
+        private optMap = OptionalClass(Map<string, string>)
+        getOptMap(): Optional<Map<string, string>> {
+            return Optional.of(this.optMap)
+        }
+        static create(optMap: Optional<Map<string, string>>): SomeInterfaceMethodWithOptionalMapRequest {
+            const instance = new SomeInterfaceMethodWithOptionalMapRequest()
+            instance.optMap = optMap.orElse(undefined)
+            return instance
+        }
+    }
+
+    export class SomeInterfaceMethodWithOptionalMapResponse {
+        private value = OptionalClass(Map<string, string>)
+        getValue(): Optional<Map<string, string>> {
+            return Optional.of(this.value)
+        }
+    }
+
     export class SomeInterface2ReferenceOtherClassRequest {
         private other = Class(OtherClass)
         getOther(): OtherClass {

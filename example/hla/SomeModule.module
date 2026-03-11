@@ -265,6 +265,8 @@ Interfaces
 
         methodReturningNumericType(): int
 
+        methodWithOptionalMap(optMap: <string, string>?): <string, string>?
+
     SomeInterface2
         referenceOtherClass(other: OtherClass): OtherClass
         referenceLegacyType(legacyType: LegacyType): LegacyType

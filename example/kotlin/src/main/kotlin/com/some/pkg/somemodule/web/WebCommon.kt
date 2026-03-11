@@ -152,6 +152,25 @@ class SomeInterfaceMethodReturningNumericTypeResponse(
         return value
     }
 }
+class SomeInterfaceMethodWithOptionalMapRequest(
+    private val optMap: Map<String, String>?
+) {
+    fun getOptMap(): Map<String, String>? {
+        return optMap
+    }
+    companion object {
+        fun create(optMap: Map<String, String>?): SomeInterfaceMethodWithOptionalMapRequest {
+            return SomeInterfaceMethodWithOptionalMapRequest(optMap)
+        }
+    }
+}
+class SomeInterfaceMethodWithOptionalMapResponse(
+    private val value: Map<String, String>?
+) {
+    fun getValue(): Map<String, String>? {
+        return value
+    }
+}
 class SomeInterface2ReferenceOtherClassRequest(
     private val other: OtherClass
 ) {

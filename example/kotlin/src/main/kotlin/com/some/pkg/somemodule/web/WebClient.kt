@@ -56,6 +56,10 @@ class SomeInterfaceWebClient(
     override fun methodReturningNumericType(): Int {
         return client.post("/some/prefix/someInterface/methodReturningNumericType", null).getBody(SomeInterfaceMethodReturningNumericTypeResponse::class.java).getValue()
     }
+
+    override fun methodWithOptionalMap(optMap: Map<String, String>?): Map<String, String>? {
+        return client.post("/some/prefix/someInterface/methodWithOptionalMap", SomeInterfaceMethodWithOptionalMapRequest.create(optMap)).getBody(SomeInterfaceMethodWithOptionalMapResponse::class.java).getValue()
+    }
 }
 
 class SomeInterface2WebClient(

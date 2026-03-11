@@ -31,6 +31,8 @@ interface SomeInterface {
     methodReturningOptSimpleVo(): Optional<SomeId>
 
     methodReturningNumericType(): number
+
+    methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>>
 }
 
 interface SomeInterface2 {

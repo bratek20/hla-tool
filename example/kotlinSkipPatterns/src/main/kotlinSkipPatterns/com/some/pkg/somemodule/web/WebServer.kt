@@ -79,6 +79,12 @@ class SomeInterfaceController(
         // no request needed
         return serializer.asStruct(SomeInterfaceMethodReturningNumericTypeResponse(api.methodReturningNumericType()))
     }
+
+    @PostMapping("/methodWithOptionalMap")
+    fun methodWithOptionalMap(@RequestBody rawRequest: Struct): Struct {
+        val request = serializer.fromStruct(rawRequest, SomeInterfaceMethodWithOptionalMapRequest::class.java)
+        return serializer.asStruct(SomeInterfaceMethodWithOptionalMapResponse(api.methodWithOptionalMap(request.getOptMap())))
+    }
 }
 
 @RestController

@@ -56,6 +56,10 @@ class TestSomeInterfaceLogic: SomeInterface {
         TODO("Not yet implemented")
     }
 
+    override fun methodWithOptionalMap(optMap: Map<String, String>?): Map<String, String>? {
+        TODO("Not yet implemented")
+    }
+
 }
 
 class TestSomeModuleImpl: ContextModule {
