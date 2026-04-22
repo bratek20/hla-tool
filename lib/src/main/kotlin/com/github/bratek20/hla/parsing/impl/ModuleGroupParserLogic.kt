@@ -142,6 +142,7 @@ class ModuleGroupParserLogic(
                     baseUrl = parseOptVariable(http.elements, "baseUrl"),
                     auth = parseOptVariable(http.elements, "auth"),
                     urlPathPrefix = parseOptVariable(http.elements, "urlPathPrefix"),
+                    requestResponseWrapping = parseOptVariable(http.elements, "requestResponseWrapping")?.toBoolean(),
                 )
             }
             val playFabHandlers = findSection(web.elements, "PlayFabHandlers")?.let { s ->

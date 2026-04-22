@@ -12,6 +12,48 @@ HLA is a code generation framework that converts `.module` definition files into
 - Test Fixtures (Builders, Asserts, Mocks)
 - Web clients/servers
 
+## ⚠️ CRITICAL: HLA is Self-Hosting
+
+**The HLA project uses itself to generate its own code!**
+
+### Important Rules for Modifying HLA's Own Definitions
+
+1. **NEVER manually edit generated files in the HLA lib module** (e.g., `lib/src/main/kotlin/com/github/bratek20/hla/definitions/api/ValueObjects.kt`)
+   - These files are auto-generated from `.module` files
+   - Manual edits will be overwritten when the module is regenerated
+
+2. **Always modify the `.module` file instead:**
+   - HLA's own module definitions are in `hla/` directory (not `example/hla/`)
+   - For example, `HttpDefinition` is defined in `hla/Definitions.module`
+
+3. **Use the update script to regenerate:**
+   - Navigate to the `bash/` directory
+   - Run `./updateModule.sh` to regenerate HLA's own modules
+   - This ensures all generated code stays in sync
+
+### Example: Adding a Field to HttpDefinition
+
+**❌ WRONG:**
+```kotlin
+// Directly editing lib/src/main/kotlin/com/github/bratek20/hla/definitions/api/ValueObjects.kt
+data class HttpDefinition(
+    private val requestResponseWrapping: Boolean?,  // Don't add here!
+)
+```
+
+**✅ CORRECT:**
+1. Edit `hla/Definitions.module` to add the field to HttpDefinition
+2. Navigate to `bash/` directory
+3. Run `./updateModule.sh` to regenerate
+4. The ValueObjects.kt file will be automatically updated
+
+### HLA Module Locations
+
+- **HLA's own modules**: `hla/*.module` (the framework's internal definitions)
+- **Example modules**: `example/hla/*.module` (for testing and examples)
+- **Generated HLA code**: `lib/src/main/kotlin/com/github/bratek20/hla/definitions/api/`
+- **Update script**: `bash/updateModule.sh`
+
 ## Architecture
 
 ### Key Components
@@ -212,6 +254,24 @@ override fun getOperations(): TopLevelCodeBuilderOps = {
 ```
 
 The JAR is created at: `app/build/libs/app.jar`
+
+### Regenerating HLA's Own Modules
+
+**IMPORTANT**: HLA uses itself to generate its own code. When you modify HLA's internal `.module` files (in `hla/` directory), use the update script:
+
+```bash
+cd bash
+./updateModule.sh
+```
+
+This regenerates HLA's own definitions (like `HttpDefinition`, `ModuleDefinition`, etc.) located in:
+- `lib/src/main/kotlin/com/github/bratek20/hla/definitions/api/`
+- `lib/src/testFixtures/kotlin/com/github/bratek20/hla/definitions/fixtures/`
+
+**Never manually edit these generated files!** Always:
+1. Modify the `.module` file in `hla/` directory
+2. Run `bash/updateModule.sh`
+3. Rebuild the app: `./gradlew :app:build`
 
 ### Regenerating Examples
 
@@ -520,21 +580,6 @@ when {
 5. ✅ **Follow existing patterns** - Look at similar generators before implementing
 6. ✅ **Use when blocks for language-specific logic** - Clean and maintainable
 7. ✅ **Check BaseType with enum comparison** - Not string comparison
-
-## Recent Changes
-
-### 2026-03-11
-- ✅ Fixed parser to support optional map types in method arguments (e.g., `methodWithOptionalMap(optMap: <string, string>?)`)
-- ✅ Added `splitNotInsideAngleBrackets()` helper function to `ParsingEngine.kt` to correctly handle commas inside map type definitions
-- ✅ Parser now properly handles `<key, value>?` syntax in method arguments without incorrectly splitting on the comma inside angle brackets
-
-### 2026-02-11
-- ✅ Migrated Kotlin value objects from Velocity to code builder
-- ✅ Migrated TypeScript value objects from Velocity to code builder
-- ✅ Added `operator` flag to MethodBuilder for Kotlin operators
-- ✅ Added `minus()` and `times()` builders to SimpleExpressionBuilders
-- ✅ Deleted both Velocity templates (`valueObjects.vm` for Kotlin and TypeScript)
-- ✅ All languages now use unified code builder approach
 
 ## Useful Commands
 

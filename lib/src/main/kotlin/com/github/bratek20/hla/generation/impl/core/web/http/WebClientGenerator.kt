@@ -114,17 +114,29 @@ class WebClientGenerator: PatternGenerator() {
     }
 
     private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
+        val requestResponseWrapping = c.module.getWebSubmodule()?.getHttp()?.getRequestResponseWrapping() ?: true
+
         val returnPart = if (method.returnType != "Unit") "return " else ""
-        val getBodyPart = if (method.returnType != "Unit")
-            ".getBody(${responseName(interfaceName, method)}::class.java).getValue()"
-        else
+        val getBodyPart = if (method.returnType != "Unit") {
+            if (requestResponseWrapping) {
+                ".getBody(${responseName(interfaceName, method)}::class.java).getValue()"
+            } else {
+                ".getBody(${method.returnType}::class.java)"
+            }
+        } else {
             ""
+        }
 
         val postUrl = getPostUrl(interfaceName, method)
-        val postBody = if(method.hasArgs())
-            "${requestName(interfaceName, method)}.create(${method.argsPass()})"
-        else
+        val postBody = if(method.hasArgs()) {
+            if (requestResponseWrapping) {
+                "${requestName(interfaceName, method)}.create(${method.argsPass()})"
+            } else {
+                method.args.first().name
+            }
+        } else {
             "null"
+        }
 
         return "${returnPart}client.post($postUrl, $postBody)$getBodyPart"
     }

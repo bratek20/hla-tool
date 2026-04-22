@@ -221,20 +221,24 @@ class WebCommonGenerator: PatternGenerator() {
             }
         }
 
-        exposedInterfaces(c).forEach { interf ->
-            interf.methods.forEach { method ->
-                if (method.hasArgs()) {
-                    if (lang is TypeScript) {
-                        classes.add(typeScriptRequestClass(interf.name, method))
-                    } else {
-                        classes.add(defaultRequestClass(interf.name, method))
+        val requestResponseWrapping = c.module.getWebSubmodule()?.getHttp()?.getRequestResponseWrapping() ?: true
+
+        if (requestResponseWrapping) {
+            exposedInterfaces(c).forEach { interf ->
+                interf.methods.forEach { method ->
+                    if (method.hasArgs()) {
+                        if (lang is TypeScript) {
+                            classes.add(typeScriptRequestClass(interf.name, method))
+                        } else {
+                            classes.add(defaultRequestClass(interf.name, method))
+                        }
                     }
-                }
-                if (method.returnApiType !is BaseApiType || method.returnApiType.name != BaseType.VOID) {
-                    if (lang is TypeScript) {
-                        classes.add(typeScriptResponseClass(interf.name, method))
-                    } else {
-                        classes.add(defaultResponseClass(interf.name, method))
+                    if (method.returnApiType !is BaseApiType || method.returnApiType.name != BaseType.VOID) {
+                        if (lang is TypeScript) {
+                            classes.add(typeScriptResponseClass(interf.name, method))
+                        } else {
+                            classes.add(defaultResponseClass(interf.name, method))
+                        }
                     }
                 }
             }

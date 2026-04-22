@@ -50,29 +50,55 @@ class WebServerGenerator: PatternGenerator() {
     }
 
     private fun getDeclaration(method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
+        val requestResponseWrapping = c.module.getWebSubmodule()?.getHttp()?.getRequestResponseWrapping() ?: true
+
         val returnType = if (method.returnType != "Unit") "Struct" else "Unit"
-        val body = if(method.hasArgs())
-            "@RequestBody rawRequest: Struct"
-        else
+        val body = if(method.hasArgs()) {
+            if (requestResponseWrapping) {
+                "@RequestBody rawRequest: Struct"
+            } else {
+                "@RequestBody rawRequest: Struct"
+            }
+        } else {
             ""
+        }
         return "${method.name}($body): $returnType"
     }
 
     private fun getBody(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
-        val firstLine = if (method.hasArgs()) "val request = serializer.fromStruct(rawRequest, ${
-            requestName(
-                interfaceName,
-                method
-            )
-        }::class.java)" else "// no request needed"
+        val requestResponseWrapping = c.module.getWebSubmodule()?.getHttp()?.getRequestResponseWrapping() ?: true
 
-        val prefix = if (method.returnType != "Unit") "return serializer.asStruct(${responseName(interfaceName, method)}(" else ""
+        val firstLine = if (method.hasArgs()) {
+            if (requestResponseWrapping) {
+                "val request = serializer.fromStruct(rawRequest, ${requestName(interfaceName, method)}::class.java)"
+            } else {
+                "val request = serializer.fromStruct(rawRequest, ${method.args.first().type}::class.java)"
+            }
+        } else {
+            "// no request needed"
+        }
 
-        val initApiCall = "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
+        val initApiCall = if (requestResponseWrapping) {
+            "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
+        } else {
+            "api.${method.name}(request)"
+        }
 
-        val apiCall = method.returnApiType.modernSerialize(hardcodedExpression(initApiCall)).build(c.language.types().context());
-        val suffix = if (method.returnType != "Unit") "))" else ""
-        val secondLine = "${prefix}${apiCall}${suffix}"
+        val secondLine = if (method.returnType != "Unit") {
+            val serializedCall = if (requestResponseWrapping) {
+                method.returnApiType.modernSerialize(hardcodedExpression(initApiCall)).build(c.language.types().context())
+            } else {
+                initApiCall
+            }
+            val wrappedCall = if (requestResponseWrapping) {
+                "${responseName(interfaceName, method)}($serializedCall)"
+            } else {
+                serializedCall
+            }
+            "return serializer.asStruct($wrappedCall)"
+        } else {
+            initApiCall
+        }
 
         val secondLineIndent = "        "
 

@@ -52,6 +52,7 @@ data class HttpDefinitionDef(
     var baseUrl: String? = null,
     var auth: String? = null,
     var urlPathPrefix: String? = null,
+    var requestResponseWrapping: Boolean? = null,
 )
 fun httpDefinition(init: HttpDefinitionDef.() -> Unit = {}): HttpDefinition {
     val def = HttpDefinitionDef().apply(init)
@@ -62,6 +63,7 @@ fun httpDefinition(init: HttpDefinitionDef.() -> Unit = {}): HttpDefinition {
         baseUrl = def.baseUrl,
         auth = def.auth,
         urlPathPrefix = def.urlPathPrefix,
+        requestResponseWrapping = def.requestResponseWrapping,
     )
 }
 

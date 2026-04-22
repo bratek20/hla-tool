@@ -117,7 +117,12 @@ class HlaFacadeTest {
                     "ImportingModule",
                     KOTLIN_2_PROFILE,
                     kotlin2TestPaths("importingmodule")
-                )
+                ),
+                Arguments.of(
+                    "WebNoWrappers",
+                    KOTLIN_PROFILE,
+                    kotlinTestPaths("webnowrappers")
+                ),
             )
         }
     }
@@ -740,7 +745,7 @@ class HlaFacadeTest {
         facade.updateAllModules(args)
 
         //then
-        directoriesMock.assertWriteCount(15)
+        directoriesMock.assertWriteCount(17)
     }
 
     @Test
