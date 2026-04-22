@@ -142,29 +142,17 @@ class WebClientGenerator: PatternGenerator() {
     }
 
     private fun getBodyTS(interfaceName: String, method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView): String {
-        val requestResponseWrapping = c.module.getWebSubmodule()?.getHttp()?.getRequestResponseWrapping() ?: true
-
         val returnPart = if (method.returnType != "void") "return " else ""
-        val getBodyPart = if (method.returnType != "void") {
-            if (requestResponseWrapping) {
-                ".getBody(${responseName(interfaceName, method)}).get().getValue()"
-            } else {
-                ".getBody(${method.returnType}).get()"
-            }
-        } else {
+        val getBodyPart = if (method.returnType != "void")
+            ".getBody(${responseName(interfaceName, method)}).get().getValue()"
+        else
             ""
-        }
 
         val postUrl = getPostUrl(interfaceName, method)
-        val postBody = if(method.hasArgs()) {
-            if (requestResponseWrapping) {
-                "Optional.of(${requestName(interfaceName, method)}.create(${method.argsPass()}))"
-            } else {
-                "Optional.of(${method.args.first().name})"
-            }
-        } else {
+        val postBody = if(method.hasArgs())
+            "Optional.of(${requestName(interfaceName, method)}.create(${method.argsPass()}))"
+        else
             "Optional.empty()"
-        }
 
         return "${returnPart}this.client.post($postUrl, $postBody)$getBodyPart"
     }
@@ -223,47 +211,30 @@ class WebClientGenerator: PatternGenerator() {
         interfaceName: String,
         method: com.github.bratek20.hla.generation.impl.core.api.patterns.MethodView
     ): BodyBuilderOps = {
-        val requestResponseWrapping = c.module.getWebSubmodule()?.getHttp()?.getRequestResponseWrapping() ?: true
         val hasReturnValue = method.hasReturnValue()
 
-        val getBodyPart = if (requestResponseWrapping) {
-            methodCall {
-                target = optionalOp {
-                    methodCall {
-                        name = "getBody"
-                        addGeneric(responseName(interfaceName, method))
-                    }
-                }.get()
-                name = "getValue"
-            }
-        } else {
-            optionalOp {
+        val getBodyPart = methodCall {
+            target = optionalOp {
                 methodCall {
                     name = "getBody"
-                    addGeneric(method.returnType)
+                    addGeneric(responseName(interfaceName, method))
                 }
             }.get()
+            name = "getValue"
         }
 
         val postUrl = getPostUrl(interfaceName, method)
-        val postBody = if(method.hasArgs()) {
-            if (requestResponseWrapping) {
-                val reqName = requestName(interfaceName, method)
-                hardOptional(typeName(reqName)) {
-                    methodCall {
-                        target = variable(reqName)
-                        name = "create"
-                        apply(method.argsPassCB())
-                    }
-                }
-            } else {
-                hardOptional(typeName(method.args.first().type)) {
-                    variable(method.args.first().name)
+        val reqName = requestName(interfaceName, method)
+        val postBody = if(method.hasArgs())
+            hardOptional(typeName(reqName)) {
+                methodCall {
+                    target = variable(reqName)
+                    name = "create"
+                    apply(method.argsPassCB())
                 }
             }
-        } else {
+        else
             emptyHardOptional(baseType(BaseType.ANY))
-        }
 
         val finalExpression = methodCall {
             target = instanceVariable("client")
