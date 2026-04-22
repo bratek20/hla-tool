@@ -13,7 +13,7 @@ class WebApiWebClient(
     private val client = factory.create(config.value)
 
     override fun handleRequest(i: WebRequest): WebResult {
-        return client.post("/webApi/handleRequest", WebApiHandleRequestRequest.create(i)).getBody(WebApiHandleRequestResponse::class.java).getValue()
+        return client.post("/webApi/handleRequest", i).getBody(WebResult::class.java)
     }
 }
 
