@@ -87,6 +87,7 @@ data class HttpDefinition(
     private val baseUrl: String?,
     private val auth: String?,
     private val urlPathPrefix: String?,
+    private val requestResponseWrapping: Boolean?,
 ) {
     fun getAttributes(): List<Attribute> {
         return this.attributes
@@ -112,6 +113,10 @@ data class HttpDefinition(
         return this.urlPathPrefix
     }
 
+    fun getRequestResponseWrapping(): Boolean {
+        return this.requestResponseWrapping ?: true
+    }
+
     companion object {
         fun create(
             attributes: List<Attribute>,
@@ -120,6 +125,7 @@ data class HttpDefinition(
             baseUrl: String?,
             auth: String?,
             urlPathPrefix: String?,
+            requestResponseWrapping: Boolean?,
         ): HttpDefinition {
             return HttpDefinition(
                 attributes = attributes,
@@ -128,6 +134,7 @@ data class HttpDefinition(
                 baseUrl = baseUrl,
                 auth = auth,
                 urlPathPrefix = urlPathPrefix,
+                requestResponseWrapping = requestResponseWrapping,
             )
         }
     }
