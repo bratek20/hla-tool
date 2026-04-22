@@ -78,23 +78,27 @@ class WebServerGenerator: PatternGenerator() {
             "// no request needed"
         }
 
-        val prefix = if (method.returnType != "Unit") "return serializer.asStruct(" else ""
-
         val initApiCall = if (requestResponseWrapping) {
             "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
         } else {
             "api.${method.name}(request)"
         }
 
-        val apiCall = if (requestResponseWrapping) {
-            val wrappedCall = "${responseName(interfaceName, method)}(${method.returnApiType.modernSerialize(hardcodedExpression(initApiCall)).build(c.language.types().context())})"
-            wrappedCall
+        val secondLine = if (method.returnType != "Unit") {
+            val serializedCall = if (requestResponseWrapping) {
+                method.returnApiType.modernSerialize(hardcodedExpression(initApiCall)).build(c.language.types().context())
+            } else {
+                initApiCall
+            }
+            val wrappedCall = if (requestResponseWrapping) {
+                "${responseName(interfaceName, method)}($serializedCall)"
+            } else {
+                serializedCall
+            }
+            "return serializer.asStruct($wrappedCall)"
         } else {
             initApiCall
         }
-
-        val suffix = if (method.returnType != "Unit") ")" else ""
-        val secondLine = "${prefix}${apiCall}${suffix}"
 
         val secondLineIndent = "        "
 
