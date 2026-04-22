@@ -113,8 +113,8 @@ data class HttpDefinition(
         return this.urlPathPrefix
     }
 
-    fun getRequestResponseWrapping(): Boolean {
-        return this.requestResponseWrapping ?: true
+    fun getRequestResponseWrapping(): Boolean? {
+        return this.requestResponseWrapping
     }
 
     companion object {
