@@ -117,7 +117,12 @@ class HlaFacadeTest {
                     "ImportingModule",
                     KOTLIN_2_PROFILE,
                     kotlin2TestPaths("importingmodule")
-                )
+                ),
+                Arguments.of(
+                    "WebNoWrappers",
+                    KOTLIN_PROFILE,
+                    kotlinTestPaths("webnowrappers")
+                ),
             )
         }
     }

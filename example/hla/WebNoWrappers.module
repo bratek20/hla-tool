@@ -1,0 +1,13 @@
+Interfaces
+    WebApi
+        WebRequest
+            inputField: int
+        WebResult
+            outputField: int
+        handleRequest(i: WebRequest): WebResult
+
+Web
+    Http
+        ExposedInterfaces
+            WebApi
+        requestResponseWrapping = false
