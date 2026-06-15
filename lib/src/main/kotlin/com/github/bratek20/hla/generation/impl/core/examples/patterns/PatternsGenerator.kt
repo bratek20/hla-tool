@@ -52,7 +52,8 @@ class ExampleKeyDefinitionLogic(
 class ExampleInterfaceMethodLogic(
     private val def: MethodDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    private val moduleName: ModuleName
+    private val moduleName: ModuleName,
+    private val addDebugToExampleName: Boolean = false
 ): ExampleJsonLogic() {
     override fun createExampleJson(): String {
         val valuesMap = mutableMapOf<String, Any>()
@@ -89,7 +90,8 @@ class ExampleInterfaceMethodLogic(
     }
 
     override fun getName(): String {
-        return "${moduleName.value}.${def.getName()}"
+        val debugPart = if (addDebugToExampleName) ".Debug" else ""
+        return "${moduleName.value}$debugPart.${def.getName()}"
     }
 
 }
@@ -122,12 +124,16 @@ class HandlersExamplesGenerator: PatternGenerator() {
     }
 
     private fun createExampleInterfaceMethodLogic(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleInterfaceMethodLogic> {
-        val exposedInterfacesNames = getExposedInterfaces().map { it.getName() }
+        val exposedInterfaces = getExposedInterfaces()
+        val exposedInterfacesNames = exposedInterfaces.map { it.getName() }
+
         val interfacesToMap = module.getInterfaces().filter { exposedInterfacesNames.contains(it.getName()) }
         val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
         interfacesToMap.forEach { interfaceToMap ->
+            val exposedInterface = exposedInterfaces.first { it.getName() == interfaceToMap.getName() }
+            val isDebug = exposedInterface.getAttributes().any { it.getName() == "debug" }
             interfaceToMap.getMethods().map {
-                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName()))
+                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName(), isDebug))
             }
         }
 
