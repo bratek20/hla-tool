@@ -1,5 +1,6 @@
 package com.github.bratek20.hla.queries.api
 
+import com.github.bratek20.hla.definitions.api.ExposedInterface
 import com.github.bratek20.hla.definitions.api.TypeDefinition
 import com.github.bratek20.hla.definitions.api.TypeWrapper
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
@@ -36,4 +37,8 @@ fun WorldTypeName.asTypeDefinition(): TypeDefinition {
             else -> emptyList()
         }
     )
+}
+
+fun ExposedInterface.isDebug(): Boolean {
+    return this.getAttributes().any { it.getName() == "debug" }
 }

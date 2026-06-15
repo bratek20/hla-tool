@@ -13,6 +13,7 @@ import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.queries.api.isDebug
 
 class PlayFabHandlersGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -90,8 +91,8 @@ class PlayFabHandlersGenerator: PatternGenerator() {
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val playFabHandlers = getPlayFabHandlers()
         val allExposedInterfaces = playFabHandlers.getExposedInterfaces()
-        val normalExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } == null}
-        val debugExposedInterfaces = allExposedInterfaces.filter { it.getAttributes().find { it.getName() == "debug" } != null }
+        val normalExposedInterfaces = allExposedInterfaces.filter { !it.isDebug() }
+        val debugExposedInterfaces = allExposedInterfaces.filter { it.isDebug() }
 
         addFunctionCall(registerCall(normalExposedInterfaces, false))
 
