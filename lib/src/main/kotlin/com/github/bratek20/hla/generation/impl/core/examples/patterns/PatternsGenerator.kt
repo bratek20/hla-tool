@@ -9,6 +9,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.queries.api.isDebug
 import com.github.bratek20.utils.directory.api.*
 
 abstract class ExampleJsonLogic {
@@ -131,9 +132,9 @@ class HandlersExamplesGenerator: PatternGenerator() {
         val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
         interfacesToMap.forEach { interfaceToMap ->
             val exposedInterface = exposedInterfaces.first { it.getName() == interfaceToMap.getName() }
-            val isDebug = exposedInterface.getAttributes().any { it.getName() == "debug" }
+
             interfaceToMap.getMethods().map {
-                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName(), isDebug))
+                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName(), exposedInterface.isDebug()))
             }
         }
 
