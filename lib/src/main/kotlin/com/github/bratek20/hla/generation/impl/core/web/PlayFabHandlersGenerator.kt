@@ -7,8 +7,7 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptStructure
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.newListOf
 import com.github.bratek20.codebuilder.types.typeName
-import com.github.bratek20.hla.definitions.api.ExposedInterface
-import com.github.bratek20.hla.definitions.api.InterfaceDefinition
+import com.github.bratek20.hla.definitions.api.ExposedMethodDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
@@ -28,41 +27,33 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getWebSubmodule()?.getPlayFabHandlers() != null
     }
 
-    private fun handlerName(interf: InterfaceDefinition, method: MethodDefinition, addDebugToHandlerName: Boolean): String {
+    private fun handlerName(method: ExposedMethodDefinition): String {
         val mapping = getPlayFabHandlers().getHandlerNamesMapping().firstOrNull {
-            it.getMethodPath() == "${interf.getName()}.${method.getName()}"
+            it.getMethodPath() == "${method.getInterfaceName()}.${method.getName()}"
         }
         if (mapping != null) {
             return mapping.getHandlerName().replace("\"","")
         }
 
-        val debugPart = if (addDebugToHandlerName) ".Debug" else ""
-        return "$moduleName$debugPart.${method.getName()}"
+        return "${method.getExposedName()}.${method.getName()}"
     }
 
     private fun registerCall(
-        exposedInterfaces: List<ExposedInterface>,
-        addDebugToHandlerName: Boolean
+        methods: List<ExposedMethodDefinition>,
+        behindFeatureFlag: Boolean
     ): FunctionCallBuilderOps = {
-        val handlers: List<TypeScriptStructureBuilder> = exposedInterfaces.flatMap {
-            module.getInterfaces().first { interf -> it.getName() == interf.getName() }.let { interf ->
-                interf.getMethods().map { method ->
-
-                    typeScriptStructure {
-                        addProperty {
-                            key = "name"
-                            value = string(handlerName(interf, method, addDebugToHandlerName))
-                        }
-                        addProperty {
-                            key = "handler"
-                            value = variable(method.getName())
-                        }
-                    }
+        val handlers: List<TypeScriptStructureBuilder> = methods.map { method ->
+            typeScriptStructure {
+                addProperty {
+                    key = "name"
+                    value = string(handlerName(method))
+                }
+                addProperty {
+                    key = "handler"
+                    value = variable(method.getName())
                 }
             }
         }
-
-        val behindFeatureFlag = exposedInterfaces.any { it.getAttributes().any { att -> att.getName() == "behindFeatureFlag" } }
         name = "Handlers.Api.Register"
         addArg {
             typeScriptStructure {
@@ -88,104 +79,112 @@ class PlayFabHandlersGenerator: PatternGenerator() {
 
     private fun getPlayFabHandlers() = c.module.getWebSubmodule()!!.getPlayFabHandlers()!!
 
+    private fun getMethodDefinition(exposed: ExposedMethodDefinition): MethodDefinition {
+        val interfaceDef = c.module.getInterfaces().first { it.getName() == exposed.getInterfaceName() }
+        return interfaceDef.getMethods().first { it.getName() == exposed.getName() }
+    }
+
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val playFabHandlers = getPlayFabHandlers()
         val allExposedInterfaces = playFabHandlers.getExposedInterfaces()
         val normalExposedInterfaces = allExposedInterfaces.filter { !it.isDebug() }
         val debugExposedInterfaces = allExposedInterfaces.filter { it.isDebug() }
 
-        addFunctionCall(registerCall(normalExposedInterfaces, false))
+        val normalMethods = normalExposedInterfaces.flatMap { it.getMethods() }
+        val debugMethods = debugExposedInterfaces.flatMap { it.getMethods() }
+        val allMethods = normalMethods + debugMethods
 
-        if (debugExposedInterfaces.isNotEmpty()) {
+        val normalBehindFeatureFlag = normalExposedInterfaces.any { it.getAttributes().any { att -> att.getName() == "behindFeatureFlag" } }
+        addFunctionCall(registerCall(normalMethods, normalBehindFeatureFlag))
+
+        if (debugMethods.isNotEmpty()) {
+            val debugBehindFeatureFlag = debugExposedInterfaces.any { it.getAttributes().any { att -> att.getName() == "behindFeatureFlag" } }
             addFunction {
                 name = "RegisterDebugHandlers"
                 setBody {
-                    add(functionCallStatement(registerCall(debugExposedInterfaces, true)))
+                    add(functionCallStatement(registerCall(debugMethods, debugBehindFeatureFlag)))
                 }
             }
         }
 
-        allExposedInterfaces.forEach {
-            module.getInterfaces().find { interf -> it.getName() == interf.getName() }?.let { interf ->
-                interf.getMethods().forEach { method ->
-                    addFunction {
-                        name = method.getName()
-                        addArg {
-                            name = "rawRequest"
-                            type = baseType(BaseType.ANY)
-                        }
-                        addArg {
-                            name = "c"
-                            type = typeName("HandlerContext")
-                        }
-                        returnType = typeName("IOpResult")
+        allMethods.forEach { exposedMethod ->
+            val method = getMethodDefinition(exposedMethod)
+            addFunction {
+                name = method.getName()
+                addArg {
+                    name = "rawRequest"
+                    type = baseType(BaseType.ANY)
+                }
+                addArg {
+                    name = "c"
+                    type = typeName("HandlerContext")
+                }
+                returnType = typeName("IOpResult")
 
-                        setBody {
-                            require(method.getArgs().size <= 1) {
-                                "Handler method need to have at most one argument"
+                setBody {
+                    require(method.getArgs().size <= 1) {
+                        "Handler method need to have at most one argument"
+                    }
+                    val hasRequest = method.getArgs().size == 1
+                    if (hasRequest) {
+                        add(assignment {
+                            left = variableDeclaration {
+                                name = "request"
                             }
-                            val hasRequest = method.getArgs().size == 1
-                            if (hasRequest) {
-                                add(assignment {
-                                    left = variableDeclaration {
-                                        name = "request"
-                                    }
-                                    right = functionCall {
-                                        name = "ObjectCreation.Api.FromInterface"
-                                        addArg{
-                                            variable(method.getArgs().first().getType().getName())
-                                        }
-                                        addArg{
-                                            variable("rawRequest")
-                                        }
-                                        addArg{
-                                            variable("ObjectCreationOptions.noErrors()")
-                                        }
-                                    }
-                                })
-                            }
-
-                            val hasResponse = method.getReturnType().getName() != "void"
-                            val apiCall: FunctionCallBuilderOps = {
-                                name = "Api." + method.getName()
-                                if (hasRequest) {
-                                    addArg{
-                                        variable("request")
-                                    }
+                            right = functionCall {
+                                name = "ObjectCreation.Api.FromInterface"
+                                addArg{
+                                    variable(method.getArgs().first().getType().getName())
                                 }
                                 addArg{
-                                    variable("c")
+                                    variable("rawRequest")
+                                }
+                                addArg{
+                                    variable("ObjectCreationOptions.noErrors()")
                                 }
                             }
+                        })
+                    }
 
-                            if (hasResponse) {
-                                add(assignment {
-                                    left = variableDeclaration {
-                                        name = "response"
-                                    }
-                                    right = functionCall(apiCall)
-                                })
+                    val hasResponse = method.getReturnType().getName() != "void"
+                    val apiCall: FunctionCallBuilderOps = {
+                        name = "Api." + method.getName()
+                        if (hasRequest) {
+                            addArg{
+                                variable("request")
                             }
-                            else {
-                                add(functionCallStatement(apiCall))
-                            }
-
-                            add(returnStatement {
-                                functionCall {
-                                    name = "Utils.OK"
-                                    if (hasResponse) {
-                                        addArg{
-                                            variable("response")
-                                        }
-                                    } else {
-                                        addArg{
-                                            expression("{}")
-                                        }
-                                    }
-                                }
-                            })
+                        }
+                        addArg{
+                            variable("c")
                         }
                     }
+
+                    if (hasResponse) {
+                        add(assignment {
+                            left = variableDeclaration {
+                                name = "response"
+                            }
+                            right = functionCall(apiCall)
+                        })
+                    }
+                    else {
+                        add(functionCallStatement(apiCall))
+                    }
+
+                    add(returnStatement {
+                        functionCall {
+                            name = "Utils.OK"
+                            if (hasResponse) {
+                                addArg{
+                                    variable("response")
+                                }
+                            } else {
+                                addArg{
+                                    expression("{}")
+                                }
+                            }
+                        }
+                    })
                 }
             }
         }

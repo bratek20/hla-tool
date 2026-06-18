@@ -31,6 +31,11 @@ fun assertHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefini
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertExposedMethodDefinition(given: ExposedMethodDefinition, expectedInit: ExpectedExposedMethodDefinition.() -> Unit) {
+    val diff = diffExposedMethodDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertExposedInterface(given: ExposedInterface, expectedInit: ExpectedExposedInterface.() -> Unit) {
     val diff = diffExposedInterface(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

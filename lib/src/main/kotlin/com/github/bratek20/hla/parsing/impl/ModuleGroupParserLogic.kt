@@ -115,7 +115,7 @@ class ModuleGroupParserLogic(
             implSubmodule = parseImplSubmodule(elements),
             externalTypes = parseExternalTypes(elements),
             kotlinConfig = parseKotlinConfig(elements),
-            webSubmodule = parseWebSubmodule(elements),
+            webSubmodule = parseWebSubmodule(elements, moduleName, interfacesOutput.interfaces),
             viewModelSubmodule = parseViewModelSubmodule(elements),
             exceptions = parseExceptions("Exceptions", elements),
             events = parseStructures("Events", elements).complex + parseStructures("Notifications", elements).complex,
@@ -131,7 +131,7 @@ class ModuleGroupParserLogic(
         }?.value
     }
 
-    private fun parseWebSubmodule(elements: List<ParsedElement>): WebSubmoduleDefinition? {
+    private fun parseWebSubmodule(elements: List<ParsedElement>, moduleName: ModuleName, interfaces: List<InterfaceDefinition>): WebSubmoduleDefinition? {
         return findSection(elements, "Web")?.let { web ->
             val http = findSection(web.elements, "Http")?.let { http ->
                 HttpDefinition(
@@ -147,7 +147,7 @@ class ModuleGroupParserLogic(
             }
             val playFabHandlers = findSection(web.elements, "PlayFabHandlers")?.let { s ->
                 PlayFabHandlersDefinition(
-                    exposedInterfaces = parseExposedInterfaces(s.elements),
+                    exposedInterfaces = parseExposedInterfaces(s.elements, moduleName, interfaces),
                     errorCodesMapping = findSection(s.elements, "ErrorCodesMapping")?.elements
                         ?.filterIsInstance<ParsedMapping>()?.map {
                             ErrorCodeMapping(it.key, it.value)
@@ -268,11 +268,23 @@ class ModuleGroupParserLogic(
             } ?: emptyList()
     }
 
-    private fun parseExposedInterfaces(elements: List<ParsedElement>): List<ExposedInterface> {
-        return findSection(elements, "ExposedInterfaces")?.elements?.filterIsInstance<Section>()?.map {
+    private fun parseExposedInterfaces(elements: List<ParsedElement>, moduleName: ModuleName, interfaces: List<InterfaceDefinition>): List<ExposedInterface> {
+        return findSection(elements, "ExposedInterfaces")?.elements?.filterIsInstance<Section>()?.map { section ->
+            val isDebug = section.attributes.any { it.getName() == "debug" }
+            val debugPart = if (isDebug) ".Debug" else ""
+            val exposedName = "${moduleName.value}$debugPart"
+            val interfaceDef = interfaces.first { it.getName() == section.name }
+            val methods = interfaceDef.getMethods().map { method ->
+                ExposedMethodDefinition(
+                    name = method.getName(),
+                    exposedName = exposedName,
+                    interfaceName = interfaceDef.getName()
+                )
+            }
             ExposedInterface(
-                name = it.name,
-                attributes = it.attributes
+                name = section.name,
+                attributes = section.attributes,
+                methods = methods
             )
         } ?: emptyList()
     }

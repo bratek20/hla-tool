@@ -6,10 +6,8 @@ import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.BaseApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
-import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.queries.api.isDebug
 import com.github.bratek20.utils.directory.api.*
 
 abstract class ExampleJsonLogic {
@@ -52,10 +50,10 @@ class ExampleKeyDefinitionLogic(
 
 class ExampleInterfaceMethodLogic(
     private val def: MethodDefinition,
+    private val exposedName: String,
     private val apiTypeFactory: ApiTypeFactory,
-    private val moduleName: ModuleName,
-    private val addDebugToExampleName: Boolean = false
 ): ExampleJsonLogic() {
+
     override fun createExampleJson(): String {
         val valuesMap = mutableMapOf<String, Any>()
         valuesMap["input"] = "No input for this method"
@@ -91,8 +89,7 @@ class ExampleInterfaceMethodLogic(
     }
 
     override fun getName(): String {
-        val debugPart = if (addDebugToExampleName) ".Debug" else ""
-        return "${moduleName.value}$debugPart.${def.getName()}"
+        return "${exposedName}.${def.getName()}"
     }
 
 }
@@ -105,46 +102,35 @@ class HandlersExamplesGenerator: PatternGenerator() {
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
-        val exposedInterfaces = getExposedInterfaces()
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && !exposedInterfaces.isNullOrEmpty()
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && getExposedMethods().isNotEmpty()
     }
 
     override fun getDirectory(): Directory? {
-        val exampleInterfaceMethodsLogic = createExampleInterfaceMethodLogic(c.module, c.apiTypeFactory)
-
-        if( exampleInterfaceMethodsLogic.isEmpty() ) {
+        val exposedMethods = getExposedMethods()
+        if (exposedMethods.isEmpty()) {
             return null
+        }
+
+        val exampleLogics = exposedMethods.map { exposed ->
+            val method = getMethodDefinition(exposed)
+            ExampleInterfaceMethodLogic(method, exposed.getExposedName(), c.apiTypeFactory)
         }
 
         return Directory.create(
             name = DirectoryName("Handlers"),
-            files = exampleInterfaceMethodsLogic.map { logic ->
-                logic.createFile()
-            }
+            files = exampleLogics.map { it.createFile() }
         )
     }
 
-    private fun createExampleInterfaceMethodLogic(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory): List<ExampleInterfaceMethodLogic> {
-        val exposedInterfaces = getExposedInterfaces()
-        val exposedInterfacesNames = exposedInterfaces.map { it.getName() }
-
-        val interfacesToMap = module.getInterfaces().filter { exposedInterfacesNames.contains(it.getName()) }
-        val interfacesMethodsLogic = mutableListOf<ExampleInterfaceMethodLogic>()
-        interfacesToMap.forEach { interfaceToMap ->
-            val exposedInterface = exposedInterfaces.first { it.getName() == interfaceToMap.getName() }
-
-            interfaceToMap.getMethods().map {
-                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName(), exposedInterface.isDebug()))
-            }
-        }
-
-        return interfacesMethodsLogic
-    }
-
-    private fun getExposedInterfaces(): List<ExposedInterface> {
+    private fun getExposedMethods(): List<ExposedMethodDefinition> {
         val web = c.module.getWebSubmodule() ?: return emptyList()
         val handlers = web.getPlayFabHandlers() ?: return emptyList()
-        return handlers.getExposedInterfaces()
+        return handlers.getExposedInterfaces().flatMap { it.getMethods() }
+    }
+
+    private fun getMethodDefinition(exposed: ExposedMethodDefinition): MethodDefinition {
+        val interfaceDef = c.module.getInterfaces().first { it.getName() == exposed.getInterfaceName() }
+        return interfaceDef.getMethods().first { it.getName() == exposed.getName() }
     }
 }
 

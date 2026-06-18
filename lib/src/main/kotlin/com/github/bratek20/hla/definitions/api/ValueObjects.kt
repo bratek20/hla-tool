@@ -140,9 +140,42 @@ data class HttpDefinition(
     }
 }
 
+data class ExposedMethodDefinition(
+    private val name: String,
+    private val exposedName: String,
+    private val interfaceName: String,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getExposedName(): String {
+        return this.exposedName
+    }
+
+    fun getInterfaceName(): String {
+        return this.interfaceName
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            exposedName: String,
+            interfaceName: String,
+        ): ExposedMethodDefinition {
+            return ExposedMethodDefinition(
+                name = name,
+                exposedName = exposedName,
+                interfaceName = interfaceName,
+            )
+        }
+    }
+}
+
 data class ExposedInterface(
     private val name: String,
     private val attributes: List<Attribute>,
+    private val methods: List<ExposedMethodDefinition>,
 ) {
     fun getName(): String {
         return this.name
@@ -152,14 +185,20 @@ data class ExposedInterface(
         return this.attributes
     }
 
+    fun getMethods(): List<ExposedMethodDefinition> {
+        return this.methods
+    }
+
     companion object {
         fun create(
             name: String,
             attributes: List<Attribute>,
+            methods: List<ExposedMethodDefinition>,
         ): ExposedInterface {
             return ExposedInterface(
                 name = name,
                 attributes = attributes,
+                methods = methods,
             )
         }
     }

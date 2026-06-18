@@ -17,7 +17,8 @@
       "Bash(do echo \"=== Updating $module TypeScript ===\")",
       "Bash(timeout 5 kotlinc:*)",
       "Bash(chmod:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(./updateModule.sh:*)"
     ]
   }
 }
