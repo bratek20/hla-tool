@@ -352,7 +352,8 @@ namespace SomeModule.Mocks {
         return new SomeInterfaceMock()
     }
 
-    export function setupSomeInterface(): SomeInterfaceMock {
+    export function setupSomeInterface(consumer: DependencyName): SomeInterfaceMock {
+        Dependencies.Assert.consumerContainsDependency(consumer, DependencyName.SomeModule)
         const mock = SomeModule.Mocks.createSomeInterfaceMock()
         SomeModule.Api.someEmptyMethod = CreateMock(SomeModule.Api.someEmptyMethod, () => { mock.someEmptyMethod() })
         SomeModule.Api.someCommand = CreateMock(SomeModule.Api.someCommand, (id: SomeId, amount: number) => { mock.someCommand(id, amount) })
@@ -372,7 +373,8 @@ namespace SomeModule.Mocks {
         return new SomeInterface2Mock()
     }
 
-    export function setupSomeInterface2(): SomeInterface2Mock {
+    export function setupSomeInterface2(consumer: DependencyName): SomeInterface2Mock {
+        Dependencies.Assert.consumerContainsDependency(consumer, DependencyName.SomeModule)
         const mock = SomeModule.Mocks.createSomeInterface2Mock()
         SomeModule.Api.referenceOtherClass = CreateMock(SomeModule.Api.referenceOtherClass, (other: OtherClass) => { return mock.referenceOtherClass(other) })
         SomeModule.Api.referenceLegacyType = CreateMock(SomeModule.Api.referenceLegacyType, (legacyType: LegacyType) => { return mock.referenceLegacyType(legacyType) })
@@ -383,7 +385,8 @@ namespace SomeModule.Mocks {
         return new SomeModuleHandlersMock()
     }
 
-    export function setupSomeModuleHandlers(): SomeModuleHandlersMock {
+    export function setupSomeModuleHandlers(consumer: DependencyName): SomeModuleHandlersMock {
+        Dependencies.Assert.consumerContainsDependency(consumer, DependencyName.SomeModule)
         const mock = SomeModule.Mocks.createSomeModuleHandlersMock()
         SomeModule.Api.someHandler = CreateMock(SomeModule.Api.someHandler, (i: SomeHandlerInput) => { return mock.someHandler(i) })
         SomeModule.Api.someHandler2 = CreateMock(SomeModule.Api.someHandler2, (i: SomeHandlerInput) => { return mock.someHandler2(i) })
@@ -394,7 +397,8 @@ namespace SomeModule.Mocks {
         return new SomeModuleDebugHandlersMock()
     }
 
-    export function setupSomeModuleDebugHandlers(): SomeModuleDebugHandlersMock {
+    export function setupSomeModuleDebugHandlers(consumer: DependencyName): SomeModuleDebugHandlersMock {
+        Dependencies.Assert.consumerContainsDependency(consumer, DependencyName.SomeModule)
         const mock = SomeModule.Mocks.createSomeModuleDebugHandlersMock()
         SomeModule.Api.someDebugHandler = CreateMock(SomeModule.Api.someDebugHandler, (i: SomeHandlerInput) => { return mock.someDebugHandler(i) })
         SomeModule.Api.someDebugHandler2 = CreateMock(SomeModule.Api.someDebugHandler2, (i: SomeHandlerInput) => { return mock.someDebugHandler2(i) })
@@ -405,7 +409,8 @@ namespace SomeModule.Mocks {
         return new SomeInterfaceToTestMockArgsImportMock()
     }
 
-    export function setupSomeInterfaceToTestMockArgsImport(): SomeInterfaceToTestMockArgsImportMock {
+    export function setupSomeInterfaceToTestMockArgsImport(consumer: DependencyName): SomeInterfaceToTestMockArgsImportMock {
+        Dependencies.Assert.consumerContainsDependency(consumer, DependencyName.SomeModule)
         const mock = SomeModule.Mocks.createSomeInterfaceToTestMockArgsImportMock()
         SomeModule.Api.someMethod = CreateMock(SomeModule.Api.someMethod, (arg1: MockArg, arg2: MockArg) => { mock.someMethod(arg1, arg2) })
         return mock

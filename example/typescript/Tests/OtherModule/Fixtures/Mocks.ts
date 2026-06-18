@@ -18,7 +18,8 @@ namespace OtherModule.Mocks {
         return new OtherInterfaceMock()
     }
 
-    export function setupOtherInterface(): OtherInterfaceMock {
+    export function setupOtherInterface(consumer: DependencyName): OtherInterfaceMock {
+        Dependencies.Assert.consumerContainsDependency(consumer, DependencyName.OtherModule)
         const mock = OtherModule.Mocks.createOtherInterfaceMock()
         OtherModule.Api.otherMethod = CreateMock(OtherModule.Api.otherMethod, () => { mock.otherMethod() })
         return mock

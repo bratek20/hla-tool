@@ -22,7 +22,6 @@
         //OnlyTrackingModule start
         //SomeUserModule start
         //ModuleOnlyForMocksArgs start
-
         //WebNoWrappers start
         "../main/ModuleOnlyForMocksArgs/Api/ValueObjects.ts",
         //ModuleOnlyForMocksArgs end
