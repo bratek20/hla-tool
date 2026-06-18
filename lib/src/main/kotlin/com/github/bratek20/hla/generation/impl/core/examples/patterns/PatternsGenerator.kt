@@ -9,7 +9,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.queries.api.isDebug
+import com.github.bratek20.hla.generation.impl.core.web.PlayFabHandlerLogic
 import com.github.bratek20.utils.directory.api.*
 
 abstract class ExampleJsonLogic {
@@ -53,8 +53,8 @@ class ExampleKeyDefinitionLogic(
 class ExampleInterfaceMethodLogic(
     private val def: MethodDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    private val moduleName: ModuleName,
-    private val addDebugToExampleName: Boolean = false
+    private val module: ModuleDefinition,
+    private val exposedInterface: ExposedInterface
 ): ExampleJsonLogic() {
     override fun createExampleJson(): String {
         val valuesMap = mutableMapOf<String, Any>()
@@ -91,8 +91,9 @@ class ExampleInterfaceMethodLogic(
     }
 
     override fun getName(): String {
-        val debugPart = if (addDebugToExampleName) ".Debug" else ""
-        return "${moduleName.value}$debugPart.${def.getName()}"
+        val x = module.getInterfaces().first { interf -> exposedInterface.getName() == interf.getName() }
+        val logic = PlayFabHandlerLogic(module)
+        return logic.handlerName(def, exposedInterface, x)
     }
 
 }
@@ -134,7 +135,7 @@ class HandlersExamplesGenerator: PatternGenerator() {
             val exposedInterface = exposedInterfaces.first { it.getName() == interfaceToMap.getName() }
 
             interfaceToMap.getMethods().map {
-                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module.getName(), exposedInterface.isDebug()))
+                interfacesMethodsLogic.add(ExampleInterfaceMethodLogic(it, apiTypeFactory, c.module, exposedInterface))
             }
         }
 
