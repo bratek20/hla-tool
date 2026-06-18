@@ -18,7 +18,7 @@
         //OnlyTrackingModule start
         //SomeUserModule start
         //ModuleOnlyForMocksArgs start
-
+        //WebNoWrappers start
         "../Tests/ModuleOnlyForMocksArgs/Fixtures/Builders.ts",
         "../Tests/ModuleOnlyForMocksArgs/Fixtures/Diffs.ts",
         "../Tests/ModuleOnlyForMocksArgs/Fixtures/Asserts.ts",
@@ -75,5 +75,12 @@
 
         "../Tests/TypesModule/Tests/ImplTest.ts",
         //TypesModule end
+
+        "../Tests/WebNoWrappers/Fixtures/Builders.ts",
+        "../Tests/WebNoWrappers/Fixtures/Diffs.ts",
+        "../Tests/WebNoWrappers/Fixtures/Asserts.ts",
+
+        "../Tests/WebNoWrappers/Tests/ImplTest.ts",
+        //WebNoWrappers end
     ]
 }
