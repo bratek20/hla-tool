@@ -23,6 +23,7 @@
         //SomeUserModule start
         //ModuleOnlyForMocksArgs start
 
+        //WebNoWrappers start
         "../main/ModuleOnlyForMocksArgs/Api/ValueObjects.ts",
         //ModuleOnlyForMocksArgs end
 
@@ -92,5 +93,16 @@
         "../main/TypesModule/Api/CustomTypesMapper.ts",
         "../main/TypesModule/Api/SerializedCustomTypes.ts",
         //TypesModule end
+
+        "../main/WebNoWrappers/Api/ValueObjects.ts",
+        "../main/WebNoWrappers/Api/Interfaces.ts",
+
+        "../main/WebNoWrappers/Impl/Logic.ts",
+        "../main/WebNoWrappers/Impl/ImplContext.ts",
+
+        "../main/WebNoWrappers/Web/WebCommon.ts",
+        "../main/WebNoWrappers/Web/WebClient.ts",
+        "../main/WebNoWrappers/Web/WebClientContext.ts",
+        //WebNoWrappers end
     ]
 }

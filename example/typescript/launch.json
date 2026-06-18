@@ -100,5 +100,15 @@
                 "${workspaceFolder}/**/*.js"
             ]
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - WebNoWrappers Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" WebNoWrappers"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
     ]
 }
