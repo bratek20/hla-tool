@@ -37,8 +37,25 @@ class PlayFabHandlersGenerator: PatternGenerator() {
     private fun registerCall(
         exposedInterfaces: List<ExposedInterface>
     ): FunctionCallBuilderOps = {
-        val logic = PlayFabHandlerLogic(module, c.module.getWebSubmodule()!!.getPlayFabHandlers()!!)
-        val handlers: List<TypeScriptStructureBuilder> = logic.getHandlers(exposedInterfaces)
+        val handlers: List<TypeScriptStructureBuilder> = exposedInterfaces.flatMap {
+            module.getInterfaces().first { interf -> it.getName() == interf.getName() }.let { interf ->
+                interf.getMethods().map { method ->
+                    val logic = PlayFabHandlerLogic(module, method, it, interf)
+                    typeScriptStructure {
+                        addProperty {
+                            key = "name"
+                            value = string(
+                                logic.handlerName()
+                            )
+                        }
+                        addProperty {
+                            key = "handler"
+                            value = variable(method.getName())
+                        }
+                    }
+                }
+            }
+        }
 
         val behindFeatureFlag = exposedInterfaces.any { it.getAttributes().any { att -> att.getName() == "behindFeatureFlag" } }
         name = "Handlers.Api.Register"
@@ -189,14 +206,12 @@ class PlayFabHandlersGenerator: PatternGenerator() {
 
 class PlayFabHandlerLogic (
     private val module: ModuleDefinition,
-    private val playFabHandlersDefinition: PlayFabHandlersDefinition? = null
+    private val method: MethodDefinition,
+    private val exposedInterface: ExposedInterface,
+    private val interfaceDefinition: InterfaceDefinition
 ){
-    fun handlerName(
-        method: MethodDefinition,
-        exposedInterface: ExposedInterface,
-        interfaceDefinition: InterfaceDefinition
-    ): String {
-        val mapping = playFabHandlersDefinition?.getHandlerNamesMapping()?.firstOrNull {
+    fun handlerName(): String {
+        val mapping = module.getWebSubmodule()!!.getPlayFabHandlers()!!.getHandlerNamesMapping().firstOrNull {
             it.getMethodPath() == "${interfaceDefinition.getName()}.${method.getName()}"
         }
         if (mapping != null) {
@@ -205,26 +220,5 @@ class PlayFabHandlerLogic (
 
         val debugPart = if (exposedInterface.isDebug()) ".Debug" else ""
         return "${module.getName()}$debugPart.${method.getName()}"
-    }
-
-    fun getHandlers(exposedInterfaces: List<ExposedInterface>) : List<TypeScriptStructureBuilder> {
-        return exposedInterfaces.flatMap {
-            module.getInterfaces().first { interf -> it.getName() == interf.getName() }.let { interf ->
-                interf.getMethods().map { method ->
-                    typeScriptStructure {
-                        addProperty {
-                            key = "name"
-                            value = string(
-                                handlerName(method, it, interf)
-                            )
-                        }
-                        addProperty {
-                            key = "handler"
-                            value = variable(method.getName())
-                        }
-                    }
-                }
-            }
-        }
     }
 }

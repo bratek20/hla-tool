@@ -6,7 +6,6 @@ import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.BaseApiType
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
-import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.web.PlayFabHandlerLogic
@@ -91,11 +90,10 @@ class ExampleInterfaceMethodLogic(
     }
 
     override fun getName(): String {
-        val x = module.getInterfaces().first { interf -> exposedInterface.getName() == interf.getName() }
-        val logic = PlayFabHandlerLogic(module)
-        return logic.handlerName(def, exposedInterface, x)
+        val interfaceDefinition = module.getInterfaces().first { i -> exposedInterface.getName() == i.getName() }
+        val logic = PlayFabHandlerLogic(module, def, exposedInterface, interfaceDefinition)
+        return logic.handlerName()
     }
-
 }
 
 class HandlersExamplesGenerator: PatternGenerator() {
