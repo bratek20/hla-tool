@@ -445,6 +445,7 @@ Tracking
             optional_generic_tracking_dimension_id: TrackingDimension?
             optional_int: int?
             dimensions_list: TrackingDimensionList
+            other_dimension_id: OtherDimension // referencing other module dimension
 
         SomeTrackingMultiplayerEvent (table: "some_tracking_mevent")
 

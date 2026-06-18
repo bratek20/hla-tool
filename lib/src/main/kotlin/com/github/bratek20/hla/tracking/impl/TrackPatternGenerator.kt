@@ -6,10 +6,10 @@ import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.typeName
 import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.ComplexStructureApiType
-import com.github.bratek20.hla.apitypes.impl.OptionalApiType
 import com.github.bratek20.hla.attributes.getAttributeValue
 import com.github.bratek20.hla.definitions.api.*
 import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
@@ -37,7 +37,8 @@ interface TablePart {
 
 private class TrackingTypesLogic(
     private val apiTypeFactory: ApiTypeFactory,
-    private val typesWorldApi: TypesWorldApi
+    private val typesWorldApi: TypesWorldApi,
+    private val currentModuleName: ModuleName
 ) {
     fun getSerializationExpression(variableName: String, typeDef: TypeDefinition): ExpressionBuilder {
         return apiTypeFactory.create(typeDef).modernSerialize(variable(variableName))
@@ -49,7 +50,15 @@ private class TrackingTypesLogic(
             val x = apiTypeFactory.create(typeDef)
             if (serializable) x.serializableBuilder() else x.builder()
         } else {
-            typeName(worldType.getName().value)
+            val hlaPath = worldType.getPath().asHla()
+            val typeName = worldType.getName().value
+            val hasExternalNamespace = hlaPath.getPatternName() == PatternName.Track && hlaPath.getModuleName() != currentModuleName
+
+            if (hasExternalNamespace) {
+                typeName("${hlaPath.getModuleName().value}.${hlaPath.getSubmoduleName().name}.$typeName")
+            } else {
+                typeName(typeName)
+            }
         }
     }
 
@@ -186,13 +195,14 @@ class TrackingTableLogic(
     private val def: TableDefinition,
     private val type: TableType,
     private val apiTypeFactory: ApiTypeFactory,
-    private val typesWorldApi: TypesWorldApi
+    private val typesWorldApi: TypesWorldApi,
+    private val currentModuleName: ModuleName
 ) {
     fun isMultiplayerTable(): Boolean {
         return trackingTableName().endsWith("_mevent")
     }
 
-    private val types = TrackingTypesLogic(apiTypeFactory, typesWorldApi)
+    private val types = TrackingTypesLogic(apiTypeFactory, typesWorldApi, currentModuleName)
     private val parts = def.getExposedClasses().map {
             ExposedClassLogic(it, apiTypeFactory, typesWorldApi, types)
         } + listOf(MyFieldsLogic(def.getFields(), types))
@@ -334,7 +344,7 @@ class TrackPatternGenerator: PatternGenerator() {
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
-        createTableLogics(module, apiTypeFactory, typesWorldApi).forEach {
+        createTableLogics(module, apiTypeFactory, typesWorldApi, module.getName()).forEach {
             if (!it.isMultiplayerTable()) {
                 addClass(it.getClassOps())
             }
@@ -342,9 +352,9 @@ class TrackPatternGenerator: PatternGenerator() {
     }
 }
 
-fun createTableLogics(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory, typesWorldApi: TypesWorldApi): List<TrackingTableLogic> {
+fun createTableLogics(module: ModuleDefinition, apiTypeFactory: ApiTypeFactory, typesWorldApi: TypesWorldApi, currentModuleName: ModuleName): List<TrackingTableLogic> {
     val createTableLogic = { def: TableDefinition, type: TableType ->
-        TrackingTableLogic(def, type, apiTypeFactory, typesWorldApi)
+        TrackingTableLogic(def, type, apiTypeFactory, typesWorldApi, currentModuleName)
     }
     return module.getTrackingSubmodule()!!.getDimensions().map {
         createTableLogic(it, TableType.DIMENSION)
