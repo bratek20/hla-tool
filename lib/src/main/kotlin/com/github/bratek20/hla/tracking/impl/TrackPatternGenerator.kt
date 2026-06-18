@@ -17,6 +17,7 @@ import com.github.bratek20.hla.hlatypesworld.api.asHla
 import com.github.bratek20.hla.queries.api.asNonWrappedWorldTypeName
 import com.github.bratek20.hla.queries.api.asTypeDefinition
 import com.github.bratek20.hla.queries.api.asWorldTypeName
+import com.github.bratek20.hla.queries.api.withSubmoduleName
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.typesworld.api.*
 import com.github.bratek20.utils.pascalToCamelCase
@@ -52,10 +53,8 @@ private class TrackingTypesLogic(
         } else {
             val hlaPath = worldType.getPath().asHla()
             val typeName = worldType.getName().value
-            val hasExternalNamespace = hlaPath.getPatternName() == PatternName.Track && hlaPath.getModuleName() != currentModuleName
-
-            if (hasExternalNamespace) {
-                typeName("${hlaPath.getModuleName().value}.${hlaPath.getSubmoduleName().name}.$typeName")
+            if (hlaPath.getModuleName() != currentModuleName && hlaPath.getModuleName() != ModuleName("Tracking")) {
+                typeName("${hlaPath.getModuleName().withSubmoduleName(hlaPath.getSubmoduleName())}.$typeName")
             } else {
                 typeName(typeName)
             }

@@ -20,6 +20,7 @@ import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPac
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.importscalculation.api.ImportsCalculator
 import com.github.bratek20.hla.parsing.api.ModuleGroup
+import com.github.bratek20.hla.queries.api.withSubmoduleName
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.velocity.api.TemplateNotFoundException
 import com.github.bratek20.hla.velocity.api.VelocityFacade
@@ -107,10 +108,6 @@ fun submodulePackage(group: ModuleGroup, submodule: SubmoduleName, c: ModuleGene
 
 private fun submodulePackageForModule(group: ModuleGroup, moduleName: ModuleName, submodule: SubmoduleName, c: ModuleGenerationContext): String {
     return profileToRootPackage(group.getProfile()) + "." + moduleName.value.lowercase() + "." + submodule.name.lowercase()
-}
-
-private fun submoduleNamespace(submodule: SubmoduleName, c: ModuleGenerationContext): String {
-    return c.module.getName().value + "." + submodule.name
 }
 
 class PerFileOperations(
@@ -221,7 +218,7 @@ abstract class PatternGenerator
                     }
                     else {
                         namespace {
-                            name = submoduleNamespace(submodule, c)
+                            name = c.module.getName().withSubmoduleName(submodule)
 
                             apply(ops)
                         }
@@ -283,7 +280,7 @@ abstract class PatternGenerator
                         }
                     }
 
-                    namespace(submoduleNamespace(submodule, c))
+                    namespace(c.module.getName().withSubmoduleName(submodule))
 
                     apply(ops)
                 }
