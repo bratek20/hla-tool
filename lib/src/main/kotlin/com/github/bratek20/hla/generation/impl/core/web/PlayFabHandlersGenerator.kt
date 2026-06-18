@@ -7,12 +7,18 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptStructure
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.newListOf
 import com.github.bratek20.codebuilder.types.typeName
-import com.github.bratek20.hla.definitions.api.ExposedMethodDefinition
+import com.github.bratek20.hla.definitions.api.ExposedInterface
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.queries.api.isDebug
+
+data class ExposedMethod(
+    val method: MethodDefinition,
+    val exposedName: String,
+    val interfaceName: String
+)
 
 class PlayFabHandlersGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -27,30 +33,30 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getWebSubmodule()?.getPlayFabHandlers() != null
     }
 
-    private fun handlerName(method: ExposedMethodDefinition): String {
+    private fun handlerName(exposed: ExposedMethod): String {
         val mapping = getPlayFabHandlers().getHandlerNamesMapping().firstOrNull {
-            it.getMethodPath() == "${method.getInterfaceName()}.${method.getName()}"
+            it.getMethodPath() == "${exposed.interfaceName}.${exposed.method.getName()}"
         }
         if (mapping != null) {
             return mapping.getHandlerName().replace("\"","")
         }
 
-        return "${method.getExposedName()}.${method.getName()}"
+        return "${exposed.exposedName}.${exposed.method.getName()}"
     }
 
     private fun registerCall(
-        methods: List<ExposedMethodDefinition>,
+        methods: List<ExposedMethod>,
         behindFeatureFlag: Boolean
     ): FunctionCallBuilderOps = {
-        val handlers: List<TypeScriptStructureBuilder> = methods.map { method ->
+        val handlers: List<TypeScriptStructureBuilder> = methods.map { exposed ->
             typeScriptStructure {
                 addProperty {
                     key = "name"
-                    value = string(handlerName(method))
+                    value = string(handlerName(exposed))
                 }
                 addProperty {
                     key = "handler"
-                    value = variable(method.getName())
+                    value = variable(exposed.method.getName())
                 }
             }
         }
@@ -79,9 +85,11 @@ class PlayFabHandlersGenerator: PatternGenerator() {
 
     private fun getPlayFabHandlers() = c.module.getWebSubmodule()!!.getPlayFabHandlers()!!
 
-    private fun getMethodDefinition(exposed: ExposedMethodDefinition): MethodDefinition {
-        val interfaceDef = c.module.getInterfaces().first { it.getName() == exposed.getInterfaceName() }
-        return interfaceDef.getMethods().first { it.getName() == exposed.getName() }
+    private fun getExposedMethods(exposedInterface: ExposedInterface): List<ExposedMethod> {
+        val interfaceDef = c.module.getInterfaces().first { it.getName() == exposedInterface.getName() }
+        return interfaceDef.getMethods().map { method ->
+            ExposedMethod(method, exposedInterface.getExposedName(), interfaceDef.getName())
+        }
     }
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
@@ -90,8 +98,8 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         val normalExposedInterfaces = allExposedInterfaces.filter { !it.isDebug() }
         val debugExposedInterfaces = allExposedInterfaces.filter { it.isDebug() }
 
-        val normalMethods = normalExposedInterfaces.flatMap { it.getMethods() }
-        val debugMethods = debugExposedInterfaces.flatMap { it.getMethods() }
+        val normalMethods = normalExposedInterfaces.flatMap { getExposedMethods(it) }
+        val debugMethods = debugExposedInterfaces.flatMap { getExposedMethods(it) }
         val allMethods = normalMethods + debugMethods
 
         val normalBehindFeatureFlag = normalExposedInterfaces.any { it.getAttributes().any { att -> att.getName() == "behindFeatureFlag" } }
@@ -107,8 +115,8 @@ class PlayFabHandlersGenerator: PatternGenerator() {
             }
         }
 
-        allMethods.forEach { exposedMethod ->
-            val method = getMethodDefinition(exposedMethod)
+        allMethods.forEach { exposed ->
+            val method = exposed.method
             addFunction {
                 name = method.getName()
                 addArg {

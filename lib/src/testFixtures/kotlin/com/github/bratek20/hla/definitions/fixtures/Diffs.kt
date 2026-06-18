@@ -150,34 +150,10 @@ fun diffHttpDefinition(given: HttpDefinition, expectedInit: ExpectedHttpDefiniti
     return result.joinToString("\n")
 }
 
-data class ExpectedExposedMethodDefinition(
-    var name: String? = null,
-    var exposedName: String? = null,
-    var interfaceName: String? = null,
-)
-fun diffExposedMethodDefinition(given: ExposedMethodDefinition, expectedInit: ExpectedExposedMethodDefinition.() -> Unit, path: String = ""): String {
-    val expected = ExpectedExposedMethodDefinition().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.name?.let {
-        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
-    }
-
-    expected.exposedName?.let {
-        if (given.getExposedName() != it) { result.add("${path}exposedName ${given.getExposedName()} != ${it}") }
-    }
-
-    expected.interfaceName?.let {
-        if (given.getInterfaceName() != it) { result.add("${path}interfaceName ${given.getInterfaceName()} != ${it}") }
-    }
-
-    return result.joinToString("\n")
-}
-
 data class ExpectedExposedInterface(
     var name: String? = null,
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
-    var methods: List<(ExpectedExposedMethodDefinition.() -> Unit)>? = null,
+    var exposedName: String? = null,
 )
 fun diffExposedInterface(given: ExposedInterface, expectedInit: ExpectedExposedInterface.() -> Unit, path: String = ""): String {
     val expected = ExpectedExposedInterface().apply(expectedInit)
@@ -192,9 +168,8 @@ fun diffExposedInterface(given: ExposedInterface, expectedInit: ExpectedExposedI
         given.getAttributes().forEachIndexed { idx, entry -> if (diffAttribute(entry, it[idx]) != "") { result.add(diffAttribute(entry, it[idx], "${path}attributes[${idx}].")) } }
     }
 
-    expected.methods?.let {
-        if (given.getMethods().size != it.size) { result.add("${path}methods size ${given.getMethods().size} != ${it.size}"); return@let }
-        given.getMethods().forEachIndexed { idx, entry -> if (diffExposedMethodDefinition(entry, it[idx]) != "") { result.add(diffExposedMethodDefinition(entry, it[idx], "${path}methods[${idx}].")) } }
+    expected.exposedName?.let {
+        if (given.getExposedName() != it) { result.add("${path}exposedName ${given.getExposedName()} != ${it}") }
     }
 
     return result.joinToString("\n")

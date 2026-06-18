@@ -67,31 +67,17 @@ fun httpDefinition(init: HttpDefinitionDef.() -> Unit = {}): HttpDefinition {
     )
 }
 
-data class ExposedMethodDefinitionDef(
-    var name: String = "someValue",
-    var exposedName: String = "someValue",
-    var interfaceName: String = "someValue",
-)
-fun exposedMethodDefinition(init: ExposedMethodDefinitionDef.() -> Unit = {}): ExposedMethodDefinition {
-    val def = ExposedMethodDefinitionDef().apply(init)
-    return ExposedMethodDefinition.create(
-        name = def.name,
-        exposedName = def.exposedName,
-        interfaceName = def.interfaceName,
-    )
-}
-
 data class ExposedInterfaceDef(
     var name: String = "someValue",
     var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
-    var methods: List<(ExposedMethodDefinitionDef.() -> Unit)> = emptyList(),
+    var exposedName: String = "someValue",
 )
 fun exposedInterface(init: ExposedInterfaceDef.() -> Unit = {}): ExposedInterface {
     val def = ExposedInterfaceDef().apply(init)
     return ExposedInterface.create(
         name = def.name,
         attributes = def.attributes.map { it -> attribute(it) },
-        methods = def.methods.map { it -> exposedMethodDefinition(it) },
+        exposedName = def.exposedName,
     )
 }
 

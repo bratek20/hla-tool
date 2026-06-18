@@ -36,15 +36,10 @@ ValueObjects
         urlPathPrefix: string?
         requestResponseWrapping: bool?
 
-    ExposedMethodDefinition
-        name: string
-        exposedName: string
-        interfaceName: string
-
     ExposedInterface
         name: string
         attributes: Attribute[]
-        methods: ExposedMethodDefinition[]
+        exposedName: string
 
     ErrorCodeMapping
         exceptionName: string

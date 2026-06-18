@@ -102,18 +102,20 @@ class HandlersExamplesGenerator: PatternGenerator() {
     override fun supportsCodeBuilder() = true
 
     override fun shouldGenerate(): Boolean {
-        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && getExposedMethods().isNotEmpty()
+        return c.language.name() == ModuleLanguage.TYPE_SCRIPT && getExposedInterfaces().isNotEmpty()
     }
 
     override fun getDirectory(): Directory? {
-        val exposedMethods = getExposedMethods()
-        if (exposedMethods.isEmpty()) {
+        val exposedInterfaces = getExposedInterfaces()
+        if (exposedInterfaces.isEmpty()) {
             return null
         }
 
-        val exampleLogics = exposedMethods.map { exposed ->
-            val method = getMethodDefinition(exposed)
-            ExampleInterfaceMethodLogic(method, exposed.getExposedName(), c.apiTypeFactory)
+        val exampleLogics = exposedInterfaces.flatMap { exposed ->
+            val interfaceDef = c.module.getInterfaces().first { it.getName() == exposed.getName() }
+            interfaceDef.getMethods().map { method ->
+                ExampleInterfaceMethodLogic(method, exposed.getExposedName(), c.apiTypeFactory)
+            }
         }
 
         return Directory.create(
@@ -122,15 +124,10 @@ class HandlersExamplesGenerator: PatternGenerator() {
         )
     }
 
-    private fun getExposedMethods(): List<ExposedMethodDefinition> {
+    private fun getExposedInterfaces(): List<ExposedInterface> {
         val web = c.module.getWebSubmodule() ?: return emptyList()
         val handlers = web.getPlayFabHandlers() ?: return emptyList()
-        return handlers.getExposedInterfaces().flatMap { it.getMethods() }
-    }
-
-    private fun getMethodDefinition(exposed: ExposedMethodDefinition): MethodDefinition {
-        val interfaceDef = c.module.getInterfaces().first { it.getName() == exposed.getInterfaceName() }
-        return interfaceDef.getMethods().first { it.getName() == exposed.getName() }
+        return handlers.getExposedInterfaces()
     }
 }
 
