@@ -7,10 +7,16 @@ import com.github.bratek20.codebuilder.languages.typescript.typeScriptStructure
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.newListOf
 import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.apitypes.impl.ApiTypeFactoryLogic
 import com.github.bratek20.hla.definitions.api.ExposedInterface
+import com.github.bratek20.hla.definitions.api.FieldDefinition
+import com.github.bratek20.hla.definitions.api.HandlerNameMapping
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
+import com.github.bratek20.hla.definitions.api.ModuleDefinition
+import com.github.bratek20.hla.definitions.api.PlayFabHandlersDefinition
 import com.github.bratek20.hla.facade.api.ModuleLanguage
+import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.queries.api.isDebug
@@ -28,30 +34,19 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         return c.language.name() == ModuleLanguage.TYPE_SCRIPT && c.module.getWebSubmodule()?.getPlayFabHandlers() != null
     }
 
-    private fun handlerName(interf: InterfaceDefinition, method: MethodDefinition, addDebugToHandlerName: Boolean): String {
-        val mapping = getPlayFabHandlers().getHandlerNamesMapping().firstOrNull {
-            it.getMethodPath() == "${interf.getName()}.${method.getName()}"
-        }
-        if (mapping != null) {
-            return mapping.getHandlerName().replace("\"","")
-        }
-
-        val debugPart = if (addDebugToHandlerName) ".Debug" else ""
-        return "$moduleName$debugPart.${method.getName()}"
-    }
-
     private fun registerCall(
-        exposedInterfaces: List<ExposedInterface>,
-        addDebugToHandlerName: Boolean
+        exposedInterfaces: List<ExposedInterface>
     ): FunctionCallBuilderOps = {
         val handlers: List<TypeScriptStructureBuilder> = exposedInterfaces.flatMap {
             module.getInterfaces().first { interf -> it.getName() == interf.getName() }.let { interf ->
                 interf.getMethods().map { method ->
-
+                    val logic = PlayFabHandlerLogic(module, method, it, interf)
                     typeScriptStructure {
                         addProperty {
                             key = "name"
-                            value = string(handlerName(interf, method, addDebugToHandlerName))
+                            value = string(
+                                logic.handlerName()
+                            )
                         }
                         addProperty {
                             key = "handler"
@@ -94,13 +89,13 @@ class PlayFabHandlersGenerator: PatternGenerator() {
         val normalExposedInterfaces = allExposedInterfaces.filter { !it.isDebug() }
         val debugExposedInterfaces = allExposedInterfaces.filter { it.isDebug() }
 
-        addFunctionCall(registerCall(normalExposedInterfaces, false))
+        addFunctionCall(registerCall(normalExposedInterfaces))
 
         if (debugExposedInterfaces.isNotEmpty()) {
             addFunction {
                 name = "RegisterDebugHandlers"
                 setBody {
-                    add(functionCallStatement(registerCall(debugExposedInterfaces, true)))
+                    add(functionCallStatement(registerCall(debugExposedInterfaces)))
                 }
             }
         }
@@ -206,5 +201,24 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                 }
             }
         }
+    }
+}
+
+class PlayFabHandlerLogic (
+    private val module: ModuleDefinition,
+    private val method: MethodDefinition,
+    private val exposedInterface: ExposedInterface,
+    private val interfaceDefinition: InterfaceDefinition
+){
+    fun handlerName(): String {
+        val mapping = module.getWebSubmodule()!!.getPlayFabHandlers()!!.getHandlerNamesMapping().firstOrNull {
+            it.getMethodPath() == "${interfaceDefinition.getName()}.${method.getName()}"
+        }
+        if (mapping != null) {
+            return mapping.getHandlerName().replace("\"","")
+        }
+
+        val debugPart = if (exposedInterface.isDebug()) ".Debug" else ""
+        return "${module.getName()}$debugPart.${method.getName()}"
     }
 }

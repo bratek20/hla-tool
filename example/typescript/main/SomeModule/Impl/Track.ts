@@ -66,7 +66,8 @@ namespace SomeModule.Impl {
             some_dimension_id: SomeDimension,
             optional_generic_tracking_dimension_id: Optional<TrackingDimension>,
             optional_int: Optional<number>,
-            dimensions_list: TrackingDimensionList
+            dimensions_list: TrackingDimensionList,
+            other_dimension_id: OtherModule.Impl.OtherDimension
         ) {
             super()
             this.optional_int_exposed = classWithOptExamples.getOptInt().orElse(undefined)
@@ -74,12 +75,14 @@ namespace SomeModule.Impl {
             this.optional_generic_tracking_dimension_id = optional_generic_tracking_dimension_id.orElse(undefined)
             this.optional_int = optional_int.orElse(undefined)
             this.dimensions_list = dimensions_list
+            this.other_dimension_id = other_dimension_id
         }
         private readonly optional_int_exposed: number | undefined
         private readonly some_dimension_id: SomeDimension
         private readonly optional_generic_tracking_dimension_id: TrackingDimension
         private readonly optional_int: number
         private readonly dimensions_list: TrackingDimensionList
+        private readonly other_dimension_id: OtherModule.Impl.OtherDimension
         getTableName(): TrackingTableName {
             return new TrackingTableName("some_tracking_event")
         }
