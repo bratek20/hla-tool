@@ -401,7 +401,24 @@ class MockInterfaceLogic(
     fun setup(): FunctionBuilderOps = {
         name = "setup${def.getName()}"
         returnType = typeName(def.getName() + "Mock")
+
+        addArg {
+            name = "consumer"
+            type = typeName { "DependencyName" }
+        }
+
         setBody {
+            add(methodCallStatement {
+                name = "consumerContainsDependency"
+                target = variable("Dependencies.Assert")
+                addArg {
+                    variable("consumer")
+                }
+                addArg {
+                    variable("DependencyName.$moduleName")
+                }
+            })
+
             add(assignment {
                 left = variableDeclaration {
                     name = "mock"
