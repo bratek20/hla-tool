@@ -9,6 +9,7 @@ import com.github.bratek20.hla.apitypes.api.ApiTypeFactory
 import com.github.bratek20.hla.apitypes.impl.ApiTypeLogic
 import com.github.bratek20.hla.apitypes.impl.BaseApiType
 import com.github.bratek20.hla.apitypes.impl.ExternalApiType
+import com.github.bratek20.hla.definitions.api.BaseType as DefinitionsBaseType
 import com.github.bratek20.hla.definitions.api.InterfaceDefinition
 import com.github.bratek20.hla.definitions.api.MethodDefinition
 import com.github.bratek20.hla.definitions.api.TypeDefinition
@@ -150,27 +151,44 @@ class MockMethodLogic(
     }
 
     fun callsAssertion(): MethodBuilderOps? {
-        return supportedArgsExpectedType()?.let {
-            {
-                val expectedArgsListOp = listOp(variable("expectedArgs"))
-                name = "assert${camelToPascalCase(def.getName())}Calls"
-                addArg {
-                    name = "expectedArgs"
-                    type = listType(typeName(it.alwaysReferencedName()))
-                }
-                setBody {
-                    add(methodCallStatement {
-                        name = assertCallsNumberMethodName()
-                        addArg {
-                            expectedArgsListOp.size()
-                        }
-                    })
-                    add(forLoop(
-                        from = const(0),
-                        to = expectedArgsListOp.size(),
-                        body = { iVar ->
+        val expectedType = supportedArgsExpectedType() ?: return null
+
+        return {
+            val expectedArgsListOp = listOp(variable("expectedArgs"))
+            name = "assert${camelToPascalCase(def.getName())}Calls"
+            addArg {
+                name = "expectedArgs"
+                type = listType(typeName(expectedType.alwaysReferencedName()))
+            }
+            setBody {
+                add(methodCallStatement {
+                    name = assertCallsNumberMethodName()
+                    addArg {
+                        expectedArgsListOp.size()
+                    }
+                })
+                add(forLoop(
+                    from = const(0),
+                    to = expectedArgsListOp.size(),
+                    body = { iVar ->
+                        if (expectedType is BaseExpectedType) {
+                            assertEquals {
+                                given = callsListOp().get(iVar)
+                                expected = expectedArgsListOp.get(iVar)
+                                message = plus {
+                                    left = string("Expected '${def.getName()}' to be called with ")
+                                    right = plus {
+                                        left = expectedArgsListOp.get(iVar)
+                                        right = plus {
+                                            left = string(" but was called with ")
+                                            right = callsListOp().get(iVar)
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
                             functionCallStatement {
-                                name = if (languageName == ModuleLanguage.TYPE_SCRIPT) handleTypeScriptReferencing(it) else it.funName()
+                                name = if (languageName == ModuleLanguage.TYPE_SCRIPT) handleTypeScriptReferencing(expectedType) else expectedType.funName()
                                 addArg {
                                     callsListOp().get(iVar)
                                 }
@@ -179,8 +197,8 @@ class MockMethodLogic(
                                 }
                             }
                         }
-                    ))
-                }
+                    }
+                ))
             }
         }
     }
@@ -306,16 +324,17 @@ class MockMethodLogic(
         }
     }
 
-    private fun argsDefType(): DefType<*>? {
-        return argsApiType()?.let { defTypeFactory.create(it) }
-    }
-
     private fun supportedArgsExpectedType(): ExpectedType<*>? {
-        val type = argsApiType()?.let { expectedTypeFactory.create(it) }
-        if (type is StructureExpectedType) {
-            return type
+        val expectedType = argsApiType()?.let { expectedTypeFactory.create(it) } ?: return null
+
+        val isStructure = expectedType is StructureExpectedType
+        val isSupportedBaseType = expectedType is BaseExpectedType &&
+            expectedType.api.name != DefinitionsBaseType.ANY &&
+            languageName == ModuleLanguage.TYPE_SCRIPT
+        if (!isStructure && !isSupportedBaseType) {
+            return null
         }
-        return null
+        return expectedType
     }
 
     private fun responseFieldName(): String {
