@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.generation.impl.core.SubmoduleGenerator
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.core.fixtures.TestBaseGenerator
 
 class FixturesGenerator: SubmoduleGenerator() {
     override fun submoduleName(): SubmoduleName {
@@ -19,6 +20,7 @@ class FixturesGenerator: SubmoduleGenerator() {
             DiffsGenerator(),
             AssertsGenerator(),
             MocksGenerator(),
+            TestBaseGenerator()
         )
     }
 }
