@@ -22,18 +22,13 @@ fun TypeDefinition.asWorldTypeName(): WorldTypeName {
     return WorldTypeName(name)
 }
 
-/**
- * Names of all types this definition refers to.
- * Maps keep their key/value types inside the name (`Map<key,value>`) instead of in wrappers,
- * so they have to be unpacked to be visible to type lookups.
- */
-fun TypeDefinition.referencedTypeNames(): List<String> {
-    if (!this.getWrappers().contains(TypeWrapper.MAP)) {
-        return listOf(this.getName())
+fun TypeDefinition.getInnerTypes(): List<String> {
+    if (this.getWrappers().contains(TypeWrapper.MAP)) {
+        val keyValueTypes = MapTypeParser.extractKeyValueTypes(this.getName()) ?: return listOf(this.getName())
+        return listOf(keyValueTypes.first, keyValueTypes.second)
     }
-    val keyValueTypes = MapTypeParser.extractKeyValueTypes(this.getName())
-        ?: return listOf(this.getName())
-    return listOf(keyValueTypes.first, keyValueTypes.second)
+
+    return listOf(this.getName())
 }
 
 fun WorldTypeName.asTypeDefinition(): TypeDefinition {

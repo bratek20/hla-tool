@@ -183,10 +183,10 @@ open class BaseModuleGroupQueries(
     protected fun interfacesTypeNames(module: ModuleDefinition): List<String> {
         return module.getInterfaces().flatMap {
             it.getMethods().flatMap {
-                    method -> method.getArgs().flatMap {
-                    arg -> arg.getType().referencedTypeNames()
+                method -> method.getArgs().flatMap {
+                arg -> arg.getType().getInnerTypes()
             } +
-                    method.getReturnType().referencedTypeNames()
+                method.getReturnType().getInnerTypes()
             }
         }
     }
@@ -297,7 +297,7 @@ class ModuleGroupQueries(
         val typeNames = allComplexStructureDefinitions(currentModule)
             .map { it.getFields() }
             .flatten()
-            .flatMap { it.getType().referencedTypeNames() } +
+            .flatMap { it.getType().getInnerTypes() } +
             interfacesTypeNames(currentModule)
 
         val resolvedModules = modules
