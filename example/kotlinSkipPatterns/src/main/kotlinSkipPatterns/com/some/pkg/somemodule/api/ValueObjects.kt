@@ -5,6 +5,7 @@ package src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api
 import src.main.kotlinSkipPatterns.com.some.pkg.moduleonlyformocksargs.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
+import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.api.*
 
 data class SomeId(
@@ -492,15 +493,15 @@ data class ClassWithOptionalMap(
 }
 
 data class ClassWithComplexMap(
-    private val complexMap: Map<String, SomeClass>,
+    private val complexMap: Map<String, SomeUserValueObject>,
 ) {
-    fun getComplexMap(): Map<String, SomeClass> {
+    fun getComplexMap(): Map<String, SomeUserValueObject> {
         return this.complexMap
     }
 
     companion object {
         fun create(
-            complexMap: Map<String, SomeClass>,
+            complexMap: Map<String, SomeUserValueObject>,
         ): ClassWithComplexMap {
             return ClassWithComplexMap(
                 complexMap = complexMap,

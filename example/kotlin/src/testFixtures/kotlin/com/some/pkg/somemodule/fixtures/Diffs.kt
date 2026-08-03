@@ -8,6 +8,8 @@ import com.some.pkg.othermodule.api.*
 import com.some.pkg.othermodule.fixtures.*
 import com.some.pkg.simplemodule.api.*
 import com.some.pkg.simplemodule.fixtures.*
+import com.some.pkg.someusermodule.api.*
+import com.some.pkg.someusermodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 
@@ -429,7 +431,7 @@ fun diffClassWithOptionalMap(given: ClassWithOptionalMap, expectedInit: Expected
 }
 
 data class ExpectedClassWithComplexMap(
-    var complexMap: Map<String, SomeClass>? = null,
+    var complexMap: Map<String, SomeUserValueObject>? = null,
 )
 fun diffClassWithComplexMap(given: ClassWithComplexMap, expectedInit: ExpectedClassWithComplexMap.() -> Unit, path: String = ""): String {
     val expected = ExpectedClassWithComplexMap().apply(expectedInit)

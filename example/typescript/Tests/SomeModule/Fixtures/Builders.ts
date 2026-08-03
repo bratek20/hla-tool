@@ -254,7 +254,7 @@ namespace SomeModule.Builder {
     }
 
     export interface ClassWithComplexMapDef {
-        complexMap?: Map<string, SomeModule.Builder.SomeClassDef>,
+        complexMap?: Map<string, SomeUserModule.Builder.SomeUserValueObjectDef>,
     }
     export function classWithComplexMap(def?: ClassWithComplexMapDef): ClassWithComplexMap {
         const final_complexMap = def?.complexMap ?? new Map()

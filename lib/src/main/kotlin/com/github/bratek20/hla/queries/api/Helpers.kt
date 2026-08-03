@@ -22,6 +22,15 @@ fun TypeDefinition.asWorldTypeName(): WorldTypeName {
     return WorldTypeName(name)
 }
 
+fun TypeDefinition.getInnerTypes(): List<String> {
+    if (this.getWrappers().contains(TypeWrapper.MAP)) {
+        val keyValueTypes = MapTypeParser.extractKeyValueTypes(this.getName()) ?: return listOf(this.getName())
+        return listOf(keyValueTypes.first, keyValueTypes.second)
+    }
+
+    return listOf(this.getName())
+}
+
 fun WorldTypeName.asTypeDefinition(): TypeDefinition {
     val name = this.value
     if (name.contains("List<") && name.contains("Optional<")) {

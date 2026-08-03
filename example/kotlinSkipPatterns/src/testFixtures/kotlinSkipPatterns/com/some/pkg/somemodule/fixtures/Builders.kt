@@ -8,6 +8,8 @@ import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.fixtures.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.fixtures.*
+import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api.*
+import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.fixtures.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.fixtures.*
 
@@ -230,12 +232,12 @@ fun classWithOptionalMap(init: ClassWithOptionalMapDef.() -> Unit = {}): ClassWi
 }
 
 data class ClassWithComplexMapDef(
-    var complexMap: Map<String, (SomeClassDef.() -> Unit)> = emptyMap(),
+    var complexMap: Map<String, (SomeUserValueObjectDef.() -> Unit)> = emptyMap(),
 )
 fun classWithComplexMap(init: ClassWithComplexMapDef.() -> Unit = {}): ClassWithComplexMap {
     val def = ClassWithComplexMapDef().apply(init)
     return ClassWithComplexMap.create(
-        complexMap = def.complexMap.mapValues { (key, value) -> someClass(value) },
+        complexMap = def.complexMap.mapValues { (key, value) -> someUserValueObject(value) },
     )
 }
 

@@ -8,6 +8,7 @@ using B20.Architecture.Exceptions;
 using ModuleOnlyForMocksArgs.Api;
 using OtherModule.Api;
 using SimpleModule.Api;
+using SomeUserModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Api {

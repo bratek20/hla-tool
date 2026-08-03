@@ -10,6 +10,8 @@ import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.othermodule.fixtures.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.simplemodule.fixtures.*
+import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api.*
+import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.fixtures.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.api.*
 import src.main.kotlinSkipPatterns.com.some.pkg.typesmodule.fixtures.*
 

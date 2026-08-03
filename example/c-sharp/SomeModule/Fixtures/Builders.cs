@@ -11,6 +11,8 @@ using OtherModule.Api;
 using OtherModule.Fixtures;
 using SimpleModule.Api;
 using SimpleModule.Fixtures;
+using SomeUserModule.Api;
+using SomeUserModule.Fixtures;
 using TypesModule.Api;
 using TypesModule.Fixtures;
 
@@ -100,7 +102,7 @@ namespace SomeModule.Fixtures {
     }
 
     public class ClassWithComplexMapDef {
-        public Dictionary<string, Action<SomeClassDef>> ComplexMap { get; set; } = new Dictionary<string, Action<SomeClassDef>>();
+        public Dictionary<string, Action<SomeUserValueObjectDef>> ComplexMap { get; set; } = new Dictionary<string, Action<SomeUserValueObjectDef>>();
     }
 
     public class SomeQueryInputDef {

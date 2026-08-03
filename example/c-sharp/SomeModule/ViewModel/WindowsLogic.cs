@@ -9,6 +9,7 @@ using ModuleOnlyForMocksArgs.Api;
 using OtherModule.Api;
 using OtherModule.ViewModel;
 using SimpleModule.Api;
+using SomeUserModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.ViewModel {
