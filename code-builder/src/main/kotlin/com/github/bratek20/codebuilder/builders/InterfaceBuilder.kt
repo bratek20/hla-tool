@@ -12,14 +12,6 @@ class InterfaceFieldBuilder: CodeBlockBuilder {
 
     override fun getOperations(c: CodeBuilderContext): CodeBuilderOps = {
         when (c.lang) {
-            is CSharp -> {
-                lineStart()
-                add(type)
-                if (optional) {
-                    linePart("?")
-                }
-                lineEnd(" ${camelToPascalCase(name)} { get; set; }")
-            }
             is TypeScript -> {
                 lineStart(name)
                 if (optional) {
@@ -30,12 +22,7 @@ class InterfaceFieldBuilder: CodeBlockBuilder {
                 lineEnd()
             }
             else -> {
-                lineStart("val $name: ")
-                add(type)
-                if (optional) {
-                    linePart("?")
-                }
-                lineEnd()
+                throw IllegalStateException("Interface fields are not supported in ${c.lang}")
             }
         }
     }

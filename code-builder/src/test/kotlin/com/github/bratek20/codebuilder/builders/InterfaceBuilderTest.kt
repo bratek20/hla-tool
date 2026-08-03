@@ -60,17 +60,6 @@ class InterfaceBuilderTest {
                 }
             }
             langExpected {
-                lang = Kotlin()
-                expected = """
-                    interface SomeInterface {
-                        val someField: SomeType
-                        val someOptionalField: SomeType?
-                    
-                        fun someMethod()
-                    }
-                """
-            }
-            langExpected {
                 lang = TypeScript()
                 expected = """
                     interface SomeInterface {
@@ -78,17 +67,6 @@ class InterfaceBuilderTest {
                         someOptionalField?: SomeType
                     
                         someMethod()
-                    }
-                """
-            }
-            langExpected {
-                lang = CSharp()
-                expected = """
-                    public interface SomeInterface {
-                        SomeType SomeField { get; set; }
-                        SomeType? SomeOptionalField { get; set; }
-                    
-                        void SomeMethod();
                     }
                 """
             }

@@ -21,6 +21,10 @@ class TypeScriptStructureBuilder: ExpressionBuilder {
     }
 
     override fun build(c: CodeBuilderContext): String {
+        if (properties.isEmpty()) {
+            return "{}"
+        }
+
         val b = StringBuilder()
         b.append("{ ")
         properties.forEachIndexed { index, prop ->

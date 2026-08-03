@@ -6,7 +6,7 @@ namespace OtherModule {
         otherProperties?: OtherModule.Builder.OtherPropertyDef[]
     }
 
-    export function setup(args?: SetupArgs): void {
+    export function setup(args: SetupArgs = {}): void {
         context = EmptyContextFor(DependencyName.OtherModule)
     }
 

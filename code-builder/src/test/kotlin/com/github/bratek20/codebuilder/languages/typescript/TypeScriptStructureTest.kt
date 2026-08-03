@@ -11,6 +11,21 @@ import org.junit.jupiter.api.Test
 
 class TypeScriptStructureTest {
     @Test
+    fun shouldWorkForEmptyStructure() {
+        testLinePartOps {
+            ops {
+                add(typeScriptStructure {})
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    {}
+                """
+            }
+        }
+    }
+
+    @Test
     fun shouldWork() {
         testLinePartOps {
             ops {

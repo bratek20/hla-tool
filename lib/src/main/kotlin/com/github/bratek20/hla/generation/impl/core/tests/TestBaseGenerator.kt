@@ -8,6 +8,7 @@ import com.github.bratek20.codebuilder.builders.string
 import com.github.bratek20.codebuilder.builders.variable
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
+import com.github.bratek20.codebuilder.languages.typescript.typeScriptStructure
 import com.github.bratek20.codebuilder.types.TypeBuilder
 import com.github.bratek20.codebuilder.types.baseType
 import com.github.bratek20.codebuilder.types.typeName
@@ -86,7 +87,7 @@ class TestBaseGenerator: PatternGenerator() {
                     addArg {
                         name = "args"
                         type = typeName(SETUP_ARGS_NAME)
-                        optional = true
+                        defaultValue = typeScriptStructure {}
                     }
                 }
 

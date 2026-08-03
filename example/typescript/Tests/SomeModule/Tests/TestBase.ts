@@ -23,7 +23,7 @@ namespace SomeModule {
         customTypesPropertyOptionalList?: SomeModule.Builder.CustomTypesPropertyOptionalListDef[]
     }
 
-    export function setup(args?: SetupArgs): void {
+    export function setup(args: SetupArgs = {}): void {
         context = EmptyContextFor(DependencyName.SomeModule)
     }
 
