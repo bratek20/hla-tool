@@ -10,6 +10,8 @@ import com.some.pkg.othermodule.fixtures.*
 import com.some.pkg.othermodule.api.*
 import com.some.pkg.simplemodule.fixtures.*
 import com.some.pkg.simplemodule.api.*
+import com.some.pkg.someusermodule.fixtures.*
+import com.some.pkg.someusermodule.api.*
 import com.some.pkg.typesmodule.fixtures.*
 import com.some.pkg.typesmodule.api.*
 

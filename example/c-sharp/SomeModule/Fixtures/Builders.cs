@@ -11,6 +11,8 @@ using OtherModule.Api;
 using OtherModule.Fixtures;
 using SimpleModule.Api;
 using SimpleModule.Fixtures;
+using SomeUserModule.Api;
+using SomeUserModule.Fixtures;
 using TypesModule.Api;
 using TypesModule.Fixtures;
 
