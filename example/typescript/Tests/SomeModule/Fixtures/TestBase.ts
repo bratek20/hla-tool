@@ -26,4 +26,8 @@ namespace SomeModule {
     export function setup(args?: SetupArgs): void {
         context = EmptyContextFor(DependencyName.SomeModule)
     }
+
+    export function test(testName: string, fun: TestFunction) {
+        addTest("SomeModule", testName, fun)
+    }
 }

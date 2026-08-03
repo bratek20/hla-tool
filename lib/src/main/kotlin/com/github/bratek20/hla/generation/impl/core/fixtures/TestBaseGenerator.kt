@@ -3,6 +3,8 @@ package com.github.bratek20.hla.generation.impl.core.fixtures
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.builders.assignment
 import com.github.bratek20.codebuilder.builders.functionCall
+import com.github.bratek20.codebuilder.builders.functionCallStatement
+import com.github.bratek20.codebuilder.builders.string
 import com.github.bratek20.codebuilder.builders.variable
 import com.github.bratek20.codebuilder.core.BaseType
 import com.github.bratek20.codebuilder.languages.typescript.typeScriptNamespace
@@ -13,7 +15,6 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
-import com.github.bratek20.hla.queries.api.withSubmoduleName
 
 class TestBaseGenerator: PatternGenerator() {
     override fun patternName(): PatternName {
@@ -96,6 +97,33 @@ class TestBaseGenerator: PatternGenerator() {
                             addArg {
                                 variable("DependencyName.$moduleName")
                             }
+                        }
+                    })
+                }
+            }
+
+            addFunction {
+                name = "test"
+                addArg {
+                    name = "testName"
+                    type = baseType(BaseType.STRING)
+                }
+                addArg {
+                    name = "fun"
+                    type = typeName("TestFunction")
+                }
+
+                setBody {
+                    add(functionCallStatement {
+                        name = "addTest"
+                        addArg {
+                            string(moduleName)
+                        }
+                        addArg {
+                            variable("testName")
+                        }
+                        addArg {
+                            variable("fun")
                         }
                     })
                 }
