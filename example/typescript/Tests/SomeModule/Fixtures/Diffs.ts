@@ -401,7 +401,7 @@ namespace SomeModule {
     }
 
     export interface ExpectedClassWithComplexMap {
-        complexMap?: Map<string, SomeClass>,
+        complexMap?: Map<string, SomeUserValueObject>,
     }
     export function diffClassWithComplexMap(given: ClassWithComplexMap, expected: ExpectedClassWithComplexMap, path: string = ""): string {
         const result: string[] = []

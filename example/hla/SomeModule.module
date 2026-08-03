@@ -92,7 +92,7 @@ ValueObjects
         optMap: <string, int>?
 
     ClassWithComplexMap
-        complexMap: <string, SomeClass>
+        complexMap: <string, SomeUserValueObject>
 
 Exceptions
     SomeExtraException

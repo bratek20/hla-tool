@@ -429,7 +429,7 @@ fun diffClassWithOptionalMap(given: ClassWithOptionalMap, expectedInit: Expected
 }
 
 data class ExpectedClassWithComplexMap(
-    var complexMap: Map<String, SomeClass>? = null,
+    var complexMap: Map<String, SomeUserValueObject>? = null,
 )
 fun diffClassWithComplexMap(given: ClassWithComplexMap, expectedInit: ExpectedClassWithComplexMap.() -> Unit, path: String = ""): String {
     val expected = ExpectedClassWithComplexMap().apply(expectedInit)

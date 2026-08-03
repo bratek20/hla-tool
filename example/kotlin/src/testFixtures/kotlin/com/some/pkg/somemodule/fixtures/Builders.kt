@@ -230,12 +230,12 @@ fun classWithOptionalMap(init: ClassWithOptionalMapDef.() -> Unit = {}): ClassWi
 }
 
 data class ClassWithComplexMapDef(
-    var complexMap: Map<String, (SomeClassDef.() -> Unit)> = emptyMap(),
+    var complexMap: Map<String, (SomeUserValueObjectDef.() -> Unit)> = emptyMap(),
 )
 fun classWithComplexMap(init: ClassWithComplexMapDef.() -> Unit = {}): ClassWithComplexMap {
     val def = ClassWithComplexMapDef().apply(init)
     return ClassWithComplexMap.create(
-        complexMap = def.complexMap.mapValues { (key, value) -> someClass(value) },
+        complexMap = def.complexMap.mapValues { (key, value) -> someUserValueObject(value) },
     )
 }
 

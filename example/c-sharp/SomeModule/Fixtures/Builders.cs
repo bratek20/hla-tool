@@ -100,7 +100,7 @@ namespace SomeModule.Fixtures {
     }
 
     public class ClassWithComplexMapDef {
-        public Dictionary<string, Action<SomeClassDef>> ComplexMap { get; set; } = new Dictionary<string, Action<SomeClassDef>>();
+        public Dictionary<string, Action<SomeUserValueObjectDef>> ComplexMap { get; set; } = new Dictionary<string, Action<SomeUserValueObjectDef>>();
     }
 
     public class SomeQueryInputDef {

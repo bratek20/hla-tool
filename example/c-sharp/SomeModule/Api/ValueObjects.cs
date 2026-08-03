@@ -439,17 +439,17 @@ namespace SomeModule.Api {
     }
 
     public class ClassWithComplexMap: ValueObject {
-        readonly Dictionary<string, SomeClass> complexMap;
+        readonly Dictionary<string, SomeUserValueObject> complexMap;
 
         public ClassWithComplexMap(
-            Dictionary<string, SomeClass> complexMap
+            Dictionary<string, SomeUserValueObject> complexMap
         ) {
             this.complexMap = complexMap;
         }
-        public Dictionary<string, SomeClass> GetComplexMap() {
+        public Dictionary<string, SomeUserValueObject> GetComplexMap() {
             return complexMap;
         }
-        public static ClassWithComplexMap Create(Dictionary<string, SomeClass> complexMap) {
+        public static ClassWithComplexMap Create(Dictionary<string, SomeUserValueObject> complexMap) {
             return new ClassWithComplexMap(complexMap);
         }
     }

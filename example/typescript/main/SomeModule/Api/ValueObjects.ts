@@ -737,10 +737,10 @@ class ClassWithOptionalMap {
 }
 
 class ClassWithComplexMap {
-    private complexMap = Class(Map<string, SomeClass>)
+    private complexMap = Class(Map<string, SomeUserValueObject>)
 
     static create(
-        complexMap: Map<string, SomeClass>,
+        complexMap: Map<string, SomeUserValueObject>,
     ): ClassWithComplexMap {
         const instance = new ClassWithComplexMap()
         instance.complexMap = complexMap
@@ -750,14 +750,14 @@ class ClassWithComplexMap {
     static createNamed({
         complexMap,
     }: {
-        complexMap: Map<string, SomeClass>;
+        complexMap: Map<string, SomeUserValueObject>;
     }): ClassWithComplexMap {
         const instance = new ClassWithComplexMap()
         instance.complexMap = complexMap
         return instance
     }
 
-    getComplexMap(): Map<string, SomeClass> {
+    getComplexMap(): Map<string, SomeUserValueObject> {
         return this.complexMap
     }
 }
