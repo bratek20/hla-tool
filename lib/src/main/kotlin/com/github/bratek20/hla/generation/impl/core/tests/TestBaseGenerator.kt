@@ -1,4 +1,4 @@
-package com.github.bratek20.hla.generation.impl.core.fixtures
+package com.github.bratek20.hla.generation.impl.core.tests
 
 import com.github.bratek20.codebuilder.builders.TopLevelCodeBuilderOps
 import com.github.bratek20.codebuilder.builders.assignment
@@ -15,6 +15,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.GeneratorMode
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
+import com.github.bratek20.hla.generation.impl.core.fixtures.DefTypeFactory
 
 class TestBaseGenerator: PatternGenerator() {
     override fun patternName(): PatternName {

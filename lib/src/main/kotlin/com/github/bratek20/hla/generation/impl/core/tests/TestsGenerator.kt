@@ -33,7 +33,8 @@ class TestsGenerator: SubmoduleGenerator() {
 
     override fun getPatternGenerators(): List<PatternGenerator> {
         return listOf(
-            ImplTestGenerator(),
+            TestBaseGenerator(),
+            ImplTestGenerator()
         )
     }
 }
