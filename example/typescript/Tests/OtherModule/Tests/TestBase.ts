@@ -7,7 +7,13 @@ namespace OtherModule {
     }
 
     export function setup(args: SetupArgs = {}): void {
-        context = EmptyContextFor(DependencyName.OtherModule)
+        context = Ts.E2E.SetupAndCreateContext({
+            dependencyName: DependencyName.OtherModule,
+            titleData: builderTD => {
+                builderTD.with(OTHER_PROPERTY_PROPERTY_KEY, OtherModule.Builder.otherProperty(args.otherProperty ?? {}))
+                builderTD.with(OTHER_PROPERTIES_PROPERTY_KEY, (args.otherProperties ?? []).map(it => OtherModule.Builder.otherProperty(it)))
+            }
+        }).context
     }
 
     export function test(testName: string, fun: TestFunction) {
