@@ -57,6 +57,7 @@ enum class PatternName {
     Diffs,
     Asserts,
     Mocks,
+    TestBase,
     ImplTest,
     HandlersExamples,
     TitleDataExamples,
