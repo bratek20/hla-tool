@@ -66,6 +66,7 @@ Enums
         Mocks
 
         //tests
+        TestBase
         ImplTest
 
         //Examples

@@ -9,21 +9,35 @@ open class ArgumentBuilder: ExpressionBuilder {
     lateinit var type: TypeBuilder
 
     var defaultValue: ExpressionBuilder? = null
+    var optional: Boolean = false
 
     override fun build(c: CodeBuilderContext): String {
         val b = StringBuilder()
-        if (c.lang is CSharp) {
-            b.append("${type.build(c)} $name")
-        }
-        else {
-            b.append("$name: ${type.build(c)}")
+        when {
+            c.lang is CSharp -> {
+                b.append("${type.build(c)}${optionalMark()} $name")
+            }
+            c.lang is TypeScript -> {
+                b.append("$name${optionalMark()}: ${type.build(c)}")
+            }
+            else -> {
+                b.append("$name: ${type.build(c)}${optionalMark()}")
+            }
         }
 
-        defaultValue?.let {
-            b.append(" = ${it.build(c)}")
+        val default = defaultValue
+        if (default != null) {
+            b.append(" = ${default.build(c)}")
+        }
+        else if (optional && c.lang !is TypeScript) {
+            b.append(" = null")
         }
 
         return b.toString()
+    }
+
+    private fun optionalMark(): String {
+        return if (optional) "?" else ""
     }
 }
 typealias ArgumentBuilderOps = ArgumentBuilder.() -> Unit

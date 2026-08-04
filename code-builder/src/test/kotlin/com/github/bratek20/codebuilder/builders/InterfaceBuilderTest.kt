@@ -1,6 +1,7 @@
 package com.github.bratek20.codebuilder.builders
 
 import com.github.bratek20.codebuilder.core.*
+import com.github.bratek20.codebuilder.types.typeName
 import org.junit.jupiter.api.Test
 
 class InterfaceBuilderTest {
@@ -31,6 +32,41 @@ class InterfaceBuilderTest {
                 lang = CSharp()
                 expected = """
                     public interface SomeInterface {
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `interface with fields`() {
+        testOp {
+            op = {
+                interfaceBlock {
+                    name = "SomeInterface"
+
+                    addField {
+                        name = "someField"
+                        type = typeName("SomeType")
+                    }
+                    addField {
+                        name = "someOptionalField"
+                        type = typeName("SomeType")
+                        optional = true
+                    }
+                    addMethod {
+                        name = "someMethod"
+                    }
+                }
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    interface SomeInterface {
+                        someField: SomeType
+                        someOptionalField?: SomeType
+                    
+                        someMethod()
                     }
                 """
             }

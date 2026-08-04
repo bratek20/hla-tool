@@ -63,6 +63,10 @@ fun instanceVariable(name: String) = expression { c ->
     "${c.lang.softThis()}$name"
 }
 
+fun parenthesis(value: ExpressionBuilder) = expression { c ->
+    "(${value.build(c)})"
+}
+
 fun const(value: Int) = expression(value.toString())
 fun const(value: String) = expression(value)
 

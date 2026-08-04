@@ -64,8 +64,11 @@ fun optionalOp(variable: ExpressionBuilder) = optionalOp {
 class NullCoalescingArgs {
     lateinit var left: ExpressionBuilder
     lateinit var defaultValue: ExpressionBuilder
+
+    var parenthesizeDefaultValue: Boolean = true
 }
 fun nullCoalescing(init: NullCoalescingArgs.() -> Unit) = expression { c ->
     val args = NullCoalescingArgs().apply(init)
-    args.left.build(c) + " ?? " + "("+args.defaultValue.build(c)+")"
+    val defaultValue = args.defaultValue.build(c)
+    args.left.build(c) + " ?? " + if (args.parenthesizeDefaultValue) "($defaultValue)" else defaultValue
 }

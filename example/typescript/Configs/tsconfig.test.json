@@ -19,10 +19,31 @@
         //SomeUserModule start
         //ModuleOnlyForMocksArgs start
         //WebNoWrappers start
+        "../Tests/ModuleOnlyForMocksArgs/Fixtures/TestBase.ts",
+
+        "../Tests/NoInterfacesModule/Fixtures/TestBase.ts",
+
+        "../Tests/OnlyInterfacesModule/Fixtures/TestBase.ts",
+
+        "../Tests/OnlyTrackingModule/Fixtures/TestBase.ts",
+
+        "../Tests/OtherModule/Fixtures/TestBase.ts",
+
+        "../Tests/SimpleModule/Fixtures/TestBase.ts",
+
+        "../Tests/SomeModule/Fixtures/TestBase.ts",
+
+        "../Tests/SomeUserModule/Fixtures/TestBase.ts",
+
+        "../Tests/TypesModule/Fixtures/TestBase.ts",
+
+        "../Tests/WebNoWrappers/Fixtures/TestBase.ts",
+
         "../Tests/ModuleOnlyForMocksArgs/Fixtures/Builders.ts",
         "../Tests/ModuleOnlyForMocksArgs/Fixtures/Diffs.ts",
         "../Tests/ModuleOnlyForMocksArgs/Fixtures/Asserts.ts",
 
+        "../Tests/ModuleOnlyForMocksArgs/Tests/TestBase.ts",
         "../Tests/ModuleOnlyForMocksArgs/Tests/ImplTest.ts",
         //ModuleOnlyForMocksArgs end
 
@@ -30,12 +51,15 @@
         "../Tests/NoInterfacesModule/Fixtures/Diffs.ts",
         "../Tests/NoInterfacesModule/Fixtures/Asserts.ts",
 
+        "../Tests/NoInterfacesModule/Tests/TestBase.ts",
         "../Tests/NoInterfacesModule/Tests/ImplTest.ts",
         //NoInterfacesModule end
 
+        "../Tests/OnlyInterfacesModule/Tests/TestBase.ts",
         "../Tests/OnlyInterfacesModule/Tests/ImplTest.ts",
         //OnlyInterfacesModule end
 
+        "../Tests/OnlyTrackingModule/Tests/TestBase.ts",
         "../Tests/OnlyTrackingModule/Tests/ImplTest.ts",
         //OnlyTrackingModule end
 
@@ -44,6 +68,7 @@
         "../Tests/OtherModule/Fixtures/Asserts.ts",
         "../Tests/OtherModule/Fixtures/Mocks.ts",
 
+        "../Tests/OtherModule/Tests/TestBase.ts",
         "../Tests/OtherModule/Tests/ImplTest.ts",
         //OtherModule end
 
@@ -51,6 +76,7 @@
         "../Tests/SimpleModule/Fixtures/Diffs.ts",
         "../Tests/SimpleModule/Fixtures/Asserts.ts",
 
+        "../Tests/SimpleModule/Tests/TestBase.ts",
         "../Tests/SimpleModule/Tests/ImplTest.ts",
         //SimpleModule end
 
@@ -59,6 +85,7 @@
         "../Tests/SomeModule/Fixtures/Asserts.ts",
         "../Tests/SomeModule/Fixtures/Mocks.ts",
 
+        "../Tests/SomeModule/Tests/TestBase.ts",
         "../Tests/SomeModule/Tests/ImplTest.ts",
         //SomeModule end
 
@@ -66,6 +93,7 @@
         "../Tests/SomeUserModule/Fixtures/Diffs.ts",
         "../Tests/SomeUserModule/Fixtures/Asserts.ts",
 
+        "../Tests/SomeUserModule/Tests/TestBase.ts",
         "../Tests/SomeUserModule/Tests/ImplTest.ts",
         //SomeUserModule end
 
@@ -73,6 +101,7 @@
         "../Tests/TypesModule/Fixtures/Diffs.ts",
         "../Tests/TypesModule/Fixtures/Asserts.ts",
 
+        "../Tests/TypesModule/Tests/TestBase.ts",
         "../Tests/TypesModule/Tests/ImplTest.ts",
         //TypesModule end
 
@@ -80,6 +109,7 @@
         "../Tests/WebNoWrappers/Fixtures/Diffs.ts",
         "../Tests/WebNoWrappers/Fixtures/Asserts.ts",
 
+        "../Tests/WebNoWrappers/Tests/TestBase.ts",
         "../Tests/WebNoWrappers/Tests/ImplTest.ts",
         //WebNoWrappers end
     ]
