@@ -84,10 +84,6 @@ class TypeScriptTypes(private val modules: ModuleGroupQueries): LanguageTypes {
         return "$variableName.get()"
     }
 
-    override fun orElseNull(variableName: String): String {
-        return "$variableName.orElse(undefined)"
-    }
-
     override fun serializeOptional(variableName: String): String {
         return "$variableName.orElse(undefined)"
     }

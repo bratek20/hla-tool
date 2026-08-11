@@ -244,11 +244,11 @@ class OptionalExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        return wrappedType.diff(api.orElseNull(givenVariable), expectedVariable, path)
+        return wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
     }
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
-        return wrappedType.notEquals(api.orElseNull(givenVariable), expectedVariable)
+        return wrappedType.notEquals(api.unwrap(givenVariable), expectedVariable)
     }
 }
 

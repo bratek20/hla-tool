@@ -715,10 +715,6 @@ class OptionalApiType(
         return languageTypes.unwrapOptional(variableName)
     }
 
-    fun orElseNull(variableName: String): String {
-        return languageTypes.orElseNull(variableName)
-    }
-
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {
         val mapping = wrappedType.modernDeserialize(variable("it"))
         val asOptional = hardOptional(wrappedType.serializableBuilder()) {

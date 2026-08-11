@@ -84,10 +84,6 @@ class CSharpTypes(): LanguageTypes {
         return "$variableName.get()"
     }
 
-    override fun orElseNull(variableName: String): String {
-        return "$variableName.orElse(null)"
-    }
-
     override fun serializeOptional(variableName: String): String {
         return "$variableName.orElse(undefined)"
     }
