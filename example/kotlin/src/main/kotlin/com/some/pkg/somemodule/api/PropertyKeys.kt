@@ -103,7 +103,7 @@ val CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST_PROPERTY_KEY = com.github.bratek20.archi
     CustomTypesPropertyOptionalList::class
 )
 
-val SOME_KEY2PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
+val SOME_KEY2_PROPERTY_KEY = com.github.bratek20.architecture.properties.api.ObjectPropertyKey(
     "SomeKey2",
     SomeProperty::class
 )

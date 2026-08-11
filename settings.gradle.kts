@@ -22,7 +22,7 @@ plugins {
 }
 
 b20Settings {
-    catalogVersion = "1.1.6"
+    catalogVersion = "1.1.13"
 }
 
 include("code-builder")

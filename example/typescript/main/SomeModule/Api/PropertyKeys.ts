@@ -96,7 +96,7 @@ namespace SomeModule {
         CustomTypesPropertyOptionalList
     )
 
-    export const SOME_KEY2PROPERTY_KEY = new ObjectPropertyKey(
+    export const SOME_KEY2_PROPERTY_KEY = new ObjectPropertyKey(
         "SomeKey2",
         SomeProperty
     )
