@@ -21,6 +21,7 @@ namespace SomeModule {
         customTypesProperty?: SomeModule.Builder.CustomTypesPropertyDef
         selfReferencingProperty?: SomeModule.Builder.SelfReferencingPropertyDef[]
         customTypesPropertyOptionalList?: SomeModule.Builder.CustomTypesPropertyOptionalListDef[]
+        someKey2?: SomeModule.Builder.SomePropertyDef
     }
 
     export function setup(args: SetupArgs = {}): void {
@@ -46,6 +47,7 @@ namespace SomeModule {
                 builderTD.with(CUSTOM_TYPES_PROPERTY_PROPERTY_KEY, SomeModule.Builder.customTypesProperty(args.customTypesProperty ?? {}))
                 builderTD.with(SELF_REFERENCING_PROPERTY_PROPERTY_KEY, (args.selfReferencingProperty ?? []).map(it => SomeModule.Builder.selfReferencingProperty(it)))
                 builderTD.with(CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST_PROPERTY_KEY, (args.customTypesPropertyOptionalList ?? []).map(it => SomeModule.Builder.customTypesPropertyOptionalList(it)))
+                builderTD.with(SOME_KEY2PROPERTY_KEY, SomeModule.Builder.someProperty(args.someKey2 ?? {}))
             }
         }).context
     }
