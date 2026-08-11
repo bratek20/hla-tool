@@ -207,6 +207,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.someClassOpt?.let {
+        if (given.getSomeClassOpt() == null) { result.add("${path}someClassOpt is null but expected is not"); return@let }
         if (diffSomeClass(given.getSomeClassOpt()!!, it) != "") { result.add(diffSomeClass(given.getSomeClassOpt()!!, it, "${path}someClassOpt.")) }
     }
 
@@ -215,6 +216,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.optString?.let {
+        if (given.getOptString() == null) { result.add("${path}optString is null but expected is not"); return@let }
         if (given.getOptString()!! != it) { result.add("${path}optString ${given.getOptString()!!} != ${it}") }
     }
 

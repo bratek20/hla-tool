@@ -38,8 +38,12 @@ class AssertsTests {
     fun optionalAssertion() {
         assertSomeClass6(
             someClass6 {
+                someClassOpt = null
                 optString = null
             }, {
+                someClassOpt = {
+                    id = "a"
+                }
                 optString = "a"
             }
         )

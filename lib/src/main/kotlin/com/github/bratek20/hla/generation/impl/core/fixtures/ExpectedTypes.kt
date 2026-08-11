@@ -244,12 +244,22 @@ class OptionalExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        return wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
+        val presentCheckPart = ""
+        val unwrappedAssertion = wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
+
+        return """
+        |${presentCheckPart}
+        |${getIndention(fixture)}$unwrappedAssertion
+        """.trimMargin()
     }
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
         return wrappedType.notEquals(api.unwrap(givenVariable), expectedVariable)
     }
+}
+
+fun getIndention(pattern: LanguageAssertsPattern): String {
+    return " ".repeat(pattern.indentionForAssertListAndOptionals())
 }
 
 class ListExpectedType(
@@ -285,11 +295,9 @@ class ListExpectedType(
             full
         )
 
-        val indention = " ".repeat(fixture.indentionForAssertListElements())
-
         return """
         |${sizePart}
-        |$indention$entriesAssertion
+        |${getIndention(fixture)}$entriesAssertion
         """.trimMargin()
     }
 }
