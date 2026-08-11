@@ -215,7 +215,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.optString?.let {
-        if (given.getOptString()!! != it) { result.add("${path}optString ${given.getOptString()!!} != ${it}") }
+        if (given.getOptString() != it) { result.add("${path}optString ${given.getOptString()} != ${it}") }
     }
 
     expected.class2List?.let {
