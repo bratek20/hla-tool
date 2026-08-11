@@ -244,22 +244,35 @@ class OptionalExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        val presentCheckPart = ""
-        val unwrappedAssertion = wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
+        val presentElement = languageTypes.wrapWithString("$path is empty but expected is not")
+        val presentBody = languageTypes.addListElement("result", presentElement) + earlyReturn()
+        val presentCheckPart = "if (${languageTypes.checkOptionalEmpty(givenVariable)}) { $presentBody }"
+
+        val unwrapped = api.unwrap(givenVariable)
+        val wrappedDiff = wrappedType.diff(unwrapped, expectedVariable, path)
+        val wrappedNotEquals = wrappedType.notEquals(unwrapped, expectedVariable)
+        val wrappedPart = if (wrappedNotEquals == null) wrappedDiff
+        else "if ($wrappedNotEquals) { ${languageTypes.addListElement("result", wrappedDiff)} }"
+
+        val indention = " ".repeat(fixture.indentionForAssertListElements())
 
         return """
-        |${presentCheckPart}
-        |${getIndention(fixture)}$unwrappedAssertion
+        |$presentCheckPart
+        |$indention$wrappedPart
         """.trimMargin()
     }
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
-        return wrappedType.notEquals(api.unwrap(givenVariable), expectedVariable)
+        return null
     }
-}
 
-fun getIndention(pattern: LanguageAssertsPattern): String {
-    return " ".repeat(pattern.indentionForAssertListAndOptionals())
+    private fun earlyReturn(): String {
+        return when (languageTypes) {
+            is KotlinTypes -> "; return@let"
+            is TypeScriptTypes -> "; return result.join(\"\\n\")"
+            else -> ""
+        }
+    }
 }
 
 class ListExpectedType(
@@ -278,10 +291,7 @@ class ListExpectedType(
         val sizeElement = "$path size \${${languageTypes.listSize(givenVariable)}} != \${${languageTypes.listSize(expectedVariable)}}"
         var sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
         if (languageTypes is KotlinTypes) {
-           sizeBody += "; return@let"
-        }
-        if (languageTypes is TypeScriptTypes) {
-            sizeBody += "; return result.join(\"\\n\")"
+            sizeBody += "; return@let"
         }
         val sizePart = "if (${languageTypes.listSize(givenVariable)} != ${languageTypes.listSize(expectedVariable)}) { $sizeBody }"
 
@@ -295,9 +305,11 @@ class ListExpectedType(
             full
         )
 
+        val indention = " ".repeat(fixture.indentionForAssertListElements())
+
         return """
         |${sizePart}
-        |${getIndention(fixture)}$entriesAssertion
+        |$indention$entriesAssertion
         """.trimMargin()
     }
 }
