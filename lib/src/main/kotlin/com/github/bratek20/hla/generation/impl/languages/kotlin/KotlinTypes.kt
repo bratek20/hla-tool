@@ -83,6 +83,10 @@ class KotlinTypes: LanguageTypes {
         return "$variableName!!"
     }
 
+    override fun orElseNull(variableName: String): String {
+        return "$variableName ?: null"
+    }
+
     override fun serializeOptional(variableName: String): String {
         return variableName
     }

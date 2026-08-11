@@ -24,6 +24,7 @@ interface LanguageTypes {
 
     fun mapOptionalElement(optionalName: String, elementName: String, mapping: String): String
     fun unwrapOptional(variableName: String): String
+    fun orElseNull(variableName: String): String
     fun serializeOptional(variableName: String): String
     fun deserializeOptional(variableName: String): String
 

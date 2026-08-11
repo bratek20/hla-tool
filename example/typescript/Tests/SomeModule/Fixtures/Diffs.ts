@@ -68,12 +68,12 @@ namespace SomeModule {
         }
 
         if (expected.names !== undefined) {
-            if (given.getNames().length != expected.names.length) { result.push(`${path}names size ${given.getNames().length} != ${expected.names.length}`) }
+            if (given.getNames().length != expected.names.length) { result.push(`${path}names size ${given.getNames().length} != ${expected.names.length}`); return result.join("\n") }
             given.getNames().forEach((entry, idx) => { if (entry != expected.names[idx]) { result.push(`${path}names[${idx}] ${entry} != ${expected.names[idx]}`) } })
         }
 
         if (expected.ids !== undefined) {
-            if (given.getIds().length != expected.ids.length) { result.push(`${path}ids size ${given.getIds().length} != ${expected.ids.length}`) }
+            if (given.getIds().length != expected.ids.length) { result.push(`${path}ids size ${given.getIds().length} != ${expected.ids.length}`); return result.join("\n") }
             given.getIds().forEach((entry, idx) => { if (diffSomeId(entry, expected.ids[idx]) != "") { result.push(diffSomeId(entry, expected.ids[idx], `${path}ids[${idx}].`)) } })
         }
 
@@ -101,7 +101,7 @@ namespace SomeModule {
         }
 
         if (expected.class2List !== undefined) {
-            if (given.getClass2List().length != expected.class2List.length) { result.push(`${path}class2List size ${given.getClass2List().length} != ${expected.class2List.length}`) }
+            if (given.getClass2List().length != expected.class2List.length) { result.push(`${path}class2List size ${given.getClass2List().length} != ${expected.class2List.length}`); return result.join("\n") }
             given.getClass2List().forEach((entry, idx) => { if (diffSomeClass2(entry, expected.class2List[idx]) != "") { result.push(diffSomeClass2(entry, expected.class2List[idx], `${path}class2List[${idx}].`)) } })
         }
 
@@ -126,12 +126,12 @@ namespace SomeModule {
         }
 
         if (expected.otherIdList !== undefined) {
-            if (given.getOtherIdList().length != expected.otherIdList.length) { result.push(`${path}otherIdList size ${given.getOtherIdList().length} != ${expected.otherIdList.length}`) }
+            if (given.getOtherIdList().length != expected.otherIdList.length) { result.push(`${path}otherIdList size ${given.getOtherIdList().length} != ${expected.otherIdList.length}`); return result.join("\n") }
             given.getOtherIdList().forEach((entry, idx) => { if (OtherModule.diffOtherId(entry, expected.otherIdList[idx]) != "") { result.push(OtherModule.diffOtherId(entry, expected.otherIdList[idx], `${path}otherIdList[${idx}].`)) } })
         }
 
         if (expected.otherClassList !== undefined) {
-            if (given.getOtherClassList().length != expected.otherClassList.length) { result.push(`${path}otherClassList size ${given.getOtherClassList().length} != ${expected.otherClassList.length}`) }
+            if (given.getOtherClassList().length != expected.otherClassList.length) { result.push(`${path}otherClassList size ${given.getOtherClassList().length} != ${expected.otherClassList.length}`); return result.join("\n") }
             given.getOtherClassList().forEach((entry, idx) => { if (OtherModule.diffOtherClass(entry, expected.otherClassList[idx]) != "") { result.push(OtherModule.diffOtherClass(entry, expected.otherClassList[idx], `${path}otherClassList[${idx}].`)) } })
         }
 
@@ -187,7 +187,7 @@ namespace SomeModule {
         }
 
         if (expected.someClassOpt !== undefined) {
-            if (diffSomeClass(given.getSomeClassOpt().get(), expected.someClassOpt) != "") { result.push(diffSomeClass(given.getSomeClassOpt().get(), expected.someClassOpt, `${path}someClassOpt.`)) }
+            if (diffSomeClass(given.getSomeClassOpt().orElse(undefined), expected.someClassOpt) != "") { result.push(diffSomeClass(given.getSomeClassOpt().orElse(undefined), expected.someClassOpt, `${path}someClassOpt.`)) }
         }
 
         if (expected.optStringEmpty !== undefined) {
@@ -195,16 +195,16 @@ namespace SomeModule {
         }
 
         if (expected.optString !== undefined) {
-            if (given.getOptString().get() != expected.optString) { result.push(`${path}optString ${given.getOptString().get()} != ${expected.optString}`) }
+            if (given.getOptString().orElse(undefined) != expected.optString) { result.push(`${path}optString ${given.getOptString().orElse(undefined)} != ${expected.optString}`) }
         }
 
         if (expected.class2List !== undefined) {
-            if (given.getClass2List().length != expected.class2List.length) { result.push(`${path}class2List size ${given.getClass2List().length} != ${expected.class2List.length}`) }
+            if (given.getClass2List().length != expected.class2List.length) { result.push(`${path}class2List size ${given.getClass2List().length} != ${expected.class2List.length}`); return result.join("\n") }
             given.getClass2List().forEach((entry, idx) => { if (diffSomeClass2(entry, expected.class2List[idx]) != "") { result.push(diffSomeClass2(entry, expected.class2List[idx], `${path}class2List[${idx}].`)) } })
         }
 
         if (expected.sameClassList !== undefined) {
-            if (given.getSameClassList().length != expected.sameClassList.length) { result.push(`${path}sameClassList size ${given.getSameClassList().length} != ${expected.sameClassList.length}`) }
+            if (given.getSameClassList().length != expected.sameClassList.length) { result.push(`${path}sameClassList size ${given.getSameClassList().length} != ${expected.sameClassList.length}`); return result.join("\n") }
             given.getSameClassList().forEach((entry, idx) => { if (diffSomeClass6(entry, expected.sameClassList[idx]) != "") { result.push(diffSomeClass6(entry, expected.sameClassList[idx], `${path}sameClassList[${idx}].`)) } })
         }
 
@@ -223,8 +223,8 @@ namespace SomeModule {
         }
 
         if (expected.optList !== undefined) {
-            if (given.getOptList().get().length != expected.optList.length) { result.push(`${path}optList size ${given.getOptList().get().length} != ${expected.optList.length}`) }
-            given.getOptList().get().forEach((entry, idx) => { if (diffSomeClass(entry, expected.optList[idx]) != "") { result.push(diffSomeClass(entry, expected.optList[idx], `${path}optList[${idx}].`)) } })
+            if (given.getOptList().orElse(undefined).length != expected.optList.length) { result.push(`${path}optList size ${given.getOptList().orElse(undefined).length} != ${expected.optList.length}`); return result.join("\n") }
+            given.getOptList().orElse(undefined).forEach((entry, idx) => { if (diffSomeClass(entry, expected.optList[idx]) != "") { result.push(diffSomeClass(entry, expected.optList[idx], `${path}optList[${idx}].`)) } })
         }
 
         return result.join("\n")
@@ -242,7 +242,7 @@ namespace SomeModule {
         }
 
         if (expected.optSimpleVo !== undefined) {
-            if (diffSomeId(given.getOptSimpleVo().get(), expected.optSimpleVo) != "") { result.push(diffSomeId(given.getOptSimpleVo().get(), expected.optSimpleVo, `${path}optSimpleVo.`)) }
+            if (diffSomeId(given.getOptSimpleVo().orElse(undefined), expected.optSimpleVo) != "") { result.push(diffSomeId(given.getOptSimpleVo().orElse(undefined), expected.optSimpleVo, `${path}optSimpleVo.`)) }
         }
 
         return result.join("\n")
@@ -280,7 +280,7 @@ namespace SomeModule {
         }
 
         if (expected.optInt !== undefined) {
-            if (given.getOptInt().get() != expected.optInt) { result.push(`${path}optInt ${given.getOptInt().get()} != ${expected.optInt}`) }
+            if (given.getOptInt().orElse(undefined) != expected.optInt) { result.push(`${path}optInt ${given.getOptInt().orElse(undefined)} != ${expected.optInt}`) }
         }
 
         if (expected.optIntWrapperEmpty !== undefined) {
@@ -288,7 +288,7 @@ namespace SomeModule {
         }
 
         if (expected.optIntWrapper !== undefined) {
-            if (diffSomeIntWrapper(given.getOptIntWrapper().get(), expected.optIntWrapper) != "") { result.push(diffSomeIntWrapper(given.getOptIntWrapper().get(), expected.optIntWrapper, `${path}optIntWrapper.`)) }
+            if (diffSomeIntWrapper(given.getOptIntWrapper().orElse(undefined), expected.optIntWrapper) != "") { result.push(diffSomeIntWrapper(given.getOptIntWrapper().orElse(undefined), expected.optIntWrapper, `${path}optIntWrapper.`)) }
         }
 
         return result.join("\n")
@@ -301,7 +301,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.enumList !== undefined) {
-            if (given.getEnumList().length != expected.enumList.length) { result.push(`${path}enumList size ${given.getEnumList().length} != ${expected.enumList.length}`) }
+            if (given.getEnumList().length != expected.enumList.length) { result.push(`${path}enumList size ${given.getEnumList().length} != ${expected.enumList.length}`); return result.join("\n") }
             given.getEnumList().forEach((entry, idx) => { if (diffSomeEnum2(entry, expected.enumList[idx]) != "") { result.push(diffSomeEnum2(entry, expected.enumList[idx], `${path}enumList[${idx}].`)) } })
         }
 
@@ -332,7 +332,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.meList !== undefined) {
-            if (given.getMeList().length != expected.meList.length) { result.push(`${path}meList size ${given.getMeList().length} != ${expected.meList.length}`) }
+            if (given.getMeList().length != expected.meList.length) { result.push(`${path}meList size ${given.getMeList().length} != ${expected.meList.length}`); return result.join("\n") }
             given.getMeList().forEach((entry, idx) => { if (diffRecursiveClass(entry, expected.meList[idx]) != "") { result.push(diffRecursiveClass(entry, expected.meList[idx], `${path}meList[${idx}].`)) } })
         }
 
@@ -341,7 +341,7 @@ namespace SomeModule {
         }
 
         if (expected.meOpt !== undefined) {
-            if (diffRecursiveClass(given.getMeOpt().get(), expected.meOpt) != "") { result.push(diffRecursiveClass(given.getMeOpt().get(), expected.meOpt, `${path}meOpt.`)) }
+            if (diffRecursiveClass(given.getMeOpt().orElse(undefined), expected.meOpt) != "") { result.push(diffRecursiveClass(given.getMeOpt().orElse(undefined), expected.meOpt, `${path}meOpt.`)) }
         }
 
         if (expected.meOptListEmpty !== undefined) {
@@ -349,8 +349,8 @@ namespace SomeModule {
         }
 
         if (expected.meOptList !== undefined) {
-            if (given.getMeOptList().get().length != expected.meOptList.length) { result.push(`${path}meOptList size ${given.getMeOptList().get().length} != ${expected.meOptList.length}`) }
-            given.getMeOptList().get().forEach((entry, idx) => { if (diffRecursiveClass(entry, expected.meOptList[idx]) != "") { result.push(diffRecursiveClass(entry, expected.meOptList[idx], `${path}meOptList[${idx}].`)) } })
+            if (given.getMeOptList().orElse(undefined).length != expected.meOptList.length) { result.push(`${path}meOptList size ${given.getMeOptList().orElse(undefined).length} != ${expected.meOptList.length}`); return result.join("\n") }
+            given.getMeOptList().orElse(undefined).forEach((entry, idx) => { if (diffRecursiveClass(entry, expected.meOptList[idx]) != "") { result.push(diffRecursiveClass(entry, expected.meOptList[idx], `${path}meOptList[${idx}].`)) } })
         }
 
         return result.join("\n")
@@ -394,7 +394,7 @@ namespace SomeModule {
         }
 
         if (expected.optMap !== undefined) {
-            if (given.getOptMap().get() != expected.optMap) { result.push(`${path}optMap ${given.getOptMap().get()} != ${expected.optMap}`) }
+            if (given.getOptMap().orElse(undefined) != expected.optMap) { result.push(`${path}optMap ${given.getOptMap().orElse(undefined)} != ${expected.optMap}`) }
         }
 
         return result.join("\n")
@@ -491,7 +491,7 @@ namespace SomeModule {
         }
 
         if (expected.id2 !== undefined) {
-            if (diffSomeId2(given.getId2().get(), expected.id2) != "") { result.push(diffSomeId2(given.getId2().get(), expected.id2, `${path}id2.`)) }
+            if (diffSomeId2(given.getId2().orElse(undefined), expected.id2) != "") { result.push(diffSomeId2(given.getId2().orElse(undefined), expected.id2, `${path}id2.`)) }
         }
 
         if (expected.rangeEmpty !== undefined) {
@@ -499,7 +499,7 @@ namespace SomeModule {
         }
 
         if (expected.range !== undefined) {
-            if (TypesModule.diffDateRange(given.getRange().get(), expected.range) != "") { result.push(TypesModule.diffDateRange(given.getRange().get(), expected.range, `${path}range.`)) }
+            if (TypesModule.diffDateRange(given.getRange().orElse(undefined), expected.range) != "") { result.push(TypesModule.diffDateRange(given.getRange().orElse(undefined), expected.range, `${path}range.`)) }
         }
 
         if (expected.doubleExample !== undefined) {
@@ -553,7 +553,7 @@ namespace SomeModule {
         }
 
         if (expected.customOpt !== undefined) {
-            if (JSON.stringify(given.getCustomOpt().get()) != JSON.stringify(expected.customOpt)) { result.push(`${path}customOpt ${JSON.stringify(given.getCustomOpt().get())} != ${JSON.stringify(expected.customOpt)}`) }
+            if (JSON.stringify(given.getCustomOpt().orElse(undefined)) != JSON.stringify(expected.customOpt)) { result.push(`${path}customOpt ${JSON.stringify(given.getCustomOpt().orElse(undefined))} != ${JSON.stringify(expected.customOpt)}`) }
         }
 
         if (expected.kotlinKeyword !== undefined) {
@@ -680,7 +680,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.referenceIdList !== undefined) {
-            if (given.getReferenceIdList().length != expected.referenceIdList.length) { result.push(`${path}referenceIdList size ${given.getReferenceIdList().length} != ${expected.referenceIdList.length}`) }
+            if (given.getReferenceIdList().length != expected.referenceIdList.length) { result.push(`${path}referenceIdList size ${given.getReferenceIdList().length} != ${expected.referenceIdList.length}`); return result.join("\n") }
             given.getReferenceIdList().forEach((entry, idx) => { if (diffSomeId(entry, expected.referenceIdList[idx]) != "") { result.push(diffSomeId(entry, expected.referenceIdList[idx], `${path}referenceIdList[${idx}].`)) } })
         }
 
@@ -694,7 +694,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.entries !== undefined) {
-            if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`) }
+            if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`); return result.join("\n") }
             given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
         }
 
@@ -708,7 +708,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.entries !== undefined) {
-            if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`) }
+            if (given.getEntries().length != expected.entries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expected.entries.length}`); return result.join("\n") }
             given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expected.entries[idx], `${path}entries[${idx}].`)) } })
         }
 
@@ -722,7 +722,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.nestedUniqueIds !== undefined) {
-            if (given.getNestedUniqueIds().length != expected.nestedUniqueIds.length) { result.push(`${path}nestedUniqueIds size ${given.getNestedUniqueIds().length} != ${expected.nestedUniqueIds.length}`) }
+            if (given.getNestedUniqueIds().length != expected.nestedUniqueIds.length) { result.push(`${path}nestedUniqueIds size ${given.getNestedUniqueIds().length} != ${expected.nestedUniqueIds.length}`); return result.join("\n") }
             given.getNestedUniqueIds().forEach((entry, idx) => { if (diffNestedUniqueIds(entry, expected.nestedUniqueIds[idx]) != "") { result.push(diffNestedUniqueIds(entry, expected.nestedUniqueIds[idx], `${path}nestedUniqueIds[${idx}].`)) } })
         }
 
@@ -736,7 +736,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.moreNestedFields !== undefined) {
-            if (given.getMoreNestedFields().length != expected.moreNestedFields.length) { result.push(`${path}moreNestedFields size ${given.getMoreNestedFields().length} != ${expected.moreNestedFields.length}`) }
+            if (given.getMoreNestedFields().length != expected.moreNestedFields.length) { result.push(`${path}moreNestedFields size ${given.getMoreNestedFields().length} != ${expected.moreNestedFields.length}`); return result.join("\n") }
             given.getMoreNestedFields().forEach((entry, idx) => { if (diffSomeStructureWithUniqueNestedIds(entry, expected.moreNestedFields[idx]) != "") { result.push(diffSomeStructureWithUniqueNestedIds(entry, expected.moreNestedFields[idx], `${path}moreNestedFields[${idx}].`)) } })
         }
 
@@ -763,7 +763,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.someNestedWithUniqueIds !== undefined) {
-            if (given.getSomeNestedWithUniqueIds().length != expected.someNestedWithUniqueIds.length) { result.push(`${path}someNestedWithUniqueIds size ${given.getSomeNestedWithUniqueIds().length} != ${expected.someNestedWithUniqueIds.length}`) }
+            if (given.getSomeNestedWithUniqueIds().length != expected.someNestedWithUniqueIds.length) { result.push(`${path}someNestedWithUniqueIds size ${given.getSomeNestedWithUniqueIds().length} != ${expected.someNestedWithUniqueIds.length}`); return result.join("\n") }
             given.getSomeNestedWithUniqueIds().forEach((entry, idx) => { if (diffSomeClassWIthOtherClassUniqueIds(entry, expected.someNestedWithUniqueIds[idx]) != "") { result.push(diffSomeClassWIthOtherClassUniqueIds(entry, expected.someNestedWithUniqueIds[idx], `${path}someNestedWithUniqueIds[${idx}].`)) } })
         }
 
@@ -777,7 +777,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.uniqueIds !== undefined) {
-            if (given.getUniqueIds().length != expected.uniqueIds.length) { result.push(`${path}uniqueIds size ${given.getUniqueIds().length} != ${expected.uniqueIds.length}`) }
+            if (given.getUniqueIds().length != expected.uniqueIds.length) { result.push(`${path}uniqueIds size ${given.getUniqueIds().length} != ${expected.uniqueIds.length}`); return result.join("\n") }
             given.getUniqueIds().forEach((entry, idx) => { if (OtherModule.diffOtherClassWIthUniqueId(entry, expected.uniqueIds[idx]) != "") { result.push(OtherModule.diffOtherClassWIthUniqueId(entry, expected.uniqueIds[idx], `${path}uniqueIds[${idx}].`)) } })
         }
 
@@ -791,7 +791,7 @@ namespace SomeModule {
         const result: string[] = []
 
         if (expected.nestLevel2 !== undefined) {
-            if (given.getNestLevel2().length != expected.nestLevel2.length) { result.push(`${path}nestLevel2 size ${given.getNestLevel2().length} != ${expected.nestLevel2.length}`) }
+            if (given.getNestLevel2().length != expected.nestLevel2.length) { result.push(`${path}nestLevel2 size ${given.getNestLevel2().length} != ${expected.nestLevel2.length}`); return result.join("\n") }
             given.getNestLevel2().forEach((entry, idx) => { if (diffNestedClassLevel2(entry, expected.nestLevel2[idx]) != "") { result.push(diffNestedClassLevel2(entry, expected.nestLevel2[idx], `${path}nestLevel2[${idx}].`)) } })
         }
 
@@ -810,7 +810,7 @@ namespace SomeModule {
         }
 
         if (expected.nestLevel1 !== undefined) {
-            if (given.getNestLevel1().length != expected.nestLevel1.length) { result.push(`${path}nestLevel1 size ${given.getNestLevel1().length} != ${expected.nestLevel1.length}`) }
+            if (given.getNestLevel1().length != expected.nestLevel1.length) { result.push(`${path}nestLevel1 size ${given.getNestLevel1().length} != ${expected.nestLevel1.length}`); return result.join("\n") }
             given.getNestLevel1().forEach((entry, idx) => { if (diffNestedClassLevel1(entry, expected.nestLevel1[idx]) != "") { result.push(diffNestedClassLevel1(entry, expected.nestLevel1[idx], `${path}nestLevel1[${idx}].`)) } })
         }
 
@@ -842,7 +842,7 @@ namespace SomeModule {
         }
 
         if (expected.optionalField !== undefined) {
-            if (diffNestedValue(given.getOptionalField().get(), expected.optionalField) != "") { result.push(diffNestedValue(given.getOptionalField().get(), expected.optionalField, `${path}optionalField.`)) }
+            if (diffNestedValue(given.getOptionalField().orElse(undefined), expected.optionalField) != "") { result.push(diffNestedValue(given.getOptionalField().orElse(undefined), expected.optionalField, `${path}optionalField.`)) }
         }
 
         return result.join("\n")
@@ -881,11 +881,11 @@ namespace SomeModule {
         }
 
         if (expected.optionalSelf !== undefined) {
-            if (diffSelfReferencingProperty(given.getOptionalSelf().get(), expected.optionalSelf) != "") { result.push(diffSelfReferencingProperty(given.getOptionalSelf().get(), expected.optionalSelf, `${path}optionalSelf.`)) }
+            if (diffSelfReferencingProperty(given.getOptionalSelf().orElse(undefined), expected.optionalSelf) != "") { result.push(diffSelfReferencingProperty(given.getOptionalSelf().orElse(undefined), expected.optionalSelf, `${path}optionalSelf.`)) }
         }
 
         if (expected.listSelf !== undefined) {
-            if (given.getListSelf().length != expected.listSelf.length) { result.push(`${path}listSelf size ${given.getListSelf().length} != ${expected.listSelf.length}`) }
+            if (given.getListSelf().length != expected.listSelf.length) { result.push(`${path}listSelf size ${given.getListSelf().length} != ${expected.listSelf.length}`); return result.join("\n") }
             given.getListSelf().forEach((entry, idx) => { if (diffSelfReferencingProperty(entry, expected.listSelf[idx]) != "") { result.push(diffSelfReferencingProperty(entry, expected.listSelf[idx], `${path}listSelf[${idx}].`)) } })
         }
 
@@ -894,8 +894,8 @@ namespace SomeModule {
         }
 
         if (expected.optionalListSelf !== undefined) {
-            if (given.getOptionalListSelf().get().length != expected.optionalListSelf.length) { result.push(`${path}optionalListSelf size ${given.getOptionalListSelf().get().length} != ${expected.optionalListSelf.length}`) }
-            given.getOptionalListSelf().get().forEach((entry, idx) => { if (diffSelfReferencingProperty(entry, expected.optionalListSelf[idx]) != "") { result.push(diffSelfReferencingProperty(entry, expected.optionalListSelf[idx], `${path}optionalListSelf[${idx}].`)) } })
+            if (given.getOptionalListSelf().orElse(undefined).length != expected.optionalListSelf.length) { result.push(`${path}optionalListSelf size ${given.getOptionalListSelf().orElse(undefined).length} != ${expected.optionalListSelf.length}`); return result.join("\n") }
+            given.getOptionalListSelf().orElse(undefined).forEach((entry, idx) => { if (diffSelfReferencingProperty(entry, expected.optionalListSelf[idx]) != "") { result.push(diffSelfReferencingProperty(entry, expected.optionalListSelf[idx], `${path}optionalListSelf[${idx}].`)) } })
         }
 
         return result.join("\n")
@@ -918,8 +918,8 @@ namespace SomeModule {
         }
 
         if (expected.customPropertiesList !== undefined) {
-            if (given.getCustomPropertiesList().get().length != expected.customPropertiesList.length) { result.push(`${path}customPropertiesList size ${given.getCustomPropertiesList().get().length} != ${expected.customPropertiesList.length}`) }
-            given.getCustomPropertiesList().get().forEach((entry, idx) => { if (diffCustomTypesProperty(entry, expected.customPropertiesList[idx]) != "") { result.push(diffCustomTypesProperty(entry, expected.customPropertiesList[idx], `${path}customPropertiesList[${idx}].`)) } })
+            if (given.getCustomPropertiesList().orElse(undefined).length != expected.customPropertiesList.length) { result.push(`${path}customPropertiesList size ${given.getCustomPropertiesList().orElse(undefined).length} != ${expected.customPropertiesList.length}`); return result.join("\n") }
+            given.getCustomPropertiesList().orElse(undefined).forEach((entry, idx) => { if (diffCustomTypesProperty(entry, expected.customPropertiesList[idx]) != "") { result.push(diffCustomTypesProperty(entry, expected.customPropertiesList[idx], `${path}customPropertiesList[${idx}].`)) } })
         }
 
         return result.join("\n")
@@ -1003,7 +1003,7 @@ namespace SomeModule {
         }
 
         if (expected.customOpt !== undefined) {
-            if (JSON.stringify(given.getCustomOpt().get()) != JSON.stringify(expected.customOpt)) { result.push(`${path}customOpt ${JSON.stringify(given.getCustomOpt().get())} != ${JSON.stringify(expected.customOpt)}`) }
+            if (JSON.stringify(given.getCustomOpt().orElse(undefined)) != JSON.stringify(expected.customOpt)) { result.push(`${path}customOpt ${JSON.stringify(given.getCustomOpt().orElse(undefined))} != ${JSON.stringify(expected.customOpt)}`) }
         }
 
         if (expected.goodDataName !== undefined) {
@@ -1031,7 +1031,7 @@ namespace SomeModule {
         }
 
         if (expected.optEnum !== undefined) {
-            if (diffSomeEnum(given.getOptEnum().get(), expected.optEnum) != "") { result.push(diffSomeEnum(given.getOptEnum().get(), expected.optEnum, `${path}optEnum.`)) }
+            if (diffSomeEnum(given.getOptEnum().orElse(undefined), expected.optEnum) != "") { result.push(diffSomeEnum(given.getOptEnum().orElse(undefined), expected.optEnum, `${path}optEnum.`)) }
         }
 
         if (expected.optCustomTypeEmpty !== undefined) {
@@ -1039,7 +1039,7 @@ namespace SomeModule {
         }
 
         if (expected.optCustomType !== undefined) {
-            if (TypesModule.diffDate(given.getOptCustomType().get(), expected.optCustomType) != "") { result.push(TypesModule.diffDate(given.getOptCustomType().get(), expected.optCustomType, `${path}optCustomType.`)) }
+            if (TypesModule.diffDate(given.getOptCustomType().orElse(undefined), expected.optCustomType) != "") { result.push(TypesModule.diffDate(given.getOptCustomType().orElse(undefined), expected.optCustomType, `${path}optCustomType.`)) }
         }
 
         return result.join("\n")
@@ -1067,7 +1067,7 @@ namespace SomeModule {
         }
 
         if (expected.optField !== undefined) {
-            if (given.getOptField().get() != expected.optField) { result.push(`${path}optField ${given.getOptField().get()} != ${expected.optField}`) }
+            if (given.getOptField().orElse(undefined) != expected.optField) { result.push(`${path}optField ${given.getOptField().orElse(undefined)} != ${expected.optField}`) }
         }
 
         return result.join("\n")

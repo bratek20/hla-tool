@@ -244,11 +244,11 @@ class OptionalExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        return wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
+        return wrappedType.diff(api.orElseNull(givenVariable), expectedVariable, path)
     }
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
-        return wrappedType.notEquals(api.unwrap(givenVariable), expectedVariable)
+        return wrappedType.notEquals(api.orElseNull(givenVariable), expectedVariable)
     }
 }
 
@@ -269,6 +269,9 @@ class ListExpectedType(
         var sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
         if (languageTypes is KotlinTypes) {
            sizeBody += "; return@let"
+        }
+        if (languageTypes is TypeScriptTypes) {
+            sizeBody += "; return result.join(\"\\n\")"
         }
         val sizePart = "if (${languageTypes.listSize(givenVariable)} != ${languageTypes.listSize(expectedVariable)}) { $sizeBody }"
 
