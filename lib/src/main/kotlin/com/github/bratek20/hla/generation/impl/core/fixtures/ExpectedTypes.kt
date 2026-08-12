@@ -254,11 +254,9 @@ class OptionalExpectedType(
         val wrappedPart = if (wrappedNotEquals == null) wrappedDiff
         else "if ($wrappedNotEquals) { ${languageTypes.addListElement("result", wrappedDiff)} }"
 
-        val indention = " ".repeat(fixture.indentionForAssertListElements())
-
         return """
         |$presentCheckPart
-        |$indention$wrappedPart
+        |${fixture.indentionStringForAssertListAndOptionals()}$wrappedPart
         """.trimMargin()
     }
 
@@ -305,11 +303,9 @@ class ListExpectedType(
             full
         )
 
-        val indention = " ".repeat(fixture.indentionForAssertListElements())
-
         return """
         |${sizePart}
-        |$indention$entriesAssertion
+        |${fixture.indentionStringForAssertListAndOptionals()}$entriesAssertion
         """.trimMargin()
     }
 }
