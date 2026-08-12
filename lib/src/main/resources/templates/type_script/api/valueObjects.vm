@@ -1,11 +1,21 @@
 #foreach($nt in $simpleValueObjects)
 class ${nt.name()} {
+    private static cache = new Map<${nt.boxedType.name()}, ${nt.name()}>()
+
+    private readonly value${nt.name()}: ${nt.boxedType.name()}
     constructor(
-        readonly value${nt.name()}: ${nt.boxedType.name()}
+        value${nt.name()}: ${nt.boxedType.name()}
     ) {
         if (Undefined(value${nt.name()})) {
             throw Error("Undefined value for ${nt.name()}")
         }
+
+        if (${nt.name()}.cache.has(value${nt.name()})) {
+            return ${nt.name()}.cache.get(value${nt.name()})
+        }
+
+        this.value${nt.name()} = value${nt.name()}
+        ${nt.name()}.cache.set(value${nt.name()}, this)
     }
 
     getValue(): ${nt.boxedType.name()} {
