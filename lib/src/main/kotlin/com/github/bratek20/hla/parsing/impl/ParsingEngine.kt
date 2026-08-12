@@ -66,17 +66,15 @@ class ParsedMapping(
     val value: String
 ) : ParsedNode(indent)
 
-class ParsingEngine {
-    private val structureNameRegex = Regex("[A-Za-z_][A-Za-z0-9_]*")
+const val EXTENDS_KEYWORD = " extends "
 
+class ParsingEngine {
     fun parseElements(content: FileContent): List<ParsedElement> {
-        val initialElements = convertSectionsWithBase(
-            content.lines
-                .map { replaceTabsWithSpaces(it) }
-                .map { removeComments(it) }
-                .filter { it.isNotBlank() }
-                .map { parseElement(it) }
-        )
+        val initialElements = content.lines
+            .map { replaceTabsWithSpaces(it) }
+            .map { removeComments(it) }
+            .filter { it.isNotBlank() }
+            .map { parseElement(it) }
 
         val result = mutableListOf<ParsedElement>()
         val nodesStack: ArrayDeque<ParsedNode> = ArrayDeque()
@@ -99,25 +97,6 @@ class ParsingEngine {
         }
 
         return result
-    }
-
-    // "SomeName: SomeBase" followed by nested lines declares a structure extending SomeBase,
-    // not a simple assignment - only lookahead can tell them apart
-    private fun convertSectionsWithBase(elements: List<ParsedElement>): List<ParsedElement> {
-        return elements.mapIndexed { index, element ->
-            val next = elements.getOrNull(index + 1)
-            if (element is ColonAssignment
-                && element.value2 == null
-                && element.defaultValue == null
-                && element.value.matches(structureNameRegex)
-                && next != null
-                && next.indent > element.indent
-            ) {
-                Section(element.indent, element.name, element.attributes, element.value)
-            } else {
-                element
-            }
-        }
     }
 
     private fun removeComments(line: String): String {
@@ -200,6 +179,14 @@ class ParsingEngine {
             }
         } else {
             val result = extractAttributes(noIndentLine)
+            if (result.beforeAttributes.contains(EXTENDS_KEYWORD)) {
+                return Section(
+                    indent = indent,
+                    name = result.beforeAttributes.substringBefore(EXTENDS_KEYWORD).trim(),
+                    attributes = result.attributes,
+                    base = result.beforeAttributes.substringAfter(EXTENDS_KEYWORD).trim()
+                )
+            }
             return Section(indent, result.beforeAttributes, result.attributes)
         }
     }

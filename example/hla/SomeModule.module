@@ -94,10 +94,10 @@ ValueObjects
     ClassWithComplexMap
         complexMap: <string, SomeUserValueObject>
 
-    ClassExtendingSomeClass: SomeClass
+    ClassExtendingSomeClass extends SomeClass
         extraField: string
 
-    ClassExtendingOtherClass: OtherClass
+    ClassExtendingOtherClass extends OtherClass
         extraField: string
 
 Exceptions
