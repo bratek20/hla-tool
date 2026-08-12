@@ -229,6 +229,14 @@ class PropertyExpectedType(
     fields: List<ExpectedTypeField>
 ) : ComplexStructureExpectedType(api, fields)
 
+private fun LanguageTypes.earlyReturn(): String {
+    return when (this) {
+        is KotlinTypes -> "; return@let"
+        is TypeScriptTypes -> "; return result.join(\"\\n\")"
+        else -> ""
+    }
+}
+
 class OptionalExpectedType(
     api: OptionalApiType,
     private val wrappedType: ExpectedType<*>,
@@ -245,7 +253,7 @@ class OptionalExpectedType(
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         val presentElement = languageTypes.wrapWithString("$path is empty but expected is not")
-        val presentBody = languageTypes.addListElement("result", presentElement) + earlyReturn()
+        val presentBody = languageTypes.addListElement("result", presentElement) + languageTypes.earlyReturn()
         val presentCheckPart = "if (${languageTypes.checkOptionalEmpty(givenVariable)}) { $presentBody }"
 
         val unwrapped = api.unwrap(givenVariable)
@@ -263,14 +271,6 @@ class OptionalExpectedType(
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
         return null
     }
-
-    private fun earlyReturn(): String {
-        return when (languageTypes) {
-            is KotlinTypes -> "; return@let"
-            is TypeScriptTypes -> "; return result.join(\"\\n\")"
-            else -> ""
-        }
-    }
 }
 
 class ListExpectedType(
@@ -287,10 +287,7 @@ class ListExpectedType(
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         val sizeElement = "$path size \${${languageTypes.listSize(givenVariable)}} != \${${languageTypes.listSize(expectedVariable)}}"
-        var sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
-        if (languageTypes is KotlinTypes) {
-            sizeBody += "; return@let"
-        }
+        var sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement)) + languageTypes.earlyReturn()
         val sizePart = "if (${languageTypes.listSize(givenVariable)} != ${languageTypes.listSize(expectedVariable)}) { $sizeBody }"
 
         val element = wrappedType.diff("entry", "$expectedVariable[idx]", "$path[\${idx}]")

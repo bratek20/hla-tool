@@ -207,7 +207,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.someClassOpt?.let {
-        if (given.getSomeClassOpt() == null) { result.add("${path}someClassOpt is null but expected is not"); return@let }
+        if (given.getSomeClassOpt() == null) { result.add("${path}someClassOpt is empty but expected is not"); return@let }
         if (diffSomeClass(given.getSomeClassOpt()!!, it) != "") { result.add(diffSomeClass(given.getSomeClassOpt()!!, it, "${path}someClassOpt.")) }
     }
 
@@ -216,7 +216,7 @@ fun diffSomeClass6(given: SomeClass6, expectedInit: ExpectedSomeClass6.() -> Uni
     }
 
     expected.optString?.let {
-        if (given.getOptString() == null) { result.add("${path}optString is null but expected is not"); return@let }
+        if (given.getOptString() == null) { result.add("${path}optString is empty but expected is not"); return@let }
         if (given.getOptString()!! != it) { result.add("${path}optString ${given.getOptString()!!} != ${it}") }
     }
 
@@ -246,6 +246,7 @@ fun diffClassHavingOptList(given: ClassHavingOptList, expectedInit: ExpectedClas
     }
 
     expected.optList?.let {
+        if (given.getOptList() == null) { result.add("${path}optList is empty but expected is not"); return@let }
         if (given.getOptList()!!.size != it.size) { result.add("${path}optList size ${given.getOptList()!!.size} != ${it.size}"); return@let }
         given.getOptList()!!.forEachIndexed { idx, entry -> if (diffSomeClass(entry, it[idx]) != "") { result.add(diffSomeClass(entry, it[idx], "${path}optList[${idx}].")) } }
     }
@@ -266,6 +267,7 @@ fun diffClassHavingOptSimpleVo(given: ClassHavingOptSimpleVo, expectedInit: Expe
     }
 
     expected.optSimpleVo?.let {
+        if (given.getOptSimpleVo() == null) { result.add("${path}optSimpleVo is empty but expected is not"); return@let }
         if (diffSomeId(given.getOptSimpleVo()!!, it) != "") { result.add(diffSomeId(given.getOptSimpleVo()!!, it, "${path}optSimpleVo.")) }
     }
 
@@ -306,6 +308,7 @@ fun diffClassWithOptExamples(given: ClassWithOptExamples, expectedInit: Expected
     }
 
     expected.optInt?.let {
+        if (given.getOptInt() == null) { result.add("${path}optInt is empty but expected is not"); return@let }
         if (given.getOptInt()!! != it) { result.add("${path}optInt ${given.getOptInt()!!} != ${it}") }
     }
 
@@ -314,6 +317,7 @@ fun diffClassWithOptExamples(given: ClassWithOptExamples, expectedInit: Expected
     }
 
     expected.optIntWrapper?.let {
+        if (given.getOptIntWrapper() == null) { result.add("${path}optIntWrapper is empty but expected is not"); return@let }
         if (diffSomeIntWrapper(given.getOptIntWrapper()!!, it) != "") { result.add(diffSomeIntWrapper(given.getOptIntWrapper()!!, it, "${path}optIntWrapper.")) }
     }
 
@@ -370,6 +374,7 @@ fun diffRecursiveClass(given: RecursiveClass, expectedInit: ExpectedRecursiveCla
     }
 
     expected.meOpt?.let {
+        if (given.getMeOpt() == null) { result.add("${path}meOpt is empty but expected is not"); return@let }
         if (diffRecursiveClass(given.getMeOpt()!!, it) != "") { result.add(diffRecursiveClass(given.getMeOpt()!!, it, "${path}meOpt.")) }
     }
 
@@ -378,6 +383,7 @@ fun diffRecursiveClass(given: RecursiveClass, expectedInit: ExpectedRecursiveCla
     }
 
     expected.meOptList?.let {
+        if (given.getMeOptList() == null) { result.add("${path}meOptList is empty but expected is not"); return@let }
         if (given.getMeOptList()!!.size != it.size) { result.add("${path}meOptList size ${given.getMeOptList()!!.size} != ${it.size}"); return@let }
         given.getMeOptList()!!.forEachIndexed { idx, entry -> if (diffRecursiveClass(entry, it[idx]) != "") { result.add(diffRecursiveClass(entry, it[idx], "${path}meOptList[${idx}].")) } }
     }
@@ -426,6 +432,7 @@ fun diffClassWithOptionalMap(given: ClassWithOptionalMap, expectedInit: Expected
     }
 
     expected.optMap?.let {
+        if (given.getOptMap() == null) { result.add("${path}optMap is empty but expected is not"); return@let }
         if (given.getOptMap()!! != it) { result.add("${path}optMap ${given.getOptMap()!!} != ${it}") }
     }
 
@@ -528,6 +535,7 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
     }
 
     expected.id2?.let {
+        if (given.getId2() == null) { result.add("${path}id2 is empty but expected is not"); return@let }
         if (diffSomeId2(given.getId2()!!, it) != "") { result.add(diffSomeId2(given.getId2()!!, it, "${path}id2.")) }
     }
 
@@ -536,6 +544,7 @@ fun diffSomeProperty(given: SomeProperty, expectedInit: ExpectedSomeProperty.() 
     }
 
     expected.range?.let {
+        if (given.getRange() == null) { result.add("${path}range is empty but expected is not"); return@let }
         if (diffDateRange(given.getRange()!!, it) != "") { result.add(diffDateRange(given.getRange()!!, it, "${path}range.")) }
     }
 
@@ -591,6 +600,7 @@ fun diffSomeProperty2(given: SomeProperty2, expectedInit: ExpectedSomeProperty2.
     }
 
     expected.customOpt?.let {
+        if (given.getCustomOpt() == null) { result.add("${path}customOpt is empty but expected is not"); return@let }
         if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
     }
 
@@ -897,6 +907,7 @@ fun diffOptionalFieldProperty(given: OptionalFieldProperty, expectedInit: Expect
     }
 
     expected.optionalField?.let {
+        if (given.getOptionalField() == null) { result.add("${path}optionalField is empty but expected is not"); return@let }
         if (diffNestedValue(given.getOptionalField()!!, it) != "") { result.add(diffNestedValue(given.getOptionalField()!!, it, "${path}optionalField.")) }
     }
 
@@ -938,6 +949,7 @@ fun diffSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: Ex
     }
 
     expected.optionalSelf?.let {
+        if (given.getOptionalSelf() == null) { result.add("${path}optionalSelf is empty but expected is not"); return@let }
         if (diffSelfReferencingProperty(given.getOptionalSelf()!!, it) != "") { result.add(diffSelfReferencingProperty(given.getOptionalSelf()!!, it, "${path}optionalSelf.")) }
     }
 
@@ -951,6 +963,7 @@ fun diffSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: Ex
     }
 
     expected.optionalListSelf?.let {
+        if (given.getOptionalListSelf() == null) { result.add("${path}optionalListSelf is empty but expected is not"); return@let }
         if (given.getOptionalListSelf()!!.size != it.size) { result.add("${path}optionalListSelf size ${given.getOptionalListSelf()!!.size} != ${it.size}"); return@let }
         given.getOptionalListSelf()!!.forEachIndexed { idx, entry -> if (diffSelfReferencingProperty(entry, it[idx]) != "") { result.add(diffSelfReferencingProperty(entry, it[idx], "${path}optionalListSelf[${idx}].")) } }
     }
@@ -976,6 +989,7 @@ fun diffCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, 
     }
 
     expected.customPropertiesList?.let {
+        if (given.getCustomPropertiesList() == null) { result.add("${path}customPropertiesList is empty but expected is not"); return@let }
         if (given.getCustomPropertiesList()!!.size != it.size) { result.add("${path}customPropertiesList size ${given.getCustomPropertiesList()!!.size} != ${it.size}"); return@let }
         given.getCustomPropertiesList()!!.forEachIndexed { idx, entry -> if (diffCustomTypesProperty(entry, it[idx]) != "") { result.add(diffCustomTypesProperty(entry, it[idx], "${path}customPropertiesList[${idx}].")) } }
     }
@@ -1065,6 +1079,7 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
     }
 
     expected.customOpt?.let {
+        if (given.getCustomOpt() == null) { result.add("${path}customOpt is empty but expected is not"); return@let }
         if (given.getCustomOpt()!! != it) { result.add("${path}customOpt ${given.getCustomOpt()!!} != ${it}") }
     }
 
@@ -1094,6 +1109,7 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
     }
 
     expected.optEnum?.let {
+        if (given.getOptEnum() == null) { result.add("${path}optEnum is empty but expected is not"); return@let }
         if (diffSomeEnum(given.getOptEnum()!!, it) != "") { result.add(diffSomeEnum(given.getOptEnum()!!, it, "${path}optEnum.")) }
     }
 
@@ -1102,6 +1118,7 @@ fun diffSomeData2(given: SomeData2, expectedInit: ExpectedSomeData2.() -> Unit, 
     }
 
     expected.optCustomType?.let {
+        if (given.getOptCustomType() == null) { result.add("${path}optCustomType is empty but expected is not"); return@let }
         if (diffDate(given.getOptCustomType()!!, it) != "") { result.add(diffDate(given.getOptCustomType()!!, it, "${path}optCustomType.")) }
     }
 
@@ -1131,6 +1148,7 @@ fun diffSomeEvent(given: SomeEvent, expectedInit: ExpectedSomeEvent.() -> Unit, 
     }
 
     expected.optField?.let {
+        if (given.getOptField() == null) { result.add("${path}optField is empty but expected is not"); return@let }
         if (given.getOptField()!! != it) { result.add("${path}optField ${given.getOptField()!!} != ${it}") }
     }
 
