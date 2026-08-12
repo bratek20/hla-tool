@@ -241,6 +241,34 @@ fun classWithComplexMap(init: ClassWithComplexMapDef.() -> Unit = {}): ClassWith
     )
 }
 
+data class ClassExtendingSomeClassDef(
+    var id: String = "someValue",
+    var amount: Int = 10,
+    var extraField: String = "someValue",
+)
+fun classExtendingSomeClass(init: ClassExtendingSomeClassDef.() -> Unit = {}): ClassExtendingSomeClass {
+    val def = ClassExtendingSomeClassDef().apply(init)
+    return ClassExtendingSomeClass.create(
+        id = SomeId(def.id),
+        amount = def.amount,
+        extraField = def.extraField,
+    )
+}
+
+data class ClassExtendingOtherClassDef(
+    var id: Int = 0,
+    var amount: Int = 0,
+    var extraField: String = "someValue",
+)
+fun classExtendingOtherClass(init: ClassExtendingOtherClassDef.() -> Unit = {}): ClassExtendingOtherClass {
+    val def = ClassExtendingOtherClassDef().apply(init)
+    return ClassExtendingOtherClass.create(
+        id = OtherId(def.id),
+        amount = def.amount,
+        extraField = def.extraField,
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,

@@ -453,6 +453,54 @@ fun diffClassWithComplexMap(given: ClassWithComplexMap, expectedInit: ExpectedCl
     return result.joinToString("\n")
 }
 
+data class ExpectedClassExtendingSomeClass(
+    var id: String? = null,
+    var amount: Int? = null,
+    var extraField: String? = null,
+)
+fun diffClassExtendingSomeClass(given: ClassExtendingSomeClass, expectedInit: ExpectedClassExtendingSomeClass.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassExtendingSomeClass().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffSomeId(given.getId(), it) != "") { result.add(diffSomeId(given.getId(), it, "${path}id.")) }
+    }
+
+    expected.amount?.let {
+        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    expected.extraField?.let {
+        if (given.getExtraField() != it) { result.add("${path}extraField ${given.getExtraField()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedClassExtendingOtherClass(
+    var id: Int? = null,
+    var amount: Int? = null,
+    var extraField: String? = null,
+)
+fun diffClassExtendingOtherClass(given: ClassExtendingOtherClass, expectedInit: ExpectedClassExtendingOtherClass.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassExtendingOtherClass().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.id?.let {
+        if (diffOtherId(given.getId(), it) != "") { result.add(diffOtherId(given.getId(), it, "${path}id.")) }
+    }
+
+    expected.amount?.let {
+        if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    expected.extraField?.let {
+        if (given.getExtraField() != it) { result.add("${path}extraField ${given.getExtraField()} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,

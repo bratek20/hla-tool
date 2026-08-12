@@ -106,6 +106,16 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function classExtendingSomeClass(given: ClassExtendingSomeClass, expected: ExpectedClassExtendingSomeClass) {
+        const diff = diffClassExtendingSomeClass(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function classExtendingOtherClass(given: ClassExtendingOtherClass, expected: ExpectedClassExtendingOtherClass) {
+        const diff = diffClassExtendingOtherClass(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
         const diff = diffSomeQueryInput(given, expected)
         AssertEquals(diff, "", diff)
