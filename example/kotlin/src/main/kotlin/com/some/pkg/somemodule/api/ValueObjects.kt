@@ -1205,3 +1205,53 @@ data class SomeInterfaceToTestMockArgsImportSomeMethodArgs(
         }
     }
 }
+
+data class ClassExtendingSomeClass(
+    private val id: String,
+    private val amount: Int,
+    private val extraField: String
+) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
+    fun getAmount(): Int {
+        return this.amount
+    }
+
+    fun getExtraField(): String {
+        return this.extraField
+    }
+
+    fun asSomeClass(): SomeClass {
+        return SomeClass.create(
+            getId(),
+            getAmount()
+        )
+    }
+
+    companion object {
+        fun create(
+            id: SomeId,
+            amount: Int,
+            extraField: String
+        ): ClassExtendingSomeClass {
+            return ClassExtendingSomeClass(
+                id = id.value,
+                amount = amount,
+                extraField = extraField
+            )
+        }
+
+        fun createFromBase(
+            base: SomeClass,
+            extraField: String
+        ): ClassExtendingSomeClass {
+            return create(
+                id = base.getId(),
+                amount = base.getAmount(),
+                extraField = extraField
+            )
+        }
+    }
+}
