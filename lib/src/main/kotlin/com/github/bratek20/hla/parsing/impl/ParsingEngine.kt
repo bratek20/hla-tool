@@ -29,7 +29,8 @@ open class ParsedNode(
 class Section(
     indent: Int,
     val name: String,
-    val attributes: List<Attribute>
+    val attributes: List<Attribute>,
+    val base: String? = null
 ) : ParsedNode(indent) {
 }
 
@@ -66,12 +67,16 @@ class ParsedMapping(
 ) : ParsedNode(indent)
 
 class ParsingEngine {
+    private val structureNameRegex = Regex("[A-Za-z_][A-Za-z0-9_]*")
+
     fun parseElements(content: FileContent): List<ParsedElement> {
-        val initialElements = content.lines
-            .map { replaceTabsWithSpaces(it) }
-            .map { removeComments(it) }
-            .filter { it.isNotBlank() }
-            .map { parseElement(it) }
+        val initialElements = convertSectionsWithBase(
+            content.lines
+                .map { replaceTabsWithSpaces(it) }
+                .map { removeComments(it) }
+                .filter { it.isNotBlank() }
+                .map { parseElement(it) }
+        )
 
         val result = mutableListOf<ParsedElement>()
         val nodesStack: ArrayDeque<ParsedNode> = ArrayDeque()
@@ -94,6 +99,25 @@ class ParsingEngine {
         }
 
         return result
+    }
+
+    // "SomeName: SomeBase" followed by nested lines declares a structure extending SomeBase,
+    // not a simple assignment - only lookahead can tell them apart
+    private fun convertSectionsWithBase(elements: List<ParsedElement>): List<ParsedElement> {
+        return elements.mapIndexed { index, element ->
+            val next = elements.getOrNull(index + 1)
+            if (element is ColonAssignment
+                && element.value2 == null
+                && element.defaultValue == null
+                && element.value.matches(structureNameRegex)
+                && next != null
+                && next.indent > element.indent
+            ) {
+                Section(element.indent, element.name, element.attributes, element.value)
+            } else {
+                element
+            }
+        }
     }
 
     private fun removeComments(line: String): String {

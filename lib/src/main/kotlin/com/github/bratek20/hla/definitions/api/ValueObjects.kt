@@ -821,6 +821,7 @@ data class SimpleStructureDefinition(
 data class ComplexStructureDefinition(
     private val name: String,
     private val fields: List<FieldDefinition>,
+    private val base: String?,
 ) {
     fun getName(): String {
         return this.name
@@ -830,14 +831,20 @@ data class ComplexStructureDefinition(
         return this.fields
     }
 
+    fun getBase(): String? {
+        return this.base
+    }
+
     companion object {
         fun create(
             name: String,
             fields: List<FieldDefinition>,
+            base: String?,
         ): ComplexStructureDefinition {
             return ComplexStructureDefinition(
                 name = name,
                 fields = fields,
+                base = base,
             )
         }
     }

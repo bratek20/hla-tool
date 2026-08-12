@@ -65,8 +65,18 @@ class ApiTypeFactoryLogic(
                 simpleCustomType,
                 createBaseApiType(ofBaseType(simpleCustomType.getTypeName()), typesWorldApi)
             )
-            complexVO != null -> ComplexValueObjectApiType(type.getName(), createComplexStructureFields(complexVO))
-            dataVO != null -> DataClassApiType(type.getName(), createComplexStructureFields(dataVO))
+            complexVO != null -> ComplexValueObjectApiType(
+                type.getName(),
+                createComplexStructureFields(complexVO),
+                complexVO.getBase(),
+                inheritedFieldsCount(complexVO)
+            )
+            dataVO != null -> DataClassApiType(
+                type.getName(),
+                createComplexStructureFields(dataVO),
+                dataVO.getBase(),
+                inheritedFieldsCount(dataVO)
+            )
             complexCustomType != null -> ComplexCustomApiType(
                 type.getName(),
                 createComplexStructureFields(complexCustomType)
@@ -117,8 +127,12 @@ class ApiTypeFactoryLogic(
     }
 
     private fun createComplexStructureFields(def: ComplexStructureDefinition): List<ComplexStructureField> {
-        return def.getFields().map {
+        return modules.allFieldsOf(def).map {
             ComplexStructureField(it, this)
         }
+    }
+
+    private fun inheritedFieldsCount(def: ComplexStructureDefinition): Int {
+        return modules.inheritedFieldsOf(def).size
     }
 }

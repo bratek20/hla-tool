@@ -31,6 +31,32 @@ class ${p.name()} {
         #end
         return instance
     }
+    #if($p.hasBase())
+
+    static createFromBase(
+        base: ${p.baseName},
+    #foreach($field in $p.ownFields())
+        $field.createDeclaration(),
+    #end
+    ): ${p.name()} {
+        return ${p.name()}.create(
+        #foreach($field in $p.baseFields())
+            base.${field.getterName()}(),
+        #end
+        #foreach($field in $p.ownFields())
+            ${field.name},
+        #end
+        )
+    }
+
+    ${p.asBaseMethodName()}(): ${p.baseName} {
+        return ${p.baseName}.create(
+        #foreach($field in $p.baseFields())
+            this.${field.getterName()}(),
+        #end
+        )
+    }
+    #end
     #foreach($getter in $p.getters())
 
     ${getter.name}(): ${getter.type.name()} {

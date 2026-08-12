@@ -422,6 +422,7 @@ class ModuleGroupParserLogic(
         val def = ComplexStructureDefinition(
             name = section.name,
             fields = parseFields(section.elements),
+            base = section.base,
         )
 
         return ParseComplexStructureResult(

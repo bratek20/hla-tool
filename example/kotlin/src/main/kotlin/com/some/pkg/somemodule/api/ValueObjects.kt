@@ -510,6 +510,106 @@ data class ClassWithComplexMap(
     }
 }
 
+data class ClassExtendingSomeClass(
+    private val id: String,
+    private val amount: Int,
+    private val extraField: String,
+) {
+    fun getId(): SomeId {
+        return SomeId(this.id)
+    }
+
+    fun getAmount(): Int {
+        return this.amount
+    }
+
+    fun getExtraField(): String {
+        return this.extraField
+    }
+
+    fun asSomeClass(): SomeClass {
+        return SomeClass.create(
+            getId(),
+            getAmount(),
+        )
+    }
+
+    companion object {
+        fun create(
+            id: SomeId,
+            amount: Int,
+            extraField: String,
+        ): ClassExtendingSomeClass {
+            return ClassExtendingSomeClass(
+                id = id.value,
+                amount = amount,
+                extraField = extraField,
+            )
+        }
+
+        fun createFromBase(
+            base: SomeClass,
+            extraField: String,
+        ): ClassExtendingSomeClass {
+            return create(
+                id = base.getId(),
+                amount = base.getAmount(),
+                extraField = extraField,
+            )
+        }
+    }
+}
+
+data class ClassExtendingOtherClass(
+    private val id: Int,
+    private val amount: Int,
+    private val extraField: String,
+) {
+    fun getId(): OtherId {
+        return OtherId(this.id)
+    }
+
+    fun getAmount(): Int {
+        return this.amount
+    }
+
+    fun getExtraField(): String {
+        return this.extraField
+    }
+
+    fun asOtherClass(): OtherClass {
+        return OtherClass.create(
+            getId(),
+            getAmount(),
+        )
+    }
+
+    companion object {
+        fun create(
+            id: OtherId,
+            amount: Int,
+            extraField: String,
+        ): ClassExtendingOtherClass {
+            return ClassExtendingOtherClass(
+                id = id.value,
+                amount = amount,
+                extraField = extraField,
+            )
+        }
+
+        fun createFromBase(
+            base: OtherClass,
+            extraField: String,
+        ): ClassExtendingOtherClass {
+            return create(
+                id = base.getId(),
+                amount = base.getAmount(),
+                extraField = extraField,
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,
@@ -1201,56 +1301,6 @@ data class SomeInterfaceToTestMockArgsImportSomeMethodArgs(
             return SomeInterfaceToTestMockArgsImportSomeMethodArgs(
                 arg1 = arg1.value,
                 arg2 = arg2.value,
-            )
-        }
-    }
-}
-
-data class ClassExtendingSomeClass(
-    private val id: String,
-    private val amount: Int,
-    private val extraField: String
-) {
-    fun getId(): SomeId {
-        return SomeId(this.id)
-    }
-
-    fun getAmount(): Int {
-        return this.amount
-    }
-
-    fun getExtraField(): String {
-        return this.extraField
-    }
-
-    fun asSomeClass(): SomeClass {
-        return SomeClass.create(
-            getId(),
-            getAmount()
-        )
-    }
-
-    companion object {
-        fun create(
-            id: SomeId,
-            amount: Int,
-            extraField: String
-        ): ClassExtendingSomeClass {
-            return ClassExtendingSomeClass(
-                id = id.value,
-                amount = amount,
-                extraField = extraField
-            )
-        }
-
-        fun createFromBase(
-            base: SomeClass,
-            extraField: String
-        ): ClassExtendingSomeClass {
-            return create(
-                id = base.getId(),
-                amount = base.getAmount(),
-                extraField = extraField
             )
         }
     }
