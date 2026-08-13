@@ -763,6 +763,8 @@ fun diffSimpleStructureDefinition(given: SimpleStructureDefinition, expectedInit
 data class ExpectedComplexStructureDefinition(
     var name: String? = null,
     var fields: List<(ExpectedFieldDefinition.() -> Unit)>? = null,
+    var baseEmpty: Boolean? = null,
+    var base: String? = null,
 )
 fun diffComplexStructureDefinition(given: ComplexStructureDefinition, expectedInit: ExpectedComplexStructureDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedComplexStructureDefinition().apply(expectedInit)
@@ -775,6 +777,14 @@ fun diffComplexStructureDefinition(given: ComplexStructureDefinition, expectedIn
     expected.fields?.let {
         if (given.getFields().size != it.size) { result.add("${path}fields size ${given.getFields().size} != ${it.size}"); return@let }
         given.getFields().forEachIndexed { idx, entry -> if (diffFieldDefinition(entry, it[idx]) != "") { result.add(diffFieldDefinition(entry, it[idx], "${path}fields[${idx}].")) } }
+    }
+
+    expected.baseEmpty?.let {
+        if ((given.getBase() == null) != it) { result.add("${path}base empty ${(given.getBase() == null)} != ${it}") }
+    }
+
+    expected.base?.let {
+        if (given.getBase()!! != it) { result.add("${path}base ${given.getBase()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

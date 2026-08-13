@@ -391,8 +391,30 @@ class SimpleCustomApiType(
 
 abstract class ComplexStructureApiType<T: ComplexStructureField>(
     name: String,
-    val fields: List<T>
+    val fields: List<T>,
+    val baseName: String? = null,
+    private val inheritedFieldsCount: Int = 0
 ) : StructureApiType(name) {
+
+    // used by velocity
+    fun hasBase(): Boolean {
+        return baseName != null
+    }
+
+    // used by velocity
+    fun baseFields(): List<T> {
+        return fields.take(inheritedFieldsCount)
+    }
+
+    // used by velocity
+    fun ownFields(): List<T> {
+        return fields.drop(inheritedFieldsCount)
+    }
+
+    // used by velocity
+    fun asBaseMethodName(): String {
+        return "as$baseName"
+    }
 
     open fun accessField(fieldName: String, variableName: String): String {
         return "$variableName.$fieldName"
@@ -488,8 +510,10 @@ data class ComplexStructureSetter(
 
 open class SerializableApiType(
     name: String,
-    fields: List<ComplexStructureField>
-) : ComplexStructureApiType<ComplexStructureField>(name, fields) {
+    fields: List<ComplexStructureField>,
+    baseName: String? = null,
+    inheritedFieldsCount: Int = 0
+) : ComplexStructureApiType<ComplexStructureField>(name, fields, baseName, inheritedFieldsCount) {
     // used by velocity
     fun getters(): List<ComplexStructureGetter> {
         return fields.mapNotNull { it.getter() }
@@ -601,8 +625,10 @@ open class SerializableApiType(
 
 open class ComplexValueObjectApiType(
     name: String,
-    fields: List<ComplexStructureField>
-) : SerializableApiType(name, fields) {
+    fields: List<ComplexStructureField>,
+    baseName: String? = null,
+    inheritedFieldsCount: Int = 0
+) : SerializableApiType(name, fields, baseName, inheritedFieldsCount) {
 }
 
 class EventApiType(
@@ -653,8 +679,10 @@ class EventApiType(
 
 class DataClassApiType(
     name: String,
-    fields: List<ComplexStructureField>
-) : SerializableApiType(name, fields) {
+    fields: List<ComplexStructureField>,
+    baseName: String? = null,
+    inheritedFieldsCount: Int = 0
+) : SerializableApiType(name, fields, baseName, inheritedFieldsCount) {
 
     override fun setters(): List<ComplexStructureSetter> {
         return fields.mapNotNull { it.setter() }

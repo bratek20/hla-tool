@@ -264,6 +264,40 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassExtendingSomeClassDef {
+        id?: string,
+        amount?: number,
+        extraField?: string,
+    }
+    export function classExtendingSomeClass(def?: ClassExtendingSomeClassDef): ClassExtendingSomeClass {
+        const final_id = def?.id ?? "someValue"
+        const final_amount = def?.amount ?? 10
+        const final_extraField = def?.extraField ?? "someValue"
+
+        return ClassExtendingSomeClass.create(
+            new SomeId(final_id),
+            final_amount,
+            final_extraField,
+        )
+    }
+
+    export interface ClassExtendingOtherClassDef {
+        id?: number,
+        amount?: number,
+        extraField?: string,
+    }
+    export function classExtendingOtherClass(def?: ClassExtendingOtherClassDef): ClassExtendingOtherClass {
+        const final_id = def?.id ?? 0
+        const final_amount = def?.amount ?? 0
+        const final_extraField = def?.extraField ?? "someValue"
+
+        return ClassExtendingOtherClass.create(
+            new OtherId(final_id),
+            final_amount,
+            final_extraField,
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,

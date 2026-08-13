@@ -19,7 +19,7 @@ class KotlinAssertsPattern: LanguageAssertsPattern {
         return "diff${apiStructureName}"
     }
 
-    override fun indentionForAssertListElements(): Int {
+    override fun indentionForAssertListAndOptionals(): Int {
         return 8
     }
 }

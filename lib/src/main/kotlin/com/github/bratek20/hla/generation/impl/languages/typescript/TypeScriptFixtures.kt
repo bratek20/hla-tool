@@ -26,7 +26,7 @@ class TypeScriptAssertsPattern(private val modules: ModuleGroupQueries) : Langua
         return handleReferencing(modules, apiStructureName, base, null)
     }
 
-    override fun indentionForAssertListElements(): Int {
+    override fun indentionForAssertListAndOptionals(): Int {
         return 12
     }
 }

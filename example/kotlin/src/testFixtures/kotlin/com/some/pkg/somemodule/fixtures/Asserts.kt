@@ -125,6 +125,16 @@ fun assertClassWithComplexMap(given: ClassWithComplexMap, expectedInit: Expected
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertClassExtendingSomeClass(given: ClassExtendingSomeClass, expectedInit: ExpectedClassExtendingSomeClass.() -> Unit) {
+    val diff = diffClassExtendingSomeClass(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertClassExtendingOtherClass(given: ClassExtendingOtherClass, expectedInit: ExpectedClassExtendingOtherClass.() -> Unit) {
+    val diff = diffClassExtendingOtherClass(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
     val diff = diffSomeQueryInput(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

@@ -241,6 +241,14 @@ open class BaseModuleGroupQueries(
         }
     }
 
+    fun inheritedFieldsOf(def: ComplexStructureDefinition): List<FieldDefinition> {
+        return resolveInheritedFields(modules, def)
+    }
+
+    fun allFieldsOf(def: ComplexStructureDefinition): List<FieldDefinition> {
+        return resolveAllFields(modules, def)
+    }
+
     fun allExternalTypesDefinitions(module: ModuleDefinition): List<TypeDefinition> {
         return module.getExternalTypes().map {
             TypeDefinition.create(
@@ -278,7 +286,50 @@ private fun methodArgsToStructure(name: String, args: List<ArgumentDefinition>):
                 defaultValue = null
             )
         },
+        base = null,
     )
+}
+
+fun ModuleDefinition.allComplexStructures(): List<ComplexStructureDefinition> {
+    return this.getAllComplexValueObjects() +
+            this.getComplexCustomTypes() +
+            this.getDataClasses() +
+            this.getEvents() +
+            (this.getImplSubmodule()?.getDataClasses() ?: emptyList())
+}
+
+fun findComplexStructure(modules: List<ModuleDefinition>, name: String): ComplexStructureDefinition? {
+    return modules.firstNotNullOfOrNull { module ->
+        module.allComplexStructures().find { it.getName() == name }
+    }
+}
+
+// fields taken from the base structure, without the ones redefined by the structure itself
+fun resolveInheritedFields(modules: List<ModuleDefinition>, def: ComplexStructureDefinition): List<FieldDefinition> {
+    val inherited = collectBaseFields(modules, def, mutableSetOf(def.getName()))
+    val ownNames = def.getFields().map { it.getName() }.toSet()
+    return inherited.filter { !ownNames.contains(it.getName()) }
+}
+
+fun resolveAllFields(modules: List<ModuleDefinition>, def: ComplexStructureDefinition): List<FieldDefinition> {
+    return resolveInheritedFields(modules, def) + def.getFields()
+}
+
+private fun collectBaseFields(
+    modules: List<ModuleDefinition>,
+    def: ComplexStructureDefinition,
+    visited: MutableSet<String>
+): List<FieldDefinition> {
+    val baseName = def.getBase() ?: return emptyList()
+    if (!visited.add(baseName)) {
+        throw IllegalStateException("Cyclic base structure detected for '${def.getName()}'")
+    }
+    val baseDef = findComplexStructure(modules, baseName)
+        ?: throw IllegalStateException("Base structure '$baseName' of '${def.getName()}' not found")
+
+    val baseOwnNames = baseDef.getFields().map { it.getName() }.toSet()
+    return collectBaseFields(modules, baseDef, visited)
+        .filter { !baseOwnNames.contains(it.getName()) } + baseDef.getFields()
 }
 
 fun ModuleDefinition.getMockedInterfaces(): List<InterfaceDefinition> {
@@ -295,9 +346,10 @@ class ModuleGroupQueries(
 
     fun getCurrentDependencies(): List<ModuleDependency> {
         val typeNames = allComplexStructureDefinitions(currentModule)
-            .map { it.getFields() }
+            .map { allFieldsOf(it) }
             .flatten()
             .flatMap { it.getType().getInnerTypes() } +
+            allComplexStructureDefinitions(currentModule).mapNotNull { it.getBase() } +
             interfacesTypeNames(currentModule)
 
         val resolvedModules = modules

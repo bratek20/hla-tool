@@ -149,6 +149,7 @@ ValueObjects
     ComplexStructureDefinition
         name: string
         fields: FieldDefinition[]
+        base: string?
 
     InterfaceDefinition
         name: string

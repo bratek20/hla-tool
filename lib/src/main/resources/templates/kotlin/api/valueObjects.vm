@@ -37,6 +37,16 @@ data class ${vo.name()}(
     }
 
     #end
+    #if($vo.hasBase())
+    fun ${vo.asBaseMethodName()}(): ${vo.baseName} {
+        return ${vo.baseName}.create(
+        #foreach($field in $vo.baseFields())
+            ${field.getterName()}(),
+        #end
+        )
+    }
+
+    #end
     companion object {
         fun create(
         #foreach($field in $vo.fields)
@@ -49,6 +59,24 @@ data class ${vo.name()}(
             #end
             )
         }
+        #if($vo.hasBase())
+
+        fun createFromBase(
+            base: ${vo.baseName},
+        #foreach($field in $vo.ownFields())
+            $field.createDeclaration(),
+        #end
+        ): ${vo.name()} {
+            return create(
+            #foreach($field in $vo.baseFields())
+                ${field.name} = base.${field.getterName()}(),
+            #end
+            #foreach($field in $vo.ownFields())
+                ${field.name} = ${field.name},
+            #end
+            )
+        }
+        #end
     }
 }#if($foreach.hasNext)
 

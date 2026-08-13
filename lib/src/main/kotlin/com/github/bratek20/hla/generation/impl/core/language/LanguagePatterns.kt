@@ -6,7 +6,11 @@ interface LanguageAssertsPattern {
     fun expectedClassType(name: String): String
     fun expectedReferencedClassType(name: String): String = expectedClassType(name)
     fun diffFunName(apiStructureName: String): String
-    fun indentionForAssertListElements(): Int
+    fun indentionForAssertListAndOptionals(): Int
+
+    fun indentionStringForAssertListAndOptionals(): String {
+        return " ".repeat(indentionForAssertListAndOptionals())
+    }
 }
 
 interface LanguageBuildersPattern {

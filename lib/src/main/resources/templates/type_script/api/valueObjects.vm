@@ -1,11 +1,21 @@
 #foreach($nt in $simpleValueObjects)
 class ${nt.name()} {
+    private static cache = new Map<${nt.boxedType.name()}, ${nt.name()}>()
+
+    private readonly value${nt.name()}: ${nt.boxedType.name()}
     constructor(
-        readonly value${nt.name()}: ${nt.boxedType.name()}
+        value${nt.name()}: ${nt.boxedType.name()}
     ) {
         if (Undefined(value${nt.name()})) {
             throw Error("Undefined value for ${nt.name()}")
         }
+
+        if (${nt.name()}.cache.has(value${nt.name()})) {
+            return ${nt.name()}.cache.get(value${nt.name()})
+        }
+
+        this.value${nt.name()} = value${nt.name()}
+        ${nt.name()}.cache.set(value${nt.name()}, this)
     }
 
     getValue(): ${nt.boxedType.name()} {
@@ -73,10 +83,38 @@ class ${p.name()} {
         #end
         return instance
     }
+#if($p.hasBase())
+
+    static createFromBase(
+        base: ${p.baseName},
+    #foreach($field in $p.ownFields())
+        $field.createDeclaration(),
+    #end
+    ): ${p.name()} {
+        return ${p.name()}.create(
+        #foreach($field in $p.baseFields())
+            base.${field.getterName()}(),
+        #end
+        #foreach($field in $p.ownFields())
+            ${field.name},
+        #end
+        )
+    }
+#end
 #foreach($getter in $p.getters())
 
     ${getter.name}(): ${getter.type.name()} {
         return ${getter.body}
+    }
+#end
+#if($p.hasBase())
+
+    ${p.asBaseMethodName()}(): ${p.baseName} {
+        return ${p.baseName}.create(
+        #foreach($field in $p.baseFields())
+            this.${field.getterName()}(),
+        #end
+        )
     }
 #end
 }#if($foreach.hasNext)

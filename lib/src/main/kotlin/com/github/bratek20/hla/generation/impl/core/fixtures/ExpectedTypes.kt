@@ -229,6 +229,14 @@ class PropertyExpectedType(
     fields: List<ExpectedTypeField>
 ) : ComplexStructureExpectedType(api, fields)
 
+private fun LanguageTypes.earlyReturn(): String {
+    return when (this) {
+        is KotlinTypes -> "; return@let"
+        is TypeScriptTypes -> "; return result.join(\"\\n\")"
+        else -> ""
+    }
+}
+
 class OptionalExpectedType(
     api: OptionalApiType,
     private val wrappedType: ExpectedType<*>,
@@ -244,11 +252,24 @@ class OptionalExpectedType(
     }
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
-        return wrappedType.diff(api.unwrap(givenVariable), expectedVariable, path)
+        val presentElement = languageTypes.wrapWithString("$path is empty but expected is not")
+        val presentBody = languageTypes.addListElement("result", presentElement) + languageTypes.earlyReturn()
+        val presentCheckPart = "if (${languageTypes.checkOptionalEmpty(givenVariable)}) { $presentBody }"
+
+        val unwrapped = api.unwrap(givenVariable)
+        val wrappedDiff = wrappedType.diff(unwrapped, expectedVariable, path)
+        val wrappedNotEquals = wrappedType.notEquals(unwrapped, expectedVariable)
+        val wrappedPart = if (wrappedNotEquals == null) wrappedDiff
+        else "if ($wrappedNotEquals) { ${languageTypes.addListElement("result", wrappedDiff)} }"
+
+        return """
+        |$presentCheckPart
+        |${fixture.indentionStringForAssertListAndOptionals()}$wrappedPart
+        """.trimMargin()
     }
 
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
-        return wrappedType.notEquals(api.unwrap(givenVariable), expectedVariable)
+        return null
     }
 }
 
@@ -266,10 +287,7 @@ class ListExpectedType(
 
     override fun diff(givenVariable: String, expectedVariable: String, path: String): String {
         val sizeElement = "$path size \${${languageTypes.listSize(givenVariable)}} != \${${languageTypes.listSize(expectedVariable)}}"
-        var sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement))
-        if (languageTypes is KotlinTypes) {
-           sizeBody += "; return@let"
-        }
+        var sizeBody = languageTypes.addListElement("result", languageTypes.wrapWithString(sizeElement)) + languageTypes.earlyReturn()
         val sizePart = "if (${languageTypes.listSize(givenVariable)} != ${languageTypes.listSize(expectedVariable)}) { $sizeBody }"
 
         val element = wrappedType.diff("entry", "$expectedVariable[idx]", "$path[\${idx}]")
@@ -282,11 +300,9 @@ class ListExpectedType(
             full
         )
 
-        val indention = " ".repeat(fixture.indentionForAssertListElements())
-
         return """
         |${sizePart}
-        |$indention$entriesAssertion
+        |${fixture.indentionStringForAssertListAndOptionals()}$entriesAssertion
         """.trimMargin()
     }
 }

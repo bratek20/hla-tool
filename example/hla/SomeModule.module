@@ -94,6 +94,12 @@ ValueObjects
     ClassWithComplexMap
         complexMap: <string, SomeUserValueObject>
 
+    ClassExtendingSomeClass extends SomeClass
+        extraField: string
+
+    ClassExtendingOtherClass extends OtherClass
+        extraField: string
+
 Exceptions
     SomeExtraException
 
@@ -215,6 +221,8 @@ Properties
     "CustomTypesProperty" -> CustomTypesProperty
     "SelfReferencingProperty" -> SelfReferencingProperty[]
     "CustomTypesPropertyOptionalList" -> CustomTypesPropertyOptionalList[]
+
+    "SomeKey2" -> SomeProperty // to check that correct SOME_KEY_2 name is generated
 
 Data
     SomeData
