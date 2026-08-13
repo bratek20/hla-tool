@@ -356,12 +356,14 @@ fun simpleStructureDefinition(init: SimpleStructureDefinitionDef.() -> Unit = {}
 data class ComplexStructureDefinitionDef(
     var name: String = "someValue",
     var fields: List<(FieldDefinitionDef.() -> Unit)> = emptyList(),
+    var base: String? = null,
 )
 fun complexStructureDefinition(init: ComplexStructureDefinitionDef.() -> Unit = {}): ComplexStructureDefinition {
     val def = ComplexStructureDefinitionDef().apply(init)
     return ComplexStructureDefinition.create(
         name = def.name,
         fields = def.fields.map { it -> fieldDefinition(it) },
+        base = def.base,
     )
 }
 

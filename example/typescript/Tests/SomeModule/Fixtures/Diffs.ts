@@ -422,6 +422,52 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassExtendingSomeClass {
+        id?: string,
+        amount?: number,
+        extraField?: string,
+    }
+    export function diffClassExtendingSomeClass(given: ClassExtendingSomeClass, expected: ExpectedClassExtendingSomeClass, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (diffSomeId(given.getId(), expected.id) != "") { result.push(diffSomeId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        if (expected.extraField !== undefined) {
+            if (given.getExtraField() != expected.extraField) { result.push(`${path}extraField ${given.getExtraField()} != ${expected.extraField}`) }
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedClassExtendingOtherClass {
+        id?: number,
+        amount?: number,
+        extraField?: string,
+    }
+    export function diffClassExtendingOtherClass(given: ClassExtendingOtherClass, expected: ExpectedClassExtendingOtherClass, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.id !== undefined) {
+            if (OtherModule.diffOtherId(given.getId(), expected.id) != "") { result.push(OtherModule.diffOtherId(given.getId(), expected.id, `${path}id.`)) }
+        }
+
+        if (expected.amount !== undefined) {
+            if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        if (expected.extraField !== undefined) {
+            if (given.getExtraField() != expected.extraField) { result.push(`${path}extraField ${given.getExtraField()} != ${expected.extraField}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeQueryInput {
         id?: string,
         amount?: number,

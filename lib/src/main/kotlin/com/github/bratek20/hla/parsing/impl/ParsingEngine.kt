@@ -29,7 +29,8 @@ open class ParsedNode(
 class Section(
     indent: Int,
     val name: String,
-    val attributes: List<Attribute>
+    val attributes: List<Attribute>,
+    val base: String? = null
 ) : ParsedNode(indent) {
 }
 
@@ -64,6 +65,8 @@ class ParsedMapping(
     val key: String,
     val value: String
 ) : ParsedNode(indent)
+
+const val EXTENDS_KEYWORD = " extends "
 
 class ParsingEngine {
     fun parseElements(content: FileContent): List<ParsedElement> {
@@ -176,6 +179,14 @@ class ParsingEngine {
             }
         } else {
             val result = extractAttributes(noIndentLine)
+            if (result.beforeAttributes.contains(EXTENDS_KEYWORD)) {
+                return Section(
+                    indent = indent,
+                    name = result.beforeAttributes.substringBefore(EXTENDS_KEYWORD).trim(),
+                    attributes = result.attributes,
+                    base = result.beforeAttributes.substringAfter(EXTENDS_KEYWORD).trim()
+                )
+            }
             return Section(indent, result.beforeAttributes, result.attributes)
         }
     }

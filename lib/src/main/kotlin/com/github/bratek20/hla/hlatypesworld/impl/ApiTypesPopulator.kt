@@ -19,11 +19,13 @@ abstract class ApiPatternPopulator {
     private lateinit var module: ModuleDefinition
     protected lateinit var world: TypesWorldApi
     protected lateinit var extraInfo: HlaTypesExtraInfo
+    protected var allModules: List<ModuleDefinition> = emptyList()
 
-    fun init(module: ModuleDefinition, world: TypesWorldApi, extraInfo: HlaTypesExtraInfo) {
+    fun init(module: ModuleDefinition, world: TypesWorldApi, extraInfo: HlaTypesExtraInfo, allModules: List<ModuleDefinition>) {
         this.module = module
         this.world = world
         this.extraInfo = extraInfo
+        this.allModules = allModules
     }
 
     protected abstract fun getTypeNames(): List<String>
@@ -94,13 +96,14 @@ abstract class ComplexStructuresPopulator(
 
     override fun addPatternTypes() {
         defs.forEach { def ->
+            val fields = resolveAllFields(allModules, def)
             world.addClassType(
                 WorldClassType.create(
                 type = getMyPatternType(def.getName()),
-                fields = def.getFields().map { it.asClassField(world) }
+                fields = fields.map { it.asClassField(world) }
             ))
 
-            def.getFields()
+            fields
                 .forEach { field ->
                     if(hasAttribute(field.getAttributes(), KnownAttribute.ID_SOURCE)) {
                         extraInfo.markAsIdSource(IdSourceInfo(
@@ -179,7 +182,7 @@ class ApiTypesPopulator(
     }
 
 
-    private fun createPatternPopulators(module: ModuleDefinition): List<ApiPatternPopulator> {
+    private fun createPatternPopulators(module: ModuleDefinition, allModules: List<ModuleDefinition>): List<ApiPatternPopulator> {
         val populators = listOf(
             SimpleValueObjectsPopulator(module.getSimpleValueObjects()),
             ComplexValueObjectsPopulator(module.getAllComplexValueObjects()),
@@ -196,14 +199,14 @@ class ApiTypesPopulator(
         )
 
         populators.forEach { populator ->
-            populator.init(module, world, extraInfo)
+            populator.init(module, world, extraInfo, allModules)
         }
 
         return populators
     }
 
     override fun populate(modules: List<ModuleDefinition>) {
-        val populators = modules.flatMap { createPatternPopulators(it) }
+        val populators = modules.flatMap { createPatternPopulators(it, modules) }
 
         populators.forEach { it.ensurePatternTypes() }
         ensureMapTypes(modules)

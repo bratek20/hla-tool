@@ -105,6 +105,18 @@ namespace SomeModule.Fixtures {
         public Dictionary<string, Action<SomeUserValueObjectDef>> ComplexMap { get; set; } = new Dictionary<string, Action<SomeUserValueObjectDef>>();
     }
 
+    public class ClassExtendingSomeClassDef {
+        public string Id { get; set; } = "someValue";
+        public int Amount { get; set; } = 10;
+        public string ExtraField { get; set; } = "someValue";
+    }
+
+    public class ClassExtendingOtherClassDef {
+        public int Id { get; set; } = 0;
+        public int Amount { get; set; } = 0;
+        public string ExtraField { get; set; } = "someValue";
+    }
+
     public class SomeQueryInputDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 0;
@@ -381,6 +393,18 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return ClassWithComplexMap.Create(new Dictionary<>());
+        }
+        public static ClassExtendingSomeClass BuildClassExtendingSomeClass(Action<ClassExtendingSomeClassDef> init = null) {
+            var def = new ClassExtendingSomeClassDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassExtendingSomeClass.Create(new SomeId(def.Id), def.Amount, def.ExtraField);
+        }
+        public static ClassExtendingOtherClass BuildClassExtendingOtherClass(Action<ClassExtendingOtherClassDef> init = null) {
+            var def = new ClassExtendingOtherClassDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassExtendingOtherClass.Create(new OtherId(def.Id), def.Amount, def.ExtraField);
         }
         public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = null) {
             var def = new SomeQueryInputDef();

@@ -802,6 +802,134 @@ class ClassWithComplexMap {
     }
 }
 
+class ClassExtendingSomeClass {
+    private id = STRING
+    private amount = NUMBER
+    private extraField = STRING
+
+    static create(
+        id: SomeId,
+        amount: number,
+        extraField: string,
+    ): ClassExtendingSomeClass {
+        const instance = new ClassExtendingSomeClass()
+        instance.id = id.getValue()
+        instance.amount = amount
+        instance.extraField = extraField
+        return instance
+    }
+
+    static createNamed({
+        id,
+        amount,
+        extraField,
+    }: {
+        id: SomeId;
+        amount: number;
+        extraField: string;
+    }): ClassExtendingSomeClass {
+        const instance = new ClassExtendingSomeClass()
+        instance.id = id.getValue()
+        instance.amount = amount
+        instance.extraField = extraField
+        return instance
+    }
+
+    static createFromBase(
+        base: SomeClass,
+        extraField: string,
+    ): ClassExtendingSomeClass {
+        return ClassExtendingSomeClass.create(
+            base.getId(),
+            base.getAmount(),
+            extraField,
+        )
+    }
+
+    getId(): SomeId {
+        return new SomeId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+
+    getExtraField(): string {
+        return this.extraField
+    }
+
+    asSomeClass(): SomeClass {
+        return SomeClass.create(
+            this.getId(),
+            this.getAmount(),
+        )
+    }
+}
+
+class ClassExtendingOtherClass {
+    private id = NUMBER
+    private amount = NUMBER
+    private extraField = STRING
+
+    static create(
+        id: OtherId,
+        amount: number,
+        extraField: string,
+    ): ClassExtendingOtherClass {
+        const instance = new ClassExtendingOtherClass()
+        instance.id = id.getValue()
+        instance.amount = amount
+        instance.extraField = extraField
+        return instance
+    }
+
+    static createNamed({
+        id,
+        amount,
+        extraField,
+    }: {
+        id: OtherId;
+        amount: number;
+        extraField: string;
+    }): ClassExtendingOtherClass {
+        const instance = new ClassExtendingOtherClass()
+        instance.id = id.getValue()
+        instance.amount = amount
+        instance.extraField = extraField
+        return instance
+    }
+
+    static createFromBase(
+        base: OtherClass,
+        extraField: string,
+    ): ClassExtendingOtherClass {
+        return ClassExtendingOtherClass.create(
+            base.getId(),
+            base.getAmount(),
+            extraField,
+        )
+    }
+
+    getId(): OtherId {
+        return new OtherId(this.id)
+    }
+
+    getAmount(): number {
+        return this.amount
+    }
+
+    getExtraField(): string {
+        return this.extraField
+    }
+
+    asOtherClass(): OtherClass {
+        return OtherClass.create(
+            this.getId(),
+            this.getAmount(),
+        )
+    }
+}
+
 class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

@@ -454,6 +454,62 @@ namespace SomeModule.Api {
         }
     }
 
+    public class ClassExtendingSomeClass: ValueObject {
+        readonly string id;
+        readonly int amount;
+        readonly string extraField;
+
+        public ClassExtendingSomeClass(
+            string id,
+            int amount,
+            string extraField
+        ) {
+            this.id = id;
+            this.amount = amount;
+            this.extraField = extraField;
+        }
+        public SomeId GetId() {
+            return new SomeId(id);
+        }
+        public int GetAmount() {
+            return amount;
+        }
+        public string GetExtraField() {
+            return extraField;
+        }
+        public static ClassExtendingSomeClass Create(SomeId id, int amount, string extraField) {
+            return new ClassExtendingSomeClass(id.Value, amount, extraField);
+        }
+    }
+
+    public class ClassExtendingOtherClass: ValueObject {
+        readonly int id;
+        readonly int amount;
+        readonly string extraField;
+
+        public ClassExtendingOtherClass(
+            int id,
+            int amount,
+            string extraField
+        ) {
+            this.id = id;
+            this.amount = amount;
+            this.extraField = extraField;
+        }
+        public OtherId GetId() {
+            return new OtherId(id);
+        }
+        public int GetAmount() {
+            return amount;
+        }
+        public string GetExtraField() {
+            return extraField;
+        }
+        public static ClassExtendingOtherClass Create(OtherId id, int amount, string extraField) {
+            return new ClassExtendingOtherClass(id.Value, amount, extraField);
+        }
+    }
+
     public class SomeQueryInput: ValueObject {
         readonly string id;
         readonly int amount;
