@@ -1,9 +1,10 @@
 plugins {
     alias(libs.plugins.b20.library)
+    alias(libs.plugins.b20.publish)
 }
 
 group = "com.github.bratek20.hla"
-version = "1.0.20"
+version = "1.0.21"
 
 val velocityVersion = "2.3"
 
