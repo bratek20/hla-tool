@@ -1,0 +1,14 @@
+{
+  "input": {
+    "id": "someId",
+    "amount": 0
+  },
+  "output": {
+    "id": "someId",
+    "amount": 0
+  },
+  "exceptions": [
+    "SomeException",
+    "Some2Exception"
+  ]
+}

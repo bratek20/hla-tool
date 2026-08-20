@@ -31,6 +31,27 @@ profiles:
       launchJsonPath: ""
       packageJsonPath: ""
 
+  - name: "typeScriptModern"
+    language: "TYPE_SCRIPT"
+    paths:
+      project: "../typescript-modern"
+      src:
+        default: "main"
+        overrides:
+          - submodules:
+              - "Tests"
+              - "Fixtures"
+            path: "Tests"
+          - submodules:
+              - "Examples"
+            path: "Examples"
+    typeScript:
+      mainTsconfigPath: "Configs/tsconfig.main.json"
+      testTsconfigPath: "Configs/tsconfig.test.json"
+      launchJsonPath: ""
+      packageJsonPath: ""
+      modern: true
+
   - name: "cSharp"
     language: "C_SHARP"
     paths:

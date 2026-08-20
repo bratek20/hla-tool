@@ -1,0 +1,114 @@
+{
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - Leagues Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" SomeModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - OtherModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" OtherModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - NoInterfacesModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" NoInterfacesModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - OnlyInterfacesModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" OnlyInterfacesModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - SimpleModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" SimpleModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - SomeModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" SomeModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - TypesModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" TypesModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - OnlyTrackingModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" OnlyTrackingModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - SomeUserModule Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" SomeUserModule"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - ModuleOnlyForMocksArgs Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" ModuleOnlyForMocksArgs"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Test App - WebNoWrappers Tests",
+            "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+            "args": [" WebNoWrappers"],
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ]
+        },
+    ]
+}

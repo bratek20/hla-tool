@@ -164,8 +164,22 @@ class HlaFacadeTest {
             )
         }
 
+        fun typescriptModernTestPathsWithExamplesJson(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/typescript-modern/main/$moduleName",
+                exampleFixturesPath = "../example/typescript-modern/Tests/$moduleName",
+                exampleTestsPath = "../example/typescript-modern/Tests/$moduleName",
+                expectedMainPath = "../example/hla/../typescript-modern/main",
+                expectedFixturesPath = "../example/hla/../typescript-modern/Tests",
+                expectedTestsPath = "../example/hla/../typescript-modern/Tests",
+                exampleJsonsPath = "../example/typescript-modern/Examples/$moduleName",
+                expectedExampleJsonsPath = "../example/hla/../typescript-modern/Examples",
+            )
+        }
+
         private val TYPE_SCRIPT_PROFILE = "typeScript"
         private val TYPE_SCRIPT_2_PROFILE = "typeScript2"
+        private val TYPE_SCRIPT_MODERN_PROFILE = "typeScriptModern"
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
@@ -198,7 +212,18 @@ class HlaFacadeTest {
                     "OnlyInterfacesModule",
                     TYPE_SCRIPT_PROFILE,
                     typescriptTestPaths("OnlyInterfacesModule")
-                )
+                ),
+
+                Arguments.of(
+                    "OtherModule",
+                    TYPE_SCRIPT_MODERN_PROFILE,
+                    typescriptModernTestPathsWithExamplesJson("OtherModule")
+                ),
+                Arguments.of(
+                    "SomeModule",
+                    TYPE_SCRIPT_MODERN_PROFILE,
+                    typescriptModernTestPathsWithExamplesJson("SomeModule")
+                ),
             )
         }
     }
