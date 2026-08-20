@@ -13,6 +13,7 @@ Properties
         testTsconfigPath: Path
         launchJsonPath: Path
         packageJsonPath: Path
+        modern: bool? = empty
 
     SubmodulePath
         path: Path

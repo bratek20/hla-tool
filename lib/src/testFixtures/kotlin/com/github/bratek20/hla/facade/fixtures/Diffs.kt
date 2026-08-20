@@ -72,6 +72,8 @@ data class ExpectedTypeScriptConfig(
     var testTsconfigPath: String? = null,
     var launchJsonPath: String? = null,
     var packageJsonPath: String? = null,
+    var modernEmpty: Boolean? = null,
+    var modern: Boolean? = null,
 )
 fun diffTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScriptConfig.() -> Unit, path: String = ""): String {
     val expected = ExpectedTypeScriptConfig().apply(expectedInit)
@@ -91,6 +93,14 @@ fun diffTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScri
 
     expected.packageJsonPath?.let {
         if (diffPath(given.getPackageJsonPath(), it) != "") { result.add(diffPath(given.getPackageJsonPath(), it, "${path}packageJsonPath.")) }
+    }
+
+    expected.modernEmpty?.let {
+        if ((given.getModern() == null) != it) { result.add("${path}modern empty ${(given.getModern() == null)} != ${it}") }
+    }
+
+    expected.modern?.let {
+        if (given.getModern()!! != it) { result.add("${path}modern ${given.getModern()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

@@ -83,6 +83,7 @@ data class TypeScriptConfig(
     private val testTsconfigPath: String,
     private val launchJsonPath: String,
     private val packageJsonPath: String,
+    private val modern: Boolean? = null,
 ) {
     fun getMainTsconfigPath(): Path {
         return pathCreate(this.mainTsconfigPath)
@@ -100,18 +101,24 @@ data class TypeScriptConfig(
         return pathCreate(this.packageJsonPath)
     }
 
+    fun getModern(): Boolean? {
+        return this.modern
+    }
+
     companion object {
         fun create(
             mainTsconfigPath: Path,
             testTsconfigPath: Path,
             launchJsonPath: Path,
             packageJsonPath: Path,
+            modern: Boolean? = null,
         ): TypeScriptConfig {
             return TypeScriptConfig(
                 mainTsconfigPath = pathGetValue(mainTsconfigPath),
                 testTsconfigPath = pathGetValue(testTsconfigPath),
                 launchJsonPath = pathGetValue(launchJsonPath),
                 packageJsonPath = pathGetValue(packageJsonPath),
+                modern = modern,
             )
         }
     }

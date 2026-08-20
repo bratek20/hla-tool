@@ -10,6 +10,7 @@ import com.github.bratek20.hla.generation.impl.core.language.LanguageAssertsPatt
 import com.github.bratek20.hla.generation.impl.core.language.LanguageTypes
 import com.github.bratek20.hla.generation.impl.languages.kotlin.KotlinTypes
 import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptTypes
+import com.github.bratek20.utils.camelToPascalCase
 
 abstract class ExpectedType<T: ApiTypeLogic>(
     val api: T
@@ -100,6 +101,13 @@ interface ExpectedTypeField{
     fun typeName(): String
     fun name(): String
     fun diff(givenVariable: String, expectedVariable: String): String
+
+    // Strict TypeScript cannot keep an `expected.x !== undefined` narrowing alive inside
+    // the list iteration callbacks that diff bodies generate, so modern output hoists the
+    // field into a local first and diffs against that.
+    fun localName(): String {
+        return "expected${camelToPascalCase(name())}"
+    }
 }
 
 open class DefaultExpectedTypeField(

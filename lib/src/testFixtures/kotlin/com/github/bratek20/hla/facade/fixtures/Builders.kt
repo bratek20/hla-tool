@@ -48,6 +48,7 @@ data class TypeScriptConfigDef(
     var testTsconfigPath: String = "someValue",
     var launchJsonPath: String = "someValue",
     var packageJsonPath: String = "someValue",
+    var modern: Boolean? = null,
 )
 fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfig {
     val def = TypeScriptConfigDef().apply(init)
@@ -56,6 +57,7 @@ fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfi
         testTsconfigPath = pathCreate(def.testTsconfigPath),
         launchJsonPath = pathCreate(def.launchJsonPath),
         packageJsonPath = pathCreate(def.packageJsonPath),
+        modern = def.modern,
     )
 }
 

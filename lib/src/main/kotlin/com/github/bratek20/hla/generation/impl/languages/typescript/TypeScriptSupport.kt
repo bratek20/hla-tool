@@ -43,6 +43,6 @@ class TypeScriptSupport(private val c: DomainContext)
     }
 
     override fun base(): CodeBuilderLanguage {
-        return TypeScript()
+        return TypeScript(modern = c.profile.isModernTypeScript())
     }
 }
