@@ -402,7 +402,11 @@ class ValidationsImplTest {
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyList\"/[*]/referenceId'",
             "Found reference for 'SomeId' at '\"SomeRenamedReferencingPropertyList\"/[*]/rId'",
             "Found reference for 'SomeId' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[*]'",
-            "Unique id infos: [UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=uniqueId, parent=WorldType(name=OtherClassWIthUniqueId, path=OtherModule/Api/ValueObjects)), UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SimpleModule/Api/ValueObjects))]"
+            "Unique id infos: ["
+                    + "UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=uniqueId, parent=WorldType(name=OtherClassWIthUniqueId, path=OtherModule/Api/ValueObjects)), "
+                    + "UniqueIdInfo(type=WorldType(name=string, path=Language/Types/Api/Primitives), fieldName=id, parent=WorldType(name=UniqueIdEntry, path=SimpleModule/Api/ValueObjects)), "
+                    + "UniqueIdInfo(type=WorldType(name=SomeId, path=SomeModule/Api/ValueObjects), fieldName=referenceId, parent=WorldType(name=SomeReferencingProperty, path=SomeModule/Api/ValueObjects))"
+            + "]"
         )
 
 
@@ -513,6 +517,35 @@ class ValidationsImplTest {
                 "Value '2' at '\"SomeReferencingPropertyObject\"/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '3' at '\"SomeReferencingPropertyList\"/[1]/referenceId' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'",
                 "Value '4' at '\"SomeReferencingPropertyFieldList\"/referenceIdList/[0]' not found in source values from '\"SomeSourcePropertyList\"/[*]/id'"
+            )
+        }
+    }
+
+    @Test
+    fun `unique should work on different property for idSource field from other property`() {
+        setup()
+
+        propertiesMock.set(SOME_SOURCE_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "id" to "1"
+            }
+        ))
+
+        propertiesMock.set(SOME_REFERENCING_PROPERTY_LIST_PROPERTY_KEY, listOf(
+            struct {
+                "referenceId" to "1"
+            },
+            struct {
+                "referenceId" to "1"
+            }
+        ))
+
+        val result = validateCall()
+
+        assertValidationResult(result) {
+            ok = false
+            errors = listOf(
+                "Value '1' at '\"SomeReferencingPropertyList\"/[*]/referenceId' is not unique",
             )
         }
     }

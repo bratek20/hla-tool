@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.bratek20.hla"
-version = "1.0.21"
+version = "1.0.22"
 
 val velocityVersion = "2.3"
 

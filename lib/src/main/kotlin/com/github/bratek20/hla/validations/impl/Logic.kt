@@ -180,7 +180,9 @@ private class UniqueIdValidator(
         val propertyKeys = group.getAllPropertyKeys()
         propertyKeys.forEach { propertyKey ->
             val type = typesWorldApi.getTypeByName(propertyKey.getType().asNonWrappedWorldTypeName())
-            if(type.getName() != parentType.getName()) {
+            if(type.getName() == parentType.getName()) {
+                references.add(rootReference(propertyKey))
+            } else {
                 val referencesForClass = typesWorldApi.getAllReferencesOf(type, parentType)
                 if(referencesForClass.isNotEmpty()) {
                     if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)){
@@ -195,6 +197,11 @@ private class UniqueIdValidator(
             }
         }
         return references
+    }
+
+    private fun rootReference(propertyKey: KeyDefinition): PropertyValuePathLogic {
+        val listPrefix = if(propertyKey.getType().getWrappers().contains(TypeWrapper.LIST)) "[*]/" else ""
+        return createPropertyValuePathLogic(propertyKey, "$listPrefix${info.getFieldName()}")
     }
 
     private fun processReferences(
