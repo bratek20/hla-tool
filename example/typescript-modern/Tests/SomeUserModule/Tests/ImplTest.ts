@@ -1,8 +1,7 @@
 import { describe, test } from "vitest"
-import { test as SomeUserModuleTest } from "./TestBase"
 
 describe("SomeUserModule - Api", () => {
-    SomeUserModuleTest("TODO", () => {
+    test("TODO", () => {
         AssertEquals(true, false, "TODO")
     })
 })

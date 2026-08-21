@@ -17,7 +17,3 @@ export function setup(args: SetupArgs = {}): void {
         }
     }).context
 }
-
-export function test(testName: string, fun: TestFunction) {
-    addTest("OtherModule", testName, fun)
-}

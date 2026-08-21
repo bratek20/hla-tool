@@ -1,8 +1,7 @@
 import { describe, test } from "vitest"
-import { test as WebNoWrappersTest } from "./TestBase"
 
 describe("WebNoWrappers - Api", () => {
-    WebNoWrappersTest("TODO", () => {
+    test("TODO", () => {
         AssertEquals(true, false, "TODO")
     })
 })

@@ -66,7 +66,8 @@ class ModernTypeScriptExports(queries: BaseModuleGroupQueries) {
         collectWeb(module, ::add)
         collectFixtures(::add, simpleStructures + complexStructures, module.getEnums().map { it.getName() }, interfaceNames)
 
-        listOf("context", "setup", "SetupArgs", "test").forEach {
+        // No `test` here - modern tests import it from vitest, not from TestBase
+        listOf("context", "setup", "SetupArgs").forEach {
             add(it, SubmoduleName.Tests, PatternName.TestBase)
         }
 

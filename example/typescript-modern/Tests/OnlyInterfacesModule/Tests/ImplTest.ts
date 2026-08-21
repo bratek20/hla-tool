@@ -1,8 +1,7 @@
 import { describe, test } from "vitest"
-import { test as OnlyInterfacesModuleTest } from "./TestBase"
 
 describe("OnlyInterfacesModule - Api", () => {
-    OnlyInterfacesModuleTest("TODO", () => {
+    test("TODO", () => {
         AssertEquals(true, false, "TODO")
     })
 })
