@@ -79,26 +79,31 @@ data class AllModulesOperationArgs(
 }
 
 data class TypeScriptConfig(
-    private val mainTsconfigPath: String,
-    private val testTsconfigPath: String,
-    private val launchJsonPath: String,
-    private val packageJsonPath: String,
+    private val mainTsconfigPath: String? = null,
+    private val testTsconfigPath: String? = null,
+    private val launchJsonPath: String? = null,
+    private val packageJsonPath: String? = null,
+    private val entryPath: String? = null,
     private val modern: Boolean? = null,
 ) {
-    fun getMainTsconfigPath(): Path {
-        return pathCreate(this.mainTsconfigPath)
+    fun getMainTsconfigPath(): Path? {
+        return this.mainTsconfigPath?.let { it -> pathCreate(it) }
     }
 
-    fun getTestTsconfigPath(): Path {
-        return pathCreate(this.testTsconfigPath)
+    fun getTestTsconfigPath(): Path? {
+        return this.testTsconfigPath?.let { it -> pathCreate(it) }
     }
 
-    fun getLaunchJsonPath(): Path {
-        return pathCreate(this.launchJsonPath)
+    fun getLaunchJsonPath(): Path? {
+        return this.launchJsonPath?.let { it -> pathCreate(it) }
     }
 
-    fun getPackageJsonPath(): Path {
-        return pathCreate(this.packageJsonPath)
+    fun getPackageJsonPath(): Path? {
+        return this.packageJsonPath?.let { it -> pathCreate(it) }
+    }
+
+    fun getEntryPath(): Path? {
+        return this.entryPath?.let { it -> pathCreate(it) }
     }
 
     fun getModern(): Boolean? {
@@ -107,17 +112,19 @@ data class TypeScriptConfig(
 
     companion object {
         fun create(
-            mainTsconfigPath: Path,
-            testTsconfigPath: Path,
-            launchJsonPath: Path,
-            packageJsonPath: Path,
+            mainTsconfigPath: Path? = null,
+            testTsconfigPath: Path? = null,
+            launchJsonPath: Path? = null,
+            packageJsonPath: Path? = null,
+            entryPath: Path? = null,
             modern: Boolean? = null,
         ): TypeScriptConfig {
             return TypeScriptConfig(
-                mainTsconfigPath = pathGetValue(mainTsconfigPath),
-                testTsconfigPath = pathGetValue(testTsconfigPath),
-                launchJsonPath = pathGetValue(launchJsonPath),
-                packageJsonPath = pathGetValue(packageJsonPath),
+                mainTsconfigPath = mainTsconfigPath?.let { it -> pathGetValue(it) },
+                testTsconfigPath = testTsconfigPath?.let { it -> pathGetValue(it) },
+                launchJsonPath = launchJsonPath?.let { it -> pathGetValue(it) },
+                packageJsonPath = packageJsonPath?.let { it -> pathGetValue(it) },
+                entryPath = entryPath?.let { it -> pathGetValue(it) },
                 modern = modern,
             )
         }

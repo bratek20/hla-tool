@@ -8,6 +8,8 @@ import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.writing.impl.calcModuleDirectoryName
 import com.github.bratek20.hla.writing.impl.calcSubmoduleDirectoryName
 import com.github.bratek20.hla.writing.impl.getPathForSubmodule
+import com.github.bratek20.hla.writing.impl.pathParts
+import com.github.bratek20.hla.writing.impl.relativeModuleSpecifier
 
 data class ModernTypeScriptFile(
     val module: ModuleName,
@@ -27,21 +29,15 @@ private fun patternFileName(pattern: PatternName): String {
 
 class ModernTypeScriptPaths(private val profile: HlaProfile) {
     fun calculateImportPath(from: ModernTypeScriptFile, to: ModernTypeScriptFile): String {
-        val fromParts = directoryParts(from)
-        val toParts = directoryParts(to) + patternFileName(to.pattern)
-
-        val commonPrefixLength = fromParts.zip(toParts).takeWhile { (a, b) -> a == b }.count()
-
-        val upwards = List(fromParts.size - commonPrefixLength) { ".." }
-        val downwards = toParts.drop(commonPrefixLength)
-
-        val relative = upwards + downwards
-        return if (upwards.isEmpty()) "./" + relative.joinToString("/") else relative.joinToString("/")
+        return relativeModuleSpecifier(
+            directoryParts(from),
+            directoryParts(to) + patternFileName(to.pattern)
+        )
     }
 
     private fun directoryParts(file: ModernTypeScriptFile): List<String> {
         val srcRoot = profile.getPaths().getSrc().getPathForSubmodule(file.submodule)
-        return srcRoot.value.split("/").filter { it.isNotEmpty() } +
+        return pathParts(srcRoot.value) +
             calcModuleDirectoryName(file.module, profile).value +
             calcSubmoduleDirectoryName(file.submodule, profile).value
     }

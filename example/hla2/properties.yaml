@@ -44,10 +44,7 @@ profiles:
       - hlaFolderPath: "../hla"
         profileName: "typeScript"
     typeScript:
-      mainTsconfigPath: "Configs/tsconfig.main.json"
-      testTsconfigPath: "Configs/tsconfig.test.json"
-      launchJsonPath: ""
-      packageJsonPath: ""
+      entryPath: "main/entry.ts"
       modern: true
 
   - name: "cSharp2"

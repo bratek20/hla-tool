@@ -4,7 +4,6 @@ import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
-import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.queries.api.getAllComplexValueObjects
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.camelToScreamingSnakeCase
@@ -25,16 +24,20 @@ import com.github.bratek20.utils.pascalToCamelCase
  * reason this distinction exists: both are the camelCase form of a structure name, so
  * they collide with the field and parameter names generated for that same structure.
  */
-class ModernTypeScriptExports(queries: BaseModuleGroupQueries) {
+class ModernTypeScriptExports(modules: List<ModuleDefinition>) {
     private val bare = mutableMapOf<String, MutableList<ModernTypeScriptFile>>()
     private val qualified = mutableMapOf<String, MutableList<ModernTypeScriptFile>>()
 
     init {
-        queries.modules.forEach { collect(it) }
+        modules.forEach { collect(it) }
     }
 
     fun findInModule(name: String, module: ModuleName): ModernTypeScriptFile? {
         return qualified[name]?.firstOrNull { it.module == module }
+    }
+
+    fun findInSubmodule(name: String, module: ModuleName, submodule: SubmoduleName): ModernTypeScriptFile? {
+        return qualified[name]?.firstOrNull { it.module == module && it.submodule == submodule }
     }
 
     fun find(name: String, preferredModule: ModuleName): ModernTypeScriptFile? {
@@ -66,9 +69,12 @@ class ModernTypeScriptExports(queries: BaseModuleGroupQueries) {
         collectWeb(module, ::add)
         collectFixtures(::add, simpleStructures + complexStructures, module.getEnums().map { it.getName() }, interfaceNames)
 
-        // No `test` here - modern tests import it from vitest, not from TestBase
-        listOf("context", "setup", "SetupArgs").forEach {
-            add(it, SubmoduleName.Tests, PatternName.TestBase)
+        // No `test` here - modern tests import it from vitest, not from TestBase.
+        // The context variable is qualified-only: `c` is also the conventional parameter
+        // name for HandlerContext all over Logic, ImplContext, Menu and the web handlers.
+        add(CONTEXT_VARIABLE, SubmoduleName.Tests, PatternName.TestBase, false)
+        listOf("setup", "SetupArgs").forEach {
+            add(it, SubmoduleName.Tests, PatternName.TestBase, true)
         }
 
         if (module.getMenuSubmodule() != null) {
@@ -184,5 +190,8 @@ class ModernTypeScriptExports(queries: BaseModuleGroupQueries) {
 
     companion object {
         const val API_OBJECT = "Api"
+
+        // Must match TestBaseGenerator.CONTEXT_NAME
+        private const val CONTEXT_VARIABLE = "c"
     }
 }

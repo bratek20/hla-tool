@@ -2,7 +2,6 @@ package com.github.bratek20.hla.writing.impl
 
 import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
-import com.github.bratek20.hla.facade.api.TypeScriptConfig
 import com.github.bratek20.hla.generation.api.GeneratedModule
 import com.github.bratek20.hla.generation.api.GeneratedSubmodule
 import com.github.bratek20.hla.generation.api.SubmoduleName
@@ -85,20 +84,86 @@ class FilesModifiers(
     private val files: Files,
 ) {
     fun modify(args: WriteArgs, rootPath: Path) {
-        val generateResult = calcGenerateResult(args.getModule(), args.getProfile())
         val profile = args.getProfile()
-        val onlyUpdate = args.getOnlyUpdate()
+        val info = profile.getTypeScript()
 
-        if (profile.getLanguage() == ModuleLanguage.TYPE_SCRIPT && profile.getTypeScript() != null && !onlyUpdate) {
-            val moduleName = generateResult.getMain().getName().value
-            updateTsConfigFiles(rootPath, profile.getTypeScript()!!, generateResult, profile)
-            updatePackageJson(rootPath, profile.getTypeScript()!!, moduleName)
-            updateLaunchJson(rootPath, profile.getTypeScript()!!, moduleName)
+        if (profile.getLanguage() != ModuleLanguage.TYPE_SCRIPT || info == null || args.getOnlyUpdate()) {
+            return
+        }
+
+        val generateResult = calcGenerateResult(args.getModule(), profile)
+        val moduleName = generateResult.getMain().getName().value
+
+        // Each of these files is maintained only when the profile says where it lives.
+        // Modern profiles typically configure just the entry file: imports make the
+        // ordered tsconfig file list pointless, and the launch/package scripts belong
+        // to the legacy test app.
+        info.getMainTsconfigPath()?.let { updateMainTsConfig(rootPath, it, generateResult, profile) }
+        info.getTestTsconfigPath()?.let { updateTestTsConfig(rootPath, it, generateResult, profile) }
+        info.getPackageJsonPath()?.let { updatePackageJson(rootPath, it, moduleName) }
+        info.getLaunchJsonPath()?.let { updateLaunchJson(rootPath, it, moduleName) }
+        info.getEntryPath()?.let { updateEntryFile(rootPath, it, generateResult, profile) }
+    }
+
+    // One side effect import per module, pointing at the file that pulls in the module's
+    // registrations. The entry file must already exist, like every other file spliced here.
+    private fun updateEntryFile(
+        rootPath: Path,
+        entryPath: Path,
+        generateResult: GenerateResult,
+        profile: HlaProfile
+    ) {
+        val target = findEntrySideEffectFile(generateResult.getMain(), profile) ?: return
+
+        val directory = rootPath.add(getDirectoryPart(entryPath))
+        val fileName = getFileNamePart(entryPath)
+        val file = files.read(directory.add(fileName))
+
+        val moduleDirectory = generateResult.getMain().getName().value
+        val currentLines = file.getContent().lines
+        val importLine = "import \"${entrySpecifier(entryPath, moduleDirectory, target, profile)}\""
+        if (currentLines.any { it.trim() == importLine }) {
+            return
+        }
+
+        val header = currentLines
+            .takeWhile { !it.trimStart().startsWith("import ") }
+            .dropLastWhile { it.isBlank() }
+        val imports = (currentLines.filter { it.trimStart().startsWith("import ") } + importLine)
+            .distinct()
+            .sorted()
+        val newLines = if (header.isEmpty()) imports else header + "" + imports
+
+        files.write(directory, File.create(fileName, FileContent(newLines)))
+    }
+
+    private data class EntryTarget(val submodule: SubmoduleName, val fileBaseName: String)
+
+    private fun findEntrySideEffectFile(main: Directory, profile: HlaProfile): EntryTarget? {
+        return ENTRY_CANDIDATES.firstOrNull { candidate ->
+            main.getDirectories()
+                .find { it.getName().value == calcSubmoduleDirectoryName(candidate.submodule, profile).value }
+                ?.getFiles()
+                ?.any { it.getName().value == candidate.fileBaseName + ".ts" } == true
         }
     }
 
-    private fun updateLaunchJson(rootPath: Path, info: TypeScriptConfig, moduleName: String) {
-        val path = rootPath.add(info.getLaunchJsonPath())
+    private fun entrySpecifier(
+        entryPath: Path,
+        moduleDirectory: String,
+        target: EntryTarget,
+        profile: HlaProfile
+    ): String {
+        val targetParts = pathParts(getSubmodulePath(profile, target.submodule).value) +
+            moduleDirectory +
+            calcSubmoduleDirectoryName(target.submodule, profile).value +
+            target.fileBaseName
+
+        return relativeModuleSpecifier(pathParts(getDirectoryPart(entryPath).value), targetParts)
+    }
+
+    private fun updateLaunchJson(rootPath: Path, launchJsonPath: Path, moduleName: String) {
+        val path = rootPath.add(launchJsonPath)
         files.read(path.add(FileName("launch.json"))).let {
             val currentLines = it.getContent().lines.toMutableList()
             val startIndex = currentLines.indexOfFirst { it.contains("\"configurations\"") }
@@ -128,8 +193,8 @@ class FilesModifiers(
         }
     }
 
-    private fun updatePackageJson(rootPath: Path, info: TypeScriptConfig, moduleName: String) {
-        val path = rootPath.add(info.getPackageJsonPath())
+    private fun updatePackageJson(rootPath: Path, packageJsonPath: Path, moduleName: String) {
+        val path = rootPath.add(packageJsonPath)
         files.read(path.add(FileName("package.json"))).let {
             val currentLines = it.getContent().lines.toMutableList()
             val startIndex = currentLines.indexOfFirst { it.contains("\"scripts\"") }
@@ -151,35 +216,49 @@ class FilesModifiers(
     }
 
     //TODO-REF a lot of duplication, similar methods etc
-    private fun updateTsConfigFiles(rootPath: Path, info: TypeScriptConfig, generateResult: GenerateResult, profile: HlaProfile) {
-        val mainTsconfigPath = getPathWithoutConfig(info.getMainTsconfigPath())
-        val testTsconfigPath = getPathWithoutConfig(info.getTestTsconfigPath())
-        val typeScriptPaths = TypeScriptPaths(
-            mainTsconfig = rootPath.add(mainTsconfigPath),
-            testTsconfig = rootPath.add(testTsconfigPath)
-        )
-        val testConfigFileName = getConfigFileName(info.getTestTsconfigPath())
-        val mainConfigFileName = getConfigFileName(info.getMainTsconfigPath())
-
+    private fun updateMainTsConfig(
+        rootPath: Path,
+        configPath: Path,
+        generateResult: GenerateResult,
+        profile: HlaProfile
+    ) {
+        val directoryPath = getDirectoryPart(configPath)
         val moduleName = generateResult.getMain().getName().value
-        updateTsConfigFileAndWrite(typeScriptPaths.mainTsconfig, generateResult.getMain(), "${calculateFilePrefix(mainTsconfigPath, profile.getPaths().getSrc().getDefault())}${moduleName}/", mainConfigFileName)
 
-        val initialTestFile = files.read(typeScriptPaths.testTsconfig.add(testConfigFileName))
+        updateTsConfigFileAndWrite(
+            rootPath.add(directoryPath),
+            generateResult.getMain(),
+            "${calculateFilePrefix(directoryPath, profile.getPaths().getSrc().getDefault())}${moduleName}/",
+            getFileNamePart(configPath)
+        )
+    }
+
+    private fun updateTestTsConfig(
+        rootPath: Path,
+        configPath: Path,
+        generateResult: GenerateResult,
+        profile: HlaProfile
+    ) {
+        val directoryPath = getDirectoryPart(configPath)
+        val testTsconfig = rootPath.add(directoryPath)
+        val moduleName = generateResult.getMain().getName().value
+
+        val initialTestFile = files.read(testTsconfig.add(getFileNamePart(configPath)))
         var testFile: File = initialTestFile
         generateResult.getFixtures()?.let {
-            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
+            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(directoryPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
             testFile = x ?: testFile
         }
         generateResult.getTests()?.let {
-            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(testTsconfigPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
+            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(directoryPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
             testFile = x ?: testFile
         }
         if (testFile != initialTestFile) {
-            files.write(typeScriptPaths.testTsconfig, testFile)
+            files.write(testTsconfig, testFile)
         }
     }
 
-    private fun getPathWithoutConfig(path: Path): Path {
+    private fun getDirectoryPart(path: Path): Path {
         val stringPath = path.toString()
         return if(stringPath.contains("/")) {
             Path(stringPath.substringBeforeLast("/"))
@@ -188,7 +267,7 @@ class FilesModifiers(
         }
     }
 
-    private fun getConfigFileName(path: Path): FileName {
+    private fun getFileNamePart(path: Path): FileName {
         val stringPath = path.toString()
         return if(stringPath.contains("/")) {
             FileName(stringPath.substringAfterLast("/"))
@@ -294,12 +373,20 @@ class FilesModifiers(
         indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
     }
 
-    data class TypeScriptPaths(val mainTsconfig: Path, val testTsconfig: Path)
     data class ExtractedFile(val submoduleName: String, val fileNames: List<String>)
 
     private fun extractFiles(dir: Directory): List<ExtractedFile> {
         return dir.getDirectories().map { subDir ->
             ExtractedFile(subDir.getName().value, subDir.getFiles().map { it.getName().value })
         }
+    }
+
+    companion object {
+        // Importing the web file pulls in ImplContext and then Logic, so the module's
+        // registrations run. Modules with neither get no entry line - nothing to register.
+        private val ENTRY_CANDIDATES = listOf(
+            EntryTarget(SubmoduleName.Web, "PlayFabHandlers"),
+            EntryTarget(SubmoduleName.Impl, "ImplContext"),
+        )
     }
 }
