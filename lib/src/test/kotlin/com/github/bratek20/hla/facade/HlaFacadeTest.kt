@@ -177,9 +177,22 @@ class HlaFacadeTest {
             )
         }
 
+        fun typescript2ModernTestPaths(moduleName: String): TestPaths {
+            return TestPaths(
+                exampleMainPath = "../example/typescript2-modern/main/$moduleName",
+                exampleFixturesPath = "../example/typescript2-modern/Tests/$moduleName",
+                exampleTestsPath = "../example/typescript2-modern/Tests/$moduleName",
+                expectedMainPath = "../example/hla2/../typescript2-modern/main",
+                expectedFixturesPath = "../example/hla2/../typescript2-modern/Tests",
+                expectedTestsPath = "../example/hla2/../typescript2-modern/Tests",
+                hlaFolderPath = "../example/hla2"
+            )
+        }
+
         private val TYPE_SCRIPT_PROFILE = "typeScript"
         private val TYPE_SCRIPT_2_PROFILE = "typeScript2"
         private val TYPE_SCRIPT_MODERN_PROFILE = "typeScriptModern"
+        private val TYPE_SCRIPT_2_MODERN_PROFILE = "typeScript2Modern"
 
         override fun provideArguments(context: ExtensionContext?): Stream<out Arguments> {
             return Stream.of(
@@ -223,6 +236,11 @@ class HlaFacadeTest {
                     "SomeModule",
                     TYPE_SCRIPT_MODERN_PROFILE,
                     typescriptModernTestPathsWithExamplesJson("SomeModule")
+                ),
+                Arguments.of(
+                    "ImportingModule",
+                    TYPE_SCRIPT_2_MODERN_PROFILE,
+                    typescript2ModernTestPaths("ImportingModule")
                 ),
             )
         }

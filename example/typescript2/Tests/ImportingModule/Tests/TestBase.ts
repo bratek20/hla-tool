@@ -1,8 +1,8 @@
 namespace ImportingModule {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export function setup(): void {
-        context = EmptyContextFor(DependencyName.ImportingModule)
+        c = EmptyContextFor(DependencyName.ImportingModule)
     }
 
     export function test(testName: string, fun: TestFunction) {
