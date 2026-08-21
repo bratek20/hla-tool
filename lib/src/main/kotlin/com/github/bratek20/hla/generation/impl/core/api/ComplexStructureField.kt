@@ -3,6 +3,7 @@ package com.github.bratek20.hla.generation.impl.core.api
 import com.github.bratek20.architecture.exceptions.ShouldNeverHappenException
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.types.emptyHardOptional
+import com.github.bratek20.codebuilder.types.hardOptional
 import com.github.bratek20.codebuilder.types.emptyImmutableList
 import com.github.bratek20.hla.apitypes.impl.*
 import com.github.bratek20.hla.definitions.api.FieldDefinition
@@ -191,6 +192,9 @@ open class ComplexStructureField(
         }
         if (value == "empty") {
             return emptyHardOptional((type as OptionalApiType).wrappedType.builder())
+        }
+        (type as? OptionalApiType)?.let {
+            return hardOptional(it.wrappedType.builder()) { expression(value) }
         }
         return expression(value)
     }

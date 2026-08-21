@@ -430,6 +430,15 @@ one modern profile normally holds a mix of migrated and legacy modules.
 
 ## Working with the Project
 
+### ⚠️ Do not build, generate or test unless explicitly asked
+
+Claude must **not** run `./gradlew` builds, `./gradlew test`, `updateModule.sh` or example
+regeneration on its own. Make the code change, then tell the user what to build, regenerate and
+test — the user runs it and reports back. Only run these commands when the user asks for it in
+that message.
+
+The command sections below are reference for what to tell the user (or to run when asked).
+
 ### Building the App
 
 ```bash
@@ -451,10 +460,12 @@ This regenerates HLA's own definitions (like `HttpDefinition`, `ModuleDefinition
 - `lib/src/main/kotlin/com/github/bratek20/hla/definitions/api/`
 - `lib/src/testFixtures/kotlin/com/github/bratek20/hla/definitions/fixtures/`
 
-**Never manually edit these generated files!** Always:
+**Never manually edit these generated files!** The flow is:
 1. Modify the `.module` file in `hla/` directory
-2. Run `bash/updateModule.sh`
+2. `bash/updateModule.sh`
 3. Rebuild the app: `./gradlew :app:build`
+
+Steps 2 and 3 are run by the user unless they explicitly ask Claude to run them.
 
 ### Regenerating Examples
 
@@ -475,7 +486,7 @@ Operations:
 
 **⚠️ CRITICAL: When modifying SomeModule.module**
 
-When you modify `example/hla/SomeModule.module`, you **MUST** regenerate it for **ALL** languages and profiles that use it to avoid test failures:
+When `example/hla/SomeModule.module` changes, it **MUST** be regenerated for **ALL** languages and profiles that use it to avoid test failures:
 
 ```bash
 cd example
@@ -496,6 +507,8 @@ java -jar ../app/build/libs/app.jar update hla kotlinSkipPatterns SomeModule
 **Quick tip**: Use `startAll` or `updateAll` operations to regenerate all modules at once for a specific profile.
 
 ### Running Tests
+
+Run by the user, not by Claude (see the rule at the top of this section).
 
 ```bash
 # HLA library tests
@@ -765,6 +778,8 @@ when {
 7. ✅ **Check BaseType with enum comparison** - Not string comparison
 
 ## Useful Commands
+
+Reference only — Claude suggests these, the user runs them (unless explicitly asked to run them).
 
 ```bash
 # Compile without tests

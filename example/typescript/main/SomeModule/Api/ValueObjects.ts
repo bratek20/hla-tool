@@ -935,8 +935,8 @@ class ClassWithDefaultOptionals {
     private optBool? = OPTIONAL_BOOLEAN
 
     static create(
-        optInt: Optional<number> = 1,
-        optBool: Optional<boolean> = true,
+        optInt: Optional<number> = Optional.of(1),
+        optBool: Optional<boolean> = Optional.of(true),
     ): ClassWithDefaultOptionals {
         const instance = new ClassWithDefaultOptionals()
         instance.optInt = optInt.orElse(undefined)
