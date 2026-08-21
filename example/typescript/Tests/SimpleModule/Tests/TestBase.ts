@@ -1,8 +1,8 @@
 namespace SimpleModule {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export function setup(): void {
-        context = EmptyContextFor(DependencyName.SimpleModule)
+        c = EmptyContextFor(DependencyName.SimpleModule)
     }
 
     export function test(testName: string, fun: TestFunction) {

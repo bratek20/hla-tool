@@ -29,6 +29,27 @@ profiles:
       - hlaFolderPath: "../hla"
         profileName: "typeScript"
 
+  - name: "typeScript2Modern"
+    language: "TYPE_SCRIPT"
+    paths:
+      project: "../typescript2-modern"
+      src:
+        default: "main"
+        overrides:
+          - submodules:
+              - "Tests"
+              - "Fixtures"
+            path: "Tests"
+    imports:
+      - hlaFolderPath: "../hla"
+        profileName: "typeScript"
+    typeScript:
+      launchJsonPath: ""
+      packageJsonPath: ""
+      entryPath: "main/entry.ts"
+      vitestConfigPath: "./vitest.config.mts"
+      modern: true
+
   - name: "cSharp2"
     language: "C_SHARP"
     imports:

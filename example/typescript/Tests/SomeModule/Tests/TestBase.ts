@@ -1,5 +1,5 @@
 namespace SomeModule {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export interface SetupArgs {
         someKey?: SomeModule.Builder.SomePropertyDef
@@ -25,7 +25,7 @@ namespace SomeModule {
     }
 
     export function setup(args: SetupArgs = {}): void {
-        context = Ts.E2E.SetupAndCreateContext({
+        c = Ts.E2E.SetupAndCreateContext({
             dependencyName: DependencyName.SomeModule,
             titleData: builderTD => {
                 builderTD.with(SOME_KEY_PROPERTY_KEY, SomeModule.Builder.someProperty(args.someKey ?? {}))

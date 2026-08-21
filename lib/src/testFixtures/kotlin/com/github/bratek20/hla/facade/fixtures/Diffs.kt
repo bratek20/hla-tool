@@ -68,29 +68,79 @@ fun diffAllModulesOperationArgs(given: AllModulesOperationArgs, expectedInit: Ex
 }
 
 data class ExpectedTypeScriptConfig(
+    var mainTsconfigPathEmpty: Boolean? = null,
     var mainTsconfigPath: String? = null,
+    var testTsconfigPathEmpty: Boolean? = null,
     var testTsconfigPath: String? = null,
+    var launchJsonPathEmpty: Boolean? = null,
     var launchJsonPath: String? = null,
+    var packageJsonPathEmpty: Boolean? = null,
     var packageJsonPath: String? = null,
+    var entryPathEmpty: Boolean? = null,
+    var entryPath: String? = null,
+    var vitestConfigPathEmpty: Boolean? = null,
+    var vitestConfigPath: String? = null,
+    var modernEmpty: Boolean? = null,
+    var modern: Boolean? = null,
 )
 fun diffTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScriptConfig.() -> Unit, path: String = ""): String {
     val expected = ExpectedTypeScriptConfig().apply(expectedInit)
     val result: MutableList<String> = mutableListOf()
 
+    expected.mainTsconfigPathEmpty?.let {
+        if ((given.getMainTsconfigPath() == null) != it) { result.add("${path}mainTsconfigPath empty ${(given.getMainTsconfigPath() == null)} != ${it}") }
+    }
+
     expected.mainTsconfigPath?.let {
-        if (diffPath(given.getMainTsconfigPath(), it) != "") { result.add(diffPath(given.getMainTsconfigPath(), it, "${path}mainTsconfigPath.")) }
+        if (diffPath(given.getMainTsconfigPath()!!, it) != "") { result.add(diffPath(given.getMainTsconfigPath()!!, it, "${path}mainTsconfigPath.")) }
+    }
+
+    expected.testTsconfigPathEmpty?.let {
+        if ((given.getTestTsconfigPath() == null) != it) { result.add("${path}testTsconfigPath empty ${(given.getTestTsconfigPath() == null)} != ${it}") }
     }
 
     expected.testTsconfigPath?.let {
-        if (diffPath(given.getTestTsconfigPath(), it) != "") { result.add(diffPath(given.getTestTsconfigPath(), it, "${path}testTsconfigPath.")) }
+        if (diffPath(given.getTestTsconfigPath()!!, it) != "") { result.add(diffPath(given.getTestTsconfigPath()!!, it, "${path}testTsconfigPath.")) }
+    }
+
+    expected.launchJsonPathEmpty?.let {
+        if ((given.getLaunchJsonPath() == null) != it) { result.add("${path}launchJsonPath empty ${(given.getLaunchJsonPath() == null)} != ${it}") }
     }
 
     expected.launchJsonPath?.let {
-        if (diffPath(given.getLaunchJsonPath(), it) != "") { result.add(diffPath(given.getLaunchJsonPath(), it, "${path}launchJsonPath.")) }
+        if (diffPath(given.getLaunchJsonPath()!!, it) != "") { result.add(diffPath(given.getLaunchJsonPath()!!, it, "${path}launchJsonPath.")) }
+    }
+
+    expected.packageJsonPathEmpty?.let {
+        if ((given.getPackageJsonPath() == null) != it) { result.add("${path}packageJsonPath empty ${(given.getPackageJsonPath() == null)} != ${it}") }
     }
 
     expected.packageJsonPath?.let {
-        if (diffPath(given.getPackageJsonPath(), it) != "") { result.add(diffPath(given.getPackageJsonPath(), it, "${path}packageJsonPath.")) }
+        if (diffPath(given.getPackageJsonPath()!!, it) != "") { result.add(diffPath(given.getPackageJsonPath()!!, it, "${path}packageJsonPath.")) }
+    }
+
+    expected.entryPathEmpty?.let {
+        if ((given.getEntryPath() == null) != it) { result.add("${path}entryPath empty ${(given.getEntryPath() == null)} != ${it}") }
+    }
+
+    expected.entryPath?.let {
+        if (diffPath(given.getEntryPath()!!, it) != "") { result.add(diffPath(given.getEntryPath()!!, it, "${path}entryPath.")) }
+    }
+
+    expected.vitestConfigPathEmpty?.let {
+        if ((given.getVitestConfigPath() == null) != it) { result.add("${path}vitestConfigPath empty ${(given.getVitestConfigPath() == null)} != ${it}") }
+    }
+
+    expected.vitestConfigPath?.let {
+        if (diffPath(given.getVitestConfigPath()!!, it) != "") { result.add(diffPath(given.getVitestConfigPath()!!, it, "${path}vitestConfigPath.")) }
+    }
+
+    expected.modernEmpty?.let {
+        if ((given.getModern() == null) != it) { result.add("${path}modern empty ${(given.getModern() == null)} != ${it}") }
+    }
+
+    expected.modern?.let {
+        if (given.getModern()!! != it) { result.add("${path}modern ${given.getModern()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

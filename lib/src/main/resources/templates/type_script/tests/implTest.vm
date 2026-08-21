@@ -1,5 +1,15 @@
+#if($modern)
+import { describe, test } from "vitest"
+
+describe("${moduleName} - Api", () => {
+    test("TODO", () => {
+        AssertEquals(true, false, "TODO")
+    })
+})
+#else
 namespace $moduleName {
     test("TODO", () => {
         AssertEquals(true, false, "TODO");
     });
 }
+#end

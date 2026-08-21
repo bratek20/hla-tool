@@ -19,7 +19,12 @@ namespace ${moduleName} {
 
         #foreach($field in $a.fields)
         if (expected.${field.name()} !== undefined) {
+        #if($modern)
+            const ${field.localName()} = expected.${field.name()}
+            $field.diff("given", "${field.localName()}")
+        #else
             $field.diff("given", "expected.${field.name()}")
+        #end
         }
         #if($foreach.hasNext)
 

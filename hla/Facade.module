@@ -9,10 +9,13 @@ Properties
     ProfileName: string
 
     TypeScriptConfig
-        mainTsconfigPath: Path
-        testTsconfigPath: Path
-        launchJsonPath: Path
-        packageJsonPath: Path
+        mainTsconfigPath: Path? = empty
+        testTsconfigPath: Path? = empty
+        launchJsonPath: Path? = empty
+        packageJsonPath: Path? = empty
+        entryPath: Path? = empty
+        vitestConfigPath: Path? = empty
+        modern: bool? = empty
 
     SubmodulePath
         path: Path

@@ -1,5 +1,5 @@
 namespace OtherModule {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export interface SetupArgs {
         otherProperty?: OtherModule.Builder.OtherPropertyDef
@@ -7,7 +7,7 @@ namespace OtherModule {
     }
 
     export function setup(args: SetupArgs = {}): void {
-        context = Ts.E2E.SetupAndCreateContext({
+        c = Ts.E2E.SetupAndCreateContext({
             dependencyName: DependencyName.OtherModule,
             titleData: builderTD => {
                 builderTD.with(OTHER_PROPERTY_PROPERTY_KEY, OtherModule.Builder.otherProperty(args.otherProperty ?? {}))

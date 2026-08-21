@@ -28,6 +28,7 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.DefType
 import com.github.bratek20.hla.generation.impl.core.fixtures.DefTypeFactory
 import com.github.bratek20.hla.generation.impl.core.fixtures.ListDefType
+import com.github.bratek20.hla.generation.impl.languages.typescript.isModernTypeScript
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class TestBaseGenerator: PatternGenerator() {
@@ -91,12 +92,13 @@ class TestBaseGenerator: PatternGenerator() {
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val fields = setupArgsFields()
+        val modern = c.profile.isModernTypeScript()
 
         add(typeScriptNamespace {
             name = moduleName
 
             addVariable {
-                name = "context"
+                name = CONTEXT_NAME
                 type = typeName("HandlerContext")
                 mutable = true
             }
@@ -135,30 +137,33 @@ class TestBaseGenerator: PatternGenerator() {
                 }
             }
 
-            addFunction {
-                name = "test"
-                addArg {
-                    name = "testName"
-                    type = baseType(BaseType.STRING)
-                }
-                addArg {
-                    name = "fun"
-                    type = typeName("TestFunction")
-                }
+            // Modern tests take `test` from vitest, so TestBase must not export its own
+            if (!modern) {
+                addFunction {
+                    name = "test"
+                    addArg {
+                        name = "testName"
+                        type = baseType(BaseType.STRING)
+                    }
+                    addArg {
+                        name = "fun"
+                        type = typeName("TestFunction")
+                    }
 
-                setBody {
-                    add(functionCallStatement {
-                        name = "addTest"
-                        addArg {
-                            string(moduleName)
-                        }
-                        addArg {
-                            variable("testName")
-                        }
-                        addArg {
-                            variable("fun")
-                        }
-                    })
+                    setBody {
+                        add(functionCallStatement {
+                            name = "addTest"
+                            addArg {
+                                string(moduleName)
+                            }
+                            addArg {
+                                variable("testName")
+                            }
+                            addArg {
+                                variable("fun")
+                            }
+                        })
+                    }
                 }
             }
         })
@@ -218,7 +223,7 @@ class TestBaseGenerator: PatternGenerator() {
 
     companion object {
         private const val SETUP_ARGS_NAME = "SetupArgs"
-        private const val CONTEXT_NAME = "context"
+        private const val CONTEXT_NAME = "c"
         private const val TITLE_DATA_BUILDER_NAME = "builderTD"
     }
 }

@@ -44,18 +44,24 @@ fun allModulesOperationArgs(init: AllModulesOperationArgsDef.() -> Unit = {}): A
 }
 
 data class TypeScriptConfigDef(
-    var mainTsconfigPath: String = "someValue",
-    var testTsconfigPath: String = "someValue",
-    var launchJsonPath: String = "someValue",
-    var packageJsonPath: String = "someValue",
+    var mainTsconfigPath: String? = null,
+    var testTsconfigPath: String? = null,
+    var launchJsonPath: String? = null,
+    var packageJsonPath: String? = null,
+    var entryPath: String? = null,
+    var vitestConfigPath: String? = null,
+    var modern: Boolean? = null,
 )
 fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfig {
     val def = TypeScriptConfigDef().apply(init)
     return TypeScriptConfig.create(
-        mainTsconfigPath = pathCreate(def.mainTsconfigPath),
-        testTsconfigPath = pathCreate(def.testTsconfigPath),
-        launchJsonPath = pathCreate(def.launchJsonPath),
-        packageJsonPath = pathCreate(def.packageJsonPath),
+        mainTsconfigPath = def.mainTsconfigPath?.let { it -> pathCreate(it) },
+        testTsconfigPath = def.testTsconfigPath?.let { it -> pathCreate(it) },
+        launchJsonPath = def.launchJsonPath?.let { it -> pathCreate(it) },
+        packageJsonPath = def.packageJsonPath?.let { it -> pathCreate(it) },
+        entryPath = def.entryPath?.let { it -> pathCreate(it) },
+        vitestConfigPath = def.vitestConfigPath?.let { it -> pathCreate(it) },
+        modern = def.modern,
     )
 }
 

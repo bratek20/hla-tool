@@ -1,3 +1,18 @@
+#if($modern)
+export const Api = {
+#foreach($interface in $interfaces)
+    #foreach($method in $interface.methods)
+    ${method.name}(${method.argsDeclaration()}#if(${method.hasArgs()}), #{end}c: HandlerContext): ${method.returnType} {
+        #set($return = "")
+        #if($method.returnType != "void")
+            #set($return = "return ")
+        #end
+        ${return}new ${interface.name}Logic(c).${method.name}(${method.argsPass()})
+    },
+    #end
+#end
+}
+#else
 namespace ${moduleName}.Api {
 #foreach($interface in $interfaces)
     #set($interfaceIndex = $foreach.index)
@@ -13,3 +28,4 @@ namespace ${moduleName}.Api {
     #end
 #end
 }
+#end

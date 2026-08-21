@@ -1,8 +1,8 @@
 namespace SomeUserModule {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export function setup(): void {
-        context = EmptyContextFor(DependencyName.SomeUserModule)
+        c = EmptyContextFor(DependencyName.SomeUserModule)
     }
 
     export function test(testName: string, fun: TestFunction) {

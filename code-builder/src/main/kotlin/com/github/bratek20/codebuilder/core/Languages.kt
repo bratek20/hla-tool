@@ -305,7 +305,7 @@ class Kotlin: CodeBuilderLanguage {
     }
 }
 
-class TypeScript: CodeBuilderLanguage {
+class TypeScript(val modern: Boolean = false): CodeBuilderLanguage {
     override fun name(): String {
         return "TypeScript"
     }
