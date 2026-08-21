@@ -98,7 +98,7 @@ class TestBaseGenerator: PatternGenerator() {
             name = moduleName
 
             addVariable {
-                name = "context"
+                name = CONTEXT_NAME
                 type = typeName("HandlerContext")
                 mutable = true
             }
@@ -223,7 +223,7 @@ class TestBaseGenerator: PatternGenerator() {
 
     companion object {
         private const val SETUP_ARGS_NAME = "SetupArgs"
-        private const val CONTEXT_NAME = "context"
+        private const val CONTEXT_NAME = "c"
         private const val TITLE_DATA_BUILDER_NAME = "builderTD"
     }
 }

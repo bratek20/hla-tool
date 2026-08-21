@@ -1,5 +1,5 @@
-export let context: HandlerContext
+export let c: HandlerContext
 
 export function setup(): void {
-    context = EmptyContextFor(DependencyName.OnlyInterfacesModule)
+    c = EmptyContextFor(DependencyName.OnlyInterfacesModule)
 }

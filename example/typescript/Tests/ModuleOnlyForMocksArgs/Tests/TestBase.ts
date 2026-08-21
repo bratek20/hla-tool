@@ -1,8 +1,8 @@
 namespace ModuleOnlyForMocksArgs {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export function setup(): void {
-        context = EmptyContextFor(DependencyName.ModuleOnlyForMocksArgs)
+        c = EmptyContextFor(DependencyName.ModuleOnlyForMocksArgs)
     }
 
     export function test(testName: string, fun: TestFunction) {

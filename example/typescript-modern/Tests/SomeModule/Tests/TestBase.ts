@@ -2,7 +2,7 @@ import { COMPLEX_STRUCTURE_WITH_NESTED_UNIQUE_IDS_PROPERTY_KEY, CUSTOM_TYPES_PRO
 import * as OtherModuleBuilder from "../../OtherModule/Fixtures/Builders"
 import * as Builder from "../Fixtures/Builders"
 
-export let context: HandlerContext
+export let c: HandlerContext
 
 export interface SetupArgs {
     someKey?: Builder.SomePropertyDef
@@ -28,7 +28,7 @@ export interface SetupArgs {
 }
 
 export function setup(args: SetupArgs = {}): void {
-    context = Ts.E2E.SetupAndCreateContext({
+    c = Ts.E2E.SetupAndCreateContext({
         dependencyName: DependencyName.SomeModule,
         titleData: builderTD => {
             builderTD.with(SOME_KEY_PROPERTY_KEY, Builder.someProperty(args.someKey ?? {}))

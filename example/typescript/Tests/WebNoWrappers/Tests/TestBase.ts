@@ -1,8 +1,8 @@
 namespace WebNoWrappers {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export function setup(): void {
-        context = EmptyContextFor(DependencyName.WebNoWrappers)
+        c = EmptyContextFor(DependencyName.WebNoWrappers)
     }
 
     export function test(testName: string, fun: TestFunction) {

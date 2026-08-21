@@ -1,8 +1,8 @@
 namespace NoInterfacesModule {
-    export let context: HandlerContext
+    export let c: HandlerContext
 
     export function setup(): void {
-        context = EmptyContextFor(DependencyName.NoInterfacesModule)
+        c = EmptyContextFor(DependencyName.NoInterfacesModule)
     }
 
     export function test(testName: string, fun: TestFunction) {

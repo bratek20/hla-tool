@@ -1,7 +1,7 @@
 import { OTHER_PROPERTIES_PROPERTY_KEY, OTHER_PROPERTY_PROPERTY_KEY } from "../../../main/OtherModule/Api/PropertyKeys"
 import * as Builder from "../Fixtures/Builders"
 
-export let context: HandlerContext
+export let c: HandlerContext
 
 export interface SetupArgs {
     otherProperty?: Builder.OtherPropertyDef
@@ -9,7 +9,7 @@ export interface SetupArgs {
 }
 
 export function setup(args: SetupArgs = {}): void {
-    context = Ts.E2E.SetupAndCreateContext({
+    c = Ts.E2E.SetupAndCreateContext({
         dependencyName: DependencyName.OtherModule,
         titleData: builderTD => {
             builderTD.with(OTHER_PROPERTY_PROPERTY_KEY, Builder.otherProperty(args.otherProperty ?? {}))
