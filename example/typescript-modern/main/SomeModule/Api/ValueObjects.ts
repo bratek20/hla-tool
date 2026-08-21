@@ -2,7 +2,6 @@
 
 import { MockArg } from "../../ModuleOnlyForMocksArgs/Api/ValueObjects"
 import { OtherClass, OtherClassWIthUniqueId, OtherId, OtherProperty } from "../../OtherModule/Api/ValueObjects"
-import { UniqueIdEntry } from "../../SimpleModule/Api/ValueObjects"
 import { SomeUserValueObject } from "../../SomeUserModule/Api/ValueObjects"
 import { Date, DateRange, Tier } from "../../TypesModule/Api/CustomTypes"
 import * as TypesModuleCustomTypesMapper from "../../TypesModule/Api/CustomTypesMapper"

@@ -1,4 +1,14 @@
 {
   "scripts": {
+    "test ModuleOnlyForMocksArgs": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts ModuleOnlyForMocksArgs",
+    "test NoInterfacesModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts NoInterfacesModule",
+    "test OnlyInterfacesModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts OnlyInterfacesModule",
+    "test OnlyTrackingModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts OnlyTrackingModule",
+    "test OtherModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts OtherModule",
+    "test SimpleModule": "npm run build_testapp && npm run run_testapp \" SimpleModule\"",
+    "test SomeModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts SomeModule",
+    "test SomeUserModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts SomeUserModule",
+    "test TypesModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts TypesModule",
+    "test WebNoWrappers": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts WebNoWrappers"
   }
 }

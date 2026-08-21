@@ -10,7 +10,6 @@ import { SomeEvent } from "../../../main/SomeModule/Api/Notifications"
 import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds } from "../../../main/SomeModule/Api/ValueObjects"
 import * as TypesModuleCustomTypesMapper from "../../../main/TypesModule/Api/CustomTypesMapper"
 import * as OtherModuleBuilder from "../../OtherModule/Fixtures/Builders"
-import * as SimpleModuleBuilder from "../../SimpleModule/Fixtures/Builders"
 import * as SomeUserModuleBuilder from "../../SomeUserModule/Fixtures/Builders"
 import * as TypesModuleBuilder from "../../TypesModule/Fixtures/Builders"
 
@@ -502,24 +501,24 @@ export function someReferencingPropertyFieldList(def?: SomeReferencingPropertyFi
 }
 
 export interface SomeStructureWithUniqueIdsDef {
-    entries?: SimpleModuleBuilder.UniqueIdEntryDef[],
+    entries?: SimpleModule.Builder.UniqueIdEntryDef[],
 }
 export function someStructureWithUniqueIds(def?: SomeStructureWithUniqueIdsDef): SomeStructureWithUniqueIds {
     const final_entries = def?.entries ?? []
 
     return SomeStructureWithUniqueIds.create(
-        final_entries.map(it => SimpleModuleBuilder.uniqueIdEntry(it)),
+        final_entries.map(it => SimpleModule.Builder.uniqueIdEntry(it)),
     )
 }
 
 export interface NestedUniqueIdsDef {
-    entries?: SimpleModuleBuilder.UniqueIdEntryDef[],
+    entries?: SimpleModule.Builder.UniqueIdEntryDef[],
 }
 export function nestedUniqueIds(def?: NestedUniqueIdsDef): NestedUniqueIds {
     const final_entries = def?.entries ?? []
 
     return NestedUniqueIds.create(
-        final_entries.map(it => SimpleModuleBuilder.uniqueIdEntry(it)),
+        final_entries.map(it => SimpleModule.Builder.uniqueIdEntry(it)),
     )
 }
 
