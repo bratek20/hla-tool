@@ -70,3 +70,6 @@ ViewModel
 Menu
     ExposedInterfaces
         OtherInterface
+
+TypeScript
+    modern = true

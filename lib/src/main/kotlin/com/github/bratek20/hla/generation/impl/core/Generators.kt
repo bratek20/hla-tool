@@ -19,7 +19,7 @@ import com.github.bratek20.hla.generation.impl.core.language.LanguageSupport
 import com.github.bratek20.hla.generation.impl.languages.kotlin.profileToRootPackage
 import com.github.bratek20.hla.generation.impl.languages.typescript.ModernTypeScriptFile
 import com.github.bratek20.hla.generation.impl.languages.typescript.ModernTypeScriptTransformer
-import com.github.bratek20.hla.generation.impl.languages.typescript.isModernTypeScript
+import com.github.bratek20.hla.generation.impl.languages.typescript.isModernModule
 import com.github.bratek20.hla.hlatypesworld.api.HlaTypePath
 import com.github.bratek20.hla.importscalculation.api.ImportsCalculator
 import com.github.bratek20.hla.parsing.api.ModuleGroup
@@ -103,7 +103,7 @@ abstract class ModulePartGenerator {
 
         val builder = c.velocity.contentBuilder(path)
             .put("moduleName", module.getName().value)
-            .put("modern", c.profile.isModernTypeScript())
+            .put("modern", isModernModule(c.profile, module))
 
         c.language.contentBuilderExtensions().forEach { it.extend(builder) }
 
@@ -371,7 +371,7 @@ abstract class PatternGenerator
     // Every generated .ts file funnels through here, velocity and code builder alike,
     // so this is the one place the namespace based output becomes ES modules.
     private fun toModernTypeScriptIfNeeded(content: FileContent): FileContent {
-        if (!c.profile.isModernTypeScript()) {
+        if (!isModernModule(c.profile, c.module)) {
             return content
         }
         return c.modernTypeScriptTransformer.transform(

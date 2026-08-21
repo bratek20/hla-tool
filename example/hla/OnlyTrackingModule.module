@@ -7,3 +7,6 @@ Tracking
         OnlyTrackingEvent (table: "only_tracking_event")
             only_tracking_dimension_id: OnlyTrackingDimension
             optional_int: int?
+
+TypeScript
+    modern = true

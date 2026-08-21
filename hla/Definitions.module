@@ -98,6 +98,9 @@ ValueObjects
         externalTypePackages: ExternalTypePackageMapping[]
         records: string[]
 
+    TypeScriptModuleConfig
+        modern: bool? = empty
+
     MenuDefinition
         attributes: Attribute[]
         exposedInterfaces: string[]
@@ -123,6 +126,7 @@ ValueObjects
         fixturesSubmodule: FixturesSubmoduleDefinition?
         kotlinConfig: KotlinConfig?
         menuSubmodule: MenuDefinition?
+        typeScriptConfig: TypeScriptModuleConfig? = empty
 
     FixturesSubmoduleDefinition
         mockedInterfaces: string[]

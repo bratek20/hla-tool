@@ -6,3 +6,6 @@ ViewModel
         NoInterfacesPopup
             State
                 id: NoInterfaceId
+
+TypeScript
+    modern = true

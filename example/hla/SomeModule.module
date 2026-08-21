@@ -462,3 +462,6 @@ Menu (name: "Custom name")
         SomeEmptyInterface
         SomeInterface
         SomeInterface2
+
+TypeScript
+    modern = true

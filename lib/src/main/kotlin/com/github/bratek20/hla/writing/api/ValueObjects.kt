@@ -11,6 +11,7 @@ data class WriteArgs(
     private val module: GeneratedModule,
     private val profile: HlaProfile,
     private val onlyUpdate: Boolean,
+    private val modern: Boolean = false,
 ) {
     fun getHlaFolderPath(): Path {
         return pathCreate(this.hlaFolderPath)
@@ -28,18 +29,24 @@ data class WriteArgs(
         return this.onlyUpdate
     }
 
+    fun getModern(): Boolean {
+        return this.modern
+    }
+
     companion object {
         fun create(
             hlaFolderPath: Path,
             module: GeneratedModule,
             profile: HlaProfile,
             onlyUpdate: Boolean,
+            modern: Boolean = false,
         ): WriteArgs {
             return WriteArgs(
                 hlaFolderPath = pathGetValue(hlaFolderPath),
                 module = module,
                 profile = profile,
                 onlyUpdate = onlyUpdate,
+                modern = modern,
             )
         }
     }

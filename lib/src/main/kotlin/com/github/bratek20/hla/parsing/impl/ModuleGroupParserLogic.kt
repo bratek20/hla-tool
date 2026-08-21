@@ -36,6 +36,7 @@ class ModuleGroupParserLogic(
         "Impl",
         "ExternalTypes",
         "Kotlin",
+        "TypeScript",
         "Data",
         "Properties",
         "Web",
@@ -115,6 +116,7 @@ class ModuleGroupParserLogic(
             implSubmodule = parseImplSubmodule(elements),
             externalTypes = parseExternalTypes(elements),
             kotlinConfig = parseKotlinConfig(elements),
+            typeScriptConfig = parseTypeScriptConfig(elements),
             webSubmodule = parseWebSubmodule(elements),
             viewModelSubmodule = parseViewModelSubmodule(elements),
             exceptions = parseExceptions("Exceptions", elements),
@@ -324,6 +326,13 @@ class ModuleGroupParserLogic(
             )
         }
         return null
+    }
+
+    private fun parseTypeScriptConfig(elements: List<ParsedElement>): TypeScriptModuleConfig? {
+        val typeScriptSection = findSection(elements, "TypeScript") ?: return null
+        return TypeScriptModuleConfig(
+            modern = parseOptVariable(typeScriptSection.elements, "modern")?.toBoolean(),
+        )
     }
 
     private fun checkRootSections(module: ModuleName, elements: List<ParsedElement>) {

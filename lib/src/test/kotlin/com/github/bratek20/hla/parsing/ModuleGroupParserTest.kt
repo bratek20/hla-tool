@@ -620,6 +620,32 @@ class ModuleGroupParserTest {
     }
 
     @Test
+    fun `should parse type script config`() {
+        val modules = parseSingleGroup("typescript-config")
+
+        assertModules(modules, listOf(
+            {
+                name = "LegacyModule"
+                simpleValueObjects = listOf {
+                    name = "LegacyId"
+                    typeName = "string"
+                }
+                typeScriptConfigEmpty = true
+            },
+            {
+                name = "ModernModule"
+                simpleValueObjects = listOf {
+                    name = "ModernId"
+                    typeName = "string"
+                }
+                typeScriptConfig = {
+                    modern = true
+                }
+            }
+        ))
+    }
+
+    @Test
     fun `should throw exception if root level section is unknown`() {
         assertApiExceptionThrown(
             { parseSingleGroup("unknown-section") },

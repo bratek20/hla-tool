@@ -5,4 +5,5 @@ Interfaces
             module: GeneratedModule
             profile: HlaProfile
             onlyUpdate: bool
+            modern: bool = false
         write(args: WriteArgs)
