@@ -1,3 +1,6 @@
 Interfaces
     OnlyInterfacesModuleInterface
         someMethod()
+
+TypeScript
+    modern = true

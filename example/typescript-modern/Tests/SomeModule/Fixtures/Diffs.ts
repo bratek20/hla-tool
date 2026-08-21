@@ -9,7 +9,6 @@ import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, 
 import { SomeUserValueObject } from "../../../main/SomeUserModule/Api/ValueObjects"
 import { diffMockArg } from "../../ModuleOnlyForMocksArgs/Fixtures/Diffs"
 import { ExpectedOtherClass, ExpectedOtherClassWIthUniqueId, ExpectedOtherData, ExpectedOtherProperty, diffOtherClass, diffOtherClassWIthUniqueId, diffOtherData, diffOtherId, diffOtherProperty } from "../../OtherModule/Fixtures/Diffs"
-import { ExpectedUniqueIdEntry, diffUniqueIdEntry } from "../../SimpleModule/Fixtures/Diffs"
 import { ExpectedDateRange, diffDate, diffDateRange, diffTier } from "../../TypesModule/Fixtures/Diffs"
 
 export function diffSomeId(given: SomeId, expected: string, path: string = ""): string {
@@ -846,7 +845,7 @@ export function diffSomeReferencingPropertyFieldList(given: SomeReferencingPrope
 }
 
 export interface ExpectedSomeStructureWithUniqueIds {
-    entries?: ExpectedUniqueIdEntry[],
+    entries?: SimpleModule.ExpectedUniqueIdEntry[],
 }
 export function diffSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds, expected: ExpectedSomeStructureWithUniqueIds, path: string = ""): string {
     const result: string[] = []
@@ -854,14 +853,14 @@ export function diffSomeStructureWithUniqueIds(given: SomeStructureWithUniqueIds
     if (expected.entries !== undefined) {
         const expectedEntries = expected.entries
         if (given.getEntries().length != expectedEntries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expectedEntries.length}`); return result.join("\n") }
-        given.getEntries().forEach((entry, idx) => { if (diffUniqueIdEntry(entry, expectedEntries[idx]) != "") { result.push(diffUniqueIdEntry(entry, expectedEntries[idx], `${path}entries[${idx}].`)) } })
+        given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expectedEntries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expectedEntries[idx], `${path}entries[${idx}].`)) } })
     }
 
     return result.join("\n")
 }
 
 export interface ExpectedNestedUniqueIds {
-    entries?: ExpectedUniqueIdEntry[],
+    entries?: SimpleModule.ExpectedUniqueIdEntry[],
 }
 export function diffNestedUniqueIds(given: NestedUniqueIds, expected: ExpectedNestedUniqueIds, path: string = ""): string {
     const result: string[] = []
@@ -869,7 +868,7 @@ export function diffNestedUniqueIds(given: NestedUniqueIds, expected: ExpectedNe
     if (expected.entries !== undefined) {
         const expectedEntries = expected.entries
         if (given.getEntries().length != expectedEntries.length) { result.push(`${path}entries size ${given.getEntries().length} != ${expectedEntries.length}`); return result.join("\n") }
-        given.getEntries().forEach((entry, idx) => { if (diffUniqueIdEntry(entry, expectedEntries[idx]) != "") { result.push(diffUniqueIdEntry(entry, expectedEntries[idx], `${path}entries[${idx}].`)) } })
+        given.getEntries().forEach((entry, idx) => { if (SimpleModule.diffUniqueIdEntry(entry, expectedEntries[idx]) != "") { result.push(SimpleModule.diffUniqueIdEntry(entry, expectedEntries[idx], `${path}entries[${idx}].`)) } })
     }
 
     return result.join("\n")

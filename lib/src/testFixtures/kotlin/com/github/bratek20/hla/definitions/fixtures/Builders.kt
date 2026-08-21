@@ -241,6 +241,16 @@ fun menuDefinition(init: MenuDefinitionDef.() -> Unit = {}): MenuDefinition {
     )
 }
 
+data class TypeScriptModuleConfigDef(
+    var modern: Boolean? = null,
+)
+fun typeScriptModuleConfig(init: TypeScriptModuleConfigDef.() -> Unit = {}): TypeScriptModuleConfig {
+    val def = TypeScriptModuleConfigDef().apply(init)
+    return TypeScriptModuleConfig.create(
+        modern = def.modern,
+    )
+}
+
 data class ModuleDefinitionDef(
     var name: String = "someValue",
     var simpleCustomTypes: List<(SimpleStructureDefinitionDef.() -> Unit)> = emptyList(),
@@ -262,6 +272,7 @@ data class ModuleDefinitionDef(
     var fixturesSubmodule: (FixturesSubmoduleDefinitionDef.() -> Unit)? = null,
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
     var menuSubmodule: (MenuDefinitionDef.() -> Unit)? = null,
+    var typeScriptConfig: (TypeScriptModuleConfigDef.() -> Unit)? = null,
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
@@ -286,6 +297,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         fixturesSubmodule = def.fixturesSubmodule?.let { it -> fixturesSubmoduleDefinition(it) },
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
         menuSubmodule = def.menuSubmodule?.let { it -> menuDefinition(it) },
+        typeScriptConfig = def.typeScriptConfig?.let { it -> typeScriptModuleConfig(it) },
     )
 }
 

@@ -6,7 +6,9 @@ import com.github.bratek20.hla.facade.api.*
 import com.github.bratek20.hla.generation.api.GenerateArgs
 import com.github.bratek20.hla.generation.api.GeneratedModule
 import com.github.bratek20.hla.generation.api.ModuleGenerator
+import com.github.bratek20.hla.generation.impl.languages.typescript.isModernModule
 import com.github.bratek20.hla.parsing.api.ModuleGroup
+import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.writing.api.ModuleWriter
 import com.github.bratek20.hla.writing.api.WriteArgs
@@ -70,7 +72,11 @@ class HlaFacadeLogic(
                 hlaFolderPath = hlaFolderPath,
                 module = generatedModule,
                 profile = group.getProfile(),
-                onlyUpdate = onlyUpdate
+                onlyUpdate = onlyUpdate,
+                modern = isModernModule(
+                    group.getProfile(),
+                    BaseModuleGroupQueries(group).get(moduleName)
+                )
             )
         )
     }

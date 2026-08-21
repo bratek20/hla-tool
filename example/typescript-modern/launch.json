@@ -1,4 +1,212 @@
 {
     "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - ModuleOnlyForMocksArgs",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "ModuleOnlyForMocksArgs"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - NoInterfacesModule",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "NoInterfacesModule"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - OnlyInterfacesModule",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "OnlyInterfacesModule"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - OnlyTrackingModule",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "OnlyTrackingModule"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - OtherModule",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "OtherModule"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            {
+                "type": "node",
+                "request": "launch",
+                "name": "Launch Test App - SimpleModule Tests",
+                "program": "${workspaceFolder}/Dist/AFC.testapp.js",
+                "args": [" SimpleModule"],
+                "outFiles": [
+                    "${workspaceFolder}/**/*.js"
+                ]
+            },
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - SomeModule",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "SomeModule"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - SomeUserModule",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "SomeUserModule"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - TypesModule",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "TypesModule"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Modern Tests - WebNoWrappers",
+            "program": "${workspaceFolder}/node_modules/vitest/vitest.mjs",
+            "args": [
+                "run",
+                "--config",
+                "./vitest.config.mts",
+                "--no-file-parallelism",
+                "--testTimeout=600000",
+                "WebNoWrappers"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "autoAttachChildProcesses": true,
+            "smartStep": true,
+            "skipFiles": [
+                "<node_internals>/**",
+                "**/node_modules/**"
+            ]
+        }
     ]
 }

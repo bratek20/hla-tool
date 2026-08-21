@@ -1,5 +1,5 @@
 ValueObjects
-    MockArg: string
+    ModernId: string
 
 TypeScript
     modern = true

@@ -28,7 +28,7 @@ import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.fixtures.DefType
 import com.github.bratek20.hla.generation.impl.core.fixtures.DefTypeFactory
 import com.github.bratek20.hla.generation.impl.core.fixtures.ListDefType
-import com.github.bratek20.hla.generation.impl.languages.typescript.isModernTypeScript
+import com.github.bratek20.hla.generation.impl.languages.typescript.isModernModule
 import com.github.bratek20.utils.camelToScreamingSnakeCase
 
 class TestBaseGenerator: PatternGenerator() {
@@ -92,7 +92,7 @@ class TestBaseGenerator: PatternGenerator() {
 
     override fun getOperations(): TopLevelCodeBuilderOps = {
         val fields = setupArgsFields()
-        val modern = c.profile.isModernTypeScript()
+        val modern = isModernModule(c.profile, module)
 
         add(typeScriptNamespace {
             name = moduleName

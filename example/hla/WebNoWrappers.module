@@ -11,3 +11,6 @@ Web
         ExposedInterfaces
             WebApi
         requestResponseWrapping = false
+
+TypeScript
+    modern = true

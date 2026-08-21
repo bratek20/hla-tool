@@ -95,9 +95,9 @@ class FilesModifiers(
         val moduleName = generateResult.getMain().getName().value
 
         // Each of these files is maintained only when the profile says where it lives.
-        // Modern profiles skip the tsconfig paths, because imports make the ordered file
-        // list pointless, and get the vitest flavour of the scripts and debug configs.
-        val modern = info.getModern() == true
+        // Whether a module gets the vitest flavour or the legacy test app flavour is the
+        // module's own decision, so a modern profile can hold both kinds side by side.
+        val modern = args.getModern()
         val vitestConfigPath = info.getVitestConfigPath()?.value ?: DEFAULT_VITEST_CONFIG_PATH
 
         info.getMainTsconfigPath()?.let { updateMainTsConfig(rootPath, it, generateResult, profile) }
@@ -110,7 +110,9 @@ class FilesModifiers(
             if (modern) updateModernLaunchJson(rootPath, it, moduleName, vitestConfigPath)
             else updateLaunchJson(rootPath, it, moduleName)
         }
-        info.getEntryPath()?.let { updateEntryFile(rootPath, it, generateResult, profile) }
+        if (modern) {
+            info.getEntryPath()?.let { updateEntryFile(rootPath, it, generateResult, profile) }
+        }
     }
 
     // Modern modules run on vitest, so both the npm script and the debug configuration

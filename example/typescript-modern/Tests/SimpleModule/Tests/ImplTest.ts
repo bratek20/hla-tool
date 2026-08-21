@@ -1,7 +1,5 @@
-import { describe, test } from "vitest"
-
-describe("SimpleModule - Api", () => {
+namespace SimpleModule {
     test("TODO", () => {
-        AssertEquals(true, false, "TODO")
-    })
-})
+        AssertEquals(true, false, "TODO");
+    });
+}

@@ -10,3 +10,6 @@ Web
     Http (user)
         ExposedInterfaces
             SomeUserInterface
+
+TypeScript
+    modern = true

@@ -503,6 +503,24 @@ data class KotlinConfig(
     }
 }
 
+data class TypeScriptModuleConfig(
+    private val modern: Boolean? = null,
+) {
+    fun getModern(): Boolean? {
+        return this.modern
+    }
+
+    companion object {
+        fun create(
+            modern: Boolean? = null,
+        ): TypeScriptModuleConfig {
+            return TypeScriptModuleConfig(
+                modern = modern,
+            )
+        }
+    }
+}
+
 data class MenuDefinition(
     private val attributes: List<Attribute>,
     private val exposedInterfaces: List<String>,
@@ -549,6 +567,7 @@ data class ModuleDefinition(
     private val fixturesSubmodule: FixturesSubmoduleDefinition?,
     private val kotlinConfig: KotlinConfig?,
     private val menuSubmodule: MenuDefinition?,
+    private val typeScriptConfig: TypeScriptModuleConfig? = null,
 ) {
     fun getName(): ModuleName {
         return ModuleName(this.name)
@@ -630,6 +649,10 @@ data class ModuleDefinition(
         return this.menuSubmodule
     }
 
+    fun getTypeScriptConfig(): TypeScriptModuleConfig? {
+        return this.typeScriptConfig
+    }
+
     companion object {
         fun create(
             name: ModuleName,
@@ -652,6 +675,7 @@ data class ModuleDefinition(
             fixturesSubmodule: FixturesSubmoduleDefinition?,
             kotlinConfig: KotlinConfig?,
             menuSubmodule: MenuDefinition?,
+            typeScriptConfig: TypeScriptModuleConfig? = null,
         ): ModuleDefinition {
             return ModuleDefinition(
                 name = name.value,
@@ -674,6 +698,7 @@ data class ModuleDefinition(
                 fixturesSubmodule = fixturesSubmodule,
                 kotlinConfig = kotlinConfig,
                 menuSubmodule = menuSubmodule,
+                typeScriptConfig = typeScriptConfig,
             )
         }
     }

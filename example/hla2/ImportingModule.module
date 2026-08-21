@@ -15,3 +15,6 @@ ViewModel
             other: OtherClassVm
             others: OtherClassVm[]
             otherOpt: OtherClassVm?
+
+TypeScript
+    modern = true

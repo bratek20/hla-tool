@@ -490,6 +490,25 @@ fun diffMenuDefinition(given: MenuDefinition, expectedInit: ExpectedMenuDefiniti
     return result.joinToString("\n")
 }
 
+data class ExpectedTypeScriptModuleConfig(
+    var modernEmpty: Boolean? = null,
+    var modern: Boolean? = null,
+)
+fun diffTypeScriptModuleConfig(given: TypeScriptModuleConfig, expectedInit: ExpectedTypeScriptModuleConfig.() -> Unit, path: String = ""): String {
+    val expected = ExpectedTypeScriptModuleConfig().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.modernEmpty?.let {
+        if ((given.getModern() == null) != it) { result.add("${path}modern empty ${(given.getModern() == null)} != ${it}") }
+    }
+
+    expected.modern?.let {
+        if (given.getModern()!! != it) { result.add("${path}modern ${given.getModern()!!} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedModuleDefinition(
     var name: String? = null,
     var simpleCustomTypes: List<(ExpectedSimpleStructureDefinition.() -> Unit)>? = null,
@@ -518,6 +537,8 @@ data class ExpectedModuleDefinition(
     var kotlinConfig: (ExpectedKotlinConfig.() -> Unit)? = null,
     var menuSubmoduleEmpty: Boolean? = null,
     var menuSubmodule: (ExpectedMenuDefinition.() -> Unit)? = null,
+    var typeScriptConfigEmpty: Boolean? = null,
+    var typeScriptConfig: (ExpectedTypeScriptModuleConfig.() -> Unit)? = null,
 )
 fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedModuleDefinition().apply(expectedInit)
@@ -641,6 +662,14 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
     expected.menuSubmodule?.let {
         if (diffMenuDefinition(given.getMenuSubmodule()!!, it) != "") { result.add(diffMenuDefinition(given.getMenuSubmodule()!!, it, "${path}menuSubmodule.")) }
+    }
+
+    expected.typeScriptConfigEmpty?.let {
+        if ((given.getTypeScriptConfig() == null) != it) { result.add("${path}typeScriptConfig empty ${(given.getTypeScriptConfig() == null)} != ${it}") }
+    }
+
+    expected.typeScriptConfig?.let {
+        if (diffTypeScriptModuleConfig(given.getTypeScriptConfig()!!, it) != "") { result.add(diffTypeScriptModuleConfig(given.getTypeScriptConfig()!!, it, "${path}typeScriptConfig.")) }
     }
 
     return result.joinToString("\n")

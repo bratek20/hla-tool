@@ -1,4 +1,5 @@
 {
   "scripts": {
+    "test ImportingModule": "npm run typecheck_modern_tests && vitest run --config ./vitest.config.mts ImportingModule"
   }
 }
