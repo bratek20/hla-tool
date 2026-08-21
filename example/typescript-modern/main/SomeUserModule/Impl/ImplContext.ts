@@ -1,6 +1,7 @@
-namespace SomeUserModule.Api {
+import { SomeUserInterfaceLogic } from "./Logic"
 
-    export function someMethod(c: HandlerContext): void {
-        new Impl.SomeUserInterfaceLogic(c).someMethod()
-    }
+export const Api = {
+    someMethod(c: HandlerContext): void {
+        new SomeUserInterfaceLogic(c).someMethod()
+    },
 }

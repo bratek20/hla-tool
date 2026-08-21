@@ -1,12 +1,12 @@
-namespace OtherModule.Impl {
-    export class OtherInterfaceLogic implements OtherInterface {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
+import { OtherInterface } from "../Api/Interfaces"
 
-        otherMethod(): void {
-            // TODO
-            return undefined
-        }
+export class OtherInterfaceLogic implements OtherInterface {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    otherMethod(): void {
+        // TODO
+        return undefined
     }
 }

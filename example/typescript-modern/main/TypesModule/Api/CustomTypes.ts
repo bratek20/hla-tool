@@ -1,11 +1,11 @@
-class Date {
+export class Date {
     //TODO
 }
 
-class Tier {
+export class Tier {
     //TODO
 }
 
-class DateRange {
+export class DateRange {
     //TODO
 }

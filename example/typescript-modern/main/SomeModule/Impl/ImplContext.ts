@@ -1,86 +1,72 @@
-namespace SomeModule.Api {
+import { MockArg } from "../../ModuleOnlyForMocksArgs/Api/ValueObjects"
+import { OtherInterface } from "../../OtherModule/Api/Interfaces"
+import { OtherClass } from "../../OtherModule/Api/ValueObjects"
+import { SomeEmptyInterface } from "../Api/Interfaces"
+import { LegacyType, SomeClass, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeQueryInput } from "../Api/ValueObjects"
+import { InterfaceForTrackingLogic, SomeInterface2Logic, SomeInterface3Logic, SomeInterfaceLogic, SomeInterfaceToTestMockArgsImportLogic, SomeModuleDebugHandlersLogic, SomeModuleHandlersLogic } from "./Logic"
 
-    export function someEmptyMethod(c: HandlerContext): void {
-        new Impl.SomeInterfaceLogic(c).someEmptyMethod()
-    }
-
-    export function someCommand(id: SomeId, amount: number, c: HandlerContext): void {
-        new Impl.SomeInterfaceLogic(c).someCommand(id, amount)
-    }
-
-    export function someQuery(query: SomeQueryInput, c: HandlerContext): SomeClass {
-        return new Impl.SomeInterfaceLogic(c).someQuery(query)
-    }
-
-    export function optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {
-        return new Impl.SomeInterfaceLogic(c).optMethod(optId)
-    }
-
-    export function methodWithSimpleVO(id: SomeId, c: HandlerContext): void {
-        new Impl.SomeInterfaceLogic(c).methodWithSimpleVO(id)
-    }
-
-    export function methodWithListOfSimpleVO(list: SomeId[], c: HandlerContext): SomeId[] {
-        return new Impl.SomeInterfaceLogic(c).methodWithListOfSimpleVO(list)
-    }
-
-    export function methodWithAny(i: any, c: HandlerContext): any {
-        return new Impl.SomeInterfaceLogic(c).methodWithAny(i)
-    }
-
-    export function methodWithBaseType(i: string, c: HandlerContext): string {
-        return new Impl.SomeInterfaceLogic(c).methodWithBaseType(i)
-    }
-
-    export function methodReturningOptSimpleVo(c: HandlerContext): Optional<SomeId> {
-        return new Impl.SomeInterfaceLogic(c).methodReturningOptSimpleVo()
-    }
-
-    export function methodReturningNumericType(c: HandlerContext): number {
-        return new Impl.SomeInterfaceLogic(c).methodReturningNumericType()
-    }
-
-    export function methodWithOptionalMap(optMap: Optional<Map<string, string>>, c: HandlerContext): Optional<Map<string, string>> {
-        return new Impl.SomeInterfaceLogic(c).methodWithOptionalMap(optMap)
-    }
-
-    export function referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
-        return new Impl.SomeInterface2Logic(c).referenceOtherClass(other)
-    }
-
-    export function referenceLegacyType(legacyType: LegacyType, c: HandlerContext): LegacyType {
-        return new Impl.SomeInterface2Logic(c).referenceLegacyType(legacyType)
-    }
-
-    export function referenceInterface(empty: SomeEmptyInterface, c: HandlerContext): SomeEmptyInterface {
-        return new Impl.SomeInterface3Logic(c).referenceInterface(empty)
-    }
-
-    export function referenceOtherInterface(other: OtherInterface, c: HandlerContext): OtherInterface {
-        return new Impl.SomeInterface3Logic(c).referenceOtherInterface(other)
-    }
-
-    export function someMethod(arg1: MockArg, arg2: MockArg, c: HandlerContext): void {
-        new Impl.SomeInterfaceToTestMockArgsImportLogic(c).someMethod(arg1, arg2)
-    }
-
-    export function someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
-        return new Impl.SomeModuleHandlersLogic(c).someHandler(i)
-    }
-
-    export function someHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
-        return new Impl.SomeModuleHandlersLogic(c).someHandler2(i)
-    }
-
-    export function someDebugHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
-        return new Impl.SomeModuleDebugHandlersLogic(c).someDebugHandler(i)
-    }
-
-    export function someDebugHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
-        return new Impl.SomeModuleDebugHandlersLogic(c).someDebugHandler2(i)
-    }
-
-    export function getDimension(c: HandlerContext): TrackingDimension {
-        return new Impl.InterfaceForTrackingLogic(c).getDimension()
-    }
+export const Api = {
+    someEmptyMethod(c: HandlerContext): void {
+        new SomeInterfaceLogic(c).someEmptyMethod()
+    },
+    someCommand(id: SomeId, amount: number, c: HandlerContext): void {
+        new SomeInterfaceLogic(c).someCommand(id, amount)
+    },
+    someQuery(query: SomeQueryInput, c: HandlerContext): SomeClass {
+        return new SomeInterfaceLogic(c).someQuery(query)
+    },
+    optMethod(optId: Optional<SomeId>, c: HandlerContext): Optional<SomeClass> {
+        return new SomeInterfaceLogic(c).optMethod(optId)
+    },
+    methodWithSimpleVO(id: SomeId, c: HandlerContext): void {
+        new SomeInterfaceLogic(c).methodWithSimpleVO(id)
+    },
+    methodWithListOfSimpleVO(list: SomeId[], c: HandlerContext): SomeId[] {
+        return new SomeInterfaceLogic(c).methodWithListOfSimpleVO(list)
+    },
+    methodWithAny(i: any, c: HandlerContext): any {
+        return new SomeInterfaceLogic(c).methodWithAny(i)
+    },
+    methodWithBaseType(i: string, c: HandlerContext): string {
+        return new SomeInterfaceLogic(c).methodWithBaseType(i)
+    },
+    methodReturningOptSimpleVo(c: HandlerContext): Optional<SomeId> {
+        return new SomeInterfaceLogic(c).methodReturningOptSimpleVo()
+    },
+    methodReturningNumericType(c: HandlerContext): number {
+        return new SomeInterfaceLogic(c).methodReturningNumericType()
+    },
+    methodWithOptionalMap(optMap: Optional<Map<string, string>>, c: HandlerContext): Optional<Map<string, string>> {
+        return new SomeInterfaceLogic(c).methodWithOptionalMap(optMap)
+    },
+    referenceOtherClass(other: OtherClass, c: HandlerContext): OtherClass {
+        return new SomeInterface2Logic(c).referenceOtherClass(other)
+    },
+    referenceLegacyType(legacyType: LegacyType, c: HandlerContext): LegacyType {
+        return new SomeInterface2Logic(c).referenceLegacyType(legacyType)
+    },
+    referenceInterface(empty: SomeEmptyInterface, c: HandlerContext): SomeEmptyInterface {
+        return new SomeInterface3Logic(c).referenceInterface(empty)
+    },
+    referenceOtherInterface(other: OtherInterface, c: HandlerContext): OtherInterface {
+        return new SomeInterface3Logic(c).referenceOtherInterface(other)
+    },
+    someMethod(arg1: MockArg, arg2: MockArg, c: HandlerContext): void {
+        new SomeInterfaceToTestMockArgsImportLogic(c).someMethod(arg1, arg2)
+    },
+    someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new SomeModuleHandlersLogic(c).someHandler(i)
+    },
+    someHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new SomeModuleHandlersLogic(c).someHandler2(i)
+    },
+    someDebugHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new SomeModuleDebugHandlersLogic(c).someDebugHandler(i)
+    },
+    someDebugHandler2(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
+        return new SomeModuleDebugHandlersLogic(c).someDebugHandler2(i)
+    },
+    getDimension(c: HandlerContext): TrackingDimension {
+        return new InterfaceForTrackingLogic(c).getDimension()
+    },
 }

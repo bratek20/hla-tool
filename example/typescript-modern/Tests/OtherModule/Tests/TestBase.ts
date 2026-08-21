@@ -1,22 +1,23 @@
-namespace OtherModule {
-    export let context: HandlerContext
+import { OTHER_PROPERTIES_PROPERTY_KEY, OTHER_PROPERTY_PROPERTY_KEY } from "../../../main/OtherModule/Api/PropertyKeys"
+import * as Builder from "../Fixtures/Builders"
 
-    export interface SetupArgs {
-        otherProperty?: OtherModule.Builder.OtherPropertyDef
-        otherProperties?: OtherModule.Builder.OtherPropertyDef[]
-    }
+export let context: HandlerContext
 
-    export function setup(args: SetupArgs = {}): void {
-        context = Ts.E2E.SetupAndCreateContext({
-            dependencyName: DependencyName.OtherModule,
-            titleData: builderTD => {
-                builderTD.with(OTHER_PROPERTY_PROPERTY_KEY, OtherModule.Builder.otherProperty(args.otherProperty ?? {}))
-                builderTD.with(OTHER_PROPERTIES_PROPERTY_KEY, (args.otherProperties ?? []).map(it => OtherModule.Builder.otherProperty(it)))
-            }
-        }).context
-    }
+export interface SetupArgs {
+    otherProperty?: Builder.OtherPropertyDef
+    otherProperties?: Builder.OtherPropertyDef[]
+}
 
-    export function test(testName: string, fun: TestFunction) {
-        addTest("OtherModule", testName, fun)
-    }
+export function setup(args: SetupArgs = {}): void {
+    context = Ts.E2E.SetupAndCreateContext({
+        dependencyName: DependencyName.OtherModule,
+        titleData: builderTD => {
+            builderTD.with(OTHER_PROPERTY_PROPERTY_KEY, Builder.otherProperty(args.otherProperty ?? {}))
+            builderTD.with(OTHER_PROPERTIES_PROPERTY_KEY, (args.otherProperties ?? []).map(it => Builder.otherProperty(it)))
+        }
+    }).context
+}
+
+export function test(testName: string, fun: TestFunction) {
+    addTest("OtherModule", testName, fun)
 }

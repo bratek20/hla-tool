@@ -1,6 +1,7 @@
-namespace OnlyInterfacesModule.Api {
+import { OnlyInterfacesModuleInterfaceLogic } from "./Logic"
 
-    export function someMethod(c: HandlerContext): void {
-        new Impl.OnlyInterfacesModuleInterfaceLogic(c).someMethod()
-    }
+export const Api = {
+    someMethod(c: HandlerContext): void {
+        new OnlyInterfacesModuleInterfaceLogic(c).someMethod()
+    },
 }

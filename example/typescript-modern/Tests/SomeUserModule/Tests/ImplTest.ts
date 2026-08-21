@@ -1,5 +1,8 @@
-namespace SomeUserModule {
-    test("TODO", () => {
-        AssertEquals(true, false, "TODO");
-    });
-}
+import { describe, test } from "vitest"
+import { test as SomeUserModuleTest } from "./TestBase"
+
+describe("SomeUserModule - Api", () => {
+    SomeUserModuleTest("TODO", () => {
+        AssertEquals(true, false, "TODO")
+    })
+})

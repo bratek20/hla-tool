@@ -1,154 +1,158 @@
-namespace SomeModule.Impl {
-    export class SomeEmptyInterfaceLogic implements SomeEmptyInterface {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
+import { MockArg } from "../../ModuleOnlyForMocksArgs/Api/ValueObjects"
+import { OtherInterface } from "../../OtherModule/Api/Interfaces"
+import { OtherClass } from "../../OtherModule/Api/ValueObjects"
+import { InterfaceForTracking, SomeEmptyInterface, SomeInterface, SomeInterface2, SomeInterface3, SomeInterfaceToTestMockArgsImport, SomeModuleDebugHandlers, SomeModuleHandlers } from "../Api/Interfaces"
+import { LegacyType, SomeClass, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeQueryInput } from "../Api/ValueObjects"
+
+export class SomeEmptyInterfaceLogic implements SomeEmptyInterface {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+}
+
+export class SomeInterfaceLogic implements SomeInterface {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    someEmptyMethod(): void {
+        // TODO
+        return undefined
     }
 
-    export class SomeInterfaceLogic implements SomeInterface {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
-
-        someEmptyMethod(): void {
-            // TODO
-            return undefined
-        }
-
-        someCommand(id: SomeId, amount: number): void {
-            // TODO
-            return undefined
-        }
-
-        someQuery(query: SomeQueryInput): SomeClass {
-            // TODO
-            return undefined
-        }
-
-        optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
-            // TODO
-            return undefined
-        }
-
-        methodWithSimpleVO(id: SomeId): void {
-            // TODO
-            return undefined
-        }
-
-        methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
-            // TODO
-            return undefined
-        }
-
-        methodWithAny(i: any): any {
-            // TODO
-            return undefined
-        }
-
-        methodWithBaseType(i: string): string {
-            // TODO
-            return undefined
-        }
-
-        methodReturningOptSimpleVo(): Optional<SomeId> {
-            // TODO
-            return undefined
-        }
-
-        methodReturningNumericType(): number {
-            // TODO
-            return undefined
-        }
-
-        methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>> {
-            // TODO
-            return undefined
-        }
+    someCommand(id: SomeId, amount: number): void {
+        // TODO
+        return undefined
     }
 
-    export class SomeInterface2Logic implements SomeInterface2 {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
-
-        referenceOtherClass(other: OtherClass): OtherClass {
-            // TODO
-            return undefined
-        }
-
-        referenceLegacyType(legacyType: LegacyType): LegacyType {
-            // TODO
-            return undefined
-        }
+    someQuery(query: SomeQueryInput): SomeClass {
+        // TODO
+        return undefined
     }
 
-    export class SomeInterface3Logic implements SomeInterface3 {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
-
-        referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
-            // TODO
-            return undefined
-        }
-
-        referenceOtherInterface(other: OtherInterface): OtherInterface {
-            // TODO
-            return undefined
-        }
+    optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
+        // TODO
+        return undefined
     }
 
-    export class SomeInterfaceToTestMockArgsImportLogic implements SomeInterfaceToTestMockArgsImport {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
-
-        someMethod(arg1: MockArg, arg2: MockArg): void {
-            // TODO
-            return undefined
-        }
+    methodWithSimpleVO(id: SomeId): void {
+        // TODO
+        return undefined
     }
 
-    export class SomeModuleHandlersLogic implements SomeModuleHandlers {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
-
-        someHandler(i: SomeHandlerInput): SomeHandlerOutput {
-            // TODO
-            return undefined
-        }
-
-        someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-            // TODO
-            return undefined
-        }
+    methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
+        // TODO
+        return undefined
     }
 
-    export class SomeModuleDebugHandlersLogic implements SomeModuleDebugHandlers {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
-
-        someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
-            // TODO
-            return undefined
-        }
-
-        someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
-            // TODO
-            return undefined
-        }
+    methodWithAny(i: any): any {
+        // TODO
+        return undefined
     }
 
-    export class InterfaceForTrackingLogic implements InterfaceForTracking {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
+    methodWithBaseType(i: string): string {
+        // TODO
+        return undefined
+    }
 
-        getDimension(): TrackingDimension {
-            // TODO
-            return undefined
-        }
+    methodReturningOptSimpleVo(): Optional<SomeId> {
+        // TODO
+        return undefined
+    }
+
+    methodReturningNumericType(): number {
+        // TODO
+        return undefined
+    }
+
+    methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>> {
+        // TODO
+        return undefined
+    }
+}
+
+export class SomeInterface2Logic implements SomeInterface2 {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    referenceOtherClass(other: OtherClass): OtherClass {
+        // TODO
+        return undefined
+    }
+
+    referenceLegacyType(legacyType: LegacyType): LegacyType {
+        // TODO
+        return undefined
+    }
+}
+
+export class SomeInterface3Logic implements SomeInterface3 {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
+        // TODO
+        return undefined
+    }
+
+    referenceOtherInterface(other: OtherInterface): OtherInterface {
+        // TODO
+        return undefined
+    }
+}
+
+export class SomeInterfaceToTestMockArgsImportLogic implements SomeInterfaceToTestMockArgsImport {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    someMethod(arg1: MockArg, arg2: MockArg): void {
+        // TODO
+        return undefined
+    }
+}
+
+export class SomeModuleHandlersLogic implements SomeModuleHandlers {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    someHandler(i: SomeHandlerInput): SomeHandlerOutput {
+        // TODO
+        return undefined
+    }
+
+    someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
+        // TODO
+        return undefined
+    }
+}
+
+export class SomeModuleDebugHandlersLogic implements SomeModuleDebugHandlers {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
+        // TODO
+        return undefined
+    }
+
+    someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
+        // TODO
+        return undefined
+    }
+}
+
+export class InterfaceForTrackingLogic implements InterfaceForTracking {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    getDimension(): TrackingDimension {
+        // TODO
+        return undefined
     }
 }

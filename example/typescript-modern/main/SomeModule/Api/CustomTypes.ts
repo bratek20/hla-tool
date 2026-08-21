@@ -1,3 +1,3 @@
-class DateRangeWrapper {
+export class DateRangeWrapper {
     //TODO
 }

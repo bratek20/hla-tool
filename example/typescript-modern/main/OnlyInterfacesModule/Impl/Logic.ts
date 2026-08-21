@@ -1,12 +1,12 @@
-namespace OnlyInterfacesModule.Impl {
-    export class OnlyInterfacesModuleInterfaceLogic implements OnlyInterfacesModuleInterface {
-        constructor(
-            private readonly c: HandlerContext,
-        ) {}
+import { OnlyInterfacesModuleInterface } from "../Api/Interfaces"
 
-        someMethod(): void {
-            // TODO
-            return undefined
-        }
+export class OnlyInterfacesModuleInterfaceLogic implements OnlyInterfacesModuleInterface {
+    constructor(
+        private readonly c: HandlerContext,
+    ) {}
+
+    someMethod(): void {
+        // TODO
+        return undefined
     }
 }

@@ -1,6 +1,7 @@
-namespace OtherModule.Api {
+import { OtherInterfaceLogic } from "./Logic"
 
-    export function otherMethod(c: HandlerContext): void {
-        new Impl.OtherInterfaceLogic(c).otherMethod()
-    }
+export const Api = {
+    otherMethod(c: HandlerContext): void {
+        new OtherInterfaceLogic(c).otherMethod()
+    },
 }
