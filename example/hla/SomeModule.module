@@ -100,6 +100,10 @@ ValueObjects
     ClassExtendingOtherClass extends OtherClass
         extraField: string
 
+    ClassWithDefaultOptionals
+        optInt: int? = 1
+        optBool: bool? = true
+
 Exceptions
     SomeExtraException
 

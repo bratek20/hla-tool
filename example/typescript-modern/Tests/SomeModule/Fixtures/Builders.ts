@@ -7,7 +7,7 @@ import * as CustomTypesMapper from "../../../main/SomeModule/Api/CustomTypesMapp
 import { SomeData, SomeData2 } from "../../../main/SomeModule/Api/DataClasses"
 import { SomeEnum, SomeEnum2 } from "../../../main/SomeModule/Api/Enums"
 import { SomeEvent } from "../../../main/SomeModule/Api/Notifications"
-import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds } from "../../../main/SomeModule/Api/ValueObjects"
+import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithDefaultOptionals, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds } from "../../../main/SomeModule/Api/ValueObjects"
 import * as TypesModuleCustomTypesMapper from "../../../main/TypesModule/Api/CustomTypesMapper"
 import * as OtherModuleBuilder from "../../OtherModule/Fixtures/Builders"
 import * as SomeUserModuleBuilder from "../../SomeUserModule/Fixtures/Builders"
@@ -307,6 +307,20 @@ export function classExtendingOtherClass(def?: ClassExtendingOtherClassDef): Cla
         new OtherId(final_id),
         final_amount,
         final_extraField,
+    )
+}
+
+export interface ClassWithDefaultOptionalsDef {
+    optInt?: number,
+    optBool?: boolean,
+}
+export function classWithDefaultOptionals(def?: ClassWithDefaultOptionalsDef): ClassWithDefaultOptionals {
+    const final_optInt = def?.optInt ?? 1
+    const final_optBool = def?.optBool ?? true
+
+    return ClassWithDefaultOptionals.create(
+        Optional.of(final_optInt),
+        Optional.of(final_optBool),
     )
 }
 

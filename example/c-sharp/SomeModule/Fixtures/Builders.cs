@@ -117,6 +117,11 @@ namespace SomeModule.Fixtures {
         public string ExtraField { get; set; } = "someValue";
     }
 
+    public class ClassWithDefaultOptionalsDef {
+        public int? OptInt { get; set; } = 1;
+        public bool? OptBool { get; set; } = true;
+    }
+
     public class SomeQueryInputDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 0;
@@ -405,6 +410,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return ClassExtendingOtherClass.Create(new OtherId(def.Id), def.Amount, def.ExtraField);
+        }
+        public static ClassWithDefaultOptionals BuildClassWithDefaultOptionals(Action<ClassWithDefaultOptionalsDef> init = null) {
+            var def = new ClassWithDefaultOptionalsDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return ClassWithDefaultOptionals.Create(Optional<int>.Of(def.OptInt), Optional<bool>.Of(def.OptBool));
         }
         public static SomeQueryInput BuildSomeQueryInput(Action<SomeQueryInputDef> init = null) {
             var def = new SomeQueryInputDef();

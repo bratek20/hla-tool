@@ -135,6 +135,11 @@ fun assertClassExtendingOtherClass(given: ClassExtendingOtherClass, expectedInit
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertClassWithDefaultOptionals(given: ClassWithDefaultOptionals, expectedInit: ExpectedClassWithDefaultOptionals.() -> Unit) {
+    val diff = diffClassWithDefaultOptionals(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertSomeQueryInput(given: SomeQueryInput, expectedInit: ExpectedSomeQueryInput.() -> Unit) {
     val diff = diffSomeQueryInput(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

@@ -501,6 +501,37 @@ fun diffClassExtendingOtherClass(given: ClassExtendingOtherClass, expectedInit: 
     return result.joinToString("\n")
 }
 
+data class ExpectedClassWithDefaultOptionals(
+    var optIntEmpty: Boolean? = null,
+    var optInt: Int? = null,
+    var optBoolEmpty: Boolean? = null,
+    var optBool: Boolean? = null,
+)
+fun diffClassWithDefaultOptionals(given: ClassWithDefaultOptionals, expectedInit: ExpectedClassWithDefaultOptionals.() -> Unit, path: String = ""): String {
+    val expected = ExpectedClassWithDefaultOptionals().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.optIntEmpty?.let {
+        if ((given.getOptInt() == null) != it) { result.add("${path}optInt empty ${(given.getOptInt() == null)} != ${it}") }
+    }
+
+    expected.optInt?.let {
+        if (given.getOptInt() == null) { result.add("${path}optInt is empty but expected is not"); return@let }
+        if (given.getOptInt()!! != it) { result.add("${path}optInt ${given.getOptInt()!!} != ${it}") }
+    }
+
+    expected.optBoolEmpty?.let {
+        if ((given.getOptBool() == null) != it) { result.add("${path}optBool empty ${(given.getOptBool() == null)} != ${it}") }
+    }
+
+    expected.optBool?.let {
+        if (given.getOptBool() == null) { result.add("${path}optBool is empty but expected is not"); return@let }
+        if (given.getOptBool()!! != it) { result.add("${path}optBool ${given.getOptBool()!!} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedSomeQueryInput(
     var id: String? = null,
     var amount: Int? = null,

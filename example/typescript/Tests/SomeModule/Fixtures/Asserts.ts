@@ -116,6 +116,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function classWithDefaultOptionals(given: ClassWithDefaultOptionals, expected: ExpectedClassWithDefaultOptionals) {
+        const diff = diffClassWithDefaultOptionals(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someQueryInput(given: SomeQueryInput, expected: ExpectedSomeQueryInput) {
         const diff = diffSomeQueryInput(given, expected)
         AssertEquals(diff, "", diff)

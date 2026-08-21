@@ -940,6 +940,42 @@ export class ClassExtendingOtherClass {
     }
 }
 
+export class ClassWithDefaultOptionals {
+    private optInt? = OPTIONAL_NUMBER
+    private optBool? = OPTIONAL_BOOLEAN
+
+    static create(
+        optInt: Optional<number> = 1,
+        optBool: Optional<boolean> = true,
+    ): ClassWithDefaultOptionals {
+        const instance = new ClassWithDefaultOptionals()
+        instance.optInt = optInt.orElse(undefined)
+        instance.optBool = optBool.orElse(undefined)
+        return instance
+    }
+
+    static createNamed({
+        optInt,
+        optBool,
+    }: {
+        optInt: Optional<number>;
+        optBool: Optional<boolean>;
+    }): ClassWithDefaultOptionals {
+        const instance = new ClassWithDefaultOptionals()
+        instance.optInt = optInt.orElse(undefined)
+        instance.optBool = optBool.orElse(undefined)
+        return instance
+    }
+
+    getOptInt(): Optional<number> {
+        return Optional.of(this.optInt ?? 1)
+    }
+
+    getOptBool(): Optional<boolean> {
+        return Optional.of(this.optBool ?? true)
+    }
+}
+
 export class SomeQueryInput {
     private id = STRING
     private amount = NUMBER

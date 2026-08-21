@@ -510,6 +510,28 @@ namespace SomeModule.Api {
         }
     }
 
+    public class ClassWithDefaultOptionals: ValueObject {
+        readonly int? optInt;
+        readonly bool? optBool;
+
+        public ClassWithDefaultOptionals(
+            int? optInt,
+            bool? optBool
+        ) {
+            this.optInt = optInt;
+            this.optBool = optBool;
+        }
+        public Optional<int> GetOptInt() {
+            return Optional<int>.Of(optInt);
+        }
+        public Optional<bool> GetOptBool() {
+            return Optional<bool>.Of(optBool);
+        }
+        public static ClassWithDefaultOptionals Create(Optional<int> optInt, Optional<bool> optBool) {
+            return new ClassWithDefaultOptionals(optInt.OrElse(null), optBool.OrElse(null));
+        }
+    }
+
     public class SomeQueryInput: ValueObject {
         readonly string id;
         readonly int amount;

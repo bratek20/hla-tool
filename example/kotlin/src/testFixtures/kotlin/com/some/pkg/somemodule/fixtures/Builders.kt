@@ -269,6 +269,18 @@ fun classExtendingOtherClass(init: ClassExtendingOtherClassDef.() -> Unit = {}):
     )
 }
 
+data class ClassWithDefaultOptionalsDef(
+    var optInt: Int? = 1,
+    var optBool: Boolean? = true,
+)
+fun classWithDefaultOptionals(init: ClassWithDefaultOptionalsDef.() -> Unit = {}): ClassWithDefaultOptionals {
+    val def = ClassWithDefaultOptionalsDef().apply(init)
+    return ClassWithDefaultOptionals.create(
+        optInt = def.optInt,
+        optBool = def.optBool,
+    )
+}
+
 data class SomeQueryInputDef(
     var id: String = "someValue",
     var amount: Int = 0,

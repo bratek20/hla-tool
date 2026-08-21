@@ -468,6 +468,36 @@ namespace SomeModule {
         return result.join("\n")
     }
 
+    export interface ExpectedClassWithDefaultOptionals {
+        optIntEmpty?: boolean,
+        optInt?: number,
+        optBoolEmpty?: boolean,
+        optBool?: boolean,
+    }
+    export function diffClassWithDefaultOptionals(given: ClassWithDefaultOptionals, expected: ExpectedClassWithDefaultOptionals, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.optIntEmpty !== undefined) {
+            if (given.getOptInt().isEmpty() != expected.optIntEmpty) { result.push(`${path}optInt empty ${given.getOptInt().isEmpty()} != ${expected.optIntEmpty}`) }
+        }
+
+        if (expected.optInt !== undefined) {
+            if (given.getOptInt().isEmpty()) { result.push(`${path}optInt is empty but expected is not`); return result.join("\n") }
+            if (given.getOptInt().get() != expected.optInt) { result.push(`${path}optInt ${given.getOptInt().get()} != ${expected.optInt}`) }
+        }
+
+        if (expected.optBoolEmpty !== undefined) {
+            if (given.getOptBool().isEmpty() != expected.optBoolEmpty) { result.push(`${path}optBool empty ${given.getOptBool().isEmpty()} != ${expected.optBoolEmpty}`) }
+        }
+
+        if (expected.optBool !== undefined) {
+            if (given.getOptBool().isEmpty()) { result.push(`${path}optBool is empty but expected is not`); return result.join("\n") }
+            if (given.getOptBool().get() != expected.optBool) { result.push(`${path}optBool ${given.getOptBool().get()} != ${expected.optBool}`) }
+        }
+
+        return result.join("\n")
+    }
+
     export interface ExpectedSomeQueryInput {
         id?: string,
         amount?: number,

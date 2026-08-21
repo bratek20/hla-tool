@@ -298,6 +298,20 @@ namespace SomeModule.Builder {
         )
     }
 
+    export interface ClassWithDefaultOptionalsDef {
+        optInt?: number,
+        optBool?: boolean,
+    }
+    export function classWithDefaultOptionals(def?: ClassWithDefaultOptionalsDef): ClassWithDefaultOptionals {
+        const final_optInt = def?.optInt ?? 1
+        const final_optBool = def?.optBool ?? true
+
+        return ClassWithDefaultOptionals.create(
+            Optional.of(final_optInt),
+            Optional.of(final_optBool),
+        )
+    }
+
     export interface SomeQueryInputDef {
         id?: string,
         amount?: number,

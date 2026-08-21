@@ -610,6 +610,31 @@ data class ClassExtendingOtherClass(
     }
 }
 
+data class ClassWithDefaultOptionals(
+    private val optInt: Int? = 1,
+    private val optBool: Boolean? = true,
+) {
+    fun getOptInt(): Int? {
+        return this.optInt
+    }
+
+    fun getOptBool(): Boolean? {
+        return this.optBool
+    }
+
+    companion object {
+        fun create(
+            optInt: Int? = 1,
+            optBool: Boolean? = true,
+        ): ClassWithDefaultOptionals {
+            return ClassWithDefaultOptionals(
+                optInt = optInt,
+                optBool = optBool,
+            )
+        }
+    }
+}
+
 data class SomeQueryInput(
     private val id: String,
     private val amount: Int,

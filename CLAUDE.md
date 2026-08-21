@@ -230,7 +230,8 @@ if (c.lang is Kotlin) {
 
 ```kotlin
 override fun supportsCodeBuilder(): Boolean {
-    return true  // All languages now use code builder
+    // C# only - Kotlin and TypeScript still go through valueObjects.vm
+    return c.language.name() == ModuleLanguage.C_SHARP
 }
 
 override fun getOperations(): TopLevelCodeBuilderOps = {
@@ -244,6 +245,188 @@ override fun getOperations(): TopLevelCodeBuilderOps = {
     complexVOs.forEach { addClass(it.getClassOps()) }
 }
 ```
+
+## Orientation Map (read this before exploring)
+
+This section exists to stop repeated whole-codebase exploration. It records the facts that
+are expensive to rediscover. If something here turns out to be wrong, fix it here.
+
+### The one funnel every generated file passes through
+
+`PatternGenerator` (`lib/.../generation/impl/core/Generators.kt`) is the spine:
+
+```
+generatePatterns()
+  ├─ getFiles() / getDirectory()      -> raw files, BYPASS the funnel (InitSql, Examples JSON)
+  ├─ !supportsCodeBuilder()           -> generateFileContent()  [velocity]  ─┐
+  └─ getOperations()/getOperationsPerFile() -> generateFileContent(ops) [cb] ─┤
+                                                                             ↓
+                                              generatePatternFile()  <- single funnel
+                                              (adds the DO NOT EDIT header)
+```
+
+**Any cross-cutting transform of generated file text belongs in `generatePatternFile()`** —
+it covers velocity and code builder patterns uniformly. That is where the modern TypeScript
+ESM transform hooks in.
+
+Key `PatternGenerator` extension points: `patternName()`, `mode()` (`ONLY_START` files get no
+header and are skipped on update), `supportsCodeBuilder()` (default **false** = velocity),
+`shouldGenerate()`, `doNotGenerateTypeScriptNamespace()`, `useImportsCalculator()`, `shouldSkip()`
+(honours profile `onlyPatterns`/`skipPatterns`).
+
+### Three separate "language" abstractions — don't confuse them
+
+| Abstraction | Location | Purpose |
+|---|---|---|
+| `LanguageSupport` | `lib/.../generation/impl/core/language/` + `impl/languages/<lang>/<Lang>Support.kt` | per-language services: types, file extension, fixtures, `base()` |
+| `CodeBuilderLanguage` | `code-builder/.../core/Languages.kt` (`Kotlin`, `TypeScript`, `CSharp`) | syntax level: keywords, list/map/optional forms, terminators |
+| `LanguageTypes` | `lib/.../generation/impl/core/language/LanguageTypes.kt` + `<Lang>Types.kt` | string-template level, used by velocity and legacy paths |
+
+`ModuleGeneratorLogic` is the **only** place a `ModuleLanguage` enum maps to a `LanguageSupport`.
+`<Lang>Support.base()` is the only place a `CodeBuilderLanguage` is instantiated in production.
+`CodeBuilderContext` carries only `lang` — no profile — so profile-driven behaviour either goes
+through a constructor arg on the language (`TypeScript(modern)`) or stays in `lib/`.
+
+### TypeScript: which patterns are code builder vs velocity
+
+Code builder: `Enums`, `Exceptions`, `Events`, `Mocks`, `TestBase`, `PlayFabHandlers`,
+`WebServerContext`, `Menu`, `Track`, `InitSql`, Examples.
+
+Still velocity (`lib/src/main/resources/templates/type_script/`): `ValueObjects`, `DataClasses`,
+`Interfaces`, `Builders`, `Diffs`, `Asserts`, `Logic`, `ImplContext`, `WebCommon`, `WebClient`,
+`WebServer`, `WebClientContext`, `PropertyKeys`/`DataKeys`, `CustomTypes*`, `ImplTest`.
+
+Several `.vm` files declare their own `namespace` (`keys`, `customTypesMapper`, `builders`,
+`asserts`, `diffs`, `mocks`, `logic`, `implContext`, `implTest`, `webClientContext`); the rest get
+wrapped generically in `Generators.kt`. `ImplGenerator.kt` additionally does raw string surgery to
+inject `namespace <M>.Impl {`. Templates receive `moduleName` and `modern` via `contentBuilder()`.
+
+### File and directory naming
+
+- File name = `PatternName` verbatim + extension. **Only exception**: `Events` → `Notifications.ts`
+  (`EventsGenerator.getOperationsPerFile`). `getOperationsPerFile` can set arbitrary names.
+- `calcModuleDirectoryName` / `calcSubmoduleDirectoryName` / `HlaSrcPaths.getPathForSubmodule`
+  all live in `lib/.../writing/impl/ModuleWriterLogic.kt` as top-level functions. Reuse them;
+  do not reimplement layout rules. Kotlin lowercases, TS/C# keep PascalCase.
+- Relative ESM specifier math: `writing/impl/RelativePaths.kt`.
+
+### TypesWorld — what it does and does NOT know
+
+`TypesWorldApi` (`lib/.../typesworld/`) is the type registry; `HlaTypePath` encodes
+`[groups/]<Module>/<Submodule>/<Pattern>`; `ImportsCalculator` derives Kotlin/C# imports from it.
+
+Hard limits worth knowing before designing anything on top of it:
+
+- **Populated submodules**: `Api`, `ViewModel`, `View`, and `Impl` (Track only). `Web`, `Context`,
+  `Fixtures`, `Tests`, `Examples`, `Menu`, `Prefabs` are **absent**.
+- **Populated Api patterns**: `ValueObjects`, `DataClasses`, `CustomTypes`, `Events`, `Enums`
+  (name only). `Interfaces`, `Exceptions`, `PropertyKeys`, `DataKeys`, `CustomTypesMapper`,
+  `SerializedCustomTypes` are **absent**.
+- **Dependencies come only from structure**: `extends` + field types + type arguments, one hop of
+  indirection. Method signatures, function bodies and const initializers are invisible.
+- `ensureType` enforces **global name uniqueness** and throws `SameNameTypeExistsException`. Do not
+  register speculative or duplicated names.
+- `mapToImport` **drops the last path segment**, so it cannot produce a file-level specifier.
+- Populators live in `lib/.../hlatypesworld/impl/`, registered in `hlatypesworld/context/Impl.kt`.
+
+Because of these gaps, modern TypeScript imports use TypesWorld for api types plus a lib-internal
+`ModernTypeScriptExports` registry for everything else. See "Modern TypeScript" below.
+
+### Parsing a `.module` file
+
+`lib/.../parsing/impl/ModuleGroupParserLogic.kt`:
+- Adding a root section requires adding its name to `knownRootSections` or parsing throws
+  `UnknownRootSectionException`.
+- `findSection(elements, "Name")` finds a section; `parseOptVariable(elements, "key")` reads a
+  `key = value` assignment. Follow `parseKotlinConfig` / `parseTypeScriptConfig` as the pattern.
+
+### Profiles (`properties.yaml`)
+
+Deserialized by the external b20 lib with `FAIL_ON_UNKNOWN_PROPERTIES` disabled — **unknown keys
+are silently dropped**. A config key that "does nothing" usually means the field is missing from
+`hla/Facade.module`, not that the code ignores it.
+
+`FilesModifiers` (`lib/.../writing/impl/`) maintains the shared files (tsconfig, package.json,
+launch.json, entry). It is skipped entirely when `onlyUpdate` is true, so `update`/`updateAll`
+never touch them. Each file is maintained only if the profile declares its path.
+
+### Self-hosting: editing HLA's own definitions
+
+1. Edit `hla/*.module`.
+2. Run `bash/updateModule.sh` (needs a built app) to regenerate.
+3. If you cannot build, hand-mirror into the generated files so the branch compiles — the update
+   script must then produce identical output. For a facade VO that is three files:
+   `lib/src/main/.../facade/api/ValueObjects.kt`,
+   `lib/src/testFixtures/.../facade/fixtures/Builders.kt` and `.../fixtures/Diffs.kt`.
+
+Generated shapes to copy exactly:
+
+| `.module` | ValueObjects.kt | Builders.kt | Diffs.kt |
+|---|---|---|---|
+| `x: bool?` | `private val x: Boolean?` + `getX(): Boolean?` | `var x: Boolean? = null` | `xEmpty` + `x`, using `getX()!!` |
+| `x: Path? = empty` | `private val x: String? = null` + `getX(): Path? { return this.x?.let { pathCreate(it) } }` | `var x: String? = null` → `x?.let { pathCreate(it) }` | `xEmpty` + `x`, using `getX()!!` |
+| `x: SomeVo? = empty` | `private val x: SomeVo? = null` | `var x: (SomeVoDef.() -> Unit)? = null` | `xEmpty` + `x: (ExpectedSomeVo.() -> Unit)?` |
+
+Adding a field with `= empty` keeps `create()` backward compatible; without a default it becomes a
+required parameter and breaks callers.
+
+### Testing
+
+- `HlaFacadeTest` is a **golden-file** test: it generates into `example/<lang>/` and compares.
+  Any output change means regenerating the examples or the test fails. It also runs
+  `FilesModifiers`, so it **mutates committed** tsconfig/package.json/launch.json/entry files.
+- `ModuleGroupParserTest` + `lib/src/test/resources/parsing/<case>/` for parser changes.
+- Prefer extracting pure `List<String> -> List<String>` helpers for file-text editing so they can
+  be tested without a `Files` fake (see `writing/impl/ModernFileEdits.kt`).
+
+## Modern TypeScript (ESM) generation
+
+Legacy TS output is global-scope: no imports/exports, `namespace` blocks, ordered tsconfig `files`
+list. Modern output is real ES modules. Reference implementation to match:
+`../../Rortos/aircombatcs/Modern/Src/DeepLinks` and `Modern/Test/DeepLinks`.
+
+### Opting in — two flags, ANDed
+
+```
+# profile in properties.yaml            # section in the .module file
+typeScript:                             TypeScript
+  modern: true                              modern = true
+  entryPath: "main/entry.ts"
+  vitestConfigPath: "./vitest.config.mts"
+```
+
+`isModernModule(profile, module)` in `generation/impl/languages/typescript/Modern.kt`. Both are
+required: the same `.module` files are generated by a legacy and a modern profile side by side, and
+one modern profile normally holds a mix of migrated and legacy modules.
+
+### Files
+
+| File | Role |
+|---|---|
+| `Modern.kt` | the two flags and `isModernModule` |
+| `ModernTypeScriptSource.kt` | namespace unwrap, `export` insertion, declared-name scan |
+| `ModernTypeScriptPaths.kt` | `HlaTypePath` → relative specifier |
+| `ModernTypeScriptExports.kt` | name → file registry for what TypesWorld does not model |
+| `ModernTypeScriptTransformer.kt` | orchestration: rewrite references, emit imports |
+| `writing/impl/ModernFileEdits.kt` | pure edits for entry.ts, package.json, launch.json |
+
+### Rules that are load-bearing
+
+- **Import only from modern modules.** `queries.group.getModules().filter { it.isMarkedModern() }`.
+  Legacy modules — same group or pulled in via `imports` — keep their `Module.X.y` global form.
+  Cross-group modern→modern is not resolved (would need cross-project paths).
+- **`ImplContext` must be `export const Api = { … }`**, a mutable object. `Mocks.ts` assigns to
+  `Api.someMethod`, which is illegal on an ESM namespace import.
+- **`Diffs.ts` must hoist the narrowed optional** into a local before `forEach`; strict TS cannot
+  keep `expected.x !== undefined` alive across the callback (`ExpectedTypeField.localName()`).
+- **`TestBase` must not export `test`** in modern mode — vitest provides it.
+- Ambient legacy globals (`Optional`, `STRING`, `Class()`, `HandlerContext`, `StringEnumClass`,
+  `Undefined`, `AssertEquals`, `DependencyName`, `Ts.E2E`) are **never** imported.
+- `= STRING` / `= Class(X)` field initializers are runtime descriptors reflected on by
+  `ObjectCreation` — they must survive, hence `useDefineForClassFields: false` in the consumer.
+- Builder and assert function names are the camelCase of a structure name, so they collide with
+  that structure's own field and parameter names. They are registered **qualified-only**; same for
+  the `c` context variable. Over-registering bare names produces spurious imports.
 
 ## Working with the Project
 

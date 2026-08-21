@@ -5,7 +5,7 @@ import * as CustomTypesMapper from "../../../main/SomeModule/Api/CustomTypesMapp
 import { SomeData, SomeData2 } from "../../../main/SomeModule/Api/DataClasses"
 import { SomeEnum, SomeEnum2, SomeEnum3 } from "../../../main/SomeModule/Api/Enums"
 import { SomeEvent } from "../../../main/SomeModule/Api/Notifications"
-import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds } from "../../../main/SomeModule/Api/ValueObjects"
+import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithDefaultOptionals, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds } from "../../../main/SomeModule/Api/ValueObjects"
 import { SomeUserValueObject } from "../../../main/SomeUserModule/Api/ValueObjects"
 import { diffMockArg } from "../../ModuleOnlyForMocksArgs/Fixtures/Diffs"
 import { ExpectedOtherClass, ExpectedOtherClassWIthUniqueId, ExpectedOtherData, ExpectedOtherProperty, diffOtherClass, diffOtherClassWIthUniqueId, diffOtherData, diffOtherId, diffOtherProperty } from "../../OtherModule/Fixtures/Diffs"
@@ -525,6 +525,40 @@ export function diffClassExtendingOtherClass(given: ClassExtendingOtherClass, ex
     if (expected.extraField !== undefined) {
         const expectedExtraField = expected.extraField
         if (given.getExtraField() != expectedExtraField) { result.push(`${path}extraField ${given.getExtraField()} != ${expectedExtraField}`) }
+    }
+
+    return result.join("\n")
+}
+
+export interface ExpectedClassWithDefaultOptionals {
+    optIntEmpty?: boolean,
+    optInt?: number,
+    optBoolEmpty?: boolean,
+    optBool?: boolean,
+}
+export function diffClassWithDefaultOptionals(given: ClassWithDefaultOptionals, expected: ExpectedClassWithDefaultOptionals, path: string = ""): string {
+    const result: string[] = []
+
+    if (expected.optIntEmpty !== undefined) {
+        const expectedOptIntEmpty = expected.optIntEmpty
+        if (given.getOptInt().isEmpty() != expectedOptIntEmpty) { result.push(`${path}optInt empty ${given.getOptInt().isEmpty()} != ${expectedOptIntEmpty}`) }
+    }
+
+    if (expected.optInt !== undefined) {
+        const expectedOptInt = expected.optInt
+        if (given.getOptInt().isEmpty()) { result.push(`${path}optInt is empty but expected is not`); return result.join("\n") }
+        if (given.getOptInt().get() != expectedOptInt) { result.push(`${path}optInt ${given.getOptInt().get()} != ${expectedOptInt}`) }
+    }
+
+    if (expected.optBoolEmpty !== undefined) {
+        const expectedOptBoolEmpty = expected.optBoolEmpty
+        if (given.getOptBool().isEmpty() != expectedOptBoolEmpty) { result.push(`${path}optBool empty ${given.getOptBool().isEmpty()} != ${expectedOptBoolEmpty}`) }
+    }
+
+    if (expected.optBool !== undefined) {
+        const expectedOptBool = expected.optBool
+        if (given.getOptBool().isEmpty()) { result.push(`${path}optBool is empty but expected is not`); return result.join("\n") }
+        if (given.getOptBool().get() != expectedOptBool) { result.push(`${path}optBool ${given.getOptBool().get()} != ${expectedOptBool}`) }
     }
 
     return result.join("\n")
