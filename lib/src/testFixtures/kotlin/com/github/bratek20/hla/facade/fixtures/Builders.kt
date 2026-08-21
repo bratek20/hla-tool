@@ -49,6 +49,7 @@ data class TypeScriptConfigDef(
     var launchJsonPath: String? = null,
     var packageJsonPath: String? = null,
     var entryPath: String? = null,
+    var vitestConfigPath: String? = null,
     var modern: Boolean? = null,
 )
 fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfig {
@@ -59,6 +60,7 @@ fun typeScriptConfig(init: TypeScriptConfigDef.() -> Unit = {}): TypeScriptConfi
         launchJsonPath = def.launchJsonPath?.let { it -> pathCreate(it) },
         packageJsonPath = def.packageJsonPath?.let { it -> pathCreate(it) },
         entryPath = def.entryPath?.let { it -> pathCreate(it) },
+        vitestConfigPath = def.vitestConfigPath?.let { it -> pathCreate(it) },
         modern = def.modern,
     )
 }

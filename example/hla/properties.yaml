@@ -46,7 +46,10 @@ profiles:
               - "Examples"
             path: "Examples"
     typeScript:
+      launchJsonPath: ""
+      packageJsonPath: ""
       entryPath: "main/entry.ts"
+      vitestConfigPath: "./vitest.config.mts"
       modern: true
 
   - name: "cSharp"

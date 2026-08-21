@@ -78,6 +78,8 @@ data class ExpectedTypeScriptConfig(
     var packageJsonPath: String? = null,
     var entryPathEmpty: Boolean? = null,
     var entryPath: String? = null,
+    var vitestConfigPathEmpty: Boolean? = null,
+    var vitestConfigPath: String? = null,
     var modernEmpty: Boolean? = null,
     var modern: Boolean? = null,
 )
@@ -123,6 +125,14 @@ fun diffTypeScriptConfig(given: TypeScriptConfig, expectedInit: ExpectedTypeScri
 
     expected.entryPath?.let {
         if (diffPath(given.getEntryPath()!!, it) != "") { result.add(diffPath(given.getEntryPath()!!, it, "${path}entryPath.")) }
+    }
+
+    expected.vitestConfigPathEmpty?.let {
+        if ((given.getVitestConfigPath() == null) != it) { result.add("${path}vitestConfigPath empty ${(given.getVitestConfigPath() == null)} != ${it}") }
+    }
+
+    expected.vitestConfigPath?.let {
+        if (diffPath(given.getVitestConfigPath()!!, it) != "") { result.add(diffPath(given.getVitestConfigPath()!!, it, "${path}vitestConfigPath.")) }
     }
 
     expected.modernEmpty?.let {

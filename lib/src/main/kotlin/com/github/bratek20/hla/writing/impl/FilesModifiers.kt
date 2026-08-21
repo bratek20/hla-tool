@@ -95,14 +95,54 @@ class FilesModifiers(
         val moduleName = generateResult.getMain().getName().value
 
         // Each of these files is maintained only when the profile says where it lives.
-        // Modern profiles typically configure just the entry file: imports make the
-        // ordered tsconfig file list pointless, and the launch/package scripts belong
-        // to the legacy test app.
+        // Modern profiles skip the tsconfig paths, because imports make the ordered file
+        // list pointless, and get the vitest flavour of the scripts and debug configs.
+        val modern = info.getModern() == true
+        val vitestConfigPath = info.getVitestConfigPath()?.value ?: DEFAULT_VITEST_CONFIG_PATH
+
         info.getMainTsconfigPath()?.let { updateMainTsConfig(rootPath, it, generateResult, profile) }
         info.getTestTsconfigPath()?.let { updateTestTsConfig(rootPath, it, generateResult, profile) }
-        info.getPackageJsonPath()?.let { updatePackageJson(rootPath, it, moduleName) }
-        info.getLaunchJsonPath()?.let { updateLaunchJson(rootPath, it, moduleName) }
+        info.getPackageJsonPath()?.let {
+            if (modern) updateModernPackageJson(rootPath, it, moduleName, vitestConfigPath)
+            else updatePackageJson(rootPath, it, moduleName)
+        }
+        info.getLaunchJsonPath()?.let {
+            if (modern) updateModernLaunchJson(rootPath, it, moduleName, vitestConfigPath)
+            else updateLaunchJson(rootPath, it, moduleName)
+        }
         info.getEntryPath()?.let { updateEntryFile(rootPath, it, generateResult, profile) }
+    }
+
+    // Modern modules run on vitest, so both the npm script and the debug configuration
+    // look nothing like their legacy build_testapp counterparts.
+    private fun updateModernPackageJson(
+        rootPath: Path,
+        packageJsonPath: Path,
+        moduleName: String,
+        vitestConfigPath: String
+    ) {
+        editJsonFile(rootPath.add(packageJsonPath), PACKAGE_JSON) {
+            addModernTestScript(it, moduleName, vitestConfigPath)
+        }
+    }
+
+    private fun updateModernLaunchJson(
+        rootPath: Path,
+        launchJsonPath: Path,
+        moduleName: String,
+        vitestConfigPath: String
+    ) {
+        editJsonFile(rootPath.add(launchJsonPath), LAUNCH_JSON) {
+            addModernLaunchConfig(it, moduleName, vitestConfigPath)
+        }
+    }
+
+    private fun editJsonFile(directory: Path, fileName: FileName, edit: (List<String>) -> List<String>) {
+        val file = files.read(directory.add(fileName))
+        val newLines = edit(file.getContent().lines)
+        if (newLines != file.getContent().lines) {
+            files.write(directory, File.create(file.getName(), FileContent(newLines)))
+        }
     }
 
     // One side effect import per module, pointing at the file that pulls in the module's
@@ -120,21 +160,13 @@ class FilesModifiers(
         val file = files.read(directory.add(fileName))
 
         val moduleDirectory = generateResult.getMain().getName().value
-        val currentLines = file.getContent().lines
         val importLine = "import \"${entrySpecifier(entryPath, moduleDirectory, target, profile)}\""
-        if (currentLines.any { it.trim() == importLine }) {
-            return
+
+        val currentLines = file.getContent().lines
+        val newLines = addEntryImport(currentLines, importLine)
+        if (newLines != currentLines) {
+            files.write(directory, File.create(fileName, FileContent(newLines)))
         }
-
-        val header = currentLines
-            .takeWhile { !it.trimStart().startsWith("import ") }
-            .dropLastWhile { it.isBlank() }
-        val imports = (currentLines.filter { it.trimStart().startsWith("import ") } + importLine)
-            .distinct()
-            .sorted()
-        val newLines = if (header.isEmpty()) imports else header + "" + imports
-
-        files.write(directory, File.create(fileName, FileContent(newLines)))
     }
 
     private data class EntryTarget(val submodule: SubmoduleName, val fileBaseName: String)
@@ -388,5 +420,9 @@ class FilesModifiers(
             EntryTarget(SubmoduleName.Web, "PlayFabHandlers"),
             EntryTarget(SubmoduleName.Impl, "ImplContext"),
         )
+
+        private const val DEFAULT_VITEST_CONFIG_PATH = "./vitest.config.mts"
+        private val PACKAGE_JSON = FileName("package.json")
+        private val LAUNCH_JSON = FileName("launch.json")
     }
 }

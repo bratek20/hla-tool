@@ -14,6 +14,7 @@ Properties
         launchJsonPath: Path? = empty
         packageJsonPath: Path? = empty
         entryPath: Path? = empty
+        vitestConfigPath: Path? = empty
         modern: bool? = empty
 
     SubmodulePath

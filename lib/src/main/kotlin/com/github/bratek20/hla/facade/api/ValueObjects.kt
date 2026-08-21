@@ -84,6 +84,7 @@ data class TypeScriptConfig(
     private val launchJsonPath: String? = null,
     private val packageJsonPath: String? = null,
     private val entryPath: String? = null,
+    private val vitestConfigPath: String? = null,
     private val modern: Boolean? = null,
 ) {
     fun getMainTsconfigPath(): Path? {
@@ -106,6 +107,10 @@ data class TypeScriptConfig(
         return this.entryPath?.let { it -> pathCreate(it) }
     }
 
+    fun getVitestConfigPath(): Path? {
+        return this.vitestConfigPath?.let { it -> pathCreate(it) }
+    }
+
     fun getModern(): Boolean? {
         return this.modern
     }
@@ -117,6 +122,7 @@ data class TypeScriptConfig(
             launchJsonPath: Path? = null,
             packageJsonPath: Path? = null,
             entryPath: Path? = null,
+            vitestConfigPath: Path? = null,
             modern: Boolean? = null,
         ): TypeScriptConfig {
             return TypeScriptConfig(
@@ -125,6 +131,7 @@ data class TypeScriptConfig(
                 launchJsonPath = launchJsonPath?.let { it -> pathGetValue(it) },
                 packageJsonPath = packageJsonPath?.let { it -> pathGetValue(it) },
                 entryPath = entryPath?.let { it -> pathGetValue(it) },
+                vitestConfigPath = vitestConfigPath?.let { it -> pathGetValue(it) },
                 modern = modern,
             )
         }
