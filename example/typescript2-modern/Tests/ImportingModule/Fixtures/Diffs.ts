@@ -2,7 +2,6 @@
 
 import { ImportingEnum } from "../../../main/ImportingModule/Api/Enums"
 import { ImportingProperty } from "../../../main/ImportingModule/Api/ValueObjects"
-import { ExpectedOtherProperty, diffOtherProperty } from "../../OtherModule/Fixtures/Diffs"
 
 export function diffImportingEnum(given: ImportingEnum, expected: string, path: string = ""): string {
     if (given != ImportingEnum.fromName(expected)) { return `${path}value ${given.getName()} != ${expected}` }
@@ -10,14 +9,14 @@ export function diffImportingEnum(given: ImportingEnum, expected: string, path: 
 }
 
 export interface ExpectedImportingProperty {
-    other?: ExpectedOtherProperty,
+    other?: OtherModule.ExpectedOtherProperty,
 }
 export function diffImportingProperty(given: ImportingProperty, expected: ExpectedImportingProperty, path: string = ""): string {
     const result: string[] = []
 
     if (expected.other !== undefined) {
         const expectedOther = expected.other
-        if (diffOtherProperty(given.getOther(), expectedOther) != "") { result.push(diffOtherProperty(given.getOther(), expectedOther, `${path}other.`)) }
+        if (OtherModule.diffOtherProperty(given.getOther(), expectedOther) != "") { result.push(OtherModule.diffOtherProperty(given.getOther(), expectedOther, `${path}other.`)) }
     }
 
     return result.join("\n")
