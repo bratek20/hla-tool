@@ -7,6 +7,6 @@ export class SomeUserInterfaceLogic implements SomeUserInterface {
 
     someMethod(): void {
         // TODO
-        return undefined
+        throw new Error("Method not implemented.")
     }
 }

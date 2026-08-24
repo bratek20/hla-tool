@@ -8,6 +8,6 @@ export class WebApiLogic implements WebApi {
 
     handleRequest(i: WebRequest): WebResult {
         // TODO
-        return undefined
+        throw new Error("Method not implemented.")
     }
 }

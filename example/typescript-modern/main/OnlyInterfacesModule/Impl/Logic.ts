@@ -7,6 +7,6 @@ export class OnlyInterfacesModuleInterfaceLogic implements OnlyInterfacesModuleI
 
     someMethod(): void {
         // TODO
-        return undefined
+        throw new Error("Method not implemented.")
     }
 }

@@ -12,57 +12,57 @@ namespace SomeModule.Impl {
 
         someEmptyMethod(): void {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         someCommand(id: SomeId, amount: number): void {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         someQuery(query: SomeQueryInput): SomeClass {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         optMethod(optId: Optional<SomeId>): Optional<SomeClass> {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         methodWithSimpleVO(id: SomeId): void {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         methodWithListOfSimpleVO(list: SomeId[]): SomeId[] {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         methodWithAny(i: any): any {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         methodWithBaseType(i: string): string {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         methodReturningOptSimpleVo(): Optional<SomeId> {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         methodReturningNumericType(): number {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         methodWithOptionalMap(optMap: Optional<Map<string, string>>): Optional<Map<string, string>> {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 
@@ -73,12 +73,12 @@ namespace SomeModule.Impl {
 
         referenceOtherClass(other: OtherClass): OtherClass {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         referenceLegacyType(legacyType: LegacyType): LegacyType {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 
@@ -89,12 +89,12 @@ namespace SomeModule.Impl {
 
         referenceInterface(empty: SomeEmptyInterface): SomeEmptyInterface {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         referenceOtherInterface(other: OtherInterface): OtherInterface {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 
@@ -105,7 +105,7 @@ namespace SomeModule.Impl {
 
         someMethod(arg1: MockArg, arg2: MockArg): void {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 
@@ -116,12 +116,12 @@ namespace SomeModule.Impl {
 
         someHandler(i: SomeHandlerInput): SomeHandlerOutput {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         someHandler2(i: SomeHandlerInput): SomeHandlerOutput {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 
@@ -132,12 +132,12 @@ namespace SomeModule.Impl {
 
         someDebugHandler(i: SomeHandlerInput): SomeHandlerOutput {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
 
         someDebugHandler2(i: SomeHandlerInput): SomeHandlerOutput {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 
@@ -148,7 +148,7 @@ namespace SomeModule.Impl {
 
         getDimension(): TrackingDimension {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 }

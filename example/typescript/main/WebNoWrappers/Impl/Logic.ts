@@ -6,7 +6,7 @@ namespace WebNoWrappers.Impl {
 
         handleRequest(i: WebRequest): WebResult {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 }

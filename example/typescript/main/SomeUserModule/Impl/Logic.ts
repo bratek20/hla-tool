@@ -6,7 +6,7 @@ namespace SomeUserModule.Impl {
 
         someMethod(): void {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 }

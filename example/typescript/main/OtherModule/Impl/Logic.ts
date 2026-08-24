@@ -6,7 +6,7 @@ namespace OtherModule.Impl {
 
         otherMethod(): void {
             // TODO
-            return undefined
+            throw new Error("Method not implemented.")
         }
     }
 }
