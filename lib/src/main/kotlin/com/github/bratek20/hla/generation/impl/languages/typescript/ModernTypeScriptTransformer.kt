@@ -52,7 +52,7 @@ class ModernTypeScriptTransformer(
     // or any module pulled in through `imports`, whose group has its own profile - stays
     // reachable through its `Module.X.y` global and must never get an ES import.
     private val modernModules = queries.group.getModules().filter { it.isMarkedModern() }
-    private val exports = ModernTypeScriptExports(modernModules)
+    private val exports = ModernTypeScriptExports(queries.group, modernModules)
     private val moduleNames = modernModules.map { it.getName() }.toSet()
     private val qualifiedPatterns = moduleNames.associateWith {
         Regex("\\b${Regex.escape(it.value)}\\.([A-Za-z_$][\\w$]*)(\\.([A-Za-z_$][\\w$]*))?")
@@ -120,6 +120,13 @@ class ModernTypeScriptTransformer(
     ): String? {
         NAMESPACE_QUALIFIERS[qualifier]?.let { (submodule, pattern) ->
             val file = ModernTypeScriptFile(module, submodule, pattern)
+            // Builders and asserts reference their own module's structures through the
+            // fully qualified namespace, so a self reference is the common case. There is
+            // nothing to import and no namespace object to qualify with - the member is a
+            // local declaration and must be left bare.
+            if (file == self) {
+                return if (member.isEmpty()) null else member
+            }
             val alias = if (module == self.module) qualifier else "${module.value}$qualifier"
             imports.addNamespace(file, alias)
             return if (member.isEmpty()) alias else "$alias.$member"

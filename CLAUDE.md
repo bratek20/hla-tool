@@ -427,6 +427,13 @@ one modern profile normally holds a mix of migrated and legacy modules.
 - Builder and assert function names are the camelCase of a structure name, so they collide with
   that structure's own field and parameter names. They are registered **qualified-only**; same for
   the `c` context variable. Over-registering bare names produces spurious imports.
+- A `Module.Builder.X` reference **into the file being generated** must collapse to bare `X`.
+  Suppressing the self-import is not enough — the qualifier itself has to go, or it names nothing.
+- `ModernTypeScriptExports` must register the symbols a pattern **actually emits**, which is not
+  always what the `.module` declares. Exceptions are the trap: `ExceptionsGenerator` uses
+  `ModuleGroupQueries.allExceptionNamesForCurrent()`, which adds every name from an interface
+  `throws` clause and resolves which module owns a name thrown in one and declared in another.
+  Doc-comment `@throws` references never drive imports (`isCommentLine`).
 
 ## Working with the Project
 

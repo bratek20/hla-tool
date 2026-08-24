@@ -74,6 +74,15 @@ class ModernTypeScriptTransformerTest {
                 moduleDefinition {
                     name = "ModernModule"
                     typeScriptConfig = { modern = true }
+                    interfaces = listOf {
+                        name = "ModernInterface"
+                        methods = listOf {
+                            name = "someMethod"
+                            throws = listOf {
+                                name = "ThrownOnlyException"
+                            }
+                        }
+                    }
                 },
                 moduleDefinition {
                     name = "LegacyModule"
@@ -130,6 +139,41 @@ class ModernTypeScriptTransformerTest {
 
         assertThat(result).noneMatch { it.contains("LegacyModuleBuilder") }
         assertThat(result).contains("    return LegacyModule.Builder.legacyClass()")
+    }
+
+    @Test
+    fun `should import an exception that only appears in a throws clause`() {
+        val result = transform(
+            file("ModernModule", SubmoduleName.Impl, PatternName.Logic),
+            "class ModernInterfaceLogic {",
+            "    someMethod(): void {",
+            "        throw new ThrownOnlyException(\"boom\")",
+            "    }",
+            "}"
+        )
+
+        assertThat(result).contains("import { ThrownOnlyException } from \"../Api/Exceptions\"")
+    }
+
+    @Test
+    fun `should drop the namespace qualifier of a reference into the file being generated`() {
+        val result = transform(
+            file("ModernModule", SubmoduleName.Fixtures, PatternName.Builders),
+            "namespace ModernModule.Builder {",
+            "    export interface ModernClassDef {",
+            "        nested?: ModernModule.Builder.ModernClassDef,",
+            "    }",
+            "",
+            "    export function modernClass(): void {",
+            "        ModernModule.Builder.modernClass()",
+            "    }",
+            "}"
+        )
+
+        assertThat(result).noneMatch { it.contains("Builder") }
+        assertThat(result).noneMatch { it.startsWith("import ") }
+        assertThat(result).contains("    nested?: ModernClassDef,")
+        assertThat(result).contains("    modernClass()")
     }
 
     @Test

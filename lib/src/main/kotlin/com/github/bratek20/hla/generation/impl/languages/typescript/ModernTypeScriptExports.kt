@@ -4,6 +4,8 @@ import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.facade.api.ModuleName
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
+import com.github.bratek20.hla.parsing.api.ModuleGroup
+import com.github.bratek20.hla.queries.api.ModuleGroupQueries
 import com.github.bratek20.hla.queries.api.getAllComplexValueObjects
 import com.github.bratek20.utils.camelToPascalCase
 import com.github.bratek20.utils.camelToScreamingSnakeCase
@@ -24,7 +26,10 @@ import com.github.bratek20.utils.pascalToCamelCase
  * reason this distinction exists: both are the camelCase form of a structure name, so
  * they collide with the field and parameter names generated for that same structure.
  */
-class ModernTypeScriptExports(modules: List<ModuleDefinition>) {
+class ModernTypeScriptExports(
+    private val group: ModuleGroup,
+    modules: List<ModuleDefinition>,
+) {
     private val bare = mutableMapOf<String, MutableList<ModernTypeScriptFile>>()
     private val qualified = mutableMapOf<String, MutableList<ModernTypeScriptFile>>()
 
@@ -88,7 +93,13 @@ class ModernTypeScriptExports(modules: List<ModuleDefinition>) {
         simpleStructures: List<String>,
         complexStructures: List<String>,
     ) {
-        module.getExceptions().forEach { add(it.getName(), SubmoduleName.Api, PatternName.Exceptions, true) }
+        // Exceptions.ts holds every name ExceptionsGenerator emits, so it must be asked the
+        // same question: most exceptions are never declared in the Exceptions section, they
+        // only appear in an interface `throws` clause. The query also decides which module
+        // owns a name thrown in one module and declared in another.
+        ModuleGroupQueries(module.getName(), group).allExceptionNamesForCurrent().forEach {
+            add(it, SubmoduleName.Api, PatternName.Exceptions, true)
+        }
         module.getInterfaces().forEach { add(it.getName(), SubmoduleName.Api, PatternName.Interfaces, true) }
         module.getEnums().forEach { add(it.getName(), SubmoduleName.Api, PatternName.Enums, true) }
         module.getEvents().forEach { add(it.getName(), SubmoduleName.Api, PatternName.Events, true) }

@@ -64,9 +64,9 @@ export function someClass2(def?: SomeClass2Def): SomeClass2 {
 }
 
 export interface SomeClass3Def {
-    class2Object?: Builder.SomeClass2Def,
+    class2Object?: SomeClass2Def,
     someEnum?: string,
-    class2List?: Builder.SomeClass2Def[],
+    class2List?: SomeClass2Def[],
 }
 export function someClass3(def?: SomeClass3Def): SomeClass3 {
     const final_class2Object = def?.class2Object ?? {}
@@ -74,9 +74,9 @@ export function someClass3(def?: SomeClass3Def): SomeClass3 {
     const final_class2List = def?.class2List ?? []
 
     return SomeClass3.create(
-        Builder.someClass2(final_class2Object),
+        someClass2(final_class2Object),
         SomeEnum.fromName(final_someEnum),
-        final_class2List.map(it => Builder.someClass2(it)),
+        final_class2List.map(it => someClass2(it)),
     )
 }
 
@@ -103,8 +103,8 @@ export function someClass4(def?: SomeClass4Def): SomeClass4 {
 export interface SomeClass5Def {
     date?: string,
     dateRange?: TypesModuleBuilder.DateRangeDef,
-    dateRangeWrapper?: Builder.DateRangeWrapperDef,
-    someProperty?: Builder.SomePropertyDef,
+    dateRangeWrapper?: DateRangeWrapperDef,
+    someProperty?: SomePropertyDef,
     otherProperty?: OtherModuleBuilder.OtherPropertyDef,
 }
 export function someClass5(def?: SomeClass5Def): SomeClass5 {
@@ -117,17 +117,17 @@ export function someClass5(def?: SomeClass5Def): SomeClass5 {
     return SomeClass5.create(
         TypesModuleCustomTypesMapper.dateCreate(final_date),
         TypesModuleBuilder.dateRange(final_dateRange),
-        Builder.dateRangeWrapper(final_dateRangeWrapper),
-        Builder.someProperty(final_someProperty),
+        dateRangeWrapper(final_dateRangeWrapper),
+        someProperty(final_someProperty),
         OtherModuleBuilder.otherProperty(final_otherProperty),
     )
 }
 
 export interface SomeClass6Def {
-    someClassOpt?: Builder.SomeClassDef,
+    someClassOpt?: SomeClassDef,
     optString?: string,
-    class2List?: Builder.SomeClass2Def[],
-    sameClassList?: Builder.SomeClass6Def[],
+    class2List?: SomeClass2Def[],
+    sameClassList?: SomeClass6Def[],
 }
 export function someClass6(def?: SomeClass6Def): SomeClass6 {
     const final_someClassOpt = def?.someClassOpt ?? undefined
@@ -136,21 +136,21 @@ export function someClass6(def?: SomeClass6Def): SomeClass6 {
     const final_sameClassList = def?.sameClassList ?? []
 
     return SomeClass6.create(
-        Optional.of(final_someClassOpt).map(it => Builder.someClass(it)),
+        Optional.of(final_someClassOpt).map(it => someClass(it)),
         Optional.of(final_optString),
-        final_class2List.map(it => Builder.someClass2(it)),
-        final_sameClassList.map(it => Builder.someClass6(it)),
+        final_class2List.map(it => someClass2(it)),
+        final_sameClassList.map(it => someClass6(it)),
     )
 }
 
 export interface ClassHavingOptListDef {
-    optList?: Builder.SomeClassDef[],
+    optList?: SomeClassDef[],
 }
 export function classHavingOptList(def?: ClassHavingOptListDef): ClassHavingOptList {
     const final_optList = def?.optList ?? undefined
 
     return ClassHavingOptList.create(
-        Optional.of(final_optList).map(it => it.map(it => Builder.someClass(it))),
+        Optional.of(final_optList).map(it => it.map(it => someClass(it))),
     )
 }
 
@@ -216,9 +216,9 @@ export function classWithBoolField(def?: ClassWithBoolFieldDef): ClassWithBoolFi
 }
 
 export interface RecursiveClassDef {
-    meList?: Builder.RecursiveClassDef[],
-    meOpt?: Builder.RecursiveClassDef,
-    meOptList?: Builder.RecursiveClassDef[],
+    meList?: RecursiveClassDef[],
+    meOpt?: RecursiveClassDef,
+    meOptList?: RecursiveClassDef[],
 }
 export function recursiveClass(def?: RecursiveClassDef): RecursiveClass {
     const final_meList = def?.meList ?? []
@@ -226,9 +226,9 @@ export function recursiveClass(def?: RecursiveClassDef): RecursiveClass {
     const final_meOptList = def?.meOptList ?? undefined
 
     return RecursiveClass.create(
-        final_meList.map(it => Builder.recursiveClass(it)),
-        Optional.of(final_meOpt).map(it => Builder.recursiveClass(it)),
-        Optional.of(final_meOptList).map(it => it.map(it => Builder.recursiveClass(it))),
+        final_meList.map(it => recursiveClass(it)),
+        Optional.of(final_meOpt).map(it => recursiveClass(it)),
+        Optional.of(final_meOptList).map(it => it.map(it => recursiveClass(it))),
     )
 }
 
@@ -537,24 +537,24 @@ export function nestedUniqueIds(def?: NestedUniqueIdsDef): NestedUniqueIds {
 }
 
 export interface SomeStructureWithUniqueNestedIdsDef {
-    nestedUniqueIds?: Builder.NestedUniqueIdsDef[],
+    nestedUniqueIds?: NestedUniqueIdsDef[],
 }
 export function someStructureWithUniqueNestedIds(def?: SomeStructureWithUniqueNestedIdsDef): SomeStructureWithUniqueNestedIds {
     const final_nestedUniqueIds = def?.nestedUniqueIds ?? []
 
     return SomeStructureWithUniqueNestedIds.create(
-        final_nestedUniqueIds.map(it => Builder.nestedUniqueIds(it)),
+        final_nestedUniqueIds.map(it => nestedUniqueIds(it)),
     )
 }
 
 export interface SomeStructureWithMultipleUniqueNestedIdsDef {
-    moreNestedFields?: Builder.SomeStructureWithUniqueNestedIdsDef[],
+    moreNestedFields?: SomeStructureWithUniqueNestedIdsDef[],
 }
 export function someStructureWithMultipleUniqueNestedIds(def?: SomeStructureWithMultipleUniqueNestedIdsDef): SomeStructureWithMultipleUniqueNestedIds {
     const final_moreNestedFields = def?.moreNestedFields ?? []
 
     return SomeStructureWithMultipleUniqueNestedIds.create(
-        final_moreNestedFields.map(it => Builder.someStructureWithUniqueNestedIds(it)),
+        final_moreNestedFields.map(it => someStructureWithUniqueNestedIds(it)),
     )
 }
 
@@ -570,13 +570,13 @@ export function someClassWIthOtherClassUniqueIds(def?: SomeClassWIthOtherClassUn
 }
 
 export interface SomeStructWithNestedOtherClassUniqueIdsDef {
-    someNestedWithUniqueIds?: Builder.SomeClassWIthOtherClassUniqueIdsDef[],
+    someNestedWithUniqueIds?: SomeClassWIthOtherClassUniqueIdsDef[],
 }
 export function someStructWithNestedOtherClassUniqueIds(def?: SomeStructWithNestedOtherClassUniqueIdsDef): SomeStructWithNestedOtherClassUniqueIds {
     const final_someNestedWithUniqueIds = def?.someNestedWithUniqueIds ?? []
 
     return SomeStructWithNestedOtherClassUniqueIds.create(
-        final_someNestedWithUniqueIds.map(it => Builder.someClassWIthOtherClassUniqueIds(it)),
+        final_someNestedWithUniqueIds.map(it => someClassWIthOtherClassUniqueIds(it)),
     )
 }
 
@@ -592,19 +592,19 @@ export function nestedClassLevel2(def?: NestedClassLevel2Def): NestedClassLevel2
 }
 
 export interface NestedClassLevel1Def {
-    nestLevel2?: Builder.NestedClassLevel2Def[],
+    nestLevel2?: NestedClassLevel2Def[],
 }
 export function nestedClassLevel1(def?: NestedClassLevel1Def): NestedClassLevel1 {
     const final_nestLevel2 = def?.nestLevel2 ?? []
 
     return NestedClassLevel1.create(
-        final_nestLevel2.map(it => Builder.nestedClassLevel2(it)),
+        final_nestLevel2.map(it => nestedClassLevel2(it)),
     )
 }
 
 export interface ComplexStructureWithNestedUniqueIdsDef {
     id?: string,
-    nestLevel1?: Builder.NestedClassLevel1Def[],
+    nestLevel1?: NestedClassLevel1Def[],
 }
 export function complexStructureWithNestedUniqueIds(def?: ComplexStructureWithNestedUniqueIdsDef): ComplexStructureWithNestedUniqueIds {
     const final_id = def?.id ?? "someValue"
@@ -612,7 +612,7 @@ export function complexStructureWithNestedUniqueIds(def?: ComplexStructureWithNe
 
     return ComplexStructureWithNestedUniqueIds.create(
         final_id,
-        final_nestLevel1.map(it => Builder.nestedClassLevel1(it)),
+        final_nestLevel1.map(it => nestedClassLevel1(it)),
     )
 }
 
@@ -628,13 +628,13 @@ export function nestedValue(def?: NestedValueDef): NestedValue {
 }
 
 export interface OptionalFieldPropertyDef {
-    optionalField?: Builder.NestedValueDef,
+    optionalField?: NestedValueDef,
 }
 export function optionalFieldProperty(def?: OptionalFieldPropertyDef): OptionalFieldProperty {
     const final_optionalField = def?.optionalField ?? undefined
 
     return OptionalFieldProperty.create(
-        Optional.of(final_optionalField).map(it => Builder.nestedValue(it)),
+        Optional.of(final_optionalField).map(it => nestedValue(it)),
     )
 }
 
@@ -653,9 +653,9 @@ export function customTypesProperty(def?: CustomTypesPropertyDef): CustomTypesPr
 }
 
 export interface SelfReferencingPropertyDef {
-    optionalSelf?: Builder.SelfReferencingPropertyDef,
-    listSelf?: Builder.SelfReferencingPropertyDef[],
-    optionalListSelf?: Builder.SelfReferencingPropertyDef[],
+    optionalSelf?: SelfReferencingPropertyDef,
+    listSelf?: SelfReferencingPropertyDef[],
+    optionalListSelf?: SelfReferencingPropertyDef[],
 }
 export function selfReferencingProperty(def?: SelfReferencingPropertyDef): SelfReferencingProperty {
     const final_optionalSelf = def?.optionalSelf ?? undefined
@@ -663,15 +663,15 @@ export function selfReferencingProperty(def?: SelfReferencingPropertyDef): SelfR
     const final_optionalListSelf = def?.optionalListSelf ?? undefined
 
     return SelfReferencingProperty.create(
-        Optional.of(final_optionalSelf).map(it => Builder.selfReferencingProperty(it)),
-        final_listSelf.map(it => Builder.selfReferencingProperty(it)),
-        Optional.of(final_optionalListSelf).map(it => it.map(it => Builder.selfReferencingProperty(it))),
+        Optional.of(final_optionalSelf).map(it => selfReferencingProperty(it)),
+        final_listSelf.map(it => selfReferencingProperty(it)),
+        Optional.of(final_optionalListSelf).map(it => it.map(it => selfReferencingProperty(it))),
     )
 }
 
 export interface CustomTypesPropertyOptionalListDef {
     id?: string,
-    customPropertiesList?: Builder.CustomTypesPropertyDef[],
+    customPropertiesList?: CustomTypesPropertyDef[],
 }
 export function customTypesPropertyOptionalList(def?: CustomTypesPropertyOptionalListDef): CustomTypesPropertyOptionalList {
     const final_id = def?.id ?? "someValue"
@@ -679,7 +679,7 @@ export function customTypesPropertyOptionalList(def?: CustomTypesPropertyOptiona
 
     return CustomTypesPropertyOptionalList.create(
         final_id,
-        Optional.of(final_customPropertiesList).map(it => it.map(it => Builder.customTypesProperty(it))),
+        Optional.of(final_customPropertiesList).map(it => it.map(it => customTypesProperty(it))),
     )
 }
 
