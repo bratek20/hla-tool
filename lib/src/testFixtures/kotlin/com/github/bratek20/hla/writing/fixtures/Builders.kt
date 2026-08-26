@@ -16,6 +16,7 @@ data class WriteArgsDef(
     var module: (GeneratedModuleDef.() -> Unit) = {},
     var profile: (HlaProfileDef.() -> Unit) = {},
     var onlyUpdate: Boolean = false,
+    var modern: Boolean = false,
 )
 fun writeArgs(init: WriteArgsDef.() -> Unit = {}): WriteArgs {
     val def = WriteArgsDef().apply(init)
@@ -24,5 +25,6 @@ fun writeArgs(init: WriteArgsDef.() -> Unit = {}): WriteArgs {
         module = generatedModule(def.module),
         profile = hlaProfile(def.profile),
         onlyUpdate = def.onlyUpdate,
+        modern = def.modern,
     )
 }

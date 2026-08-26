@@ -91,6 +91,11 @@ fun assertKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.(
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertTypeScriptModuleConfig(given: TypeScriptModuleConfig, expectedInit: ExpectedTypeScriptModuleConfig.() -> Unit) {
+    val diff = diffTypeScriptModuleConfig(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertMenuDefinition(given: MenuDefinition, expectedInit: ExpectedMenuDefinition.() -> Unit) {
     val diff = diffMenuDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

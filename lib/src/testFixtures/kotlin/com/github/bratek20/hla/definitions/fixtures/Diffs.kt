@@ -469,6 +469,25 @@ fun diffKotlinConfig(given: KotlinConfig, expectedInit: ExpectedKotlinConfig.() 
     return result.joinToString("\n")
 }
 
+data class ExpectedTypeScriptModuleConfig(
+    var modernEmpty: Boolean? = null,
+    var modern: Boolean? = null,
+)
+fun diffTypeScriptModuleConfig(given: TypeScriptModuleConfig, expectedInit: ExpectedTypeScriptModuleConfig.() -> Unit, path: String = ""): String {
+    val expected = ExpectedTypeScriptModuleConfig().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.modernEmpty?.let {
+        if ((given.getModern() == null) != it) { result.add("${path}modern empty ${(given.getModern() == null)} != ${it}") }
+    }
+
+    expected.modern?.let {
+        if (given.getModern()!! != it) { result.add("${path}modern ${given.getModern()!!} != ${it}") }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedMenuDefinition(
     var attributes: List<(ExpectedAttribute.() -> Unit)>? = null,
     var exposedInterfaces: List<String>? = null,
@@ -485,25 +504,6 @@ fun diffMenuDefinition(given: MenuDefinition, expectedInit: ExpectedMenuDefiniti
     expected.exposedInterfaces?.let {
         if (given.getExposedInterfaces().size != it.size) { result.add("${path}exposedInterfaces size ${given.getExposedInterfaces().size} != ${it.size}"); return@let }
         given.getExposedInterfaces().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}exposedInterfaces[${idx}] ${entry} != ${it[idx]}") } }
-    }
-
-    return result.joinToString("\n")
-}
-
-data class ExpectedTypeScriptModuleConfig(
-    var modernEmpty: Boolean? = null,
-    var modern: Boolean? = null,
-)
-fun diffTypeScriptModuleConfig(given: TypeScriptModuleConfig, expectedInit: ExpectedTypeScriptModuleConfig.() -> Unit, path: String = ""): String {
-    val expected = ExpectedTypeScriptModuleConfig().apply(expectedInit)
-    val result: MutableList<String> = mutableListOf()
-
-    expected.modernEmpty?.let {
-        if ((given.getModern() == null) != it) { result.add("${path}modern empty ${(given.getModern() == null)} != ${it}") }
-    }
-
-    expected.modern?.let {
-        if (given.getModern()!! != it) { result.add("${path}modern ${given.getModern()!!} != ${it}") }
     }
 
     return result.joinToString("\n")

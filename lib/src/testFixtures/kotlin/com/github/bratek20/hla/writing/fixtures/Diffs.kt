@@ -16,6 +16,7 @@ data class ExpectedWriteArgs(
     var module: (ExpectedGeneratedModule.() -> Unit)? = null,
     var profile: (ExpectedHlaProfile.() -> Unit)? = null,
     var onlyUpdate: Boolean? = null,
+    var modern: Boolean? = null,
 )
 fun diffWriteArgs(given: WriteArgs, expectedInit: ExpectedWriteArgs.() -> Unit, path: String = ""): String {
     val expected = ExpectedWriteArgs().apply(expectedInit)
@@ -35,6 +36,10 @@ fun diffWriteArgs(given: WriteArgs, expectedInit: ExpectedWriteArgs.() -> Unit, 
 
     expected.onlyUpdate?.let {
         if (given.getOnlyUpdate() != it) { result.add("${path}onlyUpdate ${given.getOnlyUpdate()} != ${it}") }
+    }
+
+    expected.modern?.let {
+        if (given.getModern() != it) { result.add("${path}modern ${given.getModern()} != ${it}") }
     }
 
     return result.joinToString("\n")

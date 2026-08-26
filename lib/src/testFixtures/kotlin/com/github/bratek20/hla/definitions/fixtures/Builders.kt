@@ -229,6 +229,16 @@ fun kotlinConfig(init: KotlinConfigDef.() -> Unit = {}): KotlinConfig {
     )
 }
 
+data class TypeScriptModuleConfigDef(
+    var modern: Boolean? = null,
+)
+fun typeScriptModuleConfig(init: TypeScriptModuleConfigDef.() -> Unit = {}): TypeScriptModuleConfig {
+    val def = TypeScriptModuleConfigDef().apply(init)
+    return TypeScriptModuleConfig.create(
+        modern = def.modern,
+    )
+}
+
 data class MenuDefinitionDef(
     var attributes: List<(AttributeDef.() -> Unit)> = emptyList(),
     var exposedInterfaces: List<String> = emptyList(),
@@ -238,16 +248,6 @@ fun menuDefinition(init: MenuDefinitionDef.() -> Unit = {}): MenuDefinition {
     return MenuDefinition.create(
         attributes = def.attributes.map { it -> attribute(it) },
         exposedInterfaces = def.exposedInterfaces,
-    )
-}
-
-data class TypeScriptModuleConfigDef(
-    var modern: Boolean? = null,
-)
-fun typeScriptModuleConfig(init: TypeScriptModuleConfigDef.() -> Unit = {}): TypeScriptModuleConfig {
-    val def = TypeScriptModuleConfigDef().apply(init)
-    return TypeScriptModuleConfig.create(
-        modern = def.modern,
     )
 }
 
