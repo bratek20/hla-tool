@@ -10,11 +10,13 @@ namespace SomeModule.Impl {
             super()
             this.name = someClass.getId().getValue()
             this.amount = someClass.getAmount()
+            this.from_field = someClass.getFromField()
             this.date_range = SerializedDateRange.fromCustomType(date_range)
             this.dimensions_list = dimensions_list
         }
         private readonly name: string
         private readonly amount: number
+        private readonly from_field: number
         private readonly date_range: SerializedDateRange
         private readonly dimensions_list: TrackingDimensionList
         getTableName(): TrackingTableName {
