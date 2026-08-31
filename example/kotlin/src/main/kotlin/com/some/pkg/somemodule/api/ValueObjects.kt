@@ -67,6 +67,7 @@ data class SomeId2(
 data class SomeClass(
     private val id: String,
     private val amount: Int,
+    private val fF: Int,
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
@@ -76,14 +77,20 @@ data class SomeClass(
         return this.amount
     }
 
+    fun getFromField(): Int {
+        return this.fF
+    }
+
     companion object {
         fun create(
             id: SomeId,
             amount: Int,
+            fromField: Int,
         ): SomeClass {
             return SomeClass(
                 id = id.value,
                 amount = amount,
+                fF = fromField,
             )
         }
     }
@@ -513,6 +520,7 @@ data class ClassWithComplexMap(
 data class ClassExtendingSomeClass(
     private val id: String,
     private val amount: Int,
+    private val fF: Int,
     private val extraField: String,
 ) {
     fun getId(): SomeId {
@@ -523,6 +531,10 @@ data class ClassExtendingSomeClass(
         return this.amount
     }
 
+    fun getFromField(): Int {
+        return this.fF
+    }
+
     fun getExtraField(): String {
         return this.extraField
     }
@@ -531,6 +543,7 @@ data class ClassExtendingSomeClass(
         return SomeClass.create(
             getId(),
             getAmount(),
+            getFromField(),
         )
     }
 
@@ -538,11 +551,13 @@ data class ClassExtendingSomeClass(
         fun create(
             id: SomeId,
             amount: Int,
+            fromField: Int,
             extraField: String,
         ): ClassExtendingSomeClass {
             return ClassExtendingSomeClass(
                 id = id.value,
                 amount = amount,
+                fF = fromField,
                 extraField = extraField,
             )
         }
@@ -554,6 +569,7 @@ data class ClassExtendingSomeClass(
             return create(
                 id = base.getId(),
                 amount = base.getAmount(),
+                fromField = base.getFromField(),
                 extraField = extraField,
             )
         }
