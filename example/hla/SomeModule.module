@@ -26,6 +26,7 @@ ValueObjects
     SomeClass
         id: SomeId
         amount: int (startsFrom: 10)
+        fromField: int (from: fF)
 
     SomeClass2
         id: SomeId
@@ -437,6 +438,7 @@ Tracking
             SomeClass
                 id -> name // name mapping
                 amount // keeping same name
+                fromField -> from_field // name mapping
             date_range: DateRange // field + custom type
             dimensions_list: TrackingDimensionList
         SomeDimensionWithPrimitives (table: "some_dimension_with_primitives")
