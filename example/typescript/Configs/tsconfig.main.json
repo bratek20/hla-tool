@@ -50,6 +50,8 @@
         "../main/OtherModule/Impl/ImplContext.ts",
 
         "../main/OtherModule/Web/PlayFabHandlers.ts",
+
+        "../main/OtherModule/Menu/Menu.ts",
         //OtherModule end
 
         "../main/SimpleModule/Api/ValueObjects.ts",
@@ -75,6 +77,8 @@
         "../main/SomeModule/Web/WebClient.ts",
         "../main/SomeModule/Web/PlayFabHandlers.ts",
         "../main/SomeModule/Web/WebClientContext.ts",
+
+        "../main/SomeModule/Menu/Menu.ts",
         //SomeModule end
 
         "../main/SomeUserModule/Api/ValueObjects.ts",

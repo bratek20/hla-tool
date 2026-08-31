@@ -20,6 +20,7 @@ private fun calcGenerateResult(module: GeneratedModule, profile: HlaProfile): Ge
             submoduleToDirectory(SubmoduleName.Api, module.getSubmodules(), profile),
             submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules(), profile),
             submoduleToDirectory(SubmoduleName.Web, module.getSubmodules(), profile),
+            submoduleToDirectory(SubmoduleName.Menu, module.getSubmodules(), profile),
             submoduleToDirectory(SubmoduleName.Context, module.getSubmodules(), profile),
         )
     );
