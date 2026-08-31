@@ -25,6 +25,7 @@ class TestSomeInterfaceLogic: SomeInterface {
         return SomeClass.create(
             id = query.getId(),
             amount = 0,
+            fromField = 0
         )
     }
 
