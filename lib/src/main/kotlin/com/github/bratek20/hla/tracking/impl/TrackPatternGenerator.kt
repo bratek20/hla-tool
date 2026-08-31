@@ -125,11 +125,8 @@ private class MyFieldsLogic(
 private class ExposedClassLogic(
     private val def: DependencyConceptDefinition,
     private val apiTypeFactory: ApiTypeFactory,
-    typesWorldApi: TypesWorldApi,
     private val types: TrackingTypesLogic
 ): TablePart {
-    private val worldClassType = typesWorldApi.getTypeByName(WorldTypeName(def.getName()))
-    private val worldClass = typesWorldApi.getClassType(worldClassType)
     private val defApiType = apiTypeFactory.create(TypeDefinition(def.getName(), emptyList())) as ComplexStructureApiType<*>
 
     override fun getFieldsOps(): List<FieldBuilderOps> {
@@ -186,7 +183,7 @@ private class ExposedClassLogic(
     }
 
     private fun getWorldFieldTypeName(mappedField: MappedField): String {
-        return worldClass.getField(mappedField.getName()).getType().getName().value
+        return getDefFieldTypeDef(mappedField).asWorldTypeName().value
     }
 }
 
@@ -203,7 +200,7 @@ class TrackingTableLogic(
 
     private val types = TrackingTypesLogic(apiTypeFactory, typesWorldApi, currentModuleName)
     private val parts = def.getExposedClasses().map {
-            ExposedClassLogic(it, apiTypeFactory, typesWorldApi, types)
+            ExposedClassLogic(it, apiTypeFactory, types)
         } + listOf(MyFieldsLogic(def.getFields(), types))
 
     fun getClassOps(): ClassBuilderOps {
