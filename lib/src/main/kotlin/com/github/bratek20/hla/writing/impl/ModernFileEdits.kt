@@ -106,7 +106,7 @@ private fun insertIntoBlock(
     return result
 }
 
-private fun indentationOf(line: String): String {
+internal fun indentationOf(line: String): String {
     return line.takeWhile { it == ' ' }
 }
 

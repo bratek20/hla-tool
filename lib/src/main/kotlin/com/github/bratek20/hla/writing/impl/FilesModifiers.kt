@@ -3,86 +3,28 @@ package com.github.bratek20.hla.writing.impl
 import com.github.bratek20.hla.facade.api.HlaProfile
 import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.GeneratedModule
-import com.github.bratek20.hla.generation.api.GeneratedSubmodule
+import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.api.SubmoduleName
 import com.github.bratek20.hla.writing.api.WriteArgs
 import com.github.bratek20.utils.directory.api.*
+
+private const val TS_EXTENSION = ".ts"
+
+// Fixtures and Tests are registered in the test tsconfig, every other submodule in the main one.
+private val TEST_SUBMODULES = setOf(SubmoduleName.Fixtures, SubmoduleName.Tests)
 
 private fun getSubmodulePath(profile: HlaProfile, submodule: SubmoduleName): Path {
     return profile.getPaths().getSrc().getPathForSubmodule(submodule)
 }
 
-//TODO-REF GenerateResult is legacy structure, should be removed and use new concept of GeneratedModule
-private fun calcGenerateResult(module: GeneratedModule, profile: HlaProfile): GenerateResult {
-    val main = Directory.create(
-        calcModuleDirectoryName(module.getName(), profile),
-        directories = listOfNotNull(
-            submoduleToDirectory(SubmoduleName.Api, module.getSubmodules(), profile),
-            submoduleToDirectory(SubmoduleName.Impl, module.getSubmodules(), profile),
-            submoduleToDirectory(SubmoduleName.Web, module.getSubmodules(), profile),
-            submoduleToDirectory(SubmoduleName.Context, module.getSubmodules(), profile),
-        )
-    );
-    val fixtures = Directory.create(
-        calcModuleDirectoryName(module.getName(), profile),
-        directories = listOfNotNull(
-            submoduleToDirectory(SubmoduleName.Fixtures, module.getSubmodules(), profile),
-        )
-    );
-    val tests = Directory.create(
-        calcModuleDirectoryName(module.getName(), profile),
-        directories = listOfNotNull(
-            submoduleToDirectory(SubmoduleName.Tests, module.getSubmodules(), profile),
-        )
-    );
-    return GenerateResult(
-        main,
-        toNullIfEmpty(fixtures),
-        toNullIfEmpty(tests)
-    )
-}
-
-private class GenerateResult(
-    private val main: Directory,
-    private val fixtures: Directory?,
-    private val tests: Directory?,
-) {
-    fun getMain(): Directory {
-        return main
-    }
-
-    fun getFixtures(): Directory? {
-        return fixtures
-    }
-
-    fun getTests(): Directory? {
-        return tests
-    }
-}
-
-private fun toNullIfEmpty(directory: Directory): Directory? {
-    return if (directory.getDirectories().isEmpty() && directory.getFiles().isEmpty()) {
-        null
-    } else {
-        directory
-    }
-}
-
-private fun submoduleToDirectory(name: SubmoduleName, subs: List<GeneratedSubmodule>, profile: HlaProfile): Directory? {
-    val sub = subs.find { it.getName() == name }
-    if (sub == null || sub.getPatterns().isEmpty()) {
-        return null
-    }
-
-    return Directory.create(
-        name = calcSubmoduleDirectoryName(name, profile),
-        files = sub.getPatterns().map { it.getFile()!! }
-    )
-}
-
 class FilesModifiers(
     private val files: Files,
 ) {
+    private data class SubmoduleFiles(
+        val submodule: SubmoduleName,
+        val fileNames: List<String>,
+    )
+
     fun modify(args: WriteArgs, rootPath: Path) {
         val profile = args.getProfile()
         val info = profile.getTypeScript()
@@ -91,8 +33,10 @@ class FilesModifiers(
             return
         }
 
-        val generateResult = calcGenerateResult(args.getModule(), profile)
-        val moduleName = generateResult.getMain().getName().value
+        val module = args.getModule()
+        val moduleName = module.getName().value
+        val moduleDirectory = calcModuleDirectoryName(module.getName(), profile).value
+        val (testFiles, mainFiles) = typeScriptFiles(module).partition { it.submodule in TEST_SUBMODULES }
 
         // Each of these files is maintained only when the profile says where it lives.
         // Whether a module gets the vitest flavour or the legacy test app flavour is the
@@ -100,46 +44,26 @@ class FilesModifiers(
         val modern = args.getModern()
         val vitestConfigPath = info.getVitestConfigPath()?.value ?: DEFAULT_VITEST_CONFIG_PATH
 
-        info.getMainTsconfigPath()?.let { updateMainTsConfig(rootPath, it, generateResult, profile) }
-        info.getTestTsconfigPath()?.let { updateTestTsConfig(rootPath, it, generateResult, profile) }
+        info.getMainTsconfigPath()?.let { updateTsConfig(rootPath, it, moduleDirectory, mainFiles, profile) }
+        info.getTestTsconfigPath()?.let { updateTsConfig(rootPath, it, moduleDirectory, testFiles, profile) }
         info.getPackageJsonPath()?.let {
-            if (modern) updateModernPackageJson(rootPath, it, moduleName, vitestConfigPath)
-            else updatePackageJson(rootPath, it, moduleName)
+            editFile(rootPath.add(it), PACKAGE_JSON) { lines ->
+                if (modern) addModernTestScript(lines, moduleName, vitestConfigPath)
+                else addLegacyTestScript(lines, moduleName)
+            }
         }
         info.getLaunchJsonPath()?.let {
-            if (modern) updateModernLaunchJson(rootPath, it, moduleName, vitestConfigPath)
-            else updateLaunchJson(rootPath, it, moduleName)
+            editFile(rootPath.add(it), LAUNCH_JSON) { lines ->
+                if (modern) addModernLaunchConfig(lines, moduleName, vitestConfigPath)
+                else addLegacyLaunchConfig(lines, moduleName)
+            }
         }
         if (modern) {
-            info.getEntryPath()?.let { updateEntryFile(rootPath, it, generateResult, profile) }
+            info.getEntryPath()?.let { updateEntryFile(rootPath, it, module, profile) }
         }
     }
 
-    // Modern modules run on vitest, so both the npm script and the debug configuration
-    // look nothing like their legacy build_testapp counterparts.
-    private fun updateModernPackageJson(
-        rootPath: Path,
-        packageJsonPath: Path,
-        moduleName: String,
-        vitestConfigPath: String
-    ) {
-        editJsonFile(rootPath.add(packageJsonPath), PACKAGE_JSON) {
-            addModernTestScript(it, moduleName, vitestConfigPath)
-        }
-    }
-
-    private fun updateModernLaunchJson(
-        rootPath: Path,
-        launchJsonPath: Path,
-        moduleName: String,
-        vitestConfigPath: String
-    ) {
-        editJsonFile(rootPath.add(launchJsonPath), LAUNCH_JSON) {
-            addModernLaunchConfig(it, moduleName, vitestConfigPath)
-        }
-    }
-
-    private fun editJsonFile(directory: Path, fileName: FileName, edit: (List<String>) -> List<String>) {
+    private fun editFile(directory: Path, fileName: FileName, edit: (List<String>) -> List<String>) {
         val file = files.read(directory.add(fileName))
         val newLines = edit(file.getContent().lines)
         if (newLines != file.getContent().lines) {
@@ -147,38 +71,81 @@ class FilesModifiers(
         }
     }
 
+    private fun updateTsConfig(
+        rootPath: Path,
+        configPath: Path,
+        moduleDirectory: String,
+        submodulesFiles: List<SubmoduleFiles>,
+        profile: HlaProfile
+    ) {
+        if (submodulesFiles.isEmpty()) {
+            return
+        }
+
+        val configDirectory = getDirectoryPart(configPath)
+        val submodulesPaths = submodulesFiles.map { filePaths(configDirectory, moduleDirectory, it, profile) }
+
+        editFile(rootPath.add(configDirectory), getFileNamePart(configPath)) {
+            addModuleFilesToTsConfig(it, moduleDirectory, submodulesPaths)
+        }
+    }
+
+    // Paths as the tsconfig sees them: from the config directory down to the generated file.
+    private fun filePaths(
+        configDirectory: Path,
+        moduleDirectory: String,
+        submoduleFiles: SubmoduleFiles,
+        profile: HlaProfile
+    ): List<String> {
+        val prefix = calculateFilePrefix(configDirectory, getSubmodulePath(profile, submoduleFiles.submodule))
+        val submoduleDirectory = calcSubmoduleDirectoryName(submoduleFiles.submodule, profile).value
+
+        return submoduleFiles.fileNames.map { "$prefix$moduleDirectory/$submoduleDirectory/$it" }
+    }
+
+    // Submodules that generated no TypeScript file at all are skipped - patterns writing a whole
+    // directory (Examples) or a non TypeScript file (InitSql) are nothing to register.
+    private fun typeScriptFiles(module: GeneratedModule): List<SubmoduleFiles> {
+        return module.getSubmodules().mapNotNull { submodule ->
+            val fileNames = submodule.getPatterns()
+                .mapNotNull { it.getFile()?.getName()?.value }
+                .filter { it.endsWith(TS_EXTENSION) }
+
+            if (fileNames.isEmpty()) null else SubmoduleFiles(submodule.getName(), fileNames)
+        }
+    }
+
+    private fun patternFileName(module: GeneratedModule, submodule: SubmoduleName, pattern: PatternName): String? {
+        return module.getSubmodules().find { it.getName() == submodule }
+            ?.getPatterns()?.find { it.getName() == pattern }
+            ?.getFile()?.getName()?.value
+    }
+
     // One side effect import per module, pointing at the file that pulls in the module's
     // registrations. The entry file must already exist, like every other file spliced here.
     private fun updateEntryFile(
         rootPath: Path,
         entryPath: Path,
-        generateResult: GenerateResult,
+        module: GeneratedModule,
         profile: HlaProfile
     ) {
-        val target = findEntrySideEffectFile(generateResult.getMain(), profile) ?: return
+        val target = findEntryTarget(module) ?: return
 
-        val directory = rootPath.add(getDirectoryPart(entryPath))
-        val fileName = getFileNamePart(entryPath)
-        val file = files.read(directory.add(fileName))
-
-        val moduleDirectory = generateResult.getMain().getName().value
+        val moduleDirectory = calcModuleDirectoryName(module.getName(), profile).value
         val importLine = "import \"${entrySpecifier(entryPath, moduleDirectory, target, profile)}\""
 
-        val currentLines = file.getContent().lines
-        val newLines = addEntryImport(currentLines, importLine)
-        if (newLines != currentLines) {
-            files.write(directory, File.create(fileName, FileContent(newLines)))
+        editFile(rootPath.add(getDirectoryPart(entryPath)), getFileNamePart(entryPath)) {
+            addEntryImport(it, importLine)
         }
     }
 
     private data class EntryTarget(val submodule: SubmoduleName, val fileBaseName: String)
 
-    private fun findEntrySideEffectFile(main: Directory, profile: HlaProfile): EntryTarget? {
-        return ENTRY_CANDIDATES.firstOrNull { candidate ->
-            main.getDirectories()
-                .find { it.getName().value == calcSubmoduleDirectoryName(candidate.submodule, profile).value }
-                ?.getFiles()
-                ?.any { it.getName().value == candidate.fileBaseName + ".ts" } == true
+    private fun findEntryTarget(module: GeneratedModule): EntryTarget? {
+        return ENTRY_CANDIDATES.firstNotNullOfOrNull { (submodule, pattern) ->
+            patternFileName(module, submodule, pattern)?.let {
+                EntryTarget(submodule, it.removeSuffix(TS_EXTENSION))
+            }
         }
     }
 
@@ -196,100 +163,51 @@ class FilesModifiers(
         return relativeModuleSpecifier(pathParts(getDirectoryPart(entryPath).value), targetParts)
     }
 
-    private fun updateLaunchJson(rootPath: Path, launchJsonPath: Path, moduleName: String) {
-        val path = rootPath.add(launchJsonPath)
-        files.read(path.add(FileName("launch.json"))).let {
-            val currentLines = it.getContent().lines.toMutableList()
-            val startIndex = currentLines.indexOfFirst { it.contains("\"configurations\"") }
-            val paddingIndex = currentLines.subList(startIndex, currentLines.size).indexOfLast { it.contains("workspaceFolder") } + startIndex + 2
-            val padding = currentLines[paddingIndex].takeWhile { it == ' ' }
-            val indexToAdd = paddingIndex + 1
-            val newLines = listOf(
-                "$padding{",
-                "$padding    \"type\": \"node\",",
-                "$padding    \"request\": \"launch\",",
-                "$padding    \"name\": \"Launch Test App - $moduleName Tests\",",
-                "$padding    \"program\": \"\${workspaceFolder}/Dist/AFC.testapp.js\",",
-                "$padding    \"args\": [\" $moduleName\"],",
-                "$padding    \"outFiles\": [",
-                "$padding        \"\${workspaceFolder}/**/*.js\"",
-                "$padding    ]",
-                "$padding},"
-            )
-
-            if (currentLines.any { it.contains("Launch Test App - $moduleName Tests") }) {
-                return
-            }
-
-            currentLines.addAll(indexToAdd, newLines)
-
-            files.write(path, File.create(it.getName(), FileContent(currentLines)))
+    private fun addLegacyLaunchConfig(lines: List<String>, moduleName: String): List<String> {
+        if (lines.any { it.contains("Launch Test App - $moduleName Tests") }) {
+            return lines
         }
+
+        val result = lines.toMutableList()
+        val startIndex = result.indexOfFirst { it.contains("\"configurations\"") }
+        val paddingIndex = result.subList(startIndex, result.size)
+            .indexOfLast { it.contains("workspaceFolder") } + startIndex + 2
+        val padding = indentationOf(result[paddingIndex])
+
+        result.addAll(paddingIndex + 1, listOf(
+            "$padding{",
+            "$padding    \"type\": \"node\",",
+            "$padding    \"request\": \"launch\",",
+            "$padding    \"name\": \"Launch Test App - $moduleName Tests\",",
+            "$padding    \"program\": \"\${workspaceFolder}/Dist/AFC.testapp.js\",",
+            "$padding    \"args\": [\" $moduleName\"],",
+            "$padding    \"outFiles\": [",
+            "$padding        \"\${workspaceFolder}/**/*.js\"",
+            "$padding    ]",
+            "$padding},"
+        ))
+
+        return result
     }
 
-    private fun updatePackageJson(rootPath: Path, packageJsonPath: Path, moduleName: String) {
-        val path = rootPath.add(packageJsonPath)
-        files.read(path.add(FileName("package.json"))).let {
-            val currentLines = it.getContent().lines.toMutableList()
-            val startIndex = currentLines.indexOfFirst { it.contains("\"scripts\"") }
-            val indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfLast { it.contains("test ") } + startIndex + 1
-            val padding = currentLines[indexToAdd-1].takeWhile { it == ' ' }
-            val newLines = listOf(
-                "$padding\"test $moduleName\": \"npm run build_testapp && npm run run_testapp \\\" $moduleName\\\"\"",
-            )
-
-            if (currentLines.any { it.contains("test $moduleName") }) {
-                return
-            }
-
-            currentLines[indexToAdd-1] = currentLines[indexToAdd-1] + ","
-            currentLines.addAll(indexToAdd, newLines)
-
-            files.write(path, File.create(it.getName(), FileContent(currentLines)))
+    private fun addLegacyTestScript(lines: List<String>, moduleName: String): List<String> {
+        if (lines.any { it.contains("test $moduleName") }) {
+            return lines
         }
-    }
 
-    //TODO-REF a lot of duplication, similar methods etc
-    private fun updateMainTsConfig(
-        rootPath: Path,
-        configPath: Path,
-        generateResult: GenerateResult,
-        profile: HlaProfile
-    ) {
-        val directoryPath = getDirectoryPart(configPath)
-        val moduleName = generateResult.getMain().getName().value
+        val result = lines.toMutableList()
+        val startIndex = result.indexOfFirst { it.contains("\"scripts\"") }
+        val indexToAdd = result.subList(startIndex, result.size)
+            .indexOfLast { it.contains("test ") } + startIndex + 1
+        val padding = indentationOf(result[indexToAdd - 1])
 
-        updateTsConfigFileAndWrite(
-            rootPath.add(directoryPath),
-            generateResult.getMain(),
-            "${calculateFilePrefix(directoryPath, profile.getPaths().getSrc().getDefault())}${moduleName}/",
-            getFileNamePart(configPath)
+        result[indexToAdd - 1] = result[indexToAdd - 1] + ","
+        result.add(
+            indexToAdd,
+            "$padding\"test $moduleName\": \"npm run build_testapp && npm run run_testapp \\\" $moduleName\\\"\""
         )
-    }
 
-    private fun updateTestTsConfig(
-        rootPath: Path,
-        configPath: Path,
-        generateResult: GenerateResult,
-        profile: HlaProfile
-    ) {
-        val directoryPath = getDirectoryPart(configPath)
-        val testTsconfig = rootPath.add(directoryPath)
-        val moduleName = generateResult.getMain().getName().value
-
-        val initialTestFile = files.read(testTsconfig.add(getFileNamePart(configPath)))
-        var testFile: File = initialTestFile
-        generateResult.getFixtures()?.let {
-            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(directoryPath, getSubmodulePath(profile, SubmoduleName.Fixtures))}${moduleName}/")
-            testFile = x ?: testFile
-        }
-        generateResult.getTests()?.let {
-            val x = updateTsConfigFile(testFile, it, "${calculateFilePrefix(directoryPath, getSubmodulePath(profile, SubmoduleName.Tests))}${moduleName}/")
-            testFile = x ?: testFile
-        }
-        if (testFile != initialTestFile) {
-            files.write(testTsconfig, testFile)
-        }
+        return result
     }
 
     private fun getDirectoryPart(path: Path): Path {
@@ -326,101 +244,12 @@ class FilesModifiers(
         }
     }
 
-    private fun updateTsConfigFileAndWrite(
-        tsconfigPath: Path,
-        directory: Directory,
-        prefix: String,
-        configFileName: FileName
-    ) {
-        val x = updateTsConfigFile(files.read(tsconfigPath.add(configFileName)), directory, prefix)
-        x?.let { files.write(tsconfigPath, it) }
-    }
-
-    private fun updateTsConfigFile(file: File, directory: Directory, prefix: String): File? {
-        val currentLines = file.getContent().lines.toMutableList()
-
-        val startIndex = currentLines.indexOfFirst { it.contains("\"files\"") || it.contains("\"include\"") }
-        var indexToAdd = currentLines.subList(startIndex, currentLines.size).indexOfFirst { it.contains("]")} + startIndex
-        val padding = currentLines[indexToAdd].takeWhile { it == ' ' } + "    "
-
-        val newLines = mutableListOf<String>()
-        val directoryName = directory.getName().value
-        val moduleStartComment = "$padding//$directoryName start"
-        val moduleEndComment = "$padding//$directoryName end"
-        extractFiles(directory).forEachIndexed { index, item ->
-            newLines.add("")
-            if(index == 0) {
-               newLines.add(moduleStartComment)
-            }
-            item.fileNames
-                .filter { it.endsWith(".ts") }
-                .forEach { fileName ->
-                    newLines.add("$padding\"$prefix${item.submoduleName}/$fileName\",")
-                    val result = currentLines.removeIf { line -> line.contains("\"$prefix${item.submoduleName}/$fileName")}
-                    if (result) {
-                        indexToAdd--
-                    }
-                }
-        }
-
-        newLines.add(moduleEndComment)
-
-
-        currentLines.addAll(indexToAdd, newLines)
-
-        cleanStartEndComments(currentLines, moduleStartComment, moduleEndComment)
-        cleanWhiteLines(currentLines, directoryName)
-
-        val newFile = File.create(file.getName(), FileContent(currentLines))
-        if (newFile == file) {
-            return null
-        }
-
-        return File.create(file.getName(), FileContent(currentLines))
-    }
-
-    private fun cleanWhiteLines(currentLines: MutableList<String>, directoryName: String) {
-        val indexesToRemove = mutableListOf<Int>()
-        currentLines.forEachIndexed { index, line ->
-            if (line.isBlank() && currentLines.getOrNull(index - 1)?.isBlank() == true ||
-                line.isBlank() && currentLines.getOrNull(index - 1)?.contains("//$directoryName start") == true
-            ) {
-                indexesToRemove.add(index)
-            }
-        }
-        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
-    }
-
-    private fun cleanStartEndComments(
-        currentLines: MutableList<String>,
-        moduleStartComment: String,
-        moduleEndComment: String
-    ) {
-        val indexesToRemove = mutableListOf<Int>()
-        val firstModuleStartCommentIndex = currentLines.indexOfFirst { it.contains(moduleStartComment) }
-        val lastModuleEndCommentIndex = currentLines.indexOfLast { it.contains(moduleEndComment) }
-        currentLines.forEachIndexed { index, line ->
-            if (line == moduleStartComment && index != firstModuleStartCommentIndex || line == moduleEndComment && index != lastModuleEndCommentIndex) {
-                indexesToRemove.add(index)
-            }
-        }
-        indexesToRemove.reversed().forEach { currentLines.removeAt(it) }
-    }
-
-    data class ExtractedFile(val submoduleName: String, val fileNames: List<String>)
-
-    private fun extractFiles(dir: Directory): List<ExtractedFile> {
-        return dir.getDirectories().map { subDir ->
-            ExtractedFile(subDir.getName().value, subDir.getFiles().map { it.getName().value })
-        }
-    }
-
     companion object {
         // Importing the web file pulls in ImplContext and then Logic, so the module's
         // registrations run. Modules with neither get no entry line - nothing to register.
         private val ENTRY_CANDIDATES = listOf(
-            EntryTarget(SubmoduleName.Web, "PlayFabHandlers"),
-            EntryTarget(SubmoduleName.Impl, "ImplContext"),
+            SubmoduleName.Web to PatternName.PlayFabHandlers,
+            SubmoduleName.Impl to PatternName.ImplContext,
         )
 
         private const val DEFAULT_VITEST_CONFIG_PATH = "./vitest.config.mts"

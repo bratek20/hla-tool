@@ -350,6 +350,12 @@ are silently dropped**. A config key that "does nothing" usually means the field
 launch.json, entry). It is skipped entirely when `onlyUpdate` is true, so `update`/`updateAll`
 never touch them. Each file is maintained only if the profile declares its path.
 
+It registers **every** submodule that generated a `.ts` file, straight off `GeneratedModule`:
+`Fixtures`/`Tests` go to the test tsconfig, everything else to the main one, each with the prefix
+of its own `getPathForSubmodule`. Do not reintroduce a hardcoded submodule list — that is what
+made `Menu` silently missing from tsconfig. Non-`.ts` output (InitSql) and directory patterns
+(Examples) are skipped by design.
+
 ### Self-hosting: editing HLA's own definitions
 
 1. Edit `hla/*.module`.
@@ -377,7 +383,8 @@ required parameter and breaks callers.
   `FilesModifiers`, so it **mutates committed** tsconfig/package.json/launch.json/entry files.
 - `ModuleGroupParserTest` + `lib/src/test/resources/parsing/<case>/` for parser changes.
 - Prefer extracting pure `List<String> -> List<String>` helpers for file-text editing so they can
-  be tested without a `Files` fake (see `writing/impl/ModernFileEdits.kt`).
+  be tested without a `Files` fake (see `writing/impl/ModernFileEdits.kt` and
+  `writing/impl/TsConfigEdits.kt`, tested by `writing/tests/`).
 
 ## Modern TypeScript (ESM) generation
 

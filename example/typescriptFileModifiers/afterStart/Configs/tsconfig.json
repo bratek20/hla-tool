@@ -16,6 +16,8 @@
         "../main/OtherModule/Impl/ImplContext.ts",
 
         "../main/OtherModule/Web/PlayFabHandlers.ts",
+
+        "../main/OtherModule/Menu/Menu.ts",
         //OtherModule end
     ]
 }
