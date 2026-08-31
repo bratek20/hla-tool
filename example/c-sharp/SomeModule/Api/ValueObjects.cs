@@ -65,13 +65,16 @@ namespace SomeModule.Api {
     public class SomeClass: ValueObject {
         readonly string id;
         readonly int amount;
+        readonly int fromField;
 
         public SomeClass(
             string id,
-            int amount
+            int amount,
+            int fromField
         ) {
             this.id = id;
             this.amount = amount;
+            this.fromField = fromField;
         }
         public SomeId GetId() {
             return new SomeId(id);
@@ -79,8 +82,11 @@ namespace SomeModule.Api {
         public int GetAmount() {
             return amount;
         }
-        public static SomeClass Create(SomeId id, int amount) {
-            return new SomeClass(id.Value, amount);
+        public int GetFromField() {
+            return fromField;
+        }
+        public static SomeClass Create(SomeId id, int amount, int fromField) {
+            return new SomeClass(id.Value, amount, fromField);
         }
     }
 
@@ -457,15 +463,18 @@ namespace SomeModule.Api {
     public class ClassExtendingSomeClass: ValueObject {
         readonly string id;
         readonly int amount;
+        readonly int fromField;
         readonly string extraField;
 
         public ClassExtendingSomeClass(
             string id,
             int amount,
+            int fromField,
             string extraField
         ) {
             this.id = id;
             this.amount = amount;
+            this.fromField = fromField;
             this.extraField = extraField;
         }
         public SomeId GetId() {
@@ -474,11 +483,14 @@ namespace SomeModule.Api {
         public int GetAmount() {
             return amount;
         }
+        public int GetFromField() {
+            return fromField;
+        }
         public string GetExtraField() {
             return extraField;
         }
-        public static ClassExtendingSomeClass Create(SomeId id, int amount, string extraField) {
-            return new ClassExtendingSomeClass(id.Value, amount, extraField);
+        public static ClassExtendingSomeClass Create(SomeId id, int amount, int fromField, string extraField) {
+            return new ClassExtendingSomeClass(id.Value, amount, fromField, extraField);
         }
     }
 

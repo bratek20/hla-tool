@@ -20,6 +20,7 @@ namespace SomeModule.Fixtures {
     public class SomeClassDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 10;
+        public int FromField { get; set; } = 0;
     }
 
     public class SomeClass2Def {
@@ -108,6 +109,7 @@ namespace SomeModule.Fixtures {
     public class ClassExtendingSomeClassDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 10;
+        public int FromField { get; set; } = 0;
         public string ExtraField { get; set; } = "someValue";
     }
 
@@ -301,7 +303,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeClassDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeClass.Create(new SomeId(def.Id), def.Amount);
+            return SomeClass.Create(new SomeId(def.Id), def.Amount, def.FromField);
         }
         public static SomeClass2 BuildSomeClass2(Action<SomeClass2Def> init = null) {
             var def = new SomeClass2Def();
@@ -403,7 +405,7 @@ namespace SomeModule.Fixtures {
             var def = new ClassExtendingSomeClassDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return ClassExtendingSomeClass.Create(new SomeId(def.Id), def.Amount, def.ExtraField);
+            return ClassExtendingSomeClass.Create(new SomeId(def.Id), def.Amount, def.FromField, def.ExtraField);
         }
         public static ClassExtendingOtherClass BuildClassExtendingOtherClass(Action<ClassExtendingOtherClassDef> init = null) {
             var def = new ClassExtendingOtherClassDef();

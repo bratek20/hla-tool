@@ -53,6 +53,7 @@ fun diffSomeEnum3(given: SomeEnum3, expected: String, path: String = ""): String
 data class ExpectedSomeClass(
     var id: String? = null,
     var amount: Int? = null,
+    var fromField: Int? = null,
 )
 fun diffSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeClass().apply(expectedInit)
@@ -64,6 +65,10 @@ fun diffSomeClass(given: SomeClass, expectedInit: ExpectedSomeClass.() -> Unit, 
 
     expected.amount?.let {
         if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    expected.fromField?.let {
+        if (given.getFromField() != it) { result.add("${path}fromField ${given.getFromField()} != ${it}") }
     }
 
     return result.joinToString("\n")
@@ -456,6 +461,7 @@ fun diffClassWithComplexMap(given: ClassWithComplexMap, expectedInit: ExpectedCl
 data class ExpectedClassExtendingSomeClass(
     var id: String? = null,
     var amount: Int? = null,
+    var fromField: Int? = null,
     var extraField: String? = null,
 )
 fun diffClassExtendingSomeClass(given: ClassExtendingSomeClass, expectedInit: ExpectedClassExtendingSomeClass.() -> Unit, path: String = ""): String {
@@ -468,6 +474,10 @@ fun diffClassExtendingSomeClass(given: ClassExtendingSomeClass, expectedInit: Ex
 
     expected.amount?.let {
         if (given.getAmount() != it) { result.add("${path}amount ${given.getAmount()} != ${it}") }
+    }
+
+    expected.fromField?.let {
+        if (given.getFromField() != it) { result.add("${path}fromField ${given.getFromField()} != ${it}") }
     }
 
     expected.extraField?.let {

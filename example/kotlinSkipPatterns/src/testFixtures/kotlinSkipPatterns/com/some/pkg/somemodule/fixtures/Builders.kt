@@ -34,12 +34,14 @@ fun someId2(value: Int = 0): SomeId2 {
 data class SomeClassDef(
     var id: String = "someValue",
     var amount: Int = 10,
+    var fromField: Int = 0,
 )
 fun someClass(init: SomeClassDef.() -> Unit = {}): SomeClass {
     val def = SomeClassDef().apply(init)
     return SomeClass.create(
         id = SomeId(def.id),
         amount = def.amount,
+        fromField = def.fromField,
     )
 }
 
@@ -244,6 +246,7 @@ fun classWithComplexMap(init: ClassWithComplexMapDef.() -> Unit = {}): ClassWith
 data class ClassExtendingSomeClassDef(
     var id: String = "someValue",
     var amount: Int = 10,
+    var fromField: Int = 0,
     var extraField: String = "someValue",
 )
 fun classExtendingSomeClass(init: ClassExtendingSomeClassDef.() -> Unit = {}): ClassExtendingSomeClass {
@@ -251,6 +254,7 @@ fun classExtendingSomeClass(init: ClassExtendingSomeClassDef.() -> Unit = {}): C
     return ClassExtendingSomeClass.create(
         id = SomeId(def.id),
         amount = def.amount,
+        fromField = def.fromField,
         extraField = def.extraField,
     )
 }

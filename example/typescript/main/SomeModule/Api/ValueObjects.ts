@@ -163,27 +163,33 @@ class SomeId2 {
 class SomeClass {
     private id = STRING
     private amount = NUMBER
+    private fF = NUMBER
 
     static create(
         id: SomeId,
         amount: number,
+        fromField: number,
     ): SomeClass {
         const instance = new SomeClass()
         instance.id = id.getValue()
         instance.amount = amount
+        instance.fF = fromField
         return instance
     }
 
     static createNamed({
         id,
         amount,
+        fromField,
     }: {
         id: SomeId;
         amount: number;
+        fromField: number;
     }): SomeClass {
         const instance = new SomeClass()
         instance.id = id.getValue()
         instance.amount = amount
+        instance.fF = fromField
         return instance
     }
 
@@ -193,6 +199,10 @@ class SomeClass {
 
     getAmount(): number {
         return this.amount
+    }
+
+    getFromField(): number {
+        return this.fF
     }
 }
 
@@ -805,16 +815,19 @@ class ClassWithComplexMap {
 class ClassExtendingSomeClass {
     private id = STRING
     private amount = NUMBER
+    private fF = NUMBER
     private extraField = STRING
 
     static create(
         id: SomeId,
         amount: number,
+        fromField: number,
         extraField: string,
     ): ClassExtendingSomeClass {
         const instance = new ClassExtendingSomeClass()
         instance.id = id.getValue()
         instance.amount = amount
+        instance.fF = fromField
         instance.extraField = extraField
         return instance
     }
@@ -822,15 +835,18 @@ class ClassExtendingSomeClass {
     static createNamed({
         id,
         amount,
+        fromField,
         extraField,
     }: {
         id: SomeId;
         amount: number;
+        fromField: number;
         extraField: string;
     }): ClassExtendingSomeClass {
         const instance = new ClassExtendingSomeClass()
         instance.id = id.getValue()
         instance.amount = amount
+        instance.fF = fromField
         instance.extraField = extraField
         return instance
     }
@@ -842,6 +858,7 @@ class ClassExtendingSomeClass {
         return ClassExtendingSomeClass.create(
             base.getId(),
             base.getAmount(),
+            base.getFromField(),
             extraField,
         )
     }
@@ -854,6 +871,10 @@ class ClassExtendingSomeClass {
         return this.amount
     }
 
+    getFromField(): number {
+        return this.fF
+    }
+
     getExtraField(): string {
         return this.extraField
     }
@@ -862,6 +883,7 @@ class ClassExtendingSomeClass {
         return SomeClass.create(
             this.getId(),
             this.getAmount(),
+            this.getFromField(),
         )
     }
 }

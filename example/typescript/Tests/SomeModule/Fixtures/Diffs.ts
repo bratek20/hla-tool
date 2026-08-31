@@ -39,6 +39,7 @@ namespace SomeModule {
     export interface ExpectedSomeClass {
         id?: string,
         amount?: number,
+        fromField?: number,
     }
     export function diffSomeClass(given: SomeClass, expected: ExpectedSomeClass, path: string = ""): string {
         const result: string[] = []
@@ -49,6 +50,10 @@ namespace SomeModule {
 
         if (expected.amount !== undefined) {
             if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        if (expected.fromField !== undefined) {
+            if (given.getFromField() != expected.fromField) { result.push(`${path}fromField ${given.getFromField()} != ${expected.fromField}`) }
         }
 
         return result.join("\n")
@@ -425,6 +430,7 @@ namespace SomeModule {
     export interface ExpectedClassExtendingSomeClass {
         id?: string,
         amount?: number,
+        fromField?: number,
         extraField?: string,
     }
     export function diffClassExtendingSomeClass(given: ClassExtendingSomeClass, expected: ExpectedClassExtendingSomeClass, path: string = ""): string {
@@ -436,6 +442,10 @@ namespace SomeModule {
 
         if (expected.amount !== undefined) {
             if (given.getAmount() != expected.amount) { result.push(`${path}amount ${given.getAmount()} != ${expected.amount}`) }
+        }
+
+        if (expected.fromField !== undefined) {
+            if (given.getFromField() != expected.fromField) { result.push(`${path}fromField ${given.getFromField()} != ${expected.fromField}`) }
         }
 
         if (expected.extraField !== undefined) {
