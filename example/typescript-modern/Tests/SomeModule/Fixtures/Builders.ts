@@ -32,14 +32,17 @@ export function someId2(value: number = 0): SomeId2 {
 export interface SomeClassDef {
     id?: string,
     amount?: number,
+    fromField?: number,
 }
 export function someClass(def?: SomeClassDef): SomeClass {
     const final_id = def?.id ?? "someValue"
     const final_amount = def?.amount ?? 10
+    const final_fromField = def?.fromField ?? 0
 
     return SomeClass.create(
         new SomeId(final_id),
         final_amount,
+        final_fromField,
     )
 }
 
@@ -279,16 +282,19 @@ export function classWithComplexMap(def?: ClassWithComplexMapDef): ClassWithComp
 export interface ClassExtendingSomeClassDef {
     id?: string,
     amount?: number,
+    fromField?: number,
     extraField?: string,
 }
 export function classExtendingSomeClass(def?: ClassExtendingSomeClassDef): ClassExtendingSomeClass {
     const final_id = def?.id ?? "someValue"
     const final_amount = def?.amount ?? 10
+    const final_fromField = def?.fromField ?? 0
     const final_extraField = def?.extraField ?? "someValue"
 
     return ClassExtendingSomeClass.create(
         new SomeId(final_id),
         final_amount,
+        final_fromField,
         final_extraField,
     )
 }

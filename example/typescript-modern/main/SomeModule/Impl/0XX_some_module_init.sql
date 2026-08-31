@@ -4,6 +4,7 @@ CREATE TABLE some_dimension (
     some_dimension_id BIGINT DEFAULT NEXTVAL('common.the_sequence'::regclass) CONSTRAINT some_dimension_id PRIMARY KEY,
     name VARCHAR(256) NOT NULL,
     amount INTEGER NOT NULL,
+    from_field INTEGER NOT NULL,
     date_range jsonb NOT NULL,
     dimensions_list VARCHAR(256) NOT NULL
 );

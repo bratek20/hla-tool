@@ -49,6 +49,7 @@ export function diffSomeEnum3(given: SomeEnum3, expected: string, path: string =
 export interface ExpectedSomeClass {
     id?: string,
     amount?: number,
+    fromField?: number,
 }
 export function diffSomeClass(given: SomeClass, expected: ExpectedSomeClass, path: string = ""): string {
     const result: string[] = []
@@ -61,6 +62,11 @@ export function diffSomeClass(given: SomeClass, expected: ExpectedSomeClass, pat
     if (expected.amount !== undefined) {
         const expectedAmount = expected.amount
         if (given.getAmount() != expectedAmount) { result.push(`${path}amount ${given.getAmount()} != ${expectedAmount}`) }
+    }
+
+    if (expected.fromField !== undefined) {
+        const expectedFromField = expected.fromField
+        if (given.getFromField() != expectedFromField) { result.push(`${path}fromField ${given.getFromField()} != ${expectedFromField}`) }
     }
 
     return result.join("\n")
@@ -481,6 +487,7 @@ export function diffClassWithComplexMap(given: ClassWithComplexMap, expected: Ex
 export interface ExpectedClassExtendingSomeClass {
     id?: string,
     amount?: number,
+    fromField?: number,
     extraField?: string,
 }
 export function diffClassExtendingSomeClass(given: ClassExtendingSomeClass, expected: ExpectedClassExtendingSomeClass, path: string = ""): string {
@@ -494,6 +501,11 @@ export function diffClassExtendingSomeClass(given: ClassExtendingSomeClass, expe
     if (expected.amount !== undefined) {
         const expectedAmount = expected.amount
         if (given.getAmount() != expectedAmount) { result.push(`${path}amount ${given.getAmount()} != ${expectedAmount}`) }
+    }
+
+    if (expected.fromField !== undefined) {
+        const expectedFromField = expected.fromField
+        if (given.getFromField() != expectedFromField) { result.push(`${path}fromField ${given.getFromField()} != ${expectedFromField}`) }
     }
 
     if (expected.extraField !== undefined) {
