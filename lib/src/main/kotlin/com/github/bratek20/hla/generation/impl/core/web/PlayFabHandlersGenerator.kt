@@ -126,15 +126,12 @@ class PlayFabHandlersGenerator: PatternGenerator() {
                                         name = "request"
                                     }
                                     right = functionCall {
-                                        name = "ObjectCreation.Api.FromInterface"
-                                        addArg{
-                                            variable(method.getArgs().first().getType().getName())
-                                        }
+                                        name = "Serialization.Api.fromStruct"
                                         addArg{
                                             variable("rawRequest")
                                         }
                                         addArg{
-                                            variable("ObjectCreationOptions.noErrors()")
+                                            variable(method.getArgs().first().getType().getName())
                                         }
                                     }
                                 })

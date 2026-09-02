@@ -11,25 +11,25 @@ export function RegisterDebugHandlers() {
 }
 
 export function someHandler(rawRequest: any, c: HandlerContext): IOpResult {
-    const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
+    const request = Serialization.Api.fromStruct(rawRequest, SomeHandlerInput)
     const response = Api.someHandler(request, c)
     return Utils.OK(response)
 }
 
 export function someHandler2(rawRequest: any, c: HandlerContext): IOpResult {
-    const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
+    const request = Serialization.Api.fromStruct(rawRequest, SomeHandlerInput)
     const response = Api.someHandler2(request, c)
     return Utils.OK(response)
 }
 
 export function someDebugHandler(rawRequest: any, c: HandlerContext): IOpResult {
-    const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
+    const request = Serialization.Api.fromStruct(rawRequest, SomeHandlerInput)
     const response = Api.someDebugHandler(request, c)
     return Utils.OK(response)
 }
 
 export function someDebugHandler2(rawRequest: any, c: HandlerContext): IOpResult {
-    const request = ObjectCreation.Api.FromInterface(SomeHandlerInput, rawRequest, ObjectCreationOptions.noErrors())
+    const request = Serialization.Api.fromStruct(rawRequest, SomeHandlerInput)
     const response = Api.someDebugHandler2(request, c)
     return Utils.OK(response)
 }
