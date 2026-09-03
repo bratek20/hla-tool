@@ -444,14 +444,11 @@ one modern profile normally holds a mix of migrated and legacy modules.
 
 ## Working with the Project
 
-### ⚠️ Do not build, generate or test unless explicitly asked
+### Building, generating and testing
 
-Claude must **not** run `./gradlew` builds, `./gradlew test`, `updateModule.sh` or example
-regeneration on its own. Make the code change, then tell the user what to build, regenerate and
-test — the user runs it and reports back. Only run these commands when the user asks for it in
-that message.
-
-The command sections below are reference for what to tell the user (or to run when asked).
+Claude may run `./gradlew` builds and tests after making code changes to verify them. Still ask
+before running `updateModule.sh` or example regeneration, since those rewrite committed generated
+files across the repo.
 
 ### Building the App
 

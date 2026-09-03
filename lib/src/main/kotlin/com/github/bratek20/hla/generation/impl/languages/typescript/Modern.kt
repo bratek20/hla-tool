@@ -21,3 +21,16 @@ fun ModuleDefinition.isMarkedModern(): Boolean {
 fun isModernModule(profile: HlaProfile, module: ModuleDefinition): Boolean {
     return profile.isModernTypeScript() && module.isMarkedModern()
 }
+
+/**
+ * Used by startAllModules/updateAllModules to keep an all-modules run from generating a module
+ * in the wrong mode: a legacy TypeScript profile would otherwise silently legacy-generate a
+ * module meant to be modern, and vice versa. Single-module start/update are unaffected - an
+ * explicit request for one module is still honoured regardless of its modern flag.
+ */
+fun HlaProfile.mismatchesModernFlagOf(module: ModuleDefinition): Boolean {
+    if (getLanguage() != ModuleLanguage.TYPE_SCRIPT) {
+        return false
+    }
+    return isModernTypeScript() != module.isMarkedModern()
+}
