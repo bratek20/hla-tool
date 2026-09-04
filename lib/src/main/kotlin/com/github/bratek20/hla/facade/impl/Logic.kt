@@ -7,6 +7,8 @@ import com.github.bratek20.hla.generation.api.GenerateArgs
 import com.github.bratek20.hla.generation.api.GeneratedModule
 import com.github.bratek20.hla.generation.api.ModuleGenerator
 import com.github.bratek20.hla.generation.impl.languages.typescript.isModernModule
+import com.github.bratek20.hla.generation.impl.languages.typescript.mismatchesModernFlagOf
+import com.github.bratek20.hla.definitions.api.ModuleDefinition
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.queries.api.BaseModuleGroupQueries
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
@@ -33,7 +35,7 @@ class HlaFacadeLogic(
     override fun startAllModules(args: AllModulesOperationArgs) {
         val group = parseGroup(args.getHlaFolderPath(), args.getProfileName())
 
-        group.getModules().forEach {
+        modulesForAllModulesOperation(group).forEach {
             postPrepareGenerateModule(it.getName(), group, false, args.getHlaFolderPath())
         }
     }
@@ -41,9 +43,19 @@ class HlaFacadeLogic(
     override fun updateAllModules(args: AllModulesOperationArgs) {
         val group = parseGroup(args.getHlaFolderPath(), args.getProfileName())
 
-        group.getModules().forEach {
+        modulesForAllModulesOperation(group).forEach {
             postPrepareGenerateModule(it.getName(), group, true, args.getHlaFolderPath())
         }
+    }
+
+    private fun modulesForAllModulesOperation(group: ModuleGroup): List<ModuleDefinition> {
+        val profile = group.getProfile()
+
+        val (skipped, included) = group.getModules().partition { profile.mismatchesModernFlagOf(it) }
+        skipped.forEach {
+            logger.info("Skipping module ${it.getName().value} for profile ${profile.getName().value} - TypeScript modern flag mismatch", this)
+        }
+        return included
     }
 
     private fun generateModule(args: ModuleOperationArgs, onlyUpdate: Boolean, hlaFolderPath: Path) {
