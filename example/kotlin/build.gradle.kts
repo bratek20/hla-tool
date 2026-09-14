@@ -1,14 +1,11 @@
 plugins {
-    alias(libs.plugins.bratek20.internal.kotlin.library.conventions)
+    alias(libs.plugins.b20.library)
 }
 
 dependencies {
-    implementation(libs.assertj.core)
-
-    implementation(libs.bratek20.architecture)
-    implementation(libs.bratek20.infrastructure)
+    api(libs.bratek20.architecture)
+    api(libs.bratek20.infrastructure)
 
     //TODO-REF introduce libs.bratek20.infrastructure.web.server that has it as api dependency
-    implementation(platform(libs.spring.boot.dependencies))
     implementation("org.springframework:spring-web")
 }
