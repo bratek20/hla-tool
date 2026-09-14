@@ -21,6 +21,6 @@ dependencies {
     testFixturesImplementation(testFixtures(libs.bratek20.utils))
     testImplementation(testFixtures(libs.bratek20.utils))
 
-    implementation(project(":code-builder"))
+    api(project(":code-builder"))
     implementation(kotlin("reflect"))
 }

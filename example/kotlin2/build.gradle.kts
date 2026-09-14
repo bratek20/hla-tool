@@ -1,10 +1,8 @@
 plugins {
-    alias(libs.plugins.bratek20.internal.kotlin.library.conventions)
+    alias(libs.plugins.b20.library)
 }
 
 dependencies {
-    implementation(libs.assertj.core)
-
     implementation(libs.bratek20.architecture)
 
     implementation(project(":kotlin"))

@@ -4,12 +4,9 @@ include("kotlin")
 include("kotlin2")
 include("tests")
 
-val b20Version = "1.0.121"
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
-
         mavenLocal()
 
         val githubActor: String? = if (extra.has("githubActor")) extra["githubActor"] as String else System.getenv("GITHUB_ACTOR")
@@ -28,29 +25,10 @@ pluginManagement {
     }
 }
 
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            from("com.github.bratek20:version-catalog:$b20Version")
-        }
-    }
+plugins {
+    id("com.github.bratek20.plugins.b20-settings") version "2.0.0"
+}
 
-    repositories {
-        mavenLocal()
-        mavenCentral()
-
-        val githubActor: String? = if (extra.has("githubActor")) extra["githubActor"] as String else System.getenv("GITHUB_ACTOR")
-        val githubToken: String? = if (extra.has("githubToken")) extra["githubToken"] as String else System.getenv("GITHUB_TOKEN")
-
-        if (githubActor != null && githubToken != null) {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/bratek20/starter")
-                credentials {
-                    username = githubActor
-                    password = githubToken
-                }
-            }
-        }
-    }
+b20Settings {
+    catalogVersion = "2.0.0"
 }

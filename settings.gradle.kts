@@ -18,11 +18,11 @@ pluginManagement {
 }
 
 plugins {
-    id("com.github.bratek20.plugins.b20-settings") version "1.1.0"
+    id("com.github.bratek20.plugins.b20-settings") version "2.0.0"
 }
 
 b20Settings {
-    catalogVersion = "1.1.13"
+    catalogVersion = "2.0.0"
 }
 
 include("code-builder")
