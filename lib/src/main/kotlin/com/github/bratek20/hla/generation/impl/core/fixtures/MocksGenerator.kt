@@ -329,8 +329,7 @@ class MockMethodLogic(
 
         val isStructure = expectedType is StructureExpectedType
         val isSupportedBaseType = expectedType is BaseExpectedType &&
-            expectedType.api.name != DefinitionsBaseType.ANY &&
-            languageName == ModuleLanguage.TYPE_SCRIPT
+            expectedType.api.name != DefinitionsBaseType.ANY
         if (!isStructure && !isSupportedBaseType) {
             return null
         }
