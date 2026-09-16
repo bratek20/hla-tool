@@ -133,6 +133,12 @@ open class SomeInterfaceMock: SomeInterface {
     fun assertMethodWithBaseTypeCallsNumber(expectedNumber: Int) {
         assertThat(methodWithBaseTypeCallsNumber).withFailMessage("Expected 'methodWithBaseType' to be called " + expectedNumber + " times but was called " + methodWithBaseTypeCallsNumber + " times").isEqualTo(expectedNumber)
     }
+    fun assertMethodWithBaseTypeCalls(expectedArgs: List<String>) {
+        assertMethodWithBaseTypeCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertThat(methodWithBaseTypeCalls[i]).withFailMessage("Expected 'methodWithBaseType' to be called with " + expectedArgs[i] + " but was called with " + methodWithBaseTypeCalls[i]).isEqualTo(expectedArgs[i])
+        }
+    }
     fun setMethodWithBaseTypeResponse(response: String) {
         methodWithBaseTypeResponse = response
     }
