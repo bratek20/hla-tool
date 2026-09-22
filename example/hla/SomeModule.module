@@ -11,6 +11,14 @@ Enums
         VALUE_A
         VALUE_B
 
+EnumValues
+    SomeIdValues populates SomeId
+        SomeValue
+        OtherValue
+
+    SomeOtherIdValues populates SomeOtherId
+        ThirdValue
+
 CustomTypes
     DateRangeWrapper
         range: DateRange

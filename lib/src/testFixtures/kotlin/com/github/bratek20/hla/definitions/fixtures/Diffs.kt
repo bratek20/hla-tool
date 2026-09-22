@@ -58,6 +58,31 @@ fun diffEnumDefinition(given: EnumDefinition, expectedInit: ExpectedEnumDefiniti
     return result.joinToString("\n")
 }
 
+data class ExpectedEnumValuesDefinition(
+    var name: String? = null,
+    var populates: String? = null,
+    var values: List<String>? = null,
+)
+fun diffEnumValuesDefinition(given: EnumValuesDefinition, expectedInit: ExpectedEnumValuesDefinition.() -> Unit, path: String = ""): String {
+    val expected = ExpectedEnumValuesDefinition().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.name?.let {
+        if (given.getName() != it) { result.add("${path}name ${given.getName()} != ${it}") }
+    }
+
+    expected.populates?.let {
+        if (given.getPopulates() != it) { result.add("${path}populates ${given.getPopulates()} != ${it}") }
+    }
+
+    expected.values?.let {
+        if (given.getValues().size != it.size) { result.add("${path}values size ${given.getValues().size} != ${it.size}"); return@let }
+        given.getValues().forEachIndexed { idx, entry -> if (entry != it[idx]) { result.add("${path}values[${idx}] ${entry} != ${it[idx]}") } }
+    }
+
+    return result.joinToString("\n")
+}
+
 data class ExpectedImplSubmoduleDefinition(
     var dataClasses: List<(ExpectedComplexStructureDefinition.() -> Unit)>? = null,
     var dataKeys: List<(ExpectedKeyDefinition.() -> Unit)>? = null,
@@ -539,6 +564,7 @@ data class ExpectedModuleDefinition(
     var menuSubmodule: (ExpectedMenuDefinition.() -> Unit)? = null,
     var typeScriptConfigEmpty: Boolean? = null,
     var typeScriptConfig: (ExpectedTypeScriptModuleConfig.() -> Unit)? = null,
+    var enumValues: List<(ExpectedEnumValuesDefinition.() -> Unit)>? = null,
 )
 fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDefinition.() -> Unit, path: String = ""): String {
     val expected = ExpectedModuleDefinition().apply(expectedInit)
@@ -670,6 +696,11 @@ fun diffModuleDefinition(given: ModuleDefinition, expectedInit: ExpectedModuleDe
 
     expected.typeScriptConfig?.let {
         if (diffTypeScriptModuleConfig(given.getTypeScriptConfig()!!, it) != "") { result.add(diffTypeScriptModuleConfig(given.getTypeScriptConfig()!!, it, "${path}typeScriptConfig.")) }
+    }
+
+    expected.enumValues?.let {
+        if (given.getEnumValues().size != it.size) { result.add("${path}enumValues size ${given.getEnumValues().size} != ${it.size}"); return@let }
+        given.getEnumValues().forEachIndexed { idx, entry -> if (diffEnumValuesDefinition(entry, it[idx]) != "") { result.add(diffEnumValuesDefinition(entry, it[idx], "${path}enumValues[${idx}].")) } }
     }
 
     return result.joinToString("\n")

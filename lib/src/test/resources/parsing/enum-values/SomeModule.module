@@ -1,0 +1,10 @@
+ValueObjects
+    SomeType: string
+
+EnumValues
+    SomeTypeValues populates SomeType
+        FirstValue
+        SecondValue
+
+    OtherTypeValues populates OtherType
+        OtherValue

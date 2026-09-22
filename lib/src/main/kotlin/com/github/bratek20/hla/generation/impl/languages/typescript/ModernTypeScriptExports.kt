@@ -102,6 +102,7 @@ class ModernTypeScriptExports(
         }
         module.getInterfaces().forEach { add(it.getName(), SubmoduleName.Api, PatternName.Interfaces, true) }
         module.getEnums().forEach { add(it.getName(), SubmoduleName.Api, PatternName.Enums, true) }
+        module.getEnumValues().forEach { add(it.getName(), SubmoduleName.Api, PatternName.EnumValues, true) }
         module.getEvents().forEach { add(it.getName(), SubmoduleName.Api, PatternName.Events, true) }
         module.getDataClasses().forEach { add(it.getName(), SubmoduleName.Api, PatternName.DataClasses, true) }
 

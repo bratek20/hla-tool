@@ -4,6 +4,9 @@ package com.some.pkg.someusermodule.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import com.some.pkg.somemodule.api.*
+import com.some.pkg.somemodule.fixtures.*
+
 import com.some.pkg.someusermodule.api.*
 
 fun assertSomeUserValueObject(given: SomeUserValueObject, expectedInit: ExpectedSomeUserValueObject.() -> Unit) {

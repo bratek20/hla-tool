@@ -2,6 +2,10 @@ ValueObjects
     SomeUserValueObject // to have fixtures so tests do not fail
         someField: int
 
+EnumValues
+    SomeUserIdValues populates SomeId
+        UserValue
+
 Interfaces
     SomeUserInterface
         someMethod()

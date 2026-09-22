@@ -171,6 +171,7 @@ class ApiGenerator(
             CustomTypesMapperGenerator(),
             SerializedCustomTypesGenerator(),
             valueObjectsGenerator,
+            EnumValuesGenerator(),
             DataClassesGenerator(),
             PropertyOrDataKeysGenerator(false),
             PropertyOrDataKeysGenerator(true),

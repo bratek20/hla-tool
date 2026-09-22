@@ -14,10 +14,13 @@ import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.GroupName
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
 import com.github.bratek20.hla.parsing.api.ModuleGroup
+import com.github.bratek20.hla.parsing.api.InvalidEnumValuesSectionException
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import com.github.bratek20.hla.tracking.api.TableDefinition
 import com.github.bratek20.hla.tracking.api.TrackingSubmoduleDefinition
 import com.github.bratek20.logs.api.Logger
+
+const val POPULATES_KEYWORD = " populates "
 
 class ModuleGroupParserLogic(
     private val log: Logger
@@ -31,6 +34,7 @@ class ModuleGroupParserLogic(
         "Interfaces",
         "PropertyKeys",
         "Enums",
+        "EnumValues",
         "CustomTypes",
         "DataKeys",
         "Impl",
@@ -90,6 +94,7 @@ class ModuleGroupParserLogic(
         val interfacesOutput = parseInterfaces(elements)
         val propertyKeys = parseKeys("PropertyKeys", elements)
         val enums = parseEnums(elements)
+        val enumValues = parseEnumValues(moduleName, elements)
         val customTypes = parseStructures("CustomTypes", elements)
         val dataKeys = parseKeys("DataKeys", elements)
         val properties = parseProperties(elements)
@@ -123,7 +128,8 @@ class ModuleGroupParserLogic(
             events = parseStructures("Events", elements).complex + parseStructures("Notifications", elements).complex,
             trackingSubmodule = parseTrackingSubmodule(elements),
             fixturesSubmodule = parseFixturesSubmodule(elements),
-            menuSubmodule = parseMenuSubmodule(elements)
+            menuSubmodule = parseMenuSubmodule(elements),
+            enumValues = enumValues
         )
     }
 
@@ -527,6 +533,25 @@ class ModuleGroupParserLogic(
                 name = it.name,
                 values = it.elements.filterIsInstance<Section>().map {
                     it.name
+                }
+            )
+        } ?: emptyList()
+    }
+
+    private fun parseEnumValues(module: ModuleName, elements: List<ParsedElement>): List<EnumValuesDefinition> {
+        return findSection(elements, "EnumValues")?.elements?.filterIsInstance<Section>()?.map {
+            val parts = it.name.split(POPULATES_KEYWORD)
+            if (parts.size != 2 || parts[0].isBlank() || parts[1].isBlank()) {
+                throw InvalidEnumValuesSectionException(
+                    "Module ${module.value} has invalid EnumValues entry `${it.name}`, " +
+                    "expected format `<ClassName>${POPULATES_KEYWORD}<PopulatedType>`"
+                )
+            }
+            EnumValuesDefinition(
+                name = parts[0].trim(),
+                populates = parts[1].trim(),
+                values = it.elements.filterIsInstance<Section>().map { value ->
+                    value.name
                 }
             )
         } ?: emptyList()

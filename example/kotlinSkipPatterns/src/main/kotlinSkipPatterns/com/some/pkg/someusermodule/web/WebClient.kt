@@ -6,6 +6,8 @@ import com.github.bratek20.infrastructure.httpclient.api.HttpClientFactory
 
 import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api.*
 
+import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api.*
+
 class SomeUserInterfaceWebClient(
     factory: HttpClientFactory,
     config: SomeUserModuleWebClientConfig,

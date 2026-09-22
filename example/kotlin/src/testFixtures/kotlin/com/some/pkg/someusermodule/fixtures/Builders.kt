@@ -2,6 +2,9 @@
 
 package com.some.pkg.someusermodule.fixtures
 
+import com.some.pkg.somemodule.api.*
+import com.some.pkg.somemodule.fixtures.*
+
 import com.some.pkg.someusermodule.api.*
 
 data class SomeUserValueObjectDef(

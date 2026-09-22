@@ -21,6 +21,11 @@ fun assertEnumDefinition(given: EnumDefinition, expectedInit: ExpectedEnumDefini
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 
+fun assertEnumValuesDefinition(given: EnumValuesDefinition, expectedInit: ExpectedEnumValuesDefinition.() -> Unit) {
+    val diff = diffEnumValuesDefinition(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
 fun assertImplSubmoduleDefinition(given: ImplSubmoduleDefinition, expectedInit: ExpectedImplSubmoduleDefinition.() -> Unit) {
     val diff = diffImplSubmoduleDefinition(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")

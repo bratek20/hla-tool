@@ -4,6 +4,9 @@ package src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.fixtures
 
 import org.assertj.core.api.Assertions.assertThat
 
+import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api.*
+import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.fixtures.*
+
 import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api.*
 
 fun assertSomeUserValueObject(given: SomeUserValueObject, expectedInit: ExpectedSomeUserValueObject.() -> Unit) {

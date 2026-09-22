@@ -6,6 +6,8 @@ import com.github.bratek20.infrastructure.httpclient.api.HttpClientConfig
 
 import com.some.pkg.someusermodule.api.*
 
+import com.some.pkg.somemodule.api.*
+
 class SomeUserModuleWebClientConfig(
     val value: HttpClientConfig
 ) {

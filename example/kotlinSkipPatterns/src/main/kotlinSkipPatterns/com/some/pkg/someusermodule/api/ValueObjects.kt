@@ -2,6 +2,8 @@
 
 package src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api
 
+import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api.*
+
 data class SomeUserValueObject(
     private val someField: Int,
 ) {
