@@ -120,10 +120,76 @@ class ClassBuilderTest {
                 })
             }
             langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass {
+                        companion object {
+                            private val someField: OtherClass = OtherClass("SomeStr")
+                        }
+                    }
+                """
+            }
+            langExpected {
                 lang = TypeScript()
                 expected = """
                     class SomeClass {
                         private static readonly someField: OtherClass = new OtherClass("SomeStr")
+                    }
+                """
+            }
+            langExpected {
+                lang = CSharp()
+                expected = """
+                    public class SomeClass {
+                        static readonly OtherClass someField = new OtherClass("SomeStr");
+                    }
+                """
+            }
+        }
+    }
+
+    @Test
+    fun `static field next to static method`() {
+        testOp {
+            op = {
+                add(classBlock {
+                    name = "SomeClass"
+                    addField {
+                        modifier = AccessModifier.PUBLIC
+                        static = true
+                        name = "someField"
+                        value = constructorCall {
+                            className = "OtherClass"
+                            addArg {
+                                string("SomeStr")
+                            }
+                        }
+                    }
+                    addMethod {
+                        static = true
+                        name = "someMethod"
+                    }
+                })
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                    class SomeClass {
+                        companion object {
+                            val someField = OtherClass("SomeStr")
+                            fun someMethod() {
+                            }
+                        }
+                    }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                    class SomeClass {
+                        static readonly someField = new OtherClass("SomeStr")
+                        static someMethod() {
+                        }
                     }
                 """
             }

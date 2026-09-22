@@ -75,7 +75,7 @@ class FieldBuilder(
                 linePart("${finalModifier.name.lowercase()} ")
             }
 
-            if (static) {
+            if (static && c.lang.supportsStaticKeyword()) {
                 linePart("static ")
             }
             if (mutable) {
@@ -219,7 +219,8 @@ open class ClassBuilder: CodeBlockBuilder {
         addOps(classDeclarationWithFieldConstructor(c))
         tab()
         fieldOps.forEach { ops ->
-            if (!c.lang.supportsFieldDeclarationInConstructor() || !field(ops).fromConstructor) {
+            val declaredInConstructor = c.lang.supportsFieldDeclarationInConstructor() && field(ops).fromConstructor
+            if (!declaredInConstructor && !movedToStaticSection(c, ops)) {
                 add(field(ops))
             }
         }
@@ -231,8 +232,8 @@ open class ClassBuilder: CodeBlockBuilder {
         innerClasses.forEach { c ->
             add(c)
         }
-        if (staticMethods.isNotEmpty()) {
-            addOps(staticMethodsSection(c))
+        if (staticMethods.isNotEmpty() || staticFieldOps(c).isNotEmpty()) {
+            addOps(staticMembersSection(c))
         }
         untab()
         line("}")
@@ -404,10 +405,22 @@ open class ClassBuilder: CodeBlockBuilder {
         return fields.any { it.fromConstructor }
     }
 
-    private fun staticMethodsSection(c: CodeBuilderContext): CodeBuilderOps = {
+    // Kotlin has no static keyword, so static members are moved to a companion object
+    private fun movedToStaticSection(c: CodeBuilderContext, ops: FieldBuilderOps): Boolean {
+        return c.lang is Kotlin && field(ops).static
+    }
+
+    private fun staticFieldOps(c: CodeBuilderContext): List<FieldBuilderOps> {
+        return fieldOps.filter { movedToStaticSection(c, it) }
+    }
+
+    private fun staticMembersSection(c: CodeBuilderContext): CodeBuilderOps = {
         if (c.lang is Kotlin) {
             line("companion object {")
             tab()
+            staticFieldOps(c).forEach { ops ->
+                add(field(ops))
+            }
             staticMethods.forEach { method ->
                 add(method)
             }
