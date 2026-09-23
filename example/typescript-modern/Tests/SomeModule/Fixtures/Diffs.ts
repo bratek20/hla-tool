@@ -5,7 +5,7 @@ import * as CustomTypesMapper from "../../../main/SomeModule/Api/CustomTypesMapp
 import { SomeData, SomeData2 } from "../../../main/SomeModule/Api/DataClasses"
 import { SomeEnum, SomeEnum2, SomeEnum3 } from "../../../main/SomeModule/Api/Enums"
 import { SomeEvent } from "../../../main/SomeModule/Api/Notifications"
-import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithDefaultOptionals, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds } from "../../../main/SomeModule/Api/ValueObjects"
+import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithDefaultOptionals, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeEnumValuesReferencingProperty, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds, SomeValueType } from "../../../main/SomeModule/Api/ValueObjects"
 import { SomeUserValueObject } from "../../../main/SomeUserModule/Api/ValueObjects"
 import { diffMockArg } from "../../ModuleOnlyForMocksArgs/Fixtures/Diffs"
 import { ExpectedOtherClass, ExpectedOtherClassWIthUniqueId, ExpectedOtherData, ExpectedOtherProperty, diffOtherClass, diffOtherClassWIthUniqueId, diffOtherData, diffOtherId, diffOtherProperty } from "../../OtherModule/Fixtures/Diffs"
@@ -22,6 +22,11 @@ export function diffSomeOtherId(given: SomeOtherId, expected: string, path: stri
 }
 
 export function diffSomeIntWrapper(given: SomeIntWrapper, expected: number, path: string = ""): string {
+    if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
+    return ""
+}
+
+export function diffSomeValueType(given: SomeValueType, expected: string, path: string = ""): string {
     if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
     return ""
 }
@@ -1150,6 +1155,27 @@ export function diffCustomTypesPropertyOptionalList(given: CustomTypesPropertyOp
         if (given.getCustomPropertiesList().isEmpty()) { result.push(`${path}customPropertiesList is empty but expected is not`); return result.join("\n") }
         if (given.getCustomPropertiesList().get().length != expectedCustomPropertiesList.length) { result.push(`${path}customPropertiesList size ${given.getCustomPropertiesList().get().length} != ${expectedCustomPropertiesList.length}`); return result.join("\n") }
         given.getCustomPropertiesList().get().forEach((entry, idx) => { if (diffCustomTypesProperty(entry, expectedCustomPropertiesList[idx]) != "") { result.push(diffCustomTypesProperty(entry, expectedCustomPropertiesList[idx], `${path}customPropertiesList[${idx}].`)) } })
+    }
+
+    return result.join("\n")
+}
+
+export interface ExpectedSomeEnumValuesReferencingProperty {
+    type?: string,
+    nestedTypes?: string[],
+}
+export function diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expected: ExpectedSomeEnumValuesReferencingProperty, path: string = ""): string {
+    const result: string[] = []
+
+    if (expected.type !== undefined) {
+        const expectedType = expected.type
+        if (diffSomeValueType(given.getType(), expectedType) != "") { result.push(diffSomeValueType(given.getType(), expectedType, `${path}type.`)) }
+    }
+
+    if (expected.nestedTypes !== undefined) {
+        const expectedNestedTypes = expected.nestedTypes
+        if (given.getNestedTypes().length != expectedNestedTypes.length) { result.push(`${path}nestedTypes size ${given.getNestedTypes().length} != ${expectedNestedTypes.length}`); return result.join("\n") }
+        given.getNestedTypes().forEach((entry, idx) => { if (diffSomeValueType(entry, expectedNestedTypes[idx]) != "") { result.push(diffSomeValueType(entry, expectedNestedTypes[idx], `${path}nestedTypes[${idx}].`)) } })
     }
 
     return result.join("\n")

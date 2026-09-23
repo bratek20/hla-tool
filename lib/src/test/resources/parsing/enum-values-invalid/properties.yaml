@@ -1,0 +1,7 @@
+profiles:
+  - name: "test"
+    language: "KOTLIN"
+    paths:
+      project: ""
+      src:
+        default: ""

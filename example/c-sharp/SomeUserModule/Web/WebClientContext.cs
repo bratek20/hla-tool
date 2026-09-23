@@ -7,6 +7,7 @@ using B20.Ext;
 using B20.Architecture.Contexts.Api;
 using HttpClientModule.Api;
 using SomeUserModule.Api;
+using SomeModule.Api;
 
 namespace SomeUserModule.Web {
     public class SomeUserModuleWebClient: ContextModule {

@@ -2,6 +2,9 @@
 
 package src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.fixtures
 
+import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api.*
+import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.fixtures.*
+
 import src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api.*
 
 data class ExpectedSomeUserValueObject(

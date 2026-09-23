@@ -2,6 +2,8 @@
 
 package com.some.pkg.someusermodule.api
 
+import com.some.pkg.somemodule.api.*
+
 data class SomeUserValueObject(
     private val someField: Int,
 ) {

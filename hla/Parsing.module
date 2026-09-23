@@ -12,3 +12,4 @@ Interfaces
         parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup
             throws
                 UnknownRootSectionException
+                InvalidEnumValuesSectionException

@@ -11,6 +11,11 @@ Enums
         VALUE_A
         VALUE_B
 
+EnumValues
+    SomeValueTypeValues populates SomeValueType
+        SomeValue
+        OtherValue
+
 CustomTypes
     DateRangeWrapper
         range: DateRange
@@ -22,6 +27,7 @@ ValueObjects
     SomeId: string
     SomeOtherId: string
     SomeIntWrapper: int (startsFrom: 5)
+    SomeValueType: string (example: "SomeValue")
 
     SomeClass
         id: SomeId
@@ -205,6 +211,10 @@ Properties
         id: string
         customPropertiesList: CustomTypesProperty[]?
 
+    SomeEnumValuesReferencingProperty
+        type: SomeValueType
+        nestedTypes: SomeValueType[]
+
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
     "SomeRenamedSourcePropertyEntryList" -> SomeRenamedSourcePropertyEntry[]
@@ -226,6 +236,7 @@ Properties
     "CustomTypesProperty" -> CustomTypesProperty
     "SelfReferencingProperty" -> SelfReferencingProperty[]
     "CustomTypesPropertyOptionalList" -> CustomTypesPropertyOptionalList[]
+    "SomeEnumValuesReferencingPropertyList" -> SomeEnumValuesReferencingProperty[]
 
     "SomeKey2" -> SomeProperty // to check that correct SOME_KEY_2 name is generated
 

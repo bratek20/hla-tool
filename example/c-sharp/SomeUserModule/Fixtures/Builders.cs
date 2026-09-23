@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
 using SomeUserModule.Api;
+using SomeModule.Api;
+using SomeModule.Fixtures;
 
 namespace SomeUserModule.Fixtures {
     public class SomeUserValueObjectDef {

@@ -10,6 +10,7 @@ import com.github.bratek20.utils.directory.api.Path
 import com.github.bratek20.hla.facade.api.ProfileName
 import com.github.bratek20.hla.parsing.api.ModuleGroup
 import com.github.bratek20.hla.parsing.api.ModuleGroupParser
+import com.github.bratek20.hla.parsing.api.InvalidEnumValuesSectionException
 import com.github.bratek20.hla.parsing.api.UnknownRootSectionException
 import com.github.bratek20.hla.parsing.context.ParsingImpl
 import com.github.bratek20.hla.parsing.fixtures.assertModuleGroup
@@ -643,6 +644,41 @@ class ModuleGroupParserTest {
                 }
             }
         ))
+    }
+
+    @Test
+    fun `should parse enum values`() {
+        assertModuleDefinition(parseSingleModule("enum-values")) {
+            name = "SomeModule"
+            enumValues = listOf(
+                {
+                    name = "SomeTypeValues"
+                    populates = "SomeType"
+                    values = listOf(
+                        "FirstValue",
+                        "SecondValue"
+                    )
+                },
+                {
+                    name = "OtherTypeValues"
+                    populates = "OtherType"
+                    values = listOf(
+                        "OtherValue"
+                    )
+                }
+            )
+        }
+    }
+
+    @Test
+    fun `should throw exception if enum values entry has no populated type`() {
+        assertApiExceptionThrown(
+            { parseSingleGroup("enum-values-invalid") },
+            {
+                type = InvalidEnumValuesSectionException::class
+                message = "Module SomeModule has invalid EnumValues entry `SomeTypeValues`, expected format `<ClassName> populates <PopulatedType>`"
+            }
+        )
     }
 
     @Test

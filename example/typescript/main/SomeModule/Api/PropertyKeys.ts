@@ -96,6 +96,11 @@ namespace SomeModule {
         CustomTypesPropertyOptionalList
     )
 
+    export const SOME_ENUM_VALUES_REFERENCING_PROPERTY_LIST_PROPERTY_KEY = new ListPropertyKey(
+        "SomeEnumValuesReferencingPropertyList",
+        SomeEnumValuesReferencingProperty
+    )
+
     export const SOME_KEY2_PROPERTY_KEY = new ObjectPropertyKey(
         "SomeKey2",
         SomeProperty

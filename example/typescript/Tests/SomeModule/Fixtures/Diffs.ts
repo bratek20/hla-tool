@@ -16,6 +16,11 @@ namespace SomeModule {
         return ""
     }
 
+    export function diffSomeValueType(given: SomeValueType, expected: string, path: string = ""): string {
+        if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
+        return ""
+    }
+
     export function diffSomeId2(given: SomeId2, expected: number, path: string = ""): string {
         if (given.getValue() != expected) { return `${path}value ${given.getValue()} != ${expected}` }
         return ""
@@ -1022,6 +1027,25 @@ namespace SomeModule {
             if (given.getCustomPropertiesList().isEmpty()) { result.push(`${path}customPropertiesList is empty but expected is not`); return result.join("\n") }
             if (given.getCustomPropertiesList().get().length != expected.customPropertiesList.length) { result.push(`${path}customPropertiesList size ${given.getCustomPropertiesList().get().length} != ${expected.customPropertiesList.length}`); return result.join("\n") }
             given.getCustomPropertiesList().get().forEach((entry, idx) => { if (diffCustomTypesProperty(entry, expected.customPropertiesList[idx]) != "") { result.push(diffCustomTypesProperty(entry, expected.customPropertiesList[idx], `${path}customPropertiesList[${idx}].`)) } })
+        }
+
+        return result.join("\n")
+    }
+
+    export interface ExpectedSomeEnumValuesReferencingProperty {
+        type?: string,
+        nestedTypes?: string[],
+    }
+    export function diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expected: ExpectedSomeEnumValuesReferencingProperty, path: string = ""): string {
+        const result: string[] = []
+
+        if (expected.type !== undefined) {
+            if (diffSomeValueType(given.getType(), expected.type) != "") { result.push(diffSomeValueType(given.getType(), expected.type, `${path}type.`)) }
+        }
+
+        if (expected.nestedTypes !== undefined) {
+            if (given.getNestedTypes().length != expected.nestedTypes.length) { result.push(`${path}nestedTypes size ${given.getNestedTypes().length} != ${expected.nestedTypes.length}`); return result.join("\n") }
+            given.getNestedTypes().forEach((entry, idx) => { if (diffSomeValueType(entry, expected.nestedTypes[idx]) != "") { result.push(diffSomeValueType(entry, expected.nestedTypes[idx], `${path}nestedTypes[${idx}].`)) } })
         }
 
         return result.join("\n")

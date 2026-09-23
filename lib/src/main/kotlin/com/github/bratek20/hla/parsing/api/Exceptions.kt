@@ -11,3 +11,8 @@ class UnknownRootSectionException(
     message: String = ""
 ): ApiException(message) {
 }
+
+class InvalidEnumValuesSectionException(
+    message: String = ""
+): ApiException(message) {
+}

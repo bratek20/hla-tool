@@ -34,6 +34,7 @@ enum class PatternName {
     CustomTypesMapper,
     SerializedCustomTypes,
     Undefined,
+    EnumValues,
     Logic,
     Track,
     InitSql,

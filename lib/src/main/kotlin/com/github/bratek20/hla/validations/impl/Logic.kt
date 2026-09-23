@@ -19,6 +19,7 @@ import com.github.bratek20.hla.queries.api.getAllPropertyKeys
 import com.github.bratek20.hla.typesworld.api.TypesWorldApi
 import com.github.bratek20.hla.typesworld.api.WorldType
 import com.github.bratek20.hla.typesworld.api.WorldTypeName
+import com.github.bratek20.hla.typesworld.api.findByName
 import com.github.bratek20.hla.validations.api.*
 import com.github.bratek20.logs.api.Logger
 
@@ -267,6 +268,41 @@ private class UniqueIdValidator(
         return ValidationResult.createFor(errors)
     }
 }
+private class EnumValuesValidator(
+    private val populatedTypeName: String,
+    private val holderNames: List<String>,
+    private val allowedValues: List<String>,
+    private val logger: Logger,
+    private val group: ModuleGroup,
+    private val traverser: PropertiesTraverser,
+    private val typesWorldApi: TypesWorldApi
+) {
+    private val source = holderNames.joinToString(", ") { "'$it'" }
+
+    fun validate(): ValidationResult {
+        val populatedType = typesWorldApi.findByName(WorldTypeName(populatedTypeName))
+            ?: return ValidationResult.ok()
+
+        logger.info("Allowed values for '$populatedTypeName' from enum values $source: $allowedValues")
+
+        return group.getAllPropertyKeys()
+            .map { validateProperty(populatedType, it) }
+            .fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
+    }
+
+    private fun validateProperty(populatedType: WorldType, propertyKey: KeyDefinition): ValidationResult {
+        val errors = mutableListOf<String>()
+        traverser.findReferences(populatedType, propertyKey).forEach { ref ->
+            traverser.getPrimitiveValuesWithPathAt(ref).forEach {
+                val value = it.value.toString()
+                if (value !in allowedValues) {
+                    errors.add("Value '$value' at '${it.path}' not found in enum values from $source")
+                }
+            }
+        }
+        return ValidationResult.createFor(errors)
+    }
+}
 
 class HlaValidatorLogic(
     private val parser: ModuleGroupParser,
@@ -292,8 +328,33 @@ class HlaValidatorLogic(
         val idSourceValidationResult = validateIdSources(group)
         val typeValidatorsResult = executeTypeValidators(group)
         val uniqueIdValidationResult = validateUniqueIds(group)
+        val enumValuesValidationResult = validateEnumValues(group)
 
-        return idSourceValidationResult.merge(typeValidatorsResult).merge(uniqueIdValidationResult)
+        return idSourceValidationResult
+            .merge(typeValidatorsResult)
+            .merge(uniqueIdValidationResult)
+            .merge(enumValuesValidationResult)
+    }
+
+    private fun validateEnumValues(group: ModuleGroup): ValidationResult {
+        val definitions = group.getModules().flatMap { it.getEnumValues() }
+
+        logger.info("Enum values definitions: ${definitions.map { it.getName() }}")
+
+        return definitions
+            .groupBy { it.getPopulates() }
+            .map { (populatedTypeName, definitionsForType) ->
+                EnumValuesValidator(
+                    populatedTypeName = populatedTypeName,
+                    holderNames = definitionsForType.map { it.getName() },
+                    allowedValues = definitionsForType.flatMap { it.getValues() },
+                    logger = logger,
+                    group = group,
+                    traverser = traverser,
+                    typesWorldApi = typesWorldApi
+                ).validate()
+            }
+            .fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
     }
 
     private fun validateIdSources(group: ModuleGroup): ValidationResult {

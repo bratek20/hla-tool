@@ -44,6 +44,14 @@ data class SomeIntWrapper(
     }
 }
 
+data class SomeValueType(
+    val value: String
+) {
+    override fun toString(): String {
+        return value.toString()
+    }
+}
+
 data class SomeId2(
     val value: Int
 ) {
@@ -1292,6 +1300,31 @@ data class CustomTypesPropertyOptionalList(
             return CustomTypesPropertyOptionalList(
                 id = id,
                 customPropertiesList = customPropertiesList,
+            )
+        }
+    }
+}
+
+data class SomeEnumValuesReferencingProperty(
+    private val type: String,
+    private val nestedTypes: List<String>,
+) {
+    fun getType(): SomeValueType {
+        return SomeValueType(this.type)
+    }
+
+    fun getNestedTypes(): List<SomeValueType> {
+        return this.nestedTypes.map { it -> SomeValueType(it) }
+    }
+
+    companion object {
+        fun create(
+            type: SomeValueType,
+            nestedTypes: List<SomeValueType>,
+        ): SomeEnumValuesReferencingProperty {
+            return SomeEnumValuesReferencingProperty(
+                type = type.value,
+                nestedTypes = nestedTypes.map { it -> it.value },
             )
         }
     }

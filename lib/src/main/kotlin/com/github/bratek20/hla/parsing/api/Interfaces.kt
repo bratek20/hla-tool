@@ -9,6 +9,7 @@ import com.github.bratek20.hla.facade.api.*
 interface ModuleGroupParser {
     @Throws(
         UnknownRootSectionException::class,
+        InvalidEnumValuesSectionException::class,
     )
     fun parse(hlaFolderPath: Path, profileName: ProfileName): ModuleGroup
 }

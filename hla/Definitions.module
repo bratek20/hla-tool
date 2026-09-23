@@ -23,6 +23,11 @@ ValueObjects
         name: string
         values: string[]
 
+    EnumValuesDefinition
+        name: string
+        populates: string
+        values: string[]
+
     ImplSubmoduleDefinition
         dataClasses: ComplexStructureDefinition[]
         dataKeys: KeyDefinition[]
@@ -127,6 +132,7 @@ ValueObjects
         kotlinConfig: KotlinConfig?
         menuSubmodule: MenuDefinition?
         typeScriptConfig: TypeScriptModuleConfig? = empty
+        enumValues: EnumValuesDefinition[] = []
 
     FixturesSubmoduleDefinition
         mockedInterfaces: string[]

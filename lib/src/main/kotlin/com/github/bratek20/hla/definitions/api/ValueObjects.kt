@@ -55,6 +55,38 @@ data class EnumDefinition(
     }
 }
 
+data class EnumValuesDefinition(
+    private val name: String,
+    private val populates: String,
+    private val values: List<String>,
+) {
+    fun getName(): String {
+        return this.name
+    }
+
+    fun getPopulates(): String {
+        return this.populates
+    }
+
+    fun getValues(): List<String> {
+        return this.values
+    }
+
+    companion object {
+        fun create(
+            name: String,
+            populates: String,
+            values: List<String>,
+        ): EnumValuesDefinition {
+            return EnumValuesDefinition(
+                name = name,
+                populates = populates,
+                values = values,
+            )
+        }
+    }
+}
+
 data class ImplSubmoduleDefinition(
     private val dataClasses: List<ComplexStructureDefinition>,
     private val dataKeys: List<KeyDefinition>,
@@ -568,6 +600,7 @@ data class ModuleDefinition(
     private val kotlinConfig: KotlinConfig?,
     private val menuSubmodule: MenuDefinition?,
     private val typeScriptConfig: TypeScriptModuleConfig? = null,
+    private val enumValues: List<EnumValuesDefinition> = emptyList(),
 ) {
     fun getName(): ModuleName {
         return ModuleName(this.name)
@@ -653,6 +686,10 @@ data class ModuleDefinition(
         return this.typeScriptConfig
     }
 
+    fun getEnumValues(): List<EnumValuesDefinition> {
+        return this.enumValues
+    }
+
     companion object {
         fun create(
             name: ModuleName,
@@ -676,6 +713,7 @@ data class ModuleDefinition(
             kotlinConfig: KotlinConfig?,
             menuSubmodule: MenuDefinition?,
             typeScriptConfig: TypeScriptModuleConfig? = null,
+            enumValues: List<EnumValuesDefinition> = emptyList(),
         ): ModuleDefinition {
             return ModuleDefinition(
                 name = name.value,
@@ -699,6 +737,7 @@ data class ModuleDefinition(
                 kotlinConfig = kotlinConfig,
                 menuSubmodule = menuSubmodule,
                 typeScriptConfig = typeScriptConfig,
+                enumValues = enumValues,
             )
         }
     }

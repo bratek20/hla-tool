@@ -350,7 +350,8 @@ class ModuleGroupQueries(
             .flatten()
             .flatMap { it.getType().getInnerTypes() } +
             allComplexStructureDefinitions(currentModule).mapNotNull { it.getBase() } +
-            interfacesTypeNames(currentModule)
+            interfacesTypeNames(currentModule) +
+            currentModule.getEnumValues().map { it.getPopulates() }
 
         val resolvedModules = modules
             .filter { it.getName() != currentModuleName }

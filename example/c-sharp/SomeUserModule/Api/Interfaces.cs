@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using B20.Ext;
+using SomeModule.Api;
 
 namespace SomeUserModule.Api {
     public interface SomeUserInterface {

@@ -6,6 +6,7 @@ using System.Linq;
 using B20.Ext;
 using HttpClientModule.Api;
 using SomeUserModule.Api;
+using SomeModule.Api;
 
 namespace SomeUserModule.Web {
     public class SomeUserInterfaceWebClient: SomeUserInterface {

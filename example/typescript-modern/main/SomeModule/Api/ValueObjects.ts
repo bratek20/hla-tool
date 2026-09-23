@@ -122,6 +122,38 @@ export class SomeIntWrapper {
     }
 }
 
+export class SomeValueType {
+    private static cache = new Map<string, SomeValueType>()
+
+    private readonly valueSomeValueType: string
+    constructor(
+        valueSomeValueType: string
+    ) {
+        if (Undefined(valueSomeValueType)) {
+            throw Error("Undefined value for SomeValueType")
+        }
+
+        if (SomeValueType.cache.has(valueSomeValueType)) {
+            return SomeValueType.cache.get(valueSomeValueType)
+        }
+
+        this.valueSomeValueType = valueSomeValueType
+        SomeValueType.cache.set(valueSomeValueType, this)
+    }
+
+    getValue(): string {
+        return this.valueSomeValueType
+    }
+
+    equals(other: SomeValueType): boolean {
+        return this.getValue() === other.getValue()
+    }
+
+    toString(): string {
+        return this.getValue().toString()
+    }
+}
+
 export class SomeId2 {
     private static cache = new Map<number, SomeId2>()
 
@@ -1925,6 +1957,42 @@ export class CustomTypesPropertyOptionalList {
 
     getCustomPropertiesList(): Optional<CustomTypesProperty[]> {
         return Optional.of(this.customPropertiesList)
+    }
+}
+
+export class SomeEnumValuesReferencingProperty {
+    private type = STRING
+    private nestedTypes = [STRING]
+
+    static create(
+        type: SomeValueType,
+        nestedTypes: SomeValueType[],
+    ): SomeEnumValuesReferencingProperty {
+        const instance = new SomeEnumValuesReferencingProperty()
+        instance.type = type.getValue()
+        instance.nestedTypes = nestedTypes.map(it => it.getValue())
+        return instance
+    }
+
+    static createNamed({
+        type,
+        nestedTypes,
+    }: {
+        type: SomeValueType;
+        nestedTypes: SomeValueType[];
+    }): SomeEnumValuesReferencingProperty {
+        const instance = new SomeEnumValuesReferencingProperty()
+        instance.type = type.getValue()
+        instance.nestedTypes = nestedTypes.map(it => it.getValue())
+        return instance
+    }
+
+    getType(): SomeValueType {
+        return new SomeValueType(this.type)
+    }
+
+    getNestedTypes(): SomeValueType[] {
+        return this.nestedTypes.map(it => new SomeValueType(it))
     }
 }
 

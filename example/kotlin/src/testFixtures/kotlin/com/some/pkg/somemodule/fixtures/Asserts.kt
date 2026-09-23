@@ -35,6 +35,12 @@ fun assertSomeIntWrapper(given: SomeIntWrapper, expected: Int) {
 }
 
 
+fun assertSomeValueType(given: SomeValueType, expected: String) {
+    val diff = diffSomeValueType(given, expected)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+
 fun assertSomeId2(given: SomeId2, expected: Int) {
     val diff = diffSomeId2(given, expected)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
@@ -262,6 +268,11 @@ fun assertSelfReferencingProperty(given: SelfReferencingProperty, expectedInit: 
 
 fun assertCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, expectedInit: ExpectedCustomTypesPropertyOptionalList.() -> Unit) {
     val diff = diffCustomTypesPropertyOptionalList(given, expectedInit)
+    assertThat(diff).withFailMessage(diff).isEqualTo("")
+}
+
+fun assertSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expectedInit: ExpectedSomeEnumValuesReferencingProperty.() -> Unit) {
+    val diff = diffSomeEnumValuesReferencingProperty(given, expectedInit)
     assertThat(diff).withFailMessage(diff).isEqualTo("")
 }
 

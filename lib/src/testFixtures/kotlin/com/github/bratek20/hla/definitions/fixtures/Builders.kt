@@ -33,6 +33,20 @@ fun enumDefinition(init: EnumDefinitionDef.() -> Unit = {}): EnumDefinition {
     )
 }
 
+data class EnumValuesDefinitionDef(
+    var name: String = "someValue",
+    var populates: String = "someValue",
+    var values: List<String> = emptyList(),
+)
+fun enumValuesDefinition(init: EnumValuesDefinitionDef.() -> Unit = {}): EnumValuesDefinition {
+    val def = EnumValuesDefinitionDef().apply(init)
+    return EnumValuesDefinition.create(
+        name = def.name,
+        populates = def.populates,
+        values = def.values,
+    )
+}
+
 data class ImplSubmoduleDefinitionDef(
     var dataClasses: List<(ComplexStructureDefinitionDef.() -> Unit)> = emptyList(),
     var dataKeys: List<(KeyDefinitionDef.() -> Unit)> = emptyList(),
@@ -273,6 +287,7 @@ data class ModuleDefinitionDef(
     var kotlinConfig: (KotlinConfigDef.() -> Unit)? = null,
     var menuSubmodule: (MenuDefinitionDef.() -> Unit)? = null,
     var typeScriptConfig: (TypeScriptModuleConfigDef.() -> Unit)? = null,
+    var enumValues: List<(EnumValuesDefinitionDef.() -> Unit)> = emptyList(),
 )
 fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinition {
     val def = ModuleDefinitionDef().apply(init)
@@ -298,6 +313,7 @@ fun moduleDefinition(init: ModuleDefinitionDef.() -> Unit = {}): ModuleDefinitio
         kotlinConfig = def.kotlinConfig?.let { it -> kotlinConfig(it) },
         menuSubmodule = def.menuSubmodule?.let { it -> menuDefinition(it) },
         typeScriptConfig = def.typeScriptConfig?.let { it -> typeScriptModuleConfig(it) },
+        enumValues = def.enumValues.map { it -> enumValuesDefinition(it) },
     )
 }
 

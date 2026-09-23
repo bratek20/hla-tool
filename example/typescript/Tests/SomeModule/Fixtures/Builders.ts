@@ -13,6 +13,10 @@ namespace SomeModule.Builder {
         return new SomeIntWrapper(value)
     }
 
+    export function someValueType(value: string = "SomeValue"): SomeValueType {
+        return new SomeValueType(value)
+    }
+
     export function someId2(value: number = 0): SomeId2 {
         return new SomeId2(value)
     }
@@ -674,6 +678,20 @@ namespace SomeModule.Builder {
         return CustomTypesPropertyOptionalList.create(
             final_id,
             Optional.of(final_customPropertiesList).map(it => it.map(it => SomeModule.Builder.customTypesProperty(it))),
+        )
+    }
+
+    export interface SomeEnumValuesReferencingPropertyDef {
+        type?: string,
+        nestedTypes?: string[],
+    }
+    export function someEnumValuesReferencingProperty(def?: SomeEnumValuesReferencingPropertyDef): SomeEnumValuesReferencingProperty {
+        const final_type = def?.type ?? "SomeValue"
+        const final_nestedTypes = def?.nestedTypes ?? []
+
+        return SomeEnumValuesReferencingProperty.create(
+            new SomeValueType(final_type),
+            final_nestedTypes.map(it => new SomeValueType(it)),
         )
     }
 

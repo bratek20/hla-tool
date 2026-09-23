@@ -27,6 +27,7 @@ Enums
         CustomTypesMapper
         SerializedCustomTypes
         Undefined
+        EnumValues
 
         //impl
         Logic
