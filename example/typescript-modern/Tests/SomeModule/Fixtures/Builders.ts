@@ -7,7 +7,7 @@ import * as CustomTypesMapper from "../../../main/SomeModule/Api/CustomTypesMapp
 import { SomeData, SomeData2 } from "../../../main/SomeModule/Api/DataClasses"
 import { SomeEnum, SomeEnum2 } from "../../../main/SomeModule/Api/Enums"
 import { SomeEvent } from "../../../main/SomeModule/Api/Notifications"
-import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithDefaultOptionals, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds } from "../../../main/SomeModule/Api/ValueObjects"
+import { ClassExtendingOtherClass, ClassExtendingSomeClass, ClassHavingOptList, ClassHavingOptSimpleVo, ClassWithBoolField, ClassWithComplexMap, ClassWithDefaultOptionals, ClassWithEnumList, ClassWithOptExamples, ClassWithOptionalMap, ClassWithSimpleMap, ClassWithVoMap, ComplexStructureWithNestedUniqueIds, CustomTypesProperty, CustomTypesPropertyOptionalList, NestedClassLevel1, NestedClassLevel2, NestedUniqueIds, NestedValue, OptionalFieldProperty, RecordClass, RecursiveClass, SelfReferencingProperty, SomeClass, SomeClass2, SomeClass3, SomeClass4, SomeClass5, SomeClass6, SomeClassWIthOtherClassUniqueIds, SomeEnumValuesReferencingProperty, SomeHandlerInput, SomeHandlerOutput, SomeId, SomeId2, SomeIntWrapper, SomeInterfaceSomeCommandArgs, SomeInterfaceToTestMockArgsImportSomeMethodArgs, SomeOtherId, SomeProperty, SomeProperty2, SomePropertyEntry, SomeQueryInput, SomeReferencingProperty, SomeReferencingPropertyFieldList, SomeRenamedReferencingProperty, SomeRenamedReferencingRenamedProperty, SomeRenamedSourcePropertyEntry, SomeStructWithNestedOtherClassUniqueIds, SomeStructureWithMultipleUniqueNestedIds, SomeStructureWithUniqueIds, SomeStructureWithUniqueNestedIds, SomeValueType } from "../../../main/SomeModule/Api/ValueObjects"
 import * as TypesModuleCustomTypesMapper from "../../../main/TypesModule/Api/CustomTypesMapper"
 import * as OtherModuleBuilder from "../../OtherModule/Fixtures/Builders"
 import * as SomeUserModuleBuilder from "../../SomeUserModule/Fixtures/Builders"
@@ -23,6 +23,10 @@ export function someOtherId(value: string = "someValue"): SomeOtherId {
 
 export function someIntWrapper(value: number = 5): SomeIntWrapper {
     return new SomeIntWrapper(value)
+}
+
+export function someValueType(value: string = "SomeValue"): SomeValueType {
+    return new SomeValueType(value)
 }
 
 export function someId2(value: number = 0): SomeId2 {
@@ -686,6 +690,20 @@ export function customTypesPropertyOptionalList(def?: CustomTypesPropertyOptiona
     return CustomTypesPropertyOptionalList.create(
         final_id,
         Optional.of(final_customPropertiesList).map(it => it.map(it => customTypesProperty(it))),
+    )
+}
+
+export interface SomeEnumValuesReferencingPropertyDef {
+    type?: string,
+    nestedTypes?: string[],
+}
+export function someEnumValuesReferencingProperty(def?: SomeEnumValuesReferencingPropertyDef): SomeEnumValuesReferencingProperty {
+    const final_type = def?.type ?? "SomeValue"
+    const final_nestedTypes = def?.nestedTypes ?? []
+
+    return SomeEnumValuesReferencingProperty.create(
+        new SomeValueType(final_type),
+        final_nestedTypes.map(it => new SomeValueType(it)),
     )
 }
 

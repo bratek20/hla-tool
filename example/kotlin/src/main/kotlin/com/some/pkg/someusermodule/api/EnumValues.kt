@@ -4,8 +4,8 @@ package com.some.pkg.someusermodule.api
 
 import com.some.pkg.somemodule.api.*
 
-class SomeUserIdValues {
+class SomeUserValueTypeValues {
     companion object {
-        val UserValue = SomeId("UserValue")
+        val UserValue = SomeValueType("UserValue")
     }
 }

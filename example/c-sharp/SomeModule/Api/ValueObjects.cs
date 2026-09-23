@@ -49,6 +49,19 @@ namespace SomeModule.Api {
         }
     }
 
+    public class SomeValueType: ValueObject {
+        public string Value { get; }
+
+        public SomeValueType(
+            string value
+        ) {
+            Value = value;
+        }
+        public override string ToString() {
+            return Value.ToString();
+        }
+    }
+
     public class SomeId2: ValueObject {
         public int Value { get; }
 
@@ -1109,6 +1122,28 @@ namespace SomeModule.Api {
         }
         public static CustomTypesPropertyOptionalList Create(string id, Optional<List<CustomTypesProperty>> customPropertiesList) {
             return new CustomTypesPropertyOptionalList(id, customPropertiesList.OrElse(null));
+        }
+    }
+
+    public class SomeEnumValuesReferencingProperty: ValueObject {
+        readonly string type;
+        readonly List<string> nestedTypes;
+
+        public SomeEnumValuesReferencingProperty(
+            string type,
+            List<string> nestedTypes
+        ) {
+            this.type = type;
+            this.nestedTypes = nestedTypes;
+        }
+        public SomeValueType GetType() {
+            return new SomeValueType(type);
+        }
+        public List<SomeValueType> GetNestedTypes() {
+            return nestedTypes.Select(it => new SomeValueType(it)).ToList();
+        }
+        public static SomeEnumValuesReferencingProperty Create(SomeValueType type, List<SomeValueType> nestedTypes) {
+            return new SomeEnumValuesReferencingProperty(type.Value, nestedTypes.Select(it => it.Value).ToList());
         }
     }
 

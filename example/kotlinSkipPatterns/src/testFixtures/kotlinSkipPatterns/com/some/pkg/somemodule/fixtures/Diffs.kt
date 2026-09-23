@@ -30,6 +30,11 @@ fun diffSomeIntWrapper(given: SomeIntWrapper, expected: Int, path: String = ""):
     return ""
 }
 
+fun diffSomeValueType(given: SomeValueType, expected: String, path: String = ""): String {
+    if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
+    return ""
+}
+
 fun diffSomeId2(given: SomeId2, expected: Int, path: String = ""): String {
     if (given.value != expected) { return "${path}value ${given.value} != ${expected}" }
     return ""
@@ -1081,6 +1086,26 @@ fun diffCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, 
         if (given.getCustomPropertiesList() == null) { result.add("${path}customPropertiesList is empty but expected is not"); return@let }
         if (given.getCustomPropertiesList()!!.size != it.size) { result.add("${path}customPropertiesList size ${given.getCustomPropertiesList()!!.size} != ${it.size}"); return@let }
         given.getCustomPropertiesList()!!.forEachIndexed { idx, entry -> if (diffCustomTypesProperty(entry, it[idx]) != "") { result.add(diffCustomTypesProperty(entry, it[idx], "${path}customPropertiesList[${idx}].")) } }
+    }
+
+    return result.joinToString("\n")
+}
+
+data class ExpectedSomeEnumValuesReferencingProperty(
+    var type: String? = null,
+    var nestedTypes: List<String>? = null,
+)
+fun diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expectedInit: ExpectedSomeEnumValuesReferencingProperty.() -> Unit, path: String = ""): String {
+    val expected = ExpectedSomeEnumValuesReferencingProperty().apply(expectedInit)
+    val result: MutableList<String> = mutableListOf()
+
+    expected.type?.let {
+        if (diffSomeValueType(given.getType(), it) != "") { result.add(diffSomeValueType(given.getType(), it, "${path}type.")) }
+    }
+
+    expected.nestedTypes?.let {
+        if (given.getNestedTypes().size != it.size) { result.add("${path}nestedTypes size ${given.getNestedTypes().size} != ${it.size}"); return@let }
+        given.getNestedTypes().forEachIndexed { idx, entry -> if (diffSomeValueType(entry, it[idx]) != "") { result.add(diffSomeValueType(entry, it[idx], "${path}nestedTypes[${idx}].")) } }
     }
 
     return result.joinToString("\n")

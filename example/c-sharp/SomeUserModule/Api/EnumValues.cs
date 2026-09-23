@@ -7,7 +7,7 @@ using B20.Ext;
 using SomeModule.Api;
 
 namespace SomeUserModule.Api {
-    public class SomeUserIdValues {
-        public static readonly SomeId UserValue = new SomeId("UserValue");
+    public class SomeUserValueTypeValues {
+        public static readonly SomeValueType UserValue = new SomeValueType("UserValue");
     }
 }

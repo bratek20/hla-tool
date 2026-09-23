@@ -1,0 +1,8 @@
+[
+  {
+    "type": "SomeValue",
+    "nestedTypes": [
+      "SomeValue"
+    ]
+  }
+]

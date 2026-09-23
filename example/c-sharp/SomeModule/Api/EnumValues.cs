@@ -11,12 +11,8 @@ using SomeUserModule.Api;
 using TypesModule.Api;
 
 namespace SomeModule.Api {
-    public class SomeIdValues {
-        public static readonly SomeId SomeValue = new SomeId("SomeValue");
-        public static readonly SomeId OtherValue = new SomeId("OtherValue");
-    }
-
-    public class SomeOtherIdValues {
-        public static readonly SomeOtherId ThirdValue = new SomeOtherId("ThirdValue");
+    public class SomeValueTypeValues {
+        public static readonly SomeValueType SomeValue = new SomeValueType("SomeValue");
+        public static readonly SomeValueType OtherValue = new SomeValueType("OtherValue");
     }
 }

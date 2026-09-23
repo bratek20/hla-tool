@@ -3,7 +3,7 @@ ValueObjects
         someField: int
 
 EnumValues
-    SomeUserIdValues populates SomeId
+    SomeUserValueTypeValues populates SomeValueType
         UserValue
 
 Interfaces

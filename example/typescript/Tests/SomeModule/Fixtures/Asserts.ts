@@ -16,6 +16,11 @@ namespace SomeModule.Assert {
         AssertEquals(diff, "", diff)
     }
 
+    export function someValueType(given: SomeValueType, expected: string) {
+        const diff = diffSomeValueType(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
     export function someId2(given: SomeId2, expected: number) {
         const diff = diffSomeId2(given, expected)
         AssertEquals(diff, "", diff)
@@ -243,6 +248,11 @@ namespace SomeModule.Assert {
 
     export function customTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, expected: ExpectedCustomTypesPropertyOptionalList) {
         const diff = diffCustomTypesPropertyOptionalList(given, expected)
+        AssertEquals(diff, "", diff)
+    }
+
+    export function someEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expected: ExpectedSomeEnumValuesReferencingProperty) {
+        const diff = diffSomeEnumValuesReferencingProperty(given, expected)
         AssertEquals(diff, "", diff)
     }
 

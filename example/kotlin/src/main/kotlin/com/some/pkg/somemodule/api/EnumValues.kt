@@ -8,15 +8,9 @@ import com.some.pkg.simplemodule.api.*
 import com.some.pkg.someusermodule.api.*
 import com.some.pkg.typesmodule.api.*
 
-class SomeIdValues {
+class SomeValueTypeValues {
     companion object {
-        val SomeValue = SomeId("SomeValue")
-        val OtherValue = SomeId("OtherValue")
-    }
-}
-
-class SomeOtherIdValues {
-    companion object {
-        val ThirdValue = SomeOtherId("ThirdValue")
+        val SomeValue = SomeValueType("SomeValue")
+        val OtherValue = SomeValueType("OtherValue")
     }
 }

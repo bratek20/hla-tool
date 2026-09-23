@@ -252,6 +252,11 @@ namespace SomeModule.Fixtures {
         public List<Action<CustomTypesPropertyDef>>? CustomPropertiesList { get; set; } = null;
     }
 
+    public class SomeEnumValuesReferencingPropertyDef {
+        public string Type { get; set; } = "SomeValue";
+        public List<string> NestedTypes { get; set; } = new List<string>();
+    }
+
     public class SomeInterfaceSomeCommandArgsDef {
         public string Id { get; set; } = "someValue";
         public int Amount { get; set; } = 0;
@@ -295,6 +300,9 @@ namespace SomeModule.Fixtures {
         }
         public static SomeIntWrapper BuildSomeIntWrapper(int value = 5) {
             return new SomeIntWrapper(value);
+        }
+        public static SomeValueType BuildSomeValueType(string value = "SomeValue") {
+            return new SomeValueType(value);
         }
         public static SomeId2 BuildSomeId2(int value = 0) {
             return new SomeId2(value);
@@ -568,6 +576,12 @@ namespace SomeModule.Fixtures {
             init = init ?? ((_) => {});
             init.Invoke(def);
             return CustomTypesPropertyOptionalList.Create(def.Id, Optional<List<Action<CustomTypesPropertyDef>>>.Of(def.CustomPropertiesList).Map(it => it.Select(it => BuildCustomTypesProperty(it)).ToList()));
+        }
+        public static SomeEnumValuesReferencingProperty BuildSomeEnumValuesReferencingProperty(Action<SomeEnumValuesReferencingPropertyDef> init = null) {
+            var def = new SomeEnumValuesReferencingPropertyDef();
+            init = init ?? ((_) => {});
+            init.Invoke(def);
+            return SomeEnumValuesReferencingProperty.Create(new SomeValueType(def.Type), def.NestedTypes.Select(it => new SomeValueType(it)).ToList());
         }
         public static SomeInterfaceSomeCommandArgs BuildSomeInterfaceSomeCommandArgs(Action<SomeInterfaceSomeCommandArgsDef> init = null) {
             var def = new SomeInterfaceSomeCommandArgsDef();

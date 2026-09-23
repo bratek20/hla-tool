@@ -4,8 +4,8 @@ package src.main.kotlinSkipPatterns.com.some.pkg.someusermodule.api
 
 import src.main.kotlinSkipPatterns.com.some.pkg.somemodule.api.*
 
-class SomeUserIdValues {
+class SomeUserValueTypeValues {
     companion object {
-        val UserValue = SomeId("UserValue")
+        val UserValue = SomeValueType("UserValue")
     }
 }

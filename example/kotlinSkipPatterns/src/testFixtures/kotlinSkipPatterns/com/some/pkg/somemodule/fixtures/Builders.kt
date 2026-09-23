@@ -27,6 +27,10 @@ fun someIntWrapper(value: Int = 5): SomeIntWrapper {
     return SomeIntWrapper(value)
 }
 
+fun someValueType(value: String = "SomeValue"): SomeValueType {
+    return SomeValueType(value)
+}
+
 fun someId2(value: Int = 0): SomeId2 {
     return SomeId2(value)
 }
@@ -588,6 +592,18 @@ fun customTypesPropertyOptionalList(init: CustomTypesPropertyOptionalListDef.() 
     return CustomTypesPropertyOptionalList.create(
         id = def.id,
         customPropertiesList = def.customPropertiesList?.let { it -> it.map { it -> customTypesProperty(it) } },
+    )
+}
+
+data class SomeEnumValuesReferencingPropertyDef(
+    var type: String = "SomeValue",
+    var nestedTypes: List<String> = emptyList(),
+)
+fun someEnumValuesReferencingProperty(init: SomeEnumValuesReferencingPropertyDef.() -> Unit = {}): SomeEnumValuesReferencingProperty {
+    val def = SomeEnumValuesReferencingPropertyDef().apply(init)
+    return SomeEnumValuesReferencingProperty.create(
+        type = SomeValueType(def.type),
+        nestedTypes = def.nestedTypes.map { it -> SomeValueType(it) },
     )
 }
 
