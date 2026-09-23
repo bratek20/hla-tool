@@ -2,7 +2,7 @@ package com.github.bratek20.hla.generation.impl.core.api.patterns
 
 import com.github.bratek20.codebuilder.builders.*
 import com.github.bratek20.codebuilder.core.AccessModifier
-import com.github.bratek20.codebuilder.types.typeName
+import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 
@@ -16,6 +16,9 @@ class EnumValuesGenerator: PatternGenerator() {
     }
 
     override fun shouldGenerate(): Boolean {
+        if (language.name() == ModuleLanguage.C_SHARP) {
+            return false
+        }
         return module.getEnumValues().isNotEmpty()
     }
 
@@ -29,9 +32,6 @@ class EnumValuesGenerator: PatternGenerator() {
                         modifier = AccessModifier.PUBLIC
                         static = true
                         name = enumValue
-                        if (!lang.supportsFieldTypeDeductionFromAssignedValue()) {
-                            type = typeName(populatedType)
-                        }
                         value = constructorCall {
                             className = populatedType
                             addArg {
