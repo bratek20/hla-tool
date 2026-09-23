@@ -228,6 +228,11 @@ val CUSTOM_TYPES_PROPERTY_OPTIONAL_LIST = com.github.bratek20.architecture.prope
     Struct::class
 )
 
+val SOME_ENUM_VALUES_REFERENCING_PROPERTY_LIST = com.github.bratek20.architecture.properties.api.ListPropertyKey(
+    "SomeEnumValuesReferencingPropertyList",
+    Struct::class
+)
+
 
 class ValidationsImplTest {
     private lateinit var validator: HlaValidator
@@ -1000,6 +1005,52 @@ class ValidationsImplTest {
         }
     }
 
+
+    @Nested
+    inner class EnumValuesValidation {
+        @Test
+        fun `should pass for values declared by any enum values holder`() {
+            setup()
+
+            propertiesMock.set(SOME_ENUM_VALUES_REFERENCING_PROPERTY_LIST, listOf(
+                struct {
+                    "type" to "SomeValue"
+                    "nestedTypes" to listOf("OtherValue", "UserValue")
+                }
+            ))
+
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                ok = true
+            }
+        }
+
+        @Test
+        fun `should fail for value not declared by any enum values holder`() {
+            setup()
+
+            propertiesMock.set(SOME_ENUM_VALUES_REFERENCING_PROPERTY_LIST, listOf(
+                struct {
+                    "type" to "SomeValue"
+                    "nestedTypes" to listOf("NotDeclaredValue")
+                },
+                struct {
+                    "type" to "OtherNotDeclaredValue"
+                    "nestedTypes" to listOf<String>()
+                }
+            ))
+
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                errors = listOf(
+                    "Value 'OtherNotDeclaredValue' at '\"SomeEnumValuesReferencingPropertyList\"/[1]/type' not found in enum values from 'SomeValueTypeValues', 'SomeUserValueTypeValues'",
+                    "Value 'NotDeclaredValue' at '\"SomeEnumValuesReferencingPropertyList\"/[0]/nestedTypes/[0]' not found in enum values from 'SomeValueTypeValues', 'SomeUserValueTypeValues'"
+                )
+            }
+        }
+    }
 
     private fun validateCall(): ValidationResult {
         return validator.validateProperties(
