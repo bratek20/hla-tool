@@ -14,6 +14,8 @@ Web
     Http (user)
         ExposedInterfaces
             SomeUserInterface
+        serverName = "someUserServerName"
+        baseUrl = "someUserService.baseUrl"
 
 TypeScript
     modern = true

@@ -3,9 +3,9 @@
 namespace WebNoWrappers.Web {
     export const config = new WebNoWrappersWebClientConfig(
         HttpClientConfig.create(
-            EnvVars.Api.Get(new VariableName($baseUrl)),
-            $serverName,
-            Optional.of(HttpClientAuth.create(EnvVars.Api.Get(new VariableName($auth))))
+            EnvVars.Api.Get(new VariableName("webNoWrappersService.baseUrl")),
+            "webNoWrappersServerName",
+            Optional.empty()
         )
     )
 }
