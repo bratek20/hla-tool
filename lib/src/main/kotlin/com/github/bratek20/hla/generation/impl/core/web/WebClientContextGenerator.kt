@@ -20,15 +20,20 @@ class WebClientContextGenerator: PatternGenerator() {
             return null
         }
         return c.module.getWebSubmodule()?.let { web ->
+            val http = web.getHttp()!!
             contentBuilder("webClientContext.vm")
                 .put("serverUrl", "\"http://localhost:8080\"")
-                .put("serverName", web.getHttp()!!.getServerName())
-                .put("baseUrl", web.getHttp()!!.getBaseUrl())
-                .put("auth", web.getHttp()!!.getAuth())
-                .put("interfaceNames", web.getHttp()!!.getExposedInterfaces())
-                .put("view", view(web.getHttp()!!.getExposedInterfaces()))
+                .put("serverName", requiredHttpValue(http.getServerName(), "serverName"))
+                .put("baseUrl", requiredHttpValue(http.getBaseUrl(), "baseUrl"))
+                .put("auth", http.getAuth())
+                .put("interfaceNames", http.getExposedInterfaces())
+                .put("view", view(http.getExposedInterfaces()))
                 .build()
         }
+    }
+
+    private fun requiredHttpValue(value: String?, name: String): String {
+        return value ?: throw IllegalArgumentException("Missing '$name' in Web Http section of module ${module.getName()}")
     }
 
     private fun view(interfNames: List<String>): String {

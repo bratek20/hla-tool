@@ -10,6 +10,8 @@ Web
     Http
         ExposedInterfaces
             WebApi
+        serverName = "webNoWrappersServerName"
+        baseUrl = "webNoWrappersService.baseUrl"
         requestResponseWrapping = false
 
 TypeScript

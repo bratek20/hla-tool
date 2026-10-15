@@ -289,7 +289,7 @@ through a constructor arg on the language (`TypeScript(modern)`) or stays in `li
 
 ### TypeScript: which patterns are code builder vs velocity
 
-Code builder: `Enums`, `Exceptions`, `Events`, `Mocks`, `TestBase`, `PlayFabHandlers`,
+Code builder: `Enums`, `EnumValues`, `Exceptions`, `Events`, `Mocks`, `TestBase`, `PlayFabHandlers`,
 `WebServerContext`, `Menu`, `Track`, `InitSql`, Examples.
 
 Still velocity (`lib/src/main/resources/templates/type_script/`): `ValueObjects`, `DataClasses`,
@@ -576,6 +576,31 @@ Interfaces
         findUser(id: UserId): UserProfile?
         saveUser(profile: UserProfile)
 ```
+
+### EnumValues
+
+`EnumValues` declares a holder class of named constants of an already defined type. Each entry
+must be written as `<ClassName> populates <PopulatedType>` - the parser throws
+`InvalidEnumValuesSectionException` otherwise.
+
+```
+EnumValues
+    WohRewardTypeEnum populates RewardTypeEnum
+        Currency
+        Consumable
+```
+
+Generated as static members of the holder class - a `companion object` in Kotlin, `static readonly`
+fields in TypeScript. **C# is skipped** (`shouldGenerate()`), so the pattern is Kotlin and
+TypeScript only. `PopulatedType` may live in another module; it is reported by
+`getCurrentDependencies()` so Kotlin imports its package - note that this is language-agnostic, so
+C# still gets a `using` for a module it depends on only through an EnumValues entry.
+
+The declared values are also the **closed set** `PopulatedType` may take in properties content:
+`EnumValuesValidator` in `validations/impl/Logic.kt` rejects any content value of that type that is
+not listed. Several holders may populate the same type, in which case the allowed set is the union
+of what they declare. This means a type used as an `idSource` must not be populated in EnumValues -
+the two would each claim to define its allowed values.
 
 ## Generated Code Patterns
 

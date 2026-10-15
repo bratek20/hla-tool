@@ -5,7 +5,7 @@ namespace SomeModule.Web {
         HttpClientConfig.create(
             EnvVars.Api.Get(new VariableName("someService.baseUrl2")),
             "someServerName2",
-            Optional.of(HttpClientAuth.create(EnvVars.Api.Get(new VariableName("someService.auth2"))))
+            Optional.of(new SecretKey("someService.auth2"))
         )
     )
 }
