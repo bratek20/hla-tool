@@ -111,6 +111,15 @@ open class SomeInterfaceMock: SomeInterface {
     fun assertMethodWithListOfSimpleVOCallsNumber(expectedNumber: Int) {
         assertThat(methodWithListOfSimpleVOCallsNumber).withFailMessage("Expected 'methodWithListOfSimpleVO' to be called " + expectedNumber + " times but was called " + methodWithListOfSimpleVOCallsNumber + " times").isEqualTo(expectedNumber)
     }
+    fun assertMethodWithListOfSimpleVOCalls(expectedArgs: List<List<String>>) {
+        assertMethodWithListOfSimpleVOCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertThat(methodWithListOfSimpleVOCalls[i].size).withFailMessage("Expected 'methodWithListOfSimpleVO' call " + i + " to have " + expectedArgs[i].size + " elements but had " + methodWithListOfSimpleVOCalls[i].size).isEqualTo(expectedArgs[i].size)
+            for (j in 0 until expectedArgs[i].size) {
+                assertSomeId(methodWithListOfSimpleVOCalls[i][j], expectedArgs[i][j])
+            }
+        }
+    }
     fun setMethodWithListOfSimpleVOResponse(response: List<String>) {
         methodWithListOfSimpleVOResponse = response
     }
