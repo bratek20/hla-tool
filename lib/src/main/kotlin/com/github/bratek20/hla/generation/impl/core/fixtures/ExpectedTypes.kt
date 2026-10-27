@@ -283,7 +283,7 @@ class OptionalExpectedType(
 
 class ListExpectedType(
     api: ListApiType,
-    private val wrappedType: ExpectedType<*>,
+    val wrappedType: ExpectedType<*>,
 ) : ExpectedType<ListApiType>(api) {
     override fun name(): String {
         return languageTypes.wrapWithList(wrappedType.name())

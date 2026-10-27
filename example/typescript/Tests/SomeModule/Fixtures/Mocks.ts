@@ -96,6 +96,15 @@ class SomeInterfaceMock implements SomeInterface {
     assertMethodWithListOfSimpleVOCallsNumber(expectedNumber: number) {
         AssertEquals(this.methodWithListOfSimpleVOCallsNumber, expectedNumber, "Expected 'methodWithListOfSimpleVO' to be called " + expectedNumber + " times but was called " + this.methodWithListOfSimpleVOCallsNumber + " times")
     }
+    assertMethodWithListOfSimpleVOCalls(expectedArgs: string[][]) {
+        this.assertMethodWithListOfSimpleVOCallsNumber(expectedArgs.length)
+        for (let i = 0; i < expectedArgs.length; i++) {
+            AssertEquals(this.methodWithListOfSimpleVOCalls[i].length, expectedArgs[i].length, "Expected 'methodWithListOfSimpleVO' call " + i + " to have " + expectedArgs[i].length + " elements but had " + this.methodWithListOfSimpleVOCalls[i].length)
+            for (let j = 0; j < expectedArgs[i].length; j++) {
+                SomeModule.Assert.someId(this.methodWithListOfSimpleVOCalls[i][j], expectedArgs[i][j])
+            }
+        }
+    }
     setMethodWithListOfSimpleVOResponse(response: string[]) {
         this.methodWithListOfSimpleVOResponse = response
     }

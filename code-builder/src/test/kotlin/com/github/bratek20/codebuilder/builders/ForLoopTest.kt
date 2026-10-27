@@ -39,4 +39,39 @@ class ForLoopTest {
             }
         }
     }
+
+    @Test
+    fun `should support custom index name`() {
+        testOp {
+            op = {
+                add(forLoop(
+                    from = const(0),
+                    to = const(1),
+                    indexName = "j",
+                    body = { jVar ->
+                        functionCallStatement {
+                            name = "someFun"
+                            addArg { jVar }
+                        }
+                    }
+                ))
+            }
+            langExpected {
+                lang = Kotlin()
+                expected = """
+                   for (j in 0 until 1) {
+                       someFun(j)
+                   }
+                """
+            }
+            langExpected {
+                lang = TypeScript()
+                expected = """
+                   for (let j = 0; j < 1; j++) {
+                       someFun(j)
+                   }
+                """
+            }
+        }
+    }
 }

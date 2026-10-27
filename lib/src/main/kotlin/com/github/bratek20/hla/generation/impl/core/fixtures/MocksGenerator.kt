@@ -171,34 +171,87 @@ class MockMethodLogic(
                     from = const(0),
                     to = expectedArgsListOp.size(),
                     body = { iVar ->
-                        if (expectedType is BaseExpectedType) {
-                            assertEquals {
-                                given = callsListOp().get(iVar)
-                                expected = expectedArgsListOp.get(iVar)
-                                message = plus {
-                                    left = string("Expected '${def.getName()}' to be called with ")
-                                    right = plus {
-                                        left = expectedArgsListOp.get(iVar)
-                                        right = plus {
-                                            left = string(" but was called with ")
-                                            right = callsListOp().get(iVar)
-                                        }
-                                    }
-                                }
-                            }
+                        val givenCall = callsListOp().get(iVar)
+                        val expectedCall = expectedArgsListOp.get(iVar)
+                        if (expectedType is ListExpectedType) {
+                            listCallAssertion(expectedType.wrappedType, givenCall, expectedCall, iVar)
                         } else {
-                            functionCallStatement {
-                                name = if (languageName == ModuleLanguage.TYPE_SCRIPT) handleTypeScriptReferencing(expectedType) else expectedType.funName()
-                                addArg {
-                                    callsListOp().get(iVar)
-                                }
-                                addArg {
-                                    expectedArgsListOp.get(iVar)
+                            elementAssertion(expectedType, givenCall, expectedCall)
+                        }
+                    }
+                ))
+            }
+        }
+    }
+
+    private fun listCallAssertion(
+        elementType: ExpectedType<*>,
+        givenCall: ExpressionBuilder,
+        expectedCall: ExpressionBuilder,
+        iVar: ExpressionBuilder
+    ): StatementBuilder {
+        val givenListOp = listOp(givenCall)
+        val expectedListOp = listOp(expectedCall)
+        return statement { _ -> {
+            add(assertEquals {
+                given = givenListOp.size()
+                expected = expectedListOp.size()
+                message = plus {
+                    left = string("Expected '${def.getName()}' call ")
+                    right = plus {
+                        left = iVar
+                        right = plus {
+                            left = string(" to have ")
+                            right = plus {
+                                left = expectedListOp.size()
+                                right = plus {
+                                    left = string(" elements but had ")
+                                    right = givenListOp.size()
                                 }
                             }
                         }
                     }
-                ))
+                }
+            })
+            add(forLoop(
+                from = const(0),
+                to = expectedListOp.size(),
+                indexName = "j",
+                body = { jVar ->
+                    elementAssertion(elementType, givenListOp.get(jVar), expectedListOp.get(jVar))
+                }
+            ))
+        }}
+    }
+
+    private fun elementAssertion(
+        expectedType: ExpectedType<*>,
+        givenElement: ExpressionBuilder,
+        expectedElement: ExpressionBuilder
+    ): StatementBuilder {
+        if (expectedType is BaseExpectedType) {
+            return assertEquals {
+                given = givenElement
+                expected = expectedElement
+                message = plus {
+                    left = string("Expected '${def.getName()}' to be called with ")
+                    right = plus {
+                        left = expectedElement
+                        right = plus {
+                            left = string(" but was called with ")
+                            right = givenElement
+                        }
+                    }
+                }
+            }
+        }
+        return functionCallStatement {
+            name = if (languageName == ModuleLanguage.TYPE_SCRIPT) handleTypeScriptReferencing(expectedType) else expectedType.funName()
+            addArg {
+                givenElement
+            }
+            addArg {
+                expectedElement
             }
         }
     }
@@ -328,12 +381,19 @@ class MockMethodLogic(
         val expectedType = argsApiType()?.let { expectedTypeFactory.create(it) } ?: return null
 
         val isStructure = expectedType is StructureExpectedType
-        val isSupportedBaseType = expectedType is BaseExpectedType &&
-            expectedType.api.name != DefinitionsBaseType.ANY
-        if (!isStructure && !isSupportedBaseType) {
+        val isSupportedList = expectedType is ListExpectedType && isSupportedListElement(expectedType.wrappedType)
+        if (!isStructure && !isSupportedBaseType(expectedType) && !isSupportedList) {
             return null
         }
         return expectedType
+    }
+
+    private fun isSupportedBaseType(expectedType: ExpectedType<*>): Boolean {
+        return expectedType is BaseExpectedType && expectedType.api.name != DefinitionsBaseType.ANY
+    }
+
+    private fun isSupportedListElement(elementType: ExpectedType<*>): Boolean {
+        return elementType is SimpleStructureExpectedType<*> || isSupportedBaseType(elementType)
     }
 
     private fun responseFieldName(): String {

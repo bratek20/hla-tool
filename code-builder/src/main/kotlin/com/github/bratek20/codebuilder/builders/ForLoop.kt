@@ -5,16 +5,17 @@ import com.github.bratek20.codebuilder.core.Kotlin
 fun forLoop(
     from: ExpressionBuilder,
     to: ExpressionBuilder,
+    indexName: String = "i",
     body: (iVar: ExpressionBuilder) -> StatementBuilder
 ) = statement { c -> {
     if (c.lang is Kotlin) {
-        line("for (i in ${from.build(c)} until ${to.build(c)}) {")
+        line("for ($indexName in ${from.build(c)} until ${to.build(c)}) {")
     }
     else {
-        line("for (let i = ${from.build(c)}; i < ${to.build(c)}; i++) {")
+        line("for (let $indexName = ${from.build(c)}; $indexName < ${to.build(c)}; $indexName++) {")
     }
     tab()
-    add(body(variable("i")))
+    add(body(variable(indexName)))
     untab()
     line("}")
 }}
