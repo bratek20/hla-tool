@@ -36,6 +36,11 @@ interface TablePart {
     fun getAssignmentOps(): List<AssignmentBuilderOps>
 }
 
+// enum field named *_enum is passed as enum object, runtime tracking stores it as reference to enum_value dimension
+private fun isEnumReference(fieldName: String, type: WorldType): Boolean {
+    return fieldName.endsWith("_enum") && type.getPath().asHla().getPatternName() == PatternName.Enums
+}
+
 private class TrackingTypesLogic(
     private val apiTypeFactory: ApiTypeFactory,
     private val typesWorldApi: TypesWorldApi,
@@ -43,6 +48,18 @@ private class TrackingTypesLogic(
 ) {
     fun getSerializationExpression(variableName: String, typeDef: TypeDefinition): ExpressionBuilder {
         return apiTypeFactory.create(typeDef).modernSerialize(variable(variableName))
+    }
+
+    fun getFieldTypeBuilder(fieldName: String, typeDef: TypeDefinition): TypeBuilder {
+        return getTypeBuilder(typeDef, serializable = !isEnumReference(fieldName, typeDef))
+    }
+
+    fun getFieldAssignment(fieldName: String, variableName: String, typeDef: TypeDefinition): ExpressionBuilder {
+        return if (isEnumReference(fieldName, typeDef)) variable(variableName) else getSerializationExpression(variableName, typeDef)
+    }
+
+    private fun isEnumReference(fieldName: String, typeDef: TypeDefinition): Boolean {
+        return isEnumReference(fieldName, typesWorldApi.getTypeByName(typeDef.asNonWrappedWorldTypeName()))
     }
 
     fun getTypeBuilder(typeDef: TypeDefinition, serializable: Boolean): TypeBuilder {
@@ -89,7 +106,7 @@ private class MyFieldsLogic(
             }
             {
                 name = def.getName()
-                type = types.getTypeBuilder(typeToUse, serializable = true)
+                type = types.getFieldTypeBuilder(def.getName(), typeToUse)
             }
         }
     }
@@ -116,7 +133,7 @@ private class MyFieldsLogic(
         return defs.map {def ->
             {
                 left = instanceVariable(def.getName())
-                right = types.getSerializationExpression(def.getName(), def.getType())
+                right = types.getFieldAssignment(def.getName(), def.getName(), def.getType())
             }
         }
     }
@@ -133,7 +150,7 @@ private class ExposedClassLogic(
         return def.getMappedFields().map { mappedField ->
             {
                 name = finalFieldName(mappedField)
-                type = types.getTypeBuilder(getDefFieldTypeDef(mappedField), serializable = true)
+                type = types.getFieldTypeBuilder(finalFieldName(mappedField), getDefFieldTypeDef(mappedField))
             }
         }
     }
@@ -166,7 +183,8 @@ private class ExposedClassLogic(
             val field = apiType.getField(mappedField.getName())
             return@map {
                 left = instanceVariable(finalFieldName(mappedField))
-                right = types.getSerializationExpression(
+                right = types.getFieldAssignment(
+                    finalFieldName(mappedField),
                     field.access(argVariableName()),
                     field.def.getType()
                 )
@@ -268,7 +286,7 @@ class TrackingTableLogic(
             val nullability = if (field.typeDefinition.getWrappers().contains(TypeWrapper.OPTIONAL)) "" else " NOT NULL"
 
             val unwrappedFieldType = typesWorldApi.getTypeByName(field.typeDefinition.asNonWrappedWorldTypeName())
-            builder.line("${field.name} ${toSqlType(unwrappedFieldType, field.serializableType)}"+ nullability + endLineSeparator)
+            builder.line("${field.name} ${toSqlType(field.name, unwrappedFieldType, field.serializableType)}"+ nullability + endLineSeparator)
         }
 
         builder.untab()
@@ -287,7 +305,7 @@ class TrackingTableLogic(
         }
     }
 
-    private fun toSqlType(type: WorldType, serializableType: WorldType): String {
+    private fun toSqlType(fieldName: String, type: WorldType, serializableType: WorldType): String {
         val hlaTypePath = type.getPath().asHla()
         val hlaSerializableTypePath = serializableType.getPath().asHla()
 
@@ -295,6 +313,9 @@ class TrackingTableLogic(
             return "VARCHAR(256)"
         }
 
+        if (isEnumReference(fieldName, type)) {
+            return "BIGINT"
+        }
         if (hlaTypePath.getPatternName() == PatternName.Enums) {
             return "VARCHAR(64)"
         }

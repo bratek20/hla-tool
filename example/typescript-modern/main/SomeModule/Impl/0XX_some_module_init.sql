@@ -23,6 +23,12 @@ CREATE TABLE some_dimension_with_enum (
     enum_string VARCHAR(64) NOT NULL
 );
 
+CREATE TABLE some_dimension_with_enum_reference (
+    some_dimension_with_enum_reference_id BIGINT DEFAULT NEXTVAL('common.the_sequence'::regclass) CONSTRAINT some_dimension_with_enum_reference_id PRIMARY KEY,
+    exposed_enum BIGINT NOT NULL,
+    plain_enum BIGINT NOT NULL
+);
+
 CREATE TABLE some_tracking_event (
     CONSTRAINT some_tracking_event_id PRIMARY KEY (event_id),
     optional_int_exposed INTEGER,
