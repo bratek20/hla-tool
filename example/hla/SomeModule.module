@@ -461,6 +461,10 @@ Tracking
         SomeDimensionWithEnum (table: "some_dimension_with_enum")
             SomeClass3
                 someEnum -> enum_string // name mapping
+        SomeDimensionWithEnumReference (table: "some_dimension_with_enum_reference") // _enum suffix: reference to enum_value dimension
+            SomeClass3
+                someEnum -> exposed_enum
+            plain_enum: SomeEnum
 
     Events
         SomeTrackingEvent (table: "some_tracking_event")

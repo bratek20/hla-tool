@@ -3,6 +3,7 @@
 import { OtherDimension } from "../../OtherModule/Impl/Track"
 import { DateRange } from "../../TypesModule/Api/CustomTypes"
 import { SerializedDateRange } from "../../TypesModule/Api/SerializedCustomTypes"
+import { SomeEnum } from "../Api/Enums"
 import { ClassWithOptExamples, SomeClass, SomeClass3 } from "../Api/ValueObjects"
 
 export class SomeDimension extends TrackingDimension {
@@ -63,6 +64,22 @@ export class SomeDimensionWithEnum extends TrackingDimension {
     private readonly enum_string: string
     getTableName(): TrackingTableName {
         return new TrackingTableName("some_dimension_with_enum")
+    }
+}
+
+export class SomeDimensionWithEnumReference extends TrackingDimension {
+    constructor(
+        someClass3: SomeClass3,
+        plain_enum: SomeEnum
+    ) {
+        super()
+        this.exposed_enum = someClass3.getSomeEnum()
+        this.plain_enum = plain_enum
+    }
+    private readonly exposed_enum: SomeEnum
+    private readonly plain_enum: SomeEnum
+    getTableName(): TrackingTableName {
+        return new TrackingTableName("some_dimension_with_enum_reference")
     }
 }
 

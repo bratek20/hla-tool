@@ -62,6 +62,22 @@ namespace SomeModule.Impl {
         }
     }
 
+    export class SomeDimensionWithEnumReference extends TrackingDimension {
+        constructor(
+            someClass3: SomeClass3,
+            plain_enum: SomeEnum
+        ) {
+            super()
+            this.exposed_enum = someClass3.getSomeEnum()
+            this.plain_enum = plain_enum
+        }
+        private readonly exposed_enum: SomeEnum
+        private readonly plain_enum: SomeEnum
+        getTableName(): TrackingTableName {
+            return new TrackingTableName("some_dimension_with_enum_reference")
+        }
+    }
+
     export class SomeTrackingEvent extends TrackingEvent {
         constructor(
             classWithOptExamples: ClassWithOptExamples,
