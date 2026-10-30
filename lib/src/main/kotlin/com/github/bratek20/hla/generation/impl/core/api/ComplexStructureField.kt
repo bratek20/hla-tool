@@ -63,7 +63,10 @@ open class ComplexStructureField(
             val typeToParse = extractBaseApiType(type) ?: throw ShouldNeverHappenException("Type")
             return BaseApiType.parseToProperExampleFormat(typeToParse, value)
         }
-        return value
+        if (isEnum()) {
+            return def.getDefaultValue()?.takeIf { it != "empty" }
+        }
+        return null
     }
 
     private fun extractBaseApiType(type: ApiTypeLogic): BaseApiType?{
@@ -199,6 +202,10 @@ open class ComplexStructureField(
         return mapValue(type, value)
     }
 
+    private fun isEnum(): Boolean {
+        return ((type as? OptionalApiType)?.wrappedType ?: type) is EnumApiType
+    }
+
     private fun mapValue(valueType: ApiTypeLogic, value: String): ExpressionBuilder {
         return (valueType as? EnumApiType)?.valueBuilder(value) ?: expression(value)
     }
@@ -210,7 +217,7 @@ open class ComplexStructureField(
         if (value == "empty") {
             return nullValue()
         }
-        if (((type as? OptionalApiType)?.wrappedType ?: type) is EnumApiType) {
+        if (isEnum()) {
             return string(value)
         }
         return expression(value)
