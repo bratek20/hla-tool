@@ -1,0 +1,14 @@
+profiles:
+  - name: "kotlin"
+    language: "KOTLIN"
+    paths:
+      project: "../kotlin"
+      src:
+        default: "src/main/kotlin/com/some/pkg"
+
+  - name: "typeScript"
+    language: "TYPE_SCRIPT"
+    paths:
+      project: "../typescript"
+      src:
+        default: "main"

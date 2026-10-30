@@ -8,6 +8,7 @@ import com.github.bratek20.hla.facade.api.ModuleLanguage
 import com.github.bratek20.hla.generation.api.PatternName
 import com.github.bratek20.hla.generation.impl.core.PatternGenerator
 import com.github.bratek20.hla.generation.impl.core.api.patterns.InterfaceViewFactory
+import com.github.bratek20.hla.generation.impl.languages.typescript.TypeScriptSupport
 import com.github.bratek20.utils.directory.api.FileContent
 
 class WebClientContextGenerator: PatternGenerator() {
@@ -32,8 +33,12 @@ class WebClientContextGenerator: PatternGenerator() {
         }
     }
 
-    private fun requiredHttpValue(value: String?, name: String): String {
-        return value ?: throw IllegalArgumentException("Missing '$name' in Web Http section of module ${module.getName()}")
+    // only the TypeScript template uses serverName and baseUrl
+    private fun requiredHttpValue(value: String?, name: String): String? {
+        if (value == null && c.language is TypeScriptSupport) {
+            throw IllegalArgumentException("Missing '$name' in Web Http section of module ${module.getName()}")
+        }
+        return value
     }
 
     private fun view(interfNames: List<String>): String {

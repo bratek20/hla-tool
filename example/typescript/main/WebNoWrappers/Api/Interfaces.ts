@@ -2,4 +2,8 @@
 
 interface WebApi {
     handleRequest(i: WebRequest): WebResult
+
+    getLastResult(): WebResult
+
+    reset(): void
 }

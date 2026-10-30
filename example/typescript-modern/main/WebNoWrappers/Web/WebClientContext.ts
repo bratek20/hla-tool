@@ -14,3 +14,11 @@ export const config = new WebNoWrappersWebClientConfig(
 export function handleRequest(i: WebRequest, c: HandlerContext): WebResult {
     return new Web.WebApiWebClient(Web.config, c).handleRequest(i)
 }
+
+export function getLastResult(c: HandlerContext): WebResult {
+    return new Web.WebApiWebClient(Web.config, c).getLastResult()
+}
+
+export function reset(c: HandlerContext): void {
+    new Web.WebApiWebClient(Web.config, c).reset()
+}

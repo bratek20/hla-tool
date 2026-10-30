@@ -8,5 +8,9 @@ using B20.Ext;
 namespace WebNoWrappers.Api {
     public interface WebApi {
         WebResult HandleRequest(WebRequest i);
+
+        WebResult GetLastResult();
+
+        void Reset();
     }
 }

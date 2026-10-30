@@ -2,7 +2,7 @@
 
 import { WebApi } from "../Api/Interfaces"
 import { WebRequest, WebResult } from "../Api/ValueObjects"
-import { WebApiHandleRequestRequest, WebApiHandleRequestResponse, WebNoWrappersWebClientConfig } from "./WebCommon"
+import { WebApiGetLastResultResponse, WebApiHandleRequestRequest, WebApiHandleRequestResponse, WebNoWrappersWebClientConfig } from "./WebCommon"
 
 export class WebApiWebClient implements WebApi {
     constructor(
@@ -14,5 +14,11 @@ export class WebApiWebClient implements WebApi {
     private readonly client: HttpClient
     handleRequest(i: WebRequest): WebResult {
         return this.client.post("/webApi/handleRequest", Optional.of(WebApiHandleRequestRequest.create(i))).getBody(WebApiHandleRequestResponse).get().getValue()
+    }
+    getLastResult(): WebResult {
+        return this.client.post("/webApi/getLastResult", Optional.empty()).getBody(WebApiGetLastResultResponse).get().getValue()
+    }
+    reset(): void {
+        this.client.post("/webApi/reset", Optional.empty())
     }
 }

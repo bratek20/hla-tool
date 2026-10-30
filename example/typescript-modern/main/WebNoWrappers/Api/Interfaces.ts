@@ -4,4 +4,8 @@ import { WebRequest, WebResult } from "./ValueObjects"
 
 export interface WebApi {
     handleRequest(i: WebRequest): WebResult
+
+    getLastResult(): WebResult
+
+    reset(): void
 }

@@ -25,5 +25,17 @@ class WebApiController(
         val request = serializer.fromStruct(rawRequest, WebRequest::class.java)
         return serializer.asStruct(api.handleRequest(request))
     }
+
+    @PostMapping("/getLastResult")
+    fun getLastResult(): Struct {
+        // no request needed
+        return serializer.asStruct(api.getLastResult())
+    }
+
+    @PostMapping("/reset")
+    fun reset(): Unit {
+        // no request needed
+        api.reset()
+    }
 }
 

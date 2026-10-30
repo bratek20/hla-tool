@@ -775,6 +775,38 @@ class HlaFacadeTest {
     }
 
     @Test
+    fun `should not require web client config for Kotlin module`() {
+        //given
+        val (_, facade) = setup()
+
+        val args = ModuleOperationArgs.create(
+            moduleName = ModuleName("WebModule"),
+            profileName = ProfileName("kotlin"),
+            hlaFolderPath = Path("src/test/resources/generation/webWithoutClientConfig"),
+        )
+
+        //when & then
+        assertThatCode { facade.startModule(args) }
+            .doesNotThrowAnyException()
+    }
+
+    @Test
+    fun `should require web client config for TypeScript module`() {
+        //given
+        val (_, facade) = setup()
+
+        val args = ModuleOperationArgs.create(
+            moduleName = ModuleName("WebModule"),
+            profileName = ProfileName("typeScript"),
+            hlaFolderPath = Path("src/test/resources/generation/webWithoutClientConfig"),
+        )
+
+        //when & then
+        assertThatCode { facade.startModule(args) }
+            .hasMessage("Missing 'serverName' in Web Http section of module WebModule")
+    }
+
+    @Test
     fun shouldUpdateAllModules() {
         //given
         val (directoriesMock, facade) = setup()
