@@ -6,5 +6,6 @@
   "custom": "This is any type - it can contain anything",
   "customOpt": "This is any type - it can contain anything",
   "gDN": "someValue",
-  "someDefault": "someOtherId"
+  "someDefault": "someOtherId",
+  "someEnumDefault": "VALUE_B"
 }

@@ -18,6 +18,7 @@ namespace SomeModule.Api {
         readonly object? customOpt;
         readonly string goodDataName;
         readonly string someDefault;
+        readonly string someEnumDefault;
 
         public SomeData(
             string id,
@@ -25,7 +26,8 @@ namespace SomeModule.Api {
             object custom,
             object? customOpt,
             string goodDataName,
-            string someDefault
+            string someDefault,
+            string someEnumDefault
         ) {
             this.id = id;
             this.other = other;
@@ -33,6 +35,7 @@ namespace SomeModule.Api {
             this.customOpt = customOpt;
             this.goodDataName = goodDataName;
             this.someDefault = someDefault;
+            this.someEnumDefault = someEnumDefault;
         }
         public SomeId GetId() {
             return new SomeId(id);
@@ -52,8 +55,11 @@ namespace SomeModule.Api {
         public SomeOtherId GetSomeDefault() {
             return new SomeOtherId(someDefault);
         }
-        public static SomeData Create(SomeId id, OtherData other, object custom, Optional<object> customOpt, string goodDataName, SomeOtherId someDefault) {
-            return new SomeData(id.Value, other, custom, customOpt.OrElse(null), goodDataName, someDefault.Value);
+        public SomeEnum GetSomeEnumDefault() {
+            return (SomeEnum)Enum.Parse(typeof(SomeEnum), someEnumDefault);
+        }
+        public static SomeData Create(SomeId id, OtherData other, object custom, Optional<object> customOpt, string goodDataName, SomeOtherId someDefault, SomeEnum someEnumDefault) {
+            return new SomeData(id.Value, other, custom, customOpt.OrElse(null), goodDataName, someDefault.Value, someEnumDefault.ToString());
         }
     }
 

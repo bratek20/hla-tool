@@ -63,7 +63,10 @@ open class ComplexStructureField(
             val typeToParse = extractBaseApiType(type) ?: throw ShouldNeverHappenException("Type")
             return BaseApiType.parseToProperExampleFormat(typeToParse, value)
         }
-        return value
+        if (isEnum()) {
+            return def.getDefaultValue()?.takeIf { it != "empty" }
+        }
+        return null
     }
 
     private fun extractBaseApiType(type: ApiTypeLogic): BaseApiType?{
@@ -129,7 +132,7 @@ open class ComplexStructureField(
 
         val valOrVar = if (complexStructure is DataClassApiType) "var" else "val"
         val base = "${accessor()}${valOrVar} ${privateName()}: ${type.serializableName()}"
-        defaultValue()?.let {
+        defaultSerializedValue()?.let {
             return "$base = $it"
         }
         return base
@@ -194,9 +197,17 @@ open class ComplexStructureField(
             return emptyHardOptional((type as OptionalApiType).wrappedType.builder())
         }
         (type as? OptionalApiType)?.let {
-            return hardOptional(it.wrappedType.builder()) { expression(value) }
+            return hardOptional(it.wrappedType.builder()) { mapValue(it.wrappedType, value) }
         }
-        return expression(value)
+        return mapValue(type, value)
+    }
+
+    private fun isEnum(): Boolean {
+        return ((type as? OptionalApiType)?.wrappedType ?: type) is EnumApiType
+    }
+
+    private fun mapValue(valueType: ApiTypeLogic, value: String): ExpressionBuilder {
+        return (valueType as? EnumApiType)?.valueBuilder(value) ?: expression(value)
     }
 
     private fun mapDefaultSerializableValue(value: String): ExpressionBuilder {
@@ -205,6 +216,9 @@ open class ComplexStructureField(
         }
         if (value == "empty") {
             return nullValue()
+        }
+        if (isEnum()) {
+            return string(value)
         }
         return expression(value)
     }
@@ -236,8 +250,9 @@ open class ComplexStructureField(
     private fun getterBody(): String {
         if(def.getDefaultValue() != null && type.languageTypes is TypeScriptTypes) {
             val defaultVal = def.getDefaultValue()!!
+            val serializedDefault = defaultSerializedValueBuilder()!!.build(type.languageTypes.context())
             return type.modernDeserialize(
-                hardcodedExpression("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $defaultVal"}")
+                hardcodedExpression("this.${privateName()}${if(defaultVal == "empty") "" else " ?? $serializedDefault"}")
             ).build(type.languageTypes.context())
         }
 

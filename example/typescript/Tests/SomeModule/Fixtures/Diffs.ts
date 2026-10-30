@@ -1035,6 +1035,8 @@ namespace SomeModule {
     export interface ExpectedSomeEnumValuesReferencingProperty {
         type?: string,
         nestedTypes?: string[],
+        someEnumEmpty?: boolean,
+        someEnum?: string,
     }
     export function diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expected: ExpectedSomeEnumValuesReferencingProperty, path: string = ""): string {
         const result: string[] = []
@@ -1046,6 +1048,15 @@ namespace SomeModule {
         if (expected.nestedTypes !== undefined) {
             if (given.getNestedTypes().length != expected.nestedTypes.length) { result.push(`${path}nestedTypes size ${given.getNestedTypes().length} != ${expected.nestedTypes.length}`); return result.join("\n") }
             given.getNestedTypes().forEach((entry, idx) => { if (diffSomeValueType(entry, expected.nestedTypes[idx]) != "") { result.push(diffSomeValueType(entry, expected.nestedTypes[idx], `${path}nestedTypes[${idx}].`)) } })
+        }
+
+        if (expected.someEnumEmpty !== undefined) {
+            if (given.getSomeEnum().isEmpty() != expected.someEnumEmpty) { result.push(`${path}someEnum empty ${given.getSomeEnum().isEmpty()} != ${expected.someEnumEmpty}`) }
+        }
+
+        if (expected.someEnum !== undefined) {
+            if (given.getSomeEnum().isEmpty()) { result.push(`${path}someEnum is empty but expected is not`); return result.join("\n") }
+            if (diffSomeEnum(given.getSomeEnum().get(), expected.someEnum) != "") { result.push(diffSomeEnum(given.getSomeEnum().get(), expected.someEnum, `${path}someEnum.`)) }
         }
 
         return result.join("\n")
@@ -1108,6 +1119,7 @@ namespace SomeModule {
         customOpt?: any,
         goodDataName?: string,
         someDefault?: string,
+        someEnumDefault?: string,
     }
     export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: string = ""): string {
         const result: string[] = []
@@ -1139,6 +1151,10 @@ namespace SomeModule {
 
         if (expected.someDefault !== undefined) {
             if (diffSomeOtherId(given.getSomeDefault(), expected.someDefault) != "") { result.push(diffSomeOtherId(given.getSomeDefault(), expected.someDefault, `${path}someDefault.`)) }
+        }
+
+        if (expected.someEnumDefault !== undefined) {
+            if (diffSomeEnum(given.getSomeEnumDefault(), expected.someEnumDefault) != "") { result.push(diffSomeEnum(given.getSomeEnumDefault(), expected.someEnumDefault, `${path}someEnumDefault.`)) }
         }
 
         return result.join("\n")

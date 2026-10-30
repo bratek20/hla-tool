@@ -255,6 +255,7 @@ namespace SomeModule.Fixtures {
     public class SomeEnumValuesReferencingPropertyDef {
         public string Type { get; set; } = "SomeValue";
         public List<string> NestedTypes { get; set; } = new List<string>();
+        public string? SomeEnum { get; set; } = null;
     }
 
     public class SomeInterfaceSomeCommandArgsDef {
@@ -278,6 +279,7 @@ namespace SomeModule.Fixtures {
         public object? CustomOpt { get; set; } = null;
         public string GoodDataName { get; set; } = "someValue";
         public string SomeDefault { get; set; } = "defaultValue";
+        public string SomeEnumDefault { get; set; } = "VALUE_B";
     }
 
     public class SomeData2Def {
@@ -581,7 +583,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeEnumValuesReferencingPropertyDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeEnumValuesReferencingProperty.Create(new SomeValueType(def.Type), def.NestedTypes.Select(it => new SomeValueType(it)).ToList());
+            return SomeEnumValuesReferencingProperty.Create(new SomeValueType(def.Type), def.NestedTypes.Select(it => new SomeValueType(it)).ToList(), Optional<string>.Of(def.SomeEnum).Map(it => (SomeEnum)Enum.Parse(typeof(SomeEnum), it)));
         }
         public static SomeInterfaceSomeCommandArgs BuildSomeInterfaceSomeCommandArgs(Action<SomeInterfaceSomeCommandArgsDef> init = null) {
             var def = new SomeInterfaceSomeCommandArgsDef();
@@ -605,7 +607,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeDataDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeData.Create(new SomeId(def.Id), OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName, new SomeOtherId(def.SomeDefault));
+            return SomeData.Create(new SomeId(def.Id), OtherModuleBuilders.BuildOtherData(def.Other), def.Custom, Optional<object>.Of(def.CustomOpt), def.GoodDataName, new SomeOtherId(def.SomeDefault), (SomeEnum)Enum.Parse(typeof(SomeEnum), def.SomeEnumDefault));
         }
         public static SomeData2 BuildSomeData2(Action<SomeData2Def> init = null) {
             var def = new SomeData2Def();
