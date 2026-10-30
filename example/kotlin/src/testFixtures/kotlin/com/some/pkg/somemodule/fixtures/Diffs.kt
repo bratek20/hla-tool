@@ -1094,6 +1094,8 @@ fun diffCustomTypesPropertyOptionalList(given: CustomTypesPropertyOptionalList, 
 data class ExpectedSomeEnumValuesReferencingProperty(
     var type: String? = null,
     var nestedTypes: List<String>? = null,
+    var someEnumEmpty: Boolean? = null,
+    var someEnum: String? = null,
 )
 fun diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expectedInit: ExpectedSomeEnumValuesReferencingProperty.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeEnumValuesReferencingProperty().apply(expectedInit)
@@ -1106,6 +1108,15 @@ fun diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProper
     expected.nestedTypes?.let {
         if (given.getNestedTypes().size != it.size) { result.add("${path}nestedTypes size ${given.getNestedTypes().size} != ${it.size}"); return@let }
         given.getNestedTypes().forEachIndexed { idx, entry -> if (diffSomeValueType(entry, it[idx]) != "") { result.add(diffSomeValueType(entry, it[idx], "${path}nestedTypes[${idx}].")) } }
+    }
+
+    expected.someEnumEmpty?.let {
+        if ((given.getSomeEnum() == null) != it) { result.add("${path}someEnum empty ${(given.getSomeEnum() == null)} != ${it}") }
+    }
+
+    expected.someEnum?.let {
+        if (given.getSomeEnum() == null) { result.add("${path}someEnum is empty but expected is not"); return@let }
+        if (diffSomeEnum(given.getSomeEnum()!!, it) != "") { result.add(diffSomeEnum(given.getSomeEnum()!!, it, "${path}someEnum.")) }
     }
 
     return result.joinToString("\n")

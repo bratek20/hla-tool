@@ -1163,6 +1163,8 @@ export function diffCustomTypesPropertyOptionalList(given: CustomTypesPropertyOp
 export interface ExpectedSomeEnumValuesReferencingProperty {
     type?: string,
     nestedTypes?: string[],
+    someEnumEmpty?: boolean,
+    someEnum?: string,
 }
 export function diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesReferencingProperty, expected: ExpectedSomeEnumValuesReferencingProperty, path: string = ""): string {
     const result: string[] = []
@@ -1176,6 +1178,17 @@ export function diffSomeEnumValuesReferencingProperty(given: SomeEnumValuesRefer
         const expectedNestedTypes = expected.nestedTypes
         if (given.getNestedTypes().length != expectedNestedTypes.length) { result.push(`${path}nestedTypes size ${given.getNestedTypes().length} != ${expectedNestedTypes.length}`); return result.join("\n") }
         given.getNestedTypes().forEach((entry, idx) => { if (diffSomeValueType(entry, expectedNestedTypes[idx]) != "") { result.push(diffSomeValueType(entry, expectedNestedTypes[idx], `${path}nestedTypes[${idx}].`)) } })
+    }
+
+    if (expected.someEnumEmpty !== undefined) {
+        const expectedSomeEnumEmpty = expected.someEnumEmpty
+        if (given.getSomeEnum().isEmpty() != expectedSomeEnumEmpty) { result.push(`${path}someEnum empty ${given.getSomeEnum().isEmpty()} != ${expectedSomeEnumEmpty}`) }
+    }
+
+    if (expected.someEnum !== undefined) {
+        const expectedSomeEnum = expected.someEnum
+        if (given.getSomeEnum().isEmpty()) { result.push(`${path}someEnum is empty but expected is not`); return result.join("\n") }
+        if (diffSomeEnum(given.getSomeEnum().get(), expectedSomeEnum) != "") { result.push(diffSomeEnum(given.getSomeEnum().get(), expectedSomeEnum, `${path}someEnum.`)) }
     }
 
     return result.join("\n")

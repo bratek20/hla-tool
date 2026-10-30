@@ -684,14 +684,17 @@ namespace SomeModule.Builder {
     export interface SomeEnumValuesReferencingPropertyDef {
         type?: string,
         nestedTypes?: string[],
+        someEnum?: string,
     }
     export function someEnumValuesReferencingProperty(def?: SomeEnumValuesReferencingPropertyDef): SomeEnumValuesReferencingProperty {
         const final_type = def?.type ?? "SomeValue"
         const final_nestedTypes = def?.nestedTypes ?? []
+        const final_someEnum = def?.someEnum ?? undefined
 
         return SomeEnumValuesReferencingProperty.create(
             new SomeValueType(final_type),
             final_nestedTypes.map(it => new SomeValueType(it)),
+            Optional.of(final_someEnum).map(it => SomeEnum.fromName(it)),
         )
     }
 

@@ -329,11 +329,29 @@ class HlaValidatorLogic(
         val typeValidatorsResult = executeTypeValidators(group)
         val uniqueIdValidationResult = validateUniqueIds(group)
         val enumValuesValidationResult = validateEnumValues(group)
+        val enumsValidationResult = validateEnums(group)
 
         return idSourceValidationResult
             .merge(typeValidatorsResult)
             .merge(uniqueIdValidationResult)
             .merge(enumValuesValidationResult)
+            .merge(enumsValidationResult)
+    }
+
+    private fun validateEnums(group: ModuleGroup): ValidationResult {
+        return group.getModules().flatMap { it.getEnums() }
+            .map {
+                EnumValuesValidator(
+                    populatedTypeName = it.getName(),
+                    holderNames = listOf(it.getName()),
+                    allowedValues = it.getValues(),
+                    logger = logger,
+                    group = group,
+                    traverser = traverser,
+                    typesWorldApi = typesWorldApi
+                ).validate()
+            }
+            .fold(ValidationResult.ok()) { acc, result -> acc.merge(result) }
     }
 
     private fun validateEnumValues(group: ModuleGroup): ValidationResult {

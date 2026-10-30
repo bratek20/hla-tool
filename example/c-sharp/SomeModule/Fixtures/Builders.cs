@@ -255,6 +255,7 @@ namespace SomeModule.Fixtures {
     public class SomeEnumValuesReferencingPropertyDef {
         public string Type { get; set; } = "SomeValue";
         public List<string> NestedTypes { get; set; } = new List<string>();
+        public string? SomeEnum { get; set; } = null;
     }
 
     public class SomeInterfaceSomeCommandArgsDef {
@@ -582,7 +583,7 @@ namespace SomeModule.Fixtures {
             var def = new SomeEnumValuesReferencingPropertyDef();
             init = init ?? ((_) => {});
             init.Invoke(def);
-            return SomeEnumValuesReferencingProperty.Create(new SomeValueType(def.Type), def.NestedTypes.Select(it => new SomeValueType(it)).ToList());
+            return SomeEnumValuesReferencingProperty.Create(new SomeValueType(def.Type), def.NestedTypes.Select(it => new SomeValueType(it)).ToList(), Optional<string>.Of(def.SomeEnum).Map(it => (SomeEnum)Enum.Parse(typeof(SomeEnum), it)));
         }
         public static SomeInterfaceSomeCommandArgs BuildSomeInterfaceSomeCommandArgs(Action<SomeInterfaceSomeCommandArgsDef> init = null) {
             var def = new SomeInterfaceSomeCommandArgsDef();

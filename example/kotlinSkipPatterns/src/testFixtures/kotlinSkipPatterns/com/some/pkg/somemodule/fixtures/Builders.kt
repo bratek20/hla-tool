@@ -598,12 +598,14 @@ fun customTypesPropertyOptionalList(init: CustomTypesPropertyOptionalListDef.() 
 data class SomeEnumValuesReferencingPropertyDef(
     var type: String = "SomeValue",
     var nestedTypes: List<String> = emptyList(),
+    var someEnum: String? = null,
 )
 fun someEnumValuesReferencingProperty(init: SomeEnumValuesReferencingPropertyDef.() -> Unit = {}): SomeEnumValuesReferencingProperty {
     val def = SomeEnumValuesReferencingPropertyDef().apply(init)
     return SomeEnumValuesReferencingProperty.create(
         type = SomeValueType(def.type),
         nestedTypes = def.nestedTypes.map { it -> SomeValueType(it) },
+        someEnum = def.someEnum?.let { it -> SomeEnum.valueOf(it) },
     )
 }
 

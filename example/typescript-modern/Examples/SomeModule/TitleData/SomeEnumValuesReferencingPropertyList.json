@@ -3,6 +3,7 @@
     "type": "SomeValue",
     "nestedTypes": [
       "SomeValue"
-    ]
+    ],
+    "someEnum": "VALUE_A"
   }
 ]

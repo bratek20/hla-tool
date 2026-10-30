@@ -1050,6 +1050,32 @@ class ValidationsImplTest {
                 )
             }
         }
+
+        @Test
+        fun `should fail for value not declared in enum`() {
+            setup()
+
+            propertiesMock.set(SOME_ENUM_VALUES_REFERENCING_PROPERTY_LIST, listOf(
+                struct {
+                    "type" to "SomeValue"
+                    "nestedTypes" to listOf<String>()
+                    "someEnum" to "VALUE_A"
+                },
+                struct {
+                    "type" to "SomeValue"
+                    "nestedTypes" to listOf<String>()
+                    "someEnum" to "VALUE_C"
+                }
+            ))
+
+            val result = validateCall()
+
+            assertValidationResult(result) {
+                errors = listOf(
+                    "Value 'VALUE_C' at '\"SomeEnumValuesReferencingPropertyList\"/[1]/someEnum?' not found in enum values from 'SomeEnum'"
+                )
+            }
+        }
     }
 
     private fun validateCall(): ValidationResult {

@@ -214,6 +214,7 @@ Properties
     SomeEnumValuesReferencingProperty
         type: SomeValueType
         nestedTypes: SomeValueType[]
+        someEnum: SomeEnum?
 
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
