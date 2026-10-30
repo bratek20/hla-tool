@@ -1243,6 +1243,7 @@ export interface ExpectedSomeData {
     customOpt?: any,
     goodDataName?: string,
     someDefault?: string,
+    someEnumDefault?: string,
 }
 export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: string = ""): string {
     const result: string[] = []
@@ -1281,6 +1282,11 @@ export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: 
     if (expected.someDefault !== undefined) {
         const expectedSomeDefault = expected.someDefault
         if (diffSomeOtherId(given.getSomeDefault(), expectedSomeDefault) != "") { result.push(diffSomeOtherId(given.getSomeDefault(), expectedSomeDefault, `${path}someDefault.`)) }
+    }
+
+    if (expected.someEnumDefault !== undefined) {
+        const expectedSomeEnumDefault = expected.someEnumDefault
+        if (diffSomeEnum(given.getSomeEnumDefault(), expectedSomeEnumDefault) != "") { result.push(diffSomeEnum(given.getSomeEnumDefault(), expectedSomeEnumDefault, `${path}someEnumDefault.`)) }
     }
 
     return result.join("\n")

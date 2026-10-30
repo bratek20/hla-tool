@@ -7,6 +7,7 @@ class SomeData {
     private customOpt? = OPTIONAL_ANY
     private gDN = STRING
     private someDefault? = OPTIONAL_STRING
+    private someEnumDefault? = OPTIONAL_STRING
 
     static create(
         id: SomeId,
@@ -15,6 +16,7 @@ class SomeData {
         customOpt: Optional<any>,
         goodDataName: string,
         someDefault: SomeOtherId = new SomeOtherId("defaultValue"),
+        someEnumDefault: SomeEnum = SomeEnum.VALUE_B,
     ): SomeData {
         const instance = new SomeData()
         instance.id = id.getValue()
@@ -23,6 +25,7 @@ class SomeData {
         instance.customOpt = customOpt.orElse(undefined)
         instance.gDN = goodDataName
         instance.someDefault = someDefault.getValue()
+        instance.someEnumDefault = someEnumDefault.getName()
         return instance
     }
 
@@ -33,6 +36,7 @@ class SomeData {
         customOpt,
         goodDataName,
         someDefault,
+        someEnumDefault,
     }: {
         id: SomeId;
         other: OtherData;
@@ -40,6 +44,7 @@ class SomeData {
         customOpt: Optional<any>;
         goodDataName: string;
         someDefault: SomeOtherId;
+        someEnumDefault: SomeEnum;
     }): SomeData {
         const instance = new SomeData()
         instance.id = id.getValue()
@@ -48,6 +53,7 @@ class SomeData {
         instance.customOpt = customOpt.orElse(undefined)
         instance.gDN = goodDataName
         instance.someDefault = someDefault.getValue()
+        instance.someEnumDefault = someEnumDefault.getName()
         return instance
     }
 
@@ -75,6 +81,10 @@ class SomeData {
         return new SomeOtherId(this.someDefault ?? "defaultValue")
     }
 
+    getSomeEnumDefault(): SomeEnum {
+        return SomeEnum.fromName(this.someEnumDefault ?? "VALUE_B")
+    }
+
     setId(id: SomeId): void {
         this.id = id.getValue()
     }
@@ -99,6 +109,10 @@ class SomeData {
         this.someDefault = someDefault.getValue()
     }
 
+    setSomeEnumDefault(someEnumDefault: SomeEnum): void {
+        this.someEnumDefault = someEnumDefault.getName()
+    }
+
     update(other: SomeData) {
         this.id = other.id
         this.other = other.other
@@ -106,6 +120,7 @@ class SomeData {
         this.customOpt = other.customOpt
         this.gDN = other.gDN
         this.someDefault = other.someDefault
+        this.someEnumDefault = other.someEnumDefault
     }
 }
 

@@ -1171,6 +1171,7 @@ data class ExpectedSomeData(
     var customOpt: Any? = null,
     var goodDataName: String? = null,
     var someDefault: String? = null,
+    var someEnumDefault: String? = null,
 )
 fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, path: String = ""): String {
     val expected = ExpectedSomeData().apply(expectedInit)
@@ -1203,6 +1204,10 @@ fun diffSomeData(given: SomeData, expectedInit: ExpectedSomeData.() -> Unit, pat
 
     expected.someDefault?.let {
         if (diffSomeOtherId(given.getSomeDefault(), it) != "") { result.add(diffSomeOtherId(given.getSomeDefault(), it, "${path}someDefault.")) }
+    }
+
+    expected.someEnumDefault?.let {
+        if (diffSomeEnum(given.getSomeEnumDefault(), it) != "") { result.add(diffSomeEnum(given.getSomeEnumDefault(), it, "${path}someEnumDefault.")) }
     }
 
     return result.joinToString("\n")

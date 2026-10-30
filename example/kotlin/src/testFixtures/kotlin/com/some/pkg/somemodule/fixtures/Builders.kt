@@ -648,6 +648,7 @@ data class SomeDataDef(
     var customOpt: Any? = null,
     var goodDataName: String = "someValue",
     var someDefault: String = "defaultValue",
+    var someEnumDefault: String = "VALUE_B",
 )
 fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
     val def = SomeDataDef().apply(init)
@@ -658,6 +659,7 @@ fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
         customOpt = def.customOpt,
         goodDataName = def.goodDataName,
         someDefault = SomeOtherId(def.someDefault),
+        someEnumDefault = SomeEnum.valueOf(def.someEnumDefault),
     )
 }
 

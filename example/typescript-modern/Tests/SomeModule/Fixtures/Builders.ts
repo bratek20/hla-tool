@@ -753,6 +753,7 @@ export interface SomeDataDef {
     customOpt?: any,
     goodDataName?: string,
     someDefault?: string,
+    someEnumDefault?: string,
 }
 export function someData(def?: SomeDataDef): SomeData {
     const final_id = def?.id ?? "someValue"
@@ -761,6 +762,7 @@ export function someData(def?: SomeDataDef): SomeData {
     const final_customOpt = def?.customOpt ?? undefined
     const final_goodDataName = def?.goodDataName ?? "someValue"
     const final_someDefault = def?.someDefault ?? "defaultValue"
+    const final_someEnumDefault = def?.someEnumDefault ?? "VALUE_B"
 
     return SomeData.create(
         new SomeId(final_id),
@@ -769,6 +771,7 @@ export function someData(def?: SomeDataDef): SomeData {
         Optional.of(final_customOpt),
         final_goodDataName,
         new SomeOtherId(final_someDefault),
+        SomeEnum.fromName(final_someEnumDefault),
     )
 }
 

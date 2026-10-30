@@ -1108,6 +1108,7 @@ namespace SomeModule {
         customOpt?: any,
         goodDataName?: string,
         someDefault?: string,
+        someEnumDefault?: string,
     }
     export function diffSomeData(given: SomeData, expected: ExpectedSomeData, path: string = ""): string {
         const result: string[] = []
@@ -1139,6 +1140,10 @@ namespace SomeModule {
 
         if (expected.someDefault !== undefined) {
             if (diffSomeOtherId(given.getSomeDefault(), expected.someDefault) != "") { result.push(diffSomeOtherId(given.getSomeDefault(), expected.someDefault, `${path}someDefault.`)) }
+        }
+
+        if (expected.someEnumDefault !== undefined) {
+            if (diffSomeEnum(given.getSomeEnumDefault(), expected.someEnumDefault) != "") { result.push(diffSomeEnum(given.getSomeEnumDefault(), expected.someEnumDefault, `${path}someEnumDefault.`)) }
         }
 
         return result.join("\n")
