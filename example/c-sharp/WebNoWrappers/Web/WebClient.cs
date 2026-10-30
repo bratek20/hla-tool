@@ -20,5 +20,11 @@ namespace WebNoWrappers.Web {
         public WebResult HandleRequest(WebRequest i) {
             return client.Post("/webApi/handleRequest", Optional<WebApiHandleRequestRequest>.Of(WebApiHandleRequestRequest.Create(i))).GetBody<WebApiHandleRequestResponse>().Get().GetValue();
         }
+        public WebResult GetLastResult() {
+            return client.Post("/webApi/getLastResult", Optional<object>.Empty()).GetBody<WebApiGetLastResultResponse>().Get().GetValue();
+        }
+        public void Reset() {
+            client.Post("/webApi/reset", Optional<object>.Empty());
+        }
     }
 }

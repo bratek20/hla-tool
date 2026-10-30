@@ -15,5 +15,13 @@ class WebApiWebClient(
     override fun handleRequest(i: WebRequest): WebResult {
         return client.post("/webApi/handleRequest", i).getBody(WebResult::class.java)
     }
+
+    override fun getLastResult(): WebResult {
+        return client.post("/webApi/getLastResult", null).getBody(WebResult::class.java)
+    }
+
+    override fun reset(): Unit {
+        client.post("/webApi/reset", null)
+    }
 }
 

@@ -4,4 +4,8 @@ package src.main.kotlinSkipPatterns.com.some.pkg.webnowrappers.api
 
 interface WebApi {
     fun handleRequest(i: WebRequest): WebResult
+
+    fun getLastResult(): WebResult
+
+    fun reset(): Unit
 }

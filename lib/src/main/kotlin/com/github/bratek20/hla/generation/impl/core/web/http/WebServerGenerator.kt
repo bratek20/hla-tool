@@ -80,8 +80,10 @@ class WebServerGenerator: PatternGenerator() {
 
         val initApiCall = if (requestResponseWrapping) {
             "api.${method.name}(${method.argsGetPassWithPrefix("request.")})"
-        } else {
+        } else if (method.hasArgs()) {
             "api.${method.name}(request)"
+        } else {
+            "api.${method.name}()"
         }
 
         val secondLine = if (method.returnType != "Unit") {

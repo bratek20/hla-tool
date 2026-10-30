@@ -5,6 +5,8 @@ Interfaces
         WebResult
             outputField: int
         handleRequest(i: WebRequest): WebResult
+        getLastResult(): WebResult
+        reset()
 
 Web
     Http

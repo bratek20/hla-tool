@@ -12,5 +12,11 @@ namespace WebNoWrappers.Web {
         handleRequest(i: WebRequest): WebResult {
             return this.client.post("/webApi/handleRequest", Optional.of(WebApiHandleRequestRequest.create(i))).getBody(WebApiHandleRequestResponse).get().getValue()
         }
+        getLastResult(): WebResult {
+            return this.client.post("/webApi/getLastResult", Optional.empty()).getBody(WebApiGetLastResultResponse).get().getValue()
+        }
+        reset(): void {
+            this.client.post("/webApi/reset", Optional.empty())
+        }
     }
 }
