@@ -831,13 +831,17 @@ class EnumApiType(
     }
 
     fun defaultValue(): String {
-        val value = name() + "." + def.getValues().first()
+        return valueBuilder(def.getValues().first()).build(c)
+    }
+
+    fun valueBuilder(enumValue: String): ExpressionBuilder = expression { c ->
+        val value = name() + "." + enumValue
         if (c.lang is CSharp) {
             val x = asWorldType().getPath().asHla()
-            val prefixToAvoidCollision = x.getModuleName().value + "." + x.getSubmoduleName().name + "."
-            return prefixToAvoidCollision + value
+            x.getModuleName().value + "." + x.getSubmoduleName().name + "." + value
+        } else {
+            value
         }
-        return value
     }
 
     override fun modernDeserialize(variable: ExpressionBuilder): ExpressionBuilder {

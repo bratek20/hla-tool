@@ -598,12 +598,14 @@ fun customTypesPropertyOptionalList(init: CustomTypesPropertyOptionalListDef.() 
 data class SomeEnumValuesReferencingPropertyDef(
     var type: String = "SomeValue",
     var nestedTypes: List<String> = emptyList(),
+    var someEnum: String? = null,
 )
 fun someEnumValuesReferencingProperty(init: SomeEnumValuesReferencingPropertyDef.() -> Unit = {}): SomeEnumValuesReferencingProperty {
     val def = SomeEnumValuesReferencingPropertyDef().apply(init)
     return SomeEnumValuesReferencingProperty.create(
         type = SomeValueType(def.type),
         nestedTypes = def.nestedTypes.map { it -> SomeValueType(it) },
+        someEnum = def.someEnum?.let { it -> SomeEnum.valueOf(it) },
     )
 }
 
@@ -648,6 +650,7 @@ data class SomeDataDef(
     var customOpt: Any? = null,
     var goodDataName: String = "someValue",
     var someDefault: String = "defaultValue",
+    var someEnumDefault: String = "VALUE_B",
 )
 fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
     val def = SomeDataDef().apply(init)
@@ -658,6 +661,7 @@ fun someData(init: SomeDataDef.() -> Unit = {}): SomeData {
         customOpt = def.customOpt,
         goodDataName = def.goodDataName,
         someDefault = SomeOtherId(def.someDefault),
+        someEnumDefault = SomeEnum.valueOf(def.someEnumDefault),
     )
 }
 

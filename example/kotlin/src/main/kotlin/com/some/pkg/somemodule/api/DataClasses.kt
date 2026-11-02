@@ -15,6 +15,7 @@ data class SomeData(
     private var customOpt: Any?,
     private var gDN: String,
     private var someDefault: String = "defaultValue",
+    private var someEnumDefault: String = "VALUE_B",
 ) {
     fun getId(): SomeId {
         return SomeId(this.id)
@@ -38,6 +39,10 @@ data class SomeData(
 
     fun getSomeDefault(): SomeOtherId {
         return SomeOtherId(this.someDefault)
+    }
+
+    fun getSomeEnumDefault(): SomeEnum {
+        return SomeEnum.valueOf(this.someEnumDefault)
     }
 
     fun setId(id: SomeId) {
@@ -64,6 +69,10 @@ data class SomeData(
         this.someDefault = someDefault.value
     }
 
+    fun setSomeEnumDefault(someEnumDefault: SomeEnum) {
+        this.someEnumDefault = someEnumDefault.name
+    }
+
     companion object {
         fun create(
             id: SomeId,
@@ -72,6 +81,7 @@ data class SomeData(
             customOpt: Any?,
             goodDataName: String,
             someDefault: SomeOtherId = SomeOtherId("defaultValue"),
+            someEnumDefault: SomeEnum = SomeEnum.VALUE_B,
         ): SomeData {
             return SomeData(
                 id = id.value,
@@ -80,6 +90,7 @@ data class SomeData(
                 customOpt = customOpt,
                 gDN = goodDataName,
                 someDefault = someDefault.value,
+                someEnumDefault = someEnumDefault.name,
             )
         }
     }
@@ -91,6 +102,7 @@ data class SomeData(
         this.customOpt = other.customOpt
         this.gDN = other.gDN
         this.someDefault = other.someDefault
+        this.someEnumDefault = other.someEnumDefault
     }
 }
 

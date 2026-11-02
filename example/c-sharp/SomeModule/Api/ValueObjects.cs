@@ -1128,13 +1128,16 @@ namespace SomeModule.Api {
     public class SomeEnumValuesReferencingProperty: ValueObject {
         readonly string type;
         readonly List<string> nestedTypes;
+        readonly string? someEnum;
 
         public SomeEnumValuesReferencingProperty(
             string type,
-            List<string> nestedTypes
+            List<string> nestedTypes,
+            string? someEnum
         ) {
             this.type = type;
             this.nestedTypes = nestedTypes;
+            this.someEnum = someEnum;
         }
         public SomeValueType GetType() {
             return new SomeValueType(type);
@@ -1142,8 +1145,11 @@ namespace SomeModule.Api {
         public List<SomeValueType> GetNestedTypes() {
             return nestedTypes.Select(it => new SomeValueType(it)).ToList();
         }
-        public static SomeEnumValuesReferencingProperty Create(SomeValueType type, List<SomeValueType> nestedTypes) {
-            return new SomeEnumValuesReferencingProperty(type.Value, nestedTypes.Select(it => it.Value).ToList());
+        public Optional<SomeEnum> GetSomeEnum() {
+            return Optional<string>.Of(someEnum).Map(it => (SomeEnum)Enum.Parse(typeof(SomeEnum), it));
+        }
+        public static SomeEnumValuesReferencingProperty Create(SomeValueType type, List<SomeValueType> nestedTypes, Optional<SomeEnum> someEnum) {
+            return new SomeEnumValuesReferencingProperty(type.Value, nestedTypes.Select(it => it.Value).ToList(), someEnum.Map(it => it.ToString()).OrElse(null));
         }
     }
 

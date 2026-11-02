@@ -1308,6 +1308,7 @@ data class CustomTypesPropertyOptionalList(
 data class SomeEnumValuesReferencingProperty(
     private val type: String,
     private val nestedTypes: List<String>,
+    private val someEnum: String?,
 ) {
     fun getType(): SomeValueType {
         return SomeValueType(this.type)
@@ -1317,14 +1318,20 @@ data class SomeEnumValuesReferencingProperty(
         return this.nestedTypes.map { it -> SomeValueType(it) }
     }
 
+    fun getSomeEnum(): SomeEnum? {
+        return this.someEnum?.let { it -> SomeEnum.valueOf(it) }
+    }
+
     companion object {
         fun create(
             type: SomeValueType,
             nestedTypes: List<SomeValueType>,
+            someEnum: SomeEnum?,
         ): SomeEnumValuesReferencingProperty {
             return SomeEnumValuesReferencingProperty(
                 type = type.value,
                 nestedTypes = nestedTypes.map { it -> it.value },
+                someEnum = someEnum?.let { it -> it.name },
             )
         }
     }

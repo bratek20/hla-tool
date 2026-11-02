@@ -1963,27 +1963,33 @@ export class CustomTypesPropertyOptionalList {
 export class SomeEnumValuesReferencingProperty {
     private type = STRING
     private nestedTypes = [STRING]
+    private someEnum? = OPTIONAL_STRING
 
     static create(
         type: SomeValueType,
         nestedTypes: SomeValueType[],
+        someEnum: Optional<SomeEnum>,
     ): SomeEnumValuesReferencingProperty {
         const instance = new SomeEnumValuesReferencingProperty()
         instance.type = type.getValue()
         instance.nestedTypes = nestedTypes.map(it => it.getValue())
+        instance.someEnum = someEnum.map(it => it.getName()).orElse(undefined)
         return instance
     }
 
     static createNamed({
         type,
         nestedTypes,
+        someEnum,
     }: {
         type: SomeValueType;
         nestedTypes: SomeValueType[];
+        someEnum: Optional<SomeEnum>;
     }): SomeEnumValuesReferencingProperty {
         const instance = new SomeEnumValuesReferencingProperty()
         instance.type = type.getValue()
         instance.nestedTypes = nestedTypes.map(it => it.getValue())
+        instance.someEnum = someEnum.map(it => it.getName()).orElse(undefined)
         return instance
     }
 
@@ -1993,6 +1999,10 @@ export class SomeEnumValuesReferencingProperty {
 
     getNestedTypes(): SomeValueType[] {
         return this.nestedTypes.map(it => new SomeValueType(it))
+    }
+
+    getSomeEnum(): Optional<SomeEnum> {
+        return Optional.of(this.someEnum).map(it => SomeEnum.fromName(it))
     }
 }
 

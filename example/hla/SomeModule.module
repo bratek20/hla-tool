@@ -214,6 +214,7 @@ Properties
     SomeEnumValuesReferencingProperty
         type: SomeValueType
         nestedTypes: SomeValueType[]
+        someEnum: SomeEnum?
 
     "SomeKey" -> SomeProperty
     "SomeSourcePropertyList" -> SomePropertyEntry[]
@@ -249,6 +250,7 @@ Data
         //Here startsFrom is not generated because not long or int
         goodDataName: string (from: gDN, startsFrom: "some")
         someDefault: SomeOtherId = "defaultValue"
+        someEnumDefault: SomeEnum = VALUE_B
 
     SomeData2
         optEnum: SomeEnum?
