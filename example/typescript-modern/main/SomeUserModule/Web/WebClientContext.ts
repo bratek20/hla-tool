@@ -2,14 +2,16 @@
 
 import { SomeUserModuleWebClientConfig } from "./WebCommon"
 
-export const config = new SomeUserModuleWebClientConfig(
-    HttpClientConfig.create(
-        EnvVars.Api.Get(new VariableName("someUserService.baseUrl")),
-        "someUserServerName",
-        Optional.empty()
+export function config(): SomeUserModuleWebClientConfig {
+    return new SomeUserModuleWebClientConfig(
+        HttpClientConfig.create(
+            EnvVars.Api.Get(new VariableName("someUserService.baseUrl")),
+            "someUserServerName",
+            Optional.empty()
+        )
     )
-)
+}
 
 export function someMethod(c: HandlerContext): void {
-    new Web.SomeUserInterfaceWebClient(Web.config, c).someMethod()
+    new Web.SomeUserInterfaceWebClient(Web.config(), c).someMethod()
 }
