@@ -1,15 +1,17 @@
 namespace ${moduleName}.Web {
-    export const config = new ${moduleName}WebClientConfig(
-        HttpClientConfig.create(
-            EnvVars.Api.Get(new VariableName($baseUrl)),
-            $serverName,
+    export function config(): ${moduleName}WebClientConfig {
+        return new ${moduleName}WebClientConfig(
+            HttpClientConfig.create(
+                EnvVars.Api.Get(new VariableName($baseUrl)),
+                $serverName,
 #if($auth)
-            Optional.of(new SecretKey($auth))
+                Optional.of(new SecretKey($auth))
 #else
-            Optional.empty()
+                Optional.empty()
 #end
+            )
         )
-    )
+    }
 }
 
 $view
