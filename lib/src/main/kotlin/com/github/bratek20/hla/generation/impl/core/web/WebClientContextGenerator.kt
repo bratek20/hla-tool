@@ -66,7 +66,7 @@ class WebClientContextGenerator: PatternGenerator() {
                                 }
                                 legacyBody = {
                                     val returnPart = if (m.returnType != "void") "return " else ""
-                                    line("${returnPart}new Web.${interf.name}WebClient(Web.config, c).${m.name}(${m.argsPass()})")
+                                    line("${returnPart}new Web.${interf.name}WebClient(Web.config(), c).${m.name}(${m.argsPass()})")
                                 }
                             }
                         }

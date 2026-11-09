@@ -3,22 +3,24 @@
 import { WebRequest, WebResult } from "../Api/ValueObjects"
 import { WebNoWrappersWebClientConfig } from "./WebCommon"
 
-export const config = new WebNoWrappersWebClientConfig(
-    HttpClientConfig.create(
-        EnvVars.Api.Get(new VariableName("webNoWrappersService.baseUrl")),
-        "webNoWrappersServerName",
-        Optional.empty()
+export function config(): WebNoWrappersWebClientConfig {
+    return new WebNoWrappersWebClientConfig(
+        HttpClientConfig.create(
+            EnvVars.Api.Get(new VariableName("webNoWrappersService.baseUrl")),
+            "webNoWrappersServerName",
+            Optional.empty()
+        )
     )
-)
+}
 
 export function handleRequest(i: WebRequest, c: HandlerContext): WebResult {
-    return new Web.WebApiWebClient(Web.config, c).handleRequest(i)
+    return new Web.WebApiWebClient(Web.config(), c).handleRequest(i)
 }
 
 export function getLastResult(c: HandlerContext): WebResult {
-    return new Web.WebApiWebClient(Web.config, c).getLastResult()
+    return new Web.WebApiWebClient(Web.config(), c).getLastResult()
 }
 
 export function reset(c: HandlerContext): void {
-    new Web.WebApiWebClient(Web.config, c).reset()
+    new Web.WebApiWebClient(Web.config(), c).reset()
 }
