@@ -54,6 +54,9 @@ export const Api = {
     someMethod(arg1: MockArg, arg2: MockArg, c: HandlerContext): void {
         new SomeInterfaceToTestMockArgsImportLogic(c).someMethod(arg1, arg2)
     },
+    methodWithListOfComplexVO(list: SomeClass[], c: HandlerContext): void {
+        new SomeInterfaceToTestMockArgsImportLogic(c).methodWithListOfComplexVO(list)
+    },
     someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
         return new SomeModuleHandlersLogic(c).someHandler(i)
     },

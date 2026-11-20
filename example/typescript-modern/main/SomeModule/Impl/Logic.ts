@@ -112,6 +112,11 @@ export class SomeInterfaceToTestMockArgsImportLogic implements SomeInterfaceToTe
         // TODO
         throw new Error("Method not implemented.")
     }
+
+    methodWithListOfComplexVO(list: SomeClass[]): void {
+        // TODO
+        throw new Error("Method not implemented.")
+    }
 }
 
 export class SomeModuleHandlersLogic implements SomeModuleHandlers {

@@ -289,6 +289,10 @@ class ListExpectedType(
         return languageTypes.wrapWithList(wrappedType.name())
     }
 
+    override fun alwaysReferencedName(): String {
+        return languageTypes.wrapWithList(wrappedType.alwaysReferencedName())
+    }
+
     override fun notEquals(givenVariable: String, expectedVariable: String): String? {
         return null
     }

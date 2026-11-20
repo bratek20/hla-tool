@@ -343,6 +343,8 @@ class SomeModuleDebugHandlersMock implements SomeModuleDebugHandlers {
 class SomeInterfaceToTestMockArgsImportMock implements SomeInterfaceToTestMockArgsImport {
     private someMethodCallsNumber: number = 0
     private someMethodCalls: SomeInterfaceToTestMockArgsImportSomeMethodArgs[] = []
+    private methodWithListOfComplexVOCallsNumber: number = 0
+    private methodWithListOfComplexVOCalls: SomeClass[][] = []
     someMethod(arg1: MockArg, arg2: MockArg): void {
         this.someMethodCallsNumber = this.someMethodCallsNumber + 1
         this.someMethodCalls.push(SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(arg1, arg2))
@@ -356,9 +358,27 @@ class SomeInterfaceToTestMockArgsImportMock implements SomeInterfaceToTestMockAr
             SomeModule.Assert.someInterfaceToTestMockArgsImportSomeMethodArgs(this.someMethodCalls[i], expectedArgs[i])
         }
     }
+    methodWithListOfComplexVO(list: SomeClass[]): void {
+        this.methodWithListOfComplexVOCallsNumber = this.methodWithListOfComplexVOCallsNumber + 1
+        this.methodWithListOfComplexVOCalls.push(list)
+    }
+    assertMethodWithListOfComplexVOCallsNumber(expectedNumber: number) {
+        AssertEquals(this.methodWithListOfComplexVOCallsNumber, expectedNumber, "Expected 'methodWithListOfComplexVO' to be called " + expectedNumber + " times but was called " + this.methodWithListOfComplexVOCallsNumber + " times")
+    }
+    assertMethodWithListOfComplexVOCalls(expectedArgs: SomeModule.ExpectedSomeClass[][]) {
+        this.assertMethodWithListOfComplexVOCallsNumber(expectedArgs.length)
+        for (let i = 0; i < expectedArgs.length; i++) {
+            AssertEquals(this.methodWithListOfComplexVOCalls[i].length, expectedArgs[i].length, "Expected 'methodWithListOfComplexVO' call " + i + " to have " + expectedArgs[i].length + " elements but had " + this.methodWithListOfComplexVOCalls[i].length)
+            for (let j = 0; j < expectedArgs[i].length; j++) {
+                SomeModule.Assert.someClass(this.methodWithListOfComplexVOCalls[i][j], expectedArgs[i][j])
+            }
+        }
+    }
     reset() {
         this.someMethodCallsNumber = 0
         this.someMethodCalls = []
+        this.methodWithListOfComplexVOCallsNumber = 0
+        this.methodWithListOfComplexVOCalls = []
     }
 }
 
@@ -428,6 +448,7 @@ namespace SomeModule.Mocks {
         Dependencies.Assert.consumerContainsDependency(consumer, DependencyName.SomeModule)
         const mock = SomeModule.Mocks.createSomeInterfaceToTestMockArgsImportMock()
         SomeModule.Api.someMethod = CreateMock(SomeModule.Api.someMethod, (arg1: MockArg, arg2: MockArg) => { mock.someMethod(arg1, arg2) })
+        SomeModule.Api.methodWithListOfComplexVO = CreateMock(SomeModule.Api.methodWithListOfComplexVO, (list: SomeClass[]) => { mock.methodWithListOfComplexVO(list) })
         return mock
     }
 }

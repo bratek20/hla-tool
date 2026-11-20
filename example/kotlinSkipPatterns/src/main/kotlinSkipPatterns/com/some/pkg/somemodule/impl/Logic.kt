@@ -81,6 +81,10 @@ class SomeInterfaceToTestMockArgsImportLogic: SomeInterfaceToTestMockArgsImport 
     override fun someMethod(arg1: MockArg, arg2: MockArg): Unit {
         TODO("Not yet implemented")
     }
+
+    override fun methodWithListOfComplexVO(list: List<SomeClass>): Unit {
+        TODO("Not yet implemented")
+    }
 }
 
 class SomeModuleHandlersLogic: SomeModuleHandlers {

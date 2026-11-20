@@ -358,6 +358,8 @@ open class SomeModuleDebugHandlersMock: SomeModuleDebugHandlers {
 open class SomeInterfaceToTestMockArgsImportMock: SomeInterfaceToTestMockArgsImport {
     private var someMethodCallsNumber: Int = 0
     private var someMethodCalls: MutableList<SomeInterfaceToTestMockArgsImportSomeMethodArgs> = mutableListOf()
+    private var methodWithListOfComplexVOCallsNumber: Int = 0
+    private var methodWithListOfComplexVOCalls: MutableList<List<SomeClass>> = mutableListOf()
     override fun someMethod(arg1: MockArg, arg2: MockArg): Unit {
         someMethodCallsNumber = someMethodCallsNumber + 1
         someMethodCalls.add(SomeInterfaceToTestMockArgsImportSomeMethodArgs.create(arg1, arg2))
@@ -371,8 +373,26 @@ open class SomeInterfaceToTestMockArgsImportMock: SomeInterfaceToTestMockArgsImp
             assertSomeInterfaceToTestMockArgsImportSomeMethodArgs(someMethodCalls[i], expectedArgs[i])
         }
     }
+    override fun methodWithListOfComplexVO(list: List<SomeClass>): Unit {
+        methodWithListOfComplexVOCallsNumber = methodWithListOfComplexVOCallsNumber + 1
+        methodWithListOfComplexVOCalls.add(list)
+    }
+    fun assertMethodWithListOfComplexVOCallsNumber(expectedNumber: Int) {
+        assertThat(methodWithListOfComplexVOCallsNumber).withFailMessage("Expected 'methodWithListOfComplexVO' to be called " + expectedNumber + " times but was called " + methodWithListOfComplexVOCallsNumber + " times").isEqualTo(expectedNumber)
+    }
+    fun assertMethodWithListOfComplexVOCalls(expectedArgs: List<List<(ExpectedSomeClass.() -> Unit)>>) {
+        assertMethodWithListOfComplexVOCallsNumber(expectedArgs.size)
+        for (i in 0 until expectedArgs.size) {
+            assertThat(methodWithListOfComplexVOCalls[i].size).withFailMessage("Expected 'methodWithListOfComplexVO' call " + i + " to have " + expectedArgs[i].size + " elements but had " + methodWithListOfComplexVOCalls[i].size).isEqualTo(expectedArgs[i].size)
+            for (j in 0 until expectedArgs[i].size) {
+                assertSomeClass(methodWithListOfComplexVOCalls[i][j], expectedArgs[i][j])
+            }
+        }
+    }
     fun reset() {
         someMethodCallsNumber = 0
         someMethodCalls = mutableListOf()
+        methodWithListOfComplexVOCallsNumber = 0
+        methodWithListOfComplexVOCalls = mutableListOf()
     }
 }
