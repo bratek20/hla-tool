@@ -393,7 +393,7 @@ class MockMethodLogic(
     }
 
     private fun isSupportedListElement(elementType: ExpectedType<*>): Boolean {
-        return elementType is SimpleStructureExpectedType<*> || isSupportedBaseType(elementType)
+        return elementType is StructureExpectedType<*> || isSupportedBaseType(elementType)
     }
 
     private fun responseFieldName(): String {

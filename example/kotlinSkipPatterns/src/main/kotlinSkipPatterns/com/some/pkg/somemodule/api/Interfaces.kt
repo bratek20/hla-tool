@@ -57,6 +57,8 @@ interface SomeInterface3 {
 
 interface SomeInterfaceToTestMockArgsImport {
     fun someMethod(arg1: MockArg, arg2: MockArg): Unit
+
+    fun methodWithListOfComplexVO(list: List<SomeClass>): Unit
 }
 
 interface SomeModuleHandlers {

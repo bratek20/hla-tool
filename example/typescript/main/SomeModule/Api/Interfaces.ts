@@ -49,6 +49,8 @@ interface SomeInterface3 {
 
 interface SomeInterfaceToTestMockArgsImport {
     someMethod(arg1: MockArg, arg2: MockArg): void
+
+    methodWithListOfComplexVO(list: SomeClass[]): void
 }
 
 interface SomeModuleHandlers {

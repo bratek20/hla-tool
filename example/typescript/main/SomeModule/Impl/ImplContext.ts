@@ -64,6 +64,10 @@ namespace SomeModule.Api {
         new Impl.SomeInterfaceToTestMockArgsImportLogic(c).someMethod(arg1, arg2)
     }
 
+    export function methodWithListOfComplexVO(list: SomeClass[], c: HandlerContext): void {
+        new Impl.SomeInterfaceToTestMockArgsImportLogic(c).methodWithListOfComplexVO(list)
+    }
+
     export function someHandler(i: SomeHandlerInput, c: HandlerContext): SomeHandlerOutput {
         return new Impl.SomeModuleHandlersLogic(c).someHandler(i)
     }

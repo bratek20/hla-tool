@@ -107,6 +107,11 @@ namespace SomeModule.Impl {
             // TODO
             throw new Error("Method not implemented.")
         }
+
+        methodWithListOfComplexVO(list: SomeClass[]): void {
+            // TODO
+            throw new Error("Method not implemented.")
+        }
     }
 
     export class SomeModuleHandlersLogic implements SomeModuleHandlers {

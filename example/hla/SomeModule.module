@@ -303,6 +303,7 @@ Interfaces
 
     SomeInterfaceToTestMockArgsImport
         someMethod(arg1: MockArg, arg2: MockArg)
+        methodWithListOfComplexVO(list: SomeClass[])
 
     SomeModuleHandlers
         SomeHandlerInput
